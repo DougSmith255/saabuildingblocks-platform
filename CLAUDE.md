@@ -63,6 +63,56 @@ All credentials and configurations are centrally managed:
 
 ---
 
+## 🏗️ Architecture Overview
+
+**You are using Claude Code** - Anthropic's AI-powered development environment.
+
+### What is Claude Code?
+Claude Code is the main system you're interacting with. It has:
+- Native tools (Task, Read, Write, Bash, TodoWrite, etc.)
+- MCP server support (extensions that add specialized capabilities)
+- Agent coordination (spawn multiple AI agents to work in parallel)
+
+### What are MCPs?
+**MCP (Model Context Protocol) servers** are extensions that give Claude Code additional capabilities:
+- Think of them like plugins or extensions
+- Each MCP provides specialized tools
+- All MCPs are equal in importance - use what you need
+- MCPs are NOT separate systems - they're part of Claude Code's toolkit
+
+### Example: claude-flow MCP
+`claude-flow` is ONE of the 10 MCP servers. It provides:
+- Swarm coordination tools (`swarm_init`, `agent_spawn`)
+- Neural training capabilities
+- Task orchestration features
+
+**It's not a separate "Claude Flow" system** - it's an extension that adds swarm coordination to Claude Code.
+
+### The Complete Picture:
+```
+Claude Code (Main System)
+    │
+    ├── Native Tools
+    │   ├── Task (spawn agents)
+    │   ├── Read/Write/Edit (file operations)
+    │   ├── Bash (terminal)
+    │   └── TodoWrite (task tracking)
+    │
+    └── MCP Extensions (10 servers)
+        ├── claude-flow (swarm coordination)
+        ├── github (GitHub operations)
+        ├── playwright (browser automation)
+        ├── memory (persistent context)
+        ├── postgres (database queries)
+        ├── brave-search (web research)
+        ├── filesystem (advanced file ops)
+        ├── context7 (library docs)
+        ├── ruv-swarm (enhanced coordination)
+        └── flow-nexus (cloud features)
+```
+
+---
+
 ## 🚨 CRITICAL: CONCURRENT EXECUTION & FILE MANAGEMENT
 
 **ABSOLUTE RULES**:
@@ -256,30 +306,64 @@ This project uses SPARC (Specification, Pseudocode, Architecture, Refinement, Co
 ### Migration & Planning
 `migration-planner`, `swarm-init`
 
-## 🎯 Claude Code vs MCP Tools
+## 🎯 System Architecture
 
-### Claude Code Handles ALL EXECUTION:
-- **Task tool**: Spawn and run agents concurrently for actual work
-- File operations (Read, Write, Edit, MultiEdit, Glob, Grep)
-- Code generation and programming
-- Bash commands and system operations
-- Implementation work
-- Project navigation and analysis
-- TodoWrite and task management
-- Git operations
-- Package management
-- Testing and debugging
+You are in **Claude Code** - the AI-powered development environment.
 
-### MCP Tools ONLY COORDINATE:
-- Swarm initialization (topology setup)
-- Agent type definitions (coordination patterns)
-- Task orchestration (high-level planning)
-- Memory management
-- Neural features
-- Performance tracking
-- GitHub integration
+### Native Tools (Built into Claude Code):
+- **Task** - Spawn agents concurrently for complex work
+- **File Operations** - Read, Write, Edit, Glob, Grep
+- **Terminal** - Bash commands and system operations
+- **Task Management** - TodoWrite for tracking progress
+- **Git Operations** - Version control integration
 
-**KEY**: MCP coordinates the strategy, Claude Code's Task tool executes with real agents.
+### MCP Servers (Extensions - All Equal Importance):
+
+MCPs are extension servers that provide specialized capabilities to Claude Code. They are NOT separate systems - they're tools you can use through Claude Code.
+
+**All 10 MCP servers:**
+
+1. **claude-flow** - Swarm coordination, task orchestration, neural training
+   - `swarm_init`, `agent_spawn`, `task_orchestrate`
+   - Enables multi-agent coordination patterns
+
+2. **github** - Repository operations, PRs, issues, code search
+   - `search_code`, `create_issue`, `create_pull_request`
+   - Automates GitHub workflows
+
+3. **brave-search** - Real-time web research (2025 data)
+   - `web_search`, `local_search`
+   - Current information and documentation
+
+4. **memory** - Persistent context across sessions
+   - `create_entities`, `create_relations`, `search_nodes`
+   - Knowledge graphs and cross-session learning
+
+5. **filesystem** - Advanced file operations
+   - `read_multiple_files`, `search_files`, `directory_tree`
+   - Bulk operations and file analysis
+
+6. **postgres** - Database queries (read-only)
+   - `query` - SQL execution
+   - Schema analysis and data verification
+
+7. **playwright** - Browser automation and testing
+   - `navigate`, `click`, `fill`, `screenshot`
+   - UI testing and web scraping
+
+8. **context7** - Current library documentation
+   - `resolve_library_id`, `get_library_docs`
+   - Prevents API hallucinations with up-to-date docs
+
+9. **ruv-swarm** - Enhanced coordination features
+   - `daa_agent_create`, `neural_train`, `cognitive_analyze`
+   - Autonomous agents and distributed learning
+
+10. **flow-nexus** - Cloud-based execution (requires auth)
+    - `sandbox_create`, `neural_train`, `template_deploy`
+    - E2B sandboxes and distributed computing
+
+**Key Point:** All MCPs are equal-importance extensions. Use whichever MCP provides the capabilities you need for the task at hand.
 
 ---
 
@@ -524,14 +608,30 @@ This project uses SPARC (Specification, Pseudocode, Architecture, Refinement, Co
 
 **Remember:** Claude Code has NO automatic MCP routing. YOU must explicitly specify which MCP to use for each task.
 
-## 🚀 Quick Setup
+## 🚀 MCP Server Setup
+
+MCPs extend Claude Code with specialized capabilities. Install the ones you need:
 
 ```bash
-# Add MCP servers (Claude Flow required, others optional)
+# Swarm coordination (multi-agent orchestration)
 claude mcp add claude-flow npx claude-flow@alpha mcp start
-claude mcp add ruv-swarm npx ruv-swarm mcp start  # Optional: Enhanced coordination
-claude mcp add flow-nexus npx flow-nexus@latest mcp start  # Optional: Cloud features
+
+# Enhanced coordination features
+claude mcp add ruv-swarm npx ruv-swarm mcp start
+
+# Cloud execution and distributed computing
+claude mcp add flow-nexus npx flow-nexus@latest mcp start
+
+# GitHub automation (if not already installed)
+claude mcp add github npx @modelcontextprotocol/server-github
+
+# Browser automation
+claude mcp add playwright npx @modelcontextprotocol/server-playwright
+
+# And 5 more MCPs available...
 ```
+
+**All MCPs are optional extensions.** Use what you need for your workflow.
 
 ## MCP Tool Categories
 
@@ -567,35 +667,41 @@ Flow-Nexus extends MCP capabilities with 70+ cloud-based orchestration tools:
 - Login: `mcp__flow-nexus__user_login` or `npx flow-nexus@latest login`
 - Access 70+ specialized MCP tools for advanced orchestration
 
-## 🚀 Agent Execution Flow with Claude Code
+## 🚀 Agent Execution with Claude Code
 
-### The Correct Pattern:
+### How to Spawn Agents:
 
-1. **Optional**: Use MCP tools to set up coordination topology
-2. **REQUIRED**: Use Claude Code's Task tool to spawn agents that do actual work
-3. **REQUIRED**: Each agent runs hooks for coordination
-4. **REQUIRED**: Batch all operations in single messages
+Use Claude Code's **Task tool** to spawn agents concurrently. Each agent can use any MCP tools they need.
 
-### Example Full-Stack Development:
+### Example: Full-Stack Development
 
 ```javascript
-// Single message with all agent spawning via Claude Code's Task tool
-[Parallel Agent Execution]:
-  Task("Backend Developer", "Build REST API with Express. Use hooks for coordination.", "backend-dev")
-  Task("Frontend Developer", "Create React UI. Coordinate with backend via memory.", "coder")
-  Task("Database Architect", "Design PostgreSQL schema. Store schema in memory.", "code-analyzer")
-  Task("Test Engineer", "Write Jest tests. Check memory for API contracts.", "tester")
-  Task("DevOps Engineer", "Setup Docker and CI/CD. Document in memory.", "cicd-engineer")
-  Task("Security Auditor", "Review authentication. Report findings via hooks.", "reviewer")
-  
-  // All todos batched together
-  TodoWrite { todos: [...8-10 todos...] }
-  
-  // All file operations together
-  Write "backend/server.js"
-  Write "frontend/App.jsx"
-  Write "database/schema.sql"
+// Single message - spawn all agents concurrently
+Task("Backend Developer", "Build REST API with Express. Use claude-flow MCP for coordination if needed.", "backend-dev")
+Task("Frontend Developer", "Create React UI. Use memory MCP to coordinate with backend.", "coder")
+Task("Database Architect", "Design PostgreSQL schema. Use postgres MCP to verify. Store in memory MCP.", "code-analyzer")
+Task("Test Engineer", "Write tests. Use playwright MCP for UI tests.", "tester")
+Task("DevOps Engineer", "Setup Docker and CI/CD. Use github MCP for workflow automation.", "cicd-engineer")
+Task("Security Auditor", "Review authentication. Use github MCP to check for vulnerabilities.", "reviewer")
+
+// Batch all todos together
+TodoWrite { todos: [...8-10 todos...] }
+
+// File operations
+Write "backend/server.js"
+Write "frontend/App.jsx"
+Write "database/schema.sql"
 ```
+
+### When to Use claude-flow MCP:
+
+The claude-flow MCP is useful when you need:
+- **Swarm coordination** - `swarm_init` to set up agent topology
+- **Task orchestration** - `task_orchestrate` for complex workflows
+- **Neural training** - `neural_train` to learn from patterns
+- **Performance tracking** - `swarm_monitor`, `agent_metrics`
+
+But it's OPTIONAL. You can spawn agents with just the Task tool and let them use whatever MCPs they need (github, playwright, memory, etc.).
 
 ## 📋 Agent Coordination Protocol
 
@@ -621,25 +727,19 @@ npx claude-flow@alpha hooks session-end --export-metrics true
 
 ## 🎯 Concurrent Execution Examples
 
-### ✅ CORRECT WORKFLOW: MCP Coordinates, Claude Code Executes
+### ✅ CORRECT WORKFLOW: Concurrent Agent Execution
 
 ```javascript
-// Step 1: MCP tools set up coordination (optional, for complex tasks)
-[Single Message - Coordination Setup]:
-  mcp__claude-flow__swarm_init { topology: "mesh", maxAgents: 6 }
-  mcp__claude-flow__agent_spawn { type: "researcher" }
-  mcp__claude-flow__agent_spawn { type: "coder" }
-  mcp__claude-flow__agent_spawn { type: "tester" }
+// Single message - spawn all agents with MCP capabilities
+[Parallel Agent Execution]:
+  // Claude Code's Task tool spawns agents concurrently
+  // Each agent can use any MCP tools they need (github, memory, playwright, etc.)
+  Task("Research agent", "Analyze API requirements. Use brave-search MCP for latest practices. Store findings in memory MCP.", "researcher")
+  Task("Coder agent", "Implement REST endpoints. Use context7 MCP for Express docs. Coordinate via memory MCP.", "coder")
+  Task("Database agent", "Design schema. Use postgres MCP to verify existing structure. Store in memory MCP.", "code-analyzer")
+  Task("Tester agent", "Create tests. Use playwright MCP for E2E testing with 90% coverage.", "tester")
+  Task("Reviewer agent", "Review code quality. Use github MCP to check for security vulnerabilities.", "reviewer")
 
-// Step 2: Claude Code Task tool spawns ACTUAL agents that do the work
-[Single Message - Parallel Agent Execution]:
-  // Claude Code's Task tool spawns real agents concurrently
-  Task("Research agent", "Analyze API requirements and best practices. Check memory for prior decisions.", "researcher")
-  Task("Coder agent", "Implement REST endpoints with authentication. Coordinate via hooks.", "coder")
-  Task("Database agent", "Design and implement database schema. Store decisions in memory.", "code-analyzer")
-  Task("Tester agent", "Create comprehensive test suite with 90% coverage.", "tester")
-  Task("Reviewer agent", "Review code quality and security. Document findings.", "reviewer")
-  
   // Batch ALL todos in ONE call
   TodoWrite { todos: [
     {id: "1", content: "Research API patterns", status: "in_progress", priority: "high"},
@@ -651,7 +751,7 @@ npx claude-flow@alpha hooks session-end --export-metrics true
     {id: "7", content: "API documentation", status: "pending", priority: "low"},
     {id: "8", content: "Performance optimization", status: "pending", priority: "low"}
   ]}
-  
+
   // Parallel file operations
   Bash "mkdir -p app/{src,tests,docs,config}"
   Write "app/package.json"
@@ -659,6 +759,8 @@ npx claude-flow@alpha hooks session-end --export-metrics true
   Write "app/tests/server.test.js"
   Write "app/docs/API.md"
 ```
+
+**Note:** You can optionally use `mcp__claude-flow__swarm_init` for advanced coordination patterns, but it's not required. The Task tool is sufficient for most concurrent execution needs.
 
 ### ❌ WRONG (Multiple Messages):
 ```javascript
@@ -787,7 +889,7 @@ The system learns from every conversation and stores insights persistently, ensu
 
 ---
 
-Remember: **Claude Flow coordinates, Claude Code creates!**
+Remember: **You're in Claude Code. MCPs are powerful extensions - use them!**
 
 # important-instruction-reminders
 Do what has been asked; nothing more, nothing less.
