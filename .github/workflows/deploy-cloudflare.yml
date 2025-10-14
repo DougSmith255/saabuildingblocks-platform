@@ -23,7 +23,7 @@ jobs:
         working-directory: nextjs-frontend
         run: npm ci
 
-      - name: Build Static Export
+      - name: Build with Cloudflare Next.js Adapter
         working-directory: nextjs-frontend
         env:
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
@@ -31,48 +31,21 @@ jobs:
           NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.saabuildingblocks.com/wp-json/wp/v2
           NODE_ENV: production
         run: |
-          echo "📦 Building static export for Cloudflare Pages..."
-          rm -rf out
+          echo "📦 Building Next.js for Cloudflare Pages (full dynamic site)..."
 
-          echo "🔄 Swapping to static config..."
-          cp next.config.ts next.config.dynamic.backup
-          cp next.config.static.ts next.config.ts
-
-          echo "🗑️  Temporarily removing auth-protected and client-side routes..."
-          mkdir -p .static-build-temp
-          mv app/accept-invitation .static-build-temp/
-          mv app/agent-portal .static-build-temp/
-          mv app/master-controller/page.tsx .static-build-temp/ 2>/dev/null || true
-          mv app/master-controller/components .static-build-temp/ 2>/dev/null || true
-          mv app/sign-up .static-build-temp/
-          mv app/_auth .static-build-temp/
-          mv app/category .static-build-temp/
-          mv app/blog .static-build-temp/
-
-          echo "🏗️  Running Next.js build with static export..."
+          echo "🏗️  Running Next.js build with Cloudflare adapter..."
           npm run build
 
-          echo "♻️  Restoring dynamic routes..."
-          mv .static-build-temp/accept-invitation app/
-          mv .static-build-temp/agent-portal app/
-          mv .static-build-temp/page.tsx app/master-controller/ 2>/dev/null || true
-          mv .static-build-temp/components app/master-controller/ 2>/dev/null || true
-          mv .static-build-temp/sign-up app/
-          mv .static-build-temp/_auth app/
-          mv .static-build-temp/category app/
-          mv .static-build-temp/blog app/
-          rm -rf .static-build-temp
+          echo "⚡ Building Cloudflare Workers bundle..."
+          npx @cloudflare/next-on-pages
 
-          echo "♻️  Restoring dynamic config..."
-          mv next.config.dynamic.backup next.config.ts
-
-          echo "✅ Static export complete!"
+          echo "✅ Cloudflare build complete!"
           echo "📊 Generated files:"
-          ls -lh out/ | head -20
+          ls -lh .vercel/output/static | head -20
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=main
+          command: pages deploy nextjs-frontend/.vercel/output/static --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=main
