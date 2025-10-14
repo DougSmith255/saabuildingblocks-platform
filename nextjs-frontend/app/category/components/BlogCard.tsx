@@ -16,14 +16,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { CyberCardHolographic } from '@/components/saa';
+import { generateClamp } from '@/app/master-controller/lib/clampCalculator';
 import type { BlogCardProps } from '../types';
-
-/**
- * Generate CSS clamp() function
- */
-function generateClamp(config: { min: number; preferred: number; max: number; unit: string }): string {
-  return `clamp(${config.min}${config.unit}, ${config.preferred}${config.unit}, ${config.max}${config.unit})`;
-}
 
 /**
  * Format WordPress date to readable format

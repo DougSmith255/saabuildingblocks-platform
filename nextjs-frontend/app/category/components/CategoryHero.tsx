@@ -13,14 +13,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { generateClamp } from '@/app/master-controller/lib/clampCalculator';
 import type { CategoryHeroProps } from '../types';
-
-/**
- * Generate CSS clamp() function from ClampConfig
- */
-function generateClamp(config: { min: number; preferred: number; max: number; unit: string }): string {
-  return `clamp(${config.min}${config.unit}, ${config.preferred}${config.unit}, ${config.max}${config.unit})`;
-}
 
 /**
  * Framer Motion Variants
