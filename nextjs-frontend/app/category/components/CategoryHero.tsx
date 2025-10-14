@@ -48,10 +48,10 @@ const childVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: [0.22, 1, 0.36, 1] // Custom easing
+      ease: [0.22, 1, 0.36, 1] as any // Custom easing
     }
   }
-};
+} as any;
 
 export function CategoryHero({
   config,
