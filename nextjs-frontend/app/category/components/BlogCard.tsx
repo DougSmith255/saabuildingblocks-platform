@@ -80,7 +80,7 @@ const cardVariants = {
       ease: [0.22, 1, 0.36, 1] as any
     }
   }
-};
+} as any;
 
 const hoverVariants = {
   rest: {
@@ -93,7 +93,7 @@ const hoverVariants = {
       ease: 'easeOut'
     }
   }
-};
+} as any;
 
 export function BlogCard({
   post,
