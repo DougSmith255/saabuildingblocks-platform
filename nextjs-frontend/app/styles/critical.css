@@ -1,0 +1,112 @@
+/* Critical Above-the-Fold CSS
+ * This CSS is inlined in the document head for instant rendering
+ * Contains only essential styles needed for First Contentful Paint
+ */
+
+/* Typography Variables - Required for immediate text rendering */
+:root {
+  /* Font variables are set by Next.js localFont() on HTML element */
+  /* Do NOT redefine them here - it creates circular references */
+
+  /* Brand Colors */
+  --color-gold: #ffd700;
+  --color-green: #00ff88;
+  --color-text-primary: #e5e4dd;
+  --color-text-secondary: #dcdbd5;
+  --color-background-dark: rgb(12, 12, 12);
+}
+
+/* Base Layout - Prevents FOUC */
+html {
+  background: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
+  background-color: rgb(12, 12, 12);
+  color: var(--color-text-secondary);
+  font-family: var(--font-amulya), Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Critical Typography - H1 Hero Headlines */
+h1 {
+  font-family: var(--font-taskor), system-ui, sans-serif;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0;
+}
+
+/* H2 Section Titles */
+h2 {
+  font-family: var(--font-taskor), system-ui, sans-serif;
+  color: var(--color-text-primary);
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* Critical Layout Components */
+main {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+/* Container for centering content */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Hero Section - Above the fold */
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* Critical Button Styles - Prevents flash */
+button {
+  font-family: var(--font-taskor), system-ui, sans-serif;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+/* Link Styles */
+a {
+  color: var(--color-green);
+  text-decoration: none;
+}
+
+/* Prevent Flash of Invisible Text (FOIT) */
+.font-taskor {
+  font-family: var(--font-taskor), system-ui, -apple-system, sans-serif;
+}
+
+.font-amulya {
+  font-family: var(--font-amulya), Georgia, serif;
+}
+
+.font-synonym {
+  font-family: var(--font-synonym), 'Courier New', monospace;
+}
+
+/* Master Controller Variables - Injected by useLiveCSS */
+/* Placeholder for dynamic CSS variables */
+#master-controller-vars {
+  /* CSS variables injected here by Master Controller */
+}

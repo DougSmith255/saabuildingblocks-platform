@@ -1,0 +1,619 @@
+/*!
+Theme Name: GeneratePress Child
+Theme URI: https://saabuildingblocks.com
+Description: Optimized GeneratePress child theme with performance enhancements
+Author: Doug Smart
+Author URI: https://saabuildingblocks.com
+Template: generatepress
+Version: 1.0.0
+Text Domain: generatepress-child
+*/
+
+
+/* =Theme customization starts here
+------------------------------------------------------- */
+
+/* ===== GLASSMORPHISM BUTTON STYLES - Global ===== */
+.btn {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 46px;
+    margin: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    /* FIREFOX COMPATIBILITY: Ensure buttons are always visible */
+    opacity: 1 !important;
+    visibility: visible !important;
+    /* Performance optimization for Firefox */
+    transform: translateZ(0);
+    /* will-change: transform; - Removed to reduce memory budget usage */
+}
+
+/* CRITICAL: Don't override mobile menu button positioning */
+body.menu-open .header-container .btn {
+    position: fixed !important;
+    top: auto !important;
+    left: 50% !important;
+    bottom: 20px !important;
+    transform: translateX(-50%) !important;
+    z-index: 10050 !important;
+    width: auto !important;
+    height: 46px !important;
+    margin: 0 !important;
+    opacity: 0;
+    animation: fadeInButton 0.5s ease 0.3s forwards;
+}
+
+/* Ensure mobile button animation works */
+@keyframes fadeInButton {
+    to {
+        opacity: 1;
+    }
+}
+
+.btn a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* FIREFOX FALLBACK: Solid background first */
+    background: rgb(45, 45, 45);
+    /* FIREFOX COMPATIBILITY: Enhanced backdrop blur with fallback */
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    /* Fallback for browsers without backdrop-filter support */
+    background: rgba(45, 45, 45, 0.9);
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px 20px 4px 20px;
+    letter-spacing: var(--letter-spacing-wide);
+    text-decoration: none;
+    overflow: hidden;
+    color: var(--color-text-primary);
+    font-family: 'Amulya', sans-serif;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-md); /* Responsive button text */
+    line-height: var(--line-height-normal);
+    height: 46px;
+    z-index: 1;
+    transition: 0.5s;
+    animation: textGlow 3s ease-in-out infinite;
+    /* FIREFOX PERFORMANCE: Force hardware acceleration */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    /* FIREFOX VISIBILITY: Ensure always visible */
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+@keyframes lightPulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    }
+    50% {
+        opacity: 0.4; /* More dramatic opacity drop */
+        box-shadow: 0 0 12px #ffd700, 0 0 25px #ffd700, 0 0 45px #ffd700, 0 0 85px #ffd700; /* Stronger glow */
+    }
+}
+
+@keyframes textGlow {
+    0% {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    33% {
+        text-shadow: 0 0 10px rgba(255, 237, 78, 0.5);
+    }
+    66% {
+        text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+    }
+    100% {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+}
+
+.btn a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+    transform: skewX(45deg) translate(0);
+    filter: blur(0px);
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+    bottom: -5px;
+    width: 30px;
+    height: 10px;
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    border-radius: 6px;
+    transition: width 0.5s; /* Only animate width, not color */
+    animation: lightPulse 2s ease-in-out infinite;
+}
+
+.btn:hover::before {
+    width: 80%;
+    background: #ffd700 !important; /* Keep bright gold on hover */
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700 !important;
+}
+
+.btn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+    top: -5px;
+    width: 30px;
+    height: 10px;
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    border-radius: 6px;
+    transition: width 0.5s; /* Only animate width, not color */
+    animation: lightPulse 2s ease-in-out infinite;
+}
+
+.btn:hover::after {
+    width: 80%;
+    background: #ffd700 !important; /* Keep bright gold on hover */
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700 !important;
+}
+
+/* Active/click state - Green lighting (brief moment) */
+.btn:active::before {
+    background: #00ff88 !important; /* Green on click */
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+.btn:active::after {
+    background: #00ff88 !important; /* Green on click */
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+/* Persistent clicked state - Green lighting (stays until page change) */
+.btn.clicked::before {
+    background: #00ff88 !important; /* Green stays on */
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+.btn.clicked::after {
+    background: #00ff88 !important; /* Green stays on */
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+/* ===== CTA BUTTON 3-SECOND GREEN CLICK STATE ===== */
+/* Apply green clicked state to CTA buttons */
+.cta-button.clicked::before {
+    background: #00ff88 !important; /* Green on click */
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+.cta-button.clicked::after {
+    background: #00ff88 !important; /* Green on click */
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+/* Header-specific button sizing and immediate display */
+.header-container .btn,
+.header-btn {
+    height: 40px;
+    opacity: 1 !important; /* Prevent any fade-in delays */
+}
+
+.header-container .btn a,
+.header-btn a {
+    height: 40px;
+    opacity: 1 !important; /* Ensure immediate visibility */
+    /* Force glassmorphism styles on load */
+    background: rgb(45, 45, 45) !important;
+    backdrop-filter: blur(15px) !important;
+    animation: textGlow 3s ease-in-out infinite !important;
+    /* Increased header button text size by 5px */
+    font-size: clamp(23px, 1.2vw, 27px) !important;
+}
+
+/* ===== HEADER CTA BUTTON STYLES ===== */
+/* Header CTA button now inherits styling from base component */
+/* Only specific positioning adjustments needed for header context */
+
+/* ===== MOBILE MENU CTA BUTTON STYLES ===== */
+.mobile-menu-button-container .cta-button {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: 46px;
+    margin: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-menu-button-container .cta-button a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb(45, 45, 45);
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px 20px 6px 20px;
+    letter-spacing: var(--letter-spacing-wide);
+    text-decoration: none;
+    overflow: hidden;
+    color: var(--color-text-primary);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: var(--size-button);
+    height: 46px;
+    z-index: 1;
+    transition: 0.5s;
+    backdrop-filter: blur(15px);
+    animation: textGlow 3s ease-in-out infinite;
+    text-transform: uppercase;
+}
+
+.mobile-menu-button-container .cta-button a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+    transform: skewX(45deg) translate(0);
+    filter: blur(0px);
+}
+
+.mobile-menu-button-container .cta-button::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+    bottom: -5px;
+    width: 30px;
+    height: 10px;
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    border-radius: 6px;
+    transition: 0.5s;
+    transition-delay: 0.5;
+    animation: lightPulse 3s ease-in-out infinite;
+}
+
+.mobile-menu-button-container .cta-button:hover::before {
+    width: 80%;
+}
+
+.mobile-menu-button-container .cta-button::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translatex(-50%);
+    top: -5px;
+    width: 30px;
+    height: 10px;
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    border-radius: 6px;
+    transition: 0.5s;
+    transition-delay: 0.5;
+    animation: lightPulse 3s ease-in-out infinite;
+}
+
+.mobile-menu-button-container .cta-button:hover::after {
+    width: 80%;
+}
+
+/* ===== FIREFOX CROSS-BROWSER COMPATIBILITY FIXES ===== */
+
+/* Feature detection for backdrop-filter support */
+@supports (backdrop-filter: blur(15px)) {
+    .btn a, .glassmorphism-btn__link {
+        background: rgba(45, 45, 45, 0.7);
+        backdrop-filter: blur(15px);
+    }
+}
+
+/* Fallback for browsers without backdrop-filter */
+@supports not (backdrop-filter: blur(15px)) {
+    .btn a, .glassmorphism-btn__link {
+        background: rgba(45, 45, 45, 0.95) !important;
+        /* Enhanced box-shadow for depth without blur */
+        box-shadow:
+            0 15px 25px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15),
+            inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Firefox-specific fixes using -moz- vendor prefix detection */
+@-moz-document url-prefix() {
+    .btn a, .glassmorphism-btn__link {
+        /* More opaque background for Firefox */
+        background: rgba(45, 45, 45, 0.92) !important;
+        /* Ensure visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
+        /* Force hardware acceleration */
+        transform: translateZ(0);
+        /* will-change: transform, opacity; - Removed to reduce memory budget usage */
+    }
+
+    /* Enhanced button visibility in Firefox */
+    .btn, .glassmorphism-btn {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: inline-flex !important;
+    }
+}
+
+/* CRITICAL: Firefox button invisibility emergency fix */
+.btn[style*="display: none"],
+.btn[style*="visibility: hidden"],
+.btn[style*="opacity: 0"] {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.glassmorphism-btn[style*="display: none"],
+.glassmorphism-btn[style*="visibility: hidden"],
+.glassmorphism-btn[style*="opacity: 0"] {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Footer spacing - ensure content never gets too close to footer */
+.site-footer,
+#colophon,
+footer,
+.footer-widgets,
+.site-info {
+    padding-top: 40px !important;
+}
+
+/* Alternative approach - add margin to main content to push footer down */
+.site-main,
+.main,
+#main,
+#content,
+.content-area {
+    margin-bottom: 40px !important;
+}
+
+/* Additional footer spacing for mobile */
+@media (max-width: 768px) {
+    .site-footer,
+    #colophon,
+    footer,
+    .footer-widgets,
+    .site-info {
+        padding-top: 50px !important;
+        margin-top: 30px !important;
+    }
+    
+    .site-main,
+    .main,
+    #main,
+    #content,
+    .content-area {
+        margin-bottom: 50px !important;
+        padding-bottom: 30px !important;
+    }
+}
+
+/* Holographic Data Core Header Effect - Using hover state as default */
+.header:not(.holo) {
+    position: relative;
+    transition: all 0.8s ease;
+    background:
+        linear-gradient(45deg, rgba(10, 10, 10, 0.9), rgba(26, 26, 26, 0.9)),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 215, 0, 0.02) 2px,
+            rgba(255, 215, 0, 0.02) 4px
+        ) !important;
+    overflow: visible !important; /* Allow dropdowns to extend beyond header */
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.4),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+    /* Bottom border only, no top/left/right borders */
+    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    /* Bottom corners rounded only */
+    border-radius: 0 0 12px 12px !important;
+    /* Apply holographic card hover state as default */
+    filter: brightness(1.1) contrast(1.1) saturate(1.2);
+    /* Subtle blur effect for content behind header */
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+/* ===== STARFIELD CANVAS POSITIONING ===== */
+#starfield {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: -1 !important; /* Behind everything */
+    pointer-events: none !important; /* Don't block clicks */
+}
+
+/* ===== HEADER TRANSPARENCY FIX - OVERRIDE JAVASCRIPT INLINE STYLES ===== */
+.header.glass-bg:not(.holo),
+.header:not(.glass-bg):not(.holo) {
+    background:
+        linear-gradient(45deg, rgba(10, 10, 10, 0.9), rgba(26, 26, 26, 0.9)),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 215, 0, 0.02) 2px,
+            rgba(255, 215, 0, 0.02) 4px
+        ) !important;
+}
+
+
+/* Enhanced shimmer effect for holographic headers */
+.header.glass-bg.holo::before {
+    /* Dramatically boost shimmer opacity for more visible effect */
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.50) 25%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0.40) 75%,
+        rgba(255, 255, 255, 0.25) 100%
+    ) !important;
+    opacity: 1 !important; /* Max shimmer visibility */
+}
+
+/* REMOVED: Moving this rule to load AFTER original .header::after to override solid black */
+
+/* Glassy Shimmer Effect - Using holographic card hover state intensity */
+.header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.50) 25%,
+        rgba(255, 255, 255, 0.75) 50%,
+        rgba(255, 255, 255, 0.40) 75%,
+        rgba(255, 255, 255, 0.25) 100%
+    );
+    background-size: 400% 400%;
+    animation: header-glassy-shimmer 8s ease-in-out infinite;
+    opacity: 0.8; /* Holographic card hover state intensity */
+    transition: opacity 0.6s ease;
+    border-radius: 0 0 12px 12px;
+    mix-blend-mode: overlay;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Texture Layer - Simple background like holographic card */
+.header::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px
+        ),
+        linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    border-radius: 0 0 12px 12px;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* CRITICAL FIX: Override solid black texture layer for transparent holo headers */
+.header.glass-bg.holo::after {
+    /* Replace solid black colors with transparent rgba to allow transparency */
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px
+        ),
+        linear-gradient(45deg, rgba(10, 10, 10, 0.1), rgba(26, 26, 26, 0.1)) !important;
+}
+
+/* No hover effects for header - using holographic card hover state as default */
+
+/* Glassy Shimmer Animation */
+@keyframes header-glassy-shimmer {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: brightness(1);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: brightness(1.5);
+    }
+}
+
+
+/* Optimized Progress Bar - GPU Accelerated */
+.progress-bar-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 3px !important;
+    z-index: 10050 !important;
+    background-color: transparent !important;
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+}
+
+.progress-bar {
+    height: 100% !important;
+    background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700) !important;
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.8), 0 0 8px rgba(255, 215, 0, 0.3) !important;
+    border-radius: 0 2px 2px 0 !important;
+    width: 20%; /* Start visible, JS can override without !important */
+    /* will-change: width; - Removed, set dynamically via JS when needed */
+    transition: none !important;
+}
+
+/* Performance Optimization */
+.header,
+.header::before,
+.header::after {
+    /* will-change: transform, filter, opacity; - Removed permanent declaration */
+    /* will-change will be set dynamically during scroll animations */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* ===== MOBILE MENU HEIGHT INCREASE ===== */
+/* Increase mobile toggle button height by 5px while keeping larger icon for better fill */
+.mobile-toggle {
+    height: calc(var(--logo-h-desktop) + 5px) !important;
+}
+
+/* Keep the SVG icon at increased size to better fill the container */
+.mobile-toggle svg {
+    height: calc(3.375em + 0.3em) !important; /* Larger icon in smaller container for better fill */
+}
+
+/* Ensure the mobile toggle height adjusts properly across all responsive breakpoints */
+@media (max-width: 75rem) { /* 1200px - tablet breakpoint */
+    .mobile-toggle {
+        height: calc(var(--logo-h-tablet) + 5px) !important;
+    }
+}
+
+@media (max-width: 50rem) { /* 800px - mobile breakpoint */
+    .mobile-toggle {
+        height: calc(var(--logo-h-mobile) + 5px) !important;
+    }
+}

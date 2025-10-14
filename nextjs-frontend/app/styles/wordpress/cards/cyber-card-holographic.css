@@ -1,0 +1,273 @@
+/**
+ * SAA Cyber Card - Holographic Glitch Version
+ * Features holographic effects, digital glitches, matrix rain, and chromatic aberration
+ */
+
+.saa-cyber-holo-container {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    transition: 200ms;
+    will-change: filter;
+    filter: contrast(1.1) saturate(1.2);
+}
+
+.saa-cyber-holo-card {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--radius-lg);
+    transition: 700ms;
+    will-change: transform, filter;
+    background:
+        linear-gradient(45deg, #0a0a0a, #1a1a1a),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 215, 0, 0.02) 2px,
+            rgba(255, 215, 0, 0.02) 4px
+        );
+    overflow: hidden;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.4),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Greyscale Shimmer Effect */
+.saa-cyber-holo-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.12) 25%,
+        rgba(255, 255, 255, 0.18) 50%,
+        rgba(255, 255, 255, 0.10) 75%,
+        rgba(255, 255, 255, 0.04) 100%
+    );
+    background-size: 400% 400%;
+    animation: saa-cyber-holographic 6s ease-in-out infinite;
+    opacity: 0.4;
+    transition: opacity 0.6s ease;
+    will-change: opacity, filter;
+    border-radius: var(--radius-lg);
+    mix-blend-mode: overlay;
+}
+
+/* Chromatic Aberration Effect */
+.saa-cyber-holo-card::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
+    border-radius: var(--radius-lg);
+    filter:
+        drop-shadow(2px 0 0 rgba(255, 215, 0, 0.1))
+        drop-shadow(-2px 0 0 rgba(255, 255, 255, 0.1));
+    animation: saa-cyber-chromatic 4s ease-in-out infinite;
+    will-change: filter;
+    z-index: -1;
+}
+
+.saa-cyber-holo-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: var(--space-6);
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+/* Matrix Rain Effect */
+.saa-cyber-matrix {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    opacity: 0.6;
+}
+
+.saa-cyber-matrix::before,
+.saa-cyber-matrix::after {
+    content: '01001010011001010110111001100101010000110110111101100100011001010';
+    position: absolute;
+    color: rgba(255, 255, 255, 0.3);
+    font-family: 'Courier New', monospace;
+    font-size: 8px;
+    line-height: 10px;
+    white-space: pre-wrap;
+    word-break: break-all;
+    animation: saa-cyber-matrix-rain 8s linear infinite;
+    will-change: transform, opacity;
+    width: 20px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.saa-cyber-matrix::before {
+    left: 20%;
+    animation-delay: -2s;
+}
+
+.saa-cyber-matrix::after {
+    right: 25%;
+    animation-delay: -6s;
+    color: rgba(255, 215, 0, 0.2);
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.3);
+}
+
+/* Glitch Overlay */
+.saa-cyber-glitch {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: var(--radius-lg);
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.03) 2px,
+        rgba(255, 255, 255, 0.03) 4px
+    );
+    animation: saa-cyber-glitch-effect 3s steps(1) infinite;
+    will-change: opacity, transform;
+}
+
+
+/* Hover Tracking Grid */
+.saa-cyber-holo-canvas {
+    perspective: 1000px;
+    inset: 0;
+    z-index: 200;
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 0;
+    pointer-events: none;
+}
+
+.saa-cyber-holo-tracker {
+    position: relative;
+    z-index: 200;
+    cursor: pointer;
+    background: transparent;
+    pointer-events: auto;
+}
+
+/* Grid-Based Hover Effects */
+.saa-cyber-holo-tracker:hover ~ .saa-cyber-holo-card::before {
+    opacity: 0.8;
+}
+
+.saa-cyber-holo-tracker:hover ~ .saa-cyber-holo-card {
+    transform: scale(1.02);
+    filter: brightness(1.1) contrast(1.1);
+}
+
+.saa-cyber-holo-tracker:hover ~ .saa-cyber-holo-card .saa-cyber-matrix::after {
+    color: rgba(255, 215, 0, 1);
+    text-shadow:
+        0 0 20px rgba(255, 215, 0, 1),
+        0 0 35px rgba(255, 215, 0, 0.6),
+        0 0 50px rgba(255, 215, 0, 0.3);
+}
+
+.saa-cyber-holo-tracker:hover ~ .saa-cyber-holo-card .saa-cyber-glitch {
+    animation-duration: 0.5s;
+}
+
+/* Animations */
+@keyframes saa-cyber-holographic {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: brightness(1);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: brightness(1.8);
+    }
+}
+
+@keyframes saa-cyber-chromatic {
+    0%, 100% {
+        filter:
+            drop-shadow(2px 0 0 rgba(255, 215, 0, 0.1))
+            drop-shadow(-2px 0 0 rgba(255, 255, 255, 0.1));
+    }
+    25% {
+        filter:
+            drop-shadow(3px 0 0 rgba(255, 215, 0, 0.2))
+            drop-shadow(-3px 0 0 rgba(255, 255, 255, 0.2));
+    }
+    75% {
+        filter:
+            drop-shadow(-2px 0 0 rgba(255, 215, 0, 0.15))
+            drop-shadow(2px 0 0 rgba(255, 255, 255, 0.15));
+    }
+}
+
+.saa-cyber-holo-tracker:hover ~ .saa-cyber-holo-card::after {
+    filter:
+        drop-shadow(2px 0 0 rgba(255, 215, 0, 0.9))
+        drop-shadow(-2px 0 0 rgba(255, 255, 255, 0.1))
+        drop-shadow(2px 0 5px rgba(255, 215, 0, 0.6))
+        drop-shadow(-2px 0 5px rgba(255, 215, 0, 0.6));
+}
+
+@keyframes saa-cyber-matrix-rain {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(400px);
+        opacity: 0;
+    }
+}
+
+@keyframes saa-cyber-glitch-effect {
+    0%, 90%, 100% {
+        transform: translateX(0);
+        filter: hue-rotate(0deg);
+    }
+    10% {
+        transform: translateX(-2px);
+        filter: hue-rotate(90deg);
+    }
+    20% {
+        transform: translateX(2px);
+        filter: hue-rotate(180deg);
+    }
+    30% {
+        transform: translateX(-1px);
+        filter: hue-rotate(270deg);
+    }
+}
+
+
+/* Performance Optimization */
+.saa-cyber-holo-card,
+.saa-cyber-holo-card::before,
+.saa-cyber-holo-card::after,
+.saa-cyber-matrix::before,
+.saa-cyber-matrix::after,
+.saa-cyber-glitch,
+.saa-cyber-data-streams span {
+    /* Removed permanent will-change to fix memory budget issue */
+    /* will-change will be added dynamically via JavaScript during animations */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
