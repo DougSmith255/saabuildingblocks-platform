@@ -31,13 +31,21 @@ jobs:
           NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.saabuildingblocks.com/wp-json/wp/v2
           NODE_ENV: production
         run: |
-          echo "Building static export for Cloudflare Pages..."
+          echo "📦 Building static export for Cloudflare Pages..."
           rm -rf out
-          cp next.config.static.ts next.config.ts.backup
-          mv next.config.static.ts next.config.ts
+
+          echo "🔄 Swapping to static config..."
+          cp next.config.ts next.config.dynamic.backup
+          cp next.config.static.ts next.config.ts
+
+          echo "🏗️  Running Next.js build with static export..."
           npm run build
-          mv next.config.ts.backup next.config.ts || true
-          echo "✅ Static export complete. Output in /out directory"
+
+          echo "♻️  Restoring dynamic config..."
+          mv next.config.dynamic.backup next.config.ts
+
+          echo "✅ Static export complete!"
+          echo "📊 Generated files:"
           ls -lh out/ | head -20
 
       - name: Deploy to Cloudflare Pages
