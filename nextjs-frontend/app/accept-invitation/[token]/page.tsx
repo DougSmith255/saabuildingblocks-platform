@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { notFound } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import AcceptInvitationForm from '@/components/invitations/AcceptInvitationForm';
 import InvitationExpired from '@/components/invitations/InvitationExpired';
