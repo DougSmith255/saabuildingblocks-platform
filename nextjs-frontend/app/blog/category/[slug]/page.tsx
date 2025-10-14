@@ -77,7 +77,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               title: post.title,
               excerpt: post.excerpt,
               content: post.content || '',
-              featuredImage: post.image,
+              featuredImage: post.featuredImage,
               author: (typeof post.author === 'object' && post.author?.name
                 ? post.author.name
                 : (post.author || 'Unknown')) as string,
