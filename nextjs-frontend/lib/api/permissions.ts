@@ -18,6 +18,7 @@ export interface PermissionCategory {
   'Content': Permission[];
   'System': Permission[];
   'Profile': Permission[];
+  [key: string]: Permission[]; // Index signature for compatibility with Record<string, Permission[]>
 }
 
 /**
