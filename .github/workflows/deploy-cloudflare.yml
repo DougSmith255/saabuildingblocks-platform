@@ -41,7 +41,8 @@ jobs:
           echo "🗑️  Temporarily removing auth-protected routes..."
           mv app/accept-invitation app/.accept-invitation.backup
           mv app/agent-portal app/.agent-portal.backup
-          mv app/master-controller app/.master-controller.backup
+          mv app/master-controller/page.tsx app/master-controller/.page.tsx.backup 2>/dev/null || true
+          mv app/master-controller/components app/master-controller/.components.backup 2>/dev/null || true
           mv app/sign-up app/.sign-up.backup
           mv app/_auth app/._auth.backup
 
@@ -51,7 +52,8 @@ jobs:
           echo "♻️  Restoring dynamic routes..."
           mv app/.accept-invitation.backup app/accept-invitation
           mv app/.agent-portal.backup app/agent-portal
-          mv app/.master-controller.backup app/master-controller
+          mv app/master-controller/.page.tsx.backup app/master-controller/page.tsx 2>/dev/null || true
+          mv app/master-controller/.components.backup app/master-controller/components 2>/dev/null || true
           mv app/.sign-up.backup app/sign-up
           mv app/._auth.backup app/_auth
 
