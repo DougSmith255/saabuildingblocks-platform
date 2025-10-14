@@ -37,6 +37,15 @@ interface CategoryPageProps {
 export const dynamicParams = false;
 
 /**
+ * Generate Static Params for Build-Time Rendering
+ * Returns all valid category slugs for pre-rendering
+ */
+export async function generateStaticParams() {
+  const categorySlugs = getAllCategorySlugs();
+  return categorySlugs.map((slug) => ({ slug }));
+}
+
+/**
  * Generate Metadata (SEO)
  * Dynamic metadata for each category page
  */
