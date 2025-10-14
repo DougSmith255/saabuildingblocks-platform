@@ -128,7 +128,7 @@ export default function AgentPortalDashboard() {
           <div>
             <div className="text-sm text-[#dcdbd5] mb-1">Last Login</div>
             <div className="text-lg font-semibold text-[#e5e4dd]">
-              {user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'N/A'}
+              {user.last_login_at ? new Date(user.last_login_at).toLocaleString() : 'N/A'}
             </div>
           </div>
         </div>
