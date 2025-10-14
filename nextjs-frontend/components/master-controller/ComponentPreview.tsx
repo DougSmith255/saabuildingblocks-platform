@@ -39,15 +39,16 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
         return lazy(() => import('@/components/saa/buttons/SecondaryButton').then(m => ({ default: () => <m.SecondaryButton>Learn More</m.SecondaryButton> })));
 
       // Cards
-      case 'stacked-animation-cards':
-        return lazy(() => import('@/components/saa/cards/CyberCardStackedAnimation').then(m => ({
-          default: () => (
-            <m.CyberCardStackedAnimation className="w-full max-w-md">
-              <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Stacked Card</h3>
-              <p className="text-[#dcdbd5]">Hover to see the stacked animation effect</p>
-            </m.CyberCardStackedAnimation>
-          )
-        })));
+      // TODO: Re-enable after CyberCardStackedAnimation is created
+      // case 'stacked-animation-cards':
+      //   return lazy(() => import('@/components/saa/cards/CyberCardStackedAnimation').then(m => ({
+      //     default: () => (
+      //       <m.CyberCardStackedAnimation className="w-full max-w-md">
+      //         <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Stacked Card</h3>
+      //         <p className="text-[#dcdbd5]">Hover to see the stacked animation effect</p>
+      //       </m.CyberCardStackedAnimation>
+      //     )
+      //   })));
       case 'cyber-card-prismatic-glass':
         return lazy(() => import('@/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
           default: () => (
@@ -75,62 +76,66 @@ export function ComponentPreview({ component }: ComponentPreviewProps) {
             </m.CyberCardIndustrialMetal>
           )
         })));
-      case 'cyber-card-neural-network':
-        return lazy(() => import('@/components/saa/cards/CyberCardNeuralNetwork').then(m => ({
-          default: () => (
-            <m.CyberCardNeuralNetwork className="w-full max-w-md">
-              <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Neural Network</h3>
-              <p className="text-[#dcdbd5]">Neural network visualization</p>
-            </m.CyberCardNeuralNetwork>
-          )
-        })));
-      case 'strategic-trust-builder':
-        return lazy(() => import('@/components/saa/cards/StrategicTrustBuilder').then(m => ({
-          default: () => (
-            <m.StrategicTrustBuilder className="w-full max-w-md">
-              <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Strategic Trust</h3>
-              <p className="text-[#dcdbd5]">Trust-building design pattern</p>
-            </m.StrategicTrustBuilder>
-          )
-        })));
+      // TODO: Re-enable after CyberCardNeuralNetwork is created
+      // case 'cyber-card-neural-network':
+      //   return lazy(() => import('@/components/saa/cards/CyberCardNeuralNetwork').then(m => ({
+      //     default: () => (
+      //       <m.CyberCardNeuralNetwork className="w-full max-w-md">
+      //         <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Neural Network</h3>
+      //         <p className="text-[#dcdbd5]">Neural network visualization</p>
+      //       </m.CyberCardNeuralNetwork>
+      //     )
+      //   })));
+      // TODO: Re-enable after StrategicTrustBuilder is created
+      // case 'strategic-trust-builder':
+      //   return lazy(() => import('@/components/saa/cards/StrategicTrustBuilder').then(m => ({
+      //     default: () => (
+      //       <m.StrategicTrustBuilder className="w-full max-w-md">
+      //         <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Strategic Trust</h3>
+      //         <p className="text-[#dcdbd5]">Trust-building design pattern</p>
+      //       </m.StrategicTrustBuilder>
+      //     )
+      //   })));
 
       // Navigation & Gallery
-      case 'scrollport':
-        return lazy(() => import('@/components/saa/navigation/Scrollport').then(m => ({
-          default: () => (
-            <m.Scrollport
-              items={[
-                { id: 'section1', label: 'Section 1', content: <div className="p-8"><h3 className="text-2xl text-[#ffd700]">Section 1</h3></div> },
-                { id: 'section2', label: 'Section 2', content: <div className="p-8"><h3 className="text-2xl text-[#ffd700]">Section 2</h3></div> },
-                { id: 'section3', label: 'Section 3', content: <div className="p-8"><h3 className="text-2xl text-[#ffd700]">Section 3</h3></div> }
-              ]}
-            />
-          )
-        })));
-      case 'scroll-gallery':
-        return lazy(() => import('@/components/saa/gallery/ScrollGallery').then(m => ({
-          default: () => (
-            <m.ScrollGallery
-              items={[
-                { id: '1', title: 'Item 1', content: <div className="h-64 bg-gradient-to-br from-[#ffd700]/20 to-[#00ff88]/20 rounded-lg flex items-center justify-center"><span className="text-2xl text-[#ffd700]">Item 1</span></div> },
-                { id: '2', title: 'Item 2', content: <div className="h-64 bg-gradient-to-br from-[#00ff88]/20 to-[#ffd700]/20 rounded-lg flex items-center justify-center"><span className="text-2xl text-[#00ff88]">Item 2</span></div> },
-                { id: '3', title: 'Item 3', content: <div className="h-64 bg-gradient-to-br from-[#ffd700]/20 to-[#00ff88]/20 rounded-lg flex items-center justify-center"><span className="text-2xl text-[#ffd700]">Item 3</span></div> }
-              ]}
-            />
-          )
-        })));
+      // TODO: Re-enable after Scrollport and ScrollGallery are created
+      // case 'scrollport':
+      //   return lazy(() => import('@/components/saa/navigation/Scrollport').then(m => ({
+      //     default: () => (
+      //       <m.Scrollport
+      //         items={[
+      //           { id: 'section1', label: 'Section 1', content: <div className="p-8"><h3 className="text-2xl text-[#ffd700]">Section 1</h3></div> },
+      //           { id: 'section2', label: 'Section 2', content: <div className="p-8"><h3 className="text-2xl text-[#ffd700]">Section 2</h3></div> },
+      //           { id: 'section3', label: 'Section 3', content: <div className="p-8"><h3 className="text-2xl text-[#ffd700]">Section 3</h3></div> }
+      //         ]}
+      //       />
+      //     )
+      //   })));
+      // case 'scroll-gallery':
+      //   return lazy(() => import('@/components/saa/gallery/ScrollGallery').then(m => ({
+      //     default: () => (
+      //       <m.ScrollGallery
+      //         items={[
+      //           { id: '1', title: 'Item 1', content: <div className="h-64 bg-gradient-to-br from-[#ffd700]/20 to-[#00ff88]/20 rounded-lg flex items-center justify-center"><span className="text-2xl text-[#ffd700]">Item 1</span></div> },
+      //           { id: '2', title: 'Item 2', content: <div className="h-64 bg-gradient-to-br from-[#00ff88]/20 to-[#ffd700]/20 rounded-lg flex items-center justify-center"><span className="text-2xl text-[#00ff88]">Item 2</span></div> },
+      //           { id: '3', title: 'Item 3', content: <div className="h-64 bg-gradient-to-br from-[#ffd700]/20 to-[#00ff88]/20 rounded-lg flex items-center justify-center"><span className="text-2xl text-[#ffd700]">Item 3</span></div> }
+      //         ]}
+      //       />
+      //     )
+      //   })));
 
       // Effects
-      case 'text-scramble':
-        return lazy(() => import('@/components/saa/text/TextScramble').then(m => ({
-          default: () => (
-            <div className="flex items-center justify-center h-full">
-              <m.TextScramble text="SAA Building Blocks">
-                SAA Building Blocks
-              </m.TextScramble>
-            </div>
-          )
-        })));
+      // TODO: Re-enable after TextScramble is created
+      // case 'text-scramble':
+      //   return lazy(() => import('@/components/saa/text/TextScramble').then(m => ({
+      //     default: () => (
+      //       <div className="flex items-center justify-center h-full">
+      //         <m.TextScramble text="SAA Building Blocks">
+      //           SAA Building Blocks
+      //         </m.TextScramble>
+      //       </div>
+      //     )
+      //   })));
 
       // Interactive
       case 'icon-library':

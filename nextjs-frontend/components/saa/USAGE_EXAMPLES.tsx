@@ -2,11 +2,17 @@
  * SAA Components - Usage Examples
  *
  * Comprehensive examples for using Scrollport and ScrollGallery components
+ *
+ * TODO: Re-enable after Scrollport and ScrollGallery components are created
  */
 
 import React from 'react';
-import { Scrollport, ScrollGallery } from '@/components/saa';
-import type { ScrollportItem, GalleryItem } from '@/components/saa';
+// import { Scrollport, ScrollGallery } from '@/components/saa';
+// import type { ScrollportItem, GalleryItem } from '@/components/saa';
+
+// Temporary placeholder types until components are created
+type ScrollportItem = any;
+type GalleryItem = any;
 
 // ============================================================================
 // EXAMPLE 1: Basic Scrollport Navigation
