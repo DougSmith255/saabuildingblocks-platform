@@ -31,12 +31,15 @@ const ALLOWED_CATEGORIES = [
 
 /**
  * Creates Basic Auth header for WordPress API
- * @returns Base64 encoded authorization header
- * @throws Error if credentials are not configured
+ * @returns Base64 encoded authorization header or undefined if credentials not configured
+ *
+ * Note: WordPress API is publicly accessible for reading published posts.
+ * Authentication is only needed for accessing drafts or private content.
  */
-function createAuthHeader(): string {
+function createAuthHeader(): string | undefined {
   if (!WORDPRESS_USER || !WORDPRESS_APP_PASSWORD) {
-    throw new Error('WordPress credentials not configured. Set WORDPRESS_USER and WORDPRESS_APP_PASSWORD in .env.local');
+    console.warn('⚠️ WordPress credentials not configured. Using public API access (published posts only).');
+    return undefined;
   }
   const credentials = `${WORDPRESS_USER}:${WORDPRESS_APP_PASSWORD}`;
   return 'Basic ' + Buffer.from(credentials).toString('base64');
@@ -85,13 +88,18 @@ export const fetchAllPosts = cache(async (): Promise<BlogPost[]> => {
   try {
     const authHeader = createAuthHeader();
 
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
     const response = await fetch(
       `${WORDPRESS_URL}/wp-json/wp/v2/posts?_embed&per_page=100&status=publish`,
       {
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json',
-        },
+        headers,
         next: {
           revalidate: process.env.NODE_ENV === 'development' ? 300 : false
         },
@@ -131,13 +139,18 @@ export const fetchPostBySlug = cache(async (slug: string): Promise<BlogPost | nu
   try {
     const authHeader = createAuthHeader();
 
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
     const response = await fetch(
       `${WORDPRESS_URL}/wp-json/wp/v2/posts?slug=${slug}&_embed`,
       {
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json',
-        },
+        headers,
         next: {
           revalidate: process.env.NODE_ENV === 'development' ? 300 : false
         },
@@ -311,13 +324,18 @@ export const searchPosts = cache(async (
       params.set('order', order);
     }
 
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
     const response = await fetch(
       `${WORDPRESS_URL}/wp-json/wp/v2/posts?${params}`,
       {
-        headers: {
-          'Authorization': authHeader,
-          'Content-Type': 'application/json',
-        },
+        headers,
         next: {
           revalidate: 60 // Cache search results for 1 minute
         },
