@@ -176,8 +176,6 @@ export default function TrainingDevelopment({ category, posts, settings }: Templ
 
                   <CTAButton
                     href={`/blog/${post.slug}`}
-                    variant="secondary"
-                    size="small"
                     className="w-full"
                   >
                     Read Article
@@ -205,7 +203,6 @@ export default function TrainingDevelopment({ category, posts, settings }: Templ
             description="Join eXp Realty and gain access to industry-leading training programs that will accelerate your career and maximize your earning potential."
             ctaText="Get Started Today"
             ctaLink="/contact"
-            variant="gradient"
           />
         </div>
       </TemplateSection>
