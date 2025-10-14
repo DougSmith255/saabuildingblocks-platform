@@ -256,7 +256,10 @@ export default async function BlogPostPage({
         )}
 
         {/* WordPress Content - Protocol Compliant */}
-        <BlogContent content={post.content} />
+        <div
+          className="prose prose-invert max-w-none mb-12 font-[var(--font-amulya)]"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
 
         {/* Share Buttons */}
         <ShareButtons
