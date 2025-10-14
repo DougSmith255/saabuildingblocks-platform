@@ -21,12 +21,6 @@ export function CategoryBackButton({ href, label }: CategoryBackButtonProps) {
   return (
     <CTAButton
       href={href}
-      variant="secondary"
-      style={{
-        fontSize: 'clamp(14px, 1vw, 17px)',
-        padding: '12px 24px',
-        borderRadius: '6px',
-      }}
     >
       {label}
     </CTAButton>
