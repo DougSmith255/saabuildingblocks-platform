@@ -6,7 +6,7 @@ import type { CategoryInfo } from '../types/filters';
 import { FilterBar } from './FilterBar';
 import { FilterablePostList } from './FilterablePostList';
 
-interface BlogContentProps {
+export interface BlogContentProps {
   posts: BlogPost[];
   categories: CategoryInfo[];
 }
