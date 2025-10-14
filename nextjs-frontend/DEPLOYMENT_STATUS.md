@@ -13,3 +13,12 @@ Last updated: 2025-10-14 05:55:51 UTC
 - WordPress API: Public access confirmed
 
 See TECHNICAL_DEBT.md for Phase 2 cleanup plan.
+# Build 20251014-060136
+
+Last build trigger with WordPress secrets configured in workflow.
+
+Previous issue: Workflow had secrets but didn't pass them as env vars.
+Fix: Added env section to Build step in deploy-cloudflare.yml
+
+This build should successfully fetch WordPress posts during static generation.
+
