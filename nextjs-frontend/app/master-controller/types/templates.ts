@@ -98,7 +98,7 @@ export interface TemplateSamplePost {
   excerpt: string;
 
   /** Featured image URL */
-  image: string;
+  featuredImage: string;
 
   /** Publication date */
   date: string;
@@ -178,7 +178,7 @@ export const SAMPLE_BLOG_POST: TemplateSamplePost = {
   id: 1,
   title: 'Sample Blog Post Title',
   excerpt: 'This is a sample excerpt demonstrating how blog post cards will look in your chosen template. The actual content will come from your WordPress posts.',
-  image: 'https://via.placeholder.com/800x400',
+  featuredImage: 'https://via.placeholder.com/800x400',
   date: new Date().toISOString(),
   author: 'John Doe',
   category: 'Technology'
