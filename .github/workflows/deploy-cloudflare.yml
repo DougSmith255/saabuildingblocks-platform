@@ -25,6 +25,10 @@ jobs:
 
       - name: Build
         working-directory: nextjs-frontend
+        env:
+          WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
+          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
+          NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.saabuildingblocks.com/wp-json/wp/v2
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
