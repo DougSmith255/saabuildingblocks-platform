@@ -71,19 +71,16 @@ export interface BrandColorsSettings {
  * Spacing token names
  */
 export type SpacingToken =
-  | 'sectionPadding'
   | 'containerPadding'
-  | 'cardGap'
-  | 'buttonPadding'
-  | 'inputPadding';
+  | 'gridGap'
+  | 'sectionMargin';
 
 /**
  * Spacing settings with clamp configs
  */
 export interface SpacingSettings {
-  sectionPadding: ClampConfig;
   containerPadding: ClampConfig;
-  cardGap: ClampConfig;
-  buttonPadding: ClampConfig;
-  inputPadding: ClampConfig;
+  gridGap: ClampConfig;
+  sectionMargin: ClampConfig;
+  gridMinWidth: number;
 }
