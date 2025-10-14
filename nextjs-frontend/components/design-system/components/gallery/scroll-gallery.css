@@ -1,0 +1,226 @@
+/* SAA Scrolling Gallery Component */
+/* Black glass background with scroll-synced movement and arrow controls */
+
+.scroll-gallery {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+
+    /* TRANSPARENT glass background - Let stars show through */
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+
+    /* Scroll-synced movement */
+    transform: translateZ(0);
+    /* will-change: transform; - Set dynamically during scroll animations */
+    transition: transform 0.3s ease-out;
+}
+
+/* Gallery content container */
+.scroll-gallery-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+/* Gallery items wrapper - horizontal scrolling */
+.scroll-gallery-items {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for webkit browsers */
+.scroll-gallery-items::-webkit-scrollbar {
+    display: none;
+}
+
+/* Individual gallery items */
+.gallery-item {
+    flex: 0 0 auto;
+    min-width: 300px;
+    padding: 1.5rem;
+
+    /* TRANSPARENT glass card styling - Let stars show through */
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.gallery-item h4 {
+    color: var(--color-brand-primary);
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.gallery-item p {
+    color: var(--color-text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* Arrow navigation controls */
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.gallery-nav.left {
+    left: -60px;
+}
+
+.gallery-nav.right {
+    right: -60px;
+}
+
+.gallery-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    /* Prevent button styling */
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.gallery-nav-btn:hover {
+    background: rgba(26, 26, 26, 0.95);
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.gallery-nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* Arrow icons using existing saa-arrow system */
+.gallery-nav-btn .saa-arrow {
+    font-size: var(--size-arrow);
+    color: var(--color-brand-primary);
+}
+
+.gallery-nav-btn:hover .saa-arrow {
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .scroll-gallery {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .gallery-item {
+        min-width: 250px;
+        padding: 1rem;
+    }
+
+    .gallery-nav {
+        display: none; /* Hide arrows on mobile, use touch scroll */
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-item {
+        min-width: 200px;
+    }
+}
+
+/* Scroll indicators (optional) */
+.gallery-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.gallery-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gallery-indicator.active {
+    background: var(--color-brand-primary);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* Performance optimizations */
+.scroll-gallery,
+.gallery-item,
+.gallery-nav-btn {
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .scroll-gallery,
+    .gallery-item,
+    .gallery-nav-btn,
+    .scroll-gallery-items {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .scroll-gallery {
+        border: 2px solid var(--color-brand-primary);
+        background: rgba(0, 0, 0, 0.95);
+    }
+
+    .gallery-item {
+        border: 1px solid var(--color-brand-primary);
+        background: rgba(255, 255, 255, 0.1);
+    }
+}

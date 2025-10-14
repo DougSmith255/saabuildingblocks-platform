@@ -1,0 +1,512 @@
+/*!
+ * Version: 3.0.0 - ALL CRITICAL ISSUES FIXED
+ * SYSTEMATIC FIXES:
+ * - Container glow: NUCLEAR elimination with multiple override strategies
+ * - Arrow rotation: Perfect center rotation using correct positioning and transform-origin
+ * - Smooth animations: JavaScript-controlled height with forced reflows and GPU acceleration
+ * - Glow animation: CTA button-style lightPulse with tighter glow (no conflicts)
+ * - FAQ titles: Proper H3 sizing with responsive adjustments
+ * - Rounded corners: Always rounded with !important overflow hidden
+ * Accordion Component - Interactive Content Expansion
+ * Uses existing SAA design system: glass-card backgrounds, arrow icons, gold colors
+ * Content-driven sizing with no fixed dimensions
+ * Compatible with viewport manager system
+ */
+
+/* ===== ACCORDION CONTAINER ===== */
+.accordion {
+  /* Content-driven container - no fixed width */
+  width: 100%;
+  max-width: none;
+
+  /* Spacing using SAA variables */
+  margin: var(--space-4, 1rem) 0;
+
+  /* Allow stacking of multiple accordions */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3, 0.75rem);
+
+  /* Transparency and blur effects */
+  opacity: 0.9; /* 10% transparent */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+  /* GPU acceleration for better blur performance */
+  transform: translateZ(0);
+  /* will-change: opacity, backdrop-filter; - Set dynamically during interactions */
+}
+
+/* ===== ACCORDION ITEM ===== */
+.accordion-item {
+  /* Use existing glass-card system with TRANSPARENCY */
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  /* Glass card styling */
+  border-radius: var(--radius-lg, 12px);
+  border: 3px solid rgba(255, 255, 255, 0.08); /* Thicker, slightly lighter than background */
+
+  /* Subtle shadow for depth */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+  /* Enhanced smooth transitions for all interactions */
+  transition: all 0.5s cubic-bezier(0.4, 0.0, 0.2, 1),
+              background-color 0.3s ease,
+              border-color 0.3s ease;
+  /* will-change: transform, box-shadow, background-color; - Set dynamically during hover */
+
+  /* GPU acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* .accordion-item:hover .accordion-arrow - REMOVED: Container doesn't exist with display: contents */
+
+/* Active/expanded state - fixed colors */
+.accordion-item.expanded {
+  border-color: rgba(255, 255, 255, 0.12); /* Slightly lighter than background */
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2); /* Subtle shadow instead of gold */
+}
+
+/* FORCE ROUNDED CORNERS AT ALL TIMES - especially when open */
+.accordion-item.expanded .accordion-header {
+  color: var(--gold-primary, #FFD700);
+  background: transparent !important; /* TRANSPARENT - Let stars show through */
+  border-radius: var(--radius-lg, 12px) !important; /* FORCE rounded corners when open */
+  box-shadow: none !important; /* CRITICAL: No container glow when open */
+  text-shadow: none; /* No text shadow on container */
+  filter: none; /* No filter effects on container */
+  overflow: hidden !important; /* Ensure rounded corners are visible */
+}
+
+/* Content area transparent to show stars */
+.accordion-item.expanded .accordion-content {
+  background: transparent !important; /* TRANSPARENT - Let stars show through */
+}
+
+/* Keep title text glowing when open - ABSOLUTELY CONSTANT COLOR */
+.accordion-item.expanded .accordion-title {
+  color: var(--gold-primary, #FFD700) !important; /* Base color NEVER changes */
+  text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700; /* CTA-style glow */
+  animation: titleCtaPulse 3s ease-in-out infinite; /* CTA-style title glow */
+  box-shadow: none !important;
+  background: none !important;
+  filter: none !important;
+  border: none !important;
+  opacity: 1 !important;
+  brightness: 1 !important;
+  contrast: 1 !important;
+  saturate: 1 !important;
+}
+
+/* .accordion-item.expanded .accordion-arrow - REMOVED: Container doesn't exist with display: contents */
+
+/* Arrow stays glowing when expanded - CTA-style */
+.accordion-item.expanded .accordion-arrow::before {
+  color: var(--gold-primary, #FFD700) !important;
+  text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700 !important;
+  animation: ctaArrowPulse 3s ease-in-out infinite !important;
+}
+
+/* ===== ACCORDION HEADER (CLICKABLE) ===== */
+.accordion-header {
+  /* Full clickable area */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative; /* ULTRATHINK: Required for absolutely positioned arrow */
+
+  /* Padding using SAA spacing system */
+  padding: var(--space-4, 1rem) var(--space-5, 1.25rem);
+
+  /* Interactive cursor */
+  cursor: pointer;
+
+  /* Remove default button styling */
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+
+  /* ROUNDED BOTTOM CORNERS when collapsed */
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+
+  /* Typography using SAA system */
+  font-family: 'Amulya', sans-serif;
+  font-weight: var(--font-weight-bold, 700);
+  color: rgba(255, 255, 255, 0.7); /* Default gray color */
+  font-size: var(--font-size-lg, 1.125rem);
+  line-height: var(--line-height-normal, 1.5);
+
+  /* Enhanced smooth transitions for all effects */
+  transition: color 0.3s ease,
+              background-color 0.3s ease;
+  border-radius: var(--radius-lg, 12px);
+
+  /* CRITICAL: Remove ALL glow effects from container */
+  box-shadow: none !important;
+  text-shadow: none;
+  filter: none;
+}
+
+.accordion-header:hover {
+  color: var(--gold-primary, #FFD700);
+  background: none; /* Remove container background */
+  box-shadow: none !important; /* CRITICAL: No container glow */
+  text-shadow: none; /* No text shadow on container */
+  filter: none; /* No filter effects on container */
+}
+
+.accordion-header:hover .accordion-title {
+  /* NUCLEAR: Absolutely constant color - no changes whatsoever */
+  color: var(--gold-primary, #FFD700) !important;
+  text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700;
+  animation: titleCtaPulse 3s ease-in-out infinite;
+  box-shadow: none !important;
+  background: none !important;
+  filter: none !important;
+  border: none !important;
+  opacity: 1 !important;
+  brightness: 1 !important;
+  contrast: 1 !important;
+  saturate: 1 !important;
+}
+
+/* .accordion-header:hover .accordion-arrow - REMOVED: Container doesn't exist with display: contents */
+
+.accordion-header:hover .accordion-arrow::before {
+  /* Arrow gets CTA-style glow on hover */
+  color: var(--gold-primary, #FFD700);
+  text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700;
+  animation: ctaArrowPulse 3s ease-in-out infinite;
+}
+
+.accordion-header:focus,
+.accordion-header:active {
+  outline: none !important; /* Remove all outlines */
+  box-shadow: none !important; /* Remove yellow outline completely */
+  text-shadow: none; /* No text shadow on container */
+  filter: none; /* No filter effects on container */
+  background: none; /* No background effects */
+}
+
+/* ===== ACCORDION TITLE (USE SYSTEM H3 TYPOGRAPHY) ===== */
+.accordion-title {
+  /* Flexible title that grows to fill space */
+  flex: 1;
+  margin: 0;
+
+  /* Let content determine size */
+  min-width: 0; /* Allow text wrapping */
+
+  /* USE YOUR ESTABLISHED H3 TYPOGRAPHY SYSTEM */
+  font-size: var(--size-h3) !important; /* Dynamic H3 clamp: clamp(20px, 2.5vw, 36px) */
+  font-weight: var(--font-weight-bold, 700); /* Standard H3 weight */
+  line-height: 1.25; /* Standard H3 line-height from your system */
+
+  /* NUCLEAR OPTION: Ensure NO container glow effects EVER */
+  box-shadow: none !important;
+  background: none !important;
+  border: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+  outline: none !important;
+}
+
+/* ===== ACCORDION ARROW (NUCLEAR CONTAINER ELIMINATION) ===== */
+.accordion-arrow {
+  /* ULTRATHINK: Container MUST NOT EXIST - multiple elimination strategies */
+  display: contents !important;
+
+  /* NUCLEAR OVERRIDE: All possible container styles eliminated */
+  width: 0 !important;
+  height: 0 !important;
+  font-size: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  outline: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  opacity: 1 !important;
+  visibility: hidden !important; /* Hide container but show pseudo-element */
+
+  /* Positioning elimination */
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+
+  /* Transform elimination */
+  transform: none !important;
+  transform-origin: initial !important;
+
+  /* Color/effect elimination */
+  color: transparent !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+
+  /* Animation elimination */
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Arrow character - PERFECT CENTER ROTATION SYSTEM */
+.accordion-arrow::before {
+  content: "🢗"; /* Custom arrow icon */
+
+  /* CRITICAL: Proper positioning for center rotation */
+  position: absolute;
+  top: 50%;
+  right: var(--space-5, 1.25rem);
+
+  /* Make container visible and properly sized for center calculation */
+  visibility: visible !important;
+  display: inline-block !important;
+
+  /* Arrow size and styling */
+  font-size: calc(var(--size-arrow, clamp(1.2rem, 2vw, 2.5rem)) * 1.5);
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.7);
+
+  /* PERFECT CENTER ROTATION - Calculate true center point */
+  transform: translate(-50%, -50%) rotate(0deg); /* Center first, then rotate */
+  transform-origin: 50% 50%; /* Rotate around geometric center */
+
+  /* Smooth transitions */
+  transition: transform 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+              color 0.4s ease,
+              text-shadow 0.4s ease;
+
+  /* GPU acceleration for smooth rotation */
+  /* will-change: transform, color, text-shadow; - Set dynamically during expand/collapse */
+  backface-visibility: hidden;
+}
+
+/* Rotate arrow 90° with perfect center rotation */
+.accordion-item.expanded .accordion-arrow::before {
+  /* Perfect center rotation: center first, then rotate */
+  transform: translate(-50%, -50%) rotate(90deg);
+  color: var(--gold-primary, #FFD700);
+
+  /* CTA button-style glow (tighter, more subtle) */
+  text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700;
+  animation: ctaArrowPulse 3s ease-in-out infinite;
+}
+
+/* ===== ACCORDION CONTENT ===== */
+.accordion-content {
+  /* Content area with smooth expansion */
+  overflow: hidden;
+
+  /* Start collapsed */
+  max-height: 0;
+  opacity: 0;
+
+  /* ULTRA SMOOTH SLIDE ANIMATIONS - optimized for JavaScript control */
+  transition: max-height 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+              opacity 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+              padding 0.4s cubic-bezier(0.4, 0.0, 0.2, 1),
+              background-color 0.3s ease;
+
+  /* GPU acceleration for perfect smooth animations */
+  /* will-change: max-height, opacity, padding; - Set dynamically during expand/collapse */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Expanded content state - SMOOTH SLIDE DOWN */
+.accordion-item.expanded .accordion-content {
+  /* Allow natural content height with smooth expansion */
+  max-height: 2000px; /* Large enough for most content */
+  opacity: 1;
+
+  /* Padding when expanded - using SAA spacing */
+  padding: 0 var(--space-5, 1.25rem) var(--space-4, 1rem);
+
+  /* Ensure smooth slide-down animation */
+  transition-delay: 0s; /* No delay for opening */
+}
+
+/* ===== ACCORDION CONTENT INNER ===== */
+.accordion-content-inner {
+  /* Styling for content inside accordion */
+  font-family: 'Synonym', sans-serif;
+  font-size: var(--font-size-base, 1rem);
+  line-height: var(--line-height-relaxed, 1.6);
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.9));
+
+  /* Content spacing */
+  margin-top: var(--space-2, 0.5rem);
+}
+
+/* Style lists, paragraphs inside accordion */
+.accordion-content-inner p {
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.accordion-content-inner p:last-child {
+  margin-bottom: 0;
+}
+
+.accordion-content-inner ul,
+.accordion-content-inner ol {
+  margin-left: var(--space-4, 1rem);
+  margin-bottom: var(--space-3, 0.75rem);
+}
+
+.accordion-content-inner li {
+  margin-bottom: var(--space-1, 0.25rem);
+}
+
+/* ===== ACCORDION VARIANTS ===== */
+
+/* Small variant using glass-card-small concept */
+.accordion.small .accordion-header {
+  padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+  font-size: var(--font-size-base, 1rem);
+}
+
+.accordion.small .accordion-content-inner {
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+/* .accordion.small .accordion-arrow - REMOVED: Container doesn't exist with display: contents !important */
+
+/* Multiple accordions - reduce gap */
+.accordion.compact {
+  gap: var(--space-2, 0.5rem);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Mobile optimization */
+@media (max-width: 767px) {
+  .accordion-header {
+    padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
+    font-size: var(--font-size-base, 1rem);
+  }
+
+  .accordion-item.expanded .accordion-content {
+    padding: 0 var(--space-4, 1rem) var(--space-3, 0.75rem);
+  }
+
+  /* .accordion-arrow - REMOVED: Container doesn't exist with display: contents !important */
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  .accordion-header {
+    padding: var(--space-5, 1.25rem) var(--space-6, 1.5rem);
+  }
+
+  .accordion-item.expanded .accordion-content {
+    padding: 0 var(--space-6, 1.5rem) var(--space-5, 1.25rem);
+  }
+}
+
+/* Desktop enhancement */
+@media (min-width: 1200px) {
+  .accordion-header {
+    font-size: var(--font-size-xl, 1.25rem);
+  }
+
+  /* .accordion-arrow - REMOVED: Container doesn't exist with display: contents !important */
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Focus states for keyboard navigation */
+.accordion-header:focus-visible {
+  outline: none !important;
+  box-shadow: none !important; /* Remove yellow outline completely */
+  text-shadow: none; /* No text shadow on container */
+  filter: none; /* No filter effects on container */
+  background: none; /* No background effects */
+}
+
+/* Touch/tap states for mobile */
+.accordion-header:active {
+  outline: none !important;
+  box-shadow: none !important; /* Remove yellow outline completely */
+  text-shadow: none; /* No text shadow on container */
+  filter: none; /* No filter effects on container */
+  background: none; /* No background effects */
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .accordion-item,
+  .accordion-content {
+    transition: none;
+  }
+
+  /* .accordion-arrow - REMOVED: Container doesn't exist with display: contents !important */
+
+  .accordion-item:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .accordion-item {
+    border: 2px solid rgba(255, 255, 255, 0.3); /* Light border for high contrast */
+  }
+
+  .accordion-header {
+    color: #ffffff;
+  }
+
+  .accordion-content-inner {
+    color: #ffffff;
+  }
+}
+
+/* ===== ANIMATIONS ===== */
+
+/* CTA-style arrow pulse animation (tighter glow) */
+@keyframes ctaArrowPulse {
+    0%, 100% {
+        color: var(--gold-primary, #FFD700);
+        text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700;
+    }
+    50% {
+        color: var(--gold-primary, #FFD700);
+        text-shadow: 0 0 4px #ffd700, 0 0 10px #ffd700, 0 0 16px #ffd700;
+    }
+}
+
+/* Title uses same CTA-style pulse (no conflicts) */
+@keyframes titleCtaPulse {
+    0%, 100% {
+        color: var(--gold-primary, #FFD700) !important;
+        text-shadow: 0 0 2px #ffd700, 0 0 6px #ffd700, 0 0 10px #ffd700;
+    }
+    50% {
+        color: var(--gold-primary, #FFD700) !important;
+        text-shadow: 0 0 4px #ffd700, 0 0 10px #ffd700, 0 0 16px #ffd700;
+    }
+}
+
+/* Cache busting fix for ULTRATHINK solution */
+.accordion-header, .accordion-title, .accordion-arrow::before {
+  /* Force browser cache refresh for display: contents !important solution */
+  transform: translateZ(0.001px);
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .accordion-content {
+    max-height: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+  }
+
+  /* .accordion-arrow - No need to hide: Container doesn't exist with display: contents !important */
+}

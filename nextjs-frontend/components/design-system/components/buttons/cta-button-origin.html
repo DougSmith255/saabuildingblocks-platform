@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAA CTA Button - Origin with Grainy Glow</title>
+    <style>
+        :root {
+            --gold-primary: #FFD700;
+            --gold-hover: #FFED4E;
+            --gold-dark: #FFB700;
+            --green-click: #00ff88;
+            --space-4: 1rem;
+            --size-button: 0.875rem;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: var(--space-4);
+        }
+
+        .cta-button-wrapper {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .cta-button {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 46px;
+            padding: 0.5rem 1.25rem;
+            background: rgb(45, 45, 45);
+            backdrop-filter: blur(15px);
+            border-radius: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            color: white;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: var(--size-button);
+            z-index: 10;
+            box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            overflow: hidden;
+            /* Grainy glow texture - apply this pattern to ALL glow effects across SAA components */
+            filter: url(#grainy-glow);
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+            width: 50%;
+            transform: skewX(45deg);
+        }
+
+        /* Text glow animation with grainy texture */
+        @keyframes textGlow {
+            0% {
+                text-shadow:
+                    0 0 10px rgba(255, 215, 0, 0.5),
+                    0 0 20px rgba(255, 215, 0, 0.3);
+            }
+            33% {
+                text-shadow:
+                    0 0 10px rgba(255, 237, 78, 0.5),
+                    0 0 20px rgba(255, 237, 78, 0.3);
+            }
+            66% {
+                text-shadow:
+                    0 0 10px rgba(255, 183, 0, 0.5),
+                    0 0 20px rgba(255, 183, 0, 0.3);
+            }
+            100% {
+                text-shadow:
+                    0 0 10px rgba(255, 215, 0, 0.5),
+                    0 0 20px rgba(255, 215, 0, 0.3);
+            }
+        }
+
+        /* Bottom light bar with grainy glow */
+        .light-bar-bottom {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -5px;
+            width: 30px;
+            height: 10px;
+            border-radius: 0.375rem;
+            background: var(--gold-primary);
+            transition: all 0.5s ease 0.5s;
+            /* Grainy glow texture */
+            filter: url(#grainy-glow-bar);
+            box-shadow:
+                0 0 15px var(--gold-primary),
+                0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Top light bar with grainy glow */
+        .light-bar-top {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -5px;
+            width: 30px;
+            height: 10px;
+            border-radius: 0.375rem;
+            background: var(--gold-primary);
+            transition: all 0.5s ease 0.5s;
+            /* Grainy glow texture */
+            filter: url(#grainy-glow-bar);
+            box-shadow:
+                0 0 15px var(--gold-primary),
+                0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Hover state with enhanced grainy glow */
+        .cta-button-wrapper:hover .light-bar-bottom,
+        .cta-button-wrapper:hover .light-bar-top {
+            width: 80%;
+            box-shadow:
+                0 0 20px var(--gold-primary),
+                0 0 40px rgba(255, 215, 0, 0.7),
+                0 0 60px rgba(255, 215, 0, 0.4);
+        }
+
+        .cta-button-wrapper:hover .cta-button {
+            box-shadow:
+                0 15px 15px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Click state with green grainy glow */
+        .cta-button-wrapper.clicked .light-bar-bottom,
+        .cta-button-wrapper.clicked .light-bar-top {
+            background: var(--green-click);
+            animation: greenClickGlow 3s ease-out forwards;
+            box-shadow:
+                0 0 25px var(--green-click),
+                0 0 50px rgba(0, 255, 136, 0.7),
+                0 0 75px rgba(0, 255, 136, 0.4);
+        }
+
+        @keyframes greenClickGlow {
+            0% {
+                background: var(--green-click);
+                box-shadow:
+                    0 0 25px var(--green-click),
+                    0 0 50px rgba(0, 255, 136, 0.8),
+                    0 0 75px rgba(0, 255, 136, 0.5);
+            }
+            90% {
+                background: var(--green-click);
+                box-shadow:
+                    0 0 25px var(--green-click),
+                    0 0 50px rgba(0, 255, 136, 0.8),
+                    0 0 75px rgba(0, 255, 136, 0.5);
+            }
+            100% {
+                background: var(--gold-primary);
+                box-shadow:
+                    0 0 15px var(--gold-primary),
+                    0 0 30px rgba(255, 215, 0, 0.5);
+            }
+        }
+
+        /* Demo container */
+        .demo-container {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .demo-title {
+            color: var(--gold-primary);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+        }
+
+        .demo-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG filters for grainy glow texture -->
+    <svg style="position: absolute; width: 0; height: 0; pointer-events: none;">
+        <defs>
+            <!-- Main grainy glow filter for button -->
+            <filter id="grainy-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+                <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" seed="2" result="noise"/>
+                <feColorMatrix in="noise" type="saturate" values="0" result="desaturatedNoise"/>
+                <feComponentTransfer in="desaturatedNoise" result="transparentNoise">
+                    <feFuncA type="discrete" tableValues="0 0.03 0.05 0.03 0"/>
+                </feComponentTransfer>
+                <feBlend in="blur" in2="transparentNoise" mode="overlay" result="grainyBlur"/>
+                <feComposite in="grainyBlur" in2="SourceGraphic" operator="over"/>
+            </filter>
+
+            <!-- Grainy glow filter for light bars (more intense) -->
+            <filter id="grainy-glow-bar" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+                <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="3" seed="5" result="noise"/>
+                <feColorMatrix in="noise" type="saturate" values="0" result="desaturatedNoise"/>
+                <feComponentTransfer in="desaturatedNoise" result="transparentNoise">
+                    <feFuncA type="discrete" tableValues="0 0.08 0.12 0.08 0"/>
+                </feComponentTransfer>
+                <feBlend in="blur" in2="transparentNoise" mode="screen" result="grainyBlur"/>
+                <feComposite in="grainyBlur" in2="SourceGraphic" operator="over"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="demo-container">
+        <h1 class="demo-title">SAA CTA Button - Origin with Grainy Glow</h1>
+
+        <div class="cta-button-wrapper" id="ctaWrapper">
+            <a href="#" class="cta-button" id="ctaButton">GET STARTED TODAY</a>
+            <div class="light-bar-bottom"></div>
+            <div class="light-bar-top"></div>
+        </div>
+
+        <p class="demo-description">
+            This origin component features grainy glow textures on ALL glow effects:
+            text glow, light bars, hover states, and click animations.
+            The SVG filters add subtle noise to create a more organic, textured glow appearance.
+            Hover to see the expanded grainy glow. Click to see the green click animation with grainy texture.
+        </p>
+    </div>
+
+    <script>
+        // Click animation demo
+        const wrapper = document.getElementById('ctaWrapper');
+        const button = document.getElementById('ctaButton');
+
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            wrapper.classList.add('clicked');
+            setTimeout(() => {
+                wrapper.classList.remove('clicked');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
