@@ -95,11 +95,7 @@ export function RelatedPosts({
       {/* Category link if available */}
       {currentCategory && categoryName && (
         <div className="mb-8">
-          <CTAButton
-            href={`/blog/category/${currentCategory}`}
-            variant="secondary"
-            size="sm"
-          >
+          <CTAButton href={`/blog/category/${currentCategory}`}>
             View All in {categoryName}
           </CTAButton>
         </div>
