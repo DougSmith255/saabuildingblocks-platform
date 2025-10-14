@@ -116,7 +116,7 @@ export default async function AcceptInvitationPage({ params, searchParams }: Pag
   );
 }
 
-export async function generateMetadata({ params }: PageProps) {
+export async function generateMetadata({ params: _params }: PageProps) {
   return {
     title: 'Accept Invitation | SAA Master Controller',
     description: 'Complete your account setup to join SAA Master Controller',
