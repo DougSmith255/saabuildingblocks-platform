@@ -23,13 +23,22 @@ jobs:
         working-directory: nextjs-frontend
         run: npm ci
 
-      - name: Build
+      - name: Build Static Export
         working-directory: nextjs-frontend
         env:
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
           WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
           NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.saabuildingblocks.com/wp-json/wp/v2
-        run: npm run build
+          NODE_ENV: production
+        run: |
+          echo "Building static export for Cloudflare Pages..."
+          rm -rf out
+          cp next.config.static.ts next.config.ts.backup
+          mv next.config.static.ts next.config.ts
+          npm run build
+          mv next.config.ts.backup next.config.ts || true
+          echo "✅ Static export complete. Output in /out directory"
+          ls -lh out/ | head -20
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
