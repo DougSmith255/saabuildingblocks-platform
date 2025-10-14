@@ -57,7 +57,7 @@ export function CategoryHero({
   // Generate responsive sizes from Master Controller
   const h1Size = generateClamp(typography.h1.size);
   const taglineSize = generateClamp(typography.tagline.size);
-  const sectionPadding = generateClamp(spacing.sectionPadding);
+  const sectionPadding = generateClamp(spacing.sectionMargin);
   const containerPadding = generateClamp(spacing.containerPadding);
 
   // Get background position class

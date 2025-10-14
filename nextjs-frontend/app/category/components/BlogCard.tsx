@@ -100,7 +100,7 @@ export function BlogCard({
   const h3Size = generateClamp(typography.h3.size);
   const bodySize = generateClamp(typography.body.size);
   const captionSize = generateClamp(typography.caption.size);
-  const cardGap = generateClamp(spacing.cardGap);
+  const cardGap = generateClamp(spacing.gridGap);
 
   // Extract data
   const featuredImage = getFeaturedImageUrl(post);

@@ -216,8 +216,8 @@ export function BlogGrid({
   className = ''
 }: BlogGridProps) {
   // Generate responsive spacing
-  const sectionPadding = generateClamp(spacing.sectionPadding);
-  const cardGap = generateClamp(spacing.cardGap);
+  const sectionPadding = generateClamp(spacing.sectionMargin);
+  const cardGap = generateClamp(spacing.gridGap);
 
   // Handle loading state
   if (loading) {
