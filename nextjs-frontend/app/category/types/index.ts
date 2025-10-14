@@ -9,7 +9,7 @@
 // MASTER CONTROLLER TYPES (imported for use throughout this file)
 // ============================================================================
 
-export type {
+import type {
   TypographySettings,
   TextTypeSettings,
   ClampConfig,
@@ -18,6 +18,17 @@ export type {
   ColorName,
   SpacingToken,
 } from '@/app/master-controller/types';
+
+// Re-export for external use
+export type {
+  TypographySettings,
+  TextTypeSettings,
+  ClampConfig,
+  BrandColorsSettings,
+  SpacingSettings,
+  ColorName,
+  SpacingToken,
+};
 
 // ============================================================================
 // CATEGORY CONFIGURATION TYPES
