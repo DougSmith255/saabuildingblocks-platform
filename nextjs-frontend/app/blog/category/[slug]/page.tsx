@@ -78,9 +78,9 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
               excerpt: post.excerpt,
               content: post.content || '',
               featuredImage: post.image,
-              author: typeof post.author === 'object' && post.author?.name
+              author: (typeof post.author === 'object' && post.author?.name
                 ? post.author.name
-                : (post.author || 'Unknown'),
+                : (post.author || 'Unknown')) as string,
               date: post.date,
               categories: [config.slug]
             }))}
