@@ -1,0 +1,136 @@
+/**
+ * SAA Components - CSS Custom Properties
+ * Design System Variables for Swarm Agent Academy
+ */
+
+:root {
+  /* Spacing Scale */
+  --space-1: 0.25rem;   /* 4px */
+  --space-2: 0.5rem;    /* 8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.5rem;    /* 24px */
+  --space-6: 2rem;      /* 32px */
+  --space-8: 3rem;      /* 48px */
+  --space-10: 4rem;     /* 64px */
+  --space-12: 6rem;     /* 96px */
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;  /* 4px */
+  --radius-md: 0.5rem;   /* 8px */
+  --radius-lg: 1rem;     /* 16px */
+  --radius-xl: 1.5rem;   /* 24px */
+  --radius-2xl: 2rem;    /* 32px */
+  --radius-full: 9999px;
+
+  /* Colors - Gold Theme (Primary Brand) */
+  --gold-primary: #ffd700;
+  --gold-light: #ffe066;
+  --gold-lighter: #ffed99;
+  --gold-dark: #ccaa00;
+  --gold-darker: #997f00;
+
+  /* Colors - Cyan/Green Theme (Accent) */
+  --cyan-primary: #00ff88;
+  --cyan-light: #66ffaa;
+  --cyan-lighter: #99ffcc;
+  --cyan-dark: #00cc66;
+  --cyan-darker: #009944;
+
+  /* Backgrounds - Dark Theme */
+  --bg-primary: #191818;
+  --bg-secondary: #252525;
+  --bg-tertiary: #404040;
+  --bg-quaternary: #595959;
+  --bg-overlay: rgba(0, 0, 0, 0.8);
+
+  /* Text Colors */
+  --text-primary: #e5e4dd;
+  --text-secondary: #dcdbd5;
+  --text-muted: #a0a0a0;
+  --text-inverse: #191818;
+
+  /* Border Colors */
+  --border-primary: #404040;
+  --border-secondary: #595959;
+  --border-accent: var(--gold-primary);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --shadow-gold: 0 0 20px rgba(255, 215, 0, 0.3);
+  --shadow-cyan: 0 0 20px rgba(0, 255, 136, 0.3);
+
+  /* Typography - Font Families */
+  --font-primary: 'Amulya', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'Synonym', Georgia, 'Times New Roman', serif;
+  --font-mono: 'Monaco', 'Courier New', monospace;
+
+  /* Typography - Font Sizes */
+  --text-xs: 0.75rem;    /* 12px */
+  --text-sm: 0.875rem;   /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg: 1.125rem;   /* 18px */
+  --text-xl: 1.25rem;    /* 20px */
+  --text-2xl: 1.5rem;    /* 24px */
+  --text-3xl: 1.875rem;  /* 30px */
+  --text-4xl: 2.25rem;   /* 36px */
+  --text-5xl: 3rem;      /* 48px */
+  --text-6xl: 3.75rem;   /* 60px */
+
+  /* Typography - Font Weights */
+  --font-light: 300;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Typography - Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+  --transition-all: all var(--transition-base);
+
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+
+  /* Breakpoints (for reference in JS) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
+
+/* Dark mode overrides (if light mode is added later) */
+[data-theme="dark"] {
+  /* Already dark by default */
+}
+
+/* Light mode (future enhancement) */
+[data-theme="light"] {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e0e0e0;
+  --bg-quaternary: #d0d0d0;
+  --text-primary: #191818;
+  --text-secondary: #252525;
+  --text-muted: #595959;
+  --text-inverse: #ffffff;
+  --border-primary: #e0e0e0;
+  --border-secondary: #d0d0d0;
+}

@@ -1,0 +1,100 @@
+/* Updated Icon Library - Using SVG Sprite Sheet */
+/* Sprite file: ../assets/icons/sprite.svg */
+
+:root {
+  --icon-size-small: 24px;
+  --icon-size-medium: 48px;
+  --icon-size-large: 60px;
+  --icon-size-xl: 80px;
+}
+
+/* Base icon class for sprite usage */
+.icon-sprite {
+  display: inline-block;
+  width: var(--icon-size-medium);
+  height: var(--icon-size-medium);
+}
+
+/* Size variants */
+.icon-small { width: var(--icon-size-small); height: var(--icon-size-small); }
+.icon-medium { width: var(--icon-size-medium); height: var(--icon-size-medium); }
+.icon-large { width: var(--icon-size-large); height: var(--icon-size-large); }
+.icon-xl { width: var(--icon-size-xl); height: var(--icon-size-xl); }
+
+/* Individual icon classes (backwards compatible) */
+.email-icon {
+  background-image: url('../assets/icons/sprite.svg#icon-email-icon');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.webinar-icon {
+  background-image: url('../assets/icons/sprite.svg#icon-webinar-icon');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.linkedin-icon {
+  background-image: url('../assets/icons/sprite.svg#icon-linkedin-icon');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.youtube-icon {
+  background-image: url('../assets/icons/sprite.svg#icon-youtube-icon');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.calendar-icon {
+  background-image: url('../assets/icons/sprite.svg#icon-calendar-icon');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer--email {
+  background-image: url('../assets/icons/sprite.svg#icon-footer--email');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer--webinar {
+  background-image: url('../assets/icons/sprite.svg#icon-footer--webinar');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer--linkedin {
+  background-image: url('../assets/icons/sprite.svg#icon-footer--linkedin');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer--youtube {
+  background-image: url('../assets/icons/sprite.svg#icon-footer--youtube');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer--calendar {
+  background-image: url('../assets/icons/sprite.svg#icon-footer--calendar');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.footer--rocket {
+  background-image: url('../assets/icons/sprite.svg#icon-footer--rocket');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

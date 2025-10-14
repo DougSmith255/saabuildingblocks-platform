@@ -1,0 +1,167 @@
+/* SAA Secondary Button Component Styles */
+
+/* Secondary Button Base Styles */
+.secondary-button {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.secondary-button a,
+.secondary-button button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Removed upward transform - keep text container static */
+    background: rgb(45, 45, 45);
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 20px 10px 20px; /* Symmetric padding to prevent text cutoff */
+    text-decoration: none;
+    overflow: hidden;
+    /* Master Controller button text typography - auto-updates when changed in Master Controller */
+    color: var(--text-color-button, #ffffff);
+    font-size: var(--font-size-button, 14px);
+    line-height: var(--line-height-button, 1.3);
+    letter-spacing: var(--letter-spacing-button, 0.5px);
+    font-weight: var(--font-weight-button, 600);
+    font-family: var(--font-family-button, system-ui, -apple-system, sans-serif);
+    min-height: 46px; /* Match CTA button height */
+    z-index: 1;
+    transition: 0.5s;
+    backdrop-filter: blur(15px);
+    animation: textGlow 3s ease-in-out infinite;
+    text-transform: uppercase;
+    border-left: none;
+    border-right: none;
+    cursor: pointer;
+}
+
+/* Button Glow Effects - Left/Right Sides */
+.secondary-button a::before,
+.secondary-button button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+    transform: skewX(45deg) translate(0);
+    filter: blur(0px);
+}
+
+.secondary-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translatey(-50%);
+    left: -5px;
+    width: 10px;
+    height: 18px;
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    border-radius: 6px;
+    transition: 0.5s;
+    transition-delay: 0.5;
+    animation: lightPulse 3s ease-in-out infinite;
+    z-index: 0;
+}
+
+.secondary-button:hover::before {
+    height: 80%;
+}
+
+.secondary-button::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    transform: translatey(-50%);
+    right: -5px;
+    width: 10px;
+    height: 18px;
+    background: #ffd700;
+    box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    border-radius: 6px;
+    transition: 0.5s;
+    transition-delay: 0.5;
+    animation: lightPulse 3s ease-in-out infinite;
+    z-index: 0;
+}
+
+.secondary-button:hover::after {
+    height: 80%;
+}
+
+/* Green Click Effects - Original :active functionality restored */
+.secondary-button:active::before {
+    background: #00ff88 !important;
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+.secondary-button:active::after {
+    background: #00ff88 !important;
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+/* Extended 3-second green effect */
+.secondary-button.clicked::before {
+    background: #00ff88 !important;
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+.secondary-button.clicked::after {
+    background: #00ff88 !important;
+    box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88 !important;
+}
+
+@keyframes greenClick {
+    0% {
+        background: #00ff88;
+        box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88;
+    }
+    90% {
+        background: #00ff88;
+        box-shadow: 0 0 5px #00ff88, 0 0 15px #00ff88, 0 0 30px #00ff88, 0 0 60px #00ff88;
+    }
+    100% {
+        background: #ffd700;
+        box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    }
+}
+
+/* Button Animations */
+@keyframes lightPulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 8px #ffd700, 0 0 20px #ffd700, 0 0 35px #ffd700, 0 0 70px #ffd700;
+    }
+}
+
+@keyframes textGlow {
+    0% {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    33% {
+        text-shadow: 0 0 10px rgba(255, 237, 78, 0.5);
+    }
+    66% {
+        text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
+    }
+    100% {
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+}

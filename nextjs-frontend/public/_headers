@@ -1,0 +1,32 @@
+# Cloudflare Pages Security Headers
+# Applied to all static pages served from Cloudflare Pages
+
+/*
+  # Security headers
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+  # CORS for API calls to origin server
+  Access-Control-Allow-Origin: https://saabuildingblocks.com
+  Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+  Access-Control-Allow-Headers: Content-Type, Authorization
+  Access-Control-Allow-Credentials: true
+
+  # Cache control for static assets
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache control for HTML pages (shorter cache)
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# No cache for API proxied routes
+/api/*
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/master-controller/*
+  Cache-Control: no-store, no-cache, must-revalidate
+
+/agent-portal/*
+  Cache-Control: no-store, no-cache, must-revalidate

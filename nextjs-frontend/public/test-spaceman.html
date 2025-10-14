@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spaceman SVG Test</title>
+  <style>
+    body {
+      background: #0c0c0c;
+      color: white;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .test-box {
+      border: 2px solid;
+      margin: 20px 0;
+      padding: 15px;
+    }
+    .test-box h3 {
+      margin-top: 0;
+    }
+    #test1 { border-color: red; }
+    #test2 { border-color: blue; }
+    #test3 { border-color: green; }
+    #test4 { border-color: orange; }
+    #test5 { border-color: purple; }
+  </style>
+</head>
+<body>
+  <h1>🚀 Spaceman SVG Loading Tests</h1>
+
+  <div id="test1" class="test-box">
+    <h3>Test 1: Direct IMG Tag</h3>
+    <img src="/animations/spaceman.svg" alt="Spaceman" style="width: 200px; height: 200px;"
+         onerror="this.style.border='3px solid red'; console.error('❌ IMG failed');"
+         onload="console.log('✅ IMG loaded');">
+  </div>
+
+  <div id="test2" class="test-box">
+    <h3>Test 2: Background Image CSS</h3>
+    <div style="width: 200px; height: 200px; background: url(/animations/spaceman.svg) center/contain no-repeat;">
+    </div>
+  </div>
+
+  <div id="test3" class="test-box">
+    <h3>Test 3: Object Tag</h3>
+    <object data="/animations/spaceman.svg" type="image/svg+xml" width="200" height="200">
+      ❌ Object tag failed to load
+    </object>
+  </div>
+
+  <div id="test4" class="test-box">
+    <h3>Test 4: Iframe</h3>
+    <iframe src="/animations/spaceman.svg" width="200" height="200" style="border: none;"></iframe>
+  </div>
+
+  <div id="test5" class="test-box">
+    <h3>Test 5: Fetch Test</h3>
+    <button onclick="testFetch()">Click to Test Fetch</button>
+    <pre id="fetchResult" style="color: cyan;"></pre>
+  </div>
+
+  <script>
+    async function testFetch() {
+      const result = document.getElementById('fetchResult');
+      try {
+        const response = await fetch('/animations/spaceman.svg');
+        result.textContent = `Status: ${response.status} ${response.statusText}\n`;
+        result.textContent += `Content-Type: ${response.headers.get('content-type')}\n`;
+
+        if (response.ok) {
+          const text = await response.text();
+          result.textContent += `✅ File exists! Size: ${text.length} bytes\n`;
+          result.textContent += `First 200 chars:\n${text.substring(0, 200)}...`;
+        } else {
+          result.textContent += '❌ File not found';
+        }
+      } catch (err) {
+        result.textContent = `❌ Error: ${err.message}`;
+      }
+    }
+
+    // Auto-test on load
+    setTimeout(() => {
+      console.log('🔍 Auto-testing fetch...');
+      testFetch();
+    }, 1000);
+  </script>
+</body>
+</html>

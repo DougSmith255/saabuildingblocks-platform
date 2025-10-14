@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Master Controller Cache - Smart Agent Alliance</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 600px;
+      background: rgba(45, 45, 45, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+    }
+    h1 {
+      color: #ffd700;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #e5e4dd;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+      color: #1a1a1a;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+    }
+    button:active {
+      transform: translateY(0);
+    }
+    .status {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      display: none;
+    }
+    .status.success {
+      background: rgba(0, 255, 136, 0.2);
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Clear Master Controller Cache</h1>
+    <p>If you're seeing white headings instead of gold, your browser has cached old Master Controller settings.</p>
+    <p>Click the button below to clear the cache and reload with fresh settings.</p>
+    <button onclick="clearCache()">Clear Cache & Reload</button>
+    <div id="status" class="status"></div>
+  </div>
+
+  <script>
+    function clearCache() {
+      // Clear all Master Controller localStorage
+      localStorage.removeItem('master-controller-typography');
+      localStorage.removeItem('master-controller-brand-colors');
+      localStorage.removeItem('master-controller-spacing');
+
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Cache cleared! Redirecting to homepage...';
+      status.classList.add('success');
+
+      // Redirect to homepage after 1 second
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/**
+ * SAA Cyber Card - Radar Interface Version
+ * Features rotating radar sweep with concentric circles and polar grid
+ * Uses proven transform-based animations and conic gradients
+ */
+
+.saa-cyber-radar-container {
+    position: relative;
+    width: 100%;
+    height: 340px;
+    transition: 200ms;
+    filter: contrast(1.1) saturate(1.2);
+}
+
+.saa-cyber-radar-card {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--radius-lg);
+    transition: 700ms;
+    background:
+        linear-gradient(45deg, #0a0a0a, #1a1a1a),
+        radial-gradient(circle at 50% 50%, transparent 30%, rgba(255, 255, 255, 0.01) 31%, rgba(255, 255, 255, 0.01) 32%, transparent 33%),
+        radial-gradient(circle at 50% 50%, transparent 50%, rgba(255, 255, 255, 0.01) 51%, rgba(255, 255, 255, 0.01) 52%, transparent 53%),
+        radial-gradient(circle at 50% 50%, transparent 70%, rgba(255, 255, 255, 0.01) 71%, rgba(255, 255, 255, 0.01) 72%, transparent 73%);
+    overflow: hidden;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.4),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Greyscale Shimmer Effect */
+.saa-cyber-radar-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.20) 25%,
+        rgba(255, 255, 255, 0.35) 50%,
+        rgba(255, 255, 255, 0.18) 75%,
+        rgba(255, 255, 255, 0.08) 100%
+    );
+    background-size: 400% 400%;
+    animation: saa-radar-shimmer 8s ease-in-out infinite;
+    opacity: 0.5;
+    transition: opacity 0.6s ease;
+    border-radius: var(--radius-lg);
+    mix-blend-mode: overlay;
+}
+
+/* Radar Grid Base */
+.saa-cyber-radar-card::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background:
+        repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(255, 255, 255, 0.02) 29px, rgba(255, 255, 255, 0.02) 30px),
+        repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(255, 255, 255, 0.02) 29px, rgba(255, 255, 255, 0.02) 30px);
+    border-radius: var(--radius-lg);
+    z-index: -1;
+}
+
+.saa-cyber-radar-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: var(--space-6);
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+
+/* Hover Tracking Grid */
+.saa-cyber-radar-canvas {
+    perspective: 1000px;
+    inset: 0;
+    z-index: 200;
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 0;
+    pointer-events: none;
+}
+
+.saa-cyber-radar-tracker {
+    position: relative;
+    z-index: 200;
+    cursor: pointer;
+    background: transparent;
+    pointer-events: auto;
+}
+
+/* Grid-Based Hover Effects */
+.saa-cyber-radar-tracker:hover ~ .saa-cyber-radar-card::before {
+    opacity: 0.9;
+}
+
+.saa-cyber-radar-tracker:hover ~ .saa-cyber-radar-card {
+    transform: scale(1.02);
+    filter: brightness(1.1) contrast(1.1);
+}
+
+/* Animations */
+@keyframes saa-radar-shimmer {
+    0%, 100% {
+        background-position: 0% 50%;
+        filter: brightness(1);
+    }
+    50% {
+        background-position: 100% 50%;
+        filter: brightness(1.8);
+    }
+}
+
+/* Performance Optimization */
+.saa-cyber-radar-card,
+.saa-cyber-radar-card::before,
+.saa-cyber-radar-card::after {
+    /* Removed permanent will-change to fix memory budget issue */
+    /* will-change will be added dynamically via JavaScript during animations */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}

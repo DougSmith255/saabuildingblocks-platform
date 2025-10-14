@@ -1,0 +1,96 @@
+/* Text Scramble Animation Component */
+
+/* Base scramble text - inherits all existing font styles */
+.text-scramble {
+    /* No font overrides - inherits from parent */
+    position: relative;
+    /* Prevent layout shifts during animation */
+    display: inline-block;
+    width: 100%;
+    /* Ensure consistent text rendering during scramble */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrambled characters styling */
+.text-scramble .dud,
+.text-scramble .scramble-char {
+    color: rgba(255, 255, 255, 0.35); /* Default scramble color - slightly brighter */
+    opacity: 0.75;
+    animation: scrambleGlow 0.1s ease-in-out;
+}
+
+/* Color variants for scramble effect */
+.text-scramble--gold .dud,
+.text-scramble--gold .scramble-char {
+    color: rgba(255, 215, 0, 0.4);
+}
+
+.text-scramble--white .dud,
+.text-scramble--white .scramble-char {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.text-scramble--dark .dud,
+.text-scramble--dark .scramble-char {
+    color: rgba(0, 0, 0, 0.3);
+}
+
+.text-scramble--subtle .dud,
+.text-scramble--subtle .scramble-char {
+    color: rgba(117, 117, 117, 0.5);
+}
+
+/* Scramble glow animation */
+@keyframes scrambleGlow {
+    0%, 100% { 
+        opacity: 0.4; 
+        text-shadow: 0 0 5px currentColor;
+    }
+    50% { 
+        opacity: 0.7; 
+        text-shadow: 0 0 10px currentColor;
+    }
+}
+
+/* Mobile-specific enhancements for layout stability */
+@media (max-width: 768px) {
+    .text-scramble {
+        /* Ensure scramble animation doesn't cause reflow */
+        /* will-change: contents; - Set dynamically during text scramble animation */
+        /* Maintain layout consistency during animation */
+        contain: layout;
+    }
+    
+    /* Prevent individual scramble characters from affecting layout */
+    .text-scramble .scramble-char {
+        display: inline;
+        /* Prevent scramble chars from affecting line height */
+        vertical-align: baseline;
+    }
+}
+
+/* Enhanced stability for very small screens */
+@media (max-width: 480px) {
+    .text-scramble {
+        /* Further optimize for mobile performance */
+        contain: layout style;
+        /* Ensure consistent spacing during animation */
+        white-space: normal;
+    }
+}
+
+/* Usage Examples:
+
+<!-- Basic scramble (inherits all parent styles) -->
+<h1 class="hero-title text-scramble" data-scramble-text="YOUR TEXT HERE">YOUR TEXT HERE</h1>
+
+<!-- Gold variant for scramble characters -->
+<h1 class="hero-title text-scramble text-scramble--gold" data-scramble-text="YOUR TEXT HERE">YOUR TEXT HERE</h1>
+
+<!-- Works with any element and styling -->
+<h2 class="section-title text-scramble" data-scramble-text="Section Title">Section Title</h2>
+<p class="body-text text-scramble text-scramble--subtle" data-scramble-text="Body text">Body text</p>
+
+*/
