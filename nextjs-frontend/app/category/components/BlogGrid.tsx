@@ -126,7 +126,7 @@ function EmptyState({ typography, colors }: {
         <h3
           style={{
             fontSize: h3Size,
-            fontWeight: typography.h3.weight,
+            fontWeight: typography.h3.fontWeight,
             color: colors.headingText
           }}
           className="font-[var(--font-taskor)] mb-4"
@@ -136,7 +136,7 @@ function EmptyState({ typography, colors }: {
         <p
           style={{
             fontSize: bodySize,
-            fontWeight: typography.body.weight,
+            fontWeight: typography.body.fontWeight,
             color: colors.bodyText
           }}
           className="font-[var(--font-amulya)]"
@@ -174,7 +174,7 @@ function ErrorState({
         <h3
           style={{
             fontSize: h3Size,
-            fontWeight: typography.h3.weight,
+            fontWeight: typography.h3.fontWeight,
             color: colors.headingText
           }}
           className="font-[var(--font-taskor)] mb-4"
@@ -184,7 +184,7 @@ function ErrorState({
         <p
           style={{
             fontSize: bodySize,
-            fontWeight: typography.body.weight,
+            fontWeight: typography.body.fontWeight,
             color: colors.bodyText
           }}
           className="font-[var(--font-amulya)] mb-2"
@@ -194,7 +194,7 @@ function ErrorState({
         <p
           style={{
             fontSize: bodySize,
-            fontWeight: typography.body.weight,
+            fontWeight: typography.body.fontWeight,
             color: colors.mediumGray
           }}
           className="font-[var(--font-amulya)] text-sm"

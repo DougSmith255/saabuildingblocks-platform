@@ -150,7 +150,7 @@ export function BlogCard({
               <h3
                 style={{
                   fontSize: h3Size,
-                  fontWeight: typography.h3.weight,
+                  fontWeight: typography.h3.fontWeight,
                   lineHeight: typography.h3.lineHeight,
                   letterSpacing: typography.h3.letterSpacing,
                   color: colors.headingText
@@ -164,7 +164,7 @@ export function BlogCard({
               <p
                 style={{
                   fontSize: bodySize,
-                  fontWeight: typography.body.weight,
+                  fontWeight: typography.body.fontWeight,
                   lineHeight: typography.body.lineHeight,
                   letterSpacing: typography.body.letterSpacing,
                   color: colors.bodyText
@@ -179,7 +179,7 @@ export function BlogCard({
                 dateTime={post.date}
                 style={{
                   fontSize: captionSize,
-                  fontWeight: typography.caption.weight,
+                  fontWeight: typography.caption.fontWeight,
                   lineHeight: typography.caption.lineHeight,
                   letterSpacing: typography.caption.letterSpacing,
                   color: colors.mediumGray

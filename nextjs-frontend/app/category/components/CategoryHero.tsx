@@ -122,7 +122,7 @@ export function CategoryHero({
             variants={childVariants}
             style={{
               fontSize: h1Size,
-              fontWeight: typography.h1.weight,
+              fontWeight: typography.h1.fontWeight,
               lineHeight: typography.h1.lineHeight,
               letterSpacing: typography.h1.letterSpacing,
               color: colors.headingText
@@ -137,7 +137,7 @@ export function CategoryHero({
             variants={childVariants}
             style={{
               fontSize: taglineSize,
-              fontWeight: typography.tagline.weight,
+              fontWeight: typography.tagline.fontWeight,
               lineHeight: typography.tagline.lineHeight,
               letterSpacing: typography.tagline.letterSpacing,
               color: colors.bodyText
