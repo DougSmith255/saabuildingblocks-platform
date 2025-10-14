@@ -52,7 +52,7 @@ export function CategoryHero({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.22, 1, 0.36, 1], // Custom easing for smooth entrance
+        ease: [0.22, 1, 0.36, 1] as any, // Custom easing for smooth entrance
         staggerChildren: 0.1,
       },
     },
