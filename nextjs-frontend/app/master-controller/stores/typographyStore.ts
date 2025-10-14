@@ -104,6 +104,14 @@ const defaultSettings: TypographySettings = {
     fontFamily: 'var(--font-amulya)',
     color: 'bodyText',
   },
+  caption: {
+    size: { min: 12, max: 16, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'mediumGray',
+  },
 };
 
 export const useTypographyStore = create<TypographyStore>()(

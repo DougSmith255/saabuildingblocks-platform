@@ -42,6 +42,7 @@ export interface TypographySettings {
   link: TextTypeSettings;
   button: TextTypeSettings;
   tagline: TextTypeSettings;
+  caption: TextTypeSettings;
 }
 
 /**
