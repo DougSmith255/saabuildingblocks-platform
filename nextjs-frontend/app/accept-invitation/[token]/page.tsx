@@ -13,6 +13,8 @@ import { Loader2 } from 'lucide-react';
  * This page requires server-side logic and cannot be statically exported
  * Returning empty array tells Next.js to skip this route during static export
  */
+export const dynamicParams = false; // Don't generate pages for params not in generateStaticParams
+
 export async function generateStaticParams() {
   return []; // Skip static generation for this dynamic route
 }
