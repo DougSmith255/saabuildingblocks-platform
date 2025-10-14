@@ -6,6 +6,20 @@
  */
 
 // ============================================================================
+// MASTER CONTROLLER TYPES (imported for use throughout this file)
+// ============================================================================
+
+export type {
+  TypographySettings,
+  TextTypeSettings,
+  ClampConfig,
+  BrandColorsSettings,
+  SpacingSettings,
+  ColorName,
+  SpacingToken,
+} from '@/app/master-controller/types';
+
+// ============================================================================
 // CATEGORY CONFIGURATION TYPES
 // ============================================================================
 
@@ -239,20 +253,6 @@ export interface BlogCardProps {
   /** Optional CSS class */
   className?: string;
 }
-
-// ============================================================================
-// MASTER CONTROLLER SETTINGS TYPES (Re-exported from master-controller)
-// ============================================================================
-
-export type {
-  TypographySettings,
-  TextTypeSettings,
-  ClampConfig,
-  BrandColorsSettings,
-  SpacingSettings,
-  ColorName,
-  SpacingToken,
-} from '@/app/master-controller/types';
 
 // ============================================================================
 // API TYPES
