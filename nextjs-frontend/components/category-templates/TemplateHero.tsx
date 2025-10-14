@@ -86,8 +86,6 @@ export function TemplateHero({
           >
             <CTAButton
               href={ctaLink}
-              variant="primary"
-              size="large"
               className="shadow-lg shadow-[#00ff88]/20"
             >
               {ctaText}

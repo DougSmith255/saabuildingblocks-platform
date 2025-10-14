@@ -57,7 +57,6 @@ export default function Partnerships({ category, posts, settings }: TemplateProp
         />
       </TemplateSection>
 
-      <TemplateSection variant="dark">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-[#e5e4dd]">
@@ -71,7 +70,6 @@ export default function Partnerships({ category, posts, settings }: TemplateProp
         </div>
       </TemplateSection>
 
-      <TemplateSection variant="accent">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="text-center">
@@ -146,7 +144,6 @@ export default function Partnerships({ category, posts, settings }: TemplateProp
                       </span>
                     )}
                   </div>
-                  <CTAButton href={`/blog/${post.slug}`} variant="secondary" size="small" className="w-full">
                     Learn More
                   </CTAButton>
                   <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#00ff88]/0 via-[#00ff88]/0 to-[#00ff88]/5 opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" />
@@ -170,7 +167,6 @@ export default function Partnerships({ category, posts, settings }: TemplateProp
             description="Join eXp Realty and gain instant access to our network of strategic partners, exclusive discounts, and premium services."
             ctaText="See All Partners"
             ctaLink="/contact"
-            variant="gradient"
           />
         </div>
       </TemplateSection>

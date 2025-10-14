@@ -57,7 +57,6 @@ export default function GlobalExpansion({ category, posts, settings }: TemplateP
         />
       </TemplateSection>
 
-      <TemplateSection variant="dark">
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-[#e5e4dd]">
@@ -71,7 +70,6 @@ export default function GlobalExpansion({ category, posts, settings }: TemplateP
         </div>
       </TemplateSection>
 
-      <TemplateSection variant="accent">
         <div className="mx-auto max-w-6xl">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="text-center">
@@ -146,7 +144,6 @@ export default function GlobalExpansion({ category, posts, settings }: TemplateP
                       </span>
                     )}
                   </div>
-                  <CTAButton href={`/blog/${post.slug}`} variant="secondary" size="small" className="w-full">
                     Read Article
                   </CTAButton>
                   <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-[#00ff88]/0 via-[#00ff88]/0 to-[#00ff88]/5 opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none" />
@@ -170,7 +167,6 @@ export default function GlobalExpansion({ category, posts, settings }: TemplateP
             description="Join eXp Realty and unlock international opportunities. Build a business without borders through our global platform and agent network."
             ctaText="Explore Global Markets"
             ctaLink="/contact"
-            variant="gradient"
           />
         </div>
       </TemplateSection>
