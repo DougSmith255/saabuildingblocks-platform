@@ -65,14 +65,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <main className="min-h-screen bg-black">
           <TemplateComponent
             category={{
-              id: config.id,
+              id: parseInt(config.id as string, 10),
               name: config.name,
               slug: config.slug,
               description: config.tagline,
               count: posts.length
             }}
             posts={posts.map(post => ({
-              id: post.id,
+              id: typeof post.id === 'number' ? post.id : parseInt(post.id as string, 10),
               slug: post.slug,
               title: post.title,
               excerpt: post.excerpt,
