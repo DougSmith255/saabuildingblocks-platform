@@ -103,6 +103,22 @@ const modernPreset: TypographySettings = {
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
   },
+  tagline: {
+    size: DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig,
+    lineHeight: 1.5,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'bodyText',
+  },
+  caption: {
+    size: DEFAULT_TYPOGRAPHY_CLAMPS['caption'] as ClampConfig,
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'mediumGray',
+  },
 };
 
 // Compact preset (20% smaller)
@@ -187,6 +203,22 @@ const compactPreset: TypographySettings = {
     fontWeight: 500,
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
+  },
+  tagline: {
+    size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 0.8),
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'bodyText',
+  },
+  caption: {
+    size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['caption'] as ClampConfig, 0.8),
+    lineHeight: 1.3,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'mediumGray',
   },
 };
 
@@ -273,6 +305,22 @@ const editorialPreset: TypographySettings = {
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
   },
+  tagline: {
+    size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 1.1),
+    lineHeight: scaleLineHeight(1.5, 1.1),
+    letterSpacing: 0.005,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'bodyText',
+  },
+  caption: {
+    size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['caption'] as ClampConfig, 1.1),
+    lineHeight: scaleLineHeight(1.4, 1.1),
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'mediumGray',
+  },
 };
 
 // SAA Default preset (Original Smart Agent Alliance defaults from HTML master controller)
@@ -357,6 +405,22 @@ const saaDefaultPreset: TypographySettings = {
     fontWeight: 600,
     fontFamily: 'var(--font-amulya)',
     color: 'accentGreen',
+  },
+  tagline: {
+    size: { min: 16, max: 21, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    lineHeight: 1.5,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'bodyText',
+  },
+  caption: {
+    size: { min: 12, max: 16, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'mediumGray',
   },
 };
 
