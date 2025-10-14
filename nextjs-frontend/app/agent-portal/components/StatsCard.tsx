@@ -7,7 +7,7 @@
  * Display statistical information with icon and value
  */
 
-import { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface StatsCardProps {
   title: string;
