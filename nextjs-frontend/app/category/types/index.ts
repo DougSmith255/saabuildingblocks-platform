@@ -241,47 +241,18 @@ export interface BlogCardProps {
 }
 
 // ============================================================================
-// MASTER CONTROLLER SETTINGS TYPES
+// MASTER CONTROLLER SETTINGS TYPES (Re-exported from master-controller)
 // ============================================================================
 
-export interface TypographySettings {
-  h1: TextTypeSettings;
-  h2: TextTypeSettings;
-  h3: TextTypeSettings;
-  body: TextTypeSettings;
-  tagline: TextTypeSettings;
-  button: TextTypeSettings;
-  caption: TextTypeSettings;
-}
-
-export interface TextTypeSettings {
-  size: ClampConfig;
-  weight: string;
-  lineHeight: string;
-  letterSpacing: string;
-}
-
-export interface ClampConfig {
-  min: number;
-  preferred: number;
-  max: number;
-  unit: 'px' | 'rem' | 'em';
-}
-
-export interface BrandColorsSettings {
-  accentGreen: string;
-  headingText: string;
-  bodyText: string;
-  brandGold: string;
-  darkGray: string;
-  mediumGray: string;
-}
-
-export interface SpacingSettings {
-  sectionPadding: ClampConfig;
-  containerPadding: ClampConfig;
-  cardGap: ClampConfig;
-}
+export type {
+  TypographySettings,
+  TextTypeSettings,
+  ClampConfig,
+  BrandColorsSettings,
+  SpacingSettings,
+  ColorName,
+  SpacingToken,
+} from '@/app/master-controller/types';
 
 // ============================================================================
 // API TYPES
