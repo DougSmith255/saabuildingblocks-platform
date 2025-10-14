@@ -30,12 +30,11 @@ interface CategoryPageProps {
 }
 
 /**
- * Dynamic Route Segment Config
- * Force dynamic rendering - no static generation at build time
- * This is required because WordPress API needs authentication
+ * Static Export Configuration
+ * dynamicParams: false = Only pre-render categories defined in generateStaticParams
+ * This is required for static export to work properly
  */
-export const dynamic = 'force-dynamic';
-export const dynamicParams = true;
+export const dynamicParams = false;
 
 /**
  * Generate Metadata (SEO)
