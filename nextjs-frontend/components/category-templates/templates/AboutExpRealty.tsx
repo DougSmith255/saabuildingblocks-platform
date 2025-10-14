@@ -193,8 +193,6 @@ export default function AboutExpRealty({ category, posts, settings }: TemplatePr
                   {/* Read more link */}
                   <CTAButton
                     href={`/blog/${post.slug}`}
-                    variant="secondary"
-                    size="small"
                     className="w-full"
                   >
                     Read Article
@@ -224,7 +222,6 @@ export default function AboutExpRealty({ category, posts, settings }: TemplatePr
             description="Discover why thousands of real estate agents chose eXp Realty as their brokerage. Experience the power of cloud-based technology, revenue sharing, and a global agent community."
             ctaText="Contact Us Today"
             ctaLink="/contact"
-            variant="gradient"
           />
         </div>
       </TemplateSection>

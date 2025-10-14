@@ -14,6 +14,7 @@
  *   description="Join thousands of teams already using our platform"
  *   ctaText="Start Free Trial"
  *   ctaLink="/sign-up"
+ *   variant="gradient"
  * />
  * ```
  */
@@ -78,6 +79,8 @@ export function TemplateCTA({
         >
           <CTAButton
             href={ctaLink}
+            variant="primary"
+            size="large"
             className="shadow-xl shadow-[#00ff88]/20"
           >
             {ctaText}
