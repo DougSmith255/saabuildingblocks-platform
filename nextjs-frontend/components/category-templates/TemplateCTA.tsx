@@ -79,8 +79,6 @@ export function TemplateCTA({
         >
           <CTAButton
             href={ctaLink}
-            variant="primary"
-            size="large"
             className="shadow-xl shadow-[#00ff88]/20"
           >
             {ctaText}
