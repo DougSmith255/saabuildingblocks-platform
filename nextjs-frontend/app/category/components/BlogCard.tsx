@@ -130,8 +130,6 @@ export function BlogCard({
           className="h-full"
         >
           <CyberCardHolographic
-            glowColor={colors.accentGreen}
-            hoverScale={false} // We handle scale via Framer Motion
             className="h-full overflow-hidden"
           >
             {/* Featured Image */}
