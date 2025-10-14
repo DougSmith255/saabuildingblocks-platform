@@ -1,25 +1,89 @@
 /**
  * Master Controller Type Definitions
- * Re-exports types from category template system for consistency
+ * These match the actual store implementations in master-controller/stores/
  */
-
-export type {
-  TypographySettings,
-  TextTypeSettings,
-  ClampConfig,
-  BrandColorsSettings,
-  SpacingSettings,
-} from '@/app/category/types';
 
 /**
- * Color name union type for Master Controller
+ * Clamp configuration for responsive sizing
  */
-export type ColorName = keyof BrandColorsSettings;
+export interface ClampConfig {
+  min: number;
+  max: number;
+  viewportMin: number;
+  viewportMax: number;
+  unit: 'px' | 'rem' | 'em';
+}
 
 /**
- * Spacing token union type for Master Controller
+ * Text type settings for each typography element
  */
-export type SpacingToken = keyof SpacingSettings;
+export interface TextTypeSettings {
+  size: ClampConfig;
+  lineHeight: number;
+  letterSpacing: number;
+  fontWeight: number;
+  fontFamily: string;
+  color: ColorName;
+  fontStyle?: 'normal' | 'italic';
+}
 
-// Import to enable type-only re-exports
-import type { BrandColorsSettings, SpacingSettings } from '@/app/category/types';
+/**
+ * Complete typography settings for all text elements
+ */
+export interface TypographySettings {
+  h1: TextTypeSettings;
+  h2: TextTypeSettings;
+  h3: TextTypeSettings;
+  h4: TextTypeSettings;
+  h5: TextTypeSettings;
+  h6: TextTypeSettings;
+  body: TextTypeSettings;
+  quote: TextTypeSettings;
+  link: TextTypeSettings;
+  button: TextTypeSettings;
+  tagline: TextTypeSettings;
+}
+
+/**
+ * Brand color names (Master Controller)
+ */
+export type ColorName =
+  | 'accentGreen'
+  | 'headingText'
+  | 'bodyText'
+  | 'brandGold'
+  | 'darkGray'
+  | 'mediumGray';
+
+/**
+ * Brand colors settings
+ */
+export interface BrandColorsSettings {
+  accentGreen: string;
+  headingText: string;
+  bodyText: string;
+  brandGold: string;
+  darkGray: string;
+  mediumGray: string;
+}
+
+/**
+ * Spacing token names
+ */
+export type SpacingToken =
+  | 'sectionPadding'
+  | 'containerPadding'
+  | 'cardGap'
+  | 'buttonPadding'
+  | 'inputPadding';
+
+/**
+ * Spacing settings with clamp configs
+ */
+export interface SpacingSettings {
+  sectionPadding: ClampConfig;
+  containerPadding: ClampConfig;
+  cardGap: ClampConfig;
+  buttonPadding: ClampConfig;
+  inputPadding: ClampConfig;
+}
