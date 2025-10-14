@@ -38,8 +38,22 @@ jobs:
           cp next.config.ts next.config.dynamic.backup
           cp next.config.static.ts next.config.ts
 
+          echo "🗑️  Temporarily removing auth-protected routes..."
+          mv app/accept-invitation app/.accept-invitation.backup
+          mv app/agent-portal app/.agent-portal.backup
+          mv app/master-controller app/.master-controller.backup
+          mv app/sign-up app/.sign-up.backup
+          mv app/_auth app/._auth.backup
+
           echo "🏗️  Running Next.js build with static export..."
           npm run build
+
+          echo "♻️  Restoring dynamic routes..."
+          mv app/.accept-invitation.backup app/accept-invitation
+          mv app/.agent-portal.backup app/agent-portal
+          mv app/.master-controller.backup app/master-controller
+          mv app/.sign-up.backup app/sign-up
+          mv app/._auth.backup app/_auth
 
           echo "♻️  Restoring dynamic config..."
           mv next.config.dynamic.backup next.config.ts
