@@ -178,7 +178,7 @@ export function SecondaryButton({
       />
 
       <ButtonElement
-        {...elementProps}
+        {...(elementProps as any)}
         className={`${buttonClasses} group`}
         onClick={handleClick}
         aria-label={ariaLabel || (typeof children === 'string' ? children : undefined)}
