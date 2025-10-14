@@ -24,6 +24,7 @@ export interface User {
   gohighlevel_contact_id?: string;
   created_at: string;
   updated_at: string;
+  lastLogin?: string; // Last login timestamp
 }
 
 /**
@@ -76,6 +77,7 @@ export interface UserResponse {
   email_verified_at?: string;
   created_at: string;
   updated_at: string;
+  lastLogin?: string; // Last login timestamp
 }
 
 /**
