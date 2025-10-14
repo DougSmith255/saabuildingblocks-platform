@@ -8,6 +8,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
 
+/**
+ * Route segment config
+ * This page requires server-side logic and cannot be statically exported
+ * Returning empty array tells Next.js to skip this route during static export
+ */
+export async function generateStaticParams() {
+  return []; // Skip static generation for this dynamic route
+}
+
 interface PageProps {
   params: {
     token: string;
