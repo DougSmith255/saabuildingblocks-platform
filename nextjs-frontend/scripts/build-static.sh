@@ -7,6 +7,10 @@ set -e
 
 echo "🚀 Building static export..."
 
+# Generate static Master Controller CSS first
+echo "🎨 Generating Master Controller CSS..."
+npm run generate:css
+
 # Create temporary directory for dynamic routes
 mkdir -p .dynamic-routes-backup
 
@@ -17,9 +21,9 @@ mv app/agent-portal .dynamic-routes-backup/ 2>/dev/null || true
 mv app/_auth .dynamic-routes-backup/ 2>/dev/null || true
 mv app/category .dynamic-routes-backup/ 2>/dev/null || true
 
-# Run Next.js build
+# Run Next.js build with STATIC_BUILD=true to inline CSS
 echo "🏗️  Building with Next.js..."
-npm run build
+STATIC_BUILD=true npm run build
 
 # Restore dynamic routes
 echo "📥 Restoring dynamic routes..."
