@@ -1,90 +1,50 @@
 /**
  * Build-Time CSS Generator
  *
- * Reads Master Controller settings from database at build time
- * and generates CSS that can be inlined into static HTML.
+ * Reads pre-generated Master Controller CSS from static file at build time
+ * and inlines it into static HTML.
  *
  * This is used for static site generation where we need to bake
  * the design settings into the HTML instead of injecting them
  * dynamically via JavaScript.
+ *
+ * The static CSS file is generated via: npm run generate:css
+ * Location: public/static-master-controller.css
  */
 
-import { createClient } from '@supabase/supabase-js';
-import { CSSGenerator } from './cssGenerator';
-import type { TypographySettings, BrandColorsSettings, SpacingSettings } from '../types';
-
-const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'] || '';
-const supabaseServiceKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] || '';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 /**
- * Fetches Master Controller settings from Supabase database
- * Uses service role key for server-side access during build
- */
-async function fetchSettings() {
-  if (!supabaseUrl || !supabaseServiceKey) {
-    console.warn('⚠️ Supabase credentials not found, using default settings');
-    return null;
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-  try {
-    // Fetch typography settings
-    const { data: typographyData } = await supabase
-      .from('typography_settings')
-      .select('settings')
-      .single();
-
-    // Fetch brand colors
-    const { data: colorsData } = await supabase
-      .from('brand_colors')
-      .select('settings')
-      .single();
-
-    // Fetch spacing settings
-    const { data: spacingData } = await supabase
-      .from('spacing_settings')
-      .select('settings')
-      .single();
-
-    return {
-      typography: typographyData?.settings as TypographySettings | null,
-      colors: colorsData?.settings as BrandColorsSettings | null,
-      spacing: spacingData?.settings as SpacingSettings | null,
-    };
-  } catch (error) {
-    console.error('❌ Failed to fetch Master Controller settings:', error);
-    return null;
-  }
-}
-
-/**
- * Generates static CSS from Master Controller settings
+ * Generates static CSS from pre-generated Master Controller settings file
  * This CSS will be inlined into the HTML <head> at build time
  *
- * @returns Minified CSS string ready to be inlined
+ * @returns CSS string ready to be inlined (with comments stripped for production)
  */
 export async function generateStaticCSS(): Promise<string> {
-  console.log('🎨 Generating static CSS from Master Controller settings...');
+  console.log('🎨 Loading pre-generated Master Controller CSS...');
 
-  const settings = await fetchSettings();
+  try {
+    // Read the pre-generated CSS file from public directory
+    const cssPath = join(process.cwd(), 'public', 'static-master-controller.css');
+    const css = readFileSync(cssPath, 'utf-8');
 
-  if (!settings || !settings.typography || !settings.colors || !settings.spacing) {
-    console.warn('⚠️ Using default Master Controller settings');
-    // Return empty string - default CSS from critical.css will be used
+    // Strip comments and extra whitespace for production
+    const minified = css
+      .replace(/\/\*[\s\S]*?\*\//g, '') // Remove /* */ comments
+      .replace(/\s+/g, ' ') // Collapse whitespace
+      .replace(/\s*([{}:;,])\s*/g, '$1') // Remove spaces around CSS syntax
+      .trim();
+
+    console.log(`✅ Loaded ${(minified.length / 1024).toFixed(2)}KB of static CSS from pre-generated file`);
+
+    return minified;
+  } catch (error) {
+    console.error('❌ Failed to load static-master-controller.css:', error);
+    console.warn('⚠️  Make sure to run: npm run generate:css');
+    // Return empty string to allow build to continue
     return '';
   }
-
-  // Generate CSS using the same generator as the live system
-  const css = CSSGenerator.generateComplete(
-    settings.colors,
-    settings.typography,
-    settings.spacing
-  );
-
-  console.log(`✅ Generated ${(css.length / 1024).toFixed(2)}KB of static CSS`);
-
-  return css;
 }
 
 /**
