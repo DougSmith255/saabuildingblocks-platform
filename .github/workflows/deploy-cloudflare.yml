@@ -23,29 +23,29 @@ jobs:
         working-directory: nextjs-frontend
         run: npm ci
 
-      - name: Build with Cloudflare Next.js Adapter
+      - name: Build Static Export
         working-directory: nextjs-frontend
         env:
-          WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
-          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
           NEXT_PUBLIC_WORDPRESS_API_URL: https://wp.saabuildingblocks.com/wp-json/wp/v2
           NODE_ENV: production
         run: |
-          echo "📦 Building Next.js for Cloudflare Pages (full dynamic site)..."
+          echo "🔨 Building static export for Cloudflare Pages"
+          echo "   This generates true static HTML (no server-side code)"
+          echo "   Using scripts/build-static.sh to exclude auth routes"
 
-          echo "🏗️  Running Next.js build with Cloudflare adapter..."
-          npm run build
+          # Run static export build (moves dynamic routes temporarily)
+          bash scripts/build-static.sh
 
-          echo "⚡ Building Cloudflare Workers bundle..."
-          npx @cloudflare/next-on-pages
-
-          echo "✅ Cloudflare build complete!"
-          echo "📊 Generated files:"
-          ls -lh .vercel/output/static | head -20
+          echo ""
+          echo "📊 Build verification:"
+          echo "  Files to deploy: $(find out -type f | wc -l)"
+          echo "  Total size: $(du -sh out/ | cut -f1)"
+          echo ""
+          echo "✅ Static export complete - ready for Cloudflare Pages deployment"
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/.vercel/output/static --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=main
+          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main
