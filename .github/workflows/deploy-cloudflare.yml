@@ -48,4 +48,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saa-static-site --branch=main --commit-dirty=true
