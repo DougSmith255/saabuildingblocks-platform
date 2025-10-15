@@ -22,15 +22,20 @@ const nextConfig: NextConfig = {
   /**
    * Enable static HTML export for Cloudflare Pages
    * Routes with `export const dynamic = 'force-dynamic'` will be excluded automatically
+   *
+   * DISABLED for production - incompatible with API routes, auth, Master Controller
+   * Use build-static.sh script for static exports instead
    */
-  output: 'export',
+  // output: 'export',
 
   /**
    * Experimental features (Next.js 15)
    * Combined configuration for all experimental options
+   *
+   * DISABLED: Breaks Tailwind v4 utilities - use PostCSS with cssnano instead
    */
   experimental: {
-    optimizeCss: true,
+    // optimizeCss: true,
   },
 
   /**

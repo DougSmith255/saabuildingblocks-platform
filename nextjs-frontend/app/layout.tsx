@@ -15,11 +15,35 @@ import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-// Read critical CSS at build time for inlining
+// Read critical CSS at build time for consolidation
 const criticalCSS = readFileSync(
   join(process.cwd(), 'app/styles/critical.css'),
   'utf-8'
 );
+
+/**
+ * Generate consolidated CSS for static builds
+ * Combines critical CSS + Master Controller CSS in correct order:
+ * 1. CSS variables (:root)
+ * 2. Critical layout/typography
+ * 3. Master Controller settings
+ */
+async function generateConsolidatedCSS(): Promise<string> {
+  const masterControllerCSS = await generateStaticCSS();
+
+  // Consolidate in correct order to prevent FOUC
+  return `
+/* ========================================
+   CONSOLIDATED CSS FOR STATIC EXPORT
+   Order: Variables → Critical → Components
+   ======================================== */
+
+${criticalCSS}
+
+/* Master Controller Settings (baked at build time) */
+${masterControllerCSS}
+`.trim();
+}
 
 /**
  * Custom Font Configurations
@@ -151,11 +175,11 @@ export default async function RootLayout({
   // Check if this is a static build
   const isStaticBuild = process.env['STATIC_BUILD'] === 'true';
 
-  // For static builds, generate CSS at build time
-  let staticCSS = '';
+  // For static builds, generate consolidated CSS at build time
+  let consolidatedCSS = '';
   if (isStaticBuild) {
-    staticCSS = await generateStaticCSS();
-    console.log('🎨 Static CSS generated at build time');
+    consolidatedCSS = await generateConsolidatedCSS();
+    console.log('🎨 Consolidated CSS generated at build time (prevents FOUC)');
   }
 
   return (
@@ -165,18 +189,17 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* Critical CSS - Inlined for instant FCP */}
-        <style
-          dangerouslySetInnerHTML={{ __html: criticalCSS }}
-          data-description="Critical above-the-fold CSS"
-        />
-
-        {/* Master Controller CSS - Baked in for static builds */}
-        {isStaticBuild && staticCSS && (
+        {/* SINGLE CONSOLIDATED STYLE BLOCK - Prevents CSS FOUC */}
+        {isStaticBuild && consolidatedCSS ? (
           <style
             id="master-controller-static"
-            dangerouslySetInnerHTML={{ __html: staticCSS }}
-            data-description="Master Controller settings baked at build time"
+            dangerouslySetInnerHTML={{ __html: consolidatedCSS }}
+            data-description="Consolidated CSS: Variables + Critical + Master Controller (prevents FOUC)"
+          />
+        ) : (
+          <style
+            dangerouslySetInnerHTML={{ __html: criticalCSS }}
+            data-description="Critical above-the-fold CSS"
           />
         )}
 
