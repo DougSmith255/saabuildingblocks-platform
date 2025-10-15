@@ -1,11 +1,19 @@
+'use client';
+
 /**
  * Activity Log Page
  * Phase 3: Activity Log UI
  *
  * /agent-portal/activity - Activity log viewer
+ *
+ * STATIC EXPORT: This route is excluded from static export
+ * Requires authentication and dynamic activity data
  */
 
-'use client';
+/**
+ * Route segment config for static export
+ */
+export const dynamic = 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { ActivityLogTable } from '@/components/activity/ActivityLogTable';

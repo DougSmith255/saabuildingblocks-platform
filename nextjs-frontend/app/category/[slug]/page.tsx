@@ -31,19 +31,12 @@ interface CategoryPageProps {
 
 /**
  * Static Export Configuration
- * dynamicParams: false = Only pre-render categories defined in generateStaticParams
- * This is required for static export to work properly
+ * TEMPORARILY EXCLUDED FROM STATIC EXPORT
+ * Category IDs in config don't match WordPress (causing 404s)
+ * TODO: Fix category ID mappings before enabling static export
  */
+export const dynamic = 'force-dynamic'; // Exclude from static export
 export const dynamicParams = false;
-
-/**
- * Generate Static Params for Build-Time Rendering
- * Returns all valid category slugs for pre-rendering
- */
-export async function generateStaticParams() {
-  const categorySlugs = getAllCategorySlugs();
-  return categorySlugs.map((slug) => ({ slug }));
-}
 
 /**
  * Generate Metadata (SEO)

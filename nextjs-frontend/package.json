@@ -77,7 +77,13 @@
     "blog:static:deploy:preview": "bash scripts/deploy-static-blog.sh --preview",
     "blog:static:quick": "bash scripts/quick-deploy-blog.sh",
     "blog:static:quick:preview": "bash scripts/quick-deploy-blog.sh --preview",
-    "blog:static:test": "bash scripts/test-static-blog.sh"
+    "blog:static:test": "bash scripts/test-static-blog.sh",
+    "generate:css": "tsx scripts/generate-static-css.ts",
+    "verify:static-export": "bash scripts/verify-static-export.sh",
+    "test:static-animations": "playwright test tests/static-deployment/verify-animations.spec.ts",
+    "test:static-mc": "playwright test tests/static-deployment/verify-master-controller.spec.ts",
+    "test:static-all": "playwright test tests/static-deployment/",
+    "rollback:static": "bash scripts/rollback-static-deployment.sh"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.901.0",
@@ -135,6 +141,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@axe-core/react": "^4.10.2",
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@playwright/test": "^1.55.1",
     "@tailwindcss/postcss": "^4.1.14",
     "@testing-library/jest-dom": "^6.9.1",

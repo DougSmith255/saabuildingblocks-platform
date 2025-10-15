@@ -8,6 +8,8 @@
  * - Welcome message with user name
  * - Quick stats cards
  * - Navigation cards to different sections
+ *
+ * STATIC EXPORT: Excluded via layout.tsx (parent has dynamic = 'force-dynamic')
  */
 
 import { useAuth } from '@/app/providers/AuthProvider';

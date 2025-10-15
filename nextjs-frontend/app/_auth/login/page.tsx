@@ -11,6 +11,8 @@
  * - Forgot password/username links
  * - Redirect to Agent Portal on success
  * - Glass morphism design matching Master Controller
+ *
+ * STATIC EXPORT: Excluded via layout.tsx (parent has dynamic = 'force-dynamic')
  */
 
 import { useEffect, Suspense } from 'react';

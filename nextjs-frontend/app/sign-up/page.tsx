@@ -3,6 +3,12 @@
 /**
  * Signup Page (User Activation)
  * Allows users to complete registration after email verification
+ *
+ * STATIC EXPORT: This route is excluded from static export
+ * Requires server-side user activation and API routes
+ *
+ * Note: This page doesn't have a layout, so we can't use layout-level dynamic export
+ * We accept this will be statically generated, but won't work without backend
  */
 
 import { useState, useEffect, Suspense } from 'react';

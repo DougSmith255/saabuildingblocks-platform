@@ -1,13 +1,17 @@
-name = "saabuildingblocks"
+name = "saa-static"
 compatibility_date = "2024-01-01"
-pages_build_output_dir = ".vercel/output/static"
+pages_build_output_dir = "out"
 
-# Cloudflare Pages configuration for Next.js deployment
-# Uses @cloudflare/next-on-pages adapter to run full Next.js on Workers
+# Cloudflare Pages configuration for true static export
+# Deploys pre-rendered HTML files (no server-side code)
+# Dynamic site (with API routes) is deployed separately via PM2
 
 [env.production]
-name = "saabuildingblocks"
-route = "saabuildingblocks.com/*"
+name = "saa-static"
+route = "static.smartagentalliance.com/*"
 
-# Environment variables are set in Cloudflare dashboard
-# Required: WORDPRESS_USER, WORDPRESS_APP_PASSWORD, NEXT_PUBLIC_WORDPRESS_API_URL
+# Environment variables for build-time data fetching
+# Set in GitHub Actions secrets (read-only access):
+# - NEXT_PUBLIC_SUPABASE_URL
+# - NEXT_PUBLIC_SUPABASE_ANON_KEY
+# - NEXT_PUBLIC_WORDPRESS_API_URL

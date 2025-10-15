@@ -3,6 +3,9 @@
 /**
  * Edit/View Role Page
  * Edit existing role or view system role details
+ *
+ * STATIC EXPORT: This route is excluded from static export
+ * Requires authentication and dynamic role editing
  */
 
 import { useState, useEffect } from 'react';

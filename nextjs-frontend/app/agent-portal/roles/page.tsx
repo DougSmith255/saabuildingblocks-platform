@@ -3,6 +3,9 @@
 /**
  * Roles Management Page
  * List and manage all roles in the system
+ *
+ * STATIC EXPORT: This route is excluded from static export
+ * Requires authentication and dynamic role management
  */
 
 import { useState, useEffect } from 'react';

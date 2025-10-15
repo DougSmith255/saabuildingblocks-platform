@@ -8,7 +8,15 @@ import GlassScrollbar from '@/components/GlassScrollbar';
  *
  * Clean layout without header/footer for authentication pages.
  * Features optimized starfield background with brand colors.
+ *
+ * STATIC EXPORT: Excluded from static export (requires auth)
  */
+
+/**
+ * Route segment config - excludes /login from static export
+ */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Sign In - Agent Portal',
   description: 'Secure access to Agent Portal. Authenticate with your credentials.',

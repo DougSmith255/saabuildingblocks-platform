@@ -12,7 +12,16 @@ import { AuthProvider } from '@/app/providers/AuthProvider';
  * global Header and Footer components.
  *
  * Protected by middleware - requires authentication.
+ *
+ * STATIC EXPORT: This entire route tree is excluded from static export
+ * Requires server-side authentication and dynamic data
  */
+
+/**
+ * Route segment config - excludes /agent-portal/* from static export
+ */
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Agent Portal - User Management',
   description: 'Agent Portal for managing users, roles, and permissions',

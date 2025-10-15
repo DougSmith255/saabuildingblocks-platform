@@ -30,7 +30,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'
+  CLOUDFLARE_PROJECT_NAME: 'saa-static'  # Static export project
   DEPLOYMENT_TIMEOUT: 900  # 15 minutes in seconds
   MAX_PARALLEL_UPLOADS: 50
   RETRY_ATTEMPTS: 3
@@ -94,21 +94,54 @@ jobs:
             echo "✅ Using cached node_modules"
           fi
 
-      # Build static export
-      - name: Build static export
+      # Generate Build-Time CSS (if Master Controller settings exist)
+      - name: Generate Build-Time CSS
+        working-directory: nextjs-frontend
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "🎨 Generating build-time CSS from Master Controller settings..."
+
+          # Check if generate-static-css.ts exists
+          if [ -f "scripts/generate-static-css.ts" ]; then
+            npx tsx scripts/generate-static-css.ts
+            echo "✅ CSS generated successfully"
+          else
+            echo "⚠️  No generate-static-css.ts script found - skipping CSS generation"
+            echo "   Static site will use default styles"
+          fi
+
+      # Build static export (true static HTML)
+      - name: Build Static Export
         working-directory: nextjs-frontend
         env:
           NEXT_CONFIG_FILE: next.config.static.ts
           NODE_ENV: production
+          # Supabase credentials for build-time data fetching (read-only)
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # WordPress API for blog content
+          NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
         run: |
           echo "🔨 Building static export for Cloudflare Pages"
+          echo "   This generates true static HTML (no server-side code)"
+
+          # Run static export build
           npm run export:clean
 
+          echo ""
           echo "📊 Build verification:"
           echo "  Files to deploy: $(find out -type f | wc -l)"
           echo "  Total size: $(du -sh out/ | cut -f1)"
+          echo ""
           echo "  Directory structure:"
           ls -lah out/ | head -20
+          echo ""
+          echo "  Sample files:"
+          find out -type f -name "*.html" | head -5
+          echo ""
+          echo "✅ Static export complete - ready for Cloudflare Pages deployment"
 
       # Compute build hash for change detection
       - name: Compute build hash
@@ -201,14 +234,14 @@ jobs:
           name: build-output
           path: nextjs-frontend/out
 
-      # Deploy to Cloudflare Pages with retry logic
+      # Deploy to Cloudflare Pages with retry logic (static HTML only)
       - name: Deploy to Cloudflare Pages
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 2)
@@ -219,7 +252,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 3)
@@ -230,7 +263,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main --commit-dirty=true
 
       # Set deployment status
       - name: Set deployment status
@@ -302,8 +335,8 @@ jobs:
             "message": "${MESSAGE}",
             "post_id": "${{ github.event.client_payload.post_id || inputs.post_id || '' }}",
             "post_slug": "${{ github.event.client_payload.post_slug || inputs.post_slug || '' }}",
-            "deployment_url": "https://saabuildingblocks.pages.dev",
-            "production_url": "https://saabuildingblocks.com",
+            "deployment_url": "https://saa-static.pages.dev",
+            "production_url": "https://static.smartagentalliance.com",
             "commit_sha": "${{ github.sha }}",
             "commit_message": "${{ github.event.head_commit.message }}",
             "workflow_run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
@@ -354,7 +387,7 @@ jobs:
               deployment_id: context.payload.deployment?.id || 0,
               state: status === 'success' ? 'success' : status === 'failed' ? 'failure' : 'inactive',
               description: message,
-              environment_url: 'https://saabuildingblocks.com',
+              environment_url: 'https://static.smartagentalliance.com',
               log_url: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
             }).catch(err => {
               console.log('Note: Could not create deployment status (no deployment found)');
@@ -370,8 +403,8 @@ jobs:
 
             **Status:** ${message}
             **Build Hash:** \`${{ needs.build.outputs.build-hash }}\`
-            **Deployment URL:** https://saabuildingblocks.pages.dev
-            **Production URL:** https://saabuildingblocks.com
+            **Deployment URL:** https://saa-static.pages.dev
+            **Production URL:** https://static.smartagentalliance.com
             **Workflow Run:** [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 
             ${status === 'failed' ? '⚠️ Check the workflow logs for error details.' : ''}

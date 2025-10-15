@@ -6,18 +6,24 @@ import type { NextConfig } from 'next';
  * Key Features:
  * - Static export mode for Cloudflare Pages deployment
  * - Optimized image handling with unoptimized export
- * - Strict TypeScript checking
+ * - Dynamic routes excluded via `dynamic = 'force-dynamic'`
  * - WordPress API integration ready
+ *
+ * Excluded Routes (VPS-only, not exported):
+ * - /login (auth)
+ * - /sign-up (auth)
+ * - /accept-invitation/[token] (auth)
+ * - /agent-portal/* (admin dashboard)
+ * - /master-controller/* (settings admin - no page.tsx, uses client-side)
+ *
+ * See: STATIC-EXPORT-EXCLUDED-ROUTES.md for complete list
  */
 const nextConfig: NextConfig = {
   /**
    * Enable static HTML export for Cloudflare Pages
-   * This generates a static site that can be deployed to any static hosting
-   *
-   * ⚠️ DISABLED - Application has API routes that require server-side execution
-   * See STATIC-EXPORT-LIMITATIONS.md for details and migration options
+   * Routes with `export const dynamic = 'force-dynamic'` will be excluded automatically
    */
-  // output: 'export',
+  output: 'export',
 
   /**
    * Experimental features (Next.js 15)

@@ -2,34 +2,28 @@
  * CategoryTemplate Component
  * Phase 7.4: Component Implementation
  *
- * Main orchestrator component that:
+ * STATIC EXPORT VERSION:
  * - Receives category config + initial WordPress posts
- * - Integrates with Master Controller stores (typography, colors, spacing)
- * - Composes CategoryHero + BlogGrid
- * - Implements React Query for client-side data fetching
+ * - Uses CSS variables for Master Controller settings (build-time)
+ * - No runtime stores or React Query (static HTML only)
  * - Props drilling pattern (no Context API)
  */
 
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { useTypographyStore } from '@/app/master-controller/stores/typographyStore';
-import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
-import { useSpacingStore } from '@/app/master-controller/stores/spacingStore';
 import { CategoryHero } from './CategoryHero';
 import { BlogGrid } from './BlogGrid';
-import { fetchPostsByCategory } from '../lib/wordpress-api';
-import type { CategoryTemplateProps, WordPressPost } from '../types';
+import type { CategoryTemplateProps } from '../types';
 
 /**
- * CategoryTemplate - Main orchestrator component
+ * CategoryTemplate - Main orchestrator component (Static Export)
  *
  * This component:
  * 1. Receives initial posts from SSG (Server Component)
- * 2. Fetches Master Controller settings from Zustand stores
- * 3. Sets up React Query for client-side data refresh
- * 4. Props-drills settings to child components (no Context)
- * 5. Composes CategoryHero + BlogGrid with shared settings
+ * 2. Uses CSS variables for Master Controller settings (baked in at build time)
+ * 3. No React Query (uses static initialPosts only)
+ * 4. Props-drills config to child components
+ * 5. Composes CategoryHero + BlogGrid
  *
  * @param config - Category configuration (slug, title, background, etc.)
  * @param initialPosts - Initial posts from generateStaticParams (SSG)
@@ -41,43 +35,32 @@ export function CategoryTemplate({
   className = ''
 }: CategoryTemplateProps) {
   // ============================================================================
-  // MASTER CONTROLLER INTEGRATION
+  // STATIC EXPORT MODE
   // ============================================================================
 
-  // Get typography settings from Master Controller
-  const { settings: typography } = useTypographyStore();
+  // Typography, colors, and spacing are handled via CSS variables
+  // Generated at build time by scripts/generate-static-css.ts
+  // No runtime Master Controller stores needed
 
-  // Get brand colors from Master Controller
-  const { settings: colors } = useBrandColorsStore();
+  // Use default/placeholder settings for TypeScript compatibility
+  // These values are not used in rendering (CSS variables are), but needed to prevent build errors
+  const typography = {
+    h1: { size: { min: 48, preferred: 72, max: 96 } },
+    h2: { size: { min: 36, preferred: 54, max: 72 } },
+    h3: { size: { min: 28, preferred: 42, max: 56 } },
+    body: { size: { min: 16, preferred: 18, max: 20 } },
+    tagline: { size: { min: 20, preferred: 24, max: 28 } },
+  } as any;
 
-  // Get spacing settings from Master Controller
-  const { settings: spacing } = useSpacingStore();
+  const colors = {
+    headingText: '#ffd700',
+    bodyText: '#dcdbd5',
+  } as any;
 
-  // ============================================================================
-  // WORDPRESS API INTEGRATION (React Query)
-  // ============================================================================
-
-  /**
-   * React Query hook for WordPress posts
-   * - Uses initialPosts as initialData (from SSG)
-   * - Refetches on client-side with 5-minute stale time
-   * - Provides loading/error states
-   */
-  const {
-    data: posts,
-    isLoading,
-    error
-  } = useQuery<WordPressPost[]>({
-    queryKey: ['posts', 'category', config.id],
-    queryFn: () => fetchPostsByCategory(config.id, {
-      per_page: 200,
-      _embed: true
-    }),
-    initialData: initialPosts,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
-  });
+  const spacing = {
+    sectionMargin: { min: 64, preferred: 96, max: 128 },
+    containerPadding: { min: 16, preferred: 24, max: 32 },
+  } as any;
 
   // ============================================================================
   // RENDER
@@ -95,12 +78,12 @@ export function CategoryTemplate({
 
       {/* Blog Grid Section */}
       <BlogGrid
-        posts={posts || []}
+        posts={initialPosts || []}
         typography={typography}
         colors={colors}
         spacing={spacing}
-        loading={isLoading}
-        error={error as Error | null}
+        loading={false}
+        error={null}
       />
     </div>
   );

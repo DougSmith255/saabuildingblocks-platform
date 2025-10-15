@@ -3,6 +3,9 @@
 /**
  * Create New Role Page
  * Form to create a new custom role with permissions
+ *
+ * STATIC EXPORT: This route is excluded from static export
+ * Requires authentication and role creation functionality
  */
 
 import { useState, useEffect } from 'react';

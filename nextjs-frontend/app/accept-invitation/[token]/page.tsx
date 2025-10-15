@@ -11,13 +11,9 @@ import { Loader2 } from 'lucide-react';
 /**
  * Route segment config
  * This page requires server-side logic and cannot be statically exported
- * Returning empty array tells Next.js to skip this route during static export
+ * force-dynamic will exclude this route from static export
  */
-export const dynamicParams = false; // Don't generate pages for params not in generateStaticParams
-
-export async function generateStaticParams() {
-  return []; // Skip static generation for this dynamic route
-}
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: {

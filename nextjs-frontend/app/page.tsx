@@ -3,18 +3,12 @@
 import { CTAButton, CyberText3D } from '@/components/saa';
 import SlotCounter from 'react-slot-counter';
 import { useState, useEffect } from 'react';
-import { useTypographyStore } from '@/app/master-controller/stores/typographyStore';
-import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
 
 export default function Home() {
   // Counter animation loop state
   const [counterValue, setCounterValue] = useState("0000");
   const [startValue, setStartValue] = useState("0000");
   const [isHydrated, setIsHydrated] = useState(false);
-
-  // Get body text typography settings
-  const bodySettings = useTypographyStore((state) => state.settings.body);
-  const brandColors = useBrandColorsStore((state) => state.settings);
 
   // Wait for hydration
   useEffect(() => {
@@ -149,7 +143,7 @@ export default function Home() {
             style={{
               fontFamily: 'var(--font-synonym)',
               fontWeight: 100,
-              color: brandColors?.bodyText || '#dcdbd5',
+              color: 'var(--color-body-text)',
             }}
           >
             {/* SlotCounter Numbers (LARGEST) */}
