@@ -1,7 +1,7 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from default Master Controller settings
- * Generated: 2025-10-15T16:32:53.870Z
+ * Generated: 2025-10-16T04:15:20.077Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
@@ -236,4 +236,30 @@
 .section-spacing {
   margin-top: var(--spacing-section-margin);
   margin-bottom: var(--spacing-section-margin);
+}
+
+/* ============================================
+ * MASTER CONTROLLER OVERWRITES
+ * Custom per-element styling from Master Controller UI
+ * ============================================ */
+
+/* Header Navigation Links - White Override (User Customization) */
+.nav-link,
+.nav-link:link,
+.nav-link:visited {
+  color: #ffffff !important;  /* Pure white, not accentGreen */
+}
+
+.nav-link:hover,
+.nav-link:active {
+  color: #ffffff !important;  /* Stay white on hover */
+}
+
+/* Tagline - Increased Size Override (User Customization) */
+.text-tagline {
+  font-size: clamp(20px, calc(17.143px + 0.952vw), 32px) !important;
+  line-height: 1.4 !important;
+  letter-spacing: 0.05em !important;
+  font-weight: 500 !important;
+  color: #ffd700 !important;  /* Gold color */
 }
