@@ -32,7 +32,7 @@ export default function Home() {
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
-          <div className="relative w-full max-w-[960px] h-[84vh]">
+          <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
               className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%]"
@@ -53,11 +53,11 @@ export default function Home() {
                 backgroundPosition: 'center center',
                 maskImage: `
                   radial-gradient(ellipse 60% 65% at center 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.3) 75%, transparent 100%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.1) 85%, transparent 95%)
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.95) 38%, rgba(0,0,0,0.8) 48%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.05) 63%, transparent 65%)
                 `,
                 WebkitMaskImage: `
                   radial-gradient(ellipse 60% 65% at center 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.3) 75%, transparent 100%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.3) 75%, rgba(0,0,0,0.1) 85%, transparent 95%)
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.95) 38%, rgba(0,0,0,0.8) 48%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.05) 63%, transparent 65%)
                 `,
                 maskComposite: 'intersect',
                 WebkitMaskComposite: 'source-in',
@@ -102,7 +102,7 @@ export default function Home() {
         {/* Container - shifted down to recenter vertically */}
         <div className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8 mt-[28vh]">
           {/* Headline Group */}
-          <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
+          <div className="space-y-10 text-center" style={{ perspective: '1000px' }}>
             {/* H1: 3D Neon Sign with individual letter flicker */}
             <h1
               id="hero-heading"
@@ -113,8 +113,8 @@ export default function Home() {
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'center',
-                gap: '0.5em',
-                lineHeight: '0.67',
+                rowGap: 0,
+                columnGap: '0.5em',
               }}
             >
               {['SMART', 'AGENT', 'ALLIANCE'].map((word, wordIndex) => (

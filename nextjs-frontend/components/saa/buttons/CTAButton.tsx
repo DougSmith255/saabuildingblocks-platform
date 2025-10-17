@@ -27,7 +27,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
     <div className={`
       ${className}
       group
-      relative ${isFullWidth ? 'flex' : 'inline-flex'} justify-center items-center
+      relative ${isFullWidth ? 'flex' : 'inline-flex w-fit mx-auto'} justify-center items-center
       !my-[10px]
     `}>
       <a

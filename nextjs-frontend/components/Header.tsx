@@ -126,10 +126,10 @@ export default function Header() {
       // Opening menu: make hamburger fixed immediately
       setIsHamburgerFixed(true);
     } else {
-      // Closing menu: unfix after 1 second delay
+      // Closing menu: unfix after 1.5 second delay
       hamburgerUnfixTimeoutRef.current = setTimeout(() => {
         setIsHamburgerFixed(false);
-      }, 1000);
+      }, 1500);
     }
   };
 
@@ -176,9 +176,7 @@ export default function Header() {
         {/* Sliding container for background and content */}
         <div
           className={`transition-transform duration-500 ease-in-out ${
-            isHidden && !isMobileMenuOpen ? '-translate-y-full' : 'translate-y-0'
-          } ${
-            isMobileMenuOpen ? 'xlg:translate-y-0 -translate-y-full' : ''
+            isMobileMenuOpen || isHidden ? '-translate-y-full' : 'translate-y-0'
           }`}
           style={{
             borderRadius: '0 0 20px 20px',
@@ -204,7 +202,7 @@ export default function Header() {
             style={{
               maxWidth: is404Page ? 'min(400px, 95vw)' : 'min(1900px, 95vw)',
               margin: '0 auto',
-              padding: '18px 10px 18px 15px',
+              padding: '8px 10px 8px 15px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: is404Page ? 'center' : 'space-between',
@@ -353,16 +351,16 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu Toggle - Fixed when menu open, absolute when closed - Hidden on 404 */}
+        {/* Mobile Menu Toggle - Absolute when closed, fixed when menu open - Hidden on 404 */}
         {!is404Page && (
         <button
-          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isHamburgerFixed ? 'fixed' : 'absolute'}`}
+          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isHamburgerFixed ? 'fixed' : 'absolute'} ${isMobileMenuOpen ? 'menu-open' : ''}`}
           style={{
             width: '60px',
             height: '60px',
-            top: 'clamp(18px, 4vh, 30px)',
-            right: '10px',
-            transition: 'position 0s linear',
+            top: isHamburgerFixed ? 'clamp(30px, 4vh, 45px)' : '50%',
+            transform: 'translateY(-50%)',
+            right: '15px',
           }}
           onClick={toggleMobileMenu}
           aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
@@ -527,6 +525,18 @@ export default function Header() {
           font-family: 'Synonym', monospace !important;
         }
 
+        /* Mobile Menu Link Colors - Override global green (exclude CTAButton) */
+        .mobile-menu-overlay nav a:not(.agent-portal-mobile):not([class*="text-button"]),
+        .mobile-menu-overlay nav button:not([class*="text-button"]) {
+          color: #ffffff !important;
+          font-family: 'Synonym', monospace !important;
+        }
+
+        /* Mobile menu hover states (exclude CTAButton) */
+        .mobile-menu-overlay nav a:not(.agent-portal-mobile):not([class*="text-button"]):hover {
+          color: #ffe000 !important;
+        }
+
         /* Sweeping holographic light animation - THE signature effect */
         @keyframes saa-cyber-holographic {
           0% {
@@ -642,13 +652,9 @@ export default function Header() {
           background-color: rgba(42, 42, 42, 0.8) !important;
         }
 
-        /* Hamburger Menu - Original HTML/CSS Design */
+        /* Hamburger Menu Animation */
         .hamburger {
           cursor: pointer;
-        }
-
-        .hamburger input {
-          display: none;
         }
 
         .hamburger-svg {
@@ -670,11 +676,12 @@ export default function Header() {
           stroke-dasharray: 12 63;
         }
 
-        .hamburger input:checked + .hamburger-svg {
+        /* Animate to X when menu is open */
+        .hamburger.menu-open .hamburger-svg {
           transform: rotate(-45deg);
         }
 
-        .hamburger input:checked + .hamburger-svg .line-top-bottom {
+        .hamburger.menu-open .line-top-bottom {
           stroke-dasharray: 20 300;
           stroke-dashoffset: -32.42;
         }

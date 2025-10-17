@@ -46,12 +46,11 @@ export function HomepageClient() {
 
   return (
     <>
-      {/* Agent Counter - Top Right, Below Header */}
+      {/* Agent Counter - Top Right on desktop, Centered on mobile */}
       <div
-        className="absolute z-50"
+        className="absolute z-50 left-1/2 -translate-x-1/2 xlg:left-auto xlg:translate-x-0 xlg:right-8"
         style={{
           top: '120px',
-          right: '2rem',
         }}
       >
         <div
@@ -65,7 +64,7 @@ export function HomepageClient() {
           {/* SlotCounter Numbers (LARGEST) */}
           <div
             style={{
-              fontSize: 'clamp(2.5rem, 1.2vw + 2.16rem, 4.32rem)',
+              fontSize: '4.01rem',
               maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
             }}
@@ -85,9 +84,9 @@ export function HomepageClient() {
             />
           </div>
           {/* + Symbol (MEDIUM) */}
-          <span style={{ fontSize: 'clamp(2rem, 0.55vw + 1.824rem, 2.88rem)' }}>+</span>
+          <span style={{ fontSize: '2.88rem' }}>+</span>
           {/* AGENTS Text (SMALLEST) */}
-          <span style={{ fontSize: 'clamp(1.5rem, 0.1875vw + 1.44rem, 1.8rem)' }}>AGENTS</span>
+          <span style={{ fontSize: '1.8rem' }}>AGENTS</span>
         </div>
       </div>
 
