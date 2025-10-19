@@ -1,17 +1,13 @@
-name = "saa-static"
+name = "saabuildingblocks"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "out"
 
-# Cloudflare Pages configuration for true static export
-# Deploys pre-rendered HTML files (no server-side code)
-# Dynamic site (with API routes) is deployed separately via PM2
-
-[env.production]
-name = "saa-static"
-route = "static.smartagentalliance.com/*"
+# Cloudflare Pages configuration
+# Deploys to: https://saabuildingblocks.pages.dev
+# Custom domain: saabuildingblocks.com (configured in Cloudflare dashboard)
 
 # Environment variables for build-time data fetching
-# Set in GitHub Actions secrets (read-only access):
+# Set in Cloudflare Pages dashboard or GitHub Actions secrets:
 # - NEXT_PUBLIC_SUPABASE_URL
 # - NEXT_PUBLIC_SUPABASE_ANON_KEY
 # - NEXT_PUBLIC_WORDPRESS_API_URL
