@@ -125,10 +125,10 @@ jobs:
         run: |
           echo "🔨 Building static export for Cloudflare Pages"
           echo "   This generates true static HTML (no server-side code)"
-          echo "   Using scripts/build-static.sh to exclude auth routes"
+          echo "   Using scripts/build-export.sh to exclude Master Controller and API routes"
 
           # Run static export build (moves dynamic routes temporarily)
-          bash scripts/build-static.sh
+          bash scripts/build-export.sh
 
           echo ""
           echo "📊 Build verification:"
