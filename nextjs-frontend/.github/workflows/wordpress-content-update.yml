@@ -32,21 +32,61 @@ jobs:
         working-directory: ./nextjs-frontend
         run: npm ci
 
+      - name: Generate Master Controller CSS
+        working-directory: ./nextjs-frontend
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "🎨 Generating build-time CSS from Master Controller settings..."
+
+          # Generate CSS from Supabase
+          npm run generate:css
+
+          # Verify CSS was created
+          if [ -f "public/static-master-controller.css" ]; then
+            echo "✅ CSS generated successfully"
+            ls -lh public/static-master-controller.css
+          else
+            echo "⚠️  CSS file not found - using default styles"
+          fi
+
       - name: Build Static Export
         working-directory: ./nextjs-frontend
-        run: bash scripts/build-export.sh
         env:
+          NODE_ENV: production
+          # Use export config (excludes API routes naturally)
+          NEXT_CONFIG_FILE: next.config.export.ts
           # WordPress API
           WORDPRESS_API_URL: https://saabuildingblocks.com/wp-json/wp/v2
           NEXT_PUBLIC_WORDPRESS_API_URL: https://saabuildingblocks.com/wp-json/wp/v2
-
-          # Supabase (for Master Controller CSS generation)
+          # Supabase (for build-time data)
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Static build flag (triggers Master Controller exclusion)
+          STATIC_BUILD: 'true'
+        run: |
+          echo "🔨 Building static export with Next.js natural exclusion"
+          echo "   Using: next.config.export.ts (output: 'export')"
+          echo "   Next.js will automatically skip API routes"
+          echo "   SAFE: No file movement - VPS and export share same codebase"
+          echo ""
 
-          # Build optimization
-          NODE_ENV: production
-          STATIC_BUILD: true
+          # Build with export config (Next.js excludes API routes automatically)
+          npm run build
+
+          echo ""
+          echo "📊 Build verification:"
+          echo "  Files exported: $(find out -type f 2>/dev/null | wc -l)"
+          echo "  Total size: $(du -sh out/ 2>/dev/null | cut -f1)"
+
+          # Verify critical files exist
+          test -d out/_next || { echo "❌ _next directory missing"; exit 1; }
+          test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
+          test -f out/static-master-controller.css || { echo "⚠️ CSS missing (non-fatal)"; }
+
+          echo ""
+          echo "✅ Static export complete - ready for deployment"
 
       - name: Deploy to Cloudflare Pages
         working-directory: ./nextjs-frontend
