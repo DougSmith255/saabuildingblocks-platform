@@ -55,8 +55,6 @@ jobs:
         working-directory: ./nextjs-frontend
         env:
           NODE_ENV: production
-          # Use static export config (file exists in Git)
-          NEXT_CONFIG_FILE: next.config.static-export.ts
           # WordPress API
           WORDPRESS_API_URL: https://saabuildingblocks.com/wp-json/wp/v2
           NEXT_PUBLIC_WORDPRESS_API_URL: https://saabuildingblocks.com/wp-json/wp/v2
@@ -65,13 +63,19 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           echo "🔨 Building static export with Next.js natural exclusion"
-          echo "   Config: $NEXT_CONFIG_FILE (output: 'export')"
+          echo "   Temporarily using next.config.static-export.ts (output: 'export')"
           echo "   Next.js will automatically skip API routes"
-          echo "   SAFE: No file movement - VPS and export share same codebase"
           echo ""
+
+          # Swap to static export config
+          mv next.config.ts next.config.ts.backup
+          cp next.config.static-export.ts next.config.ts
 
           # Build with static export config (Next.js excludes API routes automatically)
           npm run build
+
+          # Restore original config
+          mv next.config.ts.backup next.config.ts
 
           echo ""
           echo "📊 Build verification:"
