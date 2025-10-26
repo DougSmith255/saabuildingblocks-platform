@@ -55,24 +55,22 @@ jobs:
         working-directory: ./nextjs-frontend
         env:
           NODE_ENV: production
-          # Use export config (excludes API routes naturally)
-          NEXT_CONFIG_FILE: next.config.export.ts
+          # Use static export config (file exists in Git)
+          NEXT_CONFIG_FILE: next.config.static-export.ts
           # WordPress API
           WORDPRESS_API_URL: https://saabuildingblocks.com/wp-json/wp/v2
           NEXT_PUBLIC_WORDPRESS_API_URL: https://saabuildingblocks.com/wp-json/wp/v2
           # Supabase (for build-time data)
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
-          # Static build flag (triggers Master Controller exclusion)
-          STATIC_BUILD: 'true'
         run: |
           echo "🔨 Building static export with Next.js natural exclusion"
-          echo "   Using: next.config.export.ts (output: 'export')"
+          echo "   Config: $NEXT_CONFIG_FILE (output: 'export')"
           echo "   Next.js will automatically skip API routes"
           echo "   SAFE: No file movement - VPS and export share same codebase"
           echo ""
 
-          # Build with export config (Next.js excludes API routes automatically)
+          # Build with static export config (Next.js excludes API routes automatically)
           npm run build
 
           echo ""
@@ -83,9 +81,8 @@ jobs:
           # Verify critical files exist
           test -d out/_next || { echo "❌ _next directory missing"; exit 1; }
           test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
-          test -f out/static-master-controller.css || { echo "⚠️ CSS missing (non-fatal)"; }
+          test -f out/static-master-controller.css || echo "⚠️ CSS missing (non-fatal)"
 
-          echo ""
           echo "✅ Static export complete - ready for deployment"
 
       - name: Deploy to Cloudflare Pages

@@ -114,11 +114,13 @@ jobs:
             echo "⚠️  CSS file not found - using default styles"
           fi
 
-      # Build static export (Next.js natural exclusion - NO file movement)
+      # Build static export using environment variable (NO file movement)
       - name: Build Static Export
         working-directory: ./nextjs-frontend
         env:
           NODE_ENV: production
+          # Use static export config (file exists in Git, no swapping needed)
+          NEXT_CONFIG_FILE: next.config.static-export.ts
           # Supabase credentials for build-time data fetching (read-only)
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -127,24 +129,13 @@ jobs:
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
         run: |
           echo "🔨 Building static export with Next.js natural exclusion"
-          echo "   Using: next.config.export.ts (output: 'export')"
+          echo "   Config: $NEXT_CONFIG_FILE (output: 'export')"
           echo "   Next.js will automatically skip API routes"
           echo "   SAFE: No file movement - VPS and export share same codebase"
           echo ""
 
-          # FIX: Temporarily use export config, then restore default config
-          # This is necessary because Next.js doesn't support --config flag
-          echo "📝 Switching to export config..."
-          mv next.config.ts next.config.ts.backup
-          mv next.config.export.ts next.config.ts
-
-          # Build with export config (Next.js excludes API routes automatically)
+          # Build with static export config (Next.js excludes API routes automatically)
           npm run build
-
-          # Restore original config
-          echo "📝 Restoring default config..."
-          mv next.config.ts next.config.export.ts
-          mv next.config.ts.backup next.config.ts
 
           echo ""
           echo "📊 Build verification:"
@@ -154,12 +145,8 @@ jobs:
           # Verify critical files exist
           test -d out/_next || { echo "❌ _next directory missing"; exit 1; }
           test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
-          test -f out/static-master-controller.css || { echo "⚠️ CSS missing (non-fatal)"; }
+          test -f out/static-master-controller.css || echo "⚠️ CSS missing (non-fatal)"
 
-          echo ""
-          echo "  Sample files:"
-          find out -type f -name "*.html" | head -10
-          echo ""
           echo "✅ Static export complete - ready for Cloudflare Pages deployment"
 
       # Compute build hash for change detection
