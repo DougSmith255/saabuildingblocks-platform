@@ -119,16 +119,12 @@ jobs:
         working-directory: nextjs-frontend
         env:
           NODE_ENV: production
-          # Use export config (excludes API routes naturally)
-          NEXT_CONFIG_FILE: next.config.export.ts
           # Supabase credentials for build-time data fetching (read-only)
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           # WordPress API for blog content
           WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
-          # Static build flag (triggers Master Controller exclusion)
-          STATIC_BUILD: 'true'
         run: |
           echo "🔨 Building static export with Next.js natural exclusion"
           echo "   Using: next.config.export.ts (output: 'export')"
@@ -136,8 +132,19 @@ jobs:
           echo "   SAFE: No file movement - VPS and export share same codebase"
           echo ""
 
+          # FIX: Temporarily use export config, then restore default config
+          # This is necessary because Next.js doesn't support --config flag
+          echo "📝 Switching to export config..."
+          mv next.config.ts next.config.ts.backup
+          mv next.config.export.ts next.config.ts
+
           # Build with export config (Next.js excludes API routes automatically)
           npm run build
+
+          # Restore original config
+          echo "📝 Restoring default config..."
+          mv next.config.ts next.config.export.ts
+          mv next.config.ts.backup next.config.ts
 
           echo ""
           echo "📊 Build verification:"
