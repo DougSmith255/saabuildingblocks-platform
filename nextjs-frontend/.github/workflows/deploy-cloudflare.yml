@@ -30,7 +30,7 @@ on:
 
 env:
   NODE_VERSION: '20'
-  CLOUDFLARE_PROJECT_NAME: 'saa-static'  # Static export project
+  CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'  # Static export project
   DEPLOYMENT_TIMEOUT: 900  # 15 minutes in seconds
   MAX_PARALLEL_UPLOADS: 50
   RETRY_ATTEMPTS: 3
@@ -114,11 +114,13 @@ jobs:
             echo "⚠️  CSS file not found - using default styles"
           fi
 
-      # Build static export (Next.js natural exclusion - NO file movement)
+      # Build static export (SAFE METHOD - NO file movement)
       - name: Build Static Export
         working-directory: nextjs-frontend
         env:
           NODE_ENV: production
+          # SAFE: Use NEXT_CONFIG_FILE to specify static config (Next.js 15.1.3+)
+          NEXT_CONFIG_FILE: next.config.static.ts
           # Supabase credentials for build-time data fetching (read-only)
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -126,25 +128,15 @@ jobs:
           WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
         run: |
-          echo "🔨 Building static export with Next.js natural exclusion"
-          echo "   Using: next.config.export.ts (output: 'export')"
+          echo "🔨 Building static export with SAFE method (NEXT_CONFIG_FILE)"
+          echo "   Using: next.config.static.ts (output: 'export')"
           echo "   Next.js will automatically skip API routes"
-          echo "   SAFE: No file movement - VPS and export share same codebase"
+          echo "   ✅ SAFE: No file movement - VPS and export share same codebase"
           echo ""
 
-          # FIX: Temporarily use export config, then restore default config
-          # This is necessary because Next.js doesn't support --config flag
-          echo "📝 Switching to export config..."
-          mv next.config.ts next.config.ts.backup
-          mv next.config.export.ts next.config.ts
-
-          # Build with export config (Next.js excludes API routes automatically)
+          # SAFE BUILD: Use NEXT_CONFIG_FILE environment variable
+          # No file swapping - both VPS and export can coexist safely
           npm run build
-
-          # Restore original config
-          echo "📝 Restoring default config..."
-          mv next.config.ts next.config.export.ts
-          mv next.config.ts.backup next.config.ts
 
           echo ""
           echo "📊 Build verification:"
@@ -260,7 +252,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 2)
@@ -271,7 +263,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 3)
@@ -282,7 +274,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saa-static --branch=main --commit-dirty=true
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
 
       # Set deployment status
       - name: Set deployment status
@@ -354,7 +346,7 @@ jobs:
             "message": "${MESSAGE}",
             "post_id": "${{ github.event.client_payload.post_id || inputs.post_id || '' }}",
             "post_slug": "${{ github.event.client_payload.post_slug || inputs.post_slug || '' }}",
-            "deployment_url": "https://saa-static.pages.dev",
+            "deployment_url": "https://saabuildingblocks.pages.dev",
             "production_url": "https://static.smartagentalliance.com",
             "commit_sha": "${{ github.sha }}",
             "commit_message": "${{ github.event.head_commit.message }}",
@@ -422,7 +414,7 @@ jobs:
 
             **Status:** ${message}
             **Build Hash:** \`${{ needs.build.outputs.build-hash }}\`
-            **Deployment URL:** https://saa-static.pages.dev
+            **Deployment URL:** https://saabuildingblocks.pages.dev
             **Production URL:** https://static.smartagentalliance.com
             **Workflow Run:** [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
 

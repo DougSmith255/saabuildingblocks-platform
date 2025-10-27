@@ -1,0 +1,239 @@
+name: Deploy Static Export to Cloudflare Pages (SAFE)
+
+# This workflow uses Next.js natural exclusion instead of moving files
+# SAFE: No file movement, uses next.config.export.ts config
+# FAST: CSS generated once, build uses proper config
+
+on:
+  # Webhook from WordPress plugin
+  repository_dispatch:
+    types: [wordpress_content_update, wordpress_deploy]
+
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      post_id:
+        description: 'WordPress Post ID'
+        required: false
+      post_slug:
+        description: 'WordPress Post Slug'
+        required: false
+      skip_cache:
+        description: 'Skip build cache'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+  CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'  # Static export project
+  DEPLOYMENT_TIMEOUT: 900  # 15 minutes
+
+jobs:
+  deploy-static-export:
+    name: Build & Deploy Static Export
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: nextjs-frontend/package-lock.json
+
+      # Cache node_modules
+      - name: Cache node_modules
+        if: ${{ !inputs.skip_cache }}
+        uses: actions/cache@v4
+        id: node-modules-cache
+        with:
+          path: nextjs-frontend/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('nextjs-frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      # Cache Next.js build
+      - name: Cache Next.js build
+        if: ${{ !inputs.skip_cache }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            nextjs-frontend/.next/cache
+          key: ${{ runner.os }}-nextjs-export-${{ hashFiles('nextjs-frontend/package-lock.json') }}-${{ hashFiles('nextjs-frontend/**/*.js', 'nextjs-frontend/**/*.jsx', 'nextjs-frontend/**/*.ts', 'nextjs-frontend/**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-export-${{ hashFiles('nextjs-frontend/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-export-
+
+      - name: Install dependencies
+        working-directory: nextjs-frontend
+        run: |
+          if [ "${{ steps.node-modules-cache.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing dependencies..."
+            npm ci --prefer-offline --no-audit
+          else
+            echo "✅ Using cached node_modules"
+          fi
+
+      - name: Generate Master Controller CSS
+        working-directory: nextjs-frontend
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "🎨 Generating build-time CSS from Master Controller settings..."
+
+          # Generate CSS from Supabase
+          npm run generate:css
+
+          # Verify CSS was created
+          if [ -f "public/static-master-controller.css" ]; then
+            echo "✅ CSS generated successfully"
+            ls -lh public/static-master-controller.css
+          else
+            echo "⚠️  CSS file not found - using default styles"
+          fi
+
+      - name: Build static export (Next.js natural exclusion)
+        working-directory: nextjs-frontend
+        env:
+          NODE_ENV: production
+          # Use export config (excludes API routes naturally)
+          NEXT_CONFIG_FILE: next.config.export.ts
+          # Supabase (for build-time data)
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # WordPress API
+          WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
+          NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
+        run: |
+          echo "🔨 Building static export with Next.js natural exclusion"
+          echo "   Using: next.config.export.ts (output: 'export')"
+          echo "   Next.js will automatically skip API routes"
+          echo ""
+
+          # Build with export config
+          npm run build
+
+          echo ""
+          echo "📊 Build verification:"
+          echo "  Files exported: $(find out -type f 2>/dev/null | wc -l)"
+          echo "  Total size: $(du -sh out/ 2>/dev/null | cut -f1)"
+
+          # Verify critical files exist
+          test -d out/_next || { echo "❌ _next directory missing"; exit 1; }
+          test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
+          test -f out/static-master-controller.css || { echo "⚠️ CSS missing (non-fatal)"; }
+
+          echo ""
+          echo "  Sample files:"
+          find out -type f -name "*.html" | head -10
+          echo ""
+          echo "✅ Static export complete - ready for deployment"
+
+      - name: Deploy to Cloudflare Pages
+        working-directory: nextjs-frontend
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "🚀 Deploying to Cloudflare Pages..."
+
+          npx wrangler pages deploy out \
+            --project-name=${{ env.CLOUDFLARE_PROJECT_NAME }} \
+            --branch=main \
+            --commit-dirty=true
+
+          echo "✅ Deployment complete"
+          echo "🌍 Live at: https://${{ env.CLOUDFLARE_PROJECT_NAME }}.pages.dev"
+
+      - name: Trigger ISR Revalidation (VPS dynamic site)
+        if: success()
+        continue-on-error: true
+        run: |
+          echo "🔄 Triggering ISR revalidation on VPS dynamic site..."
+
+          # Revalidate blog paths on dynamic site
+          curl -X POST https://saabuildingblocks.com/api/revalidate \
+            -H "Content-Type: application/json" \
+            -d '{
+              "secret": "${{ secrets.REVALIDATION_SECRET }}",
+              "paths": ${{ toJSON(github.event.client_payload.paths) }}
+            }' || echo "⚠️ Revalidation call failed (non-critical)"
+
+      - name: Send success notification
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.resend.com
+          server_port: 587
+          username: resend
+          password: ${{ secrets.RESEND_API_KEY }}
+          subject: '✅ Static Export Deployed - ${{ github.event.client_payload.post_title }}'
+          to: support@saabuildingblocks.com
+          from: noreply@saabuildingblocks.com
+          body: |
+            Static export deployed successfully to Cloudflare Pages.
+
+            Post: ${{ github.event.client_payload.post_title }}
+            Post ID: ${{ github.event.client_payload.post_id }}
+            Slug: ${{ github.event.client_payload.post_slug }}
+
+            Deployment:
+            - Static Export: https://${{ env.CLOUDFLARE_PROJECT_NAME }}.pages.dev
+            - VPS Dynamic: https://saabuildingblocks.com (ISR revalidated)
+
+            Method: Next.js natural exclusion (SAFE - no file movement)
+
+            Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Timestamp: ${{ github.event.client_payload.timestamp }}
+
+      - name: Send failure notification
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.resend.com
+          server_port: 587
+          username: resend
+          password: ${{ secrets.RESEND_API_KEY }}
+          subject: '❌ Static Export Failed - ${{ github.event.client_payload.post_title }}'
+          to: support@saabuildingblocks.com
+          from: noreply@saabuildingblocks.com
+          body: |
+            Static export deployment FAILED.
+
+            Post: ${{ github.event.client_payload.post_title }}
+            Post ID: ${{ github.event.client_payload.post_id }}
+
+            Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Please check the logs for details.
+
+      - name: Deployment summary
+        if: always()
+        run: |
+          echo "### 🚀 Static Export Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Method:** Next.js natural exclusion (SAFE)" >> $GITHUB_STEP_SUMMARY
+          echo "**Config:** next.config.export.ts" >> $GITHUB_STEP_SUMMARY
+          echo "**Post:** ${{ github.event.client_payload.post_title }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Post ID:** ${{ github.event.client_payload.post_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Slug:** ${{ github.event.client_payload.post_slug }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow:** ${{ github.workflow }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Run ID:** ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment URLs:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Static: https://${{ env.CLOUDFLARE_PROJECT_NAME }}.pages.dev" >> $GITHUB_STEP_SUMMARY
+          echo "- Dynamic: https://saabuildingblocks.com" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Safety Features:**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ NO file movement (Next.js natural exclusion)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ CSS generated from Supabase" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Proper config separation (export vs VPS)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Verification before deployment" >> $GITHUB_STEP_SUMMARY

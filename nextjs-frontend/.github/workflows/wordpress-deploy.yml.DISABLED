@@ -1,0 +1,151 @@
+name: WordPress Deploy to Cloudflare
+
+# Triggered by WordPress plugin via repository_dispatch
+# This is the NEW async deployment workflow (2025-10-27)
+on:
+  repository_dispatch:
+    types: [wordpress-deploy]
+  workflow_dispatch:
+    inputs:
+      deployment_type:
+        description: 'Deployment type'
+        required: false
+        default: 'complete_site'
+
+env:
+  NODE_VERSION: '20'
+  CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'
+  DEPLOYMENT_TIMEOUT: 900
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy to Cloudflare Pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: nextjs-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: nextjs-frontend
+        run: npm ci
+
+      - name: Generate Master Controller CSS
+        working-directory: nextjs-frontend
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "🎨 Generating build-time CSS from Master Controller settings..."
+          npm run generate:css
+
+          if [ -f "public/static-master-controller.css" ]; then
+            echo "✅ CSS generated successfully"
+            ls -lh public/static-master-controller.css
+          else
+            echo "⚠️ CSS file not found - using default styles"
+          fi
+
+      - name: Build Static Export
+        working-directory: nextjs-frontend
+        env:
+          NODE_ENV: production
+          NEXT_CONFIG_FILE: next.config.static.ts
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
+          NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
+        run: |
+          echo "🔨 Building static export (triggered by WordPress)"
+          echo "   User: ${{ github.event.client_payload.user }}"
+          echo "   Timestamp: ${{ github.event.client_payload.timestamp }}"
+          echo ""
+
+          npm run build
+
+          echo ""
+          echo "📊 Build verification:"
+          echo "  Files: $(find out -type f | wc -l)"
+          echo "  Size: $(du -sh out/ | cut -f1)"
+
+          test -d out/_next || { echo "❌ _next missing"; exit 1; }
+          test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
+
+          echo "✅ Static export complete"
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+
+      - name: Notify WordPress
+        if: always()
+        continue-on-error: true
+        run: |
+          # Send deployment status back to WordPress
+          STATUS="${{ job.status }}"
+          WORKFLOW_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          # Prepare payload
+          PAYLOAD=$(cat <<EOF
+          {
+            "status": "${STATUS}",
+            "workflow_url": "${WORKFLOW_URL}",
+            "deployment_url": "https://saabuildingblocks.pages.dev",
+            "triggered_by": "${{ github.event.client_payload.user }}",
+            "timestamp": "$(date -Iseconds)"
+          }
+          EOF
+          )
+
+          # Send to WordPress webhook endpoint (if configured)
+          if [ -n "${{ secrets.WORDPRESS_WEBHOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.WORDPRESS_WEBHOOK_URL }}" \
+              -H "Content-Type: application/json" \
+              -d "${PAYLOAD}" || echo "WordPress notification failed (non-critical)"
+          fi
+
+      - name: Send Email Notification
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.resend.com
+          server_port: 587
+          username: resend
+          password: ${{ secrets.RESEND_API_KEY }}
+          subject: |
+            ${{ job.status == 'success' && '✅' || '❌' }} Cloudflare Deployment ${{ job.status == 'success' && 'Complete' || 'Failed' }}
+          to: ${{ github.event.client_payload.user_email || 'support@saabuildingblocks.com' }}
+          from: noreply@saabuildingblocks.com
+          body: |
+            Deployment Status: ${{ job.status }}
+
+            Triggered by: ${{ github.event.client_payload.user }}
+            Timestamp: ${{ github.event.client_payload.timestamp }}
+
+            Deployment URL: https://saabuildingblocks.pages.dev
+            Workflow Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            ${{ job.status == 'success' && 'Your site is now live on Cloudflare Pages (300+ global edge locations).' || 'Please check the workflow logs for error details.' }}
+
+      - name: Create deployment summary
+        if: always()
+        run: |
+          echo "## 🚀 Cloudflare Deployment ${{ job.status == 'success' && '✅' || '❌' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Triggered by:** ${{ github.event.client_payload.user }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** ${{ github.event.client_payload.timestamp }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment URL:** https://saabuildingblocks.pages.dev" >> $GITHUB_STEP_SUMMARY
+          echo "**Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
