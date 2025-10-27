@@ -127,7 +127,7 @@ jobs:
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
         run: |
           echo "🔨 Building static export with Next.js natural exclusion"
-          echo "   Temporarily using next.config.static-export.ts (output: 'export')"
+          echo "   Temporarily using next.config.export.ts (output: 'export')"
           echo "   Next.js will automatically skip API routes"
           echo ""
 
@@ -343,8 +343,8 @@ jobs:
           {
             "status": "${STATUS}",
             "message": "${MESSAGE}",
-            "post_id": "${{ github.event.client_payload.post_id || inputs.post_id || '' }}",
-            "post_slug": "${{ github.event.client_payload.post_slug || inputs.post_slug || '' }}",
+            "post_id": "${{ github.event.client_payload.post_id || inputs.post_id }}",
+            "post_slug": "${{ github.event.client_payload.post_slug || inputs.post_slug }}",
             "deployment_url": "https://saa-static.pages.dev",
             "production_url": "https://static.smartagentalliance.com",
             "commit_sha": "${{ github.sha }}",
