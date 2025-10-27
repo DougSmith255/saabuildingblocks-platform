@@ -133,7 +133,7 @@ jobs:
 
           # Swap to static export config
           mv next.config.ts next.config.ts.backup
-          cp next.config.static-export.ts next.config.ts
+          cp next.config.export.ts next.config.ts
 
           # Build with static export config (Next.js excludes API routes automatically)
           npm run build
