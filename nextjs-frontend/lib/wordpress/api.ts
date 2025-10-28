@@ -137,7 +137,7 @@ export const fetchAllPosts = cache(async (): Promise<BlogPost[]> => {
     }
 
     const response = await fetch(
-      `${WORDPRESS_URL}/wp-json/wp/v2/posts?_embed&per_page=100&status=publish`,
+      `${WORDPRESS_URL}/wp-json/wp/v2/posts?_embed&per_page=50&status=publish`,
       {
         headers,
         next: {

@@ -1,5 +1,5 @@
 // Force dynamic rendering - exclude from static export
-export const dynamic = 'error';
+export const dynamic = 'force-dynamic';
 
 /**
  * Audit Logs Export API Route

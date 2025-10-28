@@ -23,7 +23,7 @@ import { AuthProvider } from '@/app/providers/AuthProvider';
  * VPS deployment: force-dynamic (requires auth and dynamic data)
  * Cloudflare Pages: undefined (route tree excluded from build)
  */
-export const dynamic = 'error';
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Agent Portal - User Management',
