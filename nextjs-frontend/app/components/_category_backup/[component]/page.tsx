@@ -4,6 +4,14 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ComponentPreview from './ComponentPreview';
 
+// Exclude from static export
+export const dynamic = 'error';
+
+// Next.js 16 requires generateStaticParams for dynamic routes even when excluded
+export async function generateStaticParams() {
+  return [];
+}
+
 interface ComponentPageProps {
   params: {
     category: string;
