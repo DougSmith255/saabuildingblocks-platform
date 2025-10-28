@@ -13,7 +13,7 @@ import { rateLimit } from '@/lib/middleware/rate-limit';
 import { createHash } from 'crypto';
 import { ZodError } from 'zod';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 /**
  * GET /api/invitations/validate - Validate invitation token

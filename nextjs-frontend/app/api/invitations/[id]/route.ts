@@ -20,7 +20,7 @@ import {
 import { sendInvitationEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 /**
  * GET /api/invitations/[id] - Get single invitation

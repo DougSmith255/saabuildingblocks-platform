@@ -21,7 +21,7 @@ import {
 import { sendInvitationEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 /**
  * POST /api/invitations - Create new invitation

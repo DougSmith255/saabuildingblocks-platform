@@ -7,7 +7,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 // Force dynamic rendering - disable Next.js route cache
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 // GET - Fetch top 5 high scores (enforced limit)
 export async function GET() {

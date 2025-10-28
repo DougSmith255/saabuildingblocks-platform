@@ -18,7 +18,7 @@ import { createOrUpdateGHLContact } from '@/lib/gohighlevel';
 import { ZodError } from 'zod';
 import bcrypt from 'bcryptjs';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 // Rate limiting map: IP -> { count, resetTime }
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();

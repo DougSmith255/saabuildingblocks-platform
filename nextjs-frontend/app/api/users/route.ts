@@ -16,7 +16,7 @@ import { sendInvitationEmail } from '@/lib/email/send';
 import { z } from 'zod';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 const createUserSchema = z.object({
   email: z.string().email('Invalid email format'),

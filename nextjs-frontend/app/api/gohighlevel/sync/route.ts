@@ -14,7 +14,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getContactSyncService } from '@/lib/gohighlevel';
 import { createClient } from '@supabase/supabase-js';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 // Initialize Supabase client
 const supabase = createClient(

@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import bcryptjs from 'bcryptjs';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 
 const BCRYPT_ROUNDS = 12;
 

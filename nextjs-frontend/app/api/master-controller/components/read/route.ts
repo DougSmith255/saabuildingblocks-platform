@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // Force dynamic rendering - exclude from static export
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
 import fs from 'fs/promises';
 import path from 'path';
 
