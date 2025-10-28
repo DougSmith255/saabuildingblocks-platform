@@ -17,6 +17,7 @@ const WORDPRESS_APP_PASSWORD = process.env.WORDPRESS_APP_PASSWORD || '';
 const ALLOWED_CATEGORIES = [
   'about-exp',
   'agent-career-info',
+  'become-an-agent',
   'brokerage-comparison',
   'exp-realty-sponsor',
   'fun-for-agents',

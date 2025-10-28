@@ -12,8 +12,13 @@
 
 /**
  * Route segment config for static export
+ * Conditional dynamic export - allows static export to skip this page
+ * VPS deployment: force-dynamic (requires auth and dynamic data)
+ * Cloudflare Pages: undefined (page excluded from build)
  */
-export const dynamic = 'force-dynamic';
+export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
+  ? undefined
+  : 'force-dynamic';
 
 import { useState, useEffect } from 'react';
 import { ActivityLogTable } from '@/components/activity/ActivityLogTable';

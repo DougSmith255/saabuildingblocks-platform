@@ -1,11 +1,32 @@
 import type { NextConfig } from 'next';
 
 /**
- * Next.js 15 Configuration for Static Export to Cloudflare Pages
+ * 🌍 CLOUDFLARE PAGES CONFIGURATION (STATIC EXPORT)
  *
- * This config exports ONLY public-facing pages as static HTML.
- * API routes, Master Controller, and Agent Portal remain on PM2 origin server.
- * Cloudflare Pages _redirects file proxies protected routes back to origin.
+ * PURPOSE: Public-facing static site on global CDN (300+ edge locations)
+ * DEPLOYMENT: Cloudflare Pages
+ * URL: https://saabuildingblocks.pages.dev
+ *
+ * FEATURES EXPORTED:
+ * ✅ Public content pages (homepage, about, blog, etc.)
+ * ✅ Master Controller CSS (settings baked from Supabase)
+ * ✅ Lightning-fast delivery (20-50ms TTFB globally)
+ *
+ * NOT EXPORTED (stays on VPS):
+ * ❌ Master Controller UI (admin interface)
+ * ❌ API routes (Next.js excludes automatically)
+ * ❌ Authentication pages
+ * ❌ Agent Portal
+ *
+ * DEPLOY COMMANDS:
+ * npm run generate:css  # Generate CSS from Supabase
+ * npm run export:clean   # Build static export
+ * npx wrangler pages deploy out --project-name=saabuildingblocks
+ *
+ * OR USE SAFE SCRIPT (recommended):
+ * bash scripts/build-export-safe.sh
+ *
+ * CRITICAL: API routes excluded automatically by Next.js (no file movement)
  */
 const staticConfig: NextConfig = {
   /**
@@ -13,6 +34,11 @@ const staticConfig: NextConfig = {
    * Generates /out directory with pre-rendered HTML
    */
   output: 'export',
+
+  /**
+   * API routes excluded automatically by Next.js 16
+   * No exportPathMap needed - Next.js handles this automatically
+   */
 
   /**
    * Disable server features not needed for static export
@@ -52,14 +78,11 @@ const staticConfig: NextConfig = {
   trailingSlash: true,
 
   /**
-   * TypeScript and ESLint checks
+   * TypeScript checks
    * TEMPORARILY DISABLED - Re-enable after Phase 2 cleanup
    */
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   /**

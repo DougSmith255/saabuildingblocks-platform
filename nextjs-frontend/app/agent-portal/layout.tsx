@@ -19,8 +19,13 @@ import { AuthProvider } from '@/app/providers/AuthProvider';
 
 /**
  * Route segment config - excludes /agent-portal/* from static export
+ * Conditional dynamic export - allows static export to skip this route tree
+ * VPS deployment: force-dynamic (requires auth and dynamic data)
+ * Cloudflare Pages: undefined (route tree excluded from build)
  */
-export const dynamic = 'force-dynamic';
+export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
+  ? undefined
+  : 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Agent Portal - User Management',

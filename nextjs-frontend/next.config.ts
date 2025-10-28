@@ -23,8 +23,8 @@ const nextConfig: NextConfig = {
    * Enable static HTML export for Cloudflare Pages
    * Routes with `export const dynamic = 'force-dynamic'` will be excluded automatically
    *
-   * DISABLED for production - incompatible with API routes, auth, Master Controller
-   * Use build-static.sh script for static exports instead
+   * DISABLED for production VPS - incompatible with API routes, auth, Master Controller
+   * Enable via build scripts for Cloudflare Pages static export
    */
   // output: 'export',
 
@@ -90,13 +90,6 @@ const nextConfig: NextConfig = {
    */
   typescript: {
     ignoreBuildErrors: true,
-  },
-
-  /**
-   * ESLint checking during build (temporarily disabled for development)
-   */
-  eslint: {
-    ignoreDuringBuilds: true,
   },
 
   /**

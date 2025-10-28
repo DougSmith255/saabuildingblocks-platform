@@ -96,7 +96,7 @@ jobs:
 
           # Verify Next.js version
           echo "🔍 Verifying Next.js version..."
-          NEXTJS_VERSION=$(npm list next --depth=0 --json | grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+          NEXTJS_VERSION=$(npm list next --depth=0 --json | jq -r '.dependencies.next.version')
           echo "   Installed: Next.js v${NEXTJS_VERSION}"
 
           if [[ "${NEXTJS_VERSION}" != "16."* ]]; then

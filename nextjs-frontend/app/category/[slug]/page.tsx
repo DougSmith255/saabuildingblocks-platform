@@ -31,11 +31,14 @@ interface CategoryPageProps {
 
 /**
  * Static Export Configuration
- * TEMPORARILY EXCLUDED FROM STATIC EXPORT
- * Category IDs in config don't match WordPress (causing 404s)
+ * Conditional dynamic export - allows static export to skip this page
+ * VPS deployment: force-dynamic (category ID mappings)
+ * Cloudflare Pages: undefined (page excluded from build)
  * TODO: Fix category ID mappings before enabling static export
  */
-export const dynamic = 'force-dynamic'; // Exclude from static export
+export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
+  ? undefined
+  : 'force-dynamic';
 export const dynamicParams = false;
 
 /**

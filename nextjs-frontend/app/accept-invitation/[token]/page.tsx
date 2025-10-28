@@ -10,10 +10,13 @@ import { Loader2 } from 'lucide-react';
 
 /**
  * Route segment config
- * This page requires server-side logic and cannot be statically exported
- * force-dynamic will exclude this route from static export
+ * Conditional dynamic export - allows static export to skip this page
+ * VPS deployment: force-dynamic (full auth logic)
+ * Cloudflare Pages: undefined (page excluded from build)
  */
-export const dynamic = 'force-dynamic';
+export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
+  ? undefined
+  : 'force-dynamic';
 
 interface PageProps {
   params: {
