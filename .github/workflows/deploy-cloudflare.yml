@@ -363,7 +363,6 @@ jobs:
 
       # Send notification to n8n webhook
       - name: Send notification webhook
-        if: ${{ secrets.N8N_WEBHOOK_URL != '' }}
         continue-on-error: true
         run: |
           echo "📤 Sending notification to n8n webhook..."
