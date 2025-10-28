@@ -114,29 +114,36 @@ jobs:
             echo "⚠️  CSS file not found - using default styles"
           fi
 
-      # Build static export (SAFE METHOD - NO file movement)
+      # Build static export (SAFE METHOD - Config swap for Next.js 16)
       - name: Build Static Export
         working-directory: nextjs-frontend
         env:
           NODE_ENV: production
-          # SAFE: Use NEXT_CONFIG_FILE to specify static config (Next.js 15.1.3+)
-          NEXT_CONFIG_FILE: next.config.static.ts
-          # Supabase credentials for build-time data fetching (read-only)
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Supabase credentials (dummy values for build - API routes excluded anyway)
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key-for-build' }}
           # WordPress API for blog content
           WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
         run: |
-          echo "🔨 Building static export with SAFE method (NEXT_CONFIG_FILE)"
+          echo "🔨 Building static export with config swap method (Next.js 16 compatible)"
           echo "   Using: next.config.static.ts (output: 'export')"
-          echo "   Next.js will automatically skip API routes"
-          echo "   ✅ SAFE: No file movement - VPS and export share same codebase"
+          echo "   Next.js will automatically skip API routes (dynamic = 'error')"
+          echo "   ✅ SAFE: Temporary config swap, restored after build"
           echo ""
 
-          # SAFE BUILD: Use NEXT_CONFIG_FILE environment variable
-          # No file swapping - both VPS and export can coexist safely
+          # SAFE BUILD: Temporarily swap configs for Next.js 16 (NEXT_CONFIG_FILE removed)
+          echo "📝 Swapping configs..."
+          mv next.config.ts next.config.ts.backup
+          mv next.config.static.ts next.config.ts
+
+          # Build with static config
           npm run build
+
+          # Restore original configs
+          echo "📝 Restoring configs..."
+          mv next.config.ts next.config.static.ts
+          mv next.config.ts.backup next.config.ts
 
           echo ""
           echo "📊 Build verification:"
