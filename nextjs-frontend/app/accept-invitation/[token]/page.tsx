@@ -16,6 +16,11 @@ import { Loader2 } from 'lucide-react';
  */
 export const dynamic = 'error';
 
+// Next.js 16 requires generateStaticParams for dynamic routes even when excluded
+export async function generateStaticParams() {
+  return [];
+}
+
 interface PageProps {
   params: {
     token: string;
