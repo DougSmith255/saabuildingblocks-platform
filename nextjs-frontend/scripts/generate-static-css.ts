@@ -12,24 +12,31 @@
  * Output:
  *   public/static-master-controller.css
  *
+ * Features:
+ * - Smart caching (skips write if content unchanged)
+ * - Retry logic for Supabase connectivity
+ * - Input validation
+ * - Comprehensive error handling
+ *
  * Note: This uses the default settings from the Master Controller stores.
  * For custom settings, users must configure them via the Master Controller UI,
  * which persists to localStorage and is injected via useLiveCSS hook.
  */
 
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
+import { createHash } from 'crypto';
 
 // Import the existing CSS generator infrastructure
-import { CSSGenerator } from '../app/master-controller/lib/cssGenerator.js';
+import { CSSGenerator } from '../app/master-controller/lib/cssGenerator';
 import type {
   TypographySettings,
   BrandColorsSettings,
   SpacingSettings,
   ClampConfig,
-} from '../app/master-controller/types.js';
+} from '../app/master-controller/types';
 
 // Get __dirname equivalent in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -39,8 +46,91 @@ const __dirname = dirname(__filename);
 const OUTPUT_PATH = join(__dirname, '../public/static-master-controller.css');
 
 /**
+ * Calculates SHA-256 hash of content for cache comparison
+ */
+function calculateHash(content: string): string {
+  return createHash('sha256').update(content).digest('hex');
+}
+
+/**
+ * Checks if output file exists and matches content hash
+ * Returns true if file unchanged (can skip write)
+ *
+ * Note: Excludes timestamp line from comparison to detect actual CSS changes
+ */
+function shouldSkipWrite(newContent: string): boolean {
+  if (!existsSync(OUTPUT_PATH)) {
+    return false; // File doesn't exist, must write
+  }
+
+  try {
+    const existingContent = readFileSync(OUTPUT_PATH, 'utf-8');
+
+    // Remove timestamp lines for comparison (starts with "Generated:")
+    const normalizeForComparison = (content: string) => {
+      return content
+        .split('\n')
+        .filter(line => !line.includes('Generated:'))
+        .join('\n');
+    };
+
+    const normalizedExisting = normalizeForComparison(existingContent);
+    const normalizedNew = normalizeForComparison(newContent);
+
+    const existingHash = calculateHash(normalizedExisting);
+    const newHash = calculateHash(normalizedNew);
+
+    return existingHash === newHash;
+  } catch (error) {
+    return false; // Error reading file, write anyway
+  }
+}
+
+/**
+ * Validates settings structure
+ */
+function validateSettings(data: any): boolean {
+  if (!data) return false;
+
+  // Check required properties exist
+  const hasTypography = data.typography && typeof data.typography === 'object';
+  const hasColors = data.brand_colors && typeof data.brand_colors === 'object';
+  const hasSpacing = data.spacing && typeof data.spacing === 'object';
+
+  return hasTypography || hasColors || hasSpacing; // At least one required
+}
+
+/**
+ * Retries async function with exponential backoff
+ */
+async function retryWithBackoff<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  initialDelay: number = 1000
+): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+
+      if (attempt < maxRetries) {
+        const delay = initialDelay * Math.pow(2, attempt - 1);
+        console.warn(`⚠️  Attempt ${attempt}/${maxRetries} failed, retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+/**
  * Fetches Master Controller settings from Supabase database
  * Falls back to defaults if database unavailable
+ * Includes retry logic for transient failures
  */
 async function fetchSettingsFromDatabase() {
   try {
@@ -56,24 +146,33 @@ async function fetchSettingsFromDatabase() {
     // Connect to Supabase
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch settings from design_settings table
-    const { data, error } = await supabase
-      .from('design_settings')
-      .select('typography, brand_colors, spacing')
-      .single();
+    // Fetch settings with retry logic
+    const result = await retryWithBackoff(async () => {
+      const { data, error } = await supabase
+        .from('design_settings')
+        .select('typography, brand_colors, spacing')
+        .single();
 
-    if (error) {
-      console.warn('⚠️  Database error:', error.message, '- using defaults');
-      return null;
-    }
+      if (error) {
+        throw new Error(error.message);
+      }
 
-    if (!data) {
+      return data;
+    });
+
+    if (!result) {
       console.warn('⚠️  No settings found in database - using defaults');
       return null;
     }
 
-    console.log('✅ Settings loaded from database');
-    return data;
+    // Validate settings structure
+    if (!validateSettings(result)) {
+      console.warn('⚠️  Invalid settings structure - using defaults');
+      return null;
+    }
+
+    console.log('✅ Settings loaded from database (after validation)');
+    return result;
 
   } catch (error) {
     console.warn('⚠️  Database fetch failed:', error instanceof Error ? error.message : String(error), '- using defaults');
@@ -267,6 +366,14 @@ async function generateAndWriteCSS() {
 `;
 
   const finalCSS = header + css;
+
+  // Check if content changed (smart caching)
+  if (shouldSkipWrite(finalCSS)) {
+    console.log('\n⚡ CSS unchanged - skipping write (cache hit)');
+    console.log(`   Output: ${OUTPUT_PATH}`);
+    console.log('\n✅ Static CSS generation complete (cached)!\n');
+    return;
+  }
 
   // Ensure public directory exists
   try {
