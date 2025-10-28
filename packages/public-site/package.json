@@ -9,7 +9,8 @@
     "start": "next start -p 3001",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "export": "npm run build"
+    "export": "npm run build",
+    "generate:css": "tsx scripts/generate-static-css.ts"
   },
   "dependencies": {
     "@saa/shared": "*",
@@ -32,6 +33,7 @@
     "postcss": "^8.4.49",
     "postcss-import": "^16.1.1",
     "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },
   "engines": {
