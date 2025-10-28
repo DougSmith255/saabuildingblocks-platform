@@ -92,6 +92,9 @@ jobs:
             npm ci --prefer-offline --no-audit
           else
             echo "✅ Using cached node_modules"
+            # Ensure Next.js is at version from package.json (cache might have older version)
+            echo "🔄 Verifying Next.js version..."
+            npm install next@latest --no-save
           fi
 
       # Generate Master Controller CSS from Supabase settings
