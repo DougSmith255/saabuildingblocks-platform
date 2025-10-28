@@ -32,7 +32,7 @@
 
 **URL:** https://saabuildingblocks.com
 **Status:** ❌ HTTP 503 Service Unavailable
-**Technology:** Next.js 15.0.0 + PM2 + Apache reverse proxy
+**Technology:** Next.js 16.0.0 + PM2 + Apache reverse proxy
 
 **Service Health:**
 ```
@@ -95,7 +95,7 @@ curl: (7) Failed to connect  # ❌ Nothing listening
 
 **PM2 Logs:**
 ```
-▲ Next.js 15.0.0
+▲ Next.js 16.0.0
 - Local: http://localhost:3000  # Always starts on 3000!
 ✓ Ready in 353ms
 ```
@@ -122,7 +122,7 @@ HOSTNAME=127.0.0.1
 
 **Possible Causes:**
 1. .env.local file overriding PORT to 3000
-2. Next.js 15.0.0 changed environment variable precedence
+2. Next.js 16.0.0 changed environment variable precedence
 3. server.js loads .env.local AFTER PM2 sets env vars
 4. Next.js default behavior ignores PORT in production mode
 

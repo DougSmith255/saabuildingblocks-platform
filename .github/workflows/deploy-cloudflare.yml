@@ -58,16 +58,18 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
-          cache-dependency-path: nextjs-frontend/package-lock.json
+          cache-dependency-path: package-lock.json
 
-      # Cache node_modules
+      # Cache node_modules (monorepo root + packages)
       - name: Cache node_modules
         if: ${{ !inputs.skip_build_cache }}
         uses: actions/cache@v4
         id: node-modules-cache
         with:
-          path: nextjs-frontend/node_modules
-          key: ${{ runner.os }}-node-modules-nextjs16-${{ hashFiles('nextjs-frontend/package-lock.json') }}
+          path: |
+            node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-node-modules-nextjs16-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-modules-nextjs16-
 
@@ -77,15 +79,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            nextjs-frontend/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('nextjs-frontend/package-lock.json') }}-${{ hashFiles('nextjs-frontend/**/*.js', 'nextjs-frontend/**/*.jsx', 'nextjs-frontend/**/*.ts', 'nextjs-frontend/**/*.tsx') }}
+            packages/public-site/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('packages/public-site/**/*.js', 'packages/public-site/**/*.jsx', 'packages/public-site/**/*.ts', 'packages/public-site/**/*.tsx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('nextjs-frontend/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
             ${{ runner.os }}-nextjs-
 
-      # Install dependencies
+      # Install dependencies (monorepo root)
       - name: Install dependencies
-        working-directory: nextjs-frontend
         run: |
           if [ "${{ steps.node-modules-cache.outputs.cache-hit }}" != "true" ]; then
             echo "📦 Installing dependencies (fresh install)..."
@@ -94,20 +95,24 @@ jobs:
             echo "✅ Using cached node_modules"
           fi
 
-          # Verify Next.js version
+          # Verify Next.js version in public-site package
           echo "🔍 Verifying Next.js version..."
-          NEXTJS_VERSION=$(npm list next --depth=0 --json | jq -r '.dependencies.next.version')
-          echo "   Installed: Next.js v${NEXTJS_VERSION}"
+          cd packages/public-site
+          NEXTJS_VERSION=$(npm list next --depth=0 --json 2>/dev/null | jq -r '.dependencies.next.version // empty')
 
-          if [[ "${NEXTJS_VERSION}" != "16."* ]]; then
-            echo "⚠️  Next.js version mismatch! Expected 16.x, got ${NEXTJS_VERSION}"
-            echo "📦 Installing Next.js 16..."
-            npm install next@^16.0.0 --no-save
+          if [ -z "$NEXTJS_VERSION" ]; then
+            echo "⚠️  Next.js not found in package dependencies"
+          else
+            echo "   Installed: Next.js v${NEXTJS_VERSION}"
+
+            if [[ "${NEXTJS_VERSION}" != "16."* ]]; then
+              echo "⚠️  Next.js version mismatch! Expected 16.x, got ${NEXTJS_VERSION}"
+            fi
           fi
 
       # Generate Master Controller CSS from Supabase settings
       - name: Generate Master Controller CSS
-        working-directory: nextjs-frontend
+        working-directory: packages/public-site
         env:
           # Use properly formatted placeholder values (CSS generator falls back to defaults)
           NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
@@ -129,7 +134,7 @@ jobs:
 
       # Build static export (SAFE METHOD - Config swap for Next.js 16)
       - name: Build Static Export
-        working-directory: nextjs-frontend
+        working-directory: packages/public-site
         env:
           NODE_ENV: production
           # Use properly formatted placeholder values (API routes excluded from export)
@@ -198,7 +203,7 @@ jobs:
       # Compute build hash for change detection
       - name: Compute build hash
         id: compute-hash
-        working-directory: nextjs-frontend
+        working-directory: packages/public-site
         run: |
           echo "🔍 Computing build hash for change detection..."
 
@@ -236,7 +241,7 @@ jobs:
       # Check if deployment needed (incremental mode)
       - name: Check for changes
         id: check-changes
-        working-directory: nextjs-frontend
+        working-directory: packages/public-site
         env:
           DEPLOYMENT_TYPE: ${{ inputs.deployment_type || 'incremental' }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -263,7 +268,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-output
-          path: nextjs-frontend/out
+          path: packages/public-site/out
           retention-days: 7
           compression-level: 6
 
@@ -284,7 +289,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: nextjs-frontend/out
+          path: packages/public-site/out
 
       # Deploy to Cloudflare Pages with retry logic (static HTML only)
       - name: Deploy to Cloudflare Pages
@@ -293,7 +298,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+          command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 2)
@@ -304,7 +309,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+          command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 3)
@@ -315,7 +320,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+          command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
 
       # Set deployment status
       - name: Set deployment status
@@ -346,7 +351,7 @@ jobs:
           # This requires a Worker endpoint to accept the manifest
           # curl -X POST "https://saabuildingblocks.com/api/store-manifest" \
           #   -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-          #   -d @nextjs-frontend/out/_deployment-manifest.json
+          #   -d @packages/public-site/out/_deployment-manifest.json
 
           echo "⚠️  Manifest storage not implemented yet (requires Worker setup)"
 

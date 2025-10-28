@@ -1,0 +1,26 @@
+{
+  "name": "smartagentalliance-monorepo",
+  "version": "1.0.0",
+  "description": "Smart Agent Alliance - Monorepo with Public Site and Admin Dashboard",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:public": "npm run dev --workspace=@saa/public-site",
+    "dev:admin": "npm run dev --workspace=@saa/admin-dashboard",
+    "dev:all": "npm run dev --workspaces",
+    "build:public": "npm run build --workspace=@saa/public-site",
+    "build:admin": "npm run build --workspace=@saa/admin-dashboard",
+    "build:all": "npm run build --workspaces",
+    "test:all": "npm run test --workspaces",
+    "lint:all": "npm run lint --workspaces",
+    "type-check:all": "npm run type-check --workspaces",
+    "clean": "rm -rf packages/*/node_modules packages/*/.next packages/*/out node_modules",
+    "clean:build": "rm -rf packages/*/.next packages/*/out"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

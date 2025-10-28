@@ -1,0 +1,701 @@
+
+> @saa/admin-dashboard@1.0.0 build
+> next build
+
+   ▲ Next.js 16.0.0 (Turbopack)
+   - Experiments (use with caution):
+     · serverActions
+
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+   Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 22 errors:
+./packages/admin-dashboard/app/agent-portal/activity/page.tsx:23:1
+Module not found: Can't resolve '@/components/activity/ActivityLogFilters'
+[0m [90m 21 |[39m [36mimport[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 22 |[39m [36mimport[39m { [33mActivityLogTable[39m } [36mfrom[39m [32m'@/components/activity/ActivityLogTable'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 23 |[39m [36mimport[39m { [33mActivityLogFilters[39m } [36mfrom[39m [32m'@/components/activity/ActivityLogFilters'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 24 |[39m [36mimport[39m { [33mExportButton[39m } [36mfrom[39m [32m'@/components/activity/ExportButton'[39m[33m;[39m
+ [90m 25 |[39m [36mimport[39m { fetchAuditLogs } [36mfrom[39m [32m'@/lib/api/audit-logs'[39m[33m;[39m
+ [90m 26 |[39m [36mimport[39m type { [33mAuditLog[39m[33m,[39m [33mAuditLogFilters[39m } [36mfrom[39m [32m'@/lib/api/audit-logs'[39m[33m;[39m[0m
+
+Import map: aliased to relative './components/activity/ActivityLogFilters' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/agent-portal/activity/page.tsx:22:1
+Module not found: Can't resolve '@/components/activity/ActivityLogTable'
+[0m [90m 20 |[39m
+ [90m 21 |[39m [36mimport[39m { useState[33m,[39m useEffect } [36mfrom[39m [32m'react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 22 |[39m [36mimport[39m { [33mActivityLogTable[39m } [36mfrom[39m [32m'@/components/activity/ActivityLogTable'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 23 |[39m [36mimport[39m { [33mActivityLogFilters[39m } [36mfrom[39m [32m'@/components/activity/ActivityLogFilters'[39m[33m;[39m
+ [90m 24 |[39m [36mimport[39m { [33mExportButton[39m } [36mfrom[39m [32m'@/components/activity/ExportButton'[39m[33m;[39m
+ [90m 25 |[39m [36mimport[39m { fetchAuditLogs } [36mfrom[39m [32m'@/lib/api/audit-logs'[39m[33m;[39m[0m
+
+Import map: aliased to relative './components/activity/ActivityLogTable' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/agent-portal/activity/page.tsx:24:1
+Module not found: Can't resolve '@/components/activity/ExportButton'
+[0m [90m 22 |[39m [36mimport[39m { [33mActivityLogTable[39m } [36mfrom[39m [32m'@/components/activity/ActivityLogTable'[39m[33m;[39m
+ [90m 23 |[39m [36mimport[39m { [33mActivityLogFilters[39m } [36mfrom[39m [32m'@/components/activity/ActivityLogFilters'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 24 |[39m [36mimport[39m { [33mExportButton[39m } [36mfrom[39m [32m'@/components/activity/ExportButton'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 25 |[39m [36mimport[39m { fetchAuditLogs } [36mfrom[39m [32m'@/lib/api/audit-logs'[39m[33m;[39m
+ [90m 26 |[39m [36mimport[39m type { [33mAuditLog[39m[33m,[39m [33mAuditLogFilters[39m } [36mfrom[39m [32m'@/lib/api/audit-logs'[39m[33m;[39m
+ [90m 27 |[39m [36mimport[39m { [33mChevronLeft[39m[33m,[39m [33mChevronRight[39m[33m,[39m [33mRefreshCw[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+
+Import map: aliased to relative './components/activity/ExportButton' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/activity/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/agent-portal/page.tsx:18:1
+Module not found: Can't resolve '@/components/activity/RecentActivityWidget'
+[0m [90m 16 |[39m [36mimport[39m { [33mDashboardCard[39m } [36mfrom[39m [32m'./components/DashboardCard'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m { [33mStatsCard[39m } [36mfrom[39m [32m'./components/StatsCard'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 18 |[39m [36mimport[39m { [33mRecentActivityWidget[39m } [36mfrom[39m [32m'@/components/activity/RecentActivityWidget'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 19 |[39m [36mimport[39m { [33mUsers[39m[33m,[39m [33mShield[39m[33m,[39m [33mActivity[39m[33m,[39m [33mSettings[39m[33m,[39m [33mUserPlus[39m[33m,[39m [33mLock[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+ [90m 20 |[39m
+ [90m 21 |[39m [36mexport[39m [36mdefault[39m [36mfunction[39m [33mAgentPortalDashboard[39m() {[0m
+
+Import map: aliased to relative './components/activity/RecentActivityWidget' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx:14:1
+Module not found: Can't resolve '@/components/roles/RoleForm'
+[0m [90m 12 |[39m [36mimport[39m { useRouter[33m,[39m useParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 13 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 14 |[39m [36mimport[39m { [33mRoleForm[39m } [36mfrom[39m [32m'@/components/roles/RoleForm'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 15 |[39m [36mimport[39m { getPermissions[33m,[39m [33mPermission[39m[33m,[39m [33mPermissionCategory[39m } [36mfrom[39m [32m'@/lib/api/permissions'[39m[33m;[39m
+ [90m 16 |[39m [36mimport[39m { getRole[33m,[39m updateRole[33m,[39m [33mRole[39m } [36mfrom[39m [32m'@/lib/api/roles'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mLoader2[39m[33m,[39m [33mAlertCircle[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+
+Import map: aliased to relative './components/roles/RoleForm' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx:14:1
+Module not found: Can't resolve '@/components/roles/RoleForm'
+[0m [90m 12 |[39m [36mimport[39m { useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 13 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 14 |[39m [36mimport[39m { [33mRoleForm[39m } [36mfrom[39m [32m'@/components/roles/RoleForm'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 15 |[39m [36mimport[39m { getPermissions[33m,[39m [33mPermission[39m[33m,[39m [33mPermissionCategory[39m } [36mfrom[39m [32m'@/lib/api/permissions'[39m[33m;[39m
+ [90m 16 |[39m [36mimport[39m { createRole } [36mfrom[39m [32m'@/lib/api/roles'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m { [33mArrowLeft[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m[0m
+
+Import map: aliased to relative './components/roles/RoleForm' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/agent-portal/roles/page.tsx:14:1
+Module not found: Can't resolve '@/components/roles/RoleTable'
+[0m [90m 12 |[39m [36mimport[39m { useRouter } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+ [90m 13 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 14 |[39m [36mimport[39m { [33mRoleTable[39m } [36mfrom[39m [32m'@/components/roles/RoleTable'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 15 |[39m [36mimport[39m { [33mRole[39m[33m,[39m getRoles[33m,[39m deleteRole } [36mfrom[39m [32m'@/lib/api/roles'[39m[33m;[39m
+ [90m 16 |[39m [36mimport[39m { [33mPlus[39m[33m,[39m [33mShield[39m[33m,[39m [33mAlertCircle[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+ [90m 17 |[39m[0m
+
+Import map: aliased to relative './components/roles/RoleTable' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/agent-portal/roles/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/agent-portal/roles/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/agent-portal/roles/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/agent-portal/roles/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/agent-portal/roles/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/category/components/BlogCard.tsx:18:1
+Module not found: Can't resolve '@/components/saa'
+[0m [90m 16 |[39m [36mimport[39m [33mImage[39m [36mfrom[39m [32m'next/image'[39m[33m;[39m
+ [90m 17 |[39m [36mimport[39m [33mLink[39m [36mfrom[39m [32m'next/link'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 18 |[39m [36mimport[39m { [33mCyberCardHolographic[39m } [36mfrom[39m [32m'@/components/saa'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 19 |[39m [36mimport[39m { generateClamp } [36mfrom[39m [32m'@/app/master-controller/lib/clampCalculator'[39m[33m;[39m
+ [90m 20 |[39m [36mimport[39m type { [33mBlogCardProps[39m } [36mfrom[39m [32m'../types'[39m[33m;[39m
+ [90m 21 |[39m[0m
+
+Import map: aliased to relative './components/saa' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/category/components/BlogCard.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/category/components/BlogCard.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/category/components/BlogGrid.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/category/components/CategoryTemplate.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/category/components/CategoryTemplate.tsx [Server Component]
+    ./packages/admin-dashboard/app/category/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/category/components/BlogCard.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/category/components/BlogGrid.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/category/components/CategoryTemplate.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/category/components/CategoryTemplate.tsx [Server Component]
+    ./packages/admin-dashboard/app/category/[slug]/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:216:27
+Module not found: Can't resolve '@/components/saa/buttons/CTAButton'
+[0m [90m 214 |[39m       [90m// Buttons[39m
+ [90m 215 |[39m       [36mcase[39m [32m'cta-button'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 216 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/buttons/CTAButton'[39m)[33m.[39mthen(m [33m=>[39m ({ [36mdefault[39m[33m:[39m () [33m=>[39m [33m<[39m[33mm[39m[33m.[39m[33mCTAButton[39m[33m>[39m[33mGet[39m [33mStarted[39m[33m<[39m[33m/[39m[33mm[39m[33m.[39m[33mCTAButton[39m[33m>[39m })))[33m;[39m
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 217 |[39m       [36mcase[39m [32m'secondary-button'[39m[33m:[39m
+ [90m 218 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/buttons/SecondaryButton'[39m)[33m.[39mthen(m [33m=>[39m ({ [36mdefault[39m[33m:[39m () [33m=>[39m [33m<[39m[33mm[39m[33m.[39m[33mSecondaryButton[39m[33m>[39m[33mLearn[39m [33mMore[39m[33m<[39m[33m/[39m[33mm[39m[33m.[39m[33mSecondaryButton[39m[33m>[39m })))[33m;[39m
+ [90m 219 |[39m[0m
+
+Import map: aliased to relative './components/saa/buttons/CTAButton' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:218:27
+Module not found: Can't resolve '@/components/saa/buttons/SecondaryButton'
+[0m [90m 216 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/buttons/CTAButton'[39m)[33m.[39mthen(m [33m=>[39m ({ [36mdefault[39m[33m:[39m () [33m=>[39m [33m<[39m[33mm[39m[33m.[39m[33mCTAButton[39m[33m>[39m[33mGet[39m [33mStarted[39m[33m<[39m[33m/[39m[33mm[39m[33m.[39m[33mCTAButton[39m[33m>[39m })))[33m;[39m
+ [90m 217 |[39m       [36mcase[39m [32m'secondary-button'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 218 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/buttons/SecondaryButton'[39m)[33m.[39mthen(m [33m=>[39m ({ [36mdefault[39m[33m:[39m () [33m=>[39m [33m<[39m[33mm[39m[33m.[39m[33mSecondaryButton[39m[33m>[39m[33mLearn[39m [33mMore[39m[33m<[39m[33m/[39m[33mm[39m[33m.[39m[33mSecondaryButton[39m[33m>[39m })))[33m;[39m
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 219 |[39m
+ [90m 220 |[39m       [90m// Cards[39m
+ [90m 221 |[39m       [36mcase[39m [32m'stacked-animation-cards'[39m[33m:[39m[0m
+
+Import map: aliased to relative './components/saa/buttons/SecondaryButton' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:278:27
+Module not found: Can't resolve '@/components/saa/cards/CyberCardHolographic'
+[0m [90m 276 |[39m         })))[33m;[39m
+ [90m 277 |[39m       [36mcase[39m [32m'cyber-card-holographic'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 278 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/cards/CyberCardHolographic'[39m)[33m.[39mthen(m [33m=>[39m ({
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 279 |[39m           [36mdefault[39m[33m:[39m () [33m=>[39m (
+ [90m 280 |[39m             [33m<[39m[33mm[39m[33m.[39m[33mCyberCardHolographic[39m className[33m=[39m[32m"w-full max-w-md"[39m[33m>[39m
+ [90m 281 |[39m               [33m<[39m[33mh3[39m className[33m=[39m[32m"text-2xl font-bold text-[#ffd700] mb-4"[39m[33m>[39m[33mHolographic[39m [33mCard[39m[33m<[39m[33m/[39m[33mh3[39m[33m>[39m[0m
+
+Import map: aliased to relative './components/saa/cards/CyberCardHolographic' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:287:27
+Module not found: Can't resolve '@/components/saa/cards/CyberCardIndustrialMetal'
+[0m [90m 285 |[39m         })))[33m;[39m
+ [90m 286 |[39m       [36mcase[39m [32m'cyber-card-industrial-metal'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 287 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/cards/CyberCardIndustrialMetal'[39m)[33m.[39mthen(m [33m=>[39m ({
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 288 |[39m           [36mdefault[39m[33m:[39m () [33m=>[39m (
+ [90m 289 |[39m             [33m<[39m[33mm[39m[33m.[39m[33mCyberCardIndustrialMetal[39m className[33m=[39m[32m"w-full max-w-md"[39m[33m>[39m
+ [90m 290 |[39m               [33m<[39m[33mh3[39m className[33m=[39m[32m"text-2xl font-bold text-[#ffd700] mb-4"[39m[33m>[39m[33mIndustrial[39m [33mMetal[39m[33m<[39m[33m/[39m[33mh3[39m[33m>[39m[0m
+
+Import map: aliased to relative './components/saa/cards/CyberCardIndustrialMetal' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:269:27
+Module not found: Can't resolve '@/components/saa/cards/CyberCardPrismaticGlass'
+[0m [90m 267 |[39m         })))[33m;[39m
+ [90m 268 |[39m       [36mcase[39m [32m'cyber-card-prismatic-glass'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 269 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/cards/CyberCardPrismaticGlass'[39m)[33m.[39mthen(m [33m=>[39m ({
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 270 |[39m           [36mdefault[39m[33m:[39m () [33m=>[39m (
+ [90m 271 |[39m             [33m<[39m[33mm[39m[33m.[39m[33mCyberCardPrismaticGlass[39m className[33m=[39m[32m"w-full max-w-md"[39m[33m>[39m
+ [90m 272 |[39m               [33m<[39m[33mh3[39m className[33m=[39m[32m"text-2xl font-bold text-[#ffd700] mb-4"[39m[33m>[39m[33mPrismatic[39m [33mGlass[39m[33m<[39m[33m/[39m[33mh3[39m[33m>[39m[0m
+
+Import map: aliased to relative './components/saa/cards/CyberCardPrismaticGlass' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:223:27
+Module not found: Can't resolve '@/components/saa/cards/CyberCardStackedAnimation'
+[0m [90m 221 |[39m       [36mcase[39m [32m'stacked-animation-cards'[39m[33m:[39m
+ [90m 222 |[39m       [36mcase[39m [32m'cyber-card-stacked-animation'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 223 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/cards/CyberCardStackedAnimation'[39m)[33m.[39mthen(m [33m=>[39m ({
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 224 |[39m           [36mdefault[39m[33m:[39m () [33m=>[39m (
+ [90m 225 |[39m             [33m<[39m[33mm[39m[33m.[39m[33mCyberCardStackedAnimation[39m
+ [90m 226 |[39m               cards[33m=[39m{[[0m
+
+Import map: aliased to relative './components/saa/cards/CyberCardStackedAnimation' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:309:27
+Module not found: Can't resolve '@/components/saa/icons/IconLibrary'
+[0m [90m 307 |[39m       [90m// Interactive[39m
+ [90m 308 |[39m       [36mcase[39m [32m'icon-library'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 309 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/icons/IconLibrary'[39m)[33m.[39mthen(m [33m=>[39m ({
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 310 |[39m           [36mdefault[39m[33m:[39m () [33m=>[39m (
+ [90m 311 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"w-full h-full p-8"[39m[33m>[39m
+ [90m 312 |[39m               [33m<[39m[33mm[39m[33m.[39m[33mIconLibrary[39m size[33m=[39m[32m"large"[39m showLabels [33m/[39m[33m>[39m[0m
+
+Import map: aliased to relative './components/saa/icons/IconLibrary' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:297:27
+Module not found: Can't resolve '@/components/saa/text/TextScramble'
+[0m [90m 295 |[39m       [90m// Effects[39m
+ [90m 296 |[39m       [36mcase[39m [32m'text-scramble'[39m[33m:[39m
+[31m[1m>[22m[39m[90m 297 |[39m         [36mreturn[39m lazy(() [33m=>[39m [36mimport[39m([32m'@/components/saa/text/TextScramble'[39m)[33m.[39mthen(m [33m=>[39m ({
+ [90m     |[39m                           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 298 |[39m           [36mdefault[39m[33m:[39m () [33m=>[39m (
+ [90m 299 |[39m             [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex items-center justify-center h-full"[39m[33m>[39m
+ [90m 300 |[39m               [33m<[39m[33mm[39m[33m.[39m[33mTextScramble[39m text[33m=[39m[32m"SAA Building Blocks"[39m[33m>[39m[0m
+
+Import map: aliased to relative './components/saa/text/TextScramble' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/shared/components/ui/form.tsx:16:1
+Module not found: Can't resolve '@/components/ui/label'
+[0m [90m 14 |[39m
+ [90m 15 |[39m [36mimport[39m { cn } [36mfrom[39m [32m"@/lib/utils"[39m
+[31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m { [33mLabel[39m } [36mfrom[39m [32m"@/components/ui/label"[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 17 |[39m
+ [90m 18 |[39m [36mconst[39m [33mForm[39m [33m=[39m [33mFormProvider[39m
+ [90m 19 |[39m[0m
+
+Import map: aliased to relative './components/ui/label' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  Client Component Browser:
+    ./packages/shared/components/ui/form.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/activate-account/components/ActivateAccountForm.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/shared/components/ui/form.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/activate-account/components/ActivateAccountForm.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx:7:1
+Module not found: Can't resolve '@/data/saa-component-registry'
+[0m [90m  5 |[39m [36mimport[39m { [33mComponentCard[39m } [36mfrom[39m [32m'../../components/ComponentCard'[39m[33m;[39m
+ [90m  6 |[39m [36mimport[39m { [33mComponentEditor[39m } [36mfrom[39m [32m'../ComponentEditor'[39m[33m;[39m
+[31m[1m>[22m[39m[90m  7 |[39m [36mimport[39m {
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  8 |[39m   saaComponentRegistry[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m  9 |[39m   getConversionStats[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 10 |[39m   searchComponents[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 11 |[39m   [33mSAA_CATEGORY_LABELS[39m[33m,[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+[31m[1m>[22m[39m[90m 12 |[39m } [36mfrom[39m [32m'@/data/saa-component-registry'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 13 |[39m [36mimport[39m type { [33mSAAComponent[39m[33m,[39m [33mSAAComponentCategory[39m } [36mfrom[39m [32m'@/data/saa-component-registry'[39m[33m;[39m
+ [90m 14 |[39m
+ [90m 15 |[39m type [33mCategoryFilter[39m [33m=[39m [33mSAAComponentCategory[39m [33m|[39m [32m'all'[39m[33m;[39m[0m
+
+Import map: aliased to relative './data/saa-component-registry' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/master-controller/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/activate-account/page.tsx:24:1
+Module not found: Can't resolve '@/hooks/useAuth'
+[0m [90m 22 |[39m [36mimport[39m { useEffect[33m,[39m [33mSuspense[39m } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 23 |[39m [36mimport[39m { useRouter[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 24 |[39m [36mimport[39m { useAuth } [36mfrom[39m [32m'@/hooks/useAuth'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 25 |[39m [36mimport[39m [33mActivateAccountForm[39m [36mfrom[39m [32m'./components/ActivateAccountForm'[39m[33m;[39m
+ [90m 26 |[39m [36mimport[39m { [33mCyberCardHolographic[39m } [36mfrom[39m [32m'@saa/shared/components/saa/cards/CyberCardHolographic'[39m[33m;[39m
+ [90m 27 |[39m[0m
+
+Import map: aliased to relative './hooks/useAuth' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/activate-account/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/activate-account/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/login/components/LoginForm.tsx:23:1
+Module not found: Can't resolve '@/hooks/useAuth'
+[0m [90m 21 |[39m [36mimport[39m [33m*[39m [36mas[39m z [36mfrom[39m [32m'zod'[39m[33m;[39m
+ [90m 22 |[39m [36mimport[39m { [33mMail[39m[33m,[39m [33mLoader2[39m } [36mfrom[39m [32m'lucide-react'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 23 |[39m [36mimport[39m { useAuth } [36mfrom[39m [32m'@/hooks/useAuth'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 24 |[39m [36mimport[39m {
+ [90m 25 |[39m   [33mForm[39m[33m,[39m
+ [90m 26 |[39m   [33mFormControl[39m[33m,[39m[0m
+
+Import map: aliased to relative './hooks/useAuth' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/login/components/LoginForm.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/login/components/LoginForm.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/login/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/login/components/LoginForm.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/login/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/login/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/login/page.tsx:20:1
+Module not found: Can't resolve '@/hooks/useAuth'
+[0m [90m 18 |[39m [36mimport[39m { useEffect[33m,[39m [33mSuspense[39m } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 19 |[39m [36mimport[39m { useRouter[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 20 |[39m [36mimport[39m { useAuth } [36mfrom[39m [32m'@/hooks/useAuth'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 21 |[39m [36mimport[39m [33mLoginForm[39m [36mfrom[39m [32m'./components/LoginForm'[39m[33m;[39m
+ [90m 22 |[39m [36mimport[39m { [33mCyberCardHolographic[39m } [36mfrom[39m [32m'@saa/shared/components/saa/cards/CyberCardHolographic'[39m[33m;[39m
+ [90m 23 |[39m[0m
+
+Import map: aliased to relative './hooks/useAuth' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/login/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/login/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/login/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/login/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+./packages/admin-dashboard/app/reset-password/page.tsx:19:1
+Module not found: Can't resolve '@/hooks/useAuth'
+[0m [90m 17 |[39m [36mimport[39m { useEffect[33m,[39m [33mSuspense[39m } [36mfrom[39m [32m'react'[39m[33m;[39m
+ [90m 18 |[39m [36mimport[39m { useRouter[33m,[39m useSearchParams } [36mfrom[39m [32m'next/navigation'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 19 |[39m [36mimport[39m { useAuth } [36mfrom[39m [32m'@/hooks/useAuth'[39m[33m;[39m
+ [90m    |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
+ [90m 20 |[39m [36mimport[39m [33mResetPasswordForm[39m [36mfrom[39m [32m'./components/ResetPasswordForm'[39m[33m;[39m
+ [90m 21 |[39m [36mimport[39m { [33mCyberCardHolographic[39m } [36mfrom[39m [32m'@saa/shared/components/saa/cards/CyberCardHolographic'[39m[33m;[39m
+ [90m 22 |[39m[0m
+
+Import map: aliased to relative './hooks/useAuth' inside of [project]/packages/admin-dashboard
+
+
+Import traces:
+  App Route:
+    ./packages/admin-dashboard/app/reset-password/page.tsx
+    ./packages/admin-dashboard/app/api/master-controller/components/read/route.ts
+
+  Client Component Browser:
+    ./packages/admin-dashboard/app/reset-password/page.tsx [Client Component Browser]
+    ./packages/admin-dashboard/app/reset-password/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./packages/admin-dashboard/app/reset-password/page.tsx [Client Component SSR]
+    ./packages/admin-dashboard/app/reset-password/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/activity/page.tsx:23:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/activity/page.tsx:22:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/activity/page.tsx:24:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/page.tsx:18:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/roles/[id]/page.tsx:14:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/roles/new/page.tsx:14:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/agent-portal/roles/page.tsx:14:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/category/components/BlogCard.tsx:18:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:216:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:218:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:278:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:287:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:269:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:223:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:309:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/ComponentEditor.tsx:297:27)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/shared/components/ui/form.tsx:16:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/master-controller/components/tabs/ComponentsTab.tsx:7:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/activate-account/page.tsx:24:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/login/components/LoginForm.tsx:23:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/login/page.tsx:20:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at <unknown> (./packages/admin-dashboard/app/reset-password/page.tsx:19:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path /home/claude-flow/packages/admin-dashboard
+npm error workspace @saa/admin-dashboard@1.0.0
+npm error location /home/claude-flow/packages/admin-dashboard
+npm error command failed
+npm error command sh -c next build

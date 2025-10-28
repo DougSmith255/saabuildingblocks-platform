@@ -26,3 +26,69 @@ claude-flow
 # Removed Windows wrapper files per user request
 hive-mind-prompt-*.txt
 backups/
+
+# Monorepo
+node_modules/
+.next/
+out/
+dist/
+packages/*/node_modules/
+packages/*/.next/
+packages/*/out/
+packages/*/dist/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+packages/*/.env
+packages/*/.env.local
+
+# Build artifacts
+*.log
+npm-debug.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Cache
+.turbo/
+.cache/
+.eslintcache
+.tsbuildinfo
+
+# Archive directory (pre-monorepo backups)
+.archive/
+
+# Claude Code session files
+.claude.json.*
+.claude.json.backup*
+.claude.json.corrupted.*
+.claude.json.full
+.claude.json.minimal
+
+# Agent deliverables and reports
+AGENT*.md
+AGENT*.txt
+*_DELIVERABLES*.md
+*_SUMMARY*.md
+*_STATUS*.md
+*_REPORT*.md
+*VISUAL_SUMMARY*.txt
+*QUICK_REFERENCE*.md
+REVIEWER_*.md
+CODER_*.md
+TESTER_*.md
+MESH_AGENT_*.md
+WORKER*.md
+PHASE*.md
+DEPLOY_PHASE*.sh
+ROLLBACK_*.sh
+
+# Analysis and diagnostic files
+*ANALYSIS*.md
+*DIAGNOSTIC*.md
+*FINDINGS*.md
+*AUDIT*.md
+
+# WordPress backup files
+*.php.backup*
