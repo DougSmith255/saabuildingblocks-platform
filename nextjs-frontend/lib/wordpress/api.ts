@@ -12,21 +12,19 @@ const WORDPRESS_URL = process.env.WORDPRESS_URL || 'https://wp.saabuildingblocks
 const WORDPRESS_USER = process.env.WORDPRESS_USER || '';
 const WORDPRESS_APP_PASSWORD = process.env.WORDPRESS_APP_PASSWORD || '';
 
-// Allowed Category Slugs (12 categories total)
-// Phase 7 category template categories
+// Allowed Category Slugs - Matches actual WordPress categories
+// Updated 2025-10-28 to match wp.saabuildingblocks.com categories
 const ALLOWED_CATEGORIES = [
-  'best-brokerage',
-  'become-an-agent',
+  'about-exp',
+  'agent-career-info',
   'brokerage-comparison',
+  'exp-realty-sponsor',
+  'fun-for-agents',
   'industry-trends',
   'marketing-mastery',
+  'real-estate-schools',
+  'uncategorized',
   'winning-clients',
-  'fun-for-agents',
-  'exp-realty-sponsor',
-  'agent-career-info',
-  'about-exp',
-  'getting-license',
-  'best-school'
 ] as const;
 
 /**
