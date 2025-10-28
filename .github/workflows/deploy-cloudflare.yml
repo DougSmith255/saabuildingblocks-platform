@@ -159,7 +159,7 @@ jobs:
 
           # Build with static export config
           echo "🏗️  Building with static export config..."
-          next build
+          npx next build
 
           # Restore original configs
           echo "🔄 Restoring original configs..."
