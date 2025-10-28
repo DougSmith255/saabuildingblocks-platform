@@ -1,0 +1,85 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+// Force dynamic rendering - exclude from static export
+export const dynamic = 'force-dynamic';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
+
+/**
+ * GET /api/master-controller/typography
+ * Fetch typography settings from Supabase
+ */
+export async function GET() {
+  try {
+    const { data, error } = await supabase
+      .from('master_controller_settings')
+      .select('setting_value')
+      .eq('setting_key', 'typography')
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      // PGRST116 = no rows found, which is okay for first time
+      throw error;
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: data?.setting_value || null,
+    });
+  } catch (error) {
+    console.error('[Typography API] GET error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to fetch typography settings' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * POST /api/master-controller/typography
+ * Save typography settings to Supabase
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { settings } = body;
+
+    if (!settings) {
+      return NextResponse.json(
+        { success: false, error: 'Missing settings data' },
+        { status: 400 }
+      );
+    }
+
+    // Upsert using setting_key as conflict key
+    const { data, error } = await supabase
+      .from('master_controller_settings')
+      .upsert({
+        setting_key: 'typography',
+        setting_value: settings,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'setting_key',
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    return NextResponse.json({
+      success: true,
+      message: 'Typography settings saved successfully',
+      data,
+    });
+  } catch (error) {
+    console.error('[Typography API] POST error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Failed to save typography settings' },
+      { status: 500 }
+    );
+  }
+}

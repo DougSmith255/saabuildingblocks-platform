@@ -10,15 +10,42 @@
  * - Component templates (blog, pages)
  *
  * All changes sync to localStorage and Supabase (if configured)
+ *
+ * Note: As a client component, this page is not pre-rendered during build.
+ * It runs entirely in the browser with access to localStorage and Zustand stores.
  */
 
 import { useState } from 'react';
+import dynamicImport from 'next/dynamic';
 import { Palette, Type, LayoutGrid, FileCode, Settings, Layers } from 'lucide-react';
 
-// Tab components
-import { TemplatesTab } from './components/tabs/TemplatesTab';
+// Tab components - dynamically imported to prevent SSR
+const TypographyTab = dynamicImport(() => import('./components/tabs/TypographyTab').then(mod => ({ default: mod.TypographyTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Typography tab...</div>
+});
 
-// Store hooks
+const BrandColorsTab = dynamicImport(() => import('./components/tabs/BrandColorsTab').then(mod => ({ default: mod.BrandColorsTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Brand Colors tab...</div>
+});
+
+const SpacingTab = dynamicImport(() => import('./components/tabs/SpacingTab').then(mod => ({ default: mod.SpacingTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Spacing tab...</div>
+});
+
+const ComponentsTab = dynamicImport(() => import('./components/tabs/ComponentsTab').then(mod => ({ default: mod.ComponentsTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Components tab...</div>
+});
+
+const TemplatesTab = dynamicImport(() => import('./components/tabs/TemplatesTab').then(mod => ({ default: mod.TemplatesTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Templates tab...</div>
+});
+
+// Store hooks - only used in client component after mount
 import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
@@ -133,61 +160,17 @@ export default function MasterControllerDashboard() {
 
       {/* Tab Content */}
       <div className="min-h-[600px]">
-        {activeTab === 'typography' && (
-          <div className="p-6 rounded-lg border" style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            borderColor: 'rgba(255, 215, 0, 0.2)',
-          }}>
-            <h2 className="text-2xl font-bold text-[#e5e4dd] mb-4">Typography Settings</h2>
-            <p className="text-[#dcdbd5]">Typography tab is under development. Access via API: <code className="bg-[#191818] px-2 py-1 rounded text-[#00ff88]">/api/master-controller/typography</code></p>
-          </div>
-        )}
+        {activeTab === 'typography' && <TypographyTab />}
 
-        {activeTab === 'colors' && (
-          <div className="p-6 rounded-lg border" style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            borderColor: 'rgba(0, 255, 136, 0.2)',
-          }}>
-            <h2 className="text-2xl font-bold text-[#e5e4dd] mb-4">Brand Colors</h2>
-            <p className="text-[#dcdbd5]">Colors tab is under development. Access via store: <code className="bg-[#191818] px-2 py-1 rounded text-[#00ff88]">useBrandColorsStore()</code></p>
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-              {brandColors && Object.entries(brandColors).map(([key, value]) => (
-                <div key={key} className="p-4 rounded-lg border border-[#404040]">
-                  <div className="text-sm text-[#dcdbd5] mb-2">{key}</div>
-                  <div
-                    className="h-12 rounded border border-[#404040]"
-                    style={{ backgroundColor: value as string }}
-                  />
-                  <div className="text-xs text-[#dcdbd5] mt-2 font-mono">{value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+        {activeTab === 'colors' && <BrandColorsTab />}
 
-        {activeTab === 'spacing' && (
-          <div className="p-6 rounded-lg border" style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            borderColor: 'rgba(229, 228, 221, 0.2)',
-          }}>
-            <h2 className="text-2xl font-bold text-[#e5e4dd] mb-4">Spacing System</h2>
-            <p className="text-[#dcdbd5]">Spacing tab is under development. Access via store: <code className="bg-[#191818] px-2 py-1 rounded text-[#00ff88]">useSpacingStore()</code></p>
-          </div>
-        )}
+        {activeTab === 'spacing' && <SpacingTab />}
 
         {activeTab === 'templates' && (
           <TemplatesTab />
         )}
 
-        {activeTab === 'components' && (
-          <div className="p-6 rounded-lg border" style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            borderColor: 'rgba(255, 215, 0, 0.2)',
-          }}>
-            <h2 className="text-2xl font-bold text-[#e5e4dd] mb-4">Component Library</h2>
-            <p className="text-[#dcdbd5]">Components tab is under development. See <code className="bg-[#191818] px-2 py-1 rounded text-[#00ff88]">/components/saa</code> for React components.</p>
-          </div>
-        )}
+        {activeTab === 'components' && <ComponentsTab />}
       </div>
 
       {/* Footer Info */}
