@@ -67,9 +67,9 @@ jobs:
         id: node-modules-cache
         with:
           path: nextjs-frontend/node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('nextjs-frontend/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-nextjs16-${{ hashFiles('nextjs-frontend/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-modules-
+            ${{ runner.os }}-node-modules-nextjs16-
 
       # Cache Next.js build
       - name: Cache Next.js build
@@ -88,13 +88,21 @@ jobs:
         working-directory: nextjs-frontend
         run: |
           if [ "${{ steps.node-modules-cache.outputs.cache-hit }}" != "true" ]; then
-            echo "📦 Installing dependencies..."
+            echo "📦 Installing dependencies (fresh install)..."
             npm ci --prefer-offline --no-audit
           else
             echo "✅ Using cached node_modules"
-            # Ensure Next.js is at version from package.json (cache might have older version)
-            echo "🔄 Verifying Next.js version..."
-            npm install next@latest --no-save
+          fi
+
+          # Verify Next.js version
+          echo "🔍 Verifying Next.js version..."
+          NEXTJS_VERSION=$(npm list next --depth=0 --json | grep -o '"version":"[^"]*"' | head -1 | cut -d'"' -f4)
+          echo "   Installed: Next.js v${NEXTJS_VERSION}"
+
+          if [[ "${NEXTJS_VERSION}" != "16."* ]]; then
+            echo "⚠️  Next.js version mismatch! Expected 16.x, got ${NEXTJS_VERSION}"
+            echo "📦 Installing Next.js 16..."
+            npm install next@^16.0.0 --no-save
           fi
 
       # Generate Master Controller CSS from Supabase settings
@@ -117,7 +125,7 @@ jobs:
             echo "⚠️  CSS file not found - using default styles"
           fi
 
-      # Build static export (SAFE METHOD - NO file movement)
+      # Build static export (SAFE METHOD - Config swap for Next.js 16)
       - name: Build Static Export
         working-directory: nextjs-frontend
         env:
@@ -132,14 +140,31 @@ jobs:
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
           WORDPRESS_APP_PASSWORD: ${{ secrets.WORSPRESS_APP_PASSWORD }}
         run: |
-          echo "🔨 Building static export with npm script (export:clean)"
-          echo "   Script: rm -rf out .next && npm run generate:css && NEXT_CONFIG_FILE=next.config.static.ts next build"
+          echo "🔨 Building static export for Cloudflare Pages"
+          echo "   Method: Config swap (Next.js 16 compatible)"
           echo "   Config: next.config.static.ts (output: 'export')"
-          echo "   ✅ SAFE: No file movement - VPS and export share same codebase"
+          echo "   ✅ SAFE: Temporary swap, auto-restored on completion"
           echo ""
 
-          # Use npm script that sets NEXT_CONFIG_FILE properly
-          npm run export:clean
+          # Clean previous builds
+          rm -rf out .next
+
+          # Generate Master Controller CSS from Supabase
+          npm run generate:css
+
+          # Swap config files for Next.js 16 (NEXT_CONFIG_FILE removed in v16)
+          echo "🔄 Swapping config files..."
+          mv next.config.ts next.config.dynamic.ts
+          mv next.config.static.ts next.config.ts
+
+          # Build with static export config
+          echo "🏗️  Building with static export config..."
+          next build
+
+          # Restore original configs
+          echo "🔄 Restoring original configs..."
+          mv next.config.ts next.config.static.ts
+          mv next.config.dynamic.ts next.config.ts
 
           echo ""
           echo "📊 Build verification:"
@@ -147,12 +172,22 @@ jobs:
           echo "  Total size: $(du -sh out/ | cut -f1)"
 
           # Verify critical files exist
-          test -d out/_next || { echo "❌ _next directory missing"; exit 1; }
-          test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
-          test -f out/static-master-controller.css || { echo "⚠️ CSS missing (non-fatal)"; }
+          if [ ! -d "out/_next" ]; then
+            echo "❌ _next directory missing - build failed"
+            exit 1
+          fi
+
+          if [ ! -f "out/index.html" ]; then
+            echo "❌ index.html missing - build failed"
+            exit 1
+          fi
+
+          if [ ! -f "out/static-master-controller.css" ]; then
+            echo "⚠️  CSS missing (non-fatal - may use default styles)"
+          fi
 
           echo ""
-          echo "  Sample files:"
+          echo "  Sample HTML files:"
           find out -type f -name "*.html" | head -10
           echo ""
           echo "✅ Static export complete - ready for Cloudflare Pages deployment"
