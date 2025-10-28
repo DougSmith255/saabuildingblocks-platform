@@ -119,8 +119,6 @@ jobs:
         working-directory: nextjs-frontend
         env:
           NODE_ENV: production
-          # SAFE: Use NEXT_CONFIG_FILE to specify static config (Next.js 15.1.3+)
-          NEXT_CONFIG_FILE: next.config.static.ts
           # Supabase credentials for build-time data fetching (read-only)
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -131,15 +129,14 @@ jobs:
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
           WORDPRESS_APP_PASSWORD: ${{ secrets.WORSPRESS_APP_PASSWORD }}
         run: |
-          echo "🔨 Building static export with SAFE method (NEXT_CONFIG_FILE)"
-          echo "   Using: next.config.static.ts (output: 'export')"
-          echo "   Next.js will automatically skip API routes"
+          echo "🔨 Building static export with npm script (export:clean)"
+          echo "   Script: rm -rf out .next && npm run generate:css && NEXT_CONFIG_FILE=next.config.static.ts next build"
+          echo "   Config: next.config.static.ts (output: 'export')"
           echo "   ✅ SAFE: No file movement - VPS and export share same codebase"
           echo ""
 
-          # SAFE BUILD: Use NEXT_CONFIG_FILE environment variable
-          # No file swapping - both VPS and export can coexist safely
-          npm run build
+          # Use npm script that sets NEXT_CONFIG_FILE properly
+          npm run export:clean
 
           echo ""
           echo "📊 Build verification:"
