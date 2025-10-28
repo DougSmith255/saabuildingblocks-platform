@@ -22,6 +22,11 @@ import { ZodError } from 'zod';
 
 export const dynamic = 'error';
 
+// Next.js 16 requires generateStaticParams for dynamic routes even when excluded
+export async function generateStaticParams() {
+  return [];
+}
+
 /**
  * GET /api/invitations/[id] - Get single invitation
  */

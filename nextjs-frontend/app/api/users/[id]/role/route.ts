@@ -9,6 +9,11 @@ import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseCl
 
 export const dynamic = 'error';
 
+// Next.js 16 requires generateStaticParams for dynamic routes even when excluded
+export async function generateStaticParams() {
+  return [];
+}
+
 /**
  * PATCH /api/users/[id]/role
  *

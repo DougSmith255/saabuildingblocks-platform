@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Force dynamic rendering - exclude from static export
 export const dynamic = 'error';
+
+// Next.js 16 requires generateStaticParams for dynamic routes even when excluded
+export async function generateStaticParams() {
+  return [];
+}
+
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;

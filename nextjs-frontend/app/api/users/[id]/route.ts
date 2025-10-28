@@ -12,6 +12,11 @@ import bcryptjs from 'bcryptjs';
 
 export const dynamic = 'error';
 
+// Next.js 16 requires generateStaticParams for dynamic routes even when excluded
+export async function generateStaticParams() {
+  return [];
+}
+
 const BCRYPT_ROUNDS = 12;
 
 /**
