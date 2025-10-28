@@ -5,3 +5,5 @@
  */
 
 // No gallery components available - ScrollGallery removed
+// Empty export to prevent "module has no exports" warning
+export {};

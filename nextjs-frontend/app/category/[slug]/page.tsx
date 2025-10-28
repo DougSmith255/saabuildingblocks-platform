@@ -36,9 +36,7 @@ interface CategoryPageProps {
  * Cloudflare Pages: undefined (page excluded from build)
  * TODO: Fix category ID mappings before enabling static export
  */
-export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
-  ? undefined
-  : 'force-dynamic';
+export const dynamic = 'error';
 export const dynamicParams = false;
 
 /**

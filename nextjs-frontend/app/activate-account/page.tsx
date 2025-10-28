@@ -17,9 +17,7 @@
  * VPS deployment: force-dynamic (requires AuthProvider)
  * Cloudflare Pages: undefined (page excluded from build)
  */
-export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
-  ? undefined
-  : 'force-dynamic';
+export const dynamic = 'error';
 
 import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';

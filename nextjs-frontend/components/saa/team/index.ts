@@ -4,3 +4,5 @@
  */
 
 // Team components removed - no exports
+// Empty export to prevent "module has no exports" warning
+export {};

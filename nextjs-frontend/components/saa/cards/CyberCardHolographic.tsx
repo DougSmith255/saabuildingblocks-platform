@@ -29,6 +29,10 @@ export function CyberCardHolographic({
 }: CyberCardHolographicProps) {
   const [isHovered, setIsHovered] = React.useState(false);
 
+  // Generate random animation timings for shimmer effect
+  const [shimmerDuration] = React.useState(() => 5 + Math.random() * 3); // 5-8 seconds
+  const [shimmerDelay] = React.useState(() => Math.random() * 2); // 0-2 seconds
+
   return (
     <div
       className={`
@@ -97,13 +101,15 @@ export function CyberCardHolographic({
               rgba(255, 255, 255, 0.04) 100%
             )`,
             backgroundSize: '400% 400%',
-            animation: 'saa-cyber-holographic 6s ease-in-out infinite'
-          }}
+            animation: `saa-cyber-holographic ${shimmerDuration}s ease-in-out ${shimmerDelay}s infinite`,
+            '--shimmer-duration': `${shimmerDuration}s`,
+            '--shimmer-delay': `${shimmerDelay}s`
+          } as React.CSSProperties}
         />
 
         {/* Chromatic aberration effect - tightened glow */}
         <div
-          className="absolute inset-[2px] rounded-[var(--radius-lg,1rem)] -z-[1] pointer-events-none"
+          className="absolute inset-[2px] rounded-[var(--radius-lg,1rem)] z-[1] pointer-events-none"
           style={{
             background: 'linear-gradient(45deg, #0a0a0a, #1a1a1a)',
             filter: isHovered
@@ -123,9 +129,9 @@ export function CyberCardHolographic({
 
         {/* Content area */}
         <div className="relative w-full min-h-fit p-[var(--space-6,2rem)] box-border z-10">
-          {/* Glitch overlay */}
+          {/* Glitch overlay - diagonal lines */}
           <div
-            className="absolute inset-0 pointer-events-none rounded-[var(--radius-lg,1rem)]"
+            className="absolute inset-[10px] pointer-events-none rounded-[var(--radius-lg,1rem)] overflow-hidden z-[5]"
             style={{
               background: `repeating-linear-gradient(
                 0deg,

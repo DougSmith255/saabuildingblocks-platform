@@ -18,9 +18,7 @@ import GlassScrollbar from '@/components/GlassScrollbar';
  * VPS deployment: force-dynamic (requires auth)
  * Cloudflare Pages: undefined (route excluded from build)
  */
-export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
-  ? undefined
-  : 'force-dynamic';
+export const dynamic = 'error';
 
 export const metadata: Metadata = {
   title: 'Sign In - Agent Portal',

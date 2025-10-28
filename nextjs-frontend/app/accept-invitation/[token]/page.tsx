@@ -14,9 +14,7 @@ import { Loader2 } from 'lucide-react';
  * VPS deployment: force-dynamic (full auth logic)
  * Cloudflare Pages: undefined (page excluded from build)
  */
-export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
-  ? undefined
-  : 'force-dynamic';
+export const dynamic = 'error';
 
 interface PageProps {
   params: {

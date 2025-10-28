@@ -16,9 +16,7 @@
  * VPS deployment: force-dynamic (requires auth and dynamic data)
  * Cloudflare Pages: undefined (page excluded from build)
  */
-export const dynamic = process.env.NEXT_PUBLIC_BUILD_MODE === 'static'
-  ? undefined
-  : 'force-dynamic';
+export const dynamic = 'error';
 
 import { useState, useEffect } from 'react';
 import { ActivityLogTable } from '@/components/activity/ActivityLogTable';
