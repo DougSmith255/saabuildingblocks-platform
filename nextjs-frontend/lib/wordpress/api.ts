@@ -46,6 +46,41 @@ function createAuthHeader(): string | undefined {
 }
 
 /**
+ * Extracts permalink path from WordPress full URL
+ * @param link - Full WordPress URL (e.g., 'https://wp.saabuildingblocks.com/real-estate-agent-job/career/part-time/')
+ * @returns Permalink path (e.g., 'real-estate-agent-job/career/part-time') or slug as fallback
+ *
+ * @example
+ * extractPermalink('https://wp.saabuildingblocks.com/real-estate-agent-job/career/part-time/')
+ * // Returns: 'real-estate-agent-job/career/part-time'
+ *
+ * extractPermalink('https://wp.saabuildingblocks.com/simple-post/')
+ * // Returns: 'simple-post'
+ */
+function extractPermalink(link: string, fallbackSlug: string): string {
+  try {
+    // Parse URL to extract pathname
+    const url = new URL(link);
+
+    // Get pathname and remove leading/trailing slashes
+    // e.g., '/real-estate-agent-job/career/part-time/' -> 'real-estate-agent-job/career/part-time'
+    let pathname = url.pathname.replace(/^\/+|\/+$/g, '');
+
+    // Handle edge cases
+    if (!pathname) {
+      console.warn(`⚠️ Empty permalink extracted from link: ${link}. Using slug: ${fallbackSlug}`);
+      return fallbackSlug;
+    }
+
+    return pathname;
+  } catch (error) {
+    // If URL parsing fails, log error and return fallback slug
+    console.error(`❌ Failed to parse permalink from link: ${link}. Using slug: ${fallbackSlug}`, error);
+    return fallbackSlug;
+  }
+}
+
+/**
  * Transforms WordPress API response to our BlogPost type
  * @param post - Raw WordPress post object
  * @returns Transformed BlogPost object
@@ -56,15 +91,21 @@ function transformPost(post: WordPressPost): BlogPost {
   const categories = embedded?.['wp:term']?.[0]?.map(cat => cat.slug) || [];
   const author = embedded?.author?.[0];
 
+  // Extract full permalink path from link field
+  const permalink = extractPermalink(post.link, post.slug);
+
   return {
     id: post.id,
     slug: post.slug,
+    permalink,
     title: post.title.rendered,
     content: post.content.rendered,
     excerpt: post.excerpt.rendered,
     date: post.date,
     modified: post.modified,
-    featuredImage: featuredMedia ? {
+    featuredImage: featuredMedia?.source_url &&
+                   featuredMedia?.media_details?.width &&
+                   featuredMedia?.media_details?.height ? {
       url: featuredMedia.source_url,
       alt: featuredMedia.alt_text || '',
       width: featuredMedia.media_details.width,
@@ -183,6 +224,77 @@ export const fetchPostBySlug = cache(async (slug: string): Promise<BlogPost | nu
     return post;
   } catch (error) {
     console.error(`❌ Error fetching post ${slug}:`, error);
+    return null;
+  }
+});
+
+/**
+ * Fetches a single post by permalink path
+ * Supports both legacy slug-based and new multi-level permalink paths
+ * Cached for build-time optimization
+ *
+ * @param permalink - Full permalink path (e.g., 'real-estate-agent-job/career/part-time' or 'simple-post')
+ * @returns BlogPost object or null if not found
+ *
+ * @example
+ * // Multi-level permalink
+ * await fetchPostByPermalink('real-estate-agent-job/career/part-time')
+ *
+ * // Single-level permalink (backward compatible)
+ * await fetchPostByPermalink('simple-post')
+ */
+export const fetchPostByPermalink = cache(async (permalink: string): Promise<BlogPost | null> => {
+  try {
+    // Normalize permalink (remove leading/trailing slashes)
+    const normalizedPermalink = permalink.replace(/^\/+|\/+$/g, '');
+
+    // URL decode the permalink in case it has encoded characters
+    const decodedPermalink = decodeURIComponent(normalizedPermalink);
+
+    console.log(`🔍 Searching for post with permalink: ${decodedPermalink}`);
+
+    // Fetch all posts and find by matching permalink
+    // This is more efficient than multiple API calls since we cache fetchAllPosts
+    const allPosts = await fetchAllPosts();
+
+    // First try exact permalink match
+    let post = allPosts.find(p => p.permalink === decodedPermalink);
+
+    // Fallback 1: Try matching against the last segment (slug) for backward compatibility
+    if (!post) {
+      const lastSegment = decodedPermalink.split('/').pop() || '';
+      post = allPosts.find(p => p.slug === lastSegment);
+
+      if (post) {
+        console.log(`⚠️ Post found by slug fallback: ${lastSegment} (full permalink: ${post.permalink})`);
+      }
+    }
+
+    // Fallback 2: Try case-insensitive match
+    if (!post) {
+      const lowerPermalink = decodedPermalink.toLowerCase();
+      post = allPosts.find(p => p.permalink.toLowerCase() === lowerPermalink);
+
+      if (post) {
+        console.log(`⚠️ Post found by case-insensitive match: ${post.permalink}`);
+      }
+    }
+
+    if (!post) {
+      console.warn(`⚠️ Post not found with permalink: ${decodedPermalink}`);
+      return null;
+    }
+
+    // Verify post is in allowed categories
+    if (!post.categories.some(cat => ALLOWED_CATEGORIES.includes(cat as any))) {
+      console.warn(`⚠️ Post ${decodedPermalink} not in allowed categories`);
+      return null;
+    }
+
+    console.log(`✅ Fetched post by permalink: ${decodedPermalink} (ID: ${post.id})`);
+    return post;
+  } catch (error) {
+    console.error(`❌ Error fetching post by permalink ${permalink}:`, error);
     return null;
   }
 });
