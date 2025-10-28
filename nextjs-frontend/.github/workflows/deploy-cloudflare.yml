@@ -98,8 +98,9 @@ jobs:
       - name: Generate Master Controller CSS
         working-directory: nextjs-frontend
         env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # Use placeholder values for build (CSS generator falls back to defaults)
+          NEXT_PUBLIC_SUPABASE_URL: 'https://placeholder.supabase.co'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder'
         run: |
           echo "🎨 Generating build-time CSS from Master Controller settings..."
 
@@ -119,9 +120,9 @@ jobs:
         working-directory: nextjs-frontend
         env:
           NODE_ENV: production
-          # Supabase credentials (dummy values for build - API routes excluded anyway)
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key-for-build' }}
+          # Use placeholder values (API routes with dynamic='error' won't be in export)
+          NEXT_PUBLIC_SUPABASE_URL: 'https://placeholder.supabase.co'
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.placeholder'
           # WordPress API for blog content
           WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
