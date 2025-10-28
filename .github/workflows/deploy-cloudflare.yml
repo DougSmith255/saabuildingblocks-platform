@@ -127,6 +127,9 @@ jobs:
           # WordPress API for blog content
           WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
+          # WordPress credentials for authenticated API access
+          WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
+          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
         run: |
           echo "🔨 Building static export with SAFE method (NEXT_CONFIG_FILE)"
           echo "   Using: next.config.static.ts (output: 'export')"
