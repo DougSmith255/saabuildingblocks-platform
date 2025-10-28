@@ -135,6 +135,12 @@ jobs:
           echo "   ✅ SAFE: Temporary config swap, restored after build"
           echo ""
 
+          # Debug: Check if env vars are set
+          echo "🔍 Environment check:"
+          echo "   NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL:0:30}..."
+          echo "   SERVICE_ROLE_KEY set: $([ -n "$SUPABASE_SERVICE_ROLE_KEY" ] && echo 'yes' || echo 'no')"
+          echo ""
+
           # SAFE BUILD: Temporarily swap configs for Next.js 16 (NEXT_CONFIG_FILE removed)
           echo "📝 Swapping configs..."
           mv next.config.ts next.config.ts.backup
