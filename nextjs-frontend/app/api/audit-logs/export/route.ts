@@ -1,11 +1,11 @@
-// Force dynamic rendering - exclude from static export
-export const dynamic = 'force-dynamic';
-
 /**
  * Audit Logs Export API Route
  * Phase 3: Activity Log UI
  *
  * GET /api/audit-logs/export - Export audit logs to CSV
+ *
+ * NOTE: This API route is automatically excluded from static export.
+ * Next.js detects the use of cookies() and excludes it from the build.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
