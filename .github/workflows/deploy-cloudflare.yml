@@ -1,12 +1,425 @@
 name: Deploy to Cloudflare Pages
 
 on:
+  # Trigger from n8n workflow
   repository_dispatch:
     types: [deploy-wordpress-content]
+
+  # Manual trigger for testing
   workflow_dispatch:
+    inputs:
+      post_id:
+        description: 'WordPress Post ID'
+        required: false
+      post_slug:
+        description: 'WordPress Post Slug'
+        required: false
+      deployment_type:
+        description: 'Deployment type'
+        required: false
+        default: 'incremental'
+        type: choice
+        options:
+          - incremental
+          - full
+      skip_build_cache:
+        description: 'Skip build cache'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+  CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'  # Static export project
+  DEPLOYMENT_TIMEOUT: 900  # 15 minutes in seconds
+  MAX_PARALLEL_UPLOADS: 50
+  RETRY_ATTEMPTS: 3
+  RETRY_DELAY: 5
 
 jobs:
-  deploy:
+  # Build job - creates the static export
+  build:
+    name: Build Static Export
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    outputs:
+      build-hash: ${{ steps.compute-hash.outputs.build-hash }}
+      needs-deploy: ${{ steps.check-changes.outputs.needs-deploy }}
+
     steps:
-      - run: echo "✅ Workflow triggered! Event=${{ github.event_name }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch last 2 commits for change detection
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: nextjs-frontend/package-lock.json
+
+      # Cache node_modules
+      - name: Cache node_modules
+        if: ${{ !inputs.skip_build_cache }}
+        uses: actions/cache@v4
+        id: node-modules-cache
+        with:
+          path: nextjs-frontend/node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('nextjs-frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      # Cache Next.js build
+      - name: Cache Next.js build
+        if: ${{ !inputs.skip_build_cache }}
+        uses: actions/cache@v4
+        with:
+          path: |
+            nextjs-frontend/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('nextjs-frontend/package-lock.json') }}-${{ hashFiles('nextjs-frontend/**/*.js', 'nextjs-frontend/**/*.jsx', 'nextjs-frontend/**/*.ts', 'nextjs-frontend/**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('nextjs-frontend/package-lock.json') }}-
+            ${{ runner.os }}-nextjs-
+
+      # Install dependencies
+      - name: Install dependencies
+        working-directory: nextjs-frontend
+        run: |
+          if [ "${{ steps.node-modules-cache.outputs.cache-hit }}" != "true" ]; then
+            echo "📦 Installing dependencies..."
+            npm ci --prefer-offline --no-audit
+          else
+            echo "✅ Using cached node_modules"
+          fi
+
+      # Generate Master Controller CSS from Supabase settings
+      - name: Generate Master Controller CSS
+        working-directory: nextjs-frontend
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          echo "🎨 Generating build-time CSS from Master Controller settings..."
+
+          # Generate CSS from Supabase
+          npm run generate:css
+
+          # Verify CSS was created
+          if [ -f "public/static-master-controller.css" ]; then
+            echo "✅ CSS generated successfully"
+            ls -lh public/static-master-controller.css
+          else
+            echo "⚠️  CSS file not found - using default styles"
+          fi
+
+      # Build static export (SAFE METHOD - NO file movement)
+      - name: Build Static Export
+        working-directory: nextjs-frontend
+        env:
+          NODE_ENV: production
+          # SAFE: Use NEXT_CONFIG_FILE to specify static config (Next.js 15.1.3+)
+          NEXT_CONFIG_FILE: next.config.static.ts
+          # Supabase credentials for build-time data fetching (read-only)
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          # WordPress API for blog content
+          WORDPRESS_API_URL: ${{ secrets.WORDPRESS_API_URL }}
+          NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
+        run: |
+          echo "🔨 Building static export with SAFE method (NEXT_CONFIG_FILE)"
+          echo "   Using: next.config.static.ts (output: 'export')"
+          echo "   Next.js will automatically skip API routes"
+          echo "   ✅ SAFE: No file movement - VPS and export share same codebase"
+          echo ""
+
+          # SAFE BUILD: Use NEXT_CONFIG_FILE environment variable
+          # No file swapping - both VPS and export can coexist safely
+          npm run build
+
+          echo ""
+          echo "📊 Build verification:"
+          echo "  Files to deploy: $(find out -type f | wc -l)"
+          echo "  Total size: $(du -sh out/ | cut -f1)"
+
+          # Verify critical files exist
+          test -d out/_next || { echo "❌ _next directory missing"; exit 1; }
+          test -f out/index.html || { echo "❌ index.html missing"; exit 1; }
+          test -f out/static-master-controller.css || { echo "⚠️ CSS missing (non-fatal)"; }
+
+          echo ""
+          echo "  Sample files:"
+          find out -type f -name "*.html" | head -10
+          echo ""
+          echo "✅ Static export complete - ready for Cloudflare Pages deployment"
+
+      # Compute build hash for change detection
+      - name: Compute build hash
+        id: compute-hash
+        working-directory: nextjs-frontend
+        run: |
+          echo "🔍 Computing build hash for change detection..."
+
+          # Create hash of all files in out directory
+          BUILD_HASH=$(find out -type f -exec sha256sum {} \; | sort -k 2 | sha256sum | cut -d' ' -f1)
+          echo "build-hash=${BUILD_HASH}" >> $GITHUB_OUTPUT
+          echo "📝 Build hash: ${BUILD_HASH}"
+
+          # Save manifest with file hashes
+          echo "{" > out/_deployment-manifest.json
+          echo "  \"build_hash\": \"${BUILD_HASH}\"," >> out/_deployment-manifest.json
+          echo "  \"build_time\": \"$(date -Iseconds)\"," >> out/_deployment-manifest.json
+          echo "  \"commit_sha\": \"${{ github.sha }}\"," >> out/_deployment-manifest.json
+          echo "  \"workflow_run\": \"${{ github.run_id }}\"," >> out/_deployment-manifest.json
+          echo "  \"files\": {" >> out/_deployment-manifest.json
+
+          # Generate file hashes
+          FIRST=true
+          find out -type f ! -name '_deployment-manifest.json' | sort | while read file; do
+            HASH=$(sha256sum "$file" | cut -d' ' -f1)
+            REL_PATH=${file#out/}
+            if [ "$FIRST" = true ]; then
+              echo "    \"${REL_PATH}\": \"${HASH}\"" >> out/_deployment-manifest.json
+              FIRST=false
+            else
+              echo "    ,\"${REL_PATH}\": \"${HASH}\"" >> out/_deployment-manifest.json
+            fi
+          done
+
+          echo "  }" >> out/_deployment-manifest.json
+          echo "}" >> out/_deployment-manifest.json
+
+          echo "✅ Manifest created"
+
+      # Check if deployment needed (incremental mode)
+      - name: Check for changes
+        id: check-changes
+        working-directory: nextjs-frontend
+        env:
+          DEPLOYMENT_TYPE: ${{ inputs.deployment_type || 'incremental' }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ "$DEPLOYMENT_TYPE" = "full" ]; then
+            echo "needs-deploy=true" >> $GITHUB_OUTPUT
+            echo "🚀 Full deployment requested - skipping change detection"
+            exit 0
+          fi
+
+          echo "🔍 Checking for changes since last deployment..."
+
+          # Try to fetch last deployment manifest from KV
+          # Note: This requires a Worker to expose KV via API
+          # For now, we'll always deploy in incremental mode
+          # Future enhancement: Store manifest in KV and compare
+
+          echo "needs-deploy=true" >> $GITHUB_OUTPUT
+          echo "📝 Changes detected - deployment needed"
+
+      # Upload build artifacts
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: nextjs-frontend/out
+          retention-days: 7
+          compression-level: 6
+
+  # Deploy job - uploads to Cloudflare
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: needs.build.outputs.needs-deploy == 'true'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Download build artifacts
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: nextjs-frontend/out
+
+      # Deploy to Cloudflare Pages with retry logic (static HTML only)
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+        continue-on-error: true
+
+      # Retry deployment on failure (attempt 2)
+      - name: Retry deployment (attempt 2)
+        if: steps.deploy.outcome == 'failure'
+        id: deploy-retry-2
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+        continue-on-error: true
+
+      # Retry deployment on failure (attempt 3)
+      - name: Retry deployment (attempt 3)
+        if: steps.deploy-retry-2.outcome == 'failure'
+        id: deploy-retry-3
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy nextjs-frontend/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+
+      # Set deployment status
+      - name: Set deployment status
+        if: always()
+        id: set-status
+        run: |
+          if [ "${{ steps.deploy.outcome }}" = "success" ] || \
+             [ "${{ steps.deploy-retry-2.outcome }}" = "success" ] || \
+             [ "${{ steps.deploy-retry-3.outcome }}" = "success" ]; then
+            echo "✅ Deployment successful"
+            echo "status=success" >> $GITHUB_OUTPUT
+            echo "DEPLOY_STATUS=success" >> $GITHUB_ENV
+          else
+            echo "❌ Deployment failed after 3 attempts"
+            echo "status=failed" >> $GITHUB_OUTPUT
+            echo "DEPLOY_STATUS=failed" >> $GITHUB_ENV
+            exit 1
+          fi
+
+      # Store deployment manifest in KV (optional - requires Worker setup)
+      - name: Store deployment manifest
+        if: success()
+        continue-on-error: true
+        run: |
+          echo "📝 Storing deployment manifest..."
+
+          # Future enhancement: Upload manifest to Workers KV
+          # This requires a Worker endpoint to accept the manifest
+          # curl -X POST "https://saabuildingblocks.com/api/store-manifest" \
+          #   -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          #   -d @nextjs-frontend/out/_deployment-manifest.json
+
+          echo "⚠️  Manifest storage not implemented yet (requires Worker setup)"
+
+  # Notification job - sends webhook to n8n
+  notify:
+    name: Send Deployment Notification
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    if: always()
+
+    steps:
+      - name: Prepare notification payload
+        id: prepare-payload
+        run: |
+          # Determine overall status
+          if [ "${{ needs.deploy.result }}" = "success" ]; then
+            STATUS="success"
+            MESSAGE="✅ Deployment completed successfully"
+          elif [ "${{ needs.deploy.result }}" = "failure" ]; then
+            STATUS="failed"
+            MESSAGE="❌ Deployment failed"
+          elif [ "${{ needs.deploy.result }}" = "skipped" ]; then
+            STATUS="skipped"
+            MESSAGE="⏭️  Deployment skipped (no changes detected)"
+          else
+            STATUS="cancelled"
+            MESSAGE="🚫 Deployment cancelled"
+          fi
+
+          echo "status=${STATUS}" >> $GITHUB_OUTPUT
+          echo "message=${MESSAGE}" >> $GITHUB_OUTPUT
+
+          # Create JSON payload
+          cat > payload.json <<EOF
+          {
+            "status": "${STATUS}",
+            "message": "${MESSAGE}",
+            "post_id": "${{ github.event.client_payload.post_id || inputs.post_id || '' }}",
+            "post_slug": "${{ github.event.client_payload.post_slug || inputs.post_slug || '' }}",
+            "deployment_url": "https://saabuildingblocks.pages.dev",
+            "production_url": "https://static.smartagentalliance.com",
+            "commit_sha": "${{ github.sha }}",
+            "commit_message": "${{ github.event.head_commit.message }}",
+            "workflow_run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "build_hash": "${{ needs.build.outputs.build-hash }}",
+            "triggered_by": "${{ github.event_name }}",
+            "actor": "${{ github.actor }}",
+            "timestamp": "$(date -Iseconds)"
+          }
+          EOF
+
+          echo "📝 Notification payload prepared"
+          cat payload.json
+
+      # Send notification to n8n webhook
+      - name: Send notification webhook
+        if: secrets.N8N_WEBHOOK_URL != ''
+        continue-on-error: true
+        run: |
+          echo "📤 Sending notification to n8n webhook..."
+
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.N8N_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d @payload.json)
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ Notification sent successfully (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️  Notification failed (HTTP $HTTP_CODE)"
+            echo "Response: $BODY"
+          fi
+
+      # Create GitHub deployment status
+      - name: Update GitHub deployment status
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ steps.prepare-payload.outputs.status }}';
+            const message = '${{ steps.prepare-payload.outputs.message }}';
+
+            // Create deployment status
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: context.payload.deployment?.id || 0,
+              state: status === 'success' ? 'success' : status === 'failed' ? 'failure' : 'inactive',
+              description: message,
+              environment_url: 'https://static.smartagentalliance.com',
+              log_url: `${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}`
+            }).catch(err => {
+              console.log('Note: Could not create deployment status (no deployment found)');
+            });
+
+            // Add comment to commit with deployment status
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `
+            ## 🚀 Cloudflare Deployment ${status === 'success' ? '✅' : '❌'}
+
+            **Status:** ${message}
+            **Build Hash:** \`${{ needs.build.outputs.build-hash }}\`
+            **Deployment URL:** https://saabuildingblocks.pages.dev
+            **Production URL:** https://static.smartagentalliance.com
+            **Workflow Run:** [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            ${status === 'failed' ? '⚠️ Check the workflow logs for error details.' : ''}
+              `.trim()
+            }).catch(err => {
+              console.log('Note: Could not create commit comment');
+            });
