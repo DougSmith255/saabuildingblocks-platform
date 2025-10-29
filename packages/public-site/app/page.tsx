@@ -99,6 +99,19 @@ export default function Home() {
         {/* Client-side animations (counter + neon flicker) */}
         <HomepageClient />
 
+        {/* Yellow Circle - Deployment Verification Indicator */}
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[5]"
+          style={{
+            width: '100px',
+            height: '100px',
+            backgroundColor: '#FFD700',
+            borderRadius: '50%',
+            boxShadow: '0 0 20px rgba(255, 215, 0, 0.5)',
+          }}
+          aria-label="Deployment verification indicator"
+        />
+
         {/* Container - shifted down to recenter vertically */}
         <div className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8 mt-[28vh]">
           {/* Headline Group */}
