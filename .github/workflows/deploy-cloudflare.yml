@@ -27,6 +27,13 @@ on:
         required: false
         default: false
         type: boolean
+      deployment_id:
+        description: 'WordPress Deployment ID'
+        required: false
+      triggered_by:
+        description: 'Trigger source'
+        required: false
+        default: 'manual'
 
 env:
   NODE_VERSION: '20'
@@ -110,26 +117,19 @@ jobs:
             fi
           fi
 
-      # Generate Master Controller CSS from Supabase settings
-      - name: Generate Master Controller CSS
+      # Verify Master Controller CSS exists (pre-committed to repo)
+      - name: Verify Master Controller CSS
         working-directory: packages/public-site
-        env:
-          # Use properly formatted placeholder values (CSS generator falls back to defaults)
-          NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
-          NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzUyNjUyMDAsImV4cCI6MTk5MDg0MTIwMH0.cXVhY2toIHdvcmthcm91bmQ"
-          SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY3NTI2NTIwMCwiZXhwIjoxOTkwODQxMjAwfQ.c2VydmljZSByb2xlIGtleQ"
         run: |
-          echo "🎨 Generating build-time CSS from Master Controller settings..."
+          echo "🎨 Verifying Master Controller CSS..."
 
-          # Generate CSS from Supabase
-          npm run generate:css
-
-          # Verify CSS was created
+          # Check if CSS file exists (should be pre-committed)
           if [ -f "public/static-master-controller.css" ]; then
-            echo "✅ CSS generated successfully"
+            echo "✅ CSS file found (pre-committed)"
             ls -lh public/static-master-controller.css
           else
-            echo "⚠️  CSS file not found - using default styles"
+            echo "❌ CSS file missing! Master Controller CSS should be pre-committed to repo."
+            exit 1
           fi
 
       # Build static export (SAFE METHOD - Config swap for Next.js 16)
@@ -156,9 +156,6 @@ jobs:
 
           # Clean previous builds
           rm -rf out .next
-
-          # Generate Master Controller CSS from Supabase
-          npm run generate:css
 
           # Swap config files for Next.js 16 (NEXT_CONFIG_FILE removed in v16)
           echo "🔄 Swapping config files..."
@@ -424,6 +421,54 @@ jobs:
             echo "✅ Notification sent successfully (HTTP $HTTP_CODE)"
           else
             echo "⚠️  Notification failed (HTTP $HTTP_CODE)"
+            echo "Response: $BODY"
+          fi
+
+      # Send status back to WordPress
+      - name: Notify WordPress
+        if: always()
+        continue-on-error: true
+        run: |
+          DEPLOYMENT_ID="${{ github.event.inputs.deployment_id }}"
+          STATUS="${{ steps.prepare-payload.outputs.status }}"
+
+          if [ -z "$DEPLOYMENT_ID" ]; then
+            echo "ℹ️  No deployment ID provided, skipping WordPress notification"
+            exit 0
+          fi
+
+          echo "📤 Sending deployment status to WordPress..."
+          echo "   Deployment ID: $DEPLOYMENT_ID"
+          echo "   Status: $STATUS"
+
+          # Prepare error message if deployment failed
+          ERROR_MESSAGE=""
+          if [ "$STATUS" = "failed" ]; then
+            ERROR_MESSAGE="Deployment failed after 3 attempts. Check GitHub Actions logs for details."
+          fi
+
+          # Send webhook to WordPress
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.WORDPRESS_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "deployment_id": "'"$DEPLOYMENT_ID"'",
+              "status": "'"$STATUS"'",
+              "build_hash": "${{ needs.build.outputs.build-hash }}",
+              "github_run_id": "${{ github.run_id }}",
+              "github_run_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "cloudflare_deployment_url": "https://saabuildingblocks.pages.dev",
+              "commit_sha": "${{ github.sha }}",
+              "error_message": "'"$ERROR_MESSAGE"'",
+              "timestamp": "'"$(date -Iseconds)"'"
+            }')
+
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+
+          if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
+            echo "✅ WordPress notified successfully (HTTP $HTTP_CODE)"
+          else
+            echo "⚠️  WordPress notification failed (HTTP $HTTP_CODE)"
             echo "Response: $BODY"
           fi
 
