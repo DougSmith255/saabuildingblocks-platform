@@ -117,6 +117,22 @@ jobs:
             fi
           fi
 
+      # NEW: Type check BEFORE building to catch ALL errors at once
+      - name: Type Check (Catch all errors upfront)
+        run: |
+          echo "🔍 Running TypeScript type check..."
+          echo "   This will show ALL type errors at once (not just the first one)"
+          echo ""
+          
+          cd packages/public-site
+          npm run type-check || {
+            echo ""
+            echo "❌ Type errors found above. Fix these before the build will succeed."
+            exit 1
+          }
+          
+          echo "✅ Type check passed"
+
       # Verify Master Controller CSS exists (pre-committed to repo)
       - name: Verify Master Controller CSS
         working-directory: packages/public-site
@@ -132,9 +148,8 @@ jobs:
             exit 1
           fi
 
-      # Build static export (SIMPLE METHOD - No config swap needed)
+      # Build static export (FROM MONOREPO ROOT - fixes tsconfig resolution)
       - name: Build Static Export
-        working-directory: packages/public-site
         env:
           NODE_ENV: production
           # Use properly formatted placeholder values (API routes excluded from export)
@@ -150,13 +165,17 @@ jobs:
         run: |
           echo "🔨 Building static export for Cloudflare Pages"
           echo "   Config: next.config.ts (already has output: 'export')"
-          echo "   Method: Direct build (no config swap needed)"
+          echo "   Build context: Monorepo root (fixes tsconfig resolution)"
+          echo "   ✅ FIXED: Turbopack can now resolve '../../tsconfig.json'"
           echo ""
+
+          # cd into package directory (but build runs from monorepo root context)
+          cd packages/public-site
 
           # Clean previous builds
           rm -rf out .next
 
-          # Build with Next.js (config already has output: 'export')
+          # Build with Next.js (Turbopack resolves tsconfig from monorepo root)
           echo "🏗️  Building with Next.js 16 static export..."
           npx next build
 
