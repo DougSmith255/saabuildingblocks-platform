@@ -1,0 +1,11 @@
+Deployment test v2 - 2025-10-29 04:26 UTC
+
+Testing deployment workflow after CSS generation fix (commit 645bd9b)
+
+Expected result:
+- ✅ Health check passes (homepage returns 307 redirect)
+- ✅ Build succeeds (CSS generation removed, static file used instead)
+- ✅ Deployment to Cloudflare Pages completes successfully
+
+This test verifies the complete end-to-end workflow:
+WordPress Button → GitHub Actions → Cloudflare Pages
