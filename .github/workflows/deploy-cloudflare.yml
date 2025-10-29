@@ -122,7 +122,7 @@ jobs:
         working-directory: packages/public-site
         run: |
           echo "🎨 Verifying Master Controller CSS..."
-
+          
           # Check if CSS file exists (should be pre-committed)
           if [ -f "public/static-master-controller.css" ]; then
             echo "✅ CSS file found (pre-committed)"
@@ -132,7 +132,7 @@ jobs:
             exit 1
           fi
 
-      # Build static export (SAFE METHOD - Config swap for Next.js 16)
+      # Build static export (SIMPLE METHOD - No config swap needed)
       - name: Build Static Export
         working-directory: packages/public-site
         env:
@@ -146,30 +146,19 @@ jobs:
           NEXT_PUBLIC_WORDPRESS_API_URL: ${{ secrets.NEXT_PUBLIC_WORDPRESS_API_URL }}
           # WordPress credentials for authenticated API access
           WORDPRESS_USER: ${{ secrets.WORDPRESS_USER }}
-          WORDPRESS_APP_PASSWORD: ${{ secrets.WORSPRESS_APP_PASSWORD }}
+          WORDPRESS_APP_PASSWORD: ${{ secrets.WORDPRESS_APP_PASSWORD }}
         run: |
           echo "🔨 Building static export for Cloudflare Pages"
-          echo "   Method: Config swap (Next.js 16 compatible)"
-          echo "   Config: next.config.static.ts (output: 'export')"
-          echo "   ✅ SAFE: Temporary swap, auto-restored on completion"
+          echo "   Config: next.config.ts (already has output: 'export')"
+          echo "   Method: Direct build (no config swap needed)"
           echo ""
 
           # Clean previous builds
           rm -rf out .next
 
-          # Swap config files for Next.js 16 (NEXT_CONFIG_FILE removed in v16)
-          echo "🔄 Swapping config files..."
-          mv next.config.ts next.config.dynamic.ts
-          mv next.config.static.ts next.config.ts
-
-          # Build with static export config
-          echo "🏗️  Building with static export config..."
+          # Build with Next.js (config already has output: 'export')
+          echo "🏗️  Building with Next.js 16 static export..."
           npx next build
-
-          # Restore original configs
-          echo "🔄 Restoring original configs..."
-          mv next.config.ts next.config.static.ts
-          mv next.config.dynamic.ts next.config.ts
 
           echo ""
           echo "📊 Build verification:"
@@ -203,12 +192,12 @@ jobs:
         working-directory: packages/public-site
         run: |
           echo "🔍 Computing build hash for change detection..."
-
+          
           # Create hash of all files in out directory
           BUILD_HASH=$(find out -type f -exec sha256sum {} \; | sort -k 2 | sha256sum | cut -d' ' -f1)
           echo "build-hash=${BUILD_HASH}" >> $GITHUB_OUTPUT
           echo "📝 Build hash: ${BUILD_HASH}"
-
+          
           # Save manifest with file hashes
           echo "{" > out/_deployment-manifest.json
           echo "  \"build_hash\": \"${BUILD_HASH}\"," >> out/_deployment-manifest.json
@@ -216,7 +205,7 @@ jobs:
           echo "  \"commit_sha\": \"${{ github.sha }}\"," >> out/_deployment-manifest.json
           echo "  \"workflow_run\": \"${{ github.run_id }}\"," >> out/_deployment-manifest.json
           echo "  \"files\": {" >> out/_deployment-manifest.json
-
+          
           # Generate file hashes
           FIRST=true
           find out -type f ! -name '_deployment-manifest.json' | sort | while read file; do
@@ -229,10 +218,10 @@ jobs:
               echo "    ,\"${REL_PATH}\": \"${HASH}\"" >> out/_deployment-manifest.json
             fi
           done
-
+          
           echo "  }" >> out/_deployment-manifest.json
           echo "}" >> out/_deployment-manifest.json
-
+          
           echo "✅ Manifest created"
 
       # Check if deployment needed (incremental mode)
@@ -249,14 +238,14 @@ jobs:
             echo "🚀 Full deployment requested - skipping change detection"
             exit 0
           fi
-
+          
           echo "🔍 Checking for changes since last deployment..."
-
+          
           # Try to fetch last deployment manifest from KV
           # Note: This requires a Worker to expose KV via API
           # For now, we'll always deploy in incremental mode
           # Future enhancement: Store manifest in KV and compare
-
+          
           echo "needs-deploy=true" >> $GITHUB_OUTPUT
           echo "📝 Changes detected - deployment needed"
 
@@ -343,13 +332,13 @@ jobs:
         continue-on-error: true
         run: |
           echo "📝 Storing deployment manifest..."
-
+          
           # Future enhancement: Upload manifest to Workers KV
           # This requires a Worker endpoint to accept the manifest
           # curl -X POST "https://saabuildingblocks.com/api/store-manifest" \
           #   -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
           #   -d @packages/public-site/out/_deployment-manifest.json
-
+          
           echo "⚠️  Manifest storage not implemented yet (requires Worker setup)"
 
   # Notification job - sends webhook to n8n
@@ -378,10 +367,10 @@ jobs:
             STATUS="cancelled"
             MESSAGE="🚫 Deployment cancelled"
           fi
-
+          
           echo "status=${STATUS}" >> $GITHUB_OUTPUT
           echo "message=${MESSAGE}" >> $GITHUB_OUTPUT
-
+          
           # Create JSON payload
           cat > payload.json <<EOF
           {
@@ -400,7 +389,7 @@ jobs:
             "timestamp": "$(date -Iseconds)"
           }
           EOF
-
+          
           echo "📝 Notification payload prepared"
           cat payload.json
 
@@ -409,14 +398,14 @@ jobs:
         continue-on-error: true
         run: |
           echo "📤 Sending notification to n8n webhook..."
-
+          
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.N8N_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
             -d @payload.json)
-
+          
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | head -n-1)
-
+          
           if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
             echo "✅ Notification sent successfully (HTTP $HTTP_CODE)"
           else
@@ -431,22 +420,22 @@ jobs:
         run: |
           DEPLOYMENT_ID="${{ github.event.inputs.deployment_id }}"
           STATUS="${{ steps.prepare-payload.outputs.status }}"
-
+          
           if [ -z "$DEPLOYMENT_ID" ]; then
             echo "ℹ️  No deployment ID provided, skipping WordPress notification"
             exit 0
           fi
-
+          
           echo "📤 Sending deployment status to WordPress..."
           echo "   Deployment ID: $DEPLOYMENT_ID"
           echo "   Status: $STATUS"
-
+          
           # Prepare error message if deployment failed
           ERROR_MESSAGE=""
           if [ "$STATUS" = "failed" ]; then
             ERROR_MESSAGE="Deployment failed after 3 attempts. Check GitHub Actions logs for details."
           fi
-
+          
           # Send webhook to WordPress
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${{ secrets.WORDPRESS_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
@@ -461,10 +450,10 @@ jobs:
               "error_message": "'"$ERROR_MESSAGE"'",
               "timestamp": "'"$(date -Iseconds)"'"
             }')
-
+          
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
           BODY=$(echo "$RESPONSE" | head -n-1)
-
+          
           if [ "$HTTP_CODE" -ge 200 ] && [ "$HTTP_CODE" -lt 300 ]; then
             echo "✅ WordPress notified successfully (HTTP $HTTP_CODE)"
           else
@@ -480,7 +469,7 @@ jobs:
           script: |
             const status = '${{ steps.prepare-payload.outputs.status }}';
             const message = '${{ steps.prepare-payload.outputs.message }}';
-
+            
             // Create deployment status
             await github.rest.repos.createDeploymentStatus({
               owner: context.repo.owner,
@@ -493,7 +482,7 @@ jobs:
             }).catch(err => {
               console.log('Note: Could not create deployment status (no deployment found)');
             });
-
+            
             // Add comment to commit with deployment status
             await github.rest.repos.createCommitComment({
               owner: context.repo.owner,
@@ -501,13 +490,13 @@ jobs:
               commit_sha: context.sha,
               body: `
             ## 🚀 Cloudflare Deployment ${status === 'success' ? '✅' : '❌'}
-
+            
             **Status:** ${message}
             **Build Hash:** \`${{ needs.build.outputs.build-hash }}\`
             **Deployment URL:** https://saabuildingblocks.pages.dev
             **Production URL:** https://static.smartagentalliance.com
             **Workflow Run:** [View Details](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
+            
             ${status === 'failed' ? '⚠️ Check the workflow logs for error details.' : ''}
               `.trim()
             }).catch(err => {
