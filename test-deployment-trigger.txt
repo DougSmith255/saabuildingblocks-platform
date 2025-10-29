@@ -1,0 +1,7 @@
+Test deployment trigger at 2025-10-29 04:22 UTC
+
+This file tests the repository_dispatch event for the deployment workflow.
+The WordPress deployment button should trigger the same event type: deploy-wordpress-content
+
+Homepage fix applied: HTTP 404 → HTTP 307 redirect
+Health check should now pass!
