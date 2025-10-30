@@ -15,9 +15,11 @@
  * It runs entirely in the browser with access to localStorage and Zustand stores.
  */
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
-import { Palette, Type, LayoutGrid, FileCode, Settings, Layers } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Lock, Rocket } from 'lucide-react';
+import { useUserRole, RoleBadge, canAccessTokenVault } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
 const TypographyTab = dynamicImport(() => import('./components/tabs/TypographyTab').then(mod => ({ default: mod.TypographyTab })), {
@@ -45,39 +47,74 @@ const TemplatesTab = dynamicImport(() => import('./components/tabs/TemplatesTab'
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Templates tab...</div>
 });
 
+const TokenVaultTab = dynamicImport(() => import('./components/TokenVault/TokenVaultTab').then(mod => ({ default: mod.TokenVaultTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Token Vault tab...</div>
+});
+
+const DeploymentTab = dynamicImport(() => import('./components/tabs/DeploymentTab').then(mod => ({ default: mod.DeploymentTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Deployment tab...</div>
+});
+
 // Store hooks - only used in client component after mount
 import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
 
-type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components';
+type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'vault' | 'deployment';
 
-export default function MasterControllerDashboard() {
-  const [activeTab, setActiveTab] = useState<TabId>('typography');
+function MasterControllerContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Initialize tab from URL or default to 'typography'
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const tabParam = searchParams.get('tab');
+    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'vault', 'deployment'];
+    return (tabParam && validTabs.includes(tabParam as TabId)) ? tabParam as TabId : 'typography';
+  });
+
+  // RBAC: Get user role
+  const { role, isLoading: roleLoading } = useUserRole();
 
   // Store states
   const brandColors = useBrandColorsStore();
   const typography = useTypographyStore();
   const spacing = useSpacingStore();
 
+  // Sync URL when tab changes
+  const handleTabChange = (newTab: TabId) => {
+    setActiveTab(newTab);
+    router.push(`/master-controller?tab=${newTab}`);
+  };
+
+  // All tabs are now accessible to all authenticated users
   const tabs = [
     { id: 'typography' as TabId, label: 'Typography', icon: Type },
     { id: 'colors' as TabId, label: 'Colors', icon: Palette },
     { id: 'spacing' as TabId, label: 'Spacing', icon: LayoutGrid },
     { id: 'templates' as TabId, label: 'Templates', icon: FileCode },
     { id: 'components' as TabId, label: 'Components', icon: Layers },
+    { id: 'vault' as TabId, label: 'Token Vault', icon: Lock },
+    { id: 'deployment' as TabId, label: 'Deployment', icon: Rocket },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" style={{ scrollBehavior: 'smooth' }}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-display text-3xl font-bold text-[#e5e4dd] mb-2 flex items-center gap-3">
-          <Settings className="w-8 h-8 text-[#ffd700]" />
-          Master Controller
-        </h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-display text-3xl font-bold text-[#e5e4dd] flex items-center gap-3">
+            <Settings className="w-8 h-8 text-[#ffd700]" />
+            Master Controller
+          </h1>
+          {!roleLoading && role && <RoleBadge role={role} size="md" />}
+        </div>
         <p className="text-[#dcdbd5]">
-          Control typography, colors, spacing, and templates across your entire site.
+          {role === 'admin'
+            ? 'Full admin access: Control typography, colors, spacing, templates, and Token Vault.'
+            : 'Read-only access: View Master Controller settings. Contact admin for edit access.'}
         </p>
       </div>
 
@@ -143,7 +180,7 @@ export default function MasterControllerDashboard() {
             return (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 className={`flex items-center gap-2 px-4 py-2 border-b-2 transition-colors ${
                   activeTab === tab.id
                     ? 'border-[#ffd700] text-[#ffd700]'
@@ -171,6 +208,10 @@ export default function MasterControllerDashboard() {
         )}
 
         {activeTab === 'components' && <ComponentsTab />}
+
+        {activeTab === 'vault' && <TokenVaultTab />}
+
+        {activeTab === 'deployment' && <DeploymentTab />}
       </div>
 
       {/* Footer Info */}
@@ -182,5 +223,20 @@ export default function MasterControllerDashboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MasterControllerDashboard() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center text-[#dcdbd5]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00ff88] mx-auto mb-4"></div>
+          <p>Loading Master Controller...</p>
+        </div>
+      </div>
+    }>
+      <MasterControllerContent />
+    </Suspense>
   );
 }
