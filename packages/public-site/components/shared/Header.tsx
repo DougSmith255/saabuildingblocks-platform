@@ -261,7 +261,7 @@ export default function Header() {
                     <button
                       className="nav-link flex items-center px-5 py-3 text-white font-['Synonym'] font-medium tracking-[0.5px] transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
                       style={{
-                        fontSize: 'var(--font-size-link, 18px)',
+                        fontSize: 'var(--font-size-link)',
                         willChange: 'background-color, color',
                       }}
                       aria-expanded={hoveredDropdown === index}
@@ -297,7 +297,7 @@ export default function Header() {
                           href={dropdownItem.href}
                           className="dropdown-item block px-4 py-3 text-[#dcdbd5] font-['Synonym'] transition-all duration-300 bg-[rgba(42,42,42,0.8)] rounded-lg my-[5.5px] hover:bg-[rgba(58,58,58,0.8)] hover:text-white"
                           style={{
-                            fontSize: 'var(--font-size-link-secondary, 15px)',
+                            fontSize: 'var(--font-size-link-secondary)',
                             willChange: 'background-color, color',
                           }}
                         >
@@ -312,7 +312,7 @@ export default function Header() {
                     onClick={handlePortalClick}
                     className={`nav-link agent-portal flex items-center px-5 py-3 font-medium tracking-[0.5px] transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white font-['Taskor'] font-normal ${isPortalClicked ? 'clicked' : ''}`}
                     style={{
-                      fontSize: 'var(--font-size-button, 18px)',
+                      fontSize: 'var(--font-size-button)',
                       willChange: 'background-color, color',
                     }}
                   >
@@ -328,7 +328,7 @@ export default function Header() {
                     href={item.href!}
                     className="nav-link flex items-center px-5 py-3 text-white font-['Synonym'] font-medium tracking-[0.5px] transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
                     style={{
-                      fontSize: 'var(--font-size-link, 18px)',
+                      fontSize: 'var(--font-size-link)',
                     }}
                   >
                     {item.label}
@@ -431,7 +431,7 @@ export default function Header() {
                           onClick={() => toggleDropdown(index)}
                           className="w-full flex items-center justify-between px-6 py-4 text-white font-['Synonym'] font-medium tracking-wide transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                           style={{
-                            fontSize: 'var(--font-size-link, 23px)',
+                            fontSize: 'var(--font-size-link)',
                           }}
                         >
                           {item.label}
@@ -465,7 +465,7 @@ export default function Header() {
                                   onClick={() => setIsMobileMenuOpen(false)}
                                   className="block px-6 py-3 text-[#dcdbd5] font-['Synonym'] transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)] hover:text-[#ffe000]"
                                   style={{
-                                    fontSize: 'var(--font-size-link-secondary, 18px)',
+                                    fontSize: 'var(--font-size-link-secondary)',
                                   }}
                                 >
                                   {dropdownItem.label}
@@ -484,7 +484,7 @@ export default function Header() {
                         }}
                         className={`agent-portal-mobile block px-6 py-4 font-medium tracking-wide transition-all duration-300 rounded-lg relative text-white font-['Taskor'] font-normal ${isPortalClicked ? 'clicked' : ''}`}
                         style={{
-                          fontSize: 'var(--font-size-button, 23px)',
+                          fontSize: 'var(--font-size-button)',
                         }}
                       >
                         <span className="agent-portal-styled">
@@ -500,7 +500,7 @@ export default function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block px-6 py-4 text-white font-['Synonym'] font-medium tracking-wide transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                         style={{
-                          fontSize: 'var(--font-size-link, 23px)',
+                          fontSize: 'var(--font-size-link)',
                         }}
                       >
                         {item.label}
@@ -712,12 +712,6 @@ export default function Header() {
         }
 
         /* Responsive adjustments */
-        @media (min-width: 1600px) {
-          .nav-link {
-            font-size: 20px !important;
-          }
-        }
-
         @media (max-width: 75rem) {
           .logo-container {
             width: 110px !important;

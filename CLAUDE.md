@@ -52,6 +52,46 @@ pm2 logs nextjs-saa --lines 20 --nostream
 
 ---
 
+## 📚 ALWAYS USE LATEST DOCUMENTATION (CRITICAL!)
+
+**⚠️ BEFORE WRITING ANY CODE - CHECK LATEST DOCS WITH mcp__context7**
+
+You have access to **mcp__context7** - a TIER 1 UNLIMITED documentation server providing the latest official docs for all libraries/frameworks. Your training data is from 2023, but this project uses cutting-edge versions.
+
+**Mandatory Process:**
+1. **Before writing Tailwind CSS:** Check latest Tailwind v4 syntax
+2. **Before writing Next.js code:** Verify Next.js 16 App Router APIs
+3. **Before writing React code:** Check React 19 features and patterns
+4. **Before using any library:** Verify current API and available features
+
+**Quick Commands:**
+```bash
+# Resolve library documentation
+mcp__context7__resolve-library-id { "libraryName": "nextjs" }
+mcp__context7__resolve-library-id { "libraryName": "react" }
+mcp__context7__resolve-library-id { "libraryName": "tailwindcss" }
+
+# Get specific documentation
+mcp__context7__get-library-docs { "libraryId": "...", "query": "..." }
+```
+
+**Tech Stack Versions (Verify APIs):**
+- Next.js 16 (App Router, Server Components, Server Actions)
+- React 19 (use(), Server Actions, Suspense patterns)
+- Tailwind CSS v4 (new @import syntax, CSS-first config)
+- TypeScript 5.x
+- Supabase (Auth, Database, Storage, Realtime)
+
+**Why This Matters:**
+- Avoid deprecated APIs from 2023
+- Use newest performance optimizations
+- Leverage latest framework features
+- Prevent syntax errors from outdated patterns
+
+**Pre-Task Checklist Hook:** (automated reminder system coming soon)
+
+---
+
 ## 📁 UNIFIED ARCHIVE
 
 **Location:** `/home/claude-flow/.archive/` (1.3GB, 2,859 files)

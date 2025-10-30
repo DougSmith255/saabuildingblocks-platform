@@ -103,7 +103,7 @@ export function ShareButtons({ title, slug, excerpt }: ShareButtonsProps) {
 
   return (
     <div className="mt-12 pt-8 border-t border-[#e5e4dd]/20">
-      <h3 className="text-[clamp(1.25rem,1.5vw+0.5rem,1.5rem)] mb-4 text-[#e5e4dd] font-[var(--font-taskor)]">
+      <h3 className="text-h3 mb-4 text-[#e5e4dd] font-[var(--font-taskor)]">
         Share This Post
       </h3>
 

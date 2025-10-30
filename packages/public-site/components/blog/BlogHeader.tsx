@@ -40,13 +40,13 @@ export function BlogHeader({
   return (
     <header className="mb-16 text-center">
       {/* H1 auto-applies display font (Taskor) - Protocol Section 2.1 */}
-      <h1 className="text-[clamp(3rem,5vw+1rem,6rem)] mb-6 text-[#e5e4dd]">
+      <h1 className="text-h1 mb-6 text-[#e5e4dd]">
         {title}
       </h1>
 
       {/* Description uses font-amulya via CSS variable - Protocol Section 2.1 */}
       {description && (
-        <p className="text-[clamp(1.125rem,0.5vw+0.875rem,1.25rem)] text-[#dcdbd5] max-w-2xl mx-auto font-[var(--font-amulya)]">
+        <p className="text-body text-[#dcdbd5] max-w-2xl mx-auto font-[var(--font-amulya)]">
           {description}
         </p>
       )}

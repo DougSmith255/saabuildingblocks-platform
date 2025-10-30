@@ -88,7 +88,7 @@ export function RelatedPosts({
   return (
     <section className="mt-16 pt-8 border-t border-[#e5e4dd]/20">
       {/* H2 auto-applies display font (Taskor) - Protocol Section 2.1 */}
-      <h2 className="text-[clamp(1.75rem,2vw+0.5rem,2.25rem)] mb-2 text-[#e5e4dd]">
+      <h2 className="text-h2 mb-2 text-[#e5e4dd]">
         Related Posts
       </h2>
 

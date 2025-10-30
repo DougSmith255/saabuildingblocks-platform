@@ -99,7 +99,7 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
           {/* Title (H2 - auto-applies display font) */}
           <h2
             className="
-              text-[clamp(1.5rem,2vw+0.5rem,2rem)]
+              text-h2
               font-bold
               mb-3
               text-[#e5e4dd]
@@ -116,7 +116,7 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
             <div
               className="
                 font-[var(--font-amulya)]
-                text-[clamp(1rem,0.5vw+0.875rem,1.125rem)]
+                text-body
                 text-[#dcdbd5]
                 mb-4
                 line-clamp-3
@@ -133,7 +133,7 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
             items-center
             gap-3
             font-[var(--font-amulya)]
-            text-[clamp(0.875rem,0.25vw+0.8125rem,1rem)]
+            text-caption
             text-[#dcdbd5]/70
           ">
             {/* Author */}
