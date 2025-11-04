@@ -190,13 +190,24 @@ export const TypographyTab: React.FC = () => {
 
       {/* Grid of Text Type Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {TEXT_TYPES.map((textType) => (
-          <TextTypeCardWithPreview
-            key={textType}
-            textType={textType}
-            viewportSimulation={viewportSimulation}
-          />
-        ))}
+        {TEXT_TYPES.map((textType) => {
+          // Safety check: only render card if settings exist and are valid
+          const config = settings[textType];
+          if (!config || !config.size || typeof config.size.min !== 'number') {
+            return (
+              <div key={textType} className="p-6 rounded-lg bg-[#404040]/30 border border-[#404040] shadow-lg">
+                <div className="text-center text-[#dcdbd5]">Loading {textType} settings...</div>
+              </div>
+            );
+          }
+          return (
+            <TextTypeCardWithPreview
+              key={textType}
+              textType={textType}
+              viewportSimulation={viewportSimulation}
+            />
+          );
+        })}
       </div>
 
       {/* WCAG Contrast Compliance Overview */}

@@ -1,0 +1,3548 @@
+'use client';
+
+export default function SpacemanBackgroundFull() {
+  return (
+    <div className="fixed inset-0 pointer-events-none" style={{ zIndex: 10 }}>
+      <div
+        className="absolute flex items-center"
+        style={{ top: 0, bottom: 0, left: '-20%', right: 0 }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 2000 2000"
+          style={{
+            width: 'clamp(350px, 144vw, 2050px)',
+            height: 'auto',
+          }}
+        >
+          <style>{`
+.cls-1 {
+  fill: none;
+  stroke: #fdcd4c;
+  stroke-miterlimit: 10;
+  stroke-width: 2px;
+}
+
+.cosmic_0 {
+  stroke-dasharray: 21226 21228;
+  stroke-dashoffset: 21227;
+  animation: cosmic_draw_0 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_1 {
+  stroke-dasharray: 250 252;
+  stroke-dashoffset: 251;
+  animation: cosmic_draw_1 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_2 {
+  stroke-dasharray: 350 352;
+  stroke-dashoffset: 351;
+  animation: cosmic_draw_2 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_3 {
+  stroke-dasharray: 475 477;
+  stroke-dashoffset: 476;
+  animation: cosmic_draw_3 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_4 {
+  stroke-dasharray: 128 130;
+  stroke-dashoffset: 129;
+  animation: cosmic_draw_4 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_5 {
+  stroke-dasharray: 124 126;
+  stroke-dashoffset: 125;
+  animation: cosmic_draw_5 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_6 {
+  stroke-dasharray: 92 94;
+  stroke-dashoffset: 93;
+  animation: cosmic_draw_6 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_7 {
+  stroke-dasharray: 221 223;
+  stroke-dashoffset: 222;
+  animation: cosmic_draw_7 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_8 {
+  stroke-dasharray: 166 168;
+  stroke-dashoffset: 167;
+  animation: cosmic_draw_8 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_9 {
+  stroke-dasharray: 56 58;
+  stroke-dashoffset: 57;
+  animation: cosmic_draw_9 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_10 {
+  stroke-dasharray: 66 68;
+  stroke-dashoffset: 67;
+  animation: cosmic_draw_10 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_11 {
+  stroke-dasharray: 78 80;
+  stroke-dashoffset: 79;
+  animation: cosmic_draw_11 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_12 {
+  stroke-dasharray: 70 72;
+  stroke-dashoffset: 71;
+  animation: cosmic_draw_12 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_13 {
+  stroke-dasharray: 59 61;
+  stroke-dashoffset: 60;
+  animation: cosmic_draw_13 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_14 {
+  stroke-dasharray: 74 76;
+  stroke-dashoffset: 75;
+  animation: cosmic_draw_14 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_15 {
+  stroke-dasharray: 84 86;
+  stroke-dashoffset: 85;
+  animation: cosmic_draw_15 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_16 {
+  stroke-dasharray: 57 59;
+  stroke-dashoffset: 58;
+  animation: cosmic_draw_16 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_17 {
+  stroke-dasharray: 81 83;
+  stroke-dashoffset: 82;
+  animation: cosmic_draw_17 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_18 {
+  stroke-dasharray: 46 48;
+  stroke-dashoffset: 47;
+  animation: cosmic_draw_18 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_19 {
+  stroke-dasharray: 129 131;
+  stroke-dashoffset: 130;
+  animation: cosmic_draw_19 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_20 {
+  stroke-dasharray: 48 50;
+  stroke-dashoffset: 49;
+  animation: cosmic_draw_20 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_21 {
+  stroke-dasharray: 56 58;
+  stroke-dashoffset: 57;
+  animation: cosmic_draw_21 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_22 {
+  stroke-dasharray: 46 48;
+  stroke-dashoffset: 47;
+  animation: cosmic_draw_22 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_23 {
+  stroke-dasharray: 48 50;
+  stroke-dashoffset: 49;
+  animation: cosmic_draw_23 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_24 {
+  stroke-dasharray: 72 74;
+  stroke-dashoffset: 73;
+  animation: cosmic_draw_24 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_25 {
+  stroke-dasharray: 43 45;
+  stroke-dashoffset: 44;
+  animation: cosmic_draw_25 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_26 {
+  stroke-dasharray: 33 35;
+  stroke-dashoffset: 34;
+  animation: cosmic_draw_26 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_27 {
+  stroke-dasharray: 35 37;
+  stroke-dashoffset: 36;
+  animation: cosmic_draw_27 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_28 {
+  stroke-dasharray: 45 47;
+  stroke-dashoffset: 46;
+  animation: cosmic_draw_28 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_29 {
+  stroke-dasharray: 35 37;
+  stroke-dashoffset: 36;
+  animation: cosmic_draw_29 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_30 {
+  stroke-dasharray: 36 38;
+  stroke-dashoffset: 37;
+  animation: cosmic_draw_30 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_31 {
+  stroke-dasharray: 25 27;
+  stroke-dashoffset: 26;
+  animation: cosmic_draw_31 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_32 {
+  stroke-dasharray: 34 36;
+  stroke-dashoffset: 35;
+  animation: cosmic_draw_32 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_33 {
+  stroke-dasharray: 33 35;
+  stroke-dashoffset: 34;
+  animation: cosmic_draw_33 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_34 {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 2;
+  animation: cosmic_draw_34 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_35 {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 2;
+  animation: cosmic_draw_35 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_36 {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 2;
+  animation: cosmic_draw_36 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_37 {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 2;
+  animation: cosmic_draw_37 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_38 {
+  stroke-dasharray: 710 712;
+  stroke-dashoffset: 711;
+  animation: cosmic_draw_38 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_39 {
+  stroke-dasharray: 569 571;
+  stroke-dashoffset: 570;
+  animation: cosmic_draw_39 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_40 {
+  stroke-dasharray: 368 370;
+  stroke-dashoffset: 369;
+  animation: cosmic_draw_40 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_41 {
+  stroke-dasharray: 257 259;
+  stroke-dashoffset: 258;
+  animation: cosmic_draw_41 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_42 {
+  stroke-dasharray: 189 191;
+  stroke-dashoffset: 190;
+  animation: cosmic_draw_42 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_43 {
+  stroke-dasharray: 189 191;
+  stroke-dashoffset: 190;
+  animation: cosmic_draw_43 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_44 {
+  stroke-dasharray: 248 250;
+  stroke-dashoffset: 249;
+  animation: cosmic_draw_44 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_45 {
+  stroke-dasharray: 352 354;
+  stroke-dashoffset: 353;
+  animation: cosmic_draw_45 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_46 {
+  stroke-dasharray: 256 258;
+  stroke-dashoffset: 257;
+  animation: cosmic_draw_46 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_47 {
+  stroke-dasharray: 149 151;
+  stroke-dashoffset: 150;
+  animation: cosmic_draw_47 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_48 {
+  stroke-dasharray: 167 169;
+  stroke-dashoffset: 168;
+  animation: cosmic_draw_48 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_49 {
+  stroke-dasharray: 150 152;
+  stroke-dashoffset: 151;
+  animation: cosmic_draw_49 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_50 {
+  stroke-dasharray: 166 168;
+  stroke-dashoffset: 167;
+  animation: cosmic_draw_50 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_51 {
+  stroke-dasharray: 301 303;
+  stroke-dashoffset: 302;
+  animation: cosmic_draw_51 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_52 {
+  stroke-dasharray: 111 113;
+  stroke-dashoffset: 112;
+  animation: cosmic_draw_52 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_53 {
+  stroke-dasharray: 85 87;
+  stroke-dashoffset: 86;
+  animation: cosmic_draw_53 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_54 {
+  stroke-dasharray: 222 224;
+  stroke-dashoffset: 223;
+  animation: cosmic_draw_54 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_55 {
+  stroke-dasharray: 79 81;
+  stroke-dashoffset: 80;
+  animation: cosmic_draw_55 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_56 {
+  stroke-dasharray: 133 135;
+  stroke-dashoffset: 134;
+  animation: cosmic_draw_56 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_57 {
+  stroke-dasharray: 261 263;
+  stroke-dashoffset: 262;
+  animation: cosmic_draw_57 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_58 {
+  stroke-dasharray: 108 110;
+  stroke-dashoffset: 109;
+  animation: cosmic_draw_58 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_59 {
+  stroke-dasharray: 200 202;
+  stroke-dashoffset: 201;
+  animation: cosmic_draw_59 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_60 {
+  stroke-dasharray: 93 95;
+  stroke-dashoffset: 94;
+  animation: cosmic_draw_60 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_61 {
+  stroke-dasharray: 73 75;
+  stroke-dashoffset: 74;
+  animation: cosmic_draw_61 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_62 {
+  stroke-dasharray: 103 105;
+  stroke-dashoffset: 104;
+  animation: cosmic_draw_62 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_63 {
+  stroke-dasharray: 81 83;
+  stroke-dashoffset: 82;
+  animation: cosmic_draw_63 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_64 {
+  stroke-dasharray: 143 145;
+  stroke-dashoffset: 144;
+  animation: cosmic_draw_64 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_65 {
+  stroke-dasharray: 72 74;
+  stroke-dashoffset: 73;
+  animation: cosmic_draw_65 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_66 {
+  stroke-dasharray: 97 99;
+  stroke-dashoffset: 98;
+  animation: cosmic_draw_66 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_67 {
+  stroke-dasharray: 139 141;
+  stroke-dashoffset: 140;
+  animation: cosmic_draw_67 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_68 {
+  stroke-dasharray: 75 77;
+  stroke-dashoffset: 76;
+  animation: cosmic_draw_68 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_69 {
+  stroke-dasharray: 59 61;
+  stroke-dashoffset: 60;
+  animation: cosmic_draw_69 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_70 {
+  stroke-dasharray: 162 164;
+  stroke-dashoffset: 163;
+  animation: cosmic_draw_70 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_71 {
+  stroke-dasharray: 50 52;
+  stroke-dashoffset: 51;
+  animation: cosmic_draw_71 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_72 {
+  stroke-dasharray: 69 71;
+  stroke-dashoffset: 70;
+  animation: cosmic_draw_72 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_73 {
+  stroke-dasharray: 52 54;
+  stroke-dashoffset: 53;
+  animation: cosmic_draw_73 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_74 {
+  stroke-dasharray: 56 58;
+  stroke-dashoffset: 57;
+  animation: cosmic_draw_74 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_75 {
+  stroke-dasharray: 57 59;
+  stroke-dashoffset: 58;
+  animation: cosmic_draw_75 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_76 {
+  stroke-dasharray: 62 64;
+  stroke-dashoffset: 63;
+  animation: cosmic_draw_76 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_77 {
+  stroke-dasharray: 127 129;
+  stroke-dashoffset: 128;
+  animation: cosmic_draw_77 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_78 {
+  stroke-dasharray: 175 177;
+  stroke-dashoffset: 176;
+  animation: cosmic_draw_78 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_79 {
+  stroke-dasharray: 57 59;
+  stroke-dashoffset: 58;
+  animation: cosmic_draw_79 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_80 {
+  stroke-dasharray: 52 54;
+  stroke-dashoffset: 53;
+  animation: cosmic_draw_80 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_81 {
+  stroke-dasharray: 56 58;
+  stroke-dashoffset: 57;
+  animation: cosmic_draw_81 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_82 {
+  stroke-dasharray: 46 48;
+  stroke-dashoffset: 47;
+  animation: cosmic_draw_82 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_83 {
+  stroke-dasharray: 48 50;
+  stroke-dashoffset: 49;
+  animation: cosmic_draw_83 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_84 {
+  stroke-dasharray: 72 74;
+  stroke-dashoffset: 73;
+  animation: cosmic_draw_84 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_85 {
+  stroke-dasharray: 73 75;
+  stroke-dashoffset: 74;
+  animation: cosmic_draw_85 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_86 {
+  stroke-dasharray: 87 89;
+  stroke-dashoffset: 88;
+  animation: cosmic_draw_86 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_87 {
+  stroke-dasharray: 100 102;
+  stroke-dashoffset: 101;
+  animation: cosmic_draw_87 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_88 {
+  stroke-dasharray: 118 120;
+  stroke-dashoffset: 119;
+  animation: cosmic_draw_88 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_89 {
+  stroke-dasharray: 65 67;
+  stroke-dashoffset: 66;
+  animation: cosmic_draw_89 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_90 {
+  stroke-dasharray: 55 57;
+  stroke-dashoffset: 56;
+  animation: cosmic_draw_90 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_91 {
+  stroke-dasharray: 34 36;
+  stroke-dashoffset: 35;
+  animation: cosmic_draw_91 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_92 {
+  stroke-dasharray: 61 63;
+  stroke-dashoffset: 62;
+  animation: cosmic_draw_92 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_93 {
+  stroke-dasharray: 62 64;
+  stroke-dashoffset: 63;
+  animation: cosmic_draw_93 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_94 {
+  stroke-dasharray: 70 72;
+  stroke-dashoffset: 71;
+  animation: cosmic_draw_94 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_95 {
+  stroke-dasharray: 46 48;
+  stroke-dashoffset: 47;
+  animation: cosmic_draw_95 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_96 {
+  stroke-dasharray: 65 67;
+  stroke-dashoffset: 66;
+  animation: cosmic_draw_96 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_97 {
+  stroke-dasharray: 54 56;
+  stroke-dashoffset: 55;
+  animation: cosmic_draw_97 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_98 {
+  stroke-dasharray: 51 53;
+  stroke-dashoffset: 52;
+  animation: cosmic_draw_98 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_99 {
+  stroke-dasharray: 30 32;
+  stroke-dashoffset: 31;
+  animation: cosmic_draw_99 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_100 {
+  stroke-dasharray: 63 65;
+  stroke-dashoffset: 64;
+  animation: cosmic_draw_100 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_101 {
+  stroke-dasharray: 55 57;
+  stroke-dashoffset: 56;
+  animation: cosmic_draw_101 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_102 {
+  stroke-dasharray: 112 114;
+  stroke-dashoffset: 113;
+  animation: cosmic_draw_102 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_103 {
+  stroke-dasharray: 52 54;
+  stroke-dashoffset: 53;
+  animation: cosmic_draw_103 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_104 {
+  stroke-dasharray: 31 33;
+  stroke-dashoffset: 32;
+  animation: cosmic_draw_104 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_105 {
+  stroke-dasharray: 39 41;
+  stroke-dashoffset: 40;
+  animation: cosmic_draw_105 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_106 {
+  stroke-dasharray: 41 43;
+  stroke-dashoffset: 42;
+  animation: cosmic_draw_106 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_107 {
+  stroke-dasharray: 61 63;
+  stroke-dashoffset: 62;
+  animation: cosmic_draw_107 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_108 {
+  stroke-dasharray: 41 43;
+  stroke-dashoffset: 42;
+  animation: cosmic_draw_108 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_109 {
+  stroke-dasharray: 41 43;
+  stroke-dashoffset: 42;
+  animation: cosmic_draw_109 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_110 {
+  stroke-dasharray: 50 52;
+  stroke-dashoffset: 51;
+  animation: cosmic_draw_110 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_111 {
+  stroke-dasharray: 41 43;
+  stroke-dashoffset: 42;
+  animation: cosmic_draw_111 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_112 {
+  stroke-dasharray: 38 40;
+  stroke-dashoffset: 39;
+  animation: cosmic_draw_112 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_113 {
+  stroke-dasharray: 70 72;
+  stroke-dashoffset: 71;
+  animation: cosmic_draw_113 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_114 {
+  stroke-dasharray: 35 37;
+  stroke-dashoffset: 36;
+  animation: cosmic_draw_114 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_115 {
+  stroke-dasharray: 32 34;
+  stroke-dashoffset: 33;
+  animation: cosmic_draw_115 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_116 {
+  stroke-dasharray: 34 36;
+  stroke-dashoffset: 35;
+  animation: cosmic_draw_116 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_117 {
+  stroke-dasharray: 40 42;
+  stroke-dashoffset: 41;
+  animation: cosmic_draw_117 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_118 {
+  stroke-dasharray: 41 43;
+  stroke-dashoffset: 42;
+  animation: cosmic_draw_118 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_119 {
+  stroke-dasharray: 29 31;
+  stroke-dashoffset: 30;
+  animation: cosmic_draw_119 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_120 {
+  stroke-dasharray: 28 30;
+  stroke-dashoffset: 29;
+  animation: cosmic_draw_120 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_121 {
+  stroke-dasharray: 35 37;
+  stroke-dashoffset: 36;
+  animation: cosmic_draw_121 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_122 {
+  stroke-dasharray: 29 31;
+  stroke-dashoffset: 30;
+  animation: cosmic_draw_122 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_123 {
+  stroke-dasharray: 26 28;
+  stroke-dashoffset: 27;
+  animation: cosmic_draw_123 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_124 {
+  stroke-dasharray: 26 28;
+  stroke-dashoffset: 27;
+  animation: cosmic_draw_124 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_125 {
+  stroke-dasharray: 24 26;
+  stroke-dashoffset: 25;
+  animation: cosmic_draw_125 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_126 {
+  stroke-dasharray: 38 40;
+  stroke-dashoffset: 39;
+  animation: cosmic_draw_126 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_127 {
+  stroke-dasharray: 39 41;
+  stroke-dashoffset: 40;
+  animation: cosmic_draw_127 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_128 {
+  stroke-dasharray: 57 59;
+  stroke-dashoffset: 58;
+  animation: cosmic_draw_128 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_129 {
+  stroke-dasharray: 34 36;
+  stroke-dashoffset: 35;
+  animation: cosmic_draw_129 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_130 {
+  stroke-dasharray: 40 42;
+  stroke-dashoffset: 41;
+  animation: cosmic_draw_130 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_131 {
+  stroke-dasharray: 27 29;
+  stroke-dashoffset: 28;
+  animation: cosmic_draw_131 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_132 {
+  stroke-dasharray: 29 31;
+  stroke-dashoffset: 30;
+  animation: cosmic_draw_132 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_133 {
+  stroke-dasharray: 27 29;
+  stroke-dashoffset: 28;
+  animation: cosmic_draw_133 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_134 {
+  stroke-dasharray: 26 28;
+  stroke-dashoffset: 27;
+  animation: cosmic_draw_134 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_135 {
+  stroke-dasharray: 37 39;
+  stroke-dashoffset: 38;
+  animation: cosmic_draw_135 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_136 {
+  stroke-dasharray: 19 21;
+  stroke-dashoffset: 20;
+  animation: cosmic_draw_136 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_137 {
+  stroke-dasharray: 36 38;
+  stroke-dashoffset: 37;
+  animation: cosmic_draw_137 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_138 {
+  stroke-dasharray: 24 26;
+  stroke-dashoffset: 25;
+  animation: cosmic_draw_138 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_139 {
+  stroke-dasharray: 22 24;
+  stroke-dashoffset: 23;
+  animation: cosmic_draw_139 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_140 {
+  stroke-dasharray: 47 49;
+  stroke-dashoffset: 48;
+  animation: cosmic_draw_140 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_141 {
+  stroke-dasharray: 28 30;
+  stroke-dashoffset: 29;
+  animation: cosmic_draw_141 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_142 {
+  stroke-dasharray: 20 22;
+  stroke-dashoffset: 21;
+  animation: cosmic_draw_142 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_143 {
+  stroke-dasharray: 29 31;
+  stroke-dashoffset: 30;
+  animation: cosmic_draw_143 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_144 {
+  stroke-dasharray: 35 37;
+  stroke-dashoffset: 36;
+  animation: cosmic_draw_144 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_145 {
+  stroke-dasharray: 22 24;
+  stroke-dashoffset: 23;
+  animation: cosmic_draw_145 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_146 {
+  stroke-dasharray: 8 10;
+  stroke-dashoffset: 9;
+  animation: cosmic_draw_146 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_147 {
+  stroke-dasharray: 9 11;
+  stroke-dashoffset: 10;
+  animation: cosmic_draw_147 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_148 {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 2;
+  animation: cosmic_draw_148 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_149 {
+  stroke-dasharray: 4 6;
+  stroke-dashoffset: 5;
+  animation: cosmic_draw_149 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_150 {
+  stroke-dasharray: 98 100;
+  stroke-dashoffset: 99;
+  animation: cosmic_draw_150 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_151 {
+  stroke-dasharray: 54 56;
+  stroke-dashoffset: 55;
+  animation: cosmic_draw_151 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_152 {
+  stroke-dasharray: 37 39;
+  stroke-dashoffset: 38;
+  animation: cosmic_draw_152 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_153 {
+  stroke-dasharray: 56 58;
+  stroke-dashoffset: 57;
+  animation: cosmic_draw_153 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_154 {
+  stroke-dasharray: 27 29;
+  stroke-dashoffset: 28;
+  animation: cosmic_draw_154 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_155 {
+  stroke-dasharray: 33 35;
+  stroke-dashoffset: 34;
+  animation: cosmic_draw_155 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_156 {
+  stroke-dasharray: 28 30;
+  stroke-dashoffset: 29;
+  animation: cosmic_draw_156 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_157 {
+  stroke-dasharray: 27 29;
+  stroke-dashoffset: 28;
+  animation: cosmic_draw_157 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+.cosmic_158 {
+  stroke-dasharray: 4 6;
+  stroke-dashoffset: 5;
+  animation: cosmic_draw_158 5400ms linear 0ms forwards,
+    cosmic_fade 5400ms linear 0ms forwards;
+}
+
+@keyframes cosmic_draw {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_fade {
+  0% {
+    stroke-opacity: 1;
+  }
+
+  92.5925925925926% {
+    stroke-opacity: 1;
+  }
+
+  100% {
+    stroke-opacity: 1;
+  }
+}
+
+@keyframes cosmic_draw_0 {
+  0% {
+    stroke-dashoffset: 21227;
+  }
+
+  61.72839506172839% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_1 {
+  0.19534302234724177% {
+    stroke-dashoffset: 251;
+  }
+
+  61.92373808407563% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_2 {
+  0.39068604469448354% {
+    stroke-dashoffset: 351;
+  }
+
+  62.11908110642287% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_3 {
+  0.5860290670417253% {
+    stroke-dashoffset: 476;
+  }
+
+  62.31442412877012% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_4 {
+  0.7813720893889671% {
+    stroke-dashoffset: 129;
+  }
+
+  62.50976715111736% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_5 {
+  0.9767151117362088% {
+    stroke-dashoffset: 125;
+  }
+
+  62.705110173464604% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_6 {
+  1.1720581340834506% {
+    stroke-dashoffset: 93;
+  }
+
+  62.900453195811835% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_7 {
+  1.3674011564306923% {
+    stroke-dashoffset: 222;
+  }
+
+  63.09579621815908% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_8 {
+  1.5627441787779341% {
+    stroke-dashoffset: 167;
+  }
+
+  63.291139240506325% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_9 {
+  1.7580872011251758% {
+    stroke-dashoffset: 57;
+  }
+
+  63.48648226285357% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_10 {
+  1.9534302234724177% {
+    stroke-dashoffset: 67;
+  }
+
+  63.6818252852008% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_11 {
+  2.1487732458196596% {
+    stroke-dashoffset: 79;
+  }
+
+  63.87716830754805% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_12 {
+  2.344116268166901% {
+    stroke-dashoffset: 71;
+  }
+
+  64.07251132989529% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_13 {
+  2.5394592905141433% {
+    stroke-dashoffset: 60;
+  }
+
+  64.26785435224254% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_14 {
+  2.7348023128613845% {
+    stroke-dashoffset: 75;
+  }
+
+  64.46319737458978% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_15 {
+  2.9301453352086266% {
+    stroke-dashoffset: 85;
+  }
+
+  64.65854039693701% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_16 {
+  3.1254883575558683% {
+    stroke-dashoffset: 58;
+  }
+
+  64.85388341928426% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_17 {
+  3.3208313799031095% {
+    stroke-dashoffset: 82;
+  }
+
+  65.0492264416315% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_18 {
+  3.5161744022503516% {
+    stroke-dashoffset: 47;
+  }
+
+  65.24456946397873% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_19 {
+  3.7115174245975933% {
+    stroke-dashoffset: 130;
+  }
+
+  65.43991248632598% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_20 {
+  3.9068604469448354% {
+    stroke-dashoffset: 49;
+  }
+
+  65.63525550867323% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_21 {
+  4.102203469292077% {
+    stroke-dashoffset: 57;
+  }
+
+  65.83059853102047% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_22 {
+  4.297546491639319% {
+    stroke-dashoffset: 47;
+  }
+
+  66.0259415533677% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_23 {
+  4.49288951398656% {
+    stroke-dashoffset: 49;
+  }
+
+  66.22128457571495% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_24 {
+  4.688232536333802% {
+    stroke-dashoffset: 73;
+  }
+
+  66.41662759806219% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_25 {
+  4.883575558681043% {
+    stroke-dashoffset: 44;
+  }
+
+  66.61197062040944% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_26 {
+  5.078918581028287% {
+    stroke-dashoffset: 34;
+  }
+
+  66.80731364275668% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_27 {
+  5.274261603375527% {
+    stroke-dashoffset: 36;
+  }
+
+  67.00265666510391% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_28 {
+  5.469604625722769% {
+    stroke-dashoffset: 46;
+  }
+
+  67.19799968745116% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_29 {
+  5.664947648070011% {
+    stroke-dashoffset: 36;
+  }
+
+  67.3933427097984% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_30 {
+  5.860290670417253% {
+    stroke-dashoffset: 37;
+  }
+
+  67.58868573214565% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_31 {
+  6.055633692764495% {
+    stroke-dashoffset: 26;
+  }
+
+  67.78402875449288% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_32 {
+  6.250976715111737% {
+    stroke-dashoffset: 35;
+  }
+
+  67.97937177684013% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_33 {
+  6.446319737458977% {
+    stroke-dashoffset: 34;
+  }
+
+  68.17471479918737% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_34 {
+  6.641662759806219% {
+    stroke-dashoffset: 2;
+  }
+
+  68.37005782153462% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_35 {
+  6.8370057821534616% {
+    stroke-dashoffset: 2;
+  }
+
+  68.56540084388185% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_36 {
+  7.032348804500703% {
+    stroke-dashoffset: 2;
+  }
+
+  68.76074386622909% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_37 {
+  7.227691826847944% {
+    stroke-dashoffset: 2;
+  }
+
+  68.95608688857632% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_38 {
+  7.4230348491951865% {
+    stroke-dashoffset: 711;
+  }
+
+  69.15142991092358% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_39 {
+  7.618377871542428% {
+    stroke-dashoffset: 570;
+  }
+
+  69.34677293327081% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_40 {
+  7.813720893889671% {
+    stroke-dashoffset: 369;
+  }
+
+  69.54211595561806% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_41 {
+  8.009063916236911% {
+    stroke-dashoffset: 258;
+  }
+
+  69.7374589779653% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_42 {
+  8.204406938584153% {
+    stroke-dashoffset: 190;
+  }
+
+  69.93280200031255% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_43 {
+  8.399749960931395% {
+    stroke-dashoffset: 190;
+  }
+
+  70.12814502265978% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_44 {
+  8.595092983278638% {
+    stroke-dashoffset: 249;
+  }
+
+  70.32348804500702% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_45 {
+  8.790436005625878% {
+    stroke-dashoffset: 353;
+  }
+
+  70.51883106735427% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_46 {
+  8.98577902797312% {
+    stroke-dashoffset: 257;
+  }
+
+  70.71417408970152% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_47 {
+  9.181122050320361% {
+    stroke-dashoffset: 150;
+  }
+
+  70.90951711204876% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_48 {
+  9.376465072667605% {
+    stroke-dashoffset: 168;
+  }
+
+  71.10486013439599% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_49 {
+  9.571808095014847% {
+    stroke-dashoffset: 151;
+  }
+
+  71.30020315674324% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_50 {
+  9.767151117362086% {
+    stroke-dashoffset: 167;
+  }
+
+  71.49554617909047% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_51 {
+  9.962494139709332% {
+    stroke-dashoffset: 302;
+  }
+
+  71.69088920143773% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_52 {
+  10.157837162056573% {
+    stroke-dashoffset: 112;
+  }
+
+  71.88623222378496% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_53 {
+  10.353180184403813% {
+    stroke-dashoffset: 86;
+  }
+
+  72.0815752461322% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_54 {
+  10.548523206751055% {
+    stroke-dashoffset: 223;
+  }
+
+  72.27691826847943% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_55 {
+  10.743866229098296% {
+    stroke-dashoffset: 80;
+  }
+
+  72.4722612908267% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_56 {
+  10.939209251445538% {
+    stroke-dashoffset: 134;
+  }
+
+  72.66760431317392% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_57 {
+  11.13455227379278% {
+    stroke-dashoffset: 262;
+  }
+
+  72.86294733552117% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_58 {
+  11.329895296140021% {
+    stroke-dashoffset: 109;
+  }
+
+  73.0582903578684% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_59 {
+  11.525238318487263% {
+    stroke-dashoffset: 201;
+  }
+
+  73.25363338021566% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_60 {
+  11.720581340834507% {
+    stroke-dashoffset: 94;
+  }
+
+  73.44897640256289% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_61 {
+  11.915924363181746% {
+    stroke-dashoffset: 74;
+  }
+
+  73.64431942491014% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_62 {
+  12.11126738552899% {
+    stroke-dashoffset: 104;
+  }
+
+  73.83966244725738% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_63 {
+  12.306610407876232% {
+    stroke-dashoffset: 82;
+  }
+
+  74.03500546960461% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_64 {
+  12.501953430223473% {
+    stroke-dashoffset: 144;
+  }
+
+  74.23034849195186% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_65 {
+  12.697296452570713% {
+    stroke-dashoffset: 73;
+  }
+
+  74.4256915142991% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_66 {
+  12.892639474917955% {
+    stroke-dashoffset: 98;
+  }
+
+  74.62103453664635% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_67 {
+  13.087982497265196% {
+    stroke-dashoffset: 140;
+  }
+
+  74.81637755899358% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_68 {
+  13.283325519612438% {
+    stroke-dashoffset: 76;
+  }
+
+  75.01172058134084% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_69 {
+  13.478668541959681% {
+    stroke-dashoffset: 60;
+  }
+
+  75.20706360368807% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_70 {
+  13.674011564306923% {
+    stroke-dashoffset: 163;
+  }
+
+  75.40240662603532% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_71 {
+  13.869354586654165% {
+    stroke-dashoffset: 51;
+  }
+
+  75.59774964838255% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_72 {
+  14.064697609001406% {
+    stroke-dashoffset: 70;
+  }
+
+  75.7930926707298% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_73 {
+  14.260040631348648% {
+    stroke-dashoffset: 53;
+  }
+
+  75.98843569307704% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_74 {
+  14.455383653695888% {
+    stroke-dashoffset: 57;
+  }
+
+  76.18377871542428% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_75 {
+  14.650726676043133% {
+    stroke-dashoffset: 58;
+  }
+
+  76.37912173777151% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_76 {
+  14.846069698390373% {
+    stroke-dashoffset: 63;
+  }
+
+  76.57446476011877% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_77 {
+  15.041412720737615% {
+    stroke-dashoffset: 128;
+  }
+
+  76.769807782466% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_78 {
+  15.236755743084856% {
+    stroke-dashoffset: 176;
+  }
+
+  76.96515080481325% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_79 {
+  15.432098765432102% {
+    stroke-dashoffset: 58;
+  }
+
+  77.16049382716048% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_80 {
+  15.627441787779341% {
+    stroke-dashoffset: 53;
+  }
+
+  77.35583684950772% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_81 {
+  15.822784810126583% {
+    stroke-dashoffset: 57;
+  }
+
+  77.55117987185497% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_82 {
+  16.018127832473823% {
+    stroke-dashoffset: 47;
+  }
+
+  77.74652289420222% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_83 {
+  16.213470854821065% {
+    stroke-dashoffset: 49;
+  }
+
+  77.94186591654945% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_84 {
+  16.408813877168306% {
+    stroke-dashoffset: 73;
+  }
+
+  78.13720893889669% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_85 {
+  16.604156899515548% {
+    stroke-dashoffset: 74;
+  }
+
+  78.33255196124394% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_86 {
+  16.79949992186279% {
+    stroke-dashoffset: 88;
+  }
+
+  78.52789498359118% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_87 {
+  16.994842944210035% {
+    stroke-dashoffset: 101;
+  }
+
+  78.72323800593841% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_88 {
+  17.190185966557276% {
+    stroke-dashoffset: 119;
+  }
+
+  78.91858102828566% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_89 {
+  17.385528988904518% {
+    stroke-dashoffset: 66;
+  }
+
+  79.11392405063292% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_90 {
+  17.580872011251756% {
+    stroke-dashoffset: 56;
+  }
+
+  79.30926707298015% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_91 {
+  17.776215033598998% {
+    stroke-dashoffset: 35;
+  }
+
+  79.5046100953274% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_92 {
+  17.97155805594624% {
+    stroke-dashoffset: 62;
+  }
+
+  79.69995311767462% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_93 {
+  18.16690107829348% {
+    stroke-dashoffset: 63;
+  }
+
+  79.89529614002187% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_94 {
+  18.362244100640723% {
+    stroke-dashoffset: 71;
+  }
+
+  80.09063916236911% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_95 {
+  18.557587122987965% {
+    stroke-dashoffset: 47;
+  }
+
+  80.28598218471635% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_96 {
+  18.75293014533521% {
+    stroke-dashoffset: 66;
+  }
+
+  80.48132520706359% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_97 {
+  18.94827316768245% {
+    stroke-dashoffset: 55;
+  }
+
+  80.67666822941084% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_98 {
+  19.143616190029693% {
+    stroke-dashoffset: 52;
+  }
+
+  80.87201125175808% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_99 {
+  19.33895921237693% {
+    stroke-dashoffset: 31;
+  }
+
+  81.06735427410533% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_100 {
+  19.534302234724173% {
+    stroke-dashoffset: 64;
+  }
+
+  81.26269729645256% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_101 {
+  19.729645257071418% {
+    stroke-dashoffset: 56;
+  }
+
+  81.4580403187998% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_102 {
+  19.924988279418663% {
+    stroke-dashoffset: 113;
+  }
+
+  81.65338334114705% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_103 {
+  20.120331301765905% {
+    stroke-dashoffset: 53;
+  }
+
+  81.8487263634943% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_104 {
+  20.315674324113147% {
+    stroke-dashoffset: 32;
+  }
+
+  82.04406938584152% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_105 {
+  20.511017346460385% {
+    stroke-dashoffset: 40;
+  }
+
+  82.23941240818877% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_106 {
+  20.706360368807626% {
+    stroke-dashoffset: 42;
+  }
+
+  82.43475543053603% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_107 {
+  20.901703391154868% {
+    stroke-dashoffset: 62;
+  }
+
+  82.63009845288326% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_108 {
+  21.09704641350211% {
+    stroke-dashoffset: 42;
+  }
+
+  82.8254414752305% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_109 {
+  21.29238943584935% {
+    stroke-dashoffset: 42;
+  }
+
+  83.02078449757774% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_110 {
+  21.487732458196593% {
+    stroke-dashoffset: 51;
+  }
+
+  83.21612751992498% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_111 {
+  21.683075480543835% {
+    stroke-dashoffset: 42;
+  }
+
+  83.41147054227223% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_112 {
+  21.878418502891076% {
+    stroke-dashoffset: 39;
+  }
+
+  83.60681356461946% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_113 {
+  22.073761525238318% {
+    stroke-dashoffset: 71;
+  }
+
+  83.8021565869667% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_114 {
+  22.26910454758556% {
+    stroke-dashoffset: 36;
+  }
+
+  83.99749960931395% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_115 {
+  22.4644475699328% {
+    stroke-dashoffset: 33;
+  }
+
+  84.1928426316612% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_116 {
+  22.659790592280043% {
+    stroke-dashoffset: 35;
+  }
+
+  84.38818565400844% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_117 {
+  22.855133614627285% {
+    stroke-dashoffset: 41;
+  }
+
+  84.58352867635567% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_118 {
+  23.050476636974526% {
+    stroke-dashoffset: 42;
+  }
+
+  84.77887169870291% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_119 {
+  23.24581965932177% {
+    stroke-dashoffset: 30;
+  }
+
+  84.97421472105016% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_120 {
+  23.441162681669013% {
+    stroke-dashoffset: 29;
+  }
+
+  85.1695577433974% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_121 {
+  23.63650570401625% {
+    stroke-dashoffset: 36;
+  }
+
+  85.36490076574464% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_122 {
+  23.831848726363493% {
+    stroke-dashoffset: 30;
+  }
+
+  85.56024378809188% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_123 {
+  24.027191748710738% {
+    stroke-dashoffset: 27;
+  }
+
+  85.75558681043913% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_124 {
+  24.22253477105798% {
+    stroke-dashoffset: 27;
+  }
+
+  85.95092983278637% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_125 {
+  24.41787779340522% {
+    stroke-dashoffset: 25;
+  }
+
+  86.14627285513362% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_126 {
+  24.613220815752463% {
+    stroke-dashoffset: 39;
+  }
+
+  86.34161587748085% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_127 {
+  24.808563838099705% {
+    stroke-dashoffset: 40;
+  }
+
+  86.5369588998281% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_128 {
+  25.003906860446946% {
+    stroke-dashoffset: 58;
+  }
+
+  86.73230192217534% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_129 {
+  25.199249882794184% {
+    stroke-dashoffset: 35;
+  }
+
+  86.92764494452257% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_130 {
+  25.394592905141426% {
+    stroke-dashoffset: 41;
+  }
+
+  87.12298796686981% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_131 {
+  25.58993592748867% {
+    stroke-dashoffset: 28;
+  }
+
+  87.31833098921706% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_132 {
+  25.78527894983591% {
+    stroke-dashoffset: 30;
+  }
+
+  87.5136740115643% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_133 {
+  25.980621972183155% {
+    stroke-dashoffset: 28;
+  }
+
+  87.70901703391155% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_134 {
+  26.175964994530393% {
+    stroke-dashoffset: 27;
+  }
+
+  87.90436005625878% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_135 {
+  26.371308016877638% {
+    stroke-dashoffset: 38;
+  }
+
+  88.09970307860603% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_136 {
+  26.566651039224876% {
+    stroke-dashoffset: 20;
+  }
+
+  88.29504610095327% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_137 {
+  26.76199406157212% {
+    stroke-dashoffset: 37;
+  }
+
+  88.49038912330049% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_138 {
+  26.957337083919363% {
+    stroke-dashoffset: 25;
+  }
+
+  88.68573214564775% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_139 {
+  27.152680106266608% {
+    stroke-dashoffset: 23;
+  }
+
+  88.881075167995% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_140 {
+  27.348023128613846% {
+    stroke-dashoffset: 48;
+  }
+
+  89.07641819034224% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_141 {
+  27.54336615096109% {
+    stroke-dashoffset: 29;
+  }
+
+  89.27176121268948% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_142 {
+  27.73870917330833% {
+    stroke-dashoffset: 21;
+  }
+
+  89.46710423503673% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_143 {
+  27.934052195655575% {
+    stroke-dashoffset: 30;
+  }
+
+  89.66244725738396% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_144 {
+  28.129395218002813% {
+    stroke-dashoffset: 36;
+  }
+
+  89.8577902797312% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_145 {
+  28.324738240350054% {
+    stroke-dashoffset: 23;
+  }
+
+  90.05313330207845% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_146 {
+  28.520081262697296% {
+    stroke-dashoffset: 9;
+  }
+
+  90.24847632442568% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_147 {
+  28.715424285044538% {
+    stroke-dashoffset: 10;
+  }
+
+  90.44381934677293% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_148 {
+  28.910767307391776% {
+    stroke-dashoffset: 2;
+  }
+
+  90.63916236912017% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_149 {
+  29.10611032973902% {
+    stroke-dashoffset: 5;
+  }
+
+  90.83450539146742% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_150 {
+  29.301453352086266% {
+    stroke-dashoffset: 99;
+  }
+
+  91.02984841381466% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_151 {
+  29.496796374433504% {
+    stroke-dashoffset: 55;
+  }
+
+  91.2251914361619% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_152 {
+  29.692139396780746% {
+    stroke-dashoffset: 38;
+  }
+
+  91.42053445850914% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_153 {
+  29.887482419127988% {
+    stroke-dashoffset: 57;
+  }
+
+  91.61587748085638% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_154 {
+  30.08282544147523% {
+    stroke-dashoffset: 28;
+  }
+
+  91.8112205032036% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_155 {
+  30.278168463822468% {
+    stroke-dashoffset: 34;
+  }
+
+  92.00656352555086% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_156 {
+  30.473511486169713% {
+    stroke-dashoffset: 29;
+  }
+
+  92.2019065478981% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_157 {
+  30.668854508516958% {
+    stroke-dashoffset: 28;
+  }
+
+  92.39724957024535% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes cosmic_draw_158 {
+  30.864197530864203% {
+    stroke-dashoffset: 5;
+  }
+
+  92.5925925925926% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+          `}</style>
+          <path className="cls-1 cosmic_0" d="M520,874c4.32-5,8.84-9.85,12.87-15.07,2.38-3.08,.39-8.31-3.83-10.34-3.59-1.72-3.62-3.52-2.21-7.04,3.96-9.86,11.69-15.73,20.47-20.53,1.69-.92,4.26-.14,6.41-.37,.99-.11,2.34-.48,2.82-1.19,1.64-2.47,2.96-5.15,4.4-7.75,.25,.46,.5,.92,.76,1.38,2.43-.51,4.86-.99,7.27-1.54,.46-.1,.85-.61,1.3-.66,4.55-.52,4.56-.5,4.46-5.15-2.02,.15-4.05,.3-6.07,.45-.24-.49-.47-.97-.71-1.46,3.5-2.28,6.99-4.57,10.46-6.84-.59-.71-1.33-1.61-2.07-2.51,1.23-.74,2.4-1.78,3.72-2.07,.63-.14,1.48,1.37,2.39,1.81,2.03,.98,4.28,2.68,6.22,2.42,3.34-.46,6.51-2.19,9.74-3.4,0,0-.2,.1-.2,.1,.96-.96,1.93-1.91,2.89-2.86,0,0,.1-.01,.1-.01,.86-1.18,1.72-2.36,3.04-4.18,2.02,1.52,3.92,2.95,6.19,4.65,1.22-.23,3.24-.6,5.27-.98,.07,.36,.15,.73,.22,1.09-1.77,.77-3.53,1.53-6.24,2.71,2.43,.7,3.59,1.04,4.77,1.39-.97,2.58-1.88,4.99-2.61,6.92,4.45,.53,8.2,1.02,11.95,1.4,.65,.06,1.71-.2,1.93-.64,.28-.55,.18-1.72-.24-2.14-1.02-1.01-2.32-1.74-3.66-2.69,2.15-1.65,4.04-3.1,6.48-4.98,0,1.43,.33,2.7-.05,3.7-2.05,5.33-.5,10.48,1.9,14.89,.65,1.2,5.92-.02,9.04-.35,.58-.06,1.06-1.13,1.38-1.5,2.03,.45,3.75,.83,6.23,1.39,0-2.07,.65-4.15-.11-5.12-3.73-4.71-1.08-9.53-1.27-14.34-.13-3.16-4.34-6.24-6.92-9.19-1.11-1.26-2.57-2.48-4.12-3.02-2.97-1.03-6.1-1.69-9.21-2.26-1.9-.35-3.99,.12-5.8-.44-5.22-1.61-10.24-2.02-15.16,1.51-.81-3.3-1.75-6.08-2.09-8.94-.15-1.24,.58-3.27,1.55-3.82,3.95-2.24,8.09-4.2,12.29-5.94,1.73-.72,3.79-.61,6.13-.94-6.44-6.61-9.44-5.76-19.55,3.93-2.06-5.03-4.32-9.99-6.13-15.1-2.42-6.81-.03-12.36,4.34-17.9,4.96-6.29,10.63-8.12,18.14-6.07,2.47,.67,5.19,.44,7.88,0-3.28-.79-6.55-1.57-9.83-2.36,.02-.39,.03-.77,.05-1.16h13.42c-.65-3.04-2.44-6.35-1.56-8.62,.94-2.43,4.25-5.2,6.8-5.49,6.67-.76,13.48-.26,20.34-.26-1.17,.83-2.34,1.66-3.57,2.53,4.76,13.03,15.7,20.38,25.74,29.2-1.28,.42-2.38,.78-3.36,1.1,3.69,2.26,7.46,4.57,11.37,6.97-.25-.71-.53-1.52-.67-1.93,6.1,1.17,12.4,2.39,18.55,3.57,2.07-5.79-.81-9.19-3.32-12.67,.93,.74,1.82,1.45,3.62,2.89-3.78-9.69-12.39-18.29-18.83-19.42,4.31,4.91,8.52,9.7,12.73,14.48-9.25-7.79-18.58-15.48-27.71-23.4-4.18-3.63-7.96-7.73-11.96-11.57-2.04-1.96-4.29-3.19-7.1-1.36-.27,.18-.63,.21-.95,.3-3.9,1.11-13.43-.93-13.25-3.19,.35-4.3,1.52-9.31,4.19-12.47,5.87-6.94,14.52-7.59,21.8-2.29,2.34,1.71,3.53,5,5.44,7.85,.64-.6,1.62-1.52,2.27-2.14,1.79,1.16,3.51,2.21,5.15,3.37,1.34,.95,2.58,2.03,3.43,3.66,4.74-.37,7.31,3.05,9.92,6.57,6.75,9.09,13.38,18.28,20.47,27.09,3.42,4.25,7.78,7.75,11.71,11.59,.56-.35,1.12-.7,1.68-1.05-.15-1.66-.03-3.4-.51-4.96-2.17-7.07-5.21-13.61-10.95-18.69-3.1-2.74-5.7-6.06-8.54-9.09-5.27-5.62-10.56-11.23-16.65-17.7,9.74,1.37,18.96,2.65,28.17,3.98,5.88,.85,11.84,1.43,17.61,2.78,3.45,.81,6.66,2.75,9.88,4.38,3.54,1.79,6.88,4,10.51,5.58,.85,.37,2.48-1.03,3.75-1.61-.99-1.06-1.84-2.83-2.98-3.05-3.54-.67-7.77-.34-8.43-5.03-.83-5.93-7.7-7.15-9.14-14.18,5.18,3.05,9.61,5.67,15.27,9.01-1.02-2.92-1.32-5.19-2.48-6.86-6.45-9.29-12.9-18.59-19.82-27.52-2.11-2.73-5.53-4.7-8.72-6.28-5.33-2.65-10.96-4.7-16.69-7.11,2.36-5.99,7.49-8.09,11.8-11.19,5.28-3.79,9.92-4.56,14.76,.74,.83,.91,3.82,.94,5.09,.17,6.48-3.91,12.72-3.44,19.54-.7,9.11,3.66,17.19,8.63,24.28,15.41,3.82,3.65,8.09,6.83,13.59,11.42-1.5-7.37-2.46-13.71-4.15-19.85-1.71-6.2-4.15-12.19-6.69-19.5,7.16,1.81,11.35,5.63,14.76,10.5,4.56-2.67,11.76-1.72,15.85,1.99,2.79,2.53,5.73,6.89,9.57,4.36,3.22-2.13,5.79-6.42,6.95-10.26,2.28-7.52-5.11-18.92-14.12-23.06-6.05-2.78-12.2-5.34-18.27-8.06-1.63-.73-3.15-1.71-4.65-2.55,.21-.6,.24-1.09,.42-1.16,13.46-4.95,27.25-6.32,41.01-2.04,3.35,1.04,5.93,4.98,8.52,7.88,2.28,2.55,4.09,5.51,7.17,7.79-.74-2.82-1.62-5.62-2.17-8.48-.19-.98,.43-2.11,.67-3.17,0,0-.16-.02-.16-.02,1.2,1.97,4.23,3,2.57,6.42-.56,1.15,7.7,5.77,9.57,5.78,3.97,.03,7.95,.34,12.28,.55-1.05-3.76-2.39-8.1-3.45-12.51-.48-2.02-.43-4.16-.61-6.23,3.63,9.1,7.26,18.19,10.89,27.27,.44-2.4,.09-4.65-.1-6.91-.25-3.03,.61-4.82,4.78-4.14-1.77-1.44-3.55-2.89-5.67-4.61,1.57-.14,2.87-.25,4.19-.37-1.24-4.78-2.43-9.33-3.61-13.88,2.08,1.44,4.16,2.89,5.01,3.48,.92,5.44,1.71,10.19,2.59,15.43,2.02-2.5,3.44-4.26,5.13-6.37,2.09,2.8,3.88,7.15,6.93,1,1.23,2.49,2.36,4.75,3.48,7.01,.37-.12,.75-.23,1.12-.35,.12-1.08,.23-2.15,.35-3.23h5.32c-1.46-5.34-2.83-10.36-4.21-15.39,.45-.14,.89-.28,1.34-.42,1.81,3.44,3.62,6.88,5.52,10.49,1.35-.53,2.66-1.04,3.68-1.44-1-3.98-1.93-7.63-2.85-11.28,.31-.07,.62-.14,.93-.21,.83,1.47,1.66,2.94,2.49,4.41-2.75-5.25,.02-12.86-5.6-16.41-4.99-3.15-10.96-4.76-16.49-7.05l-.52,1.28c.39,.96,.78,1.93,.95,2.33-7.54,.55-14.98,1.09-22.83,1.67,.58,1.88,1,3.25,1.43,4.63-6.78-1.86-13.51-2.59-20.04,.97-2.43,.38-4.86,.77-7.63,1.2-.05-.64-.4-1.61-.16-2.4,2.97-9.63,5.52-19.43,9.2-28.78,4.62-11.75,10.17-23.14,15.33-34.68,3.85-8.59,7.69-17.18,11.62-25.74,.45-.98,1.35-1.81,2.17-2.56,2.23-2.04,4.52-4,6.79-5.99-.25-.36-.5-.71-.75-1.07,1.61,.14,3.21,.27,5.29,.45-2.69-8.69,3.83-14.32,6.46-21.11,2.37-6.12,7-11.37,9.33-17.5,2.69-7.07,4.11-14.65,5.67-22.09,.29-1.38-1.38-3.18-2.19-4.86,1.5,.3,3.11,.61,5.69,1.12-1.8-2.14-2.94-3.49-4.89-5.81,3.47,1.73,5.88,2.93,8.29,4.13,.26-.42,.51-.83,.77-1.25-2.07-1.74-4.13-3.49-6.2-5.23,.1-.21,.2-.42,.29-.62,1.38,.52,2.77,1.04,4.15,1.56l.42-.56-4.99-4.77c.19-.28,.38-.55,.56-.83,3.41,1.94,6.81,3.88,10.52,5.99,.32-1.12,1.17-2.56,.79-3.04-5.8-7.34,1.31-11.16,4.3-16.01,2.2-3.57,5.11-6.52,5.19-11.36,.03-2,3.35-3.9,5.05-5.94,1.08-1.3,2.46-2.67,2.78-4.2,.93-4.39,3.48-5.77,7.6-5.01,6.96,1.27,13.91,2.56,21.53,3.96-2.47-7.27-10.24-10.67-10.46-18.09,.44-.42,.88-.83,1.32-1.25,3.76,3.37,7.53,6.74,11.29,10.11,.48-.3,.96-.61,1.44-.91-1.46-2.42-2.72-4.99-4.43-7.23-1.89-2.48-4.18-4.65-6.91-7.61,8.41,2.5,15.93,4.73,23.45,6.96,.25-.31,.51-.61,.76-.92-.97-1.54-1.94-3.08-3.56-5.66,4.84-1.58,9.4-3.08,13.21-4.32,1.59-1.6,2.61-3.44,4.01-3.8,1.48-.38,4.42,.22,4.77,1.14,.67,1.78-.02,4.07-.2,6.94,1.67,1.42,7.03-.16,6.88,4.62h9.96c-.17,2.79-.35,5.58-.51,8.18,.62-.45,1.73-1.35,2.95-2.08,2.85-1.7,5.17-1.54,8,.86,13.21,11.21,27.04,21.55,43.53,27.6,1.92,.71,4.11,.69,6.17,1.01,.06-.4,.12-.8,.18-1.21-5.24-1.8-10.68-3.18-15.67-5.51-4.77-2.23-9.33-5.15-13.51-8.37-2.54-1.96-5.11-4.77-6.06-7.72-2.5-7.73-6.15-14.51-12.24-19.92,.21-.21,.39-.43,.56-.67,2.35,1.65,5.22,2.88,6.96,5.02,4.6,5.65,8.71,11.69,13.36,18.05,3.75-6.53-.61-12.26-2.51-18.79,1.45-.15,2.95-.3,4.8-.49-.42-5.07,2.98-7.09,8.6-7.54-5.64-5.62-12.34-7.66-19.09-7.89-6.65-.22-13.36,1.4-20.23,2.24-.55-1.87-1.1-3.72-1.64-5.56-.38-.04-.75-.08-1.12-.12-.39,1.81-.78,3.62-1.18,5.48-8.81,2.98-13.2,1.97-18.86-4.98,6.52,.4,9.69-3.2,11.45-8.48,.89-1.22,1.79-2.44,2.68-3.66,2.14-2.29,4.94-4.25,6.28-6.94,4.43-8.86,11.57-12.79,21.14-13.04,.28,.73,.39,1.63,.88,2.19,2.4,2.74,4.9,5.39,7.37,8.08-.39,.66-.78,1.32-1.18,1.98-3.74-.82-7.62-1.25-11.18-2.54-6.64-2.4-7.75-2.7-10.18-.92,4.42,1.42,9.06,2.92,13.7,4.42-.05,.36-.1,.73-.15,1.09-6.68,2.21-13.36,4.41-20.04,6.62l.38,1.65c1.86,0,3.83,.4,5.53-.11,1.83-.55,3.29-2.34,5.13-2.89,4.57-1.39,9.39-2.04,13.87-3.66,3.98-1.43,6.53-.86,8.63,2.9,2.19,3.91,4.77,7.6,7.18,11.39,.51-.26,1.02-.51,1.53-.77l-7.84-16.79c1.58,1.88,3.16,3.76,4.32,5.15,2.54-.15,4.88-.86,6.85-.28,4.45,1.31,9.24,2.51,12.95,5.1,8.68,6.07,16.85,12.89,25.14,19.51,3.4,2.71,3.07,5.75,.65,9.15-1.44,2.02-2.16,4.54-3.21,6.84,.59,.32,1.18,.64,1.76,.96,2.32-2.61,4.64-5.23,7.18-8.09,.97,.51,2.2,1.16,4.23,2.22-.94-10.05,6.37-14.86,11.91-20.95-1.41-.89-2.49-1.57-3.53-2.23,.94-3.46,26.09,3.42,37.16,10.25-6.82,5.27-13.43,10.37-20.02,15.47-12.06,9.33-24.68,17.98-33.74,30.69-5.34,7.49-11.43,14.43-16.86,21.86-5.62,7.68-8.86,16.35-9.17,25.96-.05,1.4,.24,2.8,1.05,4.38,8.2-10.14,9.7-23.57,17.3-34.92,3.85,6.75-3.5,13.16,1.68,19.97,5.2-18.24,17.69-29.59,31.95-40.25-3.65,4.92-6.61,9.65-10.28,13.74-10.39,11.55-16.3,25.14-19.36,40.2,4.19-2.36,6.02-6.28,6.84-10.67,2.65-14.26,10.61-24.36,23.45-30.92,1.52-.78,2.75-2.71,3.45-4.39,1.38-3.33,2.29-6.86,3.54-10.75h7.74c.47,1.77,.97,3.65,1.63,6.14,4.31-6.85,11.31-.45,15.8-5.56h-14.29v-1.56h14.64c1.43-2.62,2.71-4.98,3.55-6.53,2.91,.7,4.86,1.17,7.24,1.74,1.22,3.46-.33,8.14-3.85,10.28-1.07,.65-2.58,1.34-2.89,2.33-1.85,5.95-6.25,9.06-11.51,11.7-2.22,1.11-3.81,3.51-5.67,5.33-2.42,1.69-4.84,3.38-7.26,5.06-.26-2.85-1.79-3.28-4.12-2.16,1.2-1.83,2.41-3.67,3.61-5.5l-.99-1.05-14.94,10.37c.24,.34,.48,.68,.72,1.02,3-1.54,5.99-3.08,8.99-4.62-2.48,2.18-4.92,4.39-7.44,6.52-4.5,3.8-10.26,6.45-11.6,13.24,1.52-.38,2.9-1.01,3.82-2.05,1.77-1.98,3.05-4.42,4.93-6.26,4.83-4.73,9.51-9.91,17.19-9.66-7.25,6.02-15.48,11.21-18.07,21.36,4.35-2.44,8.84-4.85,12.14-8.36,9.64-10.26,22.33-12.85,34.79-6.38,5.96,3.1,11.88,6.3,17.84,9.4,.61,.32,1.42,.25,2.36,.4-6.16-17.21-19.33-24.53-37.07-21.08-1.6,.31-3.37-.22-5.06-.35,4.15-1.56,8.52-2.7,12.4-4.76,7.53-4,15.45-5.97,23.9-5.93,2.42,.01,4.27-.06,4.38-3.22,.03-.9,1.04-1.97,1.87-2.61,3.11-2.38,6.47-4.43,9.47-6.93,5.69-4.75,9.91-5.06,17.29-.84,4.79,2.74,5.49,2.54,6.82-1.12,2.57-.47,4.62-.8,6.65-1.22,4.88-1.02,9.77-1.99,14.61-3.2,1.61-.4,4.06-1.16,4.42-2.29,2.11-6.64,7.62-8.79,13.41-11.07-1.5-1.04-2.98-2.07-4.69-3.26-2,1.42-4.11,2.91-6.53,4.63-3.58-7.36-8.57-11.29-17.1-8.02-1.5,.58-3.9-.86-5.7-1.74-.3-.15-.08-2.58,.6-3.29,1.45-1.52,3.35-2.61,5.31-3.9,2.11-1.6,4.02-3.67,6.38-4.67,2.66-1.13,5.11-.09,6.67,2.73,1.26,2.28,2.83,3.84,6,2.33,1.55-.74,3.75-.13,5.65-.13,.59,.86,1.17,1.72,1.76,2.58-1.7,.74-3.39,1.48-5.09,2.22,.09,.26,.19,.52,.28,.78,1.36-.13,2.72-.39,4.08-.36,4.62,.1,4.21-2.87,2.6-5.21-2.04-2.96-4.69-5.67-7.56-7.84-4.36-3.29-8.81-6.94-13.84-8.76-5.98-2.17-12.61-3.51-18.96-3.53-10.92-.05-21.91,.69-32.76,2.04-12.49,1.56-22.17,9.37-32.02,16.43-4.31,3.09-8.29,6.66-12.42,10.01-.3-.33-.6-.65-.91-.98,5.65-5.04,11.1-10.34,17.03-15.03,4.27-3.38,9.19-5.92,13.77-8.91,.46-.3,.61-1.09,.91-1.66,.45,.17,.91,.35,1.36,.52,19.25-7.16,39.34-8.62,58.92-4,15.49,3.65,28.59,13.15,37.78,26.89,2.96,4.42,5.88,8.86,9.18,13.28-1.52-4.46-3.05-8.86,1.49-12.43,.39-.31,.68-1.03,1.04-1.04,6.61-.18,6.37-4.54,5.1-9.37,8.05-.41,15.24-.37,18.39,8.06-2.11,1.8-4.71,3.54-6.66,5.81-2.49,2.9-.85,6.4,2.92,6.78,3.38,.34,6.85,.21,10.15,.88,2.23,.45,4.26,1.94,6.31,3.66-19.26,1.57-35.82,8.84-50.47,20.77-7.74,6.3-15.27,12.79-19.71,22.24,2.85-3.05,5.74-6.07,8.56-9.15,16.84-18.37,38-28.1,62.49-30.9,19.58-2.24,38.34,2.3,57,7.45,4.95,1.37,9.93,2.64,14.9,3.96,9.94,5.18,19.89,10.37,29.83,15.55,.33,.03,.82-.07,.96,.11,3.99,5.1,8.01,10.19,11.88,15.39,1.38,1.85,2.24,4.07,3.56,5.97,5.47,7.89,8.45,16.06,4.56,25.73-1.39,3.44-1.19,7.51-2.48,11-2.18,5.9-4.89,11.6-7.57,17.3-.5,1.07-1.9,1.71-2.01,1.81,.32,2.35,.51,4.3,.85,6.22,.41,2.3,.37,4.95,1.55,6.8,1.93,3.03,1.91,7.59-1.09,9.2-2.1,1.12-4.91,1.16-6.7,2.56-1.63,1.28-2.33,3.75-4.31,5.38,.81-6.02,2.3-12.04,2.26-18.06-.06-10.43-.29-20.98-1.94-31.25-1.24-7.68-5.91-14.07-13.88-17.03-18.23-6.75-36.32-13.89-54.72-20.13-11.94-4.05-24.3-6.87-36.52-10.07-1.34-.35-2.99,.42-4.49,.68-.04,.59-.07,1.18-.11,1.78,2.55,.96,5.04,2.09,7.65,2.84,18.55,5.31,37.29,10.07,55.65,15.98,12.15,3.91,23.9,9.18,35.59,14.38,7.52,3.34,7.49,5.88,2.21,12.28-1.7,2.06-2.86,5.39-2.69,8.04,1.93,29.24-3.24,57.78-8.48,86.27-1.22,6.65-3.85,13.05-6.09,19.48-2,5.75-5.95,9.7-11.47,12.55-2.4,1.24-3.69,4.54-5.67,6.74-1.31,1.46-2.74,3.11-4.48,3.83-5.91,2.46-14.8,13.91-14.78,20.58,11.19-2.92,17.53-12.58,26.69-17.7,.35-.23,.71-.47,1.06-.7,4.85,6.52,4.4,14.04,4.01,21.54-1.08,2.51-2.16,5.02-3.25,7.54-.57,.46-1.14,.92-1.7,1.37,0,0,.11-.17,.11-.17-.28,.63-.56,1.26-.84,1.88,0,0,.19-.13,.19-.13-1.5,1.16-3.01,2.32-4.51,3.48,.17,.44,.33,.88,.5,1.33,1.34-.21,2.67-.43,3.71-.59,.71,2.95,1.46,6.09,2.46,10.28-3.12-.49-6-.61-8.66-1.44-3.01-.94-5.2-1.25-5.18,2.34-6.19,1.12-11.99,2.17-18.71,3.39-.43,2.29-1.12,5.24-1.51,8.24-.86,6.59-4.56,10.93-10.46,13.54-8.05,3.56-16.51,4.91-25.29,4.67-1.92-.05-3.86,.43-5.79,.67,.06,.58,.12,1.17,.18,1.75h27.94c-.55,1.42-1.75,3.19-1.81,5-.07,2.41,.74,4.86,1.2,7.28,1.72,9.12,3.52,18.23,5.14,27.36,.4,2.25-.38,4.89,.52,6.82,1.23,2.6,3.5,4.74,5.49,6.92,.24,.26,1.56-.48,3.41-1.1-7.44-2.97-5.94-7.16-2.86-11.78,6.16,2.38,10.54,6.31,10.88,13.34,.26,5.35,3.57,8.57,6.89,12.17,2.37,2.58,4.99,6.03,5.23,9.27,.83,10.93,1.14,21.97,.61,32.91-.21,4.23-2.5,8.87-5.13,12.34-3,3.96-4.26,8.14-4.46,12.69-.16,3.74-.87,5.79-5.2,5.94-4.84,.17-9.65,1.19-14.33,2.44,20.34,.87,37.67-6.5,52.83-19.73-8.94,5.02-17.88,10.04-26.81,15.05l-.75-1.36c2.7-1.41,5.39-2.86,8.11-4.23,12.66-6.38,22.88-14.88,25.89-29.68,.1-.47,.28-1.12,.63-1.32,6.15-3.51,2.42-7.61,.51-11.32-5.31-10.35-11.51-20.3-16.1-30.95-5.36-12.42-12.82-23.18-21.73-33.14-6.63-7.41-12.41-15.7-21.65-20.37-.62-.31-.71-1.68-1.44-3.56,11.55,5.44,19.06,13.51,25.38,22.8,7.3,10.73,15.12,21.21,21.37,32.54,7.73,14.02,17.9,27.11,21.08,43.17,2.29,11.56,2.61,23.56-1.57,34.94-2.49,6.78-5.54,13.38-13.73,15.66-2.42,.67-4.54,3.14-6.36,5.17-5.51,6.17-13.01,7.61-20.52,8.64-4.63,.63-5.98,2.75-6.3,7.15-.69,9.27-2.07,18.5-2.92,27.76-.1,1.13,1.08,2.6,2.03,3.55,4.65,4.65,9.36,9.23,14.17,13.71,1.61,1.5,3.5,2.77,5.42,3.87,1.94,1.11,4.5,1.41,6.06,2.85,11.47,10.63,23.5,20.78,33.93,32.37,14.56,16.17,24.61,35.27,29.61,56.54,4.77,20.32,.02,38.88-12.7,55.44-3.55,4.62-6.88,9.4-10.26,14.15-.45,.63-.9,1.56-.79,2.26,.97,6.32-2.87,10.33-6.78,14.24-7.88,7.86-8.5,13.36-.3,20.48,6.58,5.71,9.68,12.67,12.2,20.54,1.71,5.33,4.36,10.41,6.99,15.38,4,7.56,5.56,15.5,5.37,24.01-.1,4.23,.87,8.48,1.35,12.73,.16,1.48,.71,3.06,.36,4.42-3.46,13.59-7.21,27.06-17.71,37.32-.59,.58-1.25,1.15-1.67,1.84-1.87,3.07-4.13,4.85-7.77,2.66-3.05-1.85-4.57-6.83-2.98-10.1,.72-1.48,1.97-2.73,2.61-4.23,1.21-2.83,1.08-5.18-2.7-5.98-5.64-1.2-7.94-6.39-5-11.54,1.22-2.13,3.12-3.87,4.58-5.88,1.87-2.57,1.53-5.38-1.61-5.8-3.94-.52-4.11-3.13-4.85-5.77-1.28-4.61-1.5-9.96-4.09-13.64-4.13-5.85-9.61-10.86-15.04-15.63-1.64-1.44-5.11-1.48-7.61-1.15-8.78,1.17-14.48-3.13-19.3-9.69-1.44-1.96-3.36-3.61-5.24-5.18-3.27-2.74-6.65-5.33-10.02-7.94-1.58-1.22-3.1-2.62-4.88-3.44-8.47-3.92-13.26-11.17-17.99-18.72-1.65-2.62-4.71-4.57-7.48-6.23-5.89-3.53-9.45-8.53-11.61-14.99-.78-2.33-3.08-5.56-4.94-5.74-2.07-.2-4.73,2.31-6.61,4.17-3.45,3.43-7.1,6.89-9.59,10.99-2.51,4.15-4.29,8.96-5.32,13.72-1.38,6.35-4.73,11.26-9.55,9.95-3.63-.99-6.61-.03-9.83,.16-3.69,.22-7.39,.08-10.58,3.27-2.23,2.24-5.64,2.86-8.96,.15-1.12-.91-4.2-.31-5.84,.59-1.2,.66-2.39,3.14-2.08,4.45,1.26,5.41,3.93,10.37,2.55,16.43-.42,1.85,2.21,4.9,4.12,6.69,6.76,6.32,12.92,12.61,12.54,23.01-.39,10.81,1.37,12.53,12.29,16.02,1.59,.51,3.64,1.79,4.12,3.18,1.73,4.95,4.53,10.32,3.92,15.15-1.47,11.58,1.35,22.21,5.42,32.45,4.46,11.23,4.79,22.96,6.25,34.56,.64,5.05,.18,10.26,0,15.39-.06,1.56-.86,3.1-1.31,4.65-3.79-6.02-7.58-12.04-11.95-18.97-.1,7.05,5.9,17.09,10.7,19.09,.33,.14,.9-.29,1.36-.46,.95,2.3,1.68,4.73,2.91,6.88,1.4,2.46,2.72,4.5-.09,7-.76,.68-.51,2.61-.54,3.98-.14,5.34,.84,10.93-3.84,15.31,2.6,6.43,6.45,12.69,4.57,21.05-2.55-3.14-4.65-5.73-6.76-8.32-.3,.19-.61,.38-.91,.57,2.53,5.11,5.58,10.04,7.43,15.39,1.51,4.35,2.58,9.31,2.11,13.82-1.13,10.86-3.26,21.62-5.06,32.41-.2,1.17-.94,2.24-1.93,4.51-.71-2.88-1.11-4.47-1.51-6.07l-.96-.09c-.94,4.26-1.73,8.56-2.92,12.74-.42,1.48-1.86,2.67-3.55,3.52,.35-1.75,.7-3.51,1.05-5.26-.44-.17-.87-.35-1.31-.52-.64,1.28-2.05,2.74-1.79,3.8,1.5,6.29-2.53,10.74-4.7,15.84-2.64,6.21-4.74,12.66-7.54,18.79-1.69,3.7-3.86,7.33-6.48,10.43-8.84,10.47-17.82,20.85-27.09,30.94-3.42,3.72-3.23,7.66-.93,10.8,3.42,4.66,.74,6.73-2.7,7.77-9.68,2.91-19.44,5.79-29.36,7.62-13.4,2.47-26.93,4.46-40.49,5.63-7.67,.66-15.77,.33-23.22-1.48-6.73-1.64-13.08-1.24-19.71-1.06-9.6,.26-19.22-.22-28.83-.12-4.73,.05-9.52,.28-14.16,1.12-15.55,2.81-28.48-4.47-41.84-10.31-2.51-1.1-5.26-1.63-7.84-2.57-1.48-.54-3.22-1.03-4.23-2.12-6.02-6.46-14.39-7.19-21.29-5.02-14,4.4-28.3,8.42-41.03,16.34-11.65,7.24-23.57,6.58-34.74-1.09-5.37-3.68-9.98-3.63-15.77-1.09-4.22,1.86-9.29,2.73-13.91,2.51-6.23-.29-11.36,1.23-17.08,3.74-12.22,5.37-19.99,15.8-25.87,25.89-5.9,10.13-14.01,17.3-21.59,25.28-9.57,10.09-20.65,18.16-35.17,20.13-6.4,.87-12.7,2.56-18.96,4.19-1.81,.47-3.49,1.85-4.96,3.13-3.77,3.27-7.39,6.72-11.07,10.1-.25,.23-.65,.4-.73,.67-2.21,7.98-9.13,12.46-13.53,18.7-4.3,6.1-8.94,10.76-15.26,14.45-2.74,1.6-6.18,4.75-6.4,7.43-.92,11.34-8.38,18.04-15.68,25.15-6.42,6.25-13.53,8.13-21.87,4.45-4.5-1.99-7.38,.14-9.44,3.86-3.74,6.74-8.35,12.86-10.51,20.64-2.69,9.7-6.99,18.83-13.37,27.06-10.57,13.61-18.89,28.86-33.33,39.41-18,13.14-33.83,12.69-47.7-4.2-9.33-11.35-14.05-24.67-15.04-39.02-.66-9.56,.39-19.26,1.06-28.87,.52-7.45,4.46-13.15,9.45-18.71,3.73-4.17,6.15-9.81,8.17-15.17,7.77-20.56,15.13-41.27,18.55-63.12,1.8-11.5,3.84-22.96,5.68-34.46,1.42-8.92,5.02-16.81,11.3-24.59-1.35,4.49-2.43,8.11-3.52,11.73,.44,.41,.87,.82,1.31,1.22,2.8-2.27,5.54-4.62,8.43-6.77,1.73-1.29,3.7-2.27,5.57-3.39,1.13,1.93,2.26,3.87,3.34,5.73,2.42-3.69,5.04-8.45,8.39-12.62,3.39-4.2,7.51-7.81,11.82-11.26-11.69,12.3-17.25,27.93-24.36,42.69,.34,.3,.68,.6,1.02,.9,3.53-3.71,7.58-7.06,10.46-11.22,2.93-4.24,4.71-9.28,6.97-13.93-.38,3.09-.77,6.35-1.18,9.69,4.85-5.2,9.31-10.56,14.38-15.27,5.11-4.74,8.32-10.41,11.26-16.61,3.14-6.62,8.94-10.79,17.18-13.44-6.5,6.01-10.8,12.04-11.37,19.87,.51,.31,1.03,.63,1.54,.94,2.01-2.88,4.06-5.73,6.02-8.64,4.58-6.77,7.93-13.66,8.86-22.29,1.92-17.7,10.47-32.06,25.98-41.68,.78-.48,1.71-.73,3.16-.27-2.78,2.34-5.81,4.45-8.29,7.07-3.58,3.79-6.76,7.94-10.12,11.94-2.65,5.93-5.3,11.86-7.95,17.79,.41,.16,.82,.32,1.23,.48,1.14-1.95,2.71-3.77,3.31-5.87,1.22-4.26,6.05-7.33,4.17-12.58,4.54-2.6,8.91-6.06,14.59-2.92,1.16-2.31,2.92-4.52,3.37-6.96,1.59-8.8,3.89-10.77,12.94-10.05,3.73,.3,6.42-1.28,8.16-4.54,2.97-5.56,6.3-10.96,8.79-16.72,6-13.87,14.06-26.08,25.15-36.54,8.6-8.11,16.22-17.26,23.97-26.47-1.28,2.86-2.55,5.72-3.83,8.58,.72,.35,1.44,.7,2.16,1.05,2.94-4.48,5.89-8.96,9.07-13.8,.81,7.12,8.24,2.67,10.68,6.73,.36,1.69,.71,3.39,1.06,5.08l1.64-.2c1.19-3.4,3.09-6.75,.3-11.35-1.3,2.78-2.2,4.7-3.11,6.62-.3-1.79-.58-3.58-.89-5.36-.71-4.14-.83-7.65,3.05-11.02,3.35-2.91,5.26-7.46,7.91-11.21,.46-.65,1.41-1.22,2.2-1.32,4.61-.61,8.14-4.33,8.7-9.89-1.41,.87-2.54,1.55-3.66,2.24-.23-.22-.47-.44-.7-.67,3.06-2.91,6.12-5.81,9.18-8.72l-1.19-.34c.6-2.04,1.12-4.1,1.81-6.11,1.14-3.36,2.98-6.6,3.43-10.03,.67-5.1,.44-10.33,.48-15.5,.02-2.39-.09-4.55,2.9-5.53,1.05-.34,1.86-1.81,2.5-2.92,5.28-9.13,12.67-16.09,21.34-22.02,16.31-11.13,34.92-13.19,53.78-14.17,14.59-.76,28.81,1.93,42.79,5.96,.75,.22,1.55,.26,2.45,.41,.03-4.68-3.4-5.89-6.51-6.64-7.9-1.9-15.85-3.78-23.89-4.86-15.39-2.06-30.54-.59-45.4,4.13-3.72,1.18-7.95,.75-11.64,1.97-14.37,4.75-24.3,15.33-33.43,26.69-1.76,2.2-2.25,5.42-4.19,8.06,.13-1.29,.43-2.59,.37-3.86-.25-4.96-.26-9.96-1.03-14.84-1.28-8.11,1.68-14.92,5.7-21.5,.51-.84,1.61-1.33,3.04-2.46-2.6,5.95-4.87,11.13-7.13,16.31l1.1,.51c2.15-4.21,3.79-8.8,6.6-12.51,2.59-3.43,6.1-6.45,9.79-8.71,7.32-4.49,15.04-8.35,22.61-12.44,3.92-2.11,7.67-4.92,11.86-6.06,8.55-2.32,16.79-7.37,26.09-4.96,6.22,1.61,12.13,4.37,18.26,6.36,10.29,3.34,20.65,6.48,30.53,9.57-.67-3.37-.91-6.42-1.97-9.14-.53-1.37-2.41-2.63-3.94-3.11-3.12-.98-6.42-1.4-11.17-2.35,3.13-2.16,5.23-3.61,7.88-5.45-2.1-1.4-2.81-2.21-3.65-2.39-11.61-2.53-23.15-5.51-34.88-7.23-7.26-1.06-13.96,2.45-20.13,6.33-.42,.26-.74,.74-1.19,.9-11.27,4.16-18.74,14.07-29.27,19.29-2.74,1.36-5.95,1.79-8.95,2.64-.41-.79-.81-1.58-1.22-2.37,2.58-1.95,4.96-4.27,7.77-5.78,4.3-2.31,8.44-4.33,11.57-8.56,3.64-4.92,8.46-8.97,12.69-14.38-2.03,.5-4.13,.82-6.09,1.53-8.32,3-13.81,9.65-19.37,15.94-5.31,6-9.86,12.68-14.79,19.03-1.01,1.31-2.22,2.47-3.34,3.69-3.8,4.13-7.6,8.26-11.57,12.58-.37-2.51-.93-5.82-1.33-9.14-.22-1.81,.18-3.75-.27-5.48-2.46-9.45,1.83-15.75,9.32-20.63,1.25-.81,2.58-1.49,3.87-2.23-.35-.58-.71-1.17-1.06-1.75-3-.31-6-.63-9.64-1.01,1.65-2.79,3.43-5.83,5.47-9.27,1.06,.92,1.75,1.52,2.85,2.48,1.56-3.57,2.97-6.74,4.33-9.93,1.3-3.04,2.56-6.11,3.85-9.2,4.99,3.05,6.11,2.67,7.97-2.47,1.51-4.17,3.03-8.34,4.55-12.5-.4-.32-.8-.64-1.2-.96-3.61,4.67-7.22,9.35-10.83,14.02-.63-.47-1.25-.95-1.88-1.42-.5-.94-1-1.88-1.57-2.95-2.75,3.75-5.46,7.45-8.25,11.26-1.73-3.9-1.08-8.67,2.53-12.13,4.68-4.48,8.55-9.18,9.67-15.81,.16-.94,2.26-1.46,2.69-2.49,.41-.99-.17-2.4-.47-4.81-4.27,6.81-7.82,12.48-11.38,18.14-.27-.13-.53-.27-.8-.4,1.53-3.41,3.02-6.84,4.59-10.23,5.36-11.59,10.44-23.32,16.26-34.67,2.74-5.35,6.33-10.56,10.58-14.78,6.08-6.04,12.94-11.34,19.8-16.52,3.09-2.33,6.97-3.62,10.67-5.47-2.83-3.54-7.15-3.87-10.36-1.66-3.94,2.71-7.81,5.53-11.91,7.99-1.87,1.12-4.16,1.56-6.3,2.19-8.44,2.48-12.72,9.5-17.64,17.55,.19-3.49,.29-5.38,.44-8.25-1.86,2.56-3.24,4.46-4.61,6.35-.7-.35-1.4-.7-2.1-1.05,.21-3.33,.05-6.73,.69-9.98,2.51-12.78,11.61-20.54,21.63-27.45,2.73-1.88,5.8-3.27,8.65-4.99,3.72-2.23,6.75-1.59,9.82,1.46,1.15,1.14,3.5,1.91,5.06,1.61,4.72-.89,9.33-2.39,13.83-4.75-6.54-1.43-13.48,2.73-19.95-3.37,4.36-1.39,8.32-2.66,12.16-3.88-5.62-.81-14.36,1.53-24.07,7.67-7.37,4.66-14.15,10.26-21.32,15.54-1.16-3.27-1.27-6.28,1.32-9.75,10.4-13.9,19.22-19.49,41.19-24.69-2.14-.13-3.17-.3-4.17-.22-1.13,.09-2.24,.41-2.97,.55,5.77-7.45,11.65-15.04,17.53-22.63-.55-.5-1.09-1-1.64-1.51-1.63,1.62-3.21,3.3-4.91,4.85-5.64,5.11-11.16,10.38-17.1,15.13-1.91,1.52-5.06,4.03-7.17-.84-.83-1.92-8.85,.51-10.7,3.55-4.88,8-11.92,14.98-11.92,24-5.77,2.04-10.98,3.46-15.81,5.68-9.31,4.28-18.69,7.78-29.17,7.7-3.78-.03-7.57,1.02-11.34,1.58,1.97-.8,3.94-1.6,5.91-2.4-14.34,1.45-28.64,2.66-42.97,3.09-14.54,.43-29.1,.1-43.65,.1,.55,1.04,1.14,1.2,1.74,1.2,14.29,.06,28.59,.42,42.87,.07,12.1-.3,24.17-1.4,36.26-2.15-5.01,1.07-10,2.89-15.04,3.06-16.79,.56-33.63,1.25-50.4,.53-21.41-.92-41.6,2.88-61.23,11.26-30.15,12.87-60.4,25.55-90.81,37.78-5.99,2.41-12.94,2.42-19.44,3.57-14.94,2.64-29.91,4.72-45.42,2.51,1.91-.55,3.85-1.66,5.74-1.57,27.66,1.18,52.16-8.92,76.78-19.96,25.33-11.35,51.56-20.71,77.23-31.33,18.08-7.49,36.83-9.71,56.19-9.38,16.48,.28,32.99-.01,49.47-.52,5.76-.18,11.5-1.67,17.22-2.71,9.77-1.78,19.71-3.04,29.23-5.75,6.69-1.91,12.8-5.86,19.17-8.89v-1.58c-2.52-1.38-4.92-3.07-7.59-4.07-11.78-4.45-23.61-8.41-33.96-16.22-11.76-8.86-25.27-15.49-36.55-24.86-16.54-13.75-30.82-29.83-33.51-52.57-1-8.43,.94-16.67,6.1-23.9,.95-1.33,.88-3.57,.84-5.39-.04-1.93-.61-3.86-.15-6.01,.34,.83,.68,1.66,.75,1.81,4.17-5.86,8.58-12.05,14-19.67,1.32,2.51,2.24,4.26,3.41,6.48,3.24-7.37,6.05-13.59,8.73-19.87,4.95-11.61,10.28-23.09,14.62-34.92,7.13-19.41,16.1-38.26,19.24-58.95,.78-5.18,.35-10.53,.86-15.77,.27-2.75,1.41-5.4,2.07-8.12,.4-1.68,.63-3.41,1.23-6.82-9.59,3.12-17.92,5.64-26.12,8.57-4.03,1.44-6.04,4.42-4.38,9.22-.9-.83-1.8-1.65-2.7-2.48-.56-.56-1.12-1.12-1.68-1.68-1.53,2.37-3.07,4.73-4.6,7.1,0,0,.13,.14,.13,.14-6.35-1.78-10.19,.3-12.92,6.61-2.83-.61-5.47-1.62-8.14-1.68-8.79-.21-17.58-.02-26.37-.1-3.49-.03-5.52,.93-7.16,4.59-2.27,5.08-6,9.49-9.02,14.25-2.85,4.48-6.27,8.76-8.25,13.62-4.51,11.05-13.48,14.51-24.13,15.45-4.3,.38-8.67,.34-12.98,.05-6.38-.43-10.56,2.8-13.34,7.9-3.64,6.69-6.26,13.97-10.31,20.37-3.33,5.25-8.39,9.37-12.17,14.37-4.08,5.39-8.05,10.97-11.19,16.94-4.98,9.45-15.4,10.86-21.93,2.33-.99-1.29-1.32-3.4-1.28-5.12,.07-3.54-1.63-4.44-4.85-4.78-6.02-.62-10.07,3.11-14.29,6.12-8.64,6.19-16.91,12.89-25.43,19.27-5.87,4.39-15.38,5.19-20.68,1.31-2.16-1.58-4.15-4.37-4.74-6.95-1.35-6-7-6.63-10.67-9.65-1.9-1.56-4.17-2.68-6.27-4,0-1.67,0-3.33,0-5Zm587.75-372.77c.91,.61,1.82,1.21,2.73,1.82,.12-.43,.24-.85,.36-1.28-1.08-.13-2.17-.26-3.25-.39-.5-.81-1-1.62-1.5-2.43-1.7-1.93-3.03-4.74-5.17-5.64-8.83-3.71-17.8-7.18-26.95-10.01-4.16-1.29-8.85-.89-13.29-1.25-.4,.82-.8,1.63-1.21,2.45,.89,.35,1.75,.83,2.67,1.01,14.88,3.01,28.95,8.44,42.87,14.33,.9,.47,1.8,.94,2.73,1.39Zm-189,394.72c-.9,.32-1.79,.65-3.32,1.2,13.27,8.08,19.5,10.45,24.93,9.21-4.34-2.01-8.09-3.74-11.84-5.47,2.32,.44,4.64,.89,6.96,1.33-4.42-3.18-9.15-5.46-13.99-7.49-.63-.26-1.81,.79-2.74,1.23Zm396.51-187.82l-.07,.19c4.48,1.2,3.65,4.68,3.49,7.94-.06,1.27,.17,2.56,.27,3.83,4.2-10.42,4.39-14.17-8.81-19.98-7.73-3.41-15.52-6.71-23.17-10.29-10.19-4.77-20.25-9.81-30.41-14.63-13.03-6.19-26.22-12.09-39.13-18.53-6.59-3.29-8.3-3.16-11.35,3.53-.58,1.27-.69,2.77-.99,4.07,4.44,1.79,8.75,5.53,12.52-1.9,1.48,5.21,2.64,9.28,3.49,12.26,2.66-1.07,4.84-2.84,6.27-2.37,8.16,2.71,16.31,5.61,24.15,9.12,9.61,4.3,18.92,9.27,28.36,13.95,.41-.65,.83-1.31,1.24-1.96-2.48-4.14-7.5-4.88-11.61-6.76-4.38-2.01-8.86-3.83-13.29-5.74,12.43,1.79,33.4,12.42,51.79,25.51-.19,.43-.37,.87-.56,1.3-2.19-.97-4.41-1.86-6.55-2.93-2.87-1.44-5.67-3.01-9.64-5.14,.83,1.95,.89,2.55,1.21,2.78,4.85,3.4,9.7,6.82,14.63,10.11,5.28,3.52,7.65,2.21,8.17-4.39Zm-127.54-44.76c-.97,.13-2.77,.18-2.79,.42-.45,4.21-3.1,3.02-5.48,2.31-5.23-1.56-10.44-3.19-15.66-4.79-.15,.39-.29,.79-.44,1.18,5.14,2.17,10.26,4.37,15.41,6.51,6.42,2.67,7.93,1.9,10.13-5.04,3.13-5.51,2.79-7.36-1.6-9.16,.14,2.84,.27,5.71,.41,8.57Zm236.18,408.27c.07-1.79,.82-4,.05-5.29-1.21-2.01-3.39-3.47-5.28-5.02-2.73-2.24-7.97-1.69-8.66,.84-.53,1.95-.9,3.95-1.45,6.39,2.68,.46,5.66,.97,8.64,1.49-1.2,.63-3.07,.98-3.47,1.95-1.34,3.19,4.6,9.42,8.17,9.43,2.26,.01,4.59,1.03,6.76,1.91,1.2,.48,2.14,1.6,3.19,2.43,.58-1.35,1.15-2.7,1.73-4.06-1.36-.07-2.02-.1-2.69-.14-.02-.24-.04-.48-.06-.72,1.12-.42,2.23-.84,3.21-1.2-.8-6.37-5.05-7.86-10.21-8.14l.06,.13Zm-345.88-574.66c-5.23-1.31-10.46-2.61-15.69-3.92-.28,.5-.57,1-.85,1.5,27.54,4.84,46.5,21.94,62.75,44.1,.33-1.86,.54-2.3,.41-2.44-6.68-7.6-13.4-15.17-20.08-22.78-.91-1.04-1.61-2.25-2.41-3.38,1.57,.79,3.44,1.27,4.66,2.43,6.24,5.96,12.29,12.12,18.45,18.17,1.31,1.28,2.82,2.35,4.24,3.52,.34-.46,.69-.92,1.03-1.39-14.77-15.99-29.1-32.54-50.88-39.72-17.69-5.84-55.85-5.78-64.07,.18,1.81-.34,3.43-.7,5.06-.96,19.71-3.1,39.19-3.03,58.17,4.11-.25,.22-.52,.42-.8,.59Zm-102.01,394.84c-.56,2.45-1.12,4.9-1.66,7.25,13.3,4.96,23.1-.14,30.62-7.78,2.64-2.69,2.35-5.45-1.25-7.14-2.93-1.38-6.36-1.91-8.96-3.69-3.91-2.67-6.59-1.43-9.3,1.49,1.54-2.67,3.08-5.34,4.7-8.17-3.09-1.84-5.8-3.39-8.45-5.04-3.87-2.4-8.04-1.85-8.34,2.15-.26,3.39-2.94,4.73-3.68,7.7-1.28,5.1-6.22,9.21-9.28,13.96-2.58,4.01-5.5,8.06-4.9,14.31,2.6-1.14,4.82-1.57,6.29-2.85,3.5-3.05,6.56-6.6,9.98-9.74,1.17-1.07,2.9-1.54,4.37-2.29l-.15-.15Zm-43.78,183.67c-3.78-.07-9.18,1.39-11.01-.54-3.72-3.91-6.77-3.1-9.91-.9-8.32,5.84-16.36,12.09-24.51,18.18,.12,.58,.24,1.16,.37,1.75,1.27,.35,2.67,1.21,3.78,.93,1.85-.46,3.54-1.63,5.26-2.55,6.76-3.62,11.64-10.47,19.88-11.57,4.27-.57,8.54-1.12,12.79-1.83,1.93-.32,4.81-.17,3.13-3.7,1.66-.41,3.31-.81,4.22-1.04,3.93,4.79,9.52,3.24,14.05,4.54,4.79,1.37,9.7,2.31,14.56,3.44,5.02,1.17,10.06,2.3,15.07,3.52,4.93,1.2,9.83,2.5,15.81,4.04-1.34-3.2-2.58-5.36-3.15-7.68-2.58-10.53-5.62-13.44-16.19-14.9-13.72-1.9-27.26-.11-40.74,2.27-1.64,.29-3.28,1.51-4.5,2.73-.37,.36,.69,2.16,1.09,3.3Zm165.76-550.01c3.52,3.19,7.42,6.07,10.47,9.66,3.64,4.29,6.46,9.27,9.85,13.79,1.18,1.57,3.01,2.65,4.55,3.96,.54-.55,1.08-1.09,1.62-1.64-8.35-10.87-16.12-22.26-25.21-32.47-10.97-12.32-26.43-17.52-41.65-22.26-6.38-1.99-13.49-2.68-21.66,.62,13.9-.35,26.06,.99,36.93,7.65,9.12,5.59,19.17,10.12,24.62,20.21-3.27-2.23-6.79-4.16-9.77-6.73-17.51-15.1-37.83-19.01-60.11-15.58-5.1,.78-10.24,1.35-15.36,2.01,6.22,.28,12.29-.44,18.36-1.13,12.19-1.38,23.32,1.24,32.18,10,10.39,10.28,21.89,19.58,29.53,32.44,1.81,3.05,4.64,5.76,7.58,7.8,2.87,1.99,6.47,2.91,9.75,4.3,.27-.47,.53-.95,.8-1.42-.59-1.69-1.3-3.35-1.73-5.08-.84-3.32-1.55-6.68-2.28-10.03-.44-2.01-.34-4.32-1.33-6-2.09-3.54-4.73-6.76-7.15-10.1Zm-116.63,31.27c2.01,2.43,4.41,4.63,5.94,7.33,3.82,6.74,7.24,13.7,10.82,20.57,.15-.07,.31-.15,.46-.22-1.12-6.08-2.23-12.17-3.31-18.01,4.21,7.13,8.39,14.22,12.58,21.32,.35-.08,.71-.16,1.06-.24l-1.79-13.99c2.29,2.8,3.2,6.19,5.18,8.76,1.67,2.16,4.39,4.05,7,4.78,2.14,.6,4.8-.72,7.24-1.11,2.11-.34,4.24-.59,6.47-.89-1.94-12.46-13.78-14.04-19.96-20.71h40.88c-.2-1.89-.23-3.68-.6-5.4-3.14-14.76-9.72-27.14-23.83-34.32-7.71-3.93-15.14-4.54-23.3-.52-7.39,3.65-15.46,5.94-23.25,8.79-3.57,1.31-7.19,2.5-10.78,3.75,.07,.45,.15,.89,.22,1.34,3.77-1.99,7.31-2.85,9.52,.79-4.74,0-10.1-1.28-14.49,.24-13.91,4.8-28.84,6.63-41.84,14.25-2.35,1.38-2.69,2.45-2.01,4.57-2.53-.76-5.06-1.51-8.3-2.48,4.94,8.13,9.08,14.96,13.25,21.82,3.81-3.22,2.56-11.29-2.32-16.92,4.23,.33,6.2,3.14,7.75,6.68,1.93,4.41,5.05,7.3,10.3,6.89l-.44,.11c.13-.02,.26-.05,.39-.07-1.1-1.2-2.44-2.27-3.23-3.65-.49-.84-.58-2.5-.06-3.17,.47-.6,2.31-.85,3.06-.42,4.32,2.49,8.5,5.23,12.98,8.06-.28-2.03-.54-3.87-.9-6.46,2.13,1.88,3.59,3.17,5.94,5.24v-14.07c3.31,4.22,1.8,10.75,8.2,12.58-.03,1.3-.63,3.13,0,3.82,3.41,3.66,7.41,3.71,11.77,1.46,1.42-.73,3.29-.58,5.19-.87-.43-1.31-1.12-3.43-1.98-6.04-4.83,5.26-9.9,4.49-15.12,1.7-2.55-11.06,6.66-2.65,9.37-5.98-.52-1.15-1.17-2.57-1.94-4.26h4.5c-.22-1.84-.42-3.45-.61-5.05h0Zm417.09,466.35c.23,.63,.46,1.26,.68,1.89-3.69,1.58-7.47,2.97-11.01,4.82-1.38,.72-2.22,2.45-3.31,3.72,1.43,.92,2.82,2.54,4.29,2.61,2.23,.1,4.58-.68,6.76-1.44,9.94-3.44,19.88-6.71,30.63-6.05,1.25,.08,2.78-.29,3.78-1.01,4.05-2.92,5.89-.46,7.76,2.74,1.22,2.09,2.82,3.96,4.24,5.94,.44-.22,.89-.44,1.33-.66,.18-1.71-.17-3.74,.64-5.05,1.82-2.93,4.16-5.54,6.38-8.21,12.19-14.71,16.55-31.74,12.16-50.03-5.95-24.81-18.36-46.36-37.53-63.53-12.86-11.53-26.17-22.56-39.23-33.86-2.81-2.44-5.42-5.11-8.69-8.21-1.44,4.08-1.8,7.82-3.81,10.12-2.84,3.26-1.08,5.18,.24,7.93,1.9,3.96,4.02,8.12,.91,13.01,2.73,1.44,5.32,2.88,7.97,4.2,4.57,2.28,4.8,3.76,2.14,8.03-.65,1.04,.31,3.26,.85,4.83,.61,1.78,2.63,3.74,2.23,5.08-1.68,5.65-.93,10.03,4.48,13.14,.74,.42,1.21,1.61,1.45,2.54,1.16,4.44,2.19,8.91,3.45,14.12-7.97-2.86-15.43-4.66-23.53-1.82-10.42,3.65-16.95,9.55-15.51,15.67,.78-.13,1.63-.14,2.36-.43,9.3-3.64,18.55-7.38,27.88-10.94,2.12-.81,4.5-1.45,6.72-1.36,4.54,.19,6.71,3.52,5.4,7.93-.79,2.66-1.93,5.22-3.16,8.48,2.79,1.2,5.57,2.58,8.48,3.6,13.33,4.66,16.39,8.99,17.25,22.91,.2,3.18,2.22,6.29,3.64,9.33,1.52,3.25,3.31,6.37,4.99,9.53,1.18,2.22,2.29,4.49,3.63,6.62,1.58,2.52,3.38,4.9,5.08,7.34-.6,.44-1.19,.87-1.79,1.31-.77-1.07-1.51-2.17-2.32-3.21-7.39-9.41-16.79-15.22-29.03-14.8-7.11,.24-14.17,1.57-21.27,2.22-2.76,.26-5.97,.88-8.25-.19-3.63-1.71-5.38-.12-8.76,3.08,9.01,.95,16.74,1.77,24.31,2.58,.25,6.34-6.65,5.47-9.93,9.56,5.42-1.48,10.21-2.78,14.99-4.08Zm-486.88,85.11c7.74-7.55,8.99-19.74,16.22-19.99-5.08,1.44-16.05,1.23-26.06,7.26,1.65,1.48,2.69,3.13,3.55,3.04,2.75-.28,5.14,.37,5.19,3.12,.03,1.83-1.8,3.75-2.95,5.52-1.79,2.76-4.39,5.22-5.31,8.22-.49,1.58,1.88,4.02,2.89,6.1,.36,.74,.53,1.57,.76,2.37,2.36,8.15,7.89,12.77,16.4,13.79,2.96,.35,6.07,.4,8.84,1.38,14.27,5.04,28.41,10.46,42.69,15.46,5.45,1.91,11.2,2.96,16.76,4.6,6.46,1.9,10.35-2.28,14.69-5.71,1.25-.98,3-1.35,4.57-1.89,.99-.34,2.82-.29,2.92-.72,.26-1.12,.19-2.79-.5-3.58-4.91-5.6-9.21-12.03-17.65-13.03-2.75-.32-5.79-3.02-6.51,2.38-.11,.86-2.38,2.12-3.58,2.04-4.28-.28-8.6-.78-12.78-1.75-2.71-.63-4.28-2.12-1.9-5.41,3.63-5.02,6.42-10.57,8.75-16.38,1.18-2.93,.17-4.69-2.24-4.61-4.31,.15-8.84-7.31-12.47-.77-3.03,5.45-7.38,8.18-12.23,4.02-3.74-3.21-7.84-2.9-11.91-3.7-3.25-.64-6.96-.4-9.7-1.93-5.29-2.95-10.03-3.86-15.06,.11-.39,.31-1.23,.04-3.39,.04Zm163.94,221.09c1.8-3.88,2.98-7.02,4.63-9.88,8.64-14.94,5.43-29.32-1.95-43.48-1.21-2.32-3.09-4.32-4.82-6.33-2.37-2.76-5.25-1.96-6.76,.44-4.38,6.97-8.25,14.25-12.3,21.42-.23,.42-.16,.99-.35,1.45-2.08,5-4.08,10.05-6.33,14.97-1.71,3.75-5.37,7.39-5.28,11,.13,5.24-2.07,8.58-4.73,12.32-.95,1.34-.91,3.38-1.32,5.09,1.69,.38,3.36,.89,5.07,1.09,1.3,.16,2.72-.34,3.97-.04,1.35,.32,3.18,.96,3.62,1.98,.36,.82-.8,2.59-1.66,3.62-1.69,2.04-3.65,3.85-5.5,5.76,.35,.5,.7,.99,1.05,1.49,1.87-.73,3.83-1.3,5.6-2.23,4.09-2.17,7.23-6.24,12.89-5.18,1.32,.24,3.22-2.69,4.86-4.16-1.34-1.34-2.46-3.1-4.06-3.91-2.97-1.51-3.53-3.14-.81-5.11,4.4-3.19,9.02-5.57,14.17-.31Zm-65.33-817.62c8.42,3.6,15.88,6.02,22.57,9.82,10.5,5.96,16.42,16.24,22.38,26.32,3.49,5.89,6.72,7.59,12.74,5.36,3.46-1.28,4.64,.36,6.68,1.97,1.5,1.18,3.49,1.75,5.25,2.6,.08-1.87,.23-3.75,.23-5.62,0-2.3-1.04-5.25,.02-6.75,1.96-2.76,1.41-4.59-.49-6.56-6.24-6.47-12.43-12.99-18.84-19.29-6.99-6.87-15.62-10.26-25.35-9.95-8.1,.26-16.18,1.32-25.2,2.11Zm-147.83,417.25c.71-.04,1.42-.08,2.12-.12,.22-2.16,.2-4.39,.71-6.48,.57-2.3,1.32-4.67,2.56-6.65,1.61-2.59,4.63-4.54,5.54-7.27,1.99-5.98,8.65-6.33,11.81-10.74,.22-.3,2.62,.6,3.69,1.37,1.09,.79,1.8,2.12,2.74,3.29,9.04-6.51,15.86-14.19,20.09-24,.48-1.1,.39-2.45,.56-3.69-1.07-.11-2.26-.58-3.19-.26-3.88,1.3-7.68,2.83-11.87,4.41-.24-.54-.72-1.61-1.19-2.67-2.7,.85-6.11,.88-7.63,2.59-4.37,4.94-8.31,10.36-11.79,15.97-2.89,4.66-5.36,9.4-11.73,11.62,.36-3.1,.64-5.54,1.08-9.3-2.02,3.75-3.4,6.3-4.95,9.17-1.01-1.58-1.67-2.61-2.4-3.76-5.17,8.96-5.71,20.71,1.51,24.57-1.25-3.87-2.38-7.39-3.72-11.57,4.26,.96,5.63,2.37,5.06,5.9-.39,2.42,.61,5.05,.99,7.59Zm564.67-157.04c-.86,.25-1.29,.24-1.42,.44-7.37,10.7-15.74,20.23-28.34,25.05-.98,.37-2.06,1.84-2.16,2.89-.78,8.02-7.08,9.43-12.83,9.62-4.82,.16-9.61,1.16-14.42,1.79,.03,.24,.06,.49,.09,.73,4.49-.34,8.99-.69,13.79-1.05-.4,4.96,1.42,6,5.37,5.29,12.69-2.29,23.06-8.17,32.12-17.51,7.78-8.03,8-17.2,7.81-27.25Zm-519.91,125.79c.19,.09,.37,.17,.56,.26,1.56-2.47,2.95-5.07,4.71-7.38,1.81-2.37,3.84-4.62,6.01-6.67,6.74-6.39,11.43-6.51,17.89,0,3.19,3.21,5.66,7.12,8.24,10.43,3.39-6.84,7.33-13.61,9.97-20.85,.81-2.22,1.22-5.59,.79-8.32-.2-1.25-2.5-3.22-3.66-3.1-5.28,.55-10.99,.68-15.62,2.89-12.94,6.19-20.38,18.01-27.79,29.65-.57,.9-.74,2.05-1.1,3.09Zm148.52-429.52l-.32,2.31c1.73,.32,3.45,.69,5.19,.95,20.93,3.13,39.77,11.42,55.19,25.7,15.23,14.11,29.06,29.71,43.67,44.49,4.29,4.34,9.14,8.12,13.73,12.16-3.58-5.42-7.77-10.1-12.02-14.73-12.43-13.56-24.77-27.21-37.4-40.59-4.61-4.88-9.27-10.39-15.06-13.32-11.25-5.69-23.18-10.19-35.13-14.31-5.59-1.93-11.88-1.83-17.86-2.65Zm51.72,301.72c-2.1,.62-3.64,1.55-5.06,1.41-6.97-.72-12.82,2.31-18.66,5.31-6.33,3.26-7.64,8.18-3.48,13.48,.82,1.04,3.59,1.92,4.44,1.36,8.62-5.8,16.69-12.26,22.76-21.55Zm-67.92-410.13c.25-.45,.49-.9,.74-1.35,2.79,.91,5.59,1.82,8.94,2.91-2.31-3.34-4.42-5.08-8.4-3.97-1.93,.54-4.27-.39-6.42-.65,0-.11,0-.22,0-.33-2.1-.22-4.19-.44-6.29-.67-.39-.46-.78-.92-1.18-1.39-4.52,10.27-9.18,20.48-13.44,30.85-.83,2.03-.12,4.69-.12,7.06,.85,.18,1.7,.37,2.56,.55,5.98-11.59,11.95-23.17,17.93-34.76-1.28,6.75,5.04,2.48,6.84,4.68-.38-.98-.77-1.96-1.15-2.95Zm26.34,106.29c.03,.49,.06,.98,.08,1.47,2.06,.49,4.12,.98,6.18,1.48,11.75,2.84,23.52,5.37,33.99,12.09,13.85,8.88,25.71,19.97,37.24,31.52,1.36,1.36,3.25,2.18,4.9,3.25,.26-.35,.52-.69,.78-1.04-10.5-10.52-20.79-21.13-32.77-30.22-14.1-10.7-29.8-16.34-46.99-18.76-1.11-.16-2.27,.13-3.41,.2Zm191.5,729.66c.95-.38,2.64-1.07,4.34-1.71,1.65-.62,3.39-1.88,4.95-1.67,3.82,.5,4.02-1.47,4.16-4.36,.1-2.18,.97-4.32,1.57-6.78-12.07-5.92-21.59-6.47-32.12-1.41,6.54,.77,12.94,1.52,20.27,2.38-1.12,4.8-2.12,9.07-3.17,13.56Zm63.16-286.45c-2.31,3.25-3.89,6.52-6.39,8.74-3.08,2.73-6.69,5.53-10.53,6.53-2.7,.7-3.17,1.48-3.09,3.58,.06,1.59,.38,3.17,.57,4.68,9.02,.72,16.34-1.34,20.13-10.51,1.8-4.36,3.61-8.47-.7-13.02Zm-419.56-346.07c8.77-1.65,10.72,4.11,13.16,9.18,2.28,4.73,4.38,9.56,6.62,14.49,1.59-1.06,3-2,4.82-3.22-3.4-7.85-3.77-17.06-11.62-22.91-3.89-2.9-8.14-2.86-12.98,2.46Zm-295.29,1007.38c-7.6,23.18-14.87,45.37-22.15,67.56,1.78-2.19,2.63-4.72,3.87-7.04,8.78-16.37,13.22-34.25,18.18-51.94,.67-2.39,.09-5.14,.09-8.58Zm782.25-608.38c-10.61,3.39-16.3,13.23-25.41,18.51,9.41,2.06,15.35-7.86,24.73-6.31-5.4-4.25,2.74-7.39,.68-12.2Zm55.81-547.59c-.53,6.94-1.59,13.71-1.41,20.45,.18,6.5,1.63,12.96,2.53,19.43,.48-.04,.95-.08,1.43-.11v-15.22c2.51,1.14,4.39,2,6.28,2.86,.04-1.51-.34-2.42-.98-2.67-5.94-2.36-6.16-6.08-3.51-11.36,2.62-5.21,1.14-8.83-4.33-13.38Zm-233.31,340.73l-.25,1.25c21.18,8.49,42.36,16.98,63.53,25.46-20.1-11.45-41.35-19.95-63.28-26.72Zm-322.9,501.01c.39,1.13,.42,1.7,.72,2.01,.69,.7,1.47,1.33,2.28,1.89,6.06,4.24,12.55,3.73,19.06,1.45,1.76-.62,3.19-2.18,4.77-3.3-1.87-.71-3.7-1.91-5.62-2.05-5.62-.43-11.28-.49-16.92-.59-1.34-.02-2.69,.36-4.28,.59Zm561.3-142.43c1.94-6.8-1.65-16.06-7.73-18.53-.82-.33-3.34,1.1-3.29,1.45,.8,5.4,1.9,10.75,2.87,15.8,2.79,.44,5.44,.85,8.15,1.28Zm-720.78,349.43c.53,.41,1.07,.82,1.6,1.23,2.92-1.48,5.91-2.86,8.76-4.46,6.42-3.61,9.83-9.55,12-16.29,.28-.88-.29-2.34-.95-3.09-.4-.45-2.2-.44-2.61,.02-2.12,2.44-4.13,5-5.91,7.69-2.11,3.17-3.61,6.8-6.01,9.71-1.77,2.16-4.55,3.49-6.88,5.19Zm-167.05-630.59c3.89,1.48,7.05,2.73,10.26,3.86,1.14,.41,2.59,1.09,3.54,.72,7.12-2.79,8.01-5.35,4.77-12.88-6.16,2.75-12.34,5.51-18.56,8.29Zm300.96,428.49c3.78,1.78,10.29-1.68,9.62,6.15,4.63-2.37,11.05,1.53,14.46-4.45-7.11-5.85-19.2-6.8-24.08-1.7Zm262.72-431.41c-10.77,5.34-8.6,18.16-14.9,26.16,8.33-6.71,13.09-15.52,14.9-26.16Zm-223.01,399c20.64-5.53,41.39-5.54,62.23-.76-14.45-7.43-46.55-6.97-62.23,.76Zm7.03,45.25c-.06-.36-.12-.72-.19-1.08-5.29-1.09-10.56-2.27-15.88-3.22-2.24-.4-4.68-.77-6.8-.26-1.4,.34-2.41,2.29-3.6,3.51,1.34,1,2.72,2.9,4.01,2.85,7.5-.34,14.97-1.15,22.46-1.8Zm-245.23-579.48c.31-.5,.62-1,.92-1.49-1.5-1.22-2.87-2.68-4.53-3.62-4.04-2.28-8.18-4.39-12.37-6.39-1.26-.6-2.81-.59-4.23-.87,.24,1.59-.06,3.63,.82,4.68,5.12,6.08,12.5,6.24,19.38,7.68Zm646.16,163.45c4.43,8.16,19.16,12.33,25.62,7.25-8.62-2.44-16.66-4.72-25.62-7.25Zm-52.75,342.25c-7.21-.77-12.66-8.37-21-5.63,1.95,7.84,11.58,9.39,21,5.63Zm-65.63-619.49c-3.49,11.43-6.87,22.5-10.22,33.44,5.51-3.48,13.25-28.14,10.22-33.44Zm172.78,57.89c-10.95,5.5-22.54,6.27-34.6,4.92,1.58,1.22,3.22,1.82,4.9,2.29,1.11,.31,2.27,.54,3.42,.59,9.62,.4,19.15,.41,26.28-7.79Zm-207.7,68.81c.49,.28,.99,.56,1.48,.85,5.87-11.26,11.78-22.5,17.61-33.78,1.57-3.04,.15-3.8-2.58-3.32-1.85,13.85-11.59,23.97-16.5,36.25Zm224.31-338.91c-16.07-3.54-32.13-4.29-49.52,0h49.52Zm-506.31,940.53c18.72-9.72,37.83-5.41,56.92-1.67-19.2-6.44-38.29-8.8-56.92,1.67Zm503.88-702.75c-8.83,5.08-18.13,9.1-29.02,8.18,5.44,2.18,10.93,5.06,16.15,2.15,4.74-2.64,8.61-6.83,12.87-10.33Zm-639.69,29.11c3.27,6.86,16.33,11.01,25.02,7.5-8.6-2.58-16.64-4.99-25.02-7.5Zm-101.52,199.32c-1.78,1.59-7.66,1.1-5.7,6.34,.71,1.89,4.55,3.85,6.71,3.6,1.95-.22,3.56-3.41,5.04-4.99-2.51-2.05-4.07-3.33-6.05-4.95Zm294.03,366.24l-.3,1.1c1.93,.22,3.87,.67,5.79,.6,2.26-.08,4.54-1.04,6.75-.84,4.72,.42,9.39,1.42,14.1,1.96,.82,.09,1.76-.89,2.64-1.38-.08-.48-.15-.96-.23-1.44h-28.75Zm-28.41-232.44c-.53-.15-1.06-.31-1.59-.46-4.26,5.43-2.72,11.84-3.43,17.95,3.89-3.21,7.29-6.02,10.68-8.82-.2-.31-.4-.61-.6-.92-2.49,.41-4.98,.82-8.57,1.4,1.39-3.63,2.44-6.39,3.5-9.16Zm423.91-288.34c9.64,3.65,6.32,12.23,7.45,20.28,5.68-11.27,1.96-21.06-7.45-20.28Zm-215.95-107.54c.13,5.87,1.73,8.52,4.58,7.99,1.6-.3,2.94-2.02,4.4-3.09-2.29-2.44-4.58-4.87-6.87-7.31-.91,1.03-1.82,2.07-2.12,2.42Zm43.95,79.24c.44,.01,.87,.03,1.31,.04v-29.93c-.44,0-.87,0-1.31-.01v29.9Zm-174.1,550.01c-13.82-5.86-42.63-7.82-55.02-4.64,7.8,0,17.11-.58,26.31,.16,9.18,.74,18.26,2.79,28.71,4.47Zm-152.45-600.4l-1.39,.5c2.76,7.63,5.52,15.25,8.28,22.88,.52-.19,1.04-.37,1.56-.56-1.09-8.23-4.26-15.71-8.44-22.82Zm44.36,420.53c3.97,3.75,6.33-.29,8.49-1.74,1.93-1.29,3.2-4.21-.12-7.17-2.8,2.98-5.5,5.85-8.38,8.91Zm49.53-137.75c5.58,2.44,10.99,4.81,16.85,7.37-2.55-6.9-10.15-10.06-16.85-7.37Zm-32.77,175.95c4.81-4.56,9.62-9.12,14.47-13.72-8.05,1.25-9.85,8.92-14.47,13.72ZM1447.01,402.04c3.88,8.91,12.05,15.22,11.44,26.41,3.52-7.82-2.21-20.4-11.44-26.41Zm-207.32,18.92h18.92c-.02-.61-.03-1.22-.05-1.84-6.38,.05-12.85-3.17-18.87,1.84Zm-400.58,193.24c-.52,.3-1.05,.59-1.57,.89,3.02,5.29,6.04,10.59,9.05,15.88,.52-.3,1.05-.59,1.57-.89-.57-6.67-5.2-11.06-9.05-15.89Zm551.87,384.62c.1,.32,.21,.64,.31,.96,5.69,.45,11.38,.9,17.07,1.36,.05-.3,.09-.6,.14-.9-2.3-.79-4.61-1.59-7.6-2.62,2.45-.93,4.03-1.52,5.6-2.11-.09-.29-.18-.58-.28-.86-5.08,1.39-10.16,2.78-15.24,4.18Zm-21.33-375.26c.08,.02,.15,.05,.21,.05,6.26,0,12.52,0,19.34,0-6.98-5.44-13.2-1.14-19.56-.05Zm-446.32,667.46c-11.94-4.57-29.32-6.94-34-5.77,10.57,1.79,22.29,3.78,34,5.77Zm378.39,43.41c-1.39,.1-2.55,.18-4.08,.3,1.34,4.99,2.53,9.44,3.72,13.9,.54-.1,1.07-.2,1.61-.3-.41-4.52-.81-9.04-1.25-13.9Zm-17.03-409.88c.23,.32,.45,.64,.68,.96,3.23-1.13,6.47-2.27,9.73-3.41-2.96-4.84-5.98-5.35-9.26-1.6,.91,.5,1.81,.99,2.88,1.56-1.55,.95-2.78,1.72-4.02,2.48Zm-73.01-542.53c3.46,5.46,12.59,5.97,15.42,1.02-5.06-.33-10.39-.69-15.42-1.02Zm-78.16,344.21c4.76-4.48,9.6-9.04,13.75-12.95-6.74,.53-13.07,6.21-13.75,12.95Zm96.3-354.07c-1.66-6.7-7.15-8.24-12.11-3.59,3.96,1.17,7.81,2.32,12.11,3.59Zm-104.79,378.71c-.82-.63-1.63-1.26-2.45-1.89-2.84,4.06-5.69,8.12-8.53,12.18,.58,.43,1.17,.86,1.75,1.29,3.08-3.86,6.16-7.72,9.23-11.58Zm239.44,118.03c-4.25,2.28-7.7,4.13-11.62,6.22,5.35,2.32,8.91,.45,11.62-6.22Zm-487.83,282l1.09,1.39c2.51-1.05,5.13-1.91,7.46-3.27,.72-.42,.67-2.17,.97-3.32-1.18-.11-2.73-.74-3.46-.22-2.19,1.56-4.07,3.57-6.07,5.41Zm-159.48,336.4c1.1,2.34,2.03,4.34,2.97,6.34,.62-.09,1.25-.17,1.87-.26,.32-2.73,.63-5.46,1.08-9.32-2.75,1.5-4.14,2.26-5.92,3.23Zm637.76-848.29c7.36-1.37,11.91-4.39,14.66-11-4.91,3.68-9.27,6.95-14.66,11Zm-429.46,628.64c0,.29,0,.57,0,.86h27.63c0-.29,0-.57,0-.86h-27.63Zm236.62-864.78c0,.43,0,.86,0,1.29h15.7c0-.43,0-.86,0-1.29h-15.69Zm212.43,590.9l-1.05-1.75c1.71-.87,3.43-1.75,5.14-2.62-.33-.36-.65-.71-.98-1.07-3.58,2.32-7.15,4.63-11.91,7.72,5.2-.68,8.77-1.15,12.44-1.63-1.22-.22-2.43-.43-3.64-.65Zm-84.36,286.25c-4.02,4.58-3.54,9.17,.61,13.35-.18-3.88-.39-8.46-.61-13.35Zm-15.58-924.74c2.69-1.4,4.61-2.2,6.3-3.35,1.02-.69,1.67-1.92,2.96-3.48-3.54,1.15-5.65,1.76-7.7,2.53-1.07,.4-2.04,1.08-3.06,1.64,.59,1.05,1.18,2.09,1.5,2.66Zm-445.54,986.81c.38,.24,.77,.48,1.15,.72,1.84-2.36,3.78-4.65,5.46-7.11,.48-.7,.22-1.91,.3-2.89-1.1,.3-2.81,.27-3.19,.96-1.47,2.64-2.51,5.52-3.72,8.31Zm272.87-1002.97c-.65,.11-1.31,.23-1.96,.34,1.22,5.47,2.44,10.95,3.66,16.42,.4-.09,.8-.18,1.21-.27-.97-5.5-1.94-11-2.91-16.5Zm172.11,579.66c.07,.93,.13,1.86,.2,2.79,2.19,.22,4.38,.44,6.57,.67-.19-1.15-.23-3.24-.61-3.3-2.01-.33-4.1-.16-6.16-.16Zm-360.25,78.98c.14,.33,.29,.66,.43,.99,5.06-1.84,10.13-3.68,15.19-5.52-.25-.59-.5-1.19-.75-1.78-4.96,2.1-9.92,4.2-14.88,6.31Zm114.95,132.77c.49-.31,.99-.61,1.48-.92,.84-4.74-3.12-5.64-7.24-7.66,2.28,3.4,4.02,5.99,5.75,8.57Zm-41.75-289.72c-.67-.24-1.34-.49-2.02-.73-1.25,3.81-2.49,7.62-3.74,11.43l1.39,.51c1.45-3.74,2.91-7.47,4.36-11.21Zm-77.99,103.42q1.94,4.88,8.72,0h-8.72Zm388.4-230.57c.13-.57,.27-1.15,.4-1.72-3.62-1.75-7.25-3.51-10.87-5.26l-.59,1.25c4.45,.29,5.92,6.9,11.06,5.74Zm-51.2,475.45c0-.38,0-.76-.01-1.14l-16.11,2.2c.06,.43,.12,.86,.18,1.29,5.31-.78,10.63-1.57,15.94-2.35Zm-294.81-132.65c-.04-.56-.08-1.12-.12-1.68-2.96,.36-5.92,.71-8.88,1.07,.09,.66,.19,1.33,.28,1.99,2.9-.46,5.81-.92,8.71-1.39Z" />
+          <path className="cls-1 cosmic_1" d="M764.53,847.31c.43-2.39,.5-4.92,1.34-7.16,8.69-23.35,17.49-46.66,26.32-70.11,4.61,1.6,8.67,3.01,12.74,4.42,.25-.43,.49-.87,.74-1.3-1.47-1.05-2.95-2.09-4.42-3.14,.28-.42,.56-.85,.84-1.27,3.57,1.93,7.44,3.47,10.6,5.92,2.55,1.97,3.33,5.07,1.94,8.57-10.65,26.71-21.13,53.47-31.78,80.18-1.35,3.4-2.98,7.11-8.59,5.11,.61-2.18,1.27-4.52,1.91-6.84-.69-1.35-1.12-2.94-2.09-4.06-3.07-3.53-6.34-6.89-9.53-10.32Z" />
+          <path className="cls-1 cosmic_2" d="M1438.93,381.07c-9.94-5.18-19.89-10.37-29.83-15.55-7.17-2.45-14.22-5.36-21.53-7.26-10.72-2.79-21.62-4.86-32.18-7.18,1.91-3.21,4.36-6.62,6.05-10.37,2.21-4.92,4.16-10.02,5.45-15.24,.41-1.67-1.1-4.7-2.66-5.81-6.46-4.62-13.8-8.14-19.82-13.24-5.61-4.76-12.64-3.7-18.57-6.6-5.47-2.68-11.19-4.83-16.43-8.34,14.91,5.05,30.01,9.59,44.67,15.27,21.59,8.36,41.88,19.15,57.34,37.02,9.56,11.06,18.52,22.64,27.63,34.08,.51,.64-.05,2.13-.11,3.22Z" />
+          <path className="cls-1 cosmic_3" d="M1009.38,269.74c5.03-4.79,7.36-4.96,13.02-.51,6.02,4.73,9.07,10.84,7.69,19.25,5.41-8.5,3.31-13.23-10.07-25.64,1.84,.48,3.87,.61,5.47,1.5,5.67,3.16,8.91,8.25,10.77,14.37,.46,1.51,1.56,2.82,2.47,4.42-4.17,4.79-8.96,10.31-13.76,15.83-.86,.3-1.71,.59-2.57,.89-5.12,3.58-10.3,7.08-15.32,10.79-2.4,1.77-4.52,2.38-7.05,.33-8.56-6.94-19.54-5.49-29.31-8.28-.45-.13-1.15,1.03-1.82,1.17-2.41,.5-5.11,1.69-7.25,1.06-7.94-2.34-9.08-6.71-3.83-13.17,6.48-7.97,14.26-14.38,23.56-18.83,8.56-4.09,17.79-2.41,26.76-2.95-.82,1.73-1.64,3.46-2.46,5.18l1.61,1.17,3.1-4.27c3.37,7.81,6.73,15.62,10.15,23.55,.25-.28,.83-.96,1.42-1.64,1.12-1.62,2.48-3.12,3.31-4.87,2.78-5.8,.27-10.73-3.27-15.07-3.17-3.88-7.46-5.68-12.62-4.29Zm-46.26,28.24c2.78,.34,4.98,.79,7.19,.85,8.74,.21,17.51-.11,26.2,.59,4.84,.39,9.55,2.4,14.32,3.68-9.77-5.95-42.33-9.43-47.71-5.12Zm41.97-26.12c-.11-.48-.22-.96-.33-1.43-5.5,1.27-11,2.53-16.5,3.8,.09,.4,.18,.79,.28,1.19l16.55-3.56Z" />
+          <path className="cls-1 cosmic_4" d="M1403.95,579.01c-.35,.23-.71,.47-1.06,.7,.78-1.5,1.36-3.14,2.36-4.46,3.69-4.87,7.53-9.64,10.97-14.03,1.52,3.55,3.22,7.46,4.85,11.39,3.3,7.95,.81,15.67-1.72,23.09-.49,1.43-5.17,1.44-7.37,1.97,.13,.02,.97,.12,1.8,.27,2.31,.42,5.88,.03,4.91,3.72-.78,2.95-1.41,7.15-6.66,6.16-2.34-.44-4.87,.15-7.32,.27,1.08-2.51,2.16-5.03,3.24-7.54,2.86-7.47,.69-14.56-1.74-21.6-.07-.22-1.48,.03-2.27,.06Z" />
+          <path className="cls-1 cosmic_5" d="M851.99,571.99c6.52-3.56,13.25-2.84,20.04-.97,2.07,3.47,4.14,6.95,6.21,10.42,1.18,4.55,2.37,9.1,3.61,13.88-1.32,.12-2.62,.23-4.19,.37,2.12,1.73,3.89,3.17,5.67,4.61-4.16-.69-5.03,1.11-4.78,4.14,.19,2.26,.54,4.51,.1,6.91-3.63-9.09-7.26-18.17-10.89-27.27-3.53-6.29-8.31-10.94-15.76-12.08Z" />
+          <path className="cls-1 cosmic_6" d="M761.06,602.6c3.03-.54,6.23-.63,9.04-1.72,3.58-1.39,7.06-3.29,10.21-5.49,5.85-4.09,5.7-4.21,10.78,.71,1.78,1.73,3.77,3.26,5.75,4.76,2.99,2.27,2.92,5.08,1.35,7.97-1.79,3.29-4.26,1.71-6.89,.94-7.6-2.22-15.27-4.28-23.01-5.95-2.05-.44-4.45,.73-6.69,1.16-.18-.8-.36-1.59-.54-2.39Z" />
+          <path className="cls-1 cosmic_7" d="M1191.71,312.61c-.45-.17-.91-.35-1.36-.52,3.91-2.64,7.6-5.7,11.77-7.86,29.97-15.52,59.71-20.08,93.85-14.07-2.75,.13-5.53,.56-8.25,.35-26.95-2.07-53.07,.79-77.73,12.74-4.78,2.32-9.74,4.27-14.54,6.55-1.38,.66-2.5,1.86-3.74,2.81Z" />
+          <path className="cls-1 cosmic_8" d="M1064.21,297.08l7.84,16.79c-.51,.26-1.02,.51-1.53,.77-2.41-3.79-5-7.48-7.18-11.39-2.1-3.76-4.66-4.33-8.63-2.9-4.48,1.61-9.3,2.26-13.87,3.66-1.83,.56-3.29,2.35-5.13,2.89-1.7,.51-3.68,.11-5.53,.11l-.38-1.65c6.68-2.21,13.36-4.41,20.04-6.62,.05-.36,.1-.73,.15-1.09-4.64-1.5-9.29-3-13.7-4.42,2.43-1.78,3.54-1.49,10.18,.92,3.57,1.29,7.45,1.72,11.18,2.54,.39-.66,.78-1.32,1.18-1.98-2.47-2.68-4.97-5.34-7.37-8.08-.49-.56-.61-1.45-.88-2.19,6.13,2.53,11.22,6.15,13.64,12.65Z" />
+          <path className="cls-1 cosmic_9" d="M725.11,614.33c6.33,0,11.09-.3,15.76,.19,1.35,.14,3.1,2.42,3.48,4.01,.32,1.32-.66,3.62-1.82,4.49-3.01,2.28-6.42,4.01-10.35,6.36-2.18-4.63-4.29-9.13-7.08-15.05Z" />
+          <path className="cls-1 cosmic_10" d="M675.92,672.88c4.26-5.3,9.88-6.37,16.33-5.67,3.9,.42,7.88,.08,11.93,.08,1.63,5.55,.83,6.1-4.77,5.95-4.85-.13-9.73,1.21-14.61,1.68-2.66,.26-5.37,.12-8.04-.04-.29-.02-.5-1.4-.74-2.15,0,0-.1,.15-.1,.15Z" />
+          <path className="cls-1 cosmic_11" d="M764.53,847.31c3.19,3.43,6.46,6.78,9.53,10.32,.97,1.12,1.41,2.71,2.09,4.06-1.59-.38-3.5-.31-4.74-1.18-3.09-2.18-5.87-4.78-9.13-7.51-1.31,2.66-2.52,5.14-3.72,7.57-4.57-4.24-4.22-7.12,2.54-22.08,1.02,2.64,2.22,5.73,3.42,8.82Z" />
+          <path className="cls-1 cosmic_12" d="M896.88,414.81c-.77-.93-1.43-1.73-1.19-1.44,1.13-2.96,1.92-5.02,2.71-7.09-.38-.18-.75-.36-1.13-.54l-2.92,2.76c-.36-.22-.73-.45-1.09-.67,5.36-5.99,3.51-15.98,11.96-20.6q2.88,4.71-8.34,27.57Z" />
+          <path className="cls-1 cosmic_13" d="M680.28,659.02c-.56,2-1.06,4.01-1.69,5.99-.84,2.64-1.78,5.26-2.67,7.88,0,0,.1-.15,.1-.15-.67,2.72-2.01,2.98-4.75,2.23-3.67-1-7.62-.99-11.58-2.12,6.36-5.77,15.92-6.19,20.73-13.76,0,0-.13-.06-.13-.06Z" />
+          <path className="cls-1 cosmic_14" d="M688.27,731.6c-8.37-5.14-16.83-10.15-25.04-15.54-1.57-1.03-2.17-3.55-3.22-5.39,2.19,.09,5.14-.72,6.46,.4,7.65,6.48,14.92,13.41,22.33,20.19-.17,.11-.34,.22-.52,.34Z" />
+          <path className="cls-1 cosmic_15" d="M753.26,878.64c-1.32-6.09-2.63-12.18-3.94-18.23,.31,.24,.82,.62,.92,.7,.82-7.03,1.65-14.26,2.49-21.48,.24-.16,.49-.32,.73-.49,.51,1.38,1.57,2.82,1.43,4.13-.41,3.6-1.8,7.13-1.89,10.71-.08,3.24,.35,6.85,1.78,9.69,2.77,5.53,.56,10.19-1.51,14.98Z" />
+          <path className="cls-1 cosmic_16" d="M1364.39,674.04c6.51,6.54,4.53,16.23,8.62,23.76-5.78,.03-6.23-.24-7.22-5.44-1.14-5.95-2.1-11.94-3.14-17.92,.58-.13,1.16-.27,1.75-.4Z" />
+          <path className="cls-1 cosmic_17" d="M1009.38,269.74c5.17-1.39,9.45,.41,12.62,4.29,3.54,4.34,6.05,9.27,3.27,15.07-.84,1.75-2.2,3.25-3.31,4.87,0,0,.09,.15,.09,.15,2.36-7.64-.43-14.09-4.6-20.27-1.85-2.73-4.01-3.75-7.01-1.83l-.05,.03-3.1,4.27-1.61-1.17c.82-1.73,1.63-3.46,2.46-5.18,.42-.08,.83-.15,1.25-.22Z" />
+          <path className="cls-1 cosmic_18" d="M695.51,684.67c5.33-6.56,17.64-4.24,20.76,2.72-6.73-.88-13.26-1.74-20.76-2.72Z" />
+          <path className="cls-1 cosmic_19" d="M845,546.95c7.35-19.61,14.7-39.22,22.05-58.83,.46,.18,.92,.35,1.38,.53-7.43,19.58-14.86,39.16-22.29,58.74-.38-.15-.76-.29-1.14-.44Z" />
+          <path className="cls-1 cosmic_20" d="M879.84,461.56c1.4,4.43-3.18,16.34-9.12,20.88,2.55-7.1,5.1-14.2,7.66-21.3,.49,.14,.98,.28,1.46,.42Z" />
+          <path className="cls-1 cosmic_21" d="M698.23,733.24c-4.21-4.79-8.42-9.58-12.73-14.48,6.44,1.12,15.05,9.73,18.83,19.42-1.8-1.44-2.69-2.15-3.62-2.89-.85-.7-1.67-1.37-2.48-2.05Z" />
+          <path className="cls-1 cosmic_22" d="M1022.41,299.84c.86-.3,1.71-.59,2.57-.89-.61,1.82-1.22,3.64-1.82,5.46-.89,1.22-1.79,2.44-2.68,3.66-1.41,1.38-2.67,2.97-4.27,4.08-1.63,1.15-3.59,1.84-5.4,2.73-.28-.37-.56-.74-.84-1.11,4.15-4.65,8.29-9.29,12.44-13.94Z" />
+          <path className="cls-1 cosmic_23" d="M1301.62,1258.83c-.46,.17-1.03,.6-1.36,.46-4.79-1.99-10.8-12.04-10.7-19.09,4.37,6.93,8.16,12.95,11.95,18.97,0,0,.1-.34,.1-.34Z" />
+          <path className="cls-1 cosmic_24" d="M891.82,426.42c-4.46,10.54-8.92,21.08-13.38,31.63l-1.3-.54,13.44-31.62c.41,.18,.83,.36,1.24,.53Z" />
+          <path className="cls-1 cosmic_25" d="M706.91,1442.86c1.87,5.25-2.96,8.32-4.17,12.58-.6,2.1-2.18,3.92-3.31,5.87-.41-.16-.82-.32-1.23-.48,2.65-5.93,5.3-11.86,7.95-17.79,.26-.03,.52-.09,.76-.18Z" />
+          <path className="cls-1 cosmic_26" d="M680.28,659.02s.13,.06,.13,.06c1.81-3.42,3.44-6.95,5.54-10.18,.58-.9,2.55-.9,3.88-1.32,.37,.65,.74,1.3,1.11,1.95l-10.65,9.49Z" />
+          <path className="cls-1 cosmic_27" d="M1039.93,331.15c-.17,.24-.36,.46-.56,.67-5.09-1.52-10.17-3.05-15.26-4.57l.41-1.28c5.67,.01,11.17,.54,15.41,5.18Z" />
+          <path className="cls-1 cosmic_28" d="M786.01,767.98l-6.94,20.09c-.33-.1-.67-.21-1-.31,1.57-5.63,3.01-11.31,4.83-16.86,.38-1.16,2.12-1.87,3.24-2.78,0,0-.13-.13-.13-.13Z" />
+          <path className="cls-1 cosmic_29" d="M1119.77,318.18c-5.78-1.29-10.3-2.29-16.19-3.6,6.42-2.44,9.81-1.6,16.19,3.6Z" />
+          <path className="cls-1 cosmic_30" d="M870.74,1102.02c2.44-4.76-.46-12.54,8.32-14.65-3.04,5.36-5.68,10.01-8.32,14.65Z" />
+          <path className="cls-1 cosmic_31" d="M960.29,307.39c-5.81,2.1-8.2,.51-8.66-6.2,3.12,2.23,5.79,4.15,8.66,6.2Z" />
+          <path className="cls-1 cosmic_32" d="M771.58,878.14c-2.89-4.04-5.78-8.09-8.66-12.13,.4-.29,.79-.57,1.19-.86,2.96,3.99,5.93,7.98,8.89,11.97l-1.42,1.02Z" />
+          <path className="cls-1 cosmic_33" d="M847.39,590.06s.16,.02,.16,.02c-1.81-.55-3.63-1.1-6.46-1.96,2.96-.4,4.82-.64,7.19-.96-.76-1.79-1.34-3.16-1.92-4.52,.43-.26,.86-.51,1.28-.77,1.17,1.78,2.34,3.57,3.79,5.77-1.64,.98-2.84,1.69-4.04,2.41Z" />
+          <path className="cls-1 cosmic_34" d="M601.2,791.36s-.1,.02-.1,.01c0,0,.1-.01,.1-.01Z" />
+          <path className="cls-1 cosmic_35" d="M1402.47,611.05s-.19,.13-.19,.13,.19-.13,.19-.13Z" />
+          <path className="cls-1 cosmic_36" d="M598.21,794.24s.2-.1,.2-.1c0,0-.2,.1-.2,.1Z" />
+          <path className="cls-1 cosmic_37" d="M1403.12,609.29s-.11,.17-.11,.17c0,0,.11-.17,.11-.17Z" />
+          <path className="cls-1 cosmic_38" d="M1398.45,1023.1c-4.79,1.3-9.57,2.6-14.99,4.08,3.28-4.09,10.17-3.21,9.93-9.56-7.58-.8-15.3-1.62-24.31-2.58,3.37-3.19,5.13-4.78,8.76-3.08,2.28,1.07,5.49,.45,8.25,.19,7.1-.66,14.16-1.98,21.27-2.22,12.24-.42,21.64,5.39,29.03,14.8,.82,1.04,1.55,2.14,2.32,3.21,.6-.44,1.19-.87,1.79-1.31-1.7-2.44-3.5-4.83-5.08-7.34-1.34-2.13-2.44-4.4-3.63-6.62-1.69-3.17-3.48-6.29-4.99-9.53-1.42-3.03-3.45-6.15-3.64-9.33-.86-13.92-3.92-18.26-17.25-22.91-2.91-1.02-5.69-2.41-8.48-3.6,1.23-3.26,2.38-5.81,3.16-8.48,1.3-4.41-.86-7.74-5.4-7.93-2.22-.09-4.6,.55-6.72,1.36-9.33,3.55-18.58,7.3-27.88,10.94-.74,.29-1.58,.29-2.36,.43-1.44-6.12,5.09-12.02,15.51-15.67,8.09-2.83,15.56-1.04,23.53,1.82-1.26-5.21-2.3-9.68-3.45-14.12-.24-.93-.71-2.12-1.45-2.54-5.41-3.12-6.16-7.49-4.48-13.14,.4-1.34-1.61-3.31-2.23-5.08-.54-1.57-1.5-3.78-.85-4.83,2.66-4.27,2.43-5.75-2.14-8.03-2.65-1.32-5.24-2.76-7.97-4.2,3.11-4.89,.99-9.05-.91-13.01-1.32-2.76-3.08-4.68-.24-7.93,2.01-2.3,2.37-6.04,3.81-10.12,3.27,3.1,5.88,5.77,8.69,8.21,13.06,11.31,26.37,22.34,39.23,33.86,19.16,17.17,31.57,38.73,37.53,63.53,4.39,18.28,.02,35.32-12.16,50.03-2.21,2.67-4.56,5.28-6.38,8.21-.81,1.31-.46,3.35-.64,5.05-.44,.22-.89,.44-1.33,.66-1.43-1.97-3.02-3.84-4.24-5.94-1.87-3.2-3.71-5.66-7.76-2.74-1,.72-2.53,1.09-3.78,1.01-10.76-.66-20.7,2.61-30.63,6.05-2.18,.75-4.53,1.53-6.76,1.44-1.46-.06-2.86-1.69-4.29-2.61,1.09-1.27,1.93-3,3.31-3.72,3.55-1.85,7.32-3.24,11.01-4.82-.23-.63-.46-1.26-.68-1.89Z" />
+          <path className="cls-1 cosmic_39" d="M944.24,573.81c-5.24,.41-8.37-2.48-10.3-6.89-1.55-3.54-3.52-6.35-7.75-6.68-.88-.81-1.76-1.61-2.64-2.42-.68-2.13-.34-3.19,2.01-4.57,12.99-7.62,27.92-9.45,41.84-14.25,4.4-1.52,9.76-.24,14.49-.24-2.22-3.64-5.75-2.78-9.52-.79-.07-.45-.15-.89-.22-1.34,3.6-1.25,7.21-2.45,10.78-3.75,7.79-2.85,15.85-5.14,23.25-8.79,8.17-4.03,15.59-3.41,23.3,.52,14.11,7.18,20.69,19.56,23.83,34.32,.37,1.72,.4,3.51,.6,5.4h-40.88c6.19,6.68,18.03,8.26,19.96,20.71-2.23,.3-4.36,.55-6.47,.89-2.44,.4-5.1,1.71-7.24,1.11-2.61-.73-5.33-2.62-7-4.78-1.98-2.57-2.89-5.96-5.18-8.76l1.79,13.99c-.35,.08-.71,.16-1.06,.24-4.19-7.09-8.37-14.19-12.58-21.32,1.07,5.84,2.19,11.93,3.31,18.01-.15,.07-.31,.15-.46,.22-3.58-6.87-7-13.83-10.82-20.57-1.53-2.7-3.94-4.9-5.94-7.33,.95-6.95-4.31-14.49-8.21-13.11,2.68,4.28,5.44,8.69,8.21,13.1,.19,1.6,.39,3.21,.61,5.05h-4.5c.77,1.69,1.42,3.11,1.94,4.26-2.71,3.33-11.93-5.08-9.37,5.98l.13-.07c-6.4-1.83-4.89-8.37-8.2-12.58v14.07c-2.35-2.08-3.81-3.36-5.94-5.24,.36,2.59,.62,4.43,.9,6.46-4.49-2.82-8.67-5.56-12.98-8.06-.75-.43-2.58-.19-3.06,.42-.52,.67-.43,2.33,.06,3.17,.79,1.38,2.13,2.45,3.2,3.65-.03,0,.07-.05,.07-.05Zm-1.61-11.82c-3.18-6.83-5.91-7.48-11.16-3.56,3.34,1.07,6.99,2.23,11.16,3.56Z" />
+          <path className="cls-1 cosmic_40" d="M911.57,1108.2c2.16,0,3,.27,3.39-.04,5.03-3.97,9.77-3.06,15.06-.11,2.74,1.53,6.45,1.29,9.7,1.93,4.08,.8,8.17,.49,11.91,3.7,4.85,4.15,9.2,1.43,12.23-4.02,3.63-6.54,8.17,.92,12.47,.77,2.4-.08,3.41,1.67,2.24,4.61-2.33,5.81-5.13,11.35-8.75,16.38-2.38,3.29-.81,4.78,1.9,5.41,4.17,.97,8.49,1.47,12.78,1.75,1.2,.08,3.47-1.18,3.58-2.04,.72-5.4,3.76-2.71,6.51-2.38,8.44,1,12.74,7.43,17.65,13.03,.69,.79,.76,2.46,.5,3.58-.1,.43-1.94,.38-2.92,.72-1.56,.54-3.32,.9-4.57,1.89-4.34,3.43-8.24,7.61-14.69,5.71-5.56-1.63-11.31-2.69-16.76-4.6-14.28-5-28.42-10.43-42.69-15.46-2.76-.98-5.87-1.02-8.84-1.38-8.51-1.02-14.04-5.64-16.4-13.79-.23-.8-.4-1.63-.76-2.37-1.01-2.08-3.38-4.52-2.89-6.1,.92-3,3.52-5.47,5.31-8.22,1.15-1.78,2.98-3.69,2.95-5.52-.05-2.75-2.44-3.39-5.19-3.12-.86,.09-1.9-1.56-3.55-3.04,10.01-6.03,20.97-5.81,26.06-7.26-7.23,.25-8.47,12.43-16.22,19.99Z" />
+          <path className="cls-1 cosmic_41" d="M1075.51,1329.3c-5.15-5.26-9.77-2.88-14.17,.31-2.72,1.97-2.16,3.6,.81,5.11,1.6,.82,2.72,2.58,4.06,3.91-1.63,1.47-3.54,4.41-4.86,4.16-5.66-1.05-8.8,3.02-12.89,5.18-1.76,.93-3.72,1.5-5.6,2.23-.35-.5-.7-.99-1.05-1.49,1.85-1.91,3.81-3.73,5.5-5.76,.86-1.03,2.02-2.8,1.66-3.62-.45-1.02-2.28-1.65-3.62-1.98-1.25-.3-2.66,.2-3.97,.04-1.71-.21-3.38-.72-5.07-1.09,.41-1.72,.37-3.76,1.32-5.09,2.66-3.74,4.86-7.07,4.73-12.32-.09-3.61,3.56-7.25,5.28-11,2.25-4.93,4.25-9.97,6.33-14.97,.19-.45,.12-1.03,.35-1.45,4.05-7.17,7.92-14.45,12.3-21.42,1.51-2.4,4.39-3.2,6.76-.44,1.73,2.01,3.61,4.01,4.82,6.33,7.38,14.15,10.59,28.54,1.95,43.48-1.66,2.86-2.83,6-4.63,9.88Zm-32.71,1.69c3.86-1.56,7.72-3.13,11.58-4.69-.16-.41-.32-.81-.47-1.22-4.03,1.32-9.58-1.45-11.1,5.91Z" />
+          <path className="cls-1 cosmic_42" d="M1010.18,511.68c9.02-.79,17.09-1.85,25.2-2.11,9.73-.31,18.36,3.08,25.35,9.95,6.41,6.3,12.61,12.81,18.84,19.29,1.9,1.97,2.45,3.8,.49,6.56-1.06,1.5-.02,4.45-.02,6.75,0,1.87-.15,3.75-.23,5.62-1.77-.84-3.75-1.41-5.25-2.6-2.04-1.61-3.23-3.25-6.68-1.97-6.02,2.23-9.26,.54-12.74-5.36-5.96-10.08-11.89-20.36-22.38-26.32-6.68-3.8-14.15-6.22-22.57-9.82Z" />
+          <path className="cls-1 cosmic_43" d="M878.24,581.43c-2.07-3.47-4.14-6.95-6.21-10.42-.43-1.38-.85-2.76-1.43-4.63,7.85-.57,15.29-1.12,22.83-1.67-.16-.4-.56-1.37-.95-2.33l.52-1.28c5.53,2.29,11.5,3.9,16.49,7.05,5.63,3.55,2.85,11.16,5.6,16.41-.83-1.47-1.66-2.94-2.49-4.41-.31,.07-.62,.14-.93,.21,.92,3.65,1.84,7.3,2.85,11.28-1.03,.4-2.34,.92-3.68,1.44-1.9-3.61-3.71-7.05-5.52-10.49-.45,.14-.89,.28-1.34,.42,1.37,5.02,2.75,10.05,4.21,15.39h-5.32c-.12,1.08-.23,2.15-.35,3.23-.37,.12-.75,.23-1.12,.35-1.12-2.26-2.25-4.53-3.48-7.01-3.05,6.14-4.84,1.8-6.93-1-1.7,2.11-3.11,3.86-5.13,6.37-.88-5.24-1.68-9.98-2.59-15.43-.85-.59-2.93-2.04-5.01-3.48Z" />
+          <path className="cls-1 cosmic_44" d="M1097.99,525.49c2.42,3.35,5.06,6.56,7.15,10.1,.99,1.68,.89,3.99,1.33,6,.73,3.35,1.44,6.71,2.28,10.03,.44,1.73,1.15,3.39,1.73,5.08-.27,.47-.53,.95-.8,1.42-3.28-1.39-6.88-2.31-9.75-4.3-2.94-2.04-5.77-4.75-7.58-7.8-7.65-12.86-19.14-22.16-29.53-32.44-8.86-8.76-19.99-11.39-32.18-10-6.07,.69-12.14,1.42-18.36,1.13,5.12-.66,10.26-1.23,15.36-2.01,22.28-3.43,42.6,.48,60.11,15.58,2.98,2.57,6.5,4.5,9.77,6.72,.16,.16,.32,.32,.48,.48Z" />
+          <path className="cls-1 cosmic_45" d="M1308,706.41c-18.39-13.09-39.36-23.72-51.79-25.51,4.43,1.9,8.91,3.72,13.29,5.74,4.11,1.89,9.13,2.62,11.61,6.76-.41,.65-.83,1.31-1.24,1.96-9.44-4.68-18.75-9.65-28.36-13.95-7.85-3.51-15.99-6.41-24.15-9.12-1.43-.48-3.61,1.3-6.27,2.37-.85-2.98-2.01-7.06-3.49-12.26-3.76,7.43-8.07,3.69-12.52,1.9,.3-1.3,.41-2.8,.99-4.07,3.06-6.69,4.76-6.82,11.35-3.53,12.91,6.44,26.09,12.33,39.13,18.53,10.16,4.83,20.22,9.87,30.41,14.63,7.65,3.58,15.44,6.88,23.17,10.29,13.2,5.81,13.02,9.56,8.81,19.98-.1-1.28-.33-2.56-.27-3.83,.17-3.26,.99-6.74-3.49-7.94-1.97-2.22-3.24-7.03-7.19-1.93Z" />
+          <path className="cls-1 cosmic_46" d="M862.36,928.93c-.38-2.54-1.38-5.18-.99-7.59,.57-3.53-.8-4.94-5.06-5.9,1.34,4.17,2.47,7.69,3.72,11.57-7.22-3.86-6.68-15.61-1.51-24.57,.74,1.15,1.4,2.18,2.4,3.76,1.55-2.88,2.93-5.42,4.95-9.17-.44,3.75-.72,6.19-1.08,9.3,6.37-2.22,8.84-6.96,11.73-11.62,3.48-5.62,7.42-11.03,11.79-15.97,1.51-1.71,4.93-1.74,7.63-2.59,.47,1.06,.95,2.13,1.19,2.67,4.19-1.58,7.99-3.11,11.87-4.41,.93-.31,2.12,.16,3.19,.26-.17,1.23-.08,2.58-.56,3.69-4.24,9.8-11.05,17.49-20.09,24-.94-1.17-1.64-2.5-2.74-3.29-1.07-.78-3.48-1.68-3.69-1.37-3.17,4.4-9.82,4.76-11.81,10.74-.91,2.73-3.93,4.68-5.54,7.27-1.24,1.98-1.99,4.35-2.56,6.65-.52,2.09-.5,4.31-.71,6.48-.71,.04-1.42,.08-2.12,.12Zm36.44-42.15c-.6-.31-1.2-.61-1.8-.92-2.67,2.71-6.38,4.94-5.08,9.51,.53,.27,1.07,.54,1.6,.81l5.29-9.39Z" />
+          <path className="cls-1 cosmic_47" d="M932.23,1075.5c-.4-1.14-1.46-2.93-1.09-3.3,1.22-1.21,2.86-2.43,4.5-2.73,13.48-2.38,27.01-4.17,40.74-2.27,10.56,1.46,13.6,4.37,16.19,14.9,.57,2.32,1.81,4.47,3.15,7.68-5.98-1.53-10.89-2.83-15.81-4.04-5.01-1.22-10.04-2.35-15.07-3.52-4.86-1.13-9.77-2.07-14.56-3.44-4.53-1.3-10.13,.25-14.05-4.54-.91,.22-2.57,.63-4.22,1.04,0,0,.23,.22,.23,.22Z" />
+          <path className="cls-1 cosmic_48" d="M1427.03,771.89c.19,10.04-.03,19.22-7.81,27.25-9.05,9.34-19.42,15.22-32.12,17.51-3.95,.71-5.77-.33-5.37-5.29-4.8,.37-9.29,.71-13.79,1.05-.03-.24-.06-.49-.09-.73,4.8-.63,9.6-1.63,14.42-1.79,5.76-.19,12.05-1.6,12.83-9.62,.1-1.05,1.19-2.52,2.16-2.89,12.6-4.82,20.97-14.35,28.34-25.05,.13-.19,.56-.18,1.42-.44Z" />
+          <path className="cls-1 cosmic_49" d="M907.12,897.68c.36-1.03,.53-2.19,1.1-3.09,7.4-11.64,14.85-23.46,27.79-29.65,4.63-2.22,10.35-2.34,15.62-2.89,1.16-.12,3.46,1.84,3.66,3.1,.43,2.73,.02,6.1-.79,8.32-2.64,7.24-6.58,14.01-9.97,20.85-2.58-3.31-5.05-7.22-8.24-10.43-6.46-6.51-11.15-6.39-17.89,0-2.17,2.05-4.2,4.29-6.01,6.67-1.76,2.32-3.16,4.91-4.71,7.38-.19-.09-.37-.17-.56-.26Z" />
+          <path className="cls-1 cosmic_50" d="M1154.59,393.99c2.42-1.69,4.85-3.37,7.26-5.06,0,0-.16-.1-.16-.1,1.68,.13,3.45,.66,5.06,.35,17.74-3.44,30.91,3.87,37.07,21.08-.94-.15-1.75-.09-2.36-.4-5.96-3.1-11.88-6.3-17.84-9.4-12.46-6.47-25.15-3.88-34.79,6.38-3.31,3.52-7.79,5.92-12.14,8.36,2.59-10.15,10.82-15.34,18.07-21.37,0,0-.16,.16-.16,.16Z" />
+          <path className="cls-1 cosmic_51" d="M1055.64,468.16c5.97,.82,12.26,.72,17.86,2.65,11.95,4.12,23.87,8.62,35.13,14.31,5.79,2.93,10.45,8.44,15.06,13.32,12.63,13.38,24.97,27.03,37.4,40.59,4.25,4.63,8.44,9.31,12.02,14.73-4.59-4.04-9.44-7.82-13.73-12.16-14.61-14.78-28.45-30.38-43.67-44.49-15.42-14.29-34.26-22.57-55.19-25.7-1.74-.26-3.46-.63-5.19-.95l.32-2.31Z" />
+          <path className="cls-1 cosmic_52" d="M976.16,891.99c-1.47,.74-3.2,1.21-4.37,2.29-3.42,3.14-6.48,6.69-9.98,9.74-1.47,1.28-3.69,1.72-6.29,2.85-.6-6.25,2.32-10.31,4.9-14.31,3.06-4.75,8-8.86,9.28-13.96,.74-2.96,3.42-4.31,3.68-7.7,.3-4,4.47-4.55,8.34-2.15,2.66,1.65,5.37,3.2,8.45,5.04-1.63,2.83-3.16,5.5-4.69,8.14-1.96,2.33-3.93,4.68-5.9,7.03l-1.66,.55c-.29,.3-.58,.61-.86,.91-.3,.52-.59,1.04-.89,1.56Z" />
+          <path className="cls-1 cosmic_53" d="M979.57,888.96c1.97-2.35,3.94-4.71,5.9-7.03,2.69-2.9,5.38-4.14,9.28-1.46,2.61,1.78,6.04,2.32,8.96,3.69,3.6,1.69,3.9,4.45,1.25,7.14-7.52,7.64-17.32,12.74-30.62,7.78,.54-2.35,1.1-4.8,1.66-7.25,.35-.47,.69-.94,1.04-1.41,.29-.3,.58-.61,.86-.91,.55-.18,1.11-.37,1.66-.55Z" />
+          <path className="cls-1 cosmic_54" d="M1097.99,525.49c-.16-.16-.32-.32-.48-.48-5.45-10.09-15.5-14.62-24.62-20.21-10.86-6.66-23.03-8-36.93-7.65,8.17-3.29,15.27-2.61,21.66-.62,15.22,4.74,30.68,9.94,41.65,22.26,9.09,10.21,16.86,21.6,25.21,32.47-.54,.55-1.08,1.09-1.62,1.64-1.54-1.31-3.37-2.39-4.55-3.96-3.39-4.52-6.21-9.5-9.85-13.79-3.05-3.59-6.95-6.47-10.47-9.66Z" />
+          <path className="cls-1 cosmic_55" d="M1107.36,769.88c-6.07,9.29-14.14,15.76-22.76,21.55-.85,.57-3.62-.31-4.44-1.36-4.16-5.31-2.85-10.23,3.48-13.48,5.83-3,11.68-6.03,18.66-5.31,1.42,.15,2.96-.79,5.06-1.41Z" />
+          <path className="cls-1 cosmic_56" d="M1039.44,359.74c.38,.98,.77,1.96,1.15,2.95-1.79-2.2-8.12,2.08-6.84-4.68-5.98,11.59-11.95,23.17-17.93,34.76-.85-.18-1.7-.37-2.56-.55,0-2.37-.71-5.03,.12-7.06,4.26-10.37,8.92-20.59,13.44-30.85,.39,.46,.78,.92,1.18,1.39,2.1,.22,4.19,.44,6.29,.67,0,.11,0,.22,0,.33,2.15,.26,4.49,1.18,6.42,.65,3.98-1.1,6.09,.64,8.4,3.97-3.35-1.09-6.14-2-8.94-2.91-.25,.45-.49,.9-.74,1.35Z" />
+          <path className="cls-1 cosmic_57" d="M1078.82,496.4c-18.98-7.14-38.47-7.21-58.17-4.11-1.63,.26-3.25,.61-5.06,.96,8.21-5.96,46.38-6.02,64.07-.18,21.78,7.19,36.11,23.73,50.88,39.72-.34,.46-.69,.92-1.03,1.39-1.42-1.17-2.93-2.24-4.24-3.52-6.16-6.04-12.21-12.2-18.45-18.17-1.22-1.16-3.09-1.64-4.66-2.43-2.37-1.69-4.74-3.37-7.11-5.06-4.08-5.36-10.05-7.17-16.22-8.61Z" />
+          <path className="cls-1 cosmic_58" d="M932.23,1075.5s-.22-.22-.23-.22c1.68,3.52-1.2,3.37-3.13,3.7-4.25,.71-8.52,1.26-12.79,1.83-8.24,1.1-13.12,7.95-19.88,11.57-1.73,.92-3.41,2.09-5.26,2.55-1.11,.28-2.51-.58-3.78-.93-.12-.58-.24-1.16-.37-1.75,8.15-6.09,16.19-12.34,24.51-18.18,3.14-2.2,6.18-3.01,9.91,.9,1.84,1.93,7.23,.47,11.01,.54Z" />
+          <path className="cls-1 cosmic_59" d="M1065.78,466.03c1.14-.08,2.31-.36,3.41-.2,17.19,2.42,32.88,8.06,46.99,18.76,11.98,9.09,22.28,19.7,32.77,30.22-.26,.35-.52,.69-.78,1.04-1.65-1.07-3.54-1.89-4.9-3.25-11.54-11.55-23.4-22.64-37.24-31.52-10.47-6.71-22.24-9.24-33.99-12.09-2.06-.5-4.12-.99-6.18-1.48-.03-.49-.06-.98-.08-1.47Z" />
+          <path className="cls-1 cosmic_60" d="M1257.29,1195.69c1.05-4.49,2.05-8.76,3.17-13.56-7.33-.86-13.73-1.61-20.27-2.38,10.53-5.06,20.05-4.51,32.12,1.41-.6,2.47-1.47,4.61-1.57,6.78-.14,2.89-.34,4.86-4.16,4.36-1.55-.2-3.3,1.05-4.95,1.67-1.7,.65-3.39,1.33-4.34,1.71Z" />
+          <path className="cls-1 cosmic_61" d="M1320.44,909.24c4.31,4.55,2.51,8.66,.7,13.02-3.79,9.17-11.11,11.23-20.13,10.51-.2-1.51-.51-3.09-.57-4.68-.08-2.1,.39-2.88,3.09-3.58,3.84-1,7.45-3.79,10.53-6.53,2.5-2.23,4.08-5.49,6.39-8.74Z" />
+          <path className="cls-1 cosmic_62" d="M1105.02,499.85c-13.92-5.89-27.99-11.32-42.87-14.33-.92-.19-1.78-.67-2.67-1.01,.4-.82,.8-1.63,1.21-2.45,4.45,.36,9.13-.04,13.29,1.25,9.14,2.83,18.11,6.31,26.95,10.01,2.14,.9,3.47,3.71,5.17,5.64-.36,.3-.72,.59-1.08,.89Z" />
+          <path className="cls-1 cosmic_63" d="M900.88,563.17c4.84-5.32,9.09-5.36,12.98-2.46,7.85,5.85,8.23,15.06,11.62,22.91-1.82,1.22-3.23,2.16-4.82,3.22-2.25-4.93-4.34-9.76-6.62-14.49-2.44-5.07-4.39-10.83-13.16-9.18Z" />
+          <path className="cls-1 cosmic_64" d="M605.59,1570.55c0,3.44,.58,6.19-.09,8.58-4.97,17.69-9.4,35.58-18.18,51.94-1.24,2.32-2.09,4.85-3.87,7.04,7.27-22.19,14.55-44.38,22.15-67.56Z" />
+          <path className="cls-1 cosmic_65" d="M1387.84,962.17c2.06,4.82-6.08,7.95-.68,12.2-9.38-1.55-15.32,8.36-24.73,6.31,9.11-5.28,14.8-15.12,25.41-18.51Z" />
+          <path className="cls-1 cosmic_66" d="M1443.65,414.58c5.48,4.55,6.95,8.17,4.33,13.38-2.65,5.28-2.43,8.99,3.51,11.36,.64,.25,1.01,1.16,.98,2.67-1.88-.86-3.77-1.72-6.28-2.86v15.22c-.48,.04-.95,.08-1.43,.11-.89-6.48-2.35-12.94-2.53-19.43-.18-6.74,.88-13.51,1.41-20.45Z" />
+          <path className="cls-1 cosmic_67" d="M1210.34,755.31c21.93,6.77,43.19,15.27,63.28,26.72-21.18-8.49-42.36-16.98-63.53-25.46l.25-1.25Z" />
+          <path className="cls-1 cosmic_68" d="M1423.84,1071.52c5.16,.28,9.41,1.77,10.21,8.14-.98,.37-2.09,.78-3.21,1.2,.02,.24,.04,.48,.06,.72,.66,.03,1.32,.07,2.69,.14-.58,1.36-1.16,2.71-1.73,4.06-1.06-.83-2-1.95-3.19-2.43-2.17-.88-4.49-1.9-6.76-1.91-3.57-.02-9.51-6.24-8.17-9.43,.4-.97,2.27-1.32,3.47-1.95,0,0-.24-.11-.24-.11-.39,3.87,1.07,5.27,4.1,3.95,.23,.97,.46,1.94,.74,3.08,1.65-.98,2.87-1.7,4.1-2.44-.77-1.13-1.42-2.08-2.07-3.03Z" />
+          <path className="cls-1 cosmic_69" d="M887.44,1256.32c1.59-.23,2.94-.61,4.28-.59,5.64,.1,11.3,.16,16.92,.59,1.91,.15,3.75,1.34,5.62,2.05-1.58,1.13-3.01,2.69-4.77,3.3-6.5,2.29-13,2.8-19.06-1.45-.81-.57-1.59-1.19-2.28-1.89-.3-.31-.33-.88-.72-2.01Z" />
+          <path className="cls-1 cosmic_70" d="M1095.04,505.01c2.37,1.69,4.74,3.37,7.11,5.06,.8,1.13,1.5,2.35,2.41,3.38,6.68,7.61,13.4,15.18,20.08,22.78,.12,.14-.08,.58-.41,2.44-16.25-22.16-35.21-39.25-62.75-44.1,.28-.5,.57-1,.85-1.5,5.23,1.31,10.46,2.61,15.69,3.92,5.67,2.67,11.35,5.35,17.02,8.02Z" />
+          <path className="cls-1 cosmic_71" d="M1448.74,1113.89c-2.71-.42-5.36-.84-8.15-1.28-.97-5.05-2.07-10.41-2.87-15.8-.05-.35,2.48-1.78,3.29-1.45,6.08,2.47,9.67,11.72,7.73,18.53Z" />
+          <path className="cls-1 cosmic_72" d="M727.96,1463.33c2.33-1.7,5.11-3.03,6.88-5.19,2.39-2.91,3.9-6.54,6.01-9.71,1.78-2.69,3.79-5.25,5.91-7.69,.41-.47,2.21-.48,2.61-.02,.67,.75,1.23,2.22,.95,3.09-2.17,6.74-5.58,12.68-12,16.29-2.85,1.61-5.84,2.98-8.76,4.46-.53-.41-1.07-.82-1.6-1.23Z" />
+          <path className="cls-1 cosmic_73" d="M560.91,832.74c6.22-2.78,12.4-5.54,18.56-8.29,3.24,7.53,2.35,10.08-4.77,12.88-.95,.37-2.4-.31-3.54-.72-3.2-1.14-6.37-2.39-10.26-3.86Z" />
+          <path className="cls-1 cosmic_74" d="M861.87,1261.23c4.88-5.1,16.96-4.15,24.08,1.7-3.41,5.98-9.82,2.08-14.46,4.45,.67-7.84-5.84-4.37-9.62-6.15Z" />
+          <path className="cls-1 cosmic_75" d="M923.56,557.82c.88,.81,1.76,1.61,2.64,2.42,4.87,5.63,6.13,13.7,2.32,16.92-4.17-6.86-8.31-13.69-13.25-21.82,3.24,.97,5.77,1.73,8.3,2.48Z" />
+          <path className="cls-1 cosmic_76" d="M1124.59,829.82c-1.81,10.64-6.58,19.45-14.9,26.16,6.3-8,4.13-20.82,14.9-26.16Z" />
+          <path className="cls-1 cosmic_77" d="M901.58,1228.82c15.69-7.73,47.78-8.19,62.23-.76-20.85-4.78-41.6-4.77-62.23,.76Z" />
+          <path className="cls-1 cosmic_78" d="M816.7,1059.09c-12.09,.75-24.16,1.86-36.26,2.15-14.28,.35-28.58,0-42.87-.07-.59,0-1.18-.17-1.74-1.2,14.55,0,29.11,.34,43.65-.1,14.33-.43,28.63-1.64,42.97-3.09-1.97,.8-3.93,1.6-5.91,2.4,0,0,.15-.09,.15-.09Z" />
+          <path className="cls-1 cosmic_79" d="M908.6,1274.07c-7.48,.65-14.96,1.45-22.46,1.8-1.29,.06-2.67-1.85-4.01-2.85,1.19-1.23,2.2-3.17,3.6-3.51,2.13-.52,4.57-.14,6.8,.26,5.32,.95,10.59,2.13,15.88,3.22,.06,.36,.12,.72,.19,1.08Z" />
+          <path className="cls-1 cosmic_80" d="M663.37,694.59c-6.87-1.44-14.26-1.6-19.38-7.68-.88-1.05-.58-3.1-.82-4.68,1.42,.27,2.97,.27,4.23,.87,4.19,2,8.32,4.11,12.37,6.39,1.66,.94,3.03,2.4,4.53,3.62-.31,.5-.62,1-.92,1.49Z" />
+          <path className="cls-1 cosmic_81" d="M1309.53,858.04c8.96,2.54,17,4.81,25.62,7.25-6.46,5.08-21.19,.9-25.62-7.25Z" />
+          <path className="cls-1 cosmic_82" d="M1417.2,1070.06c-2.98-.51-5.95-1.02-8.64-1.49,.55-2.44,.92-4.44,1.45-6.39,.69-2.54,5.93-3.09,8.66-.84,1.89,1.55,4.07,3.01,5.28,5.02,.77,1.29,.02,3.49-.05,5.29-2.1-1.43-4.04-3.53-6.94-1.7,0,0,.24,.11,.24,.11Z" />
+          <path className="cls-1 cosmic_83" d="M1256.79,1200.29c-9.42,3.76-19.05,2.21-21-5.63,8.34-2.74,13.78,4.86,21,5.63Z" />
+          <path className="cls-1 cosmic_84" d="M1191.15,580.8c3.03,5.3-4.7,29.96-10.22,33.44,3.34-10.94,6.72-22.01,10.22-33.44Z" />
+          <path className="cls-1 cosmic_85" d="M1363.93,638.69c-7.13,8.2-16.66,8.19-26.28,7.79-1.15-.05-2.31-.28-3.42-.59-1.68-.46-3.32-1.07-4.9-2.29,12.05,1.36,23.64,.58,34.6-4.92Z" />
+          <path className="cls-1 cosmic_86" d="M1156.23,707.51c4.91-12.28,14.65-22.4,16.5-36.25,2.73-.48,4.15,.28,2.58,3.32-5.83,11.28-11.73,22.52-17.61,33.78-.49-.28-.99-.56-1.48-.85Z" />
+          <path className="cls-1 cosmic_87" d="M1380.53,368.6h-49.52c17.39-4.29,33.45-3.54,49.52,0Z" />
+          <path className="cls-1 cosmic_88" d="M874.23,1309.12c18.63-10.47,37.72-8.11,56.92-1.67-19.09-3.74-38.2-8.05-56.92,1.67Z" />
+          <path className="cls-1 cosmic_89" d="M1378.11,606.37c-4.25,3.51-8.13,7.7-12.87,10.33-5.22,2.9-10.71,.03-16.15-2.15,10.88,.92,20.19-3.1,29.02-8.18Z" />
+          <path className="cls-1 cosmic_90" d="M738.42,635.48c8.38,2.51,16.41,4.92,25.02,7.5-8.69,3.51-21.75-.64-25.02-7.5Z" />
+          <path className="cls-1 cosmic_91" d="M636.9,834.81c1.98,1.62,3.54,2.89,6.05,4.95-1.48,1.58-3.09,4.77-5.04,4.99-2.16,.25-6-1.71-6.71-3.6-1.96-5.24,3.92-4.75,5.7-6.34Z" />
+          <path className="cls-1 cosmic_92" d="M1188.91,663.96c-2.21,6.95-3.71,7.71-10.13,5.04-5.15-2.14-10.27-4.34-15.41-6.51,.15-.39,.29-.79,.44-1.18,5.22,1.6,10.43,3.23,15.66,4.79,2.37,.71,5.03,1.89,5.48-2.31,.03-.24,1.82-.28,2.79-.42,.39,.19,.79,.39,1.18,.59Z" />
+          <path className="cls-1 cosmic_93" d="M930.93,1201.05h28.75c.08,.48,.15,.96,.23,1.44-.88,.49-1.83,1.47-2.64,1.38-4.71-.54-9.38-1.54-14.1-1.96-2.2-.2-4.49,.76-6.75,.84-1.92,.07-3.86-.38-5.79-.6l.3-1.1Z" />
+          <path className="cls-1 cosmic_94" d="M1154.59,393.99s.16-.16,.16-.16c-7.67-.25-12.35,4.92-17.19,9.66-1.88,1.84-3.17,4.28-4.93,6.26-.92,1.04-2.29,1.67-3.82,2.05,1.34-6.79,7.1-9.44,11.6-13.24,2.52-2.13,4.96-4.34,7.44-6.52,.87-.07,1.74-.14,2.62-.21,2.34-1.11,3.86-.68,4.12,2.16Z" />
+          <path className="cls-1 cosmic_95" d="M970.05,572.03c5.22,2.79,10.28,3.56,15.12-1.7,.86,2.62,1.55,4.73,1.98,6.04-1.9,.29-3.77,.14-5.19,.87-4.36,2.24-8.36,2.19-11.77-1.46-.64-.68-.03-2.51,0-3.82,0,0-.13,.07-.13,.07Z" />
+          <path className="cls-1 cosmic_96" d="M1315.26,708.14c-.51,6.6-2.88,7.91-8.17,4.39-4.93-3.29-9.78-6.7-14.63-10.11-.33-.23-.38-.84-1.21-2.78,3.98,2.13,6.78,3.71,9.64,5.14,2.14,1.07,4.36,1.96,6.55,2.93,1.24,1.52,2.48,3.05,3.91,4.82,1.62-1.82,2.76-3.1,3.91-4.39Z" />
+          <path className="cls-1 cosmic_97" d="M902.52,968.61c-1.06,2.76-2.11,5.53-3.5,9.16,3.59-.59,6.08-1,8.57-1.4,.2,.31,.4,.61,.6,.92-3.4,2.8-6.79,5.61-10.68,8.82,.71-6.11-.83-12.53,3.43-17.95,.53,.15,1.06,.31,1.59,.46Z" />
+          <path className="cls-1 cosmic_98" d="M1326.44,680.28c9.41-.78,13.13,9.01,7.45,20.28-1.13-8.04,2.19-16.63-7.45-20.28Z" />
+          <path className="cls-1 cosmic_99" d="M1110.48,572.74c.3-.35,1.21-1.38,2.12-2.42,2.29,2.44,4.58,4.87,6.87,7.31-1.46,1.08-2.8,2.79-4.4,3.09-2.86,.54-4.45-2.12-4.58-7.99Z" />
+          <path className="cls-1 cosmic_100" d="M1154.44,651.98v-29.9c.44,0,.87,0,1.31,.01v29.93c-.44-.01-.87-.03-1.31-.04Z" />
+          <path className="cls-1 cosmic_101" d="M928.52,900.89c3.75,1.73,7.5,3.47,11.84,5.47-5.43,1.24-11.67-1.13-24.93-9.21,1.53-.55,2.42-.88,3.3-1.21,3.25,1.64,6.52,3.29,9.79,4.95Z" />
+          <path className="cls-1 cosmic_102" d="M980.34,1201.99c-10.45-1.69-19.53-3.74-28.71-4.47-9.2-.74-18.51-.16-26.31-.16,12.39-3.18,41.19-1.23,55.02,4.64Z" />
+          <path className="cls-1 cosmic_103" d="M827.89,601.59c4.18,7.11,7.35,14.59,8.44,22.82-.52,.19-1.04,.37-1.56,.56-2.76-7.63-5.52-15.25-8.28-22.88l1.39-.5Z" />
+          <path className="cls-1 cosmic_104" d="M872.25,1022.12c2.88-3.06,5.57-5.93,8.38-8.91,3.31,2.96,2.05,5.88,.12,7.17-2.16,1.45-4.53,5.49-8.49,1.74Z" />
+          <path className="cls-1 cosmic_105" d="M921.78,884.37c6.7-2.69,14.3,.46,16.85,7.37-5.86-2.56-11.27-4.93-16.85-7.37Z" />
+          <path className="cls-1 cosmic_106" d="M889.01,1060.32c4.62-4.8,6.42-12.47,14.47-13.72-4.85,4.6-9.66,9.16-14.47,13.72Z" />
+          <path className="cls-1 cosmic_107" d="M1447.01,402.04c9.23,6.01,14.96,18.58,11.44,26.41,.61-11.19-7.56-17.5-11.44-26.41Z" />
+          <path className="cls-1 cosmic_108" d="M1239.69,420.96c6.02-5.01,12.49-1.79,18.87-1.84,.02,.61,.03,1.22,.05,1.84h-18.92Z" />
+          <path className="cls-1 cosmic_109" d="M839.11,614.2c3.86,4.82,8.48,9.22,9.05,15.89-.52,.3-1.05,.59-1.57,.89-3.02-5.29-6.04-10.59-9.05-15.88,.52-.3,1.05-.59,1.57-.89Z" />
+          <path className="cls-1 cosmic_110" d="M1390.97,998.82c5.08-1.39,10.16-2.78,15.24-4.18,.09,.29,.18,.58,.28,.86-1.57,.59-3.15,1.19-5.6,2.11,2.99,1.03,5.3,1.82,7.6,2.62-.05,.3-.09,.6-.14,.9-5.69-.45-11.38-.9-17.07-1.36-.1-.32-.21-.64-.31-.96Z" />
+          <path className="cls-1 cosmic_111" d="M1369.64,623.57c6.35-1.09,12.58-5.39,19.56,.05-6.82,0-13.08,0-19.34,0-.07,0-.13-.03-.21-.05Z" />
+          <path className="cls-1 cosmic_112" d="M928.52,900.89c-3.27-1.65-6.54-3.31-9.79-4.95,.95-.43,2.13-1.48,2.76-1.21,4.84,2.03,9.57,4.31,13.99,7.49-2.32-.44-4.64-.89-6.96-1.33Z" />
+          <path className="cls-1 cosmic_113" d="M923.31,1291.03c-11.72-1.99-23.44-3.98-34-5.77,4.69-1.17,22.07,1.2,34,5.77Z" />
+          <path className="cls-1 cosmic_114" d="M1301.7,1334.45c.44,4.86,.84,9.38,1.25,13.9-.54,.1-1.07,.2-1.61,.3-1.19-4.45-2.39-8.91-3.72-13.9,1.53-.11,2.7-.2,4.08-.3Z" />
+          <path className="cls-1 cosmic_115" d="M1284.67,924.57c1.24-.76,2.47-1.53,4.02-2.48-1.06-.58-1.96-1.07-2.88-1.56,3.28-3.75,6.3-3.24,9.26,1.6-3.26,1.14-6.49,2.28-9.73,3.41-.23-.32-.45-.64-.68-.96Z" />
+          <path className="cls-1 cosmic_116" d="M1211.66,382.04c5.03,.33,10.36,.69,15.42,1.02-2.83,4.95-11.96,4.44-15.42-1.02Z" />
+          <path className="cls-1 cosmic_117" d="M1133.51,726.25c.68-6.73,7-12.42,13.75-12.95-4.15,3.91-8.99,8.47-13.75,12.95Z" />
+          <path className="cls-1 cosmic_118" d="M1150.46,391.83c-.87,.07-1.74,.14-2.62,.21-2.99,1.54-5.99,3.08-8.99,4.62-.24-.34-.48-.68-.72-1.02l14.94-10.37,.99,1.05c-1.2,1.83-2.41,3.67-3.61,5.5Z" />
+          <path className="cls-1 cosmic_119" d="M1229.81,372.18c-4.3-1.28-8.15-2.42-12.11-3.59,4.95-4.65,10.44-3.11,12.11,3.59Z" />
+          <path className="cls-1 cosmic_120" d="M1416.96,1069.95c2.9-1.83,4.84,.27,6.94,1.7,0,0-.06-.13-.06-.13,.65,.95,1.29,1.9,2.06,3.03-1.23,.73-2.46,1.46-4.1,2.44-.27-1.15-.51-2.12-.74-3.08-3.03,1.32-4.49-.09-4.1-3.95Z" />
+          <path className="cls-1 cosmic_121" d="M1125.02,750.88c-3.08,3.86-6.16,7.72-9.23,11.58-.58-.43-1.17-.86-1.75-1.29,2.84-4.06,5.69-8.12,8.53-12.18,.82,.63,1.63,1.26,2.45,1.89Z" />
+          <path className="cls-1 cosmic_122" d="M1364.47,868.91c-2.7,6.67-6.26,8.54-11.62,6.22,3.92-2.1,7.36-3.95,11.62-6.22Z" />
+          <path className="cls-1 cosmic_123" d="M876.64,1150.91c2-1.84,3.87-3.85,6.07-5.41,.73-.52,2.28,.11,3.46,.22-.3,1.14-.25,2.9-.97,3.32-2.33,1.35-4.95,2.21-7.46,3.27l-1.09-1.39Z" />
+          <path className="cls-1 cosmic_124" d="M717.16,1487.31c1.77-.97,3.17-1.73,5.92-3.23-.45,3.86-.76,6.59-1.08,9.32-.62,.09-1.25,.17-1.87,.26-.94-2-1.87-4-2.97-6.34Z" />
+          <path className="cls-1 cosmic_125" d="M1315.26,708.14c-1.14,1.29-2.29,2.57-3.91,4.39-1.44-1.77-2.68-3.3-3.91-4.82,.19-.43,.37-.87,.56-1.3,3.94-5.1,5.22-.29,7.19,1.93,0,0,.07-.2,.07-.2Z" />
+          <path className="cls-1 cosmic_126" d="M1354.92,639.03c5.39-4.04,9.75-7.31,14.66-11-2.75,6.6-7.29,9.62-14.66,11Z" />
+          <path className="cls-1 cosmic_127" d="M1095.04,505.01c-5.67-2.67-11.35-5.35-17.02-8.02,.28-.17,.55-.37,.8-.59,6.17,1.44,12.13,3.25,16.22,8.61Z" />
+          <path className="cls-1 cosmic_128" d="M925.46,1267.67h27.63c0,.29,0,.57,0,.86h-27.63c0-.29,0-.57,0-.86Z" />
+          <path className="cls-1 cosmic_129" d="M1162.08,402.89h15.69c0,.43,0,.86,0,1.29h-15.7c0-.43,0-.86,0-1.29Z" />
+          <path className="cls-1 cosmic_130" d="M1374.51,993.78c1.21,.22,2.41,.43,3.64,.65-3.67,.48-7.23,.95-12.44,1.63,4.76-3.09,8.34-5.4,11.91-7.72,.33,.36,.65,.71,.98,1.07-1.71,.87-3.43,1.75-5.14,2.62l1.05,1.75Z" />
+          <path className="cls-1 cosmic_131" d="M821.85,1341.38c.9-1.92,1.8-3.84,3.11-6.62,2.79,4.6,.89,7.95-.3,11.35l-1.64,.2c-.35-1.7-.71-3.39-1.06-5.08,0,0-.11,.16-.11,.16Z" />
+          <path className="cls-1 cosmic_132" d="M1290.15,1280.04c.22,4.89,.43,9.47,.61,13.35-4.15-4.18-4.63-8.77-.61-13.35Z" />
+          <path className="cls-1 cosmic_133" d="M1274.57,355.29c-.32-.57-.91-1.62-1.5-2.66,1.02-.55,1.99-1.23,3.06-1.64,2.05-.77,4.16-1.38,7.7-2.53-1.29,1.56-1.95,2.79-2.96,3.48-1.68,1.15-3.6,1.95-6.3,3.35Z" />
+          <path className="cls-1 cosmic_134" d="M829.02,1342.11c1.2-2.79,2.25-5.67,3.72-8.31,.39-.7,2.09-.66,3.19-.96-.08,.98,.18,2.18-.3,2.89-1.68,2.46-3.62,4.75-5.46,7.11-.38-.24-.77-.48-1.15-.72Z" />
+          <path className="cls-1 cosmic_135" d="M1101.9,339.13c.97,5.5,1.94,11,2.91,16.5-.4,.09-.8,.18-1.21,.27-1.22-5.47-2.44-10.95-3.66-16.42,.65-.11,1.31-.23,1.96-.34Z" />
+          <path className="cls-1 cosmic_136" d="M1274.01,918.79c2.06,0,4.15-.17,6.16,.16,.37,.06,.41,2.15,.61,3.3-2.19-.22-4.38-.44-6.57-.67-.07-.93-.13-1.86-.2-2.79Z" />
+          <path className="cls-1 cosmic_137" d="M913.76,997.77c4.96-2.1,9.92-4.2,14.88-6.31,.25,.59,.5,1.19,.75,1.78-5.06,1.84-10.13,3.68-15.19,5.52-.14-.33-.29-.66-.43-.99Z" />
+          <path className="cls-1 cosmic_138" d="M1028.71,1130.55c-1.74-2.59-3.47-5.17-5.75-8.57,4.12,2.01,8.08,2.91,7.24,7.66-.49,.31-.99,.61-1.48,.92Z" />
+          <path className="cls-1 cosmic_139" d="M1188.91,663.96c-.4-.2-.79-.39-1.18-.59-.14-2.87-.27-5.73-.41-8.57,4.39,1.79,4.73,3.65,1.6,9.16Z" />
+          <path className="cls-1 cosmic_140" d="M1403.95,579.01c.79-.03,2.2-.28,2.27-.06,2.43,7.04,4.61,14.13,1.74,21.6,.39-7.5,.84-15.01-4.01-21.54Z" />
+          <path className="cls-1 cosmic_141" d="M986.95,840.83c-1.45,3.74-2.91,7.47-4.36,11.21l-1.39-.51c1.25-3.81,2.49-7.62,3.74-11.43,.67,.24,1.34,.49,2.02,.73Z" />
+          <path className="cls-1 cosmic_142" d="M908.96,944.25c3.25,0,5.99,0,8.72,0q-6.78,4.88-8.72,0Z" />
+          <path className="cls-1 cosmic_143" d="M1297.36,713.69c-5.14,1.17-6.61-5.45-11.06-5.74l.59-1.25c3.62,1.75,7.25,3.51,10.87,5.26-.13,.57-.27,1.15-.4,1.72Z" />
+          <path className="cls-1 cosmic_144" d="M1246.16,1189.14c-5.31,.78-10.63,1.57-15.94,2.35-.06-.43-.12-.86-.18-1.29l16.11-2.2c0,.38,0,.76,.01,1.14Z" />
+          <path className="cls-1 cosmic_145" d="M951.35,1056.49c-2.9,.46-5.81,.92-8.71,1.39-.09-.66-.19-1.33-.28-1.99,2.96-.36,5.92-.71,8.88-1.07,.04,.56,.08,1.12,.12,1.68Z" />
+          <path className="cls-1 cosmic_146" d="M1105.02,499.85c.36-.3,.72-.59,1.08-.89l1.5,2.43,.13-.13c-.9-.47-1.8-.94-2.71-1.41Z" />
+          <path className="cls-1 cosmic_147" d="M1107.6,501.39c1.08,.13,2.17,.26,3.25,.39-.12,.43-.24,.85-.36,1.28-.91-.61-1.82-1.21-2.75-1.81-.01,.01-.14,.14-.14,.14Z" />
+          <path className="cls-1 cosmic_148" d="M944.24,573.81s-.1,.05-.07,.05c-.11,.02-.24,.05-.37,.07l.44-.11Z" />
+          <path className="cls-1 cosmic_149" d="M977.05,890.43c-.35,.47-.69,.94-1.04,1.41,0,0,.15,.15,.15,.15,.3-.52,.59-1.04,.89-1.56Z" />
+          <path className="cls-1 cosmic_150" d="M963.12,297.97c5.38-4.31,37.94-.82,47.71,5.12-4.77-1.28-9.48-3.29-14.32-3.68-8.69-.7-17.47-.38-26.2-.59-2.21-.05-4.41-.51-7.19-.85Z" />
+          <path className="cls-1 cosmic_151" d="M1010.39,272.05s.05-.03,.05-.03c1.22,1.07,2.94,1.9,3.56,3.25,2.85,6.21,5.4,12.55,8.05,18.85,0,0-.09-.15-.09-.15-.59,.68-1.18,1.35-1.42,1.64-3.42-7.93-6.78-15.74-10.15-23.55Z" />
+          <path className="cls-1 cosmic_152" d="M1005.09,271.86l-16.55,3.56c-.09-.4-.18-.79-.28-1.19,5.5-1.27,11-2.53,16.5-3.8,.11,.48,.22,.96,.33,1.43Z" />
+          <path className="cls-1 cosmic_153" d="M1022.05,294.11c-2.65-6.3-5.2-12.65-8.05-18.85-.62-1.34-2.34-2.18-3.56-3.25,3-1.92,5.16-.9,7.01,1.83,4.17,6.17,6.96,12.63,4.6,20.27Z" />
+          <path className="cls-1 cosmic_154" d="M942.63,561.99c-4.17-1.33-7.82-2.5-11.16-3.56,5.25-3.91,7.99-3.27,11.16,3.56Z" />
+          <path className="cls-1 cosmic_155" d="M981.36,556.74c-2.77-4.41-5.53-8.83-8.21-13.1,3.9-1.37,9.16,6.17,8.21,13.11,0,0,0,0,0,0Z" />
+          <path className="cls-1 cosmic_156" d="M1042.8,1330.98c1.53-7.36,7.07-4.59,11.1-5.91,.16,.41,.32,.81,.47,1.22-3.86,1.56-7.72,3.13-11.58,4.69Z" />
+          <path className="cls-1 cosmic_157" d="M898.79,886.77l-5.29,9.39c-.53-.27-1.07-.54-1.6-.81-1.3-4.57,2.41-6.8,5.08-9.51,.6,.31,1.2,.61,1.8,.92Z" />
+          <path className="cls-1 cosmic_158" d="M979.57,888.96c-.55,.18-1.11,.37-1.66,.55,.55-.19,1.11-.37,1.66-.55Z" />
+        </svg>
+      </div>
+    </div>
+  );
+}

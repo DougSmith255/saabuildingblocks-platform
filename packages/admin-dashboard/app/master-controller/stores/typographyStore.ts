@@ -133,12 +133,27 @@ export const useTypographyStore = create<TypographyStore>()(
         })),
 
       batchUpdate: (settings) =>
-        set((state) => ({
-          settings: {
-            ...state.settings,
-            ...settings,
-          },
-        })),
+        set((state) => {
+          // Deep merge each text type to preserve nested objects like 'size'
+          const newSettings = { ...state.settings };
+          Object.keys(settings).forEach((key) => {
+            const textType = key as keyof TypographySettings;
+            // Only process text types that exist in the current settings (ignore unknown types from DB)
+            if (state.settings[textType]) {
+              newSettings[textType] = {
+                ...state.settings[textType],
+                ...settings[textType],
+                // Ensure size object is deeply merged
+                size: settings[textType]?.size
+                  ? { ...state.settings[textType].size, ...settings[textType].size }
+                  : state.settings[textType].size,
+              };
+            } else {
+              console.warn(`[Typography Store] Ignoring unknown text type from database: ${textType}`);
+            }
+          });
+          return { settings: newSettings };
+        }),
 
       resetToDefaults: () => set({ settings: defaultSettings, displayTextEnabled: true, displayTextFont: 'Taskor' }),
 
