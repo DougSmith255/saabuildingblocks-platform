@@ -133,18 +133,45 @@ jobs:
           
           echo "✅ Type check passed"
 
-      # Verify Master Controller CSS exists (pre-committed to repo)
-      - name: Verify Master Controller CSS
-        working-directory: packages/public-site
+      # Sync components from admin-dashboard to public-site
+      - name: Sync SAA components
         run: |
-          echo "🎨 Verifying Master Controller CSS..."
-          
-          # Check if CSS file exists (should be pre-committed)
+          echo "🔄 Syncing SAA components from admin-dashboard to public-site..."
+
+          # Sync shared component library
+          rsync -av --delete \
+            packages/admin-dashboard/components/saa/ \
+            packages/shared/components/saa/
+
+          echo "✅ Components synced to shared library"
+
+      # Export database settings to JSON
+      - name: Export database settings
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "📥 Exporting database settings to JSON..."
+
+          cd packages/public-site
+          node scripts/export-db-settings.js
+
+          echo "✅ Database settings exported"
+
+      # Generate Master Controller CSS from database export
+      - name: Generate Master Controller CSS
+        run: |
+          echo "🎨 Generating Master Controller CSS from database settings..."
+
+          cd packages/public-site
+          npm run generate:css
+
+          # Verify CSS was generated
           if [ -f "public/static-master-controller.css" ]; then
-            echo "✅ CSS file found (pre-committed)"
+            echo "✅ CSS file generated successfully"
             ls -lh public/static-master-controller.css
           else
-            echo "❌ CSS file missing! Master Controller CSS should be pre-committed to repo."
+            echo "❌ CSS generation failed!"
             exit 1
           fi
 

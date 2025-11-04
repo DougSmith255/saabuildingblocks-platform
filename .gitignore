@@ -92,3 +92,4 @@ ROLLBACK_*.sh
 
 # WordPress backup files
 *.php.backup*
+.claude.json
