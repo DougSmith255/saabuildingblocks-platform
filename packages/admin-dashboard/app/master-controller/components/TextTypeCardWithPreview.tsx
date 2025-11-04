@@ -127,7 +127,19 @@ export const TextTypeCardWithPreview: React.FC<TextTypeCardWithPreviewProps> = (
   const { settings: brandColors } = useBrandColorsStore();
   const config = settings[textType];
 
-  // Early return BEFORE useMemo to prevent race condition during hydration
+  // Calculate interpolated font size based on viewport simulation
+  // MUST be before early return to satisfy React Rules of Hooks
+  const calculateSimulatedFontSize = useMemo(() => {
+    // Defensive null checks for hydration edge cases
+    if (!config?.size || typeof config.size.min !== 'number' || typeof config.size.max !== 'number') {
+      return 16; // Safe fallback
+    }
+    // Don't destructure - access directly to avoid race conditions
+    const interpolatedSize = config.size.min + (config.size.max - config.size.min) * (viewportSimulation / 100);
+    return Math.round(interpolatedSize);
+  }, [config?.size?.min, config?.size?.max, viewportSimulation]);
+
+  // Early return AFTER all hooks (React Rules of Hooks)
   if (!config || !config.size || typeof config.size.min === 'undefined' || typeof config.size.max === 'undefined') {
     return (
       <div className="p-6 rounded-lg bg-[#404040]/30 border border-[#404040] shadow-lg">
@@ -173,17 +185,6 @@ export const TextTypeCardWithPreview: React.FC<TextTypeCardWithPreviewProps> = (
     const colorKey = config.color as keyof typeof brandColors;
     return brandColors[colorKey] || brandColors.bodyText;
   };
-
-  // Calculate interpolated font size based on viewport simulation
-  const calculateSimulatedFontSize = useMemo(() => {
-    // Defensive null checks for hydration edge cases
-    if (!config?.size || typeof config.size.min !== 'number' || typeof config.size.max !== 'number') {
-      return 16; // Safe fallback
-    }
-    // Don't destructure - access directly to avoid race conditions
-    const interpolatedSize = config.size.min + (config.size.max - config.size.min) * (viewportSimulation / 100);
-    return Math.round(interpolatedSize);
-  }, [config?.size?.min, config?.size?.max, viewportSimulation]);
 
   return (
     <div className="p-6 rounded-lg bg-[#404040]/30 border border-[#404040] shadow-lg hover:shadow-xl hover:shadow-[#00ff88]/5 transition-all">
