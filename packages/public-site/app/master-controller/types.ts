@@ -25,6 +25,8 @@ export interface TextTypeSettings {
   fontFamily: string;
   color: ColorName;
   fontStyle?: 'normal' | 'italic';
+  fontSize?: ClampConfig;
+  textTransform?: 'none' | 'uppercase' | 'lowercase' | 'capitalize';
 }
 
 /**
@@ -57,6 +59,23 @@ export type ColorName =
   | 'mediumGray';
 
 /**
+ * Text type names for typography settings
+ */
+export type TextType =
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'h4'
+  | 'h5'
+  | 'h6'
+  | 'body'
+  | 'quote'
+  | 'link'
+  | 'button'
+  | 'tagline'
+  | 'caption';
+
+/**
  * Brand colors settings
  */
 export interface BrandColorsSettings {
@@ -66,6 +85,7 @@ export interface BrandColorsSettings {
   brandGold: string;
   darkGray: string;
   mediumGray: string;
+  green: string;
 }
 
 /**
@@ -85,3 +105,45 @@ export interface SpacingSettings {
   sectionMargin: ClampConfig;
   gridMinWidth: number;
 }
+
+/**
+ * Component types for Component Editor
+ */
+
+// SAA Component (from data/saa-component-registry.ts)
+export interface SAAComponent {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  previewPath?: string;
+  reactPath?: string;
+  converted: boolean;
+  source: 'wordpress' | 'custom';
+  tags?: string[];
+  dependencies?: string[];
+}
+
+// SAA Component Category
+export type SAAComponentCategory =
+  | 'buttons'
+  | 'cards'
+  | 'gallery'
+  | 'effects'
+  | 'interactive'
+  | 'navigation'
+  | 'layouts'
+  | 'forms';
+
+// ShadCN Component
+export interface ShadCNComponent {
+  id: string;
+  name: string;
+  description: string;
+  installed: boolean;
+  category?: string;
+  tags?: string[];
+}
+
+// Union type for all UI components
+export type UIComponent = SAAComponent | ShadCNComponent;

@@ -1,0 +1,51 @@
+ADMIN DASHBOARD - UNUSED FILES QUICK REFERENCE
+==============================================
+
+HIGH CONFIDENCE - SAFE TO ARCHIVE (6 files):
+---------------------------------------------
+app/master-controller/components/SpacemanBackgroundFull.tsx
+app/master-controller/components/StarBackground.tsx
+app/master-controller/components/tabs/UserManagementTab.tsx
+app/master-controller/components/ComponentPreviewModal.tsx
+app/master-controller/components/ConfirmDialog.tsx
+app/master-controller/components/TextTypeCard.tsx
+
+MEDIUM CONFIDENCE - OLD ARCHITECTURE (8 files):
+-----------------------------------------------
+app/master-controller/components/ActionBar.tsx
+app/master-controller/components/TabNavigation.tsx
+app/master-controller/components/PreviewPanel.tsx
+app/master-controller/components/SyncStatus.tsx
+app/master-controller/components/CSSProvider.tsx
+app/master-controller/hooks/useAutoSync.ts
+app/master-controller/lib/supabaseSync.ts
+app/master-controller/stores/controllerStore.ts
+
+INVESTIGATE - TOKEN VAULT (3 files):
+-----------------------------------
+app/master-controller/components/TokenVault/AddTokenForm.tsx
+app/master-controller/components/TokenVault/TokenDetailModal.tsx
+app/master-controller/components/TokenVault/PropagationResults.tsx
+
+INVESTIGATE - LIB UTILITIES (9 files):
+-------------------------------------
+app/master-controller/lib/cssGenerator.ts
+app/master-controller/lib/cssOptimizer.ts
+app/master-controller/lib/buildTimeCSS.ts
+app/master-controller/lib/exportImport.ts
+app/master-controller/lib/performanceMonitor.ts
+app/master-controller/lib/supabaseClient.ts
+app/master-controller/lib/typographyTransformer.ts
+app/master-controller/lib/componentInstaller.ts
+app/master-controller/lib/componentInstaller.client.ts
+
+TOTAL POTENTIALLY UNUSED: 27 files
+
+ACTIVE FILES (CONFIRMED USED): 61 files
+- 7 tab components
+- 5 stores
+- 30 UI components
+- 5 lib utilities
+- 2 type files
+
+See ACTIVE_FILES_ANALYSIS.md for complete details.
