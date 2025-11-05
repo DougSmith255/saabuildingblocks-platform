@@ -211,10 +211,10 @@ const defaultColors: BrandColorsSettings = {
   mediumGray: '#404040',      // Medium gray for menus
 };
 
-// Typography (from typographyStore.ts)
+// Typography (from typographyStore.ts) - MUST match admin-dashboard defaults exactly
 const defaultTypography: TypographySettings = {
   h1: {
-    size: { min: 48, max: 120, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 48, max: 120, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.2,
     letterSpacing: -0.02,
     fontWeight: 700,
@@ -222,7 +222,7 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
   },
   h2: {
-    size: { min: 40, max: 96, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 40, max: 96, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.2,
     letterSpacing: -0.01,
     fontWeight: 700,
@@ -230,7 +230,7 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
   },
   h3: {
-    size: { min: 32, max: 72, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 32, max: 72, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.3,
     letterSpacing: 0,
     fontWeight: 700,
@@ -238,7 +238,7 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
   },
   h4: {
-    size: { min: 26, max: 56, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 26, max: 56, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.3,
     letterSpacing: 0,
     fontWeight: 700,
@@ -246,7 +246,7 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
   },
   h5: {
-    size: { min: 22, max: 44, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 22, max: 44, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0,
     fontWeight: 700,
@@ -254,7 +254,7 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
   },
   h6: {
-    size: { min: 18, max: 32, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 18, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0,
     fontWeight: 700,
@@ -262,7 +262,7 @@ const defaultTypography: TypographySettings = {
     color: 'headingText',
   },
   body: {
-    size: { min: 16, max: 28, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 16, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.6,
     letterSpacing: 0,
     fontWeight: 400,
@@ -270,7 +270,7 @@ const defaultTypography: TypographySettings = {
     color: 'bodyText',
   },
   quote: {
-    size: { min: 18, max: 32, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 18, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
     letterSpacing: 0,
     fontWeight: 400,
@@ -279,7 +279,7 @@ const defaultTypography: TypographySettings = {
     color: 'bodyText',
   },
   link: {
-    size: { min: 16, max: 28, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 16, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.6,
     letterSpacing: 0,
     fontWeight: 400,
@@ -287,7 +287,7 @@ const defaultTypography: TypographySettings = {
     color: 'accentGreen',
   },
   button: {
-    size: { min: 14, max: 20, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 14, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1,
     letterSpacing: 0.01,
     fontWeight: 600,
@@ -295,28 +295,28 @@ const defaultTypography: TypographySettings = {
     color: 'bodyText',
   },
   tagline: {
-    size: { min: 16, max: 21, viewportMin: 300, viewportMax: 2050, unit: 'px' },
-    lineHeight: 1.4,
-    letterSpacing: 0.05,
-    fontWeight: 500,
-    fontFamily: 'var(--font-taskor)',
-    color: 'headingText',
+    size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.5,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-amulya)',
+    color: 'bodyText',
   },
   caption: {
-    size: { min: 12, max: 16, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 12, max: 16, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0,
     fontWeight: 400,
-    fontFamily: 'var(--font-synonym)',
+    fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
   },
 };
 
-// Spacing (from spacingStore.ts)
+// Spacing (from spacingStore.ts) - MUST match admin-dashboard defaults exactly
 const defaultSpacing: SpacingSettings = {
-  containerPadding: { min: 16, max: 48, viewportMin: 300, viewportMax: 2050, unit: 'px' },
-  gridGap: { min: 16, max: 32, viewportMin: 300, viewportMax: 2050, unit: 'px' },
-  sectionMargin: { min: 48, max: 120, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+  containerPadding: { min: 16, max: 80, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  gridGap: { min: 16, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  sectionMargin: { min: 32, max: 120, viewportMin: 250, viewportMax: 3000, unit: 'px' },
   gridMinWidth: 300,
 };
 
