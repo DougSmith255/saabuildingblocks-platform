@@ -133,35 +133,15 @@ jobs:
           
           echo "✅ Type check passed"
 
-      # Sync components from admin-dashboard to public-site
-      - name: Sync SAA components
-        run: |
-          echo "🔄 Syncing SAA components from admin-dashboard to public-site..."
-
-          # Sync shared component library
-          rsync -av --delete \
-            packages/admin-dashboard/components/saa/ \
-            packages/shared/components/saa/
-
-          echo "✅ Components synced to shared library"
-
-      # Export database settings to JSON
-      - name: Export database settings
+      # Generate static CSS and copy component files
+      - name: Generate static CSS and components
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          echo "📥 Exporting database settings to JSON..."
-
-          cd packages/public-site
-          node scripts/export-db-settings.js
-
-          echo "✅ Database settings exported"
-
-      # Generate Master Controller CSS from database export
-      - name: Generate Master Controller CSS
-        run: |
-          echo "🎨 Generating Master Controller CSS from database settings..."
+          echo "🎨 Generating static CSS and copying component files..."
+          echo "   Source: packages/shared/components/saa/"
+          echo "   Destination: packages/public-site/public/"
 
           cd packages/public-site
           npm run generate:css
@@ -173,6 +153,15 @@ jobs:
           else
             echo "❌ CSS generation failed!"
             exit 1
+          fi
+
+          # Verify components were copied
+          if [ -d "public/components" ]; then
+            COMPONENT_COUNT=$(find public/components -type f | wc -l)
+            echo "✅ Components copied successfully (${COMPONENT_COUNT} files)"
+            echo "   Components will be available at /components/ in static export"
+          else
+            echo "⚠️  No components directory found (non-fatal)"
           fi
 
       # Build static export (FROM MONOREPO ROOT - fixes tsconfig resolution)
