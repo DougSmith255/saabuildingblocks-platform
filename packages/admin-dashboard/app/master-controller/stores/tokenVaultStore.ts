@@ -660,9 +660,5 @@ export const useTokenVaultStore = create<TokenVaultState>()(
   )
 );
 
-// Auto-lock check interval (run every minute)
-if (typeof window !== 'undefined') {
-  setInterval(() => {
-    useTokenVaultStore.getState().checkAutoLock();
-  }, 60000);
-}
+// Note: Auto-lock check interval removed - checkAutoLock() is disabled anyway
+// If needed in future, move to useEffect in TokenVaultTab component

@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'nextjs-saa',
     script: 'npm',
-    args: 'start -- -p 3001',
+    args: 'start -- -p 3002 -H 127.0.0.1',
     cwd: '/home/claude-flow/packages/admin-dashboard',
     instances: 1,
     exec_mode: 'fork',

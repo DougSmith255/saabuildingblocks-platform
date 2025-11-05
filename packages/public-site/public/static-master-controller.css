@@ -1,7 +1,7 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from database (Supabase)
- * Generated: 2025-11-05T04:50:35.342Z
+ * Generated: 2025-11-05T16:09:53.848Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
@@ -117,9 +117,9 @@
       --text-color-menuDropdown: #bfbdb0;
 
   /* Spacing */
-  --spacing-container-padding: clamp(16px, calc(10.51px + 1.83vw), 48px);
-      --spacing-grid-gap: clamp(16px, calc(13.26px + 0.91vw), 32px);
-      --spacing-section-margin: clamp(48px, calc(35.66px + 4.11vw), 120px);
+  --spacing-container-padding: clamp(16px, calc(10.18px + 2.33vw), 80px);
+      --spacing-grid-gap: clamp(16px, calc(14.55px + 0.58vw), 32px);
+      --spacing-section-margin: clamp(32px, calc(24.00px + 3.20vw), 120px);
       --grid-min-width: 300px;
 }
 

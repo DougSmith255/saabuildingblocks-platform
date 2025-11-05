@@ -23,7 +23,7 @@ interface CSSGenerationStats {
 }
 
 export function DeploymentTab() {
-  const [isRegeneratingCSS, setIsRegeneratingCSS] = useState(false);
+  const [isUpdatingStaticFiles, setIsUpdatingStaticFiles] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
   const [cssStats, setCSSStats] = useState<CSSGenerationStats | null>(null);
   const [lastDeployment, setLastDeployment] = useState<DeploymentHistory | null>(null);
@@ -76,8 +76,8 @@ export function DeploymentTab() {
     }
   };
 
-  const handleRegenerateCSS = async () => {
-    setIsRegeneratingCSS(true);
+  const handleUpdateStaticFiles = async () => {
+    setIsUpdatingStaticFiles(true);
     setMessage(null);
 
     try {
@@ -93,24 +93,24 @@ export function DeploymentTab() {
       if (result.success) {
         setMessage({
           type: 'success',
-          text: `✓ CSS regenerated successfully! ${result.data.fileSize} from ${result.data.source}`,
+          text: `✓ Static files updated successfully! ${result.data.fileSize} CSS + components from ${result.data.source}`,
         });
         setCSSStats(result.data);
         loadCSSStats(); // Reload stats
         // Auto-clear message after 5 seconds
         setTimeout(() => setMessage(null), 5000);
       } else {
-        throw new Error(result.error || result.details || 'Failed to regenerate CSS');
+        throw new Error(result.error || result.details || 'Failed to update static files');
       }
     } catch (error) {
-      console.error('[Deployment] CSS regeneration error:', error);
+      console.error('[Deployment] Static files update error:', error);
       setMessage({
         type: 'error',
-        text: `❌ Error: ${error instanceof Error ? error.message : 'Failed to regenerate CSS'}`,
+        text: `❌ Error: ${error instanceof Error ? error.message : 'Failed to update static files'}`,
       });
       setTimeout(() => setMessage(null), 7000);
     } finally {
-      setIsRegeneratingCSS(false);
+      setIsUpdatingStaticFiles(false);
     }
   };
 
@@ -219,7 +219,7 @@ export function DeploymentTab() {
         </div>
       )}
 
-      {/* CSS Generation Section */}
+      {/* Static Files Generation Section */}
       <div
         className="p-6 rounded-lg border"
         style={{
@@ -232,23 +232,23 @@ export function DeploymentTab() {
           <div>
             <h3 className="text-lg font-semibold text-[#ffd700] flex items-center gap-2">
               <FileCode className="w-5 h-5" />
-              Static CSS Generation
+              Static Files Generation
             </h3>
             <p className="text-sm text-[#dcdbd5] mt-1">
-              Generate static CSS from Master Controller settings stored in Supabase
+              Generate static CSS + component files from Master Controller settings stored in Supabase
             </p>
           </div>
           <button
-            onClick={handleRegenerateCSS}
-            disabled={isRegeneratingCSS}
+            onClick={handleUpdateStaticFiles}
+            disabled={isUpdatingStaticFiles}
             className={`px-4 py-2 rounded-md font-medium text-sm leading-[1.5] tracking-[0.01em] transition-all flex items-center gap-2 ${
-              isRegeneratingCSS
+              isUpdatingStaticFiles
                 ? 'bg-[#404040] text-[#dcdbd5] border border-[#404040] opacity-50 cursor-not-allowed'
                 : 'bg-[#ffd700] text-[#191818] border border-[#ffd700] hover:bg-[#ffd700]/90 hover:shadow-lg hover:shadow-[#ffd700]/30'
             }`}
           >
-            <RefreshCw className={`w-4 h-4 ${isRegeneratingCSS ? 'animate-spin' : ''}`} />
-            {isRegeneratingCSS ? 'Regenerating...' : 'Regenerate CSS'}
+            <RefreshCw className={`w-4 h-4 ${isUpdatingStaticFiles ? 'animate-spin' : ''}`} />
+            {isUpdatingStaticFiles ? 'Updating...' : 'Update Static Files'}
           </button>
         </div>
 
@@ -442,8 +442,9 @@ export function DeploymentTab() {
       <div className="p-4 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
         <p className="text-[clamp(0.8125rem,0.125vw+0.75rem,0.875rem)] leading-[1.75] text-[#dcdbd5]">
           <strong className="text-[#ffd700] font-medium">💡 Deployment Flow:</strong>
-          First regenerate CSS to capture latest Master Controller settings from Supabase,
-          then deploy to Cloudflare Pages for global CDN distribution (20-50ms TTFB worldwide).
+          "Update Static Files" generates CSS tokens + copies SAA components from @saa/shared to public/.
+          "Deploy to Cloudflare" triggers GitHub Actions which builds Next.js static export (public/ → out/)
+          and deploys to Cloudflare Pages global CDN (300+ edge locations, 20-50ms TTFB worldwide).
         </p>
       </div>
     </div>

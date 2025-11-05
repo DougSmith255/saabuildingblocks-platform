@@ -77,6 +77,17 @@ export class CSSGenerator {
    * Generate CSS custom properties for spacing
    */
   static generateSpacing(spacing: SpacingSettings): string {
+    // Validate spacing config before calling generateClamp
+    if (!spacing?.containerPadding || !spacing?.gridGap || !spacing?.sectionMargin) {
+      console.warn('[CSSGenerator] Invalid spacing settings, using safe defaults');
+      return `
+        --spacing-container-padding: clamp(16px, calc(-13.33px + 9.62vw), 80px);
+        --spacing-grid-gap: clamp(16px, calc(12.57px + 1.14vw), 32px);
+        --spacing-section-margin: clamp(32px, calc(-26.67px + 19.24vw), 120px);
+        --grid-min-width: 300px;
+      `.trim();
+    }
+
     const containerPaddingClamp = generateClamp(spacing.containerPadding);
     const gridGapClamp = generateClamp(spacing.gridGap);
     const sectionMarginClamp = generateClamp(spacing.sectionMargin);

@@ -218,53 +218,6 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
         return lazy(() => import('@/components/saa/buttons/SecondaryButton').then(m => ({ default: () => <m.SecondaryButton>Learn More</m.SecondaryButton> })));
 
       // Cards
-      case 'stacked-animation-cards':
-      case 'cyber-card-stacked-animation':
-        return lazy(() => import('@/components/saa/cards/CyberCardStackedAnimation').then(m => ({
-          default: () => (
-            <m.CyberCardStackedAnimation
-              cards={[
-                {
-                  title: 'Revenue Share',
-                  description: 'Transparent compensation model with direct revenue sharing based on performance and contribution to client success.',
-                  buttonText: 'Learn More',
-                  buttonHref: '#revenue',
-                  placeholder: '💰'
-                },
-                {
-                  title: 'Stock Awards',
-                  description: 'Equity participation program for long-term alignment with company growth and success.',
-                  buttonText: 'View Details',
-                  buttonHref: '#stock',
-                  placeholder: '📈'
-                },
-                {
-                  title: 'Performance Bonuses',
-                  description: 'Quarterly performance incentives based on individual and team achievements.',
-                  buttonText: 'Get Started',
-                  buttonHref: '#bonus',
-                  placeholder: '🎯'
-                },
-                {
-                  title: 'Benefits Package',
-                  description: 'Comprehensive health, dental, vision, and wellness programs for you and your family.',
-                  buttonText: 'Explore',
-                  buttonHref: '#benefits',
-                  placeholder: '🏥'
-                },
-                {
-                  title: 'Growth Opportunities',
-                  description: 'Professional development programs, mentorship, and career advancement pathways.',
-                  buttonText: 'Learn More',
-                  buttonHref: '#growth',
-                  placeholder: '🚀'
-                }
-              ]}
-              topOffset="40px"
-              className="w-full"
-            />
-          )
-        })));
       case 'cyber-card-prismatic-glass':
         return lazy(() => import('@/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
           default: () => (
@@ -283,27 +236,6 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
             </m.CyberCardHolographic>
           )
         })));
-      case 'cyber-card-industrial-metal':
-        return lazy(() => import('@/components/saa/cards/CyberCardIndustrialMetal').then(m => ({
-          default: () => (
-            <m.CyberCardIndustrialMetal className="w-full max-w-md">
-              <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Industrial Metal</h3>
-              <p className="text-[#dcdbd5]">Industrial metal plate design</p>
-            </m.CyberCardIndustrialMetal>
-          )
-        })));
-      // Effects
-      case 'text-scramble':
-        return lazy(() => import('@/components/saa/text/TextScramble').then(m => ({
-          default: () => (
-            <div className="flex items-center justify-center h-full">
-              <m.TextScramble text="SAA Building Blocks">
-                SAA Building Blocks
-              </m.TextScramble>
-            </div>
-          )
-        })));
-
       // Interactive
       case 'icon-library':
         return lazy(() => import('@/components/saa/icons/IconLibrary').then(m => ({

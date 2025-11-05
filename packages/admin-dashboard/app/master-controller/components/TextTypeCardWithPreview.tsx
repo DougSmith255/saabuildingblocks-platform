@@ -131,16 +131,15 @@ export const TextTypeCardWithPreview: React.FC<TextTypeCardWithPreviewProps> = (
   // MUST be before early return to satisfy React Rules of Hooks
   const calculateSimulatedFontSize = useMemo(() => {
     // Defensive null checks for hydration edge cases
-    if (!config?.size || typeof config.size.min !== 'number' || typeof config.size.max !== 'number') {
-      return 16; // Safe fallback
-    }
-    // Don't destructure - access directly to avoid race conditions
-    const interpolatedSize = config.size.min + (config.size.max - config.size.min) * (viewportSimulation / 100);
+    // Use optional chaining with fallbacks for maximum safety during hydration
+    const min = config?.size?.min ?? 16;
+    const max = config?.size?.max ?? 32;
+    const interpolatedSize = min + (max - min) * (viewportSimulation / 100);
     return Math.round(interpolatedSize);
-  }, [config?.size?.min, config?.size?.max, viewportSimulation]);
+  }, [config?.size, viewportSimulation]); // Fixed: Watch entire size object instead of nested properties to avoid hydration race
 
   // Early return AFTER all hooks (React Rules of Hooks)
-  if (!config || !config.size || typeof config.size.min === 'undefined' || typeof config.size.max === 'undefined') {
+  if (!config || !config.size || typeof config?.size?.min === 'undefined' || typeof config?.size?.max === 'undefined') {
     return (
       <div className="p-6 rounded-lg bg-[#404040]/30 border border-[#404040] shadow-lg">
         <div className="text-center text-[#dcdbd5]">Loading typography settings...</div>

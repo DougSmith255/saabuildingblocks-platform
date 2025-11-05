@@ -124,7 +124,7 @@ export const TextTypeCard: React.FC<TextTypeCardProps> = ({ textType }) => {
   const config = settings[textType];
 
   // Early return if config not loaded (SSR/static generation)
-  if (!config || !config.size || typeof config.size.min !== 'number' || typeof config.size.max !== 'number') {
+  if (!config || !config.size || typeof config?.size?.min !== 'number' || typeof config?.size?.max !== 'number') {
     return (
       <div className="p-6 rounded-lg bg-[#404040]/30 border border-[#404040] shadow-lg">
         <div className="text-center text-[#dcdbd5]">Loading typography settings...</div>

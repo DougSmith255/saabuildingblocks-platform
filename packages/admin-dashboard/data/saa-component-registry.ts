@@ -29,7 +29,8 @@ export interface SAAComponent {
 }
 
 /**
- * Complete SAA Component Registry (7 components)
+ * Complete SAA Component Registry (4 components)
+ * Note: Prismatic Glass and Stacked Animation Cards have been deprecated
  */
 export const saaComponentRegistry: SAAComponent[] = [
   // Buttons (2)
@@ -54,29 +55,7 @@ export const saaComponentRegistry: SAAComponent[] = [
     tags: ['button', 'secondary', 'animation', 'wordpress', 'vertical-glow'],
   },
 
-  // Cards (4)
-  {
-    id: 'stacked-animation-cards',
-    name: 'Stacked Animation Cards',
-    category: 'cards',
-    description: 'Multiple cards with stacked layer animation on hover',
-    previewPath: '/saa-components/cards/stacked-animation-cards.html',
-    reactPath: '/components/saa/cards/CyberCardStackedAnimation.tsx',
-    converted: true,
-    source: 'wordpress',
-    tags: ['card', 'animation', 'hover', 'stacked', 'layers'],
-  },
-  {
-    id: 'cyber-card-prismatic-glass',
-    name: 'Prismatic Glass Card',
-    category: 'cards',
-    description: 'Glass morphism card with prismatic light effects',
-    previewPath: '/saa-components/cards/cyber-card-prismatic-glass.html',
-    reactPath: '/components/saa/cards/CyberCardPrismaticGlass.tsx',
-    converted: true,
-    source: 'wordpress',
-    tags: ['card', 'glassmorphism', 'prismatic', 'futuristic', 'light'],
-  },
+  // Cards (1)
   {
     id: 'cyber-card-holographic',
     name: 'Holographic Card',
@@ -87,30 +66,6 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'wordpress',
     tags: ['card', 'holographic', 'futuristic', 'border', 'glow'],
-  },
-  {
-    id: 'cyber-card-industrial-metal',
-    name: 'Industrial Metal Card',
-    category: 'cards',
-    description: 'Card with industrial metal aesthetic and rivets',
-    previewPath: '/saa-components/cards/cyber-card-industrial-metal.html',
-    reactPath: '/components/saa/cards/CyberCardIndustrialMetal.tsx',
-    converted: true,
-    source: 'wordpress',
-    tags: ['card', 'industrial', 'metal', 'rivets', 'aesthetic'],
-  },
-
-  // Effects (1)
-  {
-    id: 'text-scramble',
-    name: 'Text Scramble',
-    category: 'effects',
-    description: 'Animated text scramble effect for dynamic typography',
-    previewPath: '/saa-components/text/text-scramble.html',
-    reactPath: '/components/saa/text/TextScramble.tsx',
-    converted: true,
-    source: 'wordpress',
-    tags: ['text', 'animation', 'scramble', 'typography', 'effect'],
   },
 
 ];

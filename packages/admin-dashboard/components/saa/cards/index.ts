@@ -8,5 +8,3 @@
 export { CyberCardHolographic, type CyberCardHolographicProps } from './CyberCardHolographic';
 
 export { CyberCardPrismaticGlass, type CyberCardPrismaticGlassProps } from './CyberCardPrismaticGlass';
-
-export { CyberCardIndustrialMetal, type CyberCardIndustrialMetalProps } from './CyberCardIndustrialMetal';

@@ -10,11 +10,28 @@ export interface TypographyPreset {
 }
 
 // Helper to scale clamp values
-const scaleClamp = (clamp: ClampConfig, scale: number): ClampConfig => ({
-  ...clamp,
-  min: Math.round(clamp.min * scale),
-  max: Math.round(clamp.max * scale),
-});
+const scaleClamp = (clamp: ClampConfig, scale: number): ClampConfig => {
+  // Defensive validation to prevent undefined property access at module level
+  if (!clamp || typeof clamp !== 'object' ||
+      typeof clamp.min !== 'number' || typeof clamp.max !== 'number' ||
+      typeof clamp.viewportMin !== 'number' || typeof clamp.viewportMax !== 'number') {
+    console.error('[scaleClamp] Invalid clamp config:', clamp);
+    // Return safe fallback matching ClampConfig type
+    return {
+      min: 16,
+      max: 32,
+      viewportMin: 250,
+      viewportMax: 3000,
+      unit: 'px'
+    };
+  }
+
+  return {
+    ...clamp,
+    min: Math.round(clamp.min * scale),
+    max: Math.round(clamp.max * scale),
+  };
+};
 
 // Helper to scale line height
 const scaleLineHeight = (lineHeight: number, scale: number): number =>
@@ -326,7 +343,7 @@ const editorialPreset: TypographySettings = {
 // SAA Default preset (Original Smart Agent Alliance defaults from HTML master controller)
 const saaDefaultPreset: TypographySettings = {
   h1: {
-    size: { min: 48, max: 120, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 48, max: 120, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.2,
     letterSpacing: -0.02,
     fontWeight: 700,
@@ -334,7 +351,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'headingText',
   },
   h2: {
-    size: { min: 40, max: 96, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 40, max: 96, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.2,
     letterSpacing: -0.01,
     fontWeight: 700,
@@ -342,7 +359,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'headingText',
   },
   h3: {
-    size: { min: 32, max: 72, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 32, max: 72, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.3,
     letterSpacing: 0,
     fontWeight: 700,
@@ -350,7 +367,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'headingText',
   },
   h4: {
-    size: { min: 26, max: 56, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 26, max: 56, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.3,
     letterSpacing: 0,
     fontWeight: 700,
@@ -358,7 +375,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'headingText',
   },
   h5: {
-    size: { min: 22, max: 44, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 22, max: 44, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0,
     fontWeight: 700,
@@ -366,7 +383,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'headingText',
   },
   h6: {
-    size: { min: 18, max: 32, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 18, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0,
     fontWeight: 700,
@@ -374,7 +391,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'headingText',
   },
   body: {
-    size: { min: 16, max: 28, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 16, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.6,
     letterSpacing: 0,
     fontWeight: 400,
@@ -382,7 +399,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'bodyText',
   },
   quote: {
-    size: { min: 18, max: 32, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 18, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
     letterSpacing: 0,
     fontWeight: 400,
@@ -391,7 +408,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'bodyText',
   },
   link: {
-    size: { min: 16, max: 28, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 16, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.6,
     letterSpacing: 0,
     fontWeight: 400,
@@ -399,7 +416,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'accentGreen',
   },
   button: {
-    size: { min: 14, max: 20, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 14, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1,
     letterSpacing: 0.01,
     fontWeight: 600,
@@ -407,7 +424,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'accentGreen',
   },
   tagline: {
-    size: { min: 16, max: 21, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
     letterSpacing: 0,
     fontWeight: 400,
@@ -415,7 +432,7 @@ const saaDefaultPreset: TypographySettings = {
     color: 'bodyText',
   },
   caption: {
-    size: { min: 12, max: 16, viewportMin: 300, viewportMax: 2050, unit: 'px' },
+    size: { min: 12, max: 16, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.4,
     letterSpacing: 0,
     fontWeight: 400,
