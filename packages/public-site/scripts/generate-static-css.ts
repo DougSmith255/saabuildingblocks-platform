@@ -148,11 +148,11 @@ async function fetchSettingsFromDatabase() {
     // Connect to Supabase
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch settings with retry logic (key-value structure)
+    // Fetch settings with retry logic (key-value structure + timestamps for cache)
     const result = await retryWithBackoff(async () => {
       const { data, error } = await supabase
         .from('master_controller_settings')
-        .select('setting_key, setting_value');
+        .select('setting_key, setting_value, updated_at');
 
       if (error) {
         throw new Error(error.message);
@@ -167,14 +167,18 @@ async function fetchSettingsFromDatabase() {
     }
 
     // Convert key-value array to object structure
-    const settings: any = {};
+    // Include timestamps for cache invalidation
+    const settings: any = { _db_timestamps: {} };
     for (const row of result) {
       if (row.setting_key === 'typography') {
         settings.typography_settings = row.setting_value;
+        settings._db_timestamps.typography = row.updated_at;
       } else if (row.setting_key === 'brand_colors') {
         settings.brand_colors_settings = row.setting_value;
+        settings._db_timestamps.brand_colors = row.updated_at;
       } else if (row.setting_key === 'spacing') {
         settings.spacing_settings = row.setting_value;
+        settings._db_timestamps.spacing = row.updated_at;
       }
     }
 
@@ -310,6 +314,22 @@ const defaultTypography: TypographySettings = {
     fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
   },
+  menuMainItem: {
+    size: { min: 16, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 500,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
+  },
+  menuSubItem: {
+    size: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
+  },
 };
 
 // Spacing (from spacingStore.ts) - MUST match admin-dashboard defaults exactly
@@ -434,8 +454,9 @@ async function generateAndWriteCSS() {
     spacing
   );
 
-  // Add header comment
+  // Add header comment with database timestamps for cache invalidation
   const settingsSource = dbSettings ? 'database (Supabase)' : 'default Master Controller settings';
+  const dbTimestamps = dbSettings?._db_timestamps || {};
   const header = `/**
  * Master Controller Static CSS
  * Auto-generated from ${settingsSource}
@@ -446,9 +467,14 @@ async function generateAndWriteCSS() {
  * and spacing settings without requiring dynamic JavaScript.
  *
  * Settings source:
- * - Typography: ${dbSettings?.typography ? 'DATABASE' : 'DEFAULTS'}
- * - Colors: ${dbSettings?.brand_colors ? 'DATABASE' : 'DEFAULTS'}
- * - Spacing: ${dbSettings?.spacing ? 'DATABASE' : 'DEFAULTS'}
+ * - Typography: ${dbSettings?.typography_settings ? 'DATABASE' : 'DEFAULTS'}
+ * - Colors: ${dbSettings?.brand_colors_settings ? 'DATABASE' : 'DEFAULTS'}
+ * - Spacing: ${dbSettings?.spacing_settings ? 'DATABASE' : 'DEFAULTS'}
+ *
+ * Database timestamps (for cache invalidation):
+ * - Typography: ${dbTimestamps.typography || 'N/A'}
+ * - Colors: ${dbTimestamps.brand_colors || 'N/A'}
+ * - Spacing: ${dbTimestamps.spacing || 'N/A'}
  *
  * For custom settings:
  * 1. Use the Master Controller UI (https://saabuildingblocks.com/master-controller)

@@ -1,16 +1,21 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from database (Supabase)
- * Generated: 2025-11-05T16:09:53.848Z
+ * Generated: 2025-11-05T21:00:50.746Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
  * and spacing settings without requiring dynamic JavaScript.
  *
  * Settings source:
- * - Typography: DEFAULTS
- * - Colors: DEFAULTS
+ * - Typography: DATABASE
+ * - Colors: DATABASE
  * - Spacing: DEFAULTS
+ *
+ * Database timestamps (for cache invalidation):
+ * - Typography: 2025-11-02T17:43:44.178+00:00
+ * - Colors: 2025-11-05T00:51:06.405+00:00
+ * - Spacing: N/A
  *
  * For custom settings:
  * 1. Use the Master Controller UI (https://saabuildingblocks.com/master-controller)
