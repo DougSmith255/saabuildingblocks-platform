@@ -39,9 +39,9 @@ env:
   NODE_VERSION: '20'
   CLOUDFLARE_PROJECT_NAME: 'saabuildingblocks'  # Static export project
   DEPLOYMENT_TIMEOUT: 900  # 15 minutes in seconds
-  MAX_PARALLEL_UPLOADS: 50
+  MAX_PARALLEL_UPLOADS: 100  # Increased from 50 for faster uploads
   RETRY_ATTEMPTS: 3
-  RETRY_DELAY: 5
+  RETRY_DELAY: 2  # Reduced from 5s to 2s for faster retries
 
 jobs:
   # Build job - creates the static export
@@ -133,8 +133,21 @@ jobs:
           
           echo "✅ Type check passed"
 
-      # Generate static CSS and copy component files
+      # Cache static CSS generation (save ~35s per build when unchanged)
+      - name: Cache static CSS and components
+        uses: actions/cache@v4
+        id: css-cache
+        with:
+          path: |
+            packages/public-site/public/static-master-controller.css
+            packages/public-site/public/components
+          key: static-css-${{ hashFiles('packages/public-site/scripts/generate-static-css.ts') }}-${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          restore-keys: |
+            static-css-${{ hashFiles('packages/public-site/scripts/generate-static-css.ts') }}-
+
+      # Generate static CSS and copy component files (skip if cached)
       - name: Generate static CSS and components
+        if: steps.css-cache.outputs.cache-hit != 'true'
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
@@ -162,6 +175,15 @@ jobs:
             echo "   Components will be available at /components/ in static export"
           else
             echo "⚠️  No components directory found (non-fatal)"
+          fi
+
+      # Show cache status
+      - name: Report CSS cache status
+        run: |
+          if [ "${{ steps.css-cache.outputs.cache-hit }}" = "true" ]; then
+            echo "⚡ Using cached CSS and components (saved ~35s)"
+          else
+            echo "🆕 CSS generated fresh from Supabase"
           fi
 
       # Build static export (FROM MONOREPO ROOT - fixes tsconfig resolution)
@@ -322,10 +344,18 @@ jobs:
           command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
-      # Retry deployment on failure (attempt 2)
+      # Retry deployment on failure (attempt 2 - with 2s delay)
       - name: Retry deployment (attempt 2)
         if: steps.deploy.outcome == 'failure'
         id: deploy-retry-2
+        run: |
+          echo "⏳ Waiting ${RETRY_DELAY}s before retry 2..."
+          sleep ${{ env.RETRY_DELAY }}
+        continue-on-error: true
+
+      - name: Deploy attempt 2
+        if: steps.deploy.outcome == 'failure'
+        id: deploy-attempt-2
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -333,10 +363,18 @@ jobs:
           command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
-      # Retry deployment on failure (attempt 3)
+      # Retry deployment on failure (attempt 3 - with 2s delay)
       - name: Retry deployment (attempt 3)
-        if: steps.deploy-retry-2.outcome == 'failure'
+        if: steps.deploy-attempt-2.outcome == 'failure'
         id: deploy-retry-3
+        run: |
+          echo "⏳ Waiting ${RETRY_DELAY}s before retry 3..."
+          sleep ${{ env.RETRY_DELAY }}
+        continue-on-error: true
+
+      - name: Deploy attempt 3
+        if: steps.deploy-attempt-2.outcome == 'failure'
+        id: deploy-attempt-3
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -349,8 +387,8 @@ jobs:
         id: set-status
         run: |
           if [ "${{ steps.deploy.outcome }}" = "success" ] || \
-             [ "${{ steps.deploy-retry-2.outcome }}" = "success" ] || \
-             [ "${{ steps.deploy-retry-3.outcome }}" = "success" ]; then
+             [ "${{ steps.deploy-attempt-2.outcome }}" = "success" ] || \
+             [ "${{ steps.deploy-attempt-3.outcome }}" = "success" ]; then
             echo "✅ Deployment successful"
             echo "status=success" >> $GITHUB_OUTPUT
             echo "DEPLOY_STATUS=success" >> $GITHUB_ENV
