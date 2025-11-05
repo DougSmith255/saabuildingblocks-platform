@@ -7,6 +7,7 @@ import { TextTypeCardWithPreview } from '../../components/TextTypeCardWithPrevie
 import { TypographyViewportSlider } from '../../components/TypographyViewportSlider';
 import { TYPOGRAPHY_PRESETS, type TypographyPresetName } from '../../lib/typographyPresets';
 import { calculateContrast, getContrastRating } from '../../lib/colorUtils';
+import { VIEWPORT_RANGE } from '../../lib/constants';
 import type { TextType } from '../../types';
 
 const TEXT_TYPES: TextType[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'tagline'];
@@ -183,8 +184,8 @@ export const TypographyTab: React.FC = () => {
         <TypographyViewportSlider
           value={viewportSimulation}
           onChange={setViewportSimulation}
-          minViewport={300}
-          maxViewport={2050}
+          minViewport={VIEWPORT_RANGE.min}
+          maxViewport={VIEWPORT_RANGE.max}
         />
       </div>
 
@@ -193,7 +194,7 @@ export const TypographyTab: React.FC = () => {
         {TEXT_TYPES.map((textType) => {
           // Safety check: only render card if settings exist and are valid
           const config = settings[textType];
-          if (!config || !config.size || typeof config.size.min !== 'number') {
+          if (!config || !config.size || typeof config?.size?.min !== 'number') {
             return (
               <div key={textType} className="p-6 rounded-lg bg-[#404040]/30 border border-[#404040] shadow-lg">
                 <div className="text-center text-[#dcdbd5]">Loading {textType} settings...</div>

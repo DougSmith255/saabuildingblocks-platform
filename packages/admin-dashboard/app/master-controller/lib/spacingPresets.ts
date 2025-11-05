@@ -1,6 +1,7 @@
 // Spacing Presets for Master Controller
 
 import type { SpacingSettings } from '../types';
+import { VIEWPORT_RANGE } from './constants';
 
 export interface SpacingPreset {
   name: string;
@@ -16,22 +17,22 @@ export const SPACING_PRESETS: Record<string, SpacingPreset> = {
       containerPadding: {
         min: 12,
         max: 40,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
       gridGap: {
         min: 8,
         max: 24,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
       sectionMargin: {
         min: 24,
         max: 64,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
     },
@@ -43,22 +44,22 @@ export const SPACING_PRESETS: Record<string, SpacingPreset> = {
       containerPadding: {
         min: 16,
         max: 80,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
       gridGap: {
         min: 16,
         max: 48,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
       sectionMargin: {
         min: 32,
         max: 120,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
     },
@@ -70,22 +71,22 @@ export const SPACING_PRESETS: Record<string, SpacingPreset> = {
       containerPadding: {
         min: 24,
         max: 120,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
       gridGap: {
         min: 24,
         max: 64,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
       sectionMargin: {
         min: 48,
         max: 160,
-        viewportMin: 300,
-        viewportMax: 2050,
+        viewportMin: VIEWPORT_RANGE.min,
+        viewportMax: VIEWPORT_RANGE.max,
         unit: 'px',
       },
     },
