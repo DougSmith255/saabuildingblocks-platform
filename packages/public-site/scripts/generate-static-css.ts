@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
- * Build-Time Static CSS Generator
+ * Build-Time Static Files Generator
  *
- * Generates static CSS file from Master Controller default settings.
- * This CSS can be included in static HTML exports.
+ * Generates static CSS and component files from Master Controller settings.
+ * These files can be included in static HTML exports.
  *
  * Usage:
  *   tsx scripts/generate-static-css.ts
@@ -11,19 +11,21 @@
  *
  * Output:
  *   public/static-master-controller.css
+ *   public/components/ (all SAA components)
  *
  * Features:
  * - Smart caching (skips write if content unchanged)
  * - Retry logic for Supabase connectivity
  * - Input validation
  * - Comprehensive error handling
+ * - Component file copying from shared package
  *
  * Note: This uses the default settings from the Master Controller stores.
  * For custom settings, users must configure them via the Master Controller UI,
  * which persists to localStorage and is injected via useLiveCSS hook.
  */
 
-import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'fs';
+import { writeFileSync, mkdirSync, readFileSync, existsSync, cpSync, readdirSync, statSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
@@ -92,10 +94,10 @@ function shouldSkipWrite(newContent: string): boolean {
 function validateSettings(data: any): boolean {
   if (!data) return false;
 
-  // Check required properties exist
-  const hasTypography = data.typography && typeof data.typography === 'object';
-  const hasColors = data.brand_colors && typeof data.brand_colors === 'object';
-  const hasSpacing = data.spacing && typeof data.spacing === 'object';
+  // Check required properties exist (with _settings suffix)
+  const hasTypography = data.typography_settings && typeof data.typography_settings === 'object';
+  const hasColors = data.brand_colors_settings && typeof data.brand_colors_settings === 'object';
+  const hasSpacing = data.spacing_settings && typeof data.spacing_settings === 'object';
 
   return hasTypography || hasColors || hasSpacing; // At least one required
 }
@@ -146,12 +148,11 @@ async function fetchSettingsFromDatabase() {
     // Connect to Supabase
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch settings with retry logic
+    // Fetch settings with retry logic (key-value structure)
     const result = await retryWithBackoff(async () => {
       const { data, error } = await supabase
-        .from('design_settings')
-        .select('typography, brand_colors, spacing')
-        .single();
+        .from('master_controller_settings')
+        .select('setting_key, setting_value');
 
       if (error) {
         throw new Error(error.message);
@@ -160,19 +161,31 @@ async function fetchSettingsFromDatabase() {
       return data;
     });
 
-    if (!result) {
+    if (!result || result.length === 0) {
       console.warn('⚠️  No settings found in database - using defaults');
       return null;
     }
 
+    // Convert key-value array to object structure
+    const settings: any = {};
+    for (const row of result) {
+      if (row.setting_key === 'typography') {
+        settings.typography_settings = row.setting_value;
+      } else if (row.setting_key === 'brand_colors') {
+        settings.brand_colors_settings = row.setting_value;
+      } else if (row.setting_key === 'spacing') {
+        settings.spacing_settings = row.setting_value;
+      }
+    }
+
     // Validate settings structure
-    if (!validateSettings(result)) {
+    if (!validateSettings(settings)) {
       console.warn('⚠️  Invalid settings structure - using defaults');
       return null;
     }
 
     console.log('✅ Settings loaded from database (after validation)');
-    return result;
+    return settings;
 
   } catch (error) {
     console.warn('⚠️  Database fetch failed:', error instanceof Error ? error.message : String(error), '- using defaults');
@@ -308,23 +321,105 @@ const defaultSpacing: SpacingSettings = {
 };
 
 /**
+ * Copy component files from shared package to public directory
+ * Excludes Prismatic Glass and Stacked Animation Cards components
+ */
+function copyComponentFiles() {
+  console.log('\n📦 Copying Component Files\n');
+  console.log('=' .repeat(60));
+
+  const sharedComponentsPath = join(__dirname, '../../shared/components/saa');
+  const publicComponentsPath = join(__dirname, '../public/components');
+
+  // Components to exclude (deprecated)
+  const excludedComponents = [
+    'CyberCardPrismaticGlass.tsx',
+    'CyberCardStackedAnimation.tsx',
+    'cyber-card-prismatic-glass',
+    'stacked-animation-cards'
+  ];
+
+  try {
+    // Ensure public/components directory exists
+    mkdirSync(publicComponentsPath, { recursive: true });
+
+    // Check if shared components exist
+    if (!existsSync(sharedComponentsPath)) {
+      console.warn(`⚠️  Shared components not found at: ${sharedComponentsPath}`);
+      console.warn('   Skipping component copy');
+      return 0;
+    }
+
+    let copiedCount = 0;
+    let skippedCount = 0;
+
+    // Recursively copy components
+    function copyDirectory(src: string, dest: string, relativePath: string = '') {
+      if (!existsSync(src)) return;
+
+      const entries = readdirSync(src);
+
+      for (const entry of entries) {
+        const srcPath = join(src, entry);
+        const destPath = join(dest, entry);
+        const fullRelativePath = relativePath ? `${relativePath}/${entry}` : entry;
+
+        // Skip if in excluded list
+        if (excludedComponents.some(excluded => fullRelativePath.includes(excluded) || entry.includes(excluded))) {
+          console.log(`   ⏭️  Skipped (deprecated): ${fullRelativePath}`);
+          skippedCount++;
+          continue;
+        }
+
+        const stat = statSync(srcPath);
+
+        if (stat.isDirectory()) {
+          mkdirSync(destPath, { recursive: true });
+          copyDirectory(srcPath, destPath, fullRelativePath);
+        } else {
+          // Copy file
+          cpSync(srcPath, destPath);
+          console.log(`   ✓ Copied: ${fullRelativePath}`);
+          copiedCount++;
+        }
+      }
+    }
+
+    copyDirectory(sharedComponentsPath, publicComponentsPath);
+
+    console.log('\n📊 Component Copy Statistics:');
+    console.log('   ' + '-'.repeat(50));
+    console.log(`   Files Copied: ${copiedCount}`);
+    console.log(`   Files Skipped (deprecated): ${skippedCount}`);
+    console.log(`   Output: ${publicComponentsPath}`);
+    console.log('   ' + '-'.repeat(50));
+
+    return copiedCount;
+
+  } catch (error) {
+    console.error('❌ Failed to copy component files:', error);
+    return 0;
+  }
+}
+
+/**
  * Generates CSS and writes to file
  */
 async function generateAndWriteCSS() {
-  console.log('\n🎨 Master Controller Static CSS Generator\n');
+  console.log('\n🎨 Master Controller Static Files Generator\n');
   console.log('=' .repeat(60));
 
   // Fetch from database (with fallback to defaults)
   const dbSettings = await fetchSettingsFromDatabase();
 
-  const typography = dbSettings?.typography || defaultTypography;
-  const colors = dbSettings?.brand_colors || defaultColors;
-  const spacing = dbSettings?.spacing || defaultSpacing;
+  const typography = dbSettings?.typography_settings || defaultTypography;
+  const colors = dbSettings?.brand_colors_settings || defaultColors;
+  const spacing = dbSettings?.spacing_settings || defaultSpacing;
 
   console.log('📊 Settings source:');
-  console.log(`   Typography: ${dbSettings?.typography ? 'DATABASE' : 'DEFAULTS'}`);
-  console.log(`   Colors: ${dbSettings?.brand_colors ? 'DATABASE' : 'DEFAULTS'}`);
-  console.log(`   Spacing: ${dbSettings?.spacing ? 'DATABASE' : 'DEFAULTS'}`);
+  console.log(`   Typography: ${dbSettings?.typography_settings ? 'DATABASE' : 'DEFAULTS'}`);
+  console.log(`   Colors: ${dbSettings?.brand_colors_settings ? 'DATABASE' : 'DEFAULTS'}`);
+  console.log(`   Spacing: ${dbSettings?.spacing_settings ? 'DATABASE' : 'DEFAULTS'}`);
   console.log('');
   console.log('📊 Settings details:');
   console.log(`   Typography: ${Object.keys(typography).length} text types`);
@@ -410,6 +505,19 @@ async function generateAndWriteCSS() {
   console.log('   Settings managed via Master Controller UI');
   console.log('   CSS injected dynamically via useLiveCSS hook');
   console.log('   Changes apply instantly without rebuild\n');
+
+  // Copy component files
+  const componentsCopied = copyComponentFiles();
+
+  if (componentsCopied > 0) {
+    console.log('\n✅ Component files copied successfully!\n');
+    console.log('💡 Components available at:');
+    console.log('   /components/ (in static export)');
+    console.log('\n💡 Import in your app:');
+    console.log('   import { CTAButton } from "@/components/buttons/CTAButton"');
+  } else {
+    console.log('\n⚠️  No components copied (source not found or all excluded)\n');
+  }
 }
 
 // Run the generator
