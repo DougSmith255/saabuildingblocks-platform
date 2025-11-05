@@ -5,8 +5,11 @@
 
 /* Typography Variables - Required for immediate text rendering */
 :root {
-  /* Font variables are set by Next.js localFont() on HTML element */
-  /* Do NOT redefine them here - it creates circular references */
+  /* Font variables - defined here for global availability */
+  /* Note: Next.js localFont() also sets these on HTML element via className */
+  --font-taskor: taskor, taskor Fallback, system-ui, -apple-system, sans-serif;
+  --font-amulya: amulya, amulya Fallback, Georgia, serif;
+  --font-synonym: synonym, synonym Fallback, Courier New, monospace;
 
   /* Brand Colors */
   --color-gold: #ffd700;
