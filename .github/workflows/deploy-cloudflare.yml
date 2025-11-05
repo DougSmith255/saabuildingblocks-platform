@@ -334,14 +334,31 @@ jobs:
           name: build-output
           path: packages/public-site/out
 
+      # Cache Wrangler installation (avoids 44s npm install + deprecation warnings)
+      - name: Setup Node.js and cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      # Install Wrangler globally (cached by setup-node)
+      - name: Install Wrangler
+        run: |
+          if ! command -v wrangler &> /dev/null; then
+            echo "📦 Installing Wrangler..."
+            npm install -g wrangler@latest
+          else
+            echo "✅ Wrangler already installed: $(wrangler --version)"
+          fi
+
       # Deploy to Cloudflare Pages with retry logic (static HTML only)
       - name: Deploy to Cloudflare Pages
         id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 2 - with 2s delay)
@@ -356,11 +373,11 @@ jobs:
       - name: Deploy attempt 2
         if: steps.deploy.outcome == 'failure'
         id: deploy-attempt-2
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
         continue-on-error: true
 
       # Retry deployment on failure (attempt 3 - with 2s delay)
@@ -375,11 +392,11 @@ jobs:
       - name: Deploy attempt 3
         if: steps.deploy-attempt-2.outcome == 'failure'
         id: deploy-attempt-3
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
 
       # Set deployment status
       - name: Set deployment status
@@ -399,20 +416,6 @@ jobs:
             exit 1
           fi
 
-      # Store deployment manifest in KV (optional - requires Worker setup)
-      - name: Store deployment manifest
-        if: success()
-        continue-on-error: true
-        run: |
-          echo "📝 Storing deployment manifest..."
-          
-          # Future enhancement: Upload manifest to Workers KV
-          # This requires a Worker endpoint to accept the manifest
-          # curl -X POST "https://saabuildingblocks.com/api/store-manifest" \
-          #   -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-          #   -d @packages/public-site/out/_deployment-manifest.json
-          
-          echo "⚠️  Manifest storage not implemented yet (requires Worker setup)"
 
   # Notification job - sends webhook to n8n
   notify:

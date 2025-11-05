@@ -80,16 +80,6 @@ export default function Home() {
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
               }}
             />
-            {/* Subtle glow around the image */}
-            <div
-              className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] h-[95%]"
-              style={{
-                background: 'radial-gradient(ellipse 45% 55% at center 35%, rgba(255,215,0,0.03) 0%, rgba(255,215,0,0.01) 50%, transparent 80%)',
-                transformStyle: 'preserve-3d',
-                transform: 'translateZ(-45px)',
-                pointerEvents: 'none',
-              }}
-            />
           </div>
         </div>
 
