@@ -259,10 +259,14 @@ export default function Header() {
                 {item.dropdown ? (
                   <>
                     <button
-                      className="nav-link flex items-center px-5 py-3 text-white font-medium tracking-[0.5px] transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
+                      className="nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
                       style={{
                         fontSize: 'var(--font-size-mainMenuItem)',
-                        fontFamily: 'var(--font-synonym), monospace',
+                        fontFamily: 'var(--font-family-mainMenuItem)',
+                        fontWeight: 'var(--font-weight-mainMenuItem)',
+                        letterSpacing: 'var(--letter-spacing-mainMenuItem)',
+                        lineHeight: 'var(--line-height-mainMenuItem)',
+                        color: 'var(--text-color-mainMenuItem)',
                         willChange: 'background-color, color',
                       }}
                       aria-expanded={hoveredDropdown === index}
@@ -329,10 +333,14 @@ export default function Header() {
                 ) : (
                   <Link
                     href={item.href!}
-                    className="nav-link flex items-center px-5 py-3 text-white font-medium tracking-[0.5px] transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
+                    className="nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
                     style={{
                       fontSize: 'var(--font-size-mainMenuItem)',
-                      fontFamily: 'var(--font-synonym), monospace',
+                      fontFamily: 'var(--font-family-mainMenuItem)',
+                      fontWeight: 'var(--font-weight-mainMenuItem)',
+                      letterSpacing: 'var(--letter-spacing-mainMenuItem)',
+                      lineHeight: 'var(--line-height-mainMenuItem)',
+                      color: 'var(--text-color-mainMenuItem)',
                     }}
                   >
                     {item.label}
@@ -433,10 +441,14 @@ export default function Header() {
                       <>
                         <button
                           onClick={() => toggleDropdown(index)}
-                          className="w-full flex items-center justify-between px-6 py-4 text-white font-medium tracking-wide transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
+                          className="w-full flex items-center justify-between px-6 py-4 text-white transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                           style={{
                             fontSize: 'var(--font-size-mainMenuItem)',
-                            fontFamily: 'var(--font-synonym), monospace',
+                            fontFamily: 'var(--font-family-mainMenuItem)',
+                            fontWeight: 'var(--font-weight-mainMenuItem)',
+                            letterSpacing: 'var(--letter-spacing-mainMenuItem)',
+                            lineHeight: 'var(--line-height-mainMenuItem)',
+                            color: 'var(--text-color-mainMenuItem)',
                           }}
                         >
                           {item.label}
@@ -505,10 +517,14 @@ export default function Header() {
                       <Link
                         href={item.href!}
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-6 py-4 text-white font-medium tracking-wide transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
+                        className="block px-6 py-4 text-white transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                         style={{
                           fontSize: 'var(--font-size-mainMenuItem)',
-                          fontFamily: 'var(--font-synonym), monospace',
+                          fontFamily: 'var(--font-family-mainMenuItem)',
+                          fontWeight: 'var(--font-weight-mainMenuItem)',
+                          letterSpacing: 'var(--letter-spacing-mainMenuItem)',
+                          lineHeight: 'var(--line-height-mainMenuItem)',
+                          color: 'var(--text-color-mainMenuItem)',
                         }}
                       >
                         {item.label}

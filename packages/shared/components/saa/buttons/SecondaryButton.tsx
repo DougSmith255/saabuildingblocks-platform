@@ -25,16 +25,16 @@ export interface SecondaryButtonProps {
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
-  // Using default values until we implement Context provider pattern
+  // Hardcoded button settings (moved from typography to component-level)
   const buttonSettings = {
-    fontSize: 16,
+    fontSize: 20,
     fontFamily: 'Taskor',
     fontWeight: 600,
-    color: 'green',
+    color: 'brandGold',
     textTransform: 'uppercase',
     letterSpacing: '0.05em'
   };
-  const brandColors = { primary: '#00ff88', secondary: '#ffd700', green: '#00ff88' };
+  const brandColors = { primary: '#00ff88', secondary: '#ffd700', green: '#00ff88', brandGold: '#ffd700' };
 
   // Resolve color from brand colors store with safety check
   const resolvedColor = buttonSettings?.color as keyof typeof brandColors;

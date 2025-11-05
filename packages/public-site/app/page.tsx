@@ -8,20 +8,6 @@ import { HomepageClient } from './components/HomepageClient';
 export default function Home() {
   return (
     <main id="main-content">
-      {/* TEST DOT - Remove after deployment verification */}
-      <div style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        width: '20px',
-        height: '20px',
-        background: '#ffd700',
-        borderRadius: '50%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 9999,
-        boxShadow: '0 0 20px rgba(255, 215, 0, 0.8)'
-      }} />
-
       {/* Hero Section */}
       <section
         className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"

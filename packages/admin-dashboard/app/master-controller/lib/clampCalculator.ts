@@ -48,7 +48,6 @@ export const DEFAULT_TYPOGRAPHY_CLAMPS: Record<string, ClampConfig> = {
   body: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
   quote: { min: 16, max: 22, viewportMin: 250, viewportMax: 3000, unit: 'px' },
   link: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  button: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
 };
 
 /**

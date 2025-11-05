@@ -61,7 +61,7 @@ function validateImportedSettings(data: unknown): {
   if (!settings.typography || typeof settings.typography !== 'object') {
     errors.push({ field: 'typography', message: 'Missing or invalid typography settings' });
   } else {
-    const requiredTypographyKeys = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button'];
+    const requiredTypographyKeys = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
     const typographyKeys = Object.keys(settings.typography);
     const missingKeys = requiredTypographyKeys.filter((key) => !typographyKeys.includes(key));
     if (missingKeys.length > 0) {
