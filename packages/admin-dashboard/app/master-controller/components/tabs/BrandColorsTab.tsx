@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useBrandColorsStore } from '../../stores/brandColorsStore';
 import { ColorCard } from '../ColorCard';
-import { ContrastChecker } from '../ContrastChecker';
 import { COLOR_PRESETS } from '../../lib/colorPresets';
 import { generateHarmony } from '../../lib/colorUtils';
 import type { ColorName } from '../../types';
@@ -20,7 +19,7 @@ const COLOR_DEFINITIONS: ColorDefinition[] = [
     name: 'accentGreen',
     label: 'Accent Green',
     description: '',
-    usageExample: 'Link Text',
+    usageExample: 'Checkmarks, UI Confirmations (3s glow effects) - Use sparingly',
   },
   {
     name: 'headingText',
@@ -272,96 +271,6 @@ export function BrandColorsTab() {
             usageExample={colorDef.usageExample}
           />
         ))}
-      </div>
-
-      {/* Contrast Checker */}
-      <ContrastChecker />
-
-      {/* Live Component Preview */}
-      <div className="p-8 bg-[#191818] border-2 border-[#404040] rounded-lg shadow-sm">
-        <h3 className="text-lg font-semibold text-[#e5e4dd] mb-6">Live Preview</h3>
-
-        <div
-          className="p-8 rounded-lg transition-colors duration-200"
-          style={{ backgroundColor: 'var(--brand-primary-bg)' }}
-        >
-          {/* Buttons */}
-          <div className="flex flex-wrap gap-4 mb-8">
-            <button
-              style={{
-                backgroundColor: 'var(--brand-primary-highlight)',
-                color: '#ffffff',
-              }}
-              className="px-6 py-3 rounded-md font-semibold shadow-md hover:shadow-lg transition-shadow"
-            >
-              Primary Button
-            </button>
-
-            <button
-              style={{
-                backgroundColor: 'var(--brand-secondary-highlight)',
-                color: '#ffffff',
-              }}
-              className="px-6 py-3 rounded-md font-semibold shadow-md hover:shadow-lg transition-shadow"
-            >
-              Secondary Button
-            </button>
-
-            <button
-              style={{
-                backgroundColor: 'transparent',
-                color: 'var(--brand-primary-highlight)',
-                border: '2px solid var(--brand-primary-highlight)',
-              }}
-              className="px-6 py-3 rounded-md font-semibold hover:opacity-80 transition-opacity"
-            >
-              Outline Button
-            </button>
-          </div>
-
-          {/* Typography */}
-          <div className="mb-8">
-            <h1
-              style={{ color: 'var(--brand-primary-text)' }}
-              className="text-4xl font-bold mb-4"
-            >
-              Heading with Primary Text
-            </h1>
-            <p style={{ color: 'var(--brand-secondary-text)' }} className="text-lg mb-4">
-              Body text with secondary color. Changes to brand colors automatically update all
-              components throughout the application.
-            </p>
-            <a
-              href="#"
-              style={{ color: 'var(--brand-primary-highlight)' }}
-              className="inline-block font-medium hover:underline"
-            >
-              Link Example →
-            </a>
-          </div>
-
-          {/* Card */}
-          <div
-            style={{ backgroundColor: 'var(--brand-secondary-bg)' }}
-            className="p-6 rounded-lg shadow-md transition-colors duration-200"
-          >
-            <h3 style={{ color: 'var(--brand-primary-text)' }} className="text-xl font-bold mb-2">
-              Card with Secondary Background
-            </h3>
-            <p style={{ color: 'var(--brand-secondary-text)' }} className="mb-4">
-              This card demonstrates how secondary background and text colors work together.
-            </p>
-            <button
-              style={{
-                backgroundColor: 'var(--brand-primary-highlight)',
-                color: '#ffffff',
-              }}
-              className="px-4 py-2 rounded-md text-sm font-medium"
-            >
-              Card Action
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
