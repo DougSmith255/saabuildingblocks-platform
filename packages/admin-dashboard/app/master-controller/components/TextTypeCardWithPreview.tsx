@@ -26,9 +26,10 @@ const TEXT_TYPE_LABELS: Record<TextType, string> = {
   body: 'Body Text',
   quote: 'Quote',
   link: 'Link',
-  button: 'Button',
   tagline: 'Tagline',
   caption: 'Caption',
+  menuMainItem: 'Menu: Main Items',
+  menuSubItem: 'Menu: Sub Items',
 };
 
 // Inline ContrastIndicator Component
