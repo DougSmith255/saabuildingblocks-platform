@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTypographyStore } from '@/app/master-controller/stores/typographyStore';
 import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
 
 export interface SecondaryButtonProps {
@@ -24,7 +23,13 @@ export interface SecondaryButtonProps {
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
-  const buttonSettings = useTypographyStore((state) => state.settings.button);
+  // Hardcoded button settings (moved from typography to component-level)
+  const buttonSettings = {
+    fontSize: 20,
+    fontWeight: 600,
+    letterSpacing: 0.01,
+    color: 'headingText',
+  };
   const brandColors = useBrandColorsStore((state) => state.settings);
 
   // Resolve color from brand colors store with safety check
@@ -61,10 +66,9 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
   const buttonStyles = {
     color: buttonColor,
-    fontSize: `${buttonSettings?.fontSize || buttonSettings?.size || 16}px`,
-    fontWeight: buttonSettings?.fontWeight || 700,
-    textTransform: (buttonSettings?.textTransform || 'none') as any,
-    letterSpacing: `${buttonSettings?.letterSpacing || 0.05}em`
+    fontSize: `${buttonSettings.fontSize}px`,
+    fontWeight: buttonSettings.fontWeight,
+    letterSpacing: `${buttonSettings.letterSpacing}em`
   };
 
   const ButtonElement = as === 'button' ? 'button' : 'a';
