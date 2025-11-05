@@ -175,18 +175,23 @@ export const useTypographyStore = create<TypographyStore>()(
     }),
     {
       name: 'master-controller-typography',
+      version: 2, // Increment version to trigger migration
+      migrate: (persistedState: any, version: number) => {
+        // Migration from v0/v1 to v2: Remove deprecated 'button' text type
+        if (version < 2) {
+          console.warn('[Typography Store] Migrating to v2: Removing deprecated "button" text type');
+          if (persistedState?.settings && 'button' in persistedState.settings) {
+            const { button, ...cleanedSettings } = persistedState.settings;
+            persistedState.settings = cleanedSettings;
+          }
+        }
+        return persistedState;
+      },
       onRehydrateStorage: () => (state) => {
         if (!state) return;
 
         console.log('[Typography Store] Hydrated from localStorage:', state.settings);
         console.log('[Typography Store] Display Text:', { enabled: state.displayTextEnabled, font: state.displayTextFont });
-
-        // MIGRATION: Remove deprecated 'button' text type from cached data
-        if ('button' in state.settings) {
-          console.warn('[Typography Store] Detected deprecated "button" text type in localStorage, removing...');
-          const { button, ...cleanedSettings } = state.settings as any;
-          state.settings = cleanedSettings as TypographySettings;
-        }
 
         // Validate typography settings structure
         let needsReset = false;
