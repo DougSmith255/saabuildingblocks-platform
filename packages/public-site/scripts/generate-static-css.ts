@@ -290,14 +290,6 @@ const defaultTypography: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
   },
-  button: {
-    size: { min: 14, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-    lineHeight: 1,
-    letterSpacing: 0.01,
-    fontWeight: 600,
-    fontFamily: 'var(--font-taskor)',
-    color: 'bodyText',
-  },
   tagline: {
     size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
@@ -432,9 +424,15 @@ async function generateAndWriteCSS() {
   // Fetch from database (with fallback to defaults)
   const dbSettings = await fetchSettingsFromDatabase();
 
-  const typography = dbSettings?.typography_settings || defaultTypography;
+  let typography = dbSettings?.typography_settings || defaultTypography;
   const colors = dbSettings?.brand_colors_settings || defaultColors;
   const spacing = dbSettings?.spacing_settings || defaultSpacing;
+
+  // Remove button from typography (moved to component-level styling)
+  if (typography.button) {
+    const { button, ...restTypography } = typography;
+    typography = restTypography;
+  }
 
   console.log('📊 Settings source:');
   console.log(`   Typography: ${dbSettings?.typography_settings ? 'DATABASE' : 'DEFAULTS'}`);

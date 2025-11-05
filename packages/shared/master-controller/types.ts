@@ -45,6 +45,8 @@ export interface TypographySettings {
   button: TextTypeSettings;
   tagline: TextTypeSettings;
   caption: TextTypeSettings;
+  menuMainItem: TextTypeSettings;
+  menuSubItem: TextTypeSettings;
 }
 
 /**
@@ -73,7 +75,9 @@ export type TextType =
   | 'link'
   | 'button'
   | 'tagline'
-  | 'caption';
+  | 'caption'
+  | 'menuMainItem'
+  | 'menuSubItem';
 
 /**
  * Brand colors settings

@@ -112,14 +112,6 @@ const modernPreset: TypographySettings = {
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
   },
-  button: {
-    size: DEFAULT_TYPOGRAPHY_CLAMPS['button'] as ClampConfig,
-    lineHeight: 1,
-    letterSpacing: 0.01,
-    fontWeight: 500,
-    fontFamily: 'var(--font-taskor)',
-    color: 'accentGreen',
-  },
   tagline: {
     size: DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig,
     lineHeight: 1.5,
@@ -135,6 +127,22 @@ const modernPreset: TypographySettings = {
     fontWeight: 400,
     fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
+  },
+  menuMainItem: {
+    size: { min: 16, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 500,
+    fontFamily: 'var(--font-taskor)',
+    color: 'bodyText',
+  },
+  menuSubItem: {
+    size: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-taskor)',
+    color: 'bodyText',
   },
 };
 
@@ -213,14 +221,6 @@ const compactPreset: TypographySettings = {
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
   },
-  button: {
-    size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['button'] as ClampConfig, 0.8),
-    lineHeight: 1,
-    letterSpacing: 0.01,
-    fontWeight: 500,
-    fontFamily: 'var(--font-taskor)',
-    color: 'accentGreen',
-  },
   tagline: {
     size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 0.8),
     lineHeight: 1.4,
@@ -236,6 +236,22 @@ const compactPreset: TypographySettings = {
     fontWeight: 400,
     fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
+  },
+  menuMainItem: {
+    size: { min: 13, max: 16, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.3,
+    letterSpacing: 0,
+    fontWeight: 500,
+    fontFamily: 'var(--font-taskor)',
+    color: 'bodyText',
+  },
+  menuSubItem: {
+    size: { min: 11, max: 14, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.3,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-taskor)',
+    color: 'bodyText',
   },
 };
 
@@ -314,14 +330,6 @@ const editorialPreset: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
   },
-  button: {
-    size: DEFAULT_TYPOGRAPHY_CLAMPS['button'] as ClampConfig,
-    lineHeight: 1.1,
-    letterSpacing: 0.01,
-    fontWeight: 500,
-    fontFamily: 'var(--font-taskor)',
-    color: 'accentGreen',
-  },
   tagline: {
     size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 1.1),
     lineHeight: scaleLineHeight(1.5, 1.1),
@@ -337,6 +345,22 @@ const editorialPreset: TypographySettings = {
     fontWeight: 400,
     fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
+  },
+  menuMainItem: {
+    size: { min: 18, max: 22, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.5,
+    letterSpacing: 0,
+    fontWeight: 500,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
+  },
+  menuSubItem: {
+    size: { min: 15, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.5,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
   },
 };
 
@@ -415,14 +439,6 @@ const saaDefaultPreset: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
   },
-  button: {
-    size: { min: 14, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-    lineHeight: 1,
-    letterSpacing: 0.01,
-    fontWeight: 600,
-    fontFamily: 'var(--font-amulya)',
-    color: 'accentGreen',
-  },
   tagline: {
     size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
@@ -438,6 +454,22 @@ const saaDefaultPreset: TypographySettings = {
     fontWeight: 400,
     fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
+  },
+  menuMainItem: {
+    size: { min: 16, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 500,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
+  },
+  menuSubItem: {
+    size: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
   },
 };
 

@@ -201,16 +201,6 @@ export class CSSGenerator {
   font-style: var(--font-style-link, normal);
 }
 
-.text-button {
-  color: var(--text-color-button);
-  font-size: var(--font-size-button);
-  line-height: var(--line-height-button);
-  letter-spacing: var(--letter-spacing-button);
-  font-weight: var(--font-weight-button);
-  font-family: var(--font-family-button);
-  font-style: var(--font-style-button, normal);
-}
-
 .text-tagline {
   color: var(--text-color-tagline);
   font-size: var(--font-size-tagline);

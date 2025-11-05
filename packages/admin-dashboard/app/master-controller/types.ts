@@ -42,9 +42,10 @@ export interface TypographySettings {
   body: TextTypeSettings;
   quote: TextTypeSettings;
   link: TextTypeSettings;
-  button: TextTypeSettings;
   tagline: TextTypeSettings;
   caption: TextTypeSettings;
+  menuMainItem: TextTypeSettings;
+  menuSubItem: TextTypeSettings;
 }
 
 /**
@@ -71,9 +72,10 @@ export type TextType =
   | 'body'
   | 'quote'
   | 'link'
-  | 'button'
   | 'tagline'
-  | 'caption';
+  | 'caption'
+  | 'menuMainItem'
+  | 'menuSubItem';
 
 /**
  * Brand colors settings

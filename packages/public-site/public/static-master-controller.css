@@ -1,7 +1,7 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from database (Supabase)
- * Generated: 2025-11-05T21:00:50.746Z
+ * Generated: 2025-11-05T21:15:23.859Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
@@ -90,12 +90,6 @@
       --font-family-quote: var(--font-amulya), sans-serif;
       --font-style-quote: italic;
       --text-color-quote: #bfbdb0;
-      --font-size-button: clamp(20px, calc(18.91px + 0.44vw), 32px);
-      --line-height-button: 1;
-      --letter-spacing-button: 0.01em;
-      --font-weight-button: 600;
-      --font-family-button: var(--font-taskor), sans-serif;
-      --text-color-button: #e5e4dd;
       --font-size-caption: clamp(12px, calc(11.64px + 0.15vw), 16px);
       --line-height-caption: 1.4;
       --letter-spacing-caption: 0em;
@@ -217,16 +211,6 @@
   font-weight: var(--font-weight-link);
   font-family: var(--font-family-link);
   font-style: var(--font-style-link, normal);
-}
-
-.text-button {
-  color: var(--text-color-button);
-  font-size: var(--font-size-button);
-  line-height: var(--line-height-button);
-  letter-spacing: var(--letter-spacing-button);
-  font-weight: var(--font-weight-button);
-  font-family: var(--font-family-button);
-  font-style: var(--font-style-button, normal);
 }
 
 .text-tagline {

@@ -221,6 +221,36 @@ export class CSSGenerator {
   font-style: var(--font-style-tagline, normal);
 }
 
+.text-caption {
+  color: var(--text-color-caption);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  letter-spacing: var(--letter-spacing-caption);
+  font-weight: var(--font-weight-caption);
+  font-family: var(--font-family-caption);
+  font-style: var(--font-style-caption, normal);
+}
+
+.text-menuMainItem {
+  color: var(--text-color-menuMainItem);
+  font-size: var(--font-size-menuMainItem);
+  line-height: var(--line-height-menuMainItem);
+  letter-spacing: var(--letter-spacing-menuMainItem);
+  font-weight: var(--font-weight-menuMainItem);
+  font-family: var(--font-family-menuMainItem);
+  font-style: var(--font-style-menuMainItem, normal);
+}
+
+.text-menuSubItem {
+  color: var(--text-color-menuSubItem);
+  font-size: var(--font-size-menuSubItem);
+  line-height: var(--line-height-menuSubItem);
+  letter-spacing: var(--letter-spacing-menuSubItem);
+  font-weight: var(--font-weight-menuSubItem);
+  font-family: var(--font-family-menuSubItem);
+  font-style: var(--font-style-menuSubItem, normal);
+}
+
 /* Grid Utilities */
 .grid-responsive {
   display: grid;

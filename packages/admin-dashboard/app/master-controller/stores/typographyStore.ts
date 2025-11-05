@@ -88,14 +88,6 @@ const defaultSettings: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
   },
-  button: {
-    size: { min: 14, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-    lineHeight: 1,
-    letterSpacing: 0.01,
-    fontWeight: 600,
-    fontFamily: 'var(--font-taskor)',
-    color: 'bodyText',
-  },
   tagline: {
     size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
@@ -111,6 +103,22 @@ const defaultSettings: TypographySettings = {
     fontWeight: 400,
     fontFamily: 'var(--font-amulya)',
     color: 'mediumGray',
+  },
+  menuMainItem: {
+    size: { min: 16, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 500,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
+  },
+  menuSubItem: {
+    size: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0,
+    fontWeight: 400,
+    fontFamily: 'var(--font-synonym)',
+    color: 'bodyText',
   },
 };
 
@@ -175,7 +183,7 @@ export const useTypographyStore = create<TypographyStore>()(
 
         // Validate typography settings structure
         let needsReset = false;
-        const textTypes: Array<keyof TypographySettings> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'tagline'];
+        const textTypes: Array<keyof TypographySettings> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
 
         for (const textType of textTypes) {
           const settings = state.settings[textType];
