@@ -52,7 +52,6 @@ jobs:
 
     outputs:
       build-hash: ${{ steps.compute-hash.outputs.build-hash }}
-      needs-deploy: ${{ steps.check-changes.outputs.needs-deploy }}
 
     steps:
       - name: Checkout repository
@@ -100,21 +99,6 @@ jobs:
             npm ci --prefer-offline --no-audit
           else
             echo "✅ Using cached node_modules"
-          fi
-
-          # Verify Next.js version in public-site package
-          echo "🔍 Verifying Next.js version..."
-          cd packages/public-site
-          NEXTJS_VERSION=$(npm list next --depth=0 --json 2>/dev/null | jq -r '.dependencies.next.version // empty')
-
-          if [ -z "$NEXTJS_VERSION" ]; then
-            echo "⚠️  Next.js not found in package dependencies"
-          else
-            echo "   Installed: Next.js v${NEXTJS_VERSION}"
-
-            if [[ "${NEXTJS_VERSION}" != "16."* ]]; then
-              echo "⚠️  Next.js version mismatch! Expected 16.x, got ${NEXTJS_VERSION}"
-            fi
           fi
 
       # NEW: Type check BEFORE building to catch ALL errors at once
@@ -177,15 +161,6 @@ jobs:
             echo "⚠️  No components directory found (non-fatal)"
           fi
 
-      # Show cache status
-      - name: Report CSS cache status
-        run: |
-          if [ "${{ steps.css-cache.outputs.cache-hit }}" = "true" ]; then
-            echo "⚡ Using cached CSS and components (saved ~35s)"
-          else
-            echo "🆕 CSS generated fresh from Supabase"
-          fi
-
       # Build static export (FROM MONOREPO ROOT - fixes tsconfig resolution)
       - name: Build Static Export
         env:
@@ -207,104 +182,23 @@ jobs:
           echo "   ✅ FIXED: Turbopack can now resolve '../../tsconfig.json'"
           echo ""
 
-          # cd into package directory (but build runs from monorepo root context)
+          # cd into package directory and build
           cd packages/public-site
-
-          # Clean previous builds
-          rm -rf out .next
-
-          # Build with Next.js (Turbopack resolves tsconfig from monorepo root)
-          echo "🏗️  Building with Next.js 16 static export..."
           npx next build
 
-          echo ""
-          echo "📊 Build verification:"
-          echo "  Files to deploy: $(find out -type f | wc -l)"
-          echo "  Total size: $(du -sh out/ | cut -f1)"
+          # Quick verification
+          [ -d "out/_next" ] && [ -f "out/index.html" ] || { echo "❌ Build failed"; exit 1; }
+          echo "✅ Build complete: $(find out -type f | wc -l) files, $(du -sh out/ | cut -f1)"
 
-          # Verify critical files exist
-          if [ ! -d "out/_next" ]; then
-            echo "❌ _next directory missing - build failed"
-            exit 1
-          fi
-
-          if [ ! -f "out/index.html" ]; then
-            echo "❌ index.html missing - build failed"
-            exit 1
-          fi
-
-          if [ ! -f "out/static-master-controller.css" ]; then
-            echo "⚠️  CSS missing (non-fatal - may use default styles)"
-          fi
-
-          echo ""
-          echo "  Sample HTML files:"
-          find out -type f -name "*.html" | head -10
-          echo ""
-          echo "✅ Static export complete - ready for Cloudflare Pages deployment"
-
-      # Compute build hash for change detection
+      # Compute simple build hash (for tracking only)
       - name: Compute build hash
         id: compute-hash
         working-directory: packages/public-site
         run: |
-          echo "🔍 Computing build hash for change detection..."
-          
-          # Create hash of all files in out directory
-          BUILD_HASH=$(find out -type f -exec sha256sum {} \; | sort -k 2 | sha256sum | cut -d' ' -f1)
+          # Simple hash based on commit + build time (no per-file hashing needed)
+          BUILD_HASH="${{ github.sha }}-$(date +%s)"
           echo "build-hash=${BUILD_HASH}" >> $GITHUB_OUTPUT
-          echo "📝 Build hash: ${BUILD_HASH}"
-          
-          # Save manifest with file hashes
-          echo "{" > out/_deployment-manifest.json
-          echo "  \"build_hash\": \"${BUILD_HASH}\"," >> out/_deployment-manifest.json
-          echo "  \"build_time\": \"$(date -Iseconds)\"," >> out/_deployment-manifest.json
-          echo "  \"commit_sha\": \"${{ github.sha }}\"," >> out/_deployment-manifest.json
-          echo "  \"workflow_run\": \"${{ github.run_id }}\"," >> out/_deployment-manifest.json
-          echo "  \"files\": {" >> out/_deployment-manifest.json
-          
-          # Generate file hashes
-          FIRST=true
-          find out -type f ! -name '_deployment-manifest.json' | sort | while read file; do
-            HASH=$(sha256sum "$file" | cut -d' ' -f1)
-            REL_PATH=${file#out/}
-            if [ "$FIRST" = true ]; then
-              echo "    \"${REL_PATH}\": \"${HASH}\"" >> out/_deployment-manifest.json
-              FIRST=false
-            else
-              echo "    ,\"${REL_PATH}\": \"${HASH}\"" >> out/_deployment-manifest.json
-            fi
-          done
-          
-          echo "  }" >> out/_deployment-manifest.json
-          echo "}" >> out/_deployment-manifest.json
-          
-          echo "✅ Manifest created"
-
-      # Check if deployment needed (incremental mode)
-      - name: Check for changes
-        id: check-changes
-        working-directory: packages/public-site
-        env:
-          DEPLOYMENT_TYPE: ${{ inputs.deployment_type || 'incremental' }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          if [ "$DEPLOYMENT_TYPE" = "full" ]; then
-            echo "needs-deploy=true" >> $GITHUB_OUTPUT
-            echo "🚀 Full deployment requested - skipping change detection"
-            exit 0
-          fi
-          
-          echo "🔍 Checking for changes since last deployment..."
-          
-          # Try to fetch last deployment manifest from KV
-          # Note: This requires a Worker to expose KV via API
-          # For now, we'll always deploy in incremental mode
-          # Future enhancement: Store manifest in KV and compare
-          
-          echo "needs-deploy=true" >> $GITHUB_OUTPUT
-          echo "📝 Changes detected - deployment needed"
+          echo "📝 Build: ${BUILD_HASH}"
 
       # Upload build artifacts
       - name: Upload build artifacts
@@ -321,7 +215,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    if: needs.build.outputs.needs-deploy == 'true'
 
     steps:
       - name: Checkout repository
@@ -351,70 +244,26 @@ jobs:
             echo "✅ Wrangler already installed: $(wrangler --version)"
           fi
 
-      # Deploy to Cloudflare Pages with retry logic (static HTML only)
+      # Deploy to Cloudflare Pages with retry logic
       - name: Deploy to Cloudflare Pages
         id: deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
-        continue-on-error: true
-
-      # Retry deployment on failure (attempt 2 - with 2s delay)
-      - name: Retry deployment (attempt 2)
-        if: steps.deploy.outcome == 'failure'
-        id: deploy-retry-2
-        run: |
-          echo "⏳ Waiting ${RETRY_DELAY}s before retry 2..."
-          sleep ${{ env.RETRY_DELAY }}
-        continue-on-error: true
-
-      - name: Deploy attempt 2
-        if: steps.deploy.outcome == 'failure'
-        id: deploy-attempt-2
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
-        continue-on-error: true
-
-      # Retry deployment on failure (attempt 3 - with 2s delay)
-      - name: Retry deployment (attempt 3)
-        if: steps.deploy-attempt-2.outcome == 'failure'
-        id: deploy-retry-3
-        run: |
-          echo "⏳ Waiting ${RETRY_DELAY}s before retry 3..."
-          sleep ${{ env.RETRY_DELAY }}
-        continue-on-error: true
-
-      - name: Deploy attempt 3
-        if: steps.deploy-attempt-2.outcome == 'failure'
-        id: deploy-attempt-3
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true
-
-      # Set deployment status
-      - name: Set deployment status
-        if: always()
-        id: set-status
-        run: |
-          if [ "${{ steps.deploy.outcome }}" = "success" ] || \
-             [ "${{ steps.deploy-attempt-2.outcome }}" = "success" ] || \
-             [ "${{ steps.deploy-attempt-3.outcome }}" = "success" ]; then
-            echo "✅ Deployment successful"
-            echo "status=success" >> $GITHUB_OUTPUT
-            echo "DEPLOY_STATUS=success" >> $GITHUB_ENV
-          else
-            echo "❌ Deployment failed after 3 attempts"
-            echo "status=failed" >> $GITHUB_OUTPUT
-            echo "DEPLOY_STATUS=failed" >> $GITHUB_ENV
-            exit 1
-          fi
+          # Retry logic in bash (simpler than multiple workflow steps)
+          for attempt in 1 2 3; do
+            echo "🚀 Deployment attempt $attempt/3..."
+            if wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true; then
+              echo "✅ Deployment successful on attempt $attempt"
+              echo "status=success" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+            [ $attempt -lt 3 ] && echo "⏳ Retrying in 2s..." && sleep 2
+          done
+          echo "❌ Deployment failed after 3 attempts"
+          echo "status=failed" >> $GITHUB_OUTPUT
+          exit 1
 
 
   # Notification job - sends webhook to n8n
@@ -429,16 +278,18 @@ jobs:
       - name: Prepare notification payload
         id: prepare-payload
         run: |
-          # Determine overall status
-          if [ "${{ needs.deploy.result }}" = "success" ]; then
+          # Get status from deploy job output
+          DEPLOY_RESULT="${{ needs.deploy.result }}"
+
+          if [ "$DEPLOY_RESULT" = "success" ]; then
             STATUS="success"
             MESSAGE="✅ Deployment completed successfully"
-          elif [ "${{ needs.deploy.result }}" = "failure" ]; then
+          elif [ "$DEPLOY_RESULT" = "failure" ]; then
             STATUS="failed"
             MESSAGE="❌ Deployment failed"
-          elif [ "${{ needs.deploy.result }}" = "skipped" ]; then
+          elif [ "$DEPLOY_RESULT" = "skipped" ]; then
             STATUS="skipped"
-            MESSAGE="⏭️  Deployment skipped (no changes detected)"
+            MESSAGE="⏭️  Deployment skipped"
           else
             STATUS="cancelled"
             MESSAGE="🚫 Deployment cancelled"
