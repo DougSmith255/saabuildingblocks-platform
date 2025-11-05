@@ -181,6 +181,13 @@ export const useTypographyStore = create<TypographyStore>()(
         console.log('[Typography Store] Hydrated from localStorage:', state.settings);
         console.log('[Typography Store] Display Text:', { enabled: state.displayTextEnabled, font: state.displayTextFont });
 
+        // MIGRATION: Remove deprecated 'button' text type from cached data
+        if ('button' in state.settings) {
+          console.warn('[Typography Store] Detected deprecated "button" text type in localStorage, removing...');
+          const { button, ...cleanedSettings } = state.settings as any;
+          state.settings = cleanedSettings as TypographySettings;
+        }
+
         // Validate typography settings structure
         let needsReset = false;
         const textTypes: Array<keyof TypographySettings> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
