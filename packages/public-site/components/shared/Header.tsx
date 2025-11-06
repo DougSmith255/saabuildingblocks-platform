@@ -300,10 +300,14 @@ export default function Header() {
                         <Link
                           key={dropdownIndex}
                           href={dropdownItem.href}
-                          className="dropdown-item block px-4 py-3 text-[#dcdbd5] transition-all duration-300 bg-[rgba(42,42,42,0.8)] rounded-lg my-[5.5px] hover:bg-[rgba(58,58,58,0.8)] hover:text-white"
+                          className="dropdown-item block px-4 py-3 transition-all duration-300 bg-[rgba(42,42,42,0.8)] rounded-lg my-[5.5px] hover:bg-[rgba(58,58,58,0.8)] hover:text-white"
                           style={{
                             fontSize: 'var(--font-size-menuSubItem)',
-                            fontFamily: 'var(--font-family-menuSubItem, var(--font-synonym), monospace)',
+                            fontFamily: 'var(--font-family-menuSubItem)',
+                            fontWeight: 'var(--font-weight-menuSubItem)',
+                            letterSpacing: 'var(--letter-spacing-menuSubItem)',
+                            lineHeight: 'var(--line-height-menuSubItem)',
+                            color: 'var(--text-color-menuSubItem)',
                             willChange: 'background-color, color',
                           }}
                         >
@@ -484,10 +488,14 @@ export default function Header() {
                                   key={dropdownIndex}
                                   href={dropdownItem.href}
                                   onClick={() => setIsMobileMenuOpen(false)}
-                                  className="block px-6 py-3 text-[#dcdbd5] transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)] hover:text-[#ffe000]"
+                                  className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)] hover:text-[#ffe000]"
                                   style={{
-                                    fontSize: 'var(--font-size-menuDropdown)',
-                                    fontFamily: 'var(--font-synonym), monospace',
+                                    fontSize: 'var(--font-size-menuSubItem)',
+                                    fontFamily: 'var(--font-family-menuSubItem)',
+                                    fontWeight: 'var(--font-weight-menuSubItem)',
+                                    letterSpacing: 'var(--letter-spacing-menuSubItem)',
+                                    lineHeight: 'var(--line-height-menuSubItem)',
+                                    color: 'var(--text-color-menuSubItem)',
                                   }}
                                 >
                                   {dropdownItem.label}
@@ -558,13 +566,7 @@ export default function Header() {
         /* Header Navigation Links - Override global green link color */
         header .nav-link,
         header .nav-link a {
-          color: var(--color-text-primary, #e5e4dd) !important;
-        }
-
-        /* Dropdown items use secondary color */
-        header .dropdown-item,
-        header .dropdown-item a {
-          color: var(--color-text-secondary, #dcdbd5) !important;
+          color: var(--text-color-menuMainItem, #e5e4dd) !important;
         }
 
         /* Keep hover states white */
