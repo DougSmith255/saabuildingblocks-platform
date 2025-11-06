@@ -261,12 +261,12 @@ export default function Header() {
                     <button
                       className="nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
                       style={{
-                        fontSize: 'var(--font-size-mainMenuItem)',
-                        fontFamily: 'var(--font-family-mainMenuItem)',
-                        fontWeight: 'var(--font-weight-mainMenuItem)',
-                        letterSpacing: 'var(--letter-spacing-mainMenuItem)',
-                        lineHeight: 'var(--line-height-mainMenuItem)',
-                        color: 'var(--text-color-mainMenuItem)',
+                        fontSize: 'var(--font-size-menuMainItem)',
+                        fontFamily: 'var(--font-family-menuMainItem)',
+                        fontWeight: 'var(--font-weight-menuMainItem)',
+                        letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                        lineHeight: 'var(--line-height-menuMainItem)',
+                        color: 'var(--text-color-menuMainItem)',
                         willChange: 'background-color, color',
                       }}
                       aria-expanded={hoveredDropdown === index}
@@ -302,8 +302,8 @@ export default function Header() {
                           href={dropdownItem.href}
                           className="dropdown-item block px-4 py-3 text-[#dcdbd5] transition-all duration-300 bg-[rgba(42,42,42,0.8)] rounded-lg my-[5.5px] hover:bg-[rgba(58,58,58,0.8)] hover:text-white"
                           style={{
-                            fontSize: 'var(--font-size-menuDropdown)',
-                            fontFamily: 'var(--font-synonym), monospace',
+                            fontSize: 'var(--font-size-menuSubItem)',
+                            fontFamily: 'var(--font-family-menuSubItem, var(--font-synonym), monospace)',
                             willChange: 'background-color, color',
                           }}
                         >
@@ -318,12 +318,12 @@ export default function Header() {
                     onClick={handlePortalClick}
                     className={`nav-link agent-portal flex items-center px-5 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
                     style={{
-                      fontSize: 'var(--font-size-mainMenuItem)',
-                      fontFamily: 'var(--font-family-mainMenuItem)',
-                      fontWeight: 'var(--font-weight-mainMenuItem)',
-                      letterSpacing: 'var(--letter-spacing-mainMenuItem)',
-                      lineHeight: 'var(--line-height-mainMenuItem)',
-                      color: 'var(--text-color-mainMenuItem)',
+                      fontSize: 'var(--font-size-menuMainItem)',
+                      fontFamily: 'var(--font-family-menuMainItem)',
+                      fontWeight: 'var(--font-weight-menuMainItem)',
+                      letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                      lineHeight: 'var(--line-height-menuMainItem)',
+                      color: 'var(--text-color-menuMainItem)',
                       willChange: 'background-color, color',
                     }}
                   >
@@ -339,12 +339,12 @@ export default function Header() {
                     href={item.href!}
                     className="nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
                     style={{
-                      fontSize: 'var(--font-size-mainMenuItem)',
-                      fontFamily: 'var(--font-family-mainMenuItem)',
-                      fontWeight: 'var(--font-weight-mainMenuItem)',
-                      letterSpacing: 'var(--letter-spacing-mainMenuItem)',
-                      lineHeight: 'var(--line-height-mainMenuItem)',
-                      color: 'var(--text-color-mainMenuItem)',
+                      fontSize: 'var(--font-size-menuMainItem)',
+                      fontFamily: 'var(--font-family-menuMainItem)',
+                      fontWeight: 'var(--font-weight-menuMainItem)',
+                      letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                      lineHeight: 'var(--line-height-menuMainItem)',
+                      color: 'var(--text-color-menuMainItem)',
                     }}
                   >
                     {item.label}
@@ -447,12 +447,12 @@ export default function Header() {
                           onClick={() => toggleDropdown(index)}
                           className="w-full flex items-center justify-between px-6 py-4 text-white transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                           style={{
-                            fontSize: 'var(--font-size-mainMenuItem)',
-                            fontFamily: 'var(--font-family-mainMenuItem)',
-                            fontWeight: 'var(--font-weight-mainMenuItem)',
-                            letterSpacing: 'var(--letter-spacing-mainMenuItem)',
-                            lineHeight: 'var(--line-height-mainMenuItem)',
-                            color: 'var(--text-color-mainMenuItem)',
+                            fontSize: 'var(--font-size-menuMainItem)',
+                            fontFamily: 'var(--font-family-menuMainItem)',
+                            fontWeight: 'var(--font-weight-menuMainItem)',
+                            letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                            lineHeight: 'var(--line-height-menuMainItem)',
+                            color: 'var(--text-color-menuMainItem)',
                           }}
                         >
                           {item.label}
@@ -506,12 +506,12 @@ export default function Header() {
                         }}
                         className={`agent-portal-mobile block px-6 py-4 transition-all duration-300 rounded-lg relative text-white ${isPortalClicked ? 'clicked' : ''}`}
                         style={{
-                          fontSize: 'var(--font-size-mainMenuItem)',
-                          fontFamily: 'var(--font-family-mainMenuItem)',
-                          fontWeight: 'var(--font-weight-mainMenuItem)',
-                          letterSpacing: 'var(--letter-spacing-mainMenuItem)',
-                          lineHeight: 'var(--line-height-mainMenuItem)',
-                          color: 'var(--text-color-mainMenuItem)',
+                          fontSize: 'var(--font-size-menuMainItem)',
+                          fontFamily: 'var(--font-family-menuMainItem)',
+                          fontWeight: 'var(--font-weight-menuMainItem)',
+                          letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                          lineHeight: 'var(--line-height-menuMainItem)',
+                          color: 'var(--text-color-menuMainItem)',
                         }}
                       >
                         <span className="agent-portal-styled">
@@ -527,12 +527,12 @@ export default function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block px-6 py-4 text-white transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                         style={{
-                          fontSize: 'var(--font-size-mainMenuItem)',
-                          fontFamily: 'var(--font-family-mainMenuItem)',
-                          fontWeight: 'var(--font-weight-mainMenuItem)',
-                          letterSpacing: 'var(--letter-spacing-mainMenuItem)',
-                          lineHeight: 'var(--line-height-mainMenuItem)',
-                          color: 'var(--text-color-mainMenuItem)',
+                          fontSize: 'var(--font-size-menuMainItem)',
+                          fontFamily: 'var(--font-family-menuMainItem)',
+                          fontWeight: 'var(--font-weight-menuMainItem)',
+                          letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                          lineHeight: 'var(--line-height-menuMainItem)',
+                          color: 'var(--text-color-menuMainItem)',
                         }}
                       >
                         {item.label}
