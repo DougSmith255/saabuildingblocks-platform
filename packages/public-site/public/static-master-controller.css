@@ -1,7 +1,7 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from database (Supabase)
- * Generated: 2025-11-06T05:26:22.602Z
+ * Generated: 2025-11-06T16:16:58.967Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
@@ -13,7 +13,7 @@
  * - Spacing: DEFAULTS
  *
  * Database timestamps (for cache invalidation):
- * - Typography: 2025-11-06T05:25:24.787+00:00
+ * - Typography: 2025-11-06T16:02:21.02+00:00
  * - Colors: 2025-11-05T00:51:06.405+00:00
  * - Spacing: N/A
  *
@@ -115,7 +115,7 @@
       --font-weight-menuSubItem: 400;
       --font-family-menuSubItem: var(--font-synonym), sans-serif;
       --text-color-menuSubItem: #bfbdb0;
-      --font-size-menuMainItem: clamp(24px, calc(23.18px + 0.33vw), 33px);
+      --font-size-menuMainItem: clamp(21px, calc(20.18px + 0.33vw), 30px);
       --line-height-menuMainItem: 1.4;
       --letter-spacing-menuMainItem: 0em;
       --font-weight-menuMainItem: 500;
