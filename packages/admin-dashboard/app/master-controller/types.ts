@@ -42,6 +42,7 @@ export interface TypographySettings {
   body: TextTypeSettings;
   quote: TextTypeSettings;
   link: TextTypeSettings;
+  button: TextTypeSettings;
   tagline: TextTypeSettings;
   caption: TextTypeSettings;
   menuMainItem: TextTypeSettings;
@@ -72,6 +73,7 @@ export type TextType =
   | 'body'
   | 'quote'
   | 'link'
+  | 'button'
   | 'tagline'
   | 'caption'
   | 'menuMainItem'
@@ -120,6 +122,8 @@ export interface SAAComponent {
   description: string;
   previewPath?: string;
   reactPath?: string;
+  cssPath?: string;
+  jsPath?: string;
   converted: boolean;
   source: 'wordpress' | 'custom';
   tags?: string[];
@@ -135,7 +139,8 @@ export type SAAComponentCategory =
   | 'interactive'
   | 'navigation'
   | 'layouts'
-  | 'forms';
+  | 'forms'
+  | 'typography';
 
 // ShadCN Component
 export interface ShadCNComponent {

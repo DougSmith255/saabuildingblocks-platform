@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react';
 import { Search, Package } from 'lucide-react';
 import { ComponentCard } from '../../components/ComponentCard';
 import { ComponentEditor } from '../ComponentEditor';
+import { ComponentPreviewModal } from '../ComponentPreviewModal';
 import {
   saaComponentRegistry,
   getConversionStats,
@@ -19,6 +20,7 @@ export function ComponentsTab() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingComponent, setEditingComponent] = useState<SAAComponent | null>(null);
+  const [previewingComponent, setPreviewingComponent] = useState<SAAComponent | null>(null);
 
   // Filter components based on category and search
   const filteredComponents = useMemo(() => {
@@ -55,6 +57,7 @@ export function ComponentsTab() {
       interactive: 0,
       layouts: 0,
       forms: 0,
+      typography: 0,
     };
     saaComponents.forEach((comp) => {
       const category = comp.category as SAAComponentCategory;
@@ -65,6 +68,10 @@ export function ComponentsTab() {
 
   const handleEditComponent = (component: SAAComponent) => {
     setEditingComponent(component);
+  };
+
+  const handlePreviewComponent = (component: SAAComponent) => {
+    setPreviewingComponent(component);
   };
 
   const handleSaveComponent = async (componentId: string, code: string) => {
@@ -111,6 +118,22 @@ export function ComponentsTab() {
           component={editingComponent}
           onClose={() => setEditingComponent(null)}
           onSave={handleSaveComponent}
+        />
+      )}
+
+      {/* Component Preview Modal */}
+      {previewingComponent && previewingComponent.previewPath && (
+        <ComponentPreviewModal
+          component={{
+            id: previewingComponent.id,
+            name: previewingComponent.name,
+            description: previewingComponent.description,
+            htmlPath: previewingComponent.previewPath,
+            cssPath: previewingComponent.cssPath,
+            jsPath: previewingComponent.jsPath,
+            hasReactVersion: previewingComponent.converted,
+          }}
+          onClose={() => setPreviewingComponent(null)}
         />
       )}
 
@@ -222,6 +245,7 @@ export function ComponentsTab() {
                   key={component.id}
                   component={component}
                   onEdit={handleEditComponent}
+                  onPreview={handlePreviewComponent}
                 />
               ))}
             </div>

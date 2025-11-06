@@ -13,7 +13,8 @@ export type SAAComponentCategory =
   | 'effects'
   | 'interactive'
   | 'layouts'
-  | 'forms';
+  | 'forms'
+  | 'typography';
 
 export interface SAAComponent {
   id: string;
@@ -22,6 +23,8 @@ export interface SAAComponent {
   description: string;
   previewPath?: string; // Path to HTML preview
   reactPath?: string; // Path to React component
+  cssPath?: string; // Path to CSS file
+  jsPath?: string; // Path to JavaScript file
   converted: boolean; // Has it been converted to React?
   source: 'wordpress' | 'custom';
   tags?: string[]; // Searchable tags
@@ -29,7 +32,7 @@ export interface SAAComponent {
 }
 
 /**
- * Complete SAA Component Registry (4 components)
+ * Complete SAA Component Registry (6 components)
  * Note: Prismatic Glass and Stacked Animation Cards have been deprecated
  */
 export const saaComponentRegistry: SAAComponent[] = [
@@ -66,6 +69,28 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'wordpress',
     tags: ['card', 'holographic', 'futuristic', 'border', 'glow'],
+  },
+
+  // Typography (2)
+  {
+    id: 'h1-heading',
+    name: 'H1 Heading',
+    category: 'typography',
+    description: '3D neon heading with animated flicker effect and alt glyphs',
+    reactPath: '/home/claude-flow/packages/shared/components/saa/headings/H1.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['heading', 'h1', 'neon', 'typography', '3d', 'animation'],
+  },
+  {
+    id: 'h2-heading',
+    name: 'H2 Heading',
+    category: 'typography',
+    description: 'Static 3D neon heading with metal backing and alt glyphs',
+    reactPath: '/home/claude-flow/packages/shared/components/saa/headings/H2.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['heading', 'h2', 'neon', 'typography', '3d', 'static'],
   },
 
 ];
@@ -135,4 +160,5 @@ export const SAA_CATEGORY_LABELS: Record<SAAComponentCategory, string> = {
   interactive: 'Interactive',
   layouts: 'Layouts',
   forms: 'Forms',
+  typography: 'Typography',
 };

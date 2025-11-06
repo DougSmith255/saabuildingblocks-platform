@@ -25,23 +25,10 @@ export interface SecondaryButtonProps {
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
-  // Using default values until we implement Context provider pattern
-  const buttonSettings = {
-    fontSize: 16,
-    fontFamily: 'Taskor',
-    fontWeight: 600,
-    color: 'green',
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em'
-  };
-  const brandColors = { primary: '#00ff88', secondary: '#ffd700', green: '#00ff88' };
 
-  // Resolve color from brand colors store with safety check
-  const resolvedColor = buttonSettings?.color as keyof typeof brandColors;
-  const buttonColor = (brandColors && resolvedColor && brandColors[resolvedColor]) || '#ffffff';
-
-  // Get brand green for click effect
-  const brandGreen = brandColors?.green || '#00ff88';
+  // Brand colors for glow effects (keep hardcoded for animation compatibility)
+  const brandGold = '#ffd700';
+  const brandGreen = '#00ff88';
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
     setIsClicked(true);
@@ -68,12 +55,15 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     ${isClicked ? 'clicked' : ''}
   `;
 
+  // Button styles - using CSS variables from Master Controller
   const buttonStyles = {
-    color: buttonColor,
-    fontSize: `${buttonSettings.fontSize}px`,
-    fontWeight: buttonSettings.fontWeight,
-    textTransform: buttonSettings.textTransform as any,
-    letterSpacing: `${buttonSettings.letterSpacing}em`
+    color: 'var(--text-color-button, var(--color-headingText))',
+    fontSize: 'var(--font-size-button, 20px)',
+    fontFamily: 'var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)',
+    fontWeight: 'var(--font-weight-button, 600)' as any,
+    textTransform: 'var(--text-transform-button, uppercase)' as any,
+    letterSpacing: 'var(--letter-spacing-button, 0.05em)',
+    lineHeight: 'var(--line-height-button, 1.4)'
   };
 
   const ButtonElement = as === 'button' ? 'button' : 'a';

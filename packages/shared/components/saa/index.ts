@@ -30,3 +30,6 @@ export * from './cards';
 
 // Text Effects
 export * from './text';
+
+// Headings
+export * from './headings';
