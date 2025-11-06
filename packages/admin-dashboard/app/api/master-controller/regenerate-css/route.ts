@@ -63,6 +63,53 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
 
+    // Auto-commit the updated CSS file
+    let gitCommitSuccess = false;
+    let gitCommitMessage = '';
+    try {
+      console.log('[CSS Regeneration] Auto-committing updated CSS file...');
+
+      // Navigate to repo root and commit
+      const repoRoot = join(publicSitePath, '..');
+
+      // Check if there are changes
+      const { stdout: gitStatus } = await execAsync('git status --porcelain packages/public-site/public/static-master-controller.css', {
+        cwd: repoRoot,
+        timeout: 5000,
+      });
+
+      if (gitStatus.trim()) {
+        // Add the file
+        await execAsync('git add packages/public-site/public/static-master-controller.css', {
+          cwd: repoRoot,
+          timeout: 5000,
+        });
+
+        // Commit with timestamp
+        const commitMsg = `chore: Update static CSS from Master Controller\n\nGenerated: ${new Date().toISOString()}\nSource: ${source}\nSize: ${fileSizeKB}KB`;
+        await execAsync(`git commit -m "${commitMsg}"`, {
+          cwd: repoRoot,
+          timeout: 5000,
+        });
+
+        // Push to remote
+        await execAsync('git push', {
+          cwd: repoRoot,
+          timeout: 10000,
+        });
+
+        gitCommitSuccess = true;
+        gitCommitMessage = 'CSS file committed and pushed to GitHub';
+        console.log('[CSS Regeneration] Git commit successful');
+      } else {
+        gitCommitMessage = 'No changes to commit (file unchanged)';
+        console.log('[CSS Regeneration] No git changes detected');
+      }
+    } catch (gitError) {
+      console.warn('[CSS Regeneration] Git commit failed:', gitError);
+      gitCommitMessage = gitError instanceof Error ? gitError.message : 'Git commit failed';
+    }
+
     return NextResponse.json({
       success: true,
       message: 'CSS regenerated successfully',
@@ -74,6 +121,10 @@ export async function POST(request: NextRequest) {
         timestamp: stats.mtime.toISOString(),
         duration: `${duration}ms`,
         generatedAt: new Date().toISOString(),
+        git: {
+          committed: gitCommitSuccess,
+          message: gitCommitMessage,
+        },
       },
     });
 
