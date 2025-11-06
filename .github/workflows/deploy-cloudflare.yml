@@ -1,5 +1,6 @@
 name: Deploy to Cloudflare Pages
 
+
 on:
   # Trigger from n8n workflow
   repository_dispatch:
