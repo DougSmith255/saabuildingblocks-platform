@@ -15,15 +15,6 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
 
-  // Button settings - using CSS variables for colors
-  const buttonSettings = {
-    fontSize: 20,
-    fontFamily: 'Taskor',
-    fontWeight: 600,
-    textTransform: 'uppercase',
-    letterSpacing: '0.05em'
-  };
-
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
   const brandGreen = '#00ff88';
@@ -34,13 +25,15 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
     onClick?.(e);
   };
 
+  // Button styles - using CSS variables from Master Controller
   const buttonStyles = {
-    color: 'var(--color-headingText)',  // Use CSS variable for dynamic color
-    fontSize: `${buttonSettings.fontSize}px`,
-    fontFamily: `var(--font-taskor), ${buttonSettings.fontFamily}, system-ui, sans-serif`,
-    fontWeight: buttonSettings.fontWeight,
-    textTransform: buttonSettings.textTransform as any,
-    letterSpacing: buttonSettings.letterSpacing
+    color: 'var(--text-color-button, var(--color-headingText))',
+    fontSize: 'var(--font-size-button, 20px)',
+    fontFamily: 'var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)',
+    fontWeight: 'var(--font-weight-button, 600)' as any,
+    textTransform: 'var(--text-transform-button, uppercase)' as any,
+    letterSpacing: 'var(--letter-spacing-button, 0.05em)',
+    lineHeight: 'var(--line-height-button, 1.4)'
   };
 
   return (
