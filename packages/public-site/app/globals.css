@@ -1194,10 +1194,10 @@ body.is-404-page footer {
   border-radius: 2px;
 }
 
-/* Additional selectors for comprehensive coverage */
-.blog-post-content a,
-article a,
-[role="article"] a {
+/* Additional selectors for comprehensive coverage - Only apply to paragraph links */
+.blog-post-content p a,
+article p a,
+[role="article"] p a {
   color: var(--color-green);
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -1205,16 +1205,16 @@ article a,
   transition: all 0.2s ease;
 }
 
-.blog-post-content a:hover,
-article a:hover,
-[role="article"] a:hover {
+.blog-post-content p a:hover,
+article p a:hover,
+[role="article"] p a:hover {
   color: var(--color-gold-500);
   text-decoration-thickness: 2px;
 }
 
-.blog-post-content a:focus-visible,
-article a:focus-visible,
-[role="article"] a:focus-visible {
+.blog-post-content p a:focus-visible,
+article p a:focus-visible,
+[role="article"] p a:focus-visible {
   outline: 2px solid var(--color-gold-500);
   outline-offset: 2px;
   border-radius: 2px;

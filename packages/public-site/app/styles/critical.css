@@ -98,8 +98,8 @@ button {
   outline: none;
 }
 
-/* Link Styles */
-a {
+/* Link Styles - Only apply to paragraph links, not headings or buttons */
+p a {
   color: var(--color-green);
   text-decoration: none;
 }
