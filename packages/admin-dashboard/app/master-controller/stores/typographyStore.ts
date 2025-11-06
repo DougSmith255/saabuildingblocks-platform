@@ -88,6 +88,15 @@ const defaultSettings: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
   },
+  button: {
+    size: { min: 17, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
   tagline: {
     size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
     lineHeight: 1.5,
@@ -175,14 +184,21 @@ export const useTypographyStore = create<TypographyStore>()(
     }),
     {
       name: 'master-controller-typography',
-      version: 2, // Increment version to trigger migration
+      version: 3, // Increment version to trigger migration
       migrate: (persistedState: any, version: number) => {
-        // Migration from v0/v1 to v2: Remove deprecated 'button' text type
-        if (version < 2) {
-          console.warn('[Typography Store] Migrating to v2: Removing deprecated "button" text type');
-          if (persistedState?.settings && 'button' in persistedState.settings) {
-            const { button, ...cleanedSettings } = persistedState.settings;
-            persistedState.settings = cleanedSettings;
+        // Migration from v2 to v3: Re-add button text type with proper defaults
+        if (version < 3) {
+          console.log('[Typography Store] Migrating to v3: Adding button text type');
+          if (persistedState?.settings && !('button' in persistedState.settings)) {
+            persistedState.settings.button = {
+              size: { min: 17, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+              lineHeight: 1.4,
+              letterSpacing: 0.05,
+              fontWeight: 600,
+              fontFamily: 'var(--font-taskor)',
+              color: 'headingText',
+              textTransform: 'uppercase',
+            };
           }
         }
         return persistedState;
@@ -195,7 +211,7 @@ export const useTypographyStore = create<TypographyStore>()(
 
         // Validate typography settings structure
         let needsReset = false;
-        const textTypes: Array<keyof TypographySettings> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
+        const textTypes: Array<keyof TypographySettings> = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
 
         for (const textType of textTypes) {
           const settings = state.settings[textType];

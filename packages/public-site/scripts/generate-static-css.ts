@@ -322,6 +322,15 @@ const defaultTypography: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'bodyText',
   },
+  button: {
+    size: { min: 17, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
 };
 
 // Spacing (from spacingStore.ts) - MUST match admin-dashboard defaults exactly
@@ -424,15 +433,9 @@ async function generateAndWriteCSS() {
   // Fetch from database (with fallback to defaults)
   const dbSettings = await fetchSettingsFromDatabase();
 
-  let typography = dbSettings?.typography_settings || defaultTypography;
+  const typography = dbSettings?.typography_settings || defaultTypography;
   const colors = dbSettings?.brand_colors_settings || defaultColors;
   const spacing = dbSettings?.spacing_settings || defaultSpacing;
-
-  // Remove button from typography (moved to component-level styling)
-  if (typography.button) {
-    const { button, ...restTypography } = typography;
-    typography = restTypography;
-  }
 
   console.log('📊 Settings source:');
   console.log(`   Typography: ${dbSettings?.typography_settings ? 'DATABASE' : 'DEFAULTS'}`);
