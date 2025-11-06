@@ -17,7 +17,7 @@ const H1Preview: React.FC = () => {
   return (
     <div className="p-8 rounded-lg border border-[#404040] bg-[#191818]">
       <div className="text-center">
-        <H1>NEON TEXT</H1>
+        <H1>Heading 1</H1>
       </div>
       <div className="mt-6 text-sm text-[#dcdbd5] text-center">
         <p>3D animated neon heading with flicker effect</p>
@@ -31,7 +31,7 @@ const H2Preview: React.FC = () => {
   return (
     <div className="p-8 rounded-lg border border-[#404040] bg-[#191818]">
       <div className="text-center">
-        <H2>STATIC NEON</H2>
+        <H2>Heading 2</H2>
       </div>
       <div className="mt-6 text-sm text-[#dcdbd5] text-center">
         <p>3D static neon heading with metal backing</p>
