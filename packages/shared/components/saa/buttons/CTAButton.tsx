@@ -15,13 +15,36 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
 
-  // Using default value until we implement Context provider pattern
-  const brandGreen = '#00ff88';
+  // Hardcoded button settings (moved from typography to component-level)
+  const buttonSettings = {
+    fontSize: 20,
+    fontFamily: 'Taskor',
+    fontWeight: 600,
+    color: 'brandGold',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em'
+  };
+  const brandColors = { primary: '#00ff88', secondary: '#ffd700', green: '#00ff88', brandGold: '#ffd700' };
+
+  // Resolve color from brand colors with safety check
+  const resolvedColor = buttonSettings?.color as keyof typeof brandColors;
+  const buttonColor = (brandColors && resolvedColor && brandColors[resolvedColor]) || '#ffd700';
+
+  // Get brand green for click effect
+  const brandGreen = brandColors?.green || '#00ff88';
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     setIsClicked(true);
     setTimeout(() => setIsClicked(false), 3000);
     onClick?.(e);
+  };
+
+  const buttonStyles = {
+    color: buttonColor,
+    fontSize: `${buttonSettings.fontSize}px`,
+    fontWeight: buttonSettings.fontWeight,
+    textTransform: buttonSettings.textTransform as any,
+    letterSpacing: buttonSettings.letterSpacing
   };
 
   return (
@@ -35,12 +58,12 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
         href={href}
         onClick={handleClick}
         className={`
-          text-button
           relative flex justify-center items-center
           ${isFullWidth ? 'w-full' : ''}
           h-[56px] px-5 py-2
           bg-[rgb(45,45,45)] backdrop-blur-[15px]
           rounded-xl border-t border-b border-white/10
+          uppercase tracking-wide
           z-10
           shadow-[0_15px_15px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1),inset_0_-1px_0_rgba(0,0,0,0.5)]
           transition-all duration-500
@@ -52,6 +75,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
           ${isClicked ? 'clicked' : ''}
         `}
+        style={buttonStyles}
       >
         {children}
       </a>

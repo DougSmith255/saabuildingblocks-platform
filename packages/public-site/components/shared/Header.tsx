@@ -316,10 +316,14 @@ export default function Header() {
                   <Link
                     href={item.href!}
                     onClick={handlePortalClick}
-                    className={`nav-link agent-portal flex items-center px-5 py-3 font-medium tracking-[0.5px] transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white font-normal ${isPortalClicked ? 'clicked' : ''}`}
+                    className={`nav-link agent-portal flex items-center px-5 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
                     style={{
-                      fontSize: 'var(--font-size-button)',
-                      fontFamily: 'var(--font-taskor), system-ui, sans-serif',
+                      fontSize: 'var(--font-size-mainMenuItem)',
+                      fontFamily: 'var(--font-family-mainMenuItem)',
+                      fontWeight: 'var(--font-weight-mainMenuItem)',
+                      letterSpacing: 'var(--letter-spacing-mainMenuItem)',
+                      lineHeight: 'var(--line-height-mainMenuItem)',
+                      color: 'var(--text-color-mainMenuItem)',
                       willChange: 'background-color, color',
                     }}
                   >
@@ -500,10 +504,14 @@ export default function Header() {
                           handlePortalClick();
                           setIsMobileMenuOpen(false);
                         }}
-                        className={`agent-portal-mobile block px-6 py-4 font-medium tracking-wide transition-all duration-300 rounded-lg relative text-white font-normal ${isPortalClicked ? 'clicked' : ''}`}
+                        className={`agent-portal-mobile block px-6 py-4 transition-all duration-300 rounded-lg relative text-white ${isPortalClicked ? 'clicked' : ''}`}
                         style={{
-                          fontSize: 'var(--font-size-button)',
-                          fontFamily: 'var(--font-taskor), system-ui, sans-serif',
+                          fontSize: 'var(--font-size-mainMenuItem)',
+                          fontFamily: 'var(--font-family-mainMenuItem)',
+                          fontWeight: 'var(--font-weight-mainMenuItem)',
+                          letterSpacing: 'var(--letter-spacing-mainMenuItem)',
+                          lineHeight: 'var(--line-height-mainMenuItem)',
+                          color: 'var(--text-color-mainMenuItem)',
                         }}
                       >
                         <span className="agent-portal-styled">
