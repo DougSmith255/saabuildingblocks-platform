@@ -10,7 +10,7 @@ import dynamic from 'next/dynamic';
 
 // Dynamic imports for heading components
 const H1 = dynamic(() => import('@saa/shared/components/saa/headings/H1'), { ssr: false });
-const H2 = dynamic(() => import('@saa/shared/components/saa/headings/H2').then(mod => ({ default: mod.H2 })), { ssr: false });
+const H2 = dynamic(() => import('@saa/shared/components/saa/headings/H2'), { ssr: false });
 
 // Preview components
 const H1Preview: React.FC = () => {

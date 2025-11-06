@@ -246,6 +246,16 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
           )
         })));
 
+      // Typography
+      case 'h1-heading':
+        return lazy(() => import('@saa/shared/components/saa/headings/H1').then(m => ({
+          default: () => <m.default>Heading 1</m.default>
+        })));
+      case 'h2-heading':
+        return lazy(() => import('@saa/shared/components/saa/headings/H2').then(m => ({
+          default: () => <m.default>Heading 2</m.default>
+        })));
+
       default:
         return () => (
           <div className="flex items-center justify-center p-8 bg-transparent border-2 border-dashed border-[#404040] rounded-lg">

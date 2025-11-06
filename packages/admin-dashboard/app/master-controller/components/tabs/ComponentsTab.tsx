@@ -71,7 +71,14 @@ export function ComponentsTab() {
   };
 
   const handlePreviewComponent = (component: SAAComponent) => {
-    setPreviewingComponent(component);
+    // If component has a previewPath (HTML version), show preview modal
+    if (component.previewPath) {
+      setPreviewingComponent(component);
+    }
+    // If no previewPath but has reactPath, open editor instead
+    else if (component.reactPath) {
+      handleEditComponent(component);
+    }
   };
 
   const handleSaveComponent = async (componentId: string, code: string) => {

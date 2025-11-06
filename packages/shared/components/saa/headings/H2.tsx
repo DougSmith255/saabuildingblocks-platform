@@ -33,7 +33,7 @@ const ALT_GLYPHS: Record<string, string> = {
  * <H2>NEON TEXT</H2>
  * ```
  */
-export function H2({
+export default function H2({
   children,
   className = '',
   style = {}
