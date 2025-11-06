@@ -29,7 +29,6 @@ import { writeFileSync, mkdirSync, readFileSync, existsSync, cpSync, readdirSync
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createClient } from '@supabase/supabase-js';
-import { createHash } from 'crypto';
 
 // Import the existing CSS generator infrastructure
 import { CSSGenerator } from '../app/master-controller/lib/cssGenerator';
@@ -47,46 +46,8 @@ const __dirname = dirname(__filename);
 // Output path
 const OUTPUT_PATH = join(__dirname, '../public/static-master-controller.css');
 
-/**
- * Calculates SHA-256 hash of content for cache comparison
- */
-function calculateHash(content: string): string {
-  return createHash('sha256').update(content).digest('hex');
-}
-
-/**
- * Checks if output file exists and matches content hash
- * Returns true if file unchanged (can skip write)
- *
- * Note: Excludes timestamp line from comparison to detect actual CSS changes
- */
-function shouldSkipWrite(newContent: string): boolean {
-  if (!existsSync(OUTPUT_PATH)) {
-    return false; // File doesn't exist, must write
-  }
-
-  try {
-    const existingContent = readFileSync(OUTPUT_PATH, 'utf-8');
-
-    // Remove timestamp lines for comparison (starts with "Generated:")
-    const normalizeForComparison = (content: string) => {
-      return content
-        .split('\n')
-        .filter(line => !line.includes('Generated:'))
-        .join('\n');
-    };
-
-    const normalizedExisting = normalizeForComparison(existingContent);
-    const normalizedNew = normalizeForComparison(newContent);
-
-    const existingHash = calculateHash(normalizedExisting);
-    const newHash = calculateHash(normalizedNew);
-
-    return existingHash === newHash;
-  } catch (error) {
-    return false; // Error reading file, write anyway
-  }
-}
+// NOTE: All caching removed to ensure every "Update Static Files" click
+// results in a file write, git commit, and push to GitHub
 
 /**
  * Validates settings structure
@@ -148,7 +109,7 @@ async function fetchSettingsFromDatabase() {
     // Connect to Supabase
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch settings with retry logic (key-value structure + timestamps for cache)
+    // Fetch settings with retry logic (key-value structure + timestamps)
     const result = await retryWithBackoff(async () => {
       const { data, error } = await supabase
         .from('master_controller_settings')
@@ -167,7 +128,6 @@ async function fetchSettingsFromDatabase() {
     }
 
     // Convert key-value array to object structure
-    // Include timestamps for cache invalidation
     const settings: any = { _db_timestamps: {} };
     for (const row of result) {
       if (row.setting_key === 'typography') {
@@ -455,7 +415,7 @@ async function generateAndWriteCSS() {
     spacing
   );
 
-  // Add header comment with database timestamps for cache invalidation
+  // Add header comment with database timestamps
   const settingsSource = dbSettings ? 'database (Supabase)' : 'default Master Controller settings';
   const dbTimestamps = dbSettings?._db_timestamps || {};
   const header = `/**
@@ -472,7 +432,7 @@ async function generateAndWriteCSS() {
  * - Colors: ${dbSettings?.brand_colors_settings ? 'DATABASE' : 'DEFAULTS'}
  * - Spacing: ${dbSettings?.spacing_settings ? 'DATABASE' : 'DEFAULTS'}
  *
- * Database timestamps (for cache invalidation):
+ * Database timestamps:
  * - Typography: ${dbTimestamps.typography || 'N/A'}
  * - Colors: ${dbTimestamps.brand_colors || 'N/A'}
  * - Spacing: ${dbTimestamps.spacing || 'N/A'}
@@ -488,18 +448,6 @@ async function generateAndWriteCSS() {
 `;
 
   const finalCSS = header + css;
-
-  // NOTE: Caching disabled to ensure git commit always happens when settings change
-  // Previously, cache hits would skip write, preventing git from detecting changes
-  // This caused "Update Static Files" to not push updated CSS to GitHub/Cloudflare
-  /*
-  if (shouldSkipWrite(finalCSS)) {
-    console.log('\n⚡ CSS unchanged - skipping write (cache hit)');
-    console.log(`   Output: ${OUTPUT_PATH}`);
-    console.log('\n✅ Static CSS generation complete (cached)!\n');
-    return;
-  }
-  */
 
   // Ensure public directory exists
   try {
