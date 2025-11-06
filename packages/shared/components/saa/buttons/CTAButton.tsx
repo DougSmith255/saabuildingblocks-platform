@@ -20,11 +20,11 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
     fontSize: 20,
     fontFamily: 'Taskor',
     fontWeight: 600,
-    color: 'brandGold',
+    color: 'headingText',  // Use heading brand color (gold)
     textTransform: 'uppercase',
     letterSpacing: '0.05em'
   };
-  const brandColors = { primary: '#00ff88', secondary: '#ffd700', green: '#00ff88', brandGold: '#ffd700' };
+  const brandColors = { headingText: '#ffd700', brandGold: '#ffd700', green: '#00ff88' };
 
   // Resolve color from brand colors with safety check
   const resolvedColor = buttonSettings?.color as keyof typeof brandColors;
@@ -42,6 +42,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   const buttonStyles = {
     color: buttonColor,
     fontSize: `${buttonSettings.fontSize}px`,
+    fontFamily: `var(--font-taskor), ${buttonSettings.fontFamily}, system-ui, sans-serif`,
     fontWeight: buttonSettings.fontWeight,
     textTransform: buttonSettings.textTransform as any,
     letterSpacing: buttonSettings.letterSpacing

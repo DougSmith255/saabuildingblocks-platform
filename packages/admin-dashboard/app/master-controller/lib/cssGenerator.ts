@@ -202,6 +202,20 @@ export class CSSGenerator {
   font-style: var(--font-style-quote, normal);
 }
 
+/* Link styles - only apply to links inside paragraphs, not headings or buttons */
+p a,
+.text-body a,
+article a:not(button a):not(h1 a):not(h2 a):not(h3 a):not(h4 a):not(h5 a):not(h6 a) {
+  color: var(--text-color-link);
+  font-size: var(--font-size-link);
+  line-height: var(--line-height-link);
+  letter-spacing: var(--letter-spacing-link);
+  font-weight: var(--font-weight-link);
+  font-family: var(--font-family-link);
+  font-style: var(--font-style-link, normal);
+}
+
+/* Keep .text-link class for manual application when needed */
 .text-link {
   color: var(--text-color-link);
   font-size: var(--font-size-link);
