@@ -1,7 +1,6 @@
 name: Deploy to Cloudflare Pages
 
-
-on:
+"on":
   # Trigger from n8n workflow
   repository_dispatch:
     types: [deploy-wordpress-content]
@@ -77,9 +76,9 @@ jobs:
             git add packages/public-site/public/static-master-controller.css
             git commit -m "chore: Update static CSS from Master Controller
 
-Generated: ${CSS_TIMESTAMP}
-Source: Database (Supabase)
-Triggered by: Deploy to Cloudflare workflow"
+            Generated: ${CSS_TIMESTAMP}
+            Source: Database (Supabase)
+            Triggered by: Deploy to Cloudflare workflow"
 
             git push
 
