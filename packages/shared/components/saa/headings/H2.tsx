@@ -42,17 +42,17 @@ export default function H2({
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
 
-  // Static neon text-shadow (always at full brightness)
+  // Static neon text-shadow (always at full brightness) - using body text color
   const textShadow = `
     -1px -1px 0 rgba(255,255,255, 0.4),
     1px -1px 0 rgba(255,255,255, 0.4),
     -1px 1px 0 rgba(255,255,255, 0.4),
     1px 1px 0 rgba(255,255,255, 0.4),
-    0 -3px 8px #ffd700,
-    0 0 2px #ffd700,
-    0 0 5px #ffd700,
-    0 0 15px #ffb347,
-    0 0 3px #ffd700,
+    0 -3px 8px #bfbdb0,
+    0 0 2px #bfbdb0,
+    0 0 5px #bfbdb0,
+    0 0 15px #9a9888,
+    0 0 3px #bfbdb0,
     0 3px 3px #000
   `;
 
@@ -72,7 +72,7 @@ export default function H2({
       <style jsx>{`
         .h2-char {
           display: inline-block;
-          color: #ffd700;
+          color: #bfbdb0;
           text-shadow: ${textShadow};
           transform: translateZ(20px);
           position: relative;
