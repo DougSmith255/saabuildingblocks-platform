@@ -53,6 +53,37 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 2  # Fetch last 2 commits for change detection
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Auto-commit any pending CSS changes from "Update Static Files" button
+      - name: Commit pending CSS changes
+        run: |
+          echo "🔍 Checking for uncommitted CSS changes..."
+
+          # Configure git
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Check if CSS file has changes
+          if git diff --quiet packages/public-site/public/static-master-controller.css; then
+            echo "✅ No CSS changes to commit"
+          else
+            echo "📝 Found uncommitted CSS changes, committing..."
+
+            # Get timestamp from CSS file
+            CSS_TIMESTAMP=$(grep "Generated:" packages/public-site/public/static-master-controller.css | head -1 | sed 's/.*Generated: //' | sed 's/ \*$//')
+
+            git add packages/public-site/public/static-master-controller.css
+            git commit -m "chore: Update static CSS from Master Controller
+
+Generated: ${CSS_TIMESTAMP}
+Source: Database (Supabase)
+Triggered by: Deploy to Cloudflare workflow"
+
+            git push
+
+            echo "✅ CSS changes committed and pushed"
+          fi
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
