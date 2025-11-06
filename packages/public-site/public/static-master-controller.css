@@ -1,7 +1,7 @@
 /**
  * Master Controller Static CSS
  * Auto-generated from database (Supabase)
- * Generated: 2025-11-06T00:49:33.977Z
+ * Generated: 2025-11-06T05:26:22.602Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
@@ -13,7 +13,7 @@
  * - Spacing: DEFAULTS
  *
  * Database timestamps (for cache invalidation):
- * - Typography: 2025-11-05T21:30:41.515+00:00
+ * - Typography: 2025-11-06T05:25:24.787+00:00
  * - Colors: 2025-11-05T00:51:06.405+00:00
  * - Spacing: N/A
  *
@@ -90,6 +90,13 @@
       --font-family-quote: var(--font-amulya), sans-serif;
       --font-style-quote: italic;
       --text-color-quote: #bfbdb0;
+      --font-size-button: clamp(16px, calc(14.55px + 0.58vw), 32px);
+      --line-height-button: 1.2;
+      --letter-spacing-button: 0.05em;
+      --font-weight-button: 600;
+      --font-family-button: var(--font-taskor), sans-serif;
+      --text-transform-button: uppercase;
+      --text-color-button: #e5e4dd;
       --font-size-caption: clamp(12px, calc(11.64px + 0.15vw), 16px);
       --line-height-caption: 1.4;
       --letter-spacing-caption: 0em;
@@ -102,18 +109,18 @@
       --font-weight-tagline: 400;
       --font-family-tagline: var(--font-taskor), sans-serif;
       --text-color-tagline: #bfbdb0;
-      --font-size-mainMenuItem: clamp(16px, calc(15.18px + 0.33vw), 25px);
-      --line-height-mainMenuItem: 1.5;
-      --letter-spacing-mainMenuItem: 0.03em;
-      --font-weight-mainMenuItem: 500;
-      --font-family-mainMenuItem: var(--font-synonym), sans-serif;
-      --text-color-mainMenuItem: #e5e4dd;
-      --font-size-menuDropdown: clamp(14px, calc(13.64px + 0.15vw), 18px);
-      --line-height-menuDropdown: 1.5;
-      --letter-spacing-menuDropdown: 0.02em;
-      --font-weight-menuDropdown: 400;
-      --font-family-menuDropdown: var(--font-synonym), sans-serif;
-      --text-color-menuDropdown: #bfbdb0;
+      --font-size-menuSubItem: clamp(16px, calc(15.64px + 0.15vw), 20px);
+      --line-height-menuSubItem: 1.4;
+      --letter-spacing-menuSubItem: 0em;
+      --font-weight-menuSubItem: 400;
+      --font-family-menuSubItem: var(--font-synonym), sans-serif;
+      --text-color-menuSubItem: #bfbdb0;
+      --font-size-menuMainItem: clamp(24px, calc(23.18px + 0.33vw), 33px);
+      --line-height-menuMainItem: 1.4;
+      --letter-spacing-menuMainItem: 0em;
+      --font-weight-menuMainItem: 500;
+      --font-family-menuMainItem: var(--font-synonym), sans-serif;
+      --text-color-menuMainItem: #e5e4dd;
 
   /* Spacing */
   --spacing-container-padding: clamp(16px, calc(10.18px + 2.33vw), 80px);
@@ -221,6 +228,17 @@
   font-weight: var(--font-weight-tagline);
   font-family: var(--font-family-tagline);
   font-style: var(--font-style-tagline, normal);
+}
+
+.text-button {
+  color: var(--text-color-button);
+  font-size: var(--font-size-button);
+  line-height: var(--line-height-button);
+  letter-spacing: var(--letter-spacing-button);
+  font-weight: var(--font-weight-button);
+  font-family: var(--font-family-button);
+  font-style: var(--font-style-button, normal);
+  text-transform: var(--text-transform-button, none);
 }
 
 /* Grid Utilities */
