@@ -15,23 +15,18 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
 
-  // Hardcoded button settings (moved from typography to component-level)
+  // Button settings - using CSS variables for colors
   const buttonSettings = {
     fontSize: 20,
     fontFamily: 'Taskor',
     fontWeight: 600,
-    color: 'headingText',  // Use heading brand color (gold)
     textTransform: 'uppercase',
     letterSpacing: '0.05em'
   };
-  const brandColors = { headingText: '#ffd700', brandGold: '#ffd700', green: '#00ff88' };
 
-  // Resolve color from brand colors with safety check
-  const resolvedColor = buttonSettings?.color as keyof typeof brandColors;
-  const buttonColor = (brandColors && resolvedColor && brandColors[resolvedColor]) || '#ffd700';
-
-  // Get brand green for click effect
-  const brandGreen = brandColors?.green || '#00ff88';
+  // Brand colors for glow effects (keep hardcoded for animation compatibility)
+  const brandGold = '#ffd700';
+  const brandGreen = '#00ff88';
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     setIsClicked(true);
@@ -40,7 +35,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   };
 
   const buttonStyles = {
-    color: buttonColor,
+    color: 'var(--color-headingText)',  // Use CSS variable for dynamic color
     fontSize: `${buttonSettings.fontSize}px`,
     fontFamily: `var(--font-taskor), ${buttonSettings.fontFamily}, system-ui, sans-serif`,
     fontWeight: buttonSettings.fontWeight,
