@@ -489,13 +489,17 @@ async function generateAndWriteCSS() {
 
   const finalCSS = header + css;
 
-  // Check if content changed (smart caching)
+  // NOTE: Caching disabled to ensure git commit always happens when settings change
+  // Previously, cache hits would skip write, preventing git from detecting changes
+  // This caused "Update Static Files" to not push updated CSS to GitHub/Cloudflare
+  /*
   if (shouldSkipWrite(finalCSS)) {
     console.log('\n⚡ CSS unchanged - skipping write (cache hit)');
     console.log(`   Output: ${OUTPUT_PATH}`);
     console.log('\n✅ Static CSS generation complete (cached)!\n');
     return;
   }
+  */
 
   // Ensure public directory exists
   try {
