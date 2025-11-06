@@ -92,77 +92,74 @@ async function retryWithBackoff<T>(
 
 /**
  * Fetches Master Controller settings from Supabase database
- * Falls back to defaults if database unavailable
+ * REQUIRES database connection - FAILS if unavailable (database is source of truth)
  * Includes retry logic for transient failures
  */
 async function fetchSettingsFromDatabase() {
-  try {
-    // Check for Supabase credentials
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  // Check for Supabase credentials
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-    if (!supabaseUrl || !supabaseKey) {
-      console.warn('⚠️  Supabase credentials not found - using defaults');
-      return null;
-    }
-
-    // Connect to Supabase
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // Fetch settings with retry logic (key-value structure + timestamps)
-    const result = await retryWithBackoff(async () => {
-      const { data, error } = await supabase
-        .from('master_controller_settings')
-        .select('setting_key, setting_value, updated_at');
-
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      return data;
-    });
-
-    if (!result || result.length === 0) {
-      console.warn('⚠️  No settings found in database - using defaults');
-      return null;
-    }
-
-    // Convert key-value array to object structure
-    const settings: any = { _db_timestamps: {} };
-    for (const row of result) {
-      if (row.setting_key === 'typography') {
-        settings.typography_settings = row.setting_value;
-        settings._db_timestamps.typography = row.updated_at;
-      } else if (row.setting_key === 'brand_colors') {
-        settings.brand_colors_settings = row.setting_value;
-        settings._db_timestamps.brand_colors = row.updated_at;
-      } else if (row.setting_key === 'spacing') {
-        settings.spacing_settings = row.setting_value;
-        settings._db_timestamps.spacing = row.updated_at;
-      }
-    }
-
-    // Validate settings structure
-    if (!validateSettings(settings)) {
-      console.warn('⚠️  Invalid settings structure - using defaults');
-      return null;
-    }
-
-    console.log('✅ Settings loaded from database (after validation)');
-    return settings;
-
-  } catch (error) {
-    console.warn('⚠️  Database fetch failed:', error instanceof Error ? error.message : String(error), '- using defaults');
-    return null;
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('❌ FATAL: Supabase credentials not found. Database is the source of truth - cannot generate static files without it.');
   }
+
+  // Connect to Supabase
+  const supabase = createClient(supabaseUrl, supabaseKey);
+
+  // Fetch settings with retry logic (key-value structure + timestamps)
+  const result = await retryWithBackoff(async () => {
+    const { data, error } = await supabase
+      .from('master_controller_settings')
+      .select('setting_key, setting_value, updated_at');
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return data;
+  });
+
+  if (!result || result.length === 0) {
+    throw new Error('❌ FATAL: No settings found in database. Database must contain Master Controller settings.');
+  }
+
+  // Convert key-value array to object structure
+  const settings: any = { _db_timestamps: {} };
+  for (const row of result) {
+    if (row.setting_key === 'typography') {
+      settings.typography_settings = row.setting_value;
+      settings._db_timestamps.typography = row.updated_at;
+    } else if (row.setting_key === 'brand_colors') {
+      settings.brand_colors_settings = row.setting_value;
+      settings._db_timestamps.brand_colors = row.updated_at;
+    } else if (row.setting_key === 'spacing') {
+      settings.spacing_settings = row.setting_value;
+      settings._db_timestamps.spacing = row.updated_at;
+    }
+  }
+
+  // Validate settings structure
+  if (!validateSettings(settings)) {
+    throw new Error('❌ FATAL: Invalid settings structure in database. Check master_controller_settings table.');
+  }
+
+  console.log('✅ Settings loaded from database (source of truth)');
+  return settings;
 }
 
 /**
- * Default settings from Master Controller stores
- * These match the default values in:
- * - app/master-controller/stores/typographyStore.ts
- * - app/master-controller/stores/brandColorsStore.ts
- * - app/master-controller/stores/spacingStore.ts
+ * LEGACY: Default settings (DEPRECATED - FOR REFERENCE ONLY)
+ *
+ * These are NO LONGER USED by the generator script.
+ * Database is the SINGLE source of truth.
+ *
+ * These defaults are kept here ONLY for:
+ * 1. Initial database seeding (if database is ever completely empty)
+ * 2. Documentation/reference purposes
+ *
+ * DO NOT USE THESE - They will be out of sync with database!
+ * To update settings, use the Master Controller UI.
  */
 
 // Brand Colors (from brandColorsStore.ts)
@@ -390,22 +387,21 @@ async function generateAndWriteCSS() {
   console.log('\n🎨 Master Controller Static Files Generator\n');
   console.log('=' .repeat(60));
 
-  // Fetch from database (with fallback to defaults)
+  // Fetch from database (DATABASE IS THE ONLY SOURCE OF TRUTH)
   const dbSettings = await fetchSettingsFromDatabase();
 
-  const typography = dbSettings?.typography_settings || defaultTypography;
-  const colors = dbSettings?.brand_colors_settings || defaultColors;
-  const spacing = dbSettings?.spacing_settings || defaultSpacing;
+  // Database is required - these should always exist or function will have thrown
+  const typography = dbSettings.typography_settings;
+  const colors = dbSettings.brand_colors_settings;
+  // Spacing might not be in database yet - use defaults as fallback ONLY for spacing
+  const spacing = dbSettings.spacing_settings || defaultSpacing;
 
-  console.log('📊 Settings source:');
-  console.log(`   Typography: ${dbSettings?.typography_settings ? 'DATABASE' : 'DEFAULTS'}`);
-  console.log(`   Colors: ${dbSettings?.brand_colors_settings ? 'DATABASE' : 'DEFAULTS'}`);
-  console.log(`   Spacing: ${dbSettings?.spacing_settings ? 'DATABASE' : 'DEFAULTS'}`);
+  console.log('📊 Settings source: DATABASE (source of truth)');
   console.log('');
   console.log('📊 Settings details:');
   console.log(`   Typography: ${Object.keys(typography).length} text types`);
   console.log(`   Colors: ${Object.keys(colors).length} brand colors`);
-  console.log(`   Spacing: ${Object.keys(spacing).length} tokens`);
+  console.log(`   Spacing: ${Object.keys(spacing).length} tokens ${dbSettings.spacing_settings ? '(DB)' : '(DEFAULTS - not in DB yet)'}`);
 
   // Generate CSS using existing CSSGenerator
   console.log('\n🔨 Generating CSS...');
@@ -416,31 +412,28 @@ async function generateAndWriteCSS() {
   );
 
   // Add header comment with database timestamps
-  const settingsSource = dbSettings ? 'database (Supabase)' : 'default Master Controller settings';
-  const dbTimestamps = dbSettings?._db_timestamps || {};
+  const dbTimestamps = dbSettings._db_timestamps;
   const header = `/**
  * Master Controller Static CSS
- * Auto-generated from ${settingsSource}
+ * Auto-generated from Supabase database (SINGLE SOURCE OF TRUTH)
  * Generated: ${new Date().toISOString()}
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
  * and spacing settings without requiring dynamic JavaScript.
  *
- * Settings source:
- * - Typography: ${dbSettings?.typography_settings ? 'DATABASE' : 'DEFAULTS'}
- * - Colors: ${dbSettings?.brand_colors_settings ? 'DATABASE' : 'DEFAULTS'}
- * - Spacing: ${dbSettings?.spacing_settings ? 'DATABASE' : 'DEFAULTS'}
- *
- * Database timestamps:
- * - Typography: ${dbTimestamps.typography || 'N/A'}
- * - Colors: ${dbTimestamps.brand_colors || 'N/A'}
+ * Database timestamps (last updated):
+ * - Typography: ${dbTimestamps.typography}
+ * - Colors: ${dbTimestamps.brand_colors}
  * - Spacing: ${dbTimestamps.spacing || 'N/A'}
  *
- * For custom settings:
+ * How to update settings:
  * 1. Use the Master Controller UI (https://saabuildingblocks.com/master-controller)
- * 2. Settings persist to Supabase database and are injected via useLiveCSS hook
- * 3. Regenerate this file to bake database settings into static export
+ * 2. Click "Save Settings" to persist to database
+ * 3. Click "Update Static Files" to regenerate this CSS from database
+ * 4. Click "Deploy to Cloudflare" to push changes live
+ *
+ * DATABASE IS THE SINGLE SOURCE OF TRUTH - No hardcoded defaults!
  *
  * DO NOT EDIT MANUALLY - Regenerate with: npm run generate:css
  */
