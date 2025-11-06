@@ -22,11 +22,6 @@ on:
         options:
           - incremental
           - full
-      skip_build_cache:
-        description: 'Skip build cache'
-        required: false
-        default: false
-        type: boolean
       deployment_id:
         description: 'WordPress Deployment ID'
         required: false
@@ -63,43 +58,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          # Caching disabled for guaranteed fresh builds
 
-      # Cache node_modules (monorepo root + packages)
-      - name: Cache node_modules
-        if: ${{ !inputs.skip_build_cache }}
-        uses: actions/cache@v4
-        id: node-modules-cache
-        with:
-          path: |
-            node_modules
-            packages/*/node_modules
-          key: ${{ runner.os }}-node-modules-nextjs16-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-modules-nextjs16-
-
-      # Cache Next.js build
-      - name: Cache Next.js build
-        if: ${{ !inputs.skip_build_cache }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            packages/public-site/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-${{ hashFiles('packages/public-site/**/*.js', 'packages/public-site/**/*.jsx', 'packages/public-site/**/*.ts', 'packages/public-site/**/*.tsx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('package-lock.json') }}-
-            ${{ runner.os }}-nextjs-
-
-      # Install dependencies (monorepo root)
+      # Install dependencies (monorepo root) - always fresh install
       - name: Install dependencies
         run: |
-          if [ "${{ steps.node-modules-cache.outputs.cache-hit }}" != "true" ]; then
-            echo "📦 Installing dependencies (fresh install)..."
-            npm ci --prefer-offline --no-audit
-          else
-            echo "✅ Using cached node_modules"
-          fi
+          echo "📦 Installing dependencies (fresh install - caching disabled)..."
+          npm ci --prefer-offline --no-audit
 
       # NEW: Type check BEFORE building to catch ALL errors at once
       - name: Type Check (Catch all errors upfront)
@@ -117,48 +82,18 @@ jobs:
           
           echo "✅ Type check passed"
 
-      # Cache static CSS generation (save ~35s per build when unchanged)
-      - name: Cache static CSS and components
-        uses: actions/cache@v4
-        id: css-cache
-        with:
-          path: |
-            packages/public-site/public/static-master-controller.css
-            packages/public-site/public/components
-          key: static-css-${{ hashFiles('packages/public-site/scripts/generate-static-css.ts') }}-${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          restore-keys: |
-            static-css-${{ hashFiles('packages/public-site/scripts/generate-static-css.ts') }}-
-
-      # Generate static CSS and copy component files (skip if cached)
-      - name: Generate static CSS and components
-        if: steps.css-cache.outputs.cache-hit != 'true'
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      # Verify static CSS exists (should be committed via "Update Static Files" button)
+      - name: Verify static CSS file
         run: |
-          echo "🎨 Generating static CSS and copying component files..."
-          echo "   Source: packages/shared/components/saa/"
-          echo "   Destination: packages/public-site/public/"
-
           cd packages/public-site
-          npm run generate:css
 
-          # Verify CSS was generated
           if [ -f "public/static-master-controller.css" ]; then
-            echo "✅ CSS file generated successfully"
+            echo "✅ Static CSS file found (committed from Update Static Files)"
             ls -lh public/static-master-controller.css
           else
-            echo "❌ CSS generation failed!"
+            echo "❌ Static CSS file not found!"
+            echo "   Please click 'Update Static Files' button first to generate and commit CSS"
             exit 1
-          fi
-
-          # Verify components were copied
-          if [ -d "public/components" ]; then
-            COMPONENT_COUNT=$(find public/components -type f | wc -l)
-            echo "✅ Components copied successfully (${COMPONENT_COUNT} files)"
-            echo "   Components will be available at /components/ in static export"
-          else
-            echo "⚠️  No components directory found (non-fatal)"
           fi
 
       # Build static export (FROM MONOREPO ROOT - fixes tsconfig resolution)
@@ -227,14 +162,13 @@ jobs:
           name: build-output
           path: packages/public-site/out
 
-      # Cache Wrangler installation (avoids 44s npm install + deprecation warnings)
-      - name: Setup Node.js and cache
+      # Setup Node.js (caching disabled for guaranteed fresh builds)
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
 
-      # Install Wrangler globally (cached by setup-node)
+      # Install Wrangler globally
       - name: Install Wrangler
         run: |
           if ! command -v wrangler &> /dev/null; then

@@ -18,6 +18,7 @@ let lastDeploymentTime = 0;
  * - Requires GITHUB_TOKEN environment variable
  *
  * Workflow triggered: .github/workflows/deploy-cloudflare.yml
+ * Note: All caching disabled in workflow for guaranteed fresh builds
  */
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -43,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     // Parse request body (optional parameters)
     const body = await request.json().catch(() => ({}));
-    const { deploymentType = 'incremental', skipBuildCache = false } = body;
+    const { deploymentType = 'incremental' } = body;
 
     // Validate deployment type
     if (!['incremental', 'full'].includes(deploymentType)) {
@@ -93,7 +94,6 @@ export async function POST(request: NextRequest) {
         ref: 'main', // Branch to run workflow on
         inputs: {
           deployment_type: deploymentType,
-          skip_build_cache: String(skipBuildCache),
           triggered_by: 'master-controller',
         },
       }),
@@ -121,7 +121,6 @@ export async function POST(request: NextRequest) {
         duration: Date.now() - startTime,
         metadata: {
           deployment_type: deploymentType,
-          skip_build_cache: skipBuildCache,
           triggered_by: 'master-controller',
           github_owner: githubOwner,
           github_repo: githubRepo,
@@ -147,7 +146,6 @@ export async function POST(request: NextRequest) {
         workflowUrl: workflowRunsUrl,
         status: 'triggered',
         deploymentType,
-        skipBuildCache,
         duration: `${duration}ms`,
         triggeredAt: new Date().toISOString(),
         note: 'Workflow will start shortly. Check GitHub Actions for progress.',
