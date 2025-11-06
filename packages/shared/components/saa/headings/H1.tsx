@@ -35,9 +35,10 @@ export default function H1({ children, className = '', style = {} }: HeadingProp
             {word.split('').map((char, charIndex) => {
               // Alt glyphs: N = U+f015, E = U+f011, M = U+f016
               let displayChar = char;
-              if (char === 'N') displayChar = '\uf015';
-              if (char === 'E') displayChar = '\uf011';
-              if (char === 'M') displayChar = '\uf016';
+              const upperChar = char.toUpperCase();
+              if (upperChar === 'N') displayChar = '\uf015';
+              if (upperChar === 'E') displayChar = '\uf011';
+              if (upperChar === 'M') displayChar = '\uf016';
 
               const globalIndex = wordIndex * 10 + charIndex;
 
