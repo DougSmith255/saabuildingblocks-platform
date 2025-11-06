@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useBrandColorsStore } from '../../stores/brandColorsStore';
 import { ColorCard } from '../ColorCard';
-import { COLOR_PRESETS } from '../../lib/colorPresets';
 import { generateHarmony } from '../../lib/colorUtils';
 import type { ColorName } from '../../types';
 
@@ -54,21 +53,10 @@ const COLOR_DEFINITIONS: ColorDefinition[] = [
 ];
 
 export function BrandColorsTab() {
-  const { settings, batchUpdate, resetToDefaults } = useBrandColorsStore();
-  const [selectedPreset, setSelectedPreset] = useState<string>('');
+  const { settings, resetToDefaults } = useBrandColorsStore();
   const [showHarmony, setShowHarmony] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
-  const handlePresetChange = (presetId: string) => {
-    setSelectedPreset(presetId);
-    if (presetId === '') return;
-
-    const preset = COLOR_PRESETS.find((p) => p.id === presetId);
-    if (preset) {
-      batchUpdate(preset.colors);
-    }
-  };
 
   const handleSaveToDatabase = async () => {
     setIsSaving(true);
@@ -159,20 +147,6 @@ export function BrandColorsTab() {
               </span>
             )}
           </button>
-
-          {/* Preset Selector */}
-          <select
-            value={selectedPreset}
-            onChange={(e) => handlePresetChange(e.target.value)}
-            className="px-4 py-2 text-sm border border-[#404040] rounded-md focus:outline-none focus:ring-2 focus:ring-[#00ff88] bg-[#404040] text-[#dcdbd5] hover:bg-[#00ff88]/5 hover:border-[#00ff88]/50 transition-all"
-          >
-            <option value="">Choose Preset...</option>
-            {COLOR_PRESETS.map((preset) => (
-              <option key={preset.id} value={preset.id}>
-                {preset.name}
-              </option>
-            ))}
-          </select>
 
           {/* Harmony Toggle */}
           <button

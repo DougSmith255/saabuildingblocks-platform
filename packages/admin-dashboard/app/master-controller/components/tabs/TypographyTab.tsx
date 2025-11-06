@@ -5,17 +5,15 @@ import { useTypographyStore } from '../../stores/typographyStore';
 import { useBrandColorsStore } from '../../stores/brandColorsStore';
 import { TextTypeCardWithPreview } from '../../components/TextTypeCardWithPreview';
 import { TypographyViewportSlider } from '../../components/TypographyViewportSlider';
-import { TYPOGRAPHY_PRESETS, type TypographyPresetName } from '../../lib/typographyPresets';
 import { calculateContrast, getContrastRating } from '../../lib/colorUtils';
 import { VIEWPORT_RANGE } from '../../lib/constants';
 import type { TextType } from '../../types';
 
-const TEXT_TYPES: TextType[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
+const TEXT_TYPES: TextType[] = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'tagline', 'caption', 'menuMainItem', 'menuSubItem'];
 
 export const TypographyTab: React.FC = () => {
-  const { settings, batchUpdate, resetToDefaults } = useTypographyStore();
+  const { settings, resetToDefaults } = useTypographyStore();
   const { settings: brandColors } = useBrandColorsStore();
-  const [selectedPreset, setSelectedPreset] = useState<TypographyPresetName | ''>('');
   const [saveMessage, setSaveMessage] = useState<string>('');
   const [viewportSimulation, setViewportSimulation] = useState<number>(50); // 0-100 percentage, default 50%
 
@@ -57,33 +55,33 @@ export const TypographyTab: React.FC = () => {
     return { results, totalPassing, totalFailing, total: results.length };
   }, [settings, brandColors]);
 
-  const handlePresetChange = (presetName: TypographyPresetName) => {
-    const preset = TYPOGRAPHY_PRESETS[presetName];
-    batchUpdate(preset.settings);
-    setSelectedPreset(presetName);
-  };
-
   const handleReset = () => {
     resetToDefaults();
-    setSelectedPreset('');
   };
 
-  const handleSave = () => {
-    // Settings are already persisted via Zustand persist middleware
-    setSaveMessage('✓ Settings saved successfully!');
+  const handleSave = async () => {
+    try {
+      setSaveMessage('Saving to database...');
+
+      const response = await fetch('/api/master-controller/typography', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ settings }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setSaveMessage('✓ Settings saved to database successfully!');
+      } else {
+        setSaveMessage('❌ Failed to save: ' + (result.error || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      setSaveMessage('❌ Failed to save to database');
+    }
+
     setTimeout(() => setSaveMessage(''), 3000);
-  };
-
-  const handleUpdatePreset = () => {
-    if (!selectedPreset) return;
-
-    // Export current settings as JSON for manual preset update
-    const exportData = JSON.stringify(settings, null, 2);
-    console.log('Current Typography Settings:', exportData);
-
-    // Show success message
-    setSaveMessage(`✓ Current settings logged to console. Copy to update ${TYPOGRAPHY_PRESETS[selectedPreset].name} preset.`);
-    setTimeout(() => setSaveMessage(''), 5000);
   };
 
   // Set Taskor as the display font (permanent)
@@ -108,37 +106,7 @@ export const TypographyTab: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-2 items-center">
-          {/* Preset Selector */}
-          <div className="relative inline-block">
-            <select
-              value={selectedPreset}
-              onChange={(e) => {
-                const value = e.target.value as TypographyPresetName | '';
-                if (value) {
-                  handlePresetChange(value);
-                }
-              }}
-              className="px-4 py-2 pr-10 rounded-md bg-[#404040]
-                       text-[#dcdbd5] border border-[#404040]
-                       hover:bg-[#00ff88]/5 hover:border-[#00ff88]/50 transition-all cursor-pointer
-                       appearance-none bg-no-repeat bg-right
-                       [&>option]:bg-[#404040] [&>option]:text-[#dcdbd5]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23dcdbd5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
-                backgroundPosition: 'right 0.5rem center',
-                backgroundSize: '1.5rem',
-              }}
-            >
-              <option value="">Apply Preset...</option>
-              {Object.entries(TYPOGRAPHY_PRESETS).map(([key, preset]) => (
-                <option key={key} value={key}>
-                  {preset.name} - {preset.description}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Save Button - Always visible */}
+          {/* Save Button */}
           <button
             onClick={handleSave}
             className="px-4 py-2 rounded-md bg-[#00ff88] text-[#191818] font-medium text-sm leading-[1.5] tracking-[0.01em]
@@ -147,18 +115,6 @@ export const TypographyTab: React.FC = () => {
           >
             💾 Save
           </button>
-
-          {/* Update Preset Button - Only visible when preset is selected */}
-          {selectedPreset && (
-            <button
-              onClick={handleUpdatePreset}
-              className="px-4 py-2 rounded-md bg-[#ffd700] text-[#191818] font-semibold
-                       border border-[#ffd700]
-                       hover:bg-[#ffd700]/90 hover:shadow-lg hover:shadow-[#ffd700]/30 transition-all"
-            >
-              📝 Update {TYPOGRAPHY_PRESETS[selectedPreset].name}
-            </button>
-          )}
 
           {/* Reset Button */}
           <button
