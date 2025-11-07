@@ -209,7 +209,7 @@ export const TextTypeCard: React.FC<TextTypeCardProps> = ({ textType }) => {
             label="Max Size"
             value={config.size?.max ?? 32}
             min={12}
-            max={150}
+            max={200}
             step={1}
             unit="px"
             onChange={handleMaxChange}

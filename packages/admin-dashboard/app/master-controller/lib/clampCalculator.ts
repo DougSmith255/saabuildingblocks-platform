@@ -39,7 +39,7 @@ export function generateClamp(config: ClampConfig): string {
  * Default clamp configurations for typography
  */
 export const DEFAULT_TYPOGRAPHY_CLAMPS: Record<string, ClampConfig> = {
-  h1: { min: 50, max: 150, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h1: { min: 50, max: 200, viewportMin: 250, viewportMax: 3000, unit: 'px' },
   h2: { min: 40, max: 96, viewportMin: 250, viewportMax: 3000, unit: 'px' },
   h3: { min: 32, max: 72, viewportMin: 250, viewportMax: 3000, unit: 'px' },
   h4: { min: 26, max: 56, viewportMin: 250, viewportMax: 3000, unit: 'px' },
