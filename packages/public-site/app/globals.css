@@ -33,12 +33,18 @@
   overflow: visible !important;
 }
 
-/* Force SlotCounter internal elements to inherit size from .counter-numbers */
-/* DO NOT include .counter-numbers itself - only its children */
+/* Force Amulya font and size for counter - completely isolated from parent styles */
+.counter-numbers,
 .counter-numbers *,
 .counter-numbers [class*="slot"],
 .counter-numbers [class*="num"] {
+  font-family: Amulya !important;
   font-size: inherit !important;
+}
+
+.counter-plus,
+.counter-text {
+  font-family: Amulya !important;
 }
 
 /* Counter responsive sizing - Mobile first, scale up to desktop */
