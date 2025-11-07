@@ -35,7 +35,7 @@ export default function Home() {
           <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
-              className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
+              className="absolute top-[8%] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
@@ -43,9 +43,9 @@ export default function Home() {
                 transform: 'translateZ(-70px)',
               }}
             />
-            {/* Main image with gradient stuck to bottom edge */}
+            {/* Main image with gradient extending to 100% bottom for complete fade */}
             <div
-              className="absolute top-[10%] left-1/2 -translate-x-1/2 w-full h-full"
+              className="absolute top-[8%] left-1/2 -translate-x-1/2 w-full h-full"
               style={{
                 backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
                 backgroundSize: 'contain',
@@ -53,11 +53,11 @@ export default function Home() {
                 backgroundPosition: 'center top',
                 maskImage: `
                   radial-gradient(ellipse 55% 60% at center 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,0.6) 80%, rgba(0,0,0,0.25) 90%, rgba(0,0,0,0.05) 96%, transparent 100%)
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.85) 75%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0.2) 93%, rgba(0,0,0,0.05) 98%, transparent 100%)
                 `,
                 WebkitMaskImage: `
                   radial-gradient(ellipse 55% 60% at center 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 55%, rgba(0,0,0,0.9) 70%, rgba(0,0,0,0.6) 80%, rgba(0,0,0,0.25) 90%, rgba(0,0,0,0.05) 96%, transparent 100%)
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.85) 75%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0.2) 93%, rgba(0,0,0,0.05) 98%, transparent 100%)
                 `,
                 maskComposite: 'intersect',
                 WebkitMaskComposite: 'source-in',

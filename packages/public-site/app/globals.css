@@ -1542,3 +1542,22 @@ article p a:focus-visible,
     padding: 0.5rem 0.75rem;
   }
 }
+
+/* ========================================
+   COUNTER FONT OVERRIDE - MUST BE LAST
+   Overrides body.font-sans (Taskor)
+   ======================================== */
+body .counter-container,
+body .counter-container *,
+body .counter-numbers,
+body .counter-numbers *,
+body .counter-plus,
+body .counter-text,
+html body .counter-container,
+html body .counter-container *,
+html body .counter-numbers,
+html body .counter-numbers *,
+html body .counter-plus,
+html body .counter-text {
+  font-family: Amulya, serif !important;
+}
