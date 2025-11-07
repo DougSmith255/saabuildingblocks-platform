@@ -56,7 +56,6 @@ export function HomepageClient() {
         <div
           className="flex items-center"
           style={{
-            fontFamily: 'var(--font-synonym)',
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
