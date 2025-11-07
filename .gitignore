@@ -93,3 +93,10 @@ ROLLBACK_*.sh
 # WordPress backup files
 *.php.backup*
 .claude.json
+
+# Build artifacts
+*.tsbuildinfo
+packages/*/tsconfig.tsbuildinfo
+
+# Auto-generated CSS
+packages/public-site/public/static-master-controller.css
