@@ -83,6 +83,9 @@ export function HomepageClient() {
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
+            background: 'radial-gradient(ellipse, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '12px',
           }}
         >
           {/* Counter Numbers */}
