@@ -53,11 +53,11 @@ export default function Home() {
                 backgroundPosition: 'center top',
                 maskImage: `
                   radial-gradient(ellipse 55% 60% at center 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.4) 82%, rgba(0,0,0,0.2) 88%, rgba(0,0,0,0.1) 93%, rgba(0,0,0,0.03) 97%, transparent 100%)
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.7) 55%, rgba(0,0,0,0.4) 65%, rgba(0,0,0,0.15) 75%, rgba(0,0,0,0.05) 85%, transparent 95%)
                 `,
                 WebkitMaskImage: `
                   radial-gradient(ellipse 55% 60% at center 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.4) 82%, rgba(0,0,0,0.2) 88%, rgba(0,0,0,0.1) 93%, rgba(0,0,0,0.03) 97%, transparent 100%)
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.7) 55%, rgba(0,0,0,0.4) 65%, rgba(0,0,0,0.15) 75%, rgba(0,0,0,0.05) 85%, transparent 95%)
                 `,
                 maskComposite: 'intersect',
                 WebkitMaskComposite: 'source-in',
