@@ -292,7 +292,7 @@ export default function Header() {
                       />
                     </button>
                     <div
-                      className="dropdown absolute top-full left-0 mt-[7px] min-w-[250px] bg-[rgba(26,26,26,0.8)] rounded-xl p-[11px] transition-all duration-300 z-[1001] overflow-hidden"
+                      className="dropdown absolute top-full left-0 mt-[7px] min-w-[270px] bg-[rgba(26,26,26,0.8)] rounded-xl p-[11px] transition-all duration-300 z-[1001] overflow-hidden"
                       style={{
                         opacity: hoveredDropdown === index ? 1 : 0,
                         visibility: hoveredDropdown === index ? 'visible' : 'hidden',
