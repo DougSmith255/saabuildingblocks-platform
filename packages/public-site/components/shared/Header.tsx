@@ -764,6 +764,12 @@ export default function Header() {
           }
         }
 
+        @media (max-width: 90.625rem) {
+          .header-container {
+            min-height: calc(clamp(60px, 8vh, 90px) + 15px) !important;
+          }
+        }
+
         @media (max-width: 550px) {
           .header-container {
             padding-left: 5px !important;

@@ -135,7 +135,7 @@ main {
    * Tailwind v4's @theme directive can create issues with Next.js font variables */
 
   /* Custom Breakpoints */
-  --breakpoint-xlg: 75rem;  /* 1200px - Desktop menu breakpoint */
+  --breakpoint-xlg: 90.625rem;  /* 1450px - Desktop menu breakpoint */
 
   /* Fluid Typography with clamp() */
   --font-size-display-xl: clamp(3.5rem, 5vw + 1rem, 6rem);
