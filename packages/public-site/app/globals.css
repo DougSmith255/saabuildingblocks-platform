@@ -48,7 +48,7 @@
 }
 
 /* Counter responsive sizing - Mobile first, scale up to desktop */
-@media (max-width: 999px) {
+@media (max-width: 1450px) {
   .counter-numbers {
     font-size: 50px !important;
   }

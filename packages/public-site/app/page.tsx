@@ -35,7 +35,7 @@ export default function Home() {
           <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
-              className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%]"
+              className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%]"
               style={{
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
@@ -45,19 +45,19 @@ export default function Home() {
             />
             {/* Main image with combined radial + linear fade for smooth bottom */}
             <div
-              className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
+              className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
               style={{
                 backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center center',
                 maskImage: `
-                  radial-gradient(ellipse 60% 65% at center 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.3) 75%, transparent 100%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.95) 38%, rgba(0,0,0,0.8) 48%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.05) 63%, transparent 65%)
+                  radial-gradient(ellipse 60% 65% at center 45%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 25%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 95%),
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 74%, transparent 78%)
                 `,
                 WebkitMaskImage: `
-                  radial-gradient(ellipse 60% 65% at center 28%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 20%, rgba(0,0,0,0.85) 40%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.3) 75%, transparent 100%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 25%, rgba(0,0,0,0.95) 38%, rgba(0,0,0,0.8) 48%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.05) 63%, transparent 65%)
+                  radial-gradient(ellipse 60% 65% at center 45%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 25%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 95%),
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 74%, transparent 78%)
                 `,
                 maskComposite: 'intersect',
                 WebkitMaskComposite: 'source-in',
