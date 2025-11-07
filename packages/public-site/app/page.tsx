@@ -103,7 +103,7 @@ export default function Home() {
           </div>
 
           {/* CTA Button Group */}
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
             <CTAButton href="/sign-up">
               JOIN THE ALLIANCE
             </CTAButton>
