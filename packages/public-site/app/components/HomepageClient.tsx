@@ -62,10 +62,10 @@ export function HomepageClient() {
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
           }}
         >
-          {/* SlotCounter Numbers - 3x size on desktop (90px), current size (30px) under 1000px */}
+          {/* SlotCounter Numbers - 2.5x on mobile (75px), 4x on desktop (120px) */}
           <div
             style={{
-              fontSize: 'clamp(30px, calc(30px + (90px - 30px) * ((100vw - 1000px) / 920)), 90px)',
+              fontSize: 'clamp(75px, calc(75px + (120px - 75px) * ((100vw - 1000px) / 920)), 120px)',
               maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
             }}
@@ -84,10 +84,10 @@ export function HomepageClient() {
               } as any)}
             />
           </div>
-          {/* + Symbol - 3x size on desktop (120px), current size (40px) under 1000px */}
-          <span style={{ fontSize: 'clamp(40px, calc(40px + (120px - 40px) * ((100vw - 1000px) / 920)), 120px)' }}>+</span>
-          {/* AGENTS Text - 3x size on desktop (48px), current size (16px) under 1000px */}
-          <span style={{ fontSize: 'clamp(16px, calc(16px + (48px - 16px) * ((100vw - 1000px) / 920)), 48px)' }}>AGENTS</span>
+          {/* + Symbol - 1.5x on mobile (45px), 3x on desktop (90px) */}
+          <span style={{ fontSize: 'clamp(45px, calc(45px + (90px - 45px) * ((100vw - 1000px) / 920)), 90px)' }}>+</span>
+          {/* AGENTS Text - 1.5x on mobile (45px), 3x on desktop (90px) */}
+          <span style={{ fontSize: 'clamp(45px, calc(45px + (90px - 45px) * ((100vw - 1000px) / 920)), 90px)' }}>AGENTS</span>
         </div>
       </div>
 
