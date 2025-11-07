@@ -43,17 +43,16 @@ export default function Home() {
                 transform: 'translateZ(-70px)',
               }}
             />
-            {/* Main image - with additional gradient overlay aligned to image (not container) */}
+            {/* Main image - with radial gradient mask at bottom like wolf pack */}
             <div
               className="absolute top-[8%] left-1/2 -translate-x-1/2 w-full h-full"
               style={{
-                backgroundImage: `
-                  linear-gradient(to bottom, transparent 0%, transparent 70%, rgba(13,13,26,0.3) 80%, rgba(13,13,26,0.6) 88%, rgba(13,13,26,0.85) 94%, rgba(13,13,26,1) 100%),
-                  url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)
-                `,
-                backgroundSize: 'contain, contain',
-                backgroundRepeat: 'no-repeat, no-repeat',
-                backgroundPosition: 'center top, center top',
+                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center top',
+                maskImage: 'radial-gradient(ellipse 80% 40% at center 85%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.2) 70%, transparent 90%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 80% 40% at center 85%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 30%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.2) 70%, transparent 90%)',
                 transformStyle: 'preserve-3d',
                 transform: 'translateZ(-50px) rotateX(5deg)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
