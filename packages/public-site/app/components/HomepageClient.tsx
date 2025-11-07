@@ -67,7 +67,7 @@ export function HomepageClient() {
             className="counter-numbers"
             style={{
               fontSize: '80px',
-              fontFamily: 'var(--font-amulya)',
+              fontFamily: 'Amulya',
               maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
             }}
@@ -87,9 +87,9 @@ export function HomepageClient() {
             />
           </div>
           {/* + Symbol - 1.5x on mobile (45px), 3x on desktop (90px) */}
-          <span className="counter-plus" style={{ fontSize: '90px' }}>+</span>
+          <span className="counter-plus" style={{ fontSize: '90px', fontFamily: 'Amulya' }}>+</span>
           {/* AGENTS Text - 1.5x on mobile (45px), 3x on desktop (90px) */}
-          <span className="counter-text" style={{ fontSize: '90px' }}>AGENTS</span>
+          <span className="counter-text" style={{ fontSize: '90px', fontFamily: 'Amulya' }}>AGENTS</span>
         </div>
       </div>
 
