@@ -35,7 +35,7 @@ export default function Home() {
           <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
-              className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%]"
+              className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%]"
               style={{
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
@@ -43,21 +43,21 @@ export default function Home() {
                 transform: 'translateZ(-70px)',
               }}
             />
-            {/* Main image with combined radial + linear fade for smooth bottom */}
+            {/* Main image with tighter gradient attached to image base */}
             <div
-              className="absolute top-[20%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
+              className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full"
               style={{
                 backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center center',
+                backgroundPosition: 'center top',
                 maskImage: `
-                  radial-gradient(ellipse 60% 65% at center 45%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 25%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 95%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 74%, transparent 78%)
+                  radial-gradient(ellipse 55% 60% at center 42%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,0.6) 75%, rgba(0,0,0,0.25) 85%, rgba(0,0,0,0.05) 92%, transparent 96%)
                 `,
                 WebkitMaskImage: `
-                  radial-gradient(ellipse 60% 65% at center 45%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 25%, rgba(0,0,0,0.85) 45%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.15) 80%, transparent 95%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0.95) 50%, rgba(0,0,0,0.75) 60%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 74%, transparent 78%)
+                  radial-gradient(ellipse 55% 60% at center 42%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
+                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 50%, rgba(0,0,0,0.9) 65%, rgba(0,0,0,0.6) 75%, rgba(0,0,0,0.25) 85%, rgba(0,0,0,0.05) 92%, transparent 96%)
                 `,
                 maskComposite: 'intersect',
                 WebkitMaskComposite: 'source-in',
@@ -89,8 +89,8 @@ export default function Home() {
         {/* Client-side animations (counter + neon flicker) */}
         <HomepageClient />
 
-        {/* Container - shifted down to recenter vertically */}
-        <div className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8 mt-[28vh]">
+        {/* Container - shifted up by 15% from 28vh */}
+        <div className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8 mt-[23.8vh]">
           {/* Headline Group */}
           <div className="space-y-10 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component */}
