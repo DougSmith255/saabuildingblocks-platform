@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // TODO: Store import removed for monorepo - needs Context provider pattern
 // import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
 
@@ -14,6 +14,12 @@ export interface CTAButtonProps {
 export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
+  const [animationDelay, setAnimationDelay] = useState('0s');
+
+  useEffect(() => {
+    const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds
+    setAnimationDelay(`${randomDelay.toFixed(2)}s`);
+  }, []);
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
@@ -78,6 +84,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
           animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
+          animationDelay: isClicked ? '0s' : animationDelay,
           transition: 'all 0.3s ease-in-out',
         }}
       />
@@ -91,6 +98,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
           animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
+          animationDelay: isClicked ? '0s' : animationDelay,
           transition: 'all 0.3s ease-in-out',
         }}
       />

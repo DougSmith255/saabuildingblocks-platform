@@ -64,7 +64,7 @@ export function HomepageClient() {
           {/* SlotCounter Numbers (LARGEST) */}
           <div
             style={{
-              fontSize: 'var(--font-size-h2)',
+              fontSize: '30px',
               maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
             }}
@@ -84,9 +84,9 @@ export function HomepageClient() {
             />
           </div>
           {/* + Symbol (MEDIUM) */}
-          <span style={{ fontSize: 'var(--font-size-h3)' }}>+</span>
+          <span style={{ fontSize: '40px' }}>+</span>
           {/* AGENTS Text (SMALLEST) */}
-          <span style={{ fontSize: 'var(--font-size-body)' }}>AGENTS</span>
+          <span style={{ fontSize: '16px' }}>AGENTS</span>
         </div>
       </div>
 

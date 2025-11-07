@@ -323,7 +323,7 @@ export default function Header() {
                     className={`nav-link agent-portal flex items-center px-5 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
                     style={{
                       fontSize: 'var(--font-size-menuMainItem)',
-                      fontFamily: 'var(--font-family-menuMainItem)',
+                      fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
                       fontWeight: 'var(--font-weight-menuMainItem)',
                       letterSpacing: 'var(--letter-spacing-menuMainItem)',
                       lineHeight: 'var(--line-height-menuMainItem)',
@@ -515,7 +515,7 @@ export default function Header() {
                         className={`agent-portal-mobile block px-6 py-4 transition-all duration-300 rounded-lg relative text-white ${isPortalClicked ? 'clicked' : ''}`}
                         style={{
                           fontSize: 'var(--font-size-menuMainItem)',
-                          fontFamily: 'var(--font-family-menuMainItem)',
+                          fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
                           fontWeight: 'var(--font-weight-menuMainItem)',
                           letterSpacing: 'var(--letter-spacing-menuMainItem)',
                           lineHeight: 'var(--line-height-menuMainItem)',

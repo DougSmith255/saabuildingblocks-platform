@@ -64,6 +64,7 @@ export default function Tagline({
         display: 'flex',
         gap: '0.5em',
         flexWrap: 'wrap',
+        justifyContent: 'center',
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
         position: 'relative',
