@@ -62,11 +62,12 @@ export function HomepageClient() {
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
           }}
         >
-          {/* SlotCounter Numbers - 2.5x on mobile (75px), 4x on desktop (120px) */}
+          {/* SlotCounter Numbers - 50px on mobile, 80px on desktop (2/3 of original 120px) */}
           <div
             className="counter-numbers"
             style={{
-              fontSize: '120px',
+              fontSize: '80px',
+              fontFamily: 'var(--font-amulya)',
               maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
             }}

@@ -44,7 +44,7 @@
 /* Counter responsive sizing - Mobile first, scale up to desktop */
 @media (max-width: 999px) {
   .counter-numbers {
-    font-size: 75px !important;
+    font-size: 50px !important;
   }
   .counter-plus,
   .counter-text {
