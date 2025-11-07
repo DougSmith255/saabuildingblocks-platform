@@ -54,6 +54,8 @@
   font-size: 72px !important;
   font-family: Amulya, serif !important;
   font-weight: 300 !important;
+  position: relative;
+  top: -5px;
 }
 
 .counter-text {
@@ -73,6 +75,8 @@
     font-size: 36px !important;
     font-family: Amulya, serif !important;
     font-weight: 300 !important;
+    position: relative;
+    top: -5px;
   }
   .counter-text {
     font-size: 20px !important;
