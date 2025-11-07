@@ -40,43 +40,14 @@ export function DeploymentTab() {
   const [isDeploying, setIsDeploying] = useState(false);
   const [isCommitting, setIsCommitting] = useState(false);
   const [cssStats, setCSSStats] = useState<CSSGenerationStats | null>(null);
-  const [lastDeployment, setLastDeployment] = useState<DeploymentHistory | null>(null);
-  const [deploymentHistory, setDeploymentHistory] = useState<DeploymentHistory[]>([]);
   const [gitStatus, setGitStatus] = useState<GitStatus | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
-  // Load deployment history on mount
+  // Load CSS stats and git status on mount
   useEffect(() => {
-    loadDeploymentHistory();
     loadCSSStats();
     loadGitStatus();
   }, []);
-
-  const loadDeploymentHistory = async () => {
-    try {
-      const response = await fetch('/api/master-controller/deploy');
-      if (response.ok) {
-        const result = await response.json();
-        if (result.success && result.data.recentDeployments) {
-          // Transform Supabase deployment_logs to our format
-          const history = result.data.recentDeployments.map((log: any) => ({
-            id: log.id,
-            timestamp: log.created_at,
-            status: log.status === 'triggered' ? 'pending' : log.status === 'error' ? 'failed' : 'success',
-            url: 'https://saabuildingblocks.pages.dev',
-            duration: log.duration,
-            error: log.metadata?.error,
-          }));
-          setDeploymentHistory(history);
-          if (history.length > 0) {
-            setLastDeployment(history[0]);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('[Deployment] Failed to load history:', error);
-    }
-  };
 
   const loadCSSStats = async () => {
     try {
@@ -208,11 +179,6 @@ export function DeploymentTab() {
             text: `Deployment triggered! View progress at: ${result.data.workflowUrl}`,
           });
         }
-
-        // Reload deployment history after delay
-        setTimeout(() => {
-          loadDeploymentHistory();
-        }, 3000);
       } else {
         throw new Error(result.error || result.details || 'Failed to start deployment');
       }
@@ -454,133 +420,7 @@ export function DeploymentTab() {
           </button>
         </div>
 
-        {/* Last Deployment */}
-        {lastDeployment && (
-          <div className="p-4 rounded-md bg-[#191818]/50 border border-[#404040] mt-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="text-sm font-medium text-[#e5e4dd]">Last Deployment</div>
-              <div className={`flex items-center gap-2 text-sm ${
-                lastDeployment.status === 'success'
-                  ? 'text-[#00ff88]'
-                  : lastDeployment.status === 'failed'
-                  ? 'text-red-400'
-                  : 'text-[#ffd700]'
-              }`}>
-                {lastDeployment.status === 'success' ? (
-                  <CheckCircle className="w-4 h-4" />
-                ) : lastDeployment.status === 'failed' ? (
-                  <XCircle className="w-4 h-4" />
-                ) : (
-                  <Clock className="w-4 h-4 animate-pulse" />
-                )}
-                <span className="capitalize">{lastDeployment.status}</span>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
-              <div>
-                <div className="text-xs text-[#dcdbd5]">Timestamp</div>
-                <div className="text-[#e5e4dd] font-medium">
-                  {formatDate(lastDeployment.timestamp)}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-[#dcdbd5]">Duration</div>
-                <div className="text-[#e5e4dd] font-medium">
-                  {formatDuration(lastDeployment.duration)}
-                </div>
-              </div>
-              {lastDeployment.url && (
-                <div>
-                  <div className="text-xs text-[#dcdbd5]">URL</div>
-                  <a
-                    href={lastDeployment.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#00ff88] hover:underline font-medium"
-                  >
-                    View Site
-                  </a>
-                </div>
-              )}
-            </div>
-            {lastDeployment.error && (
-              <div className="mt-3 p-2 rounded bg-red-500/10 border border-red-500/30">
-                <div className="text-xs text-red-400">{lastDeployment.error}</div>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-
-      {/* Deployment History */}
-      {deploymentHistory.length > 0 && (
-        <div
-          className="p-6 rounded-lg border"
-          style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            backdropFilter: 'blur(8px)',
-            borderColor: 'rgba(64, 64, 64, 0.5)',
-          }}
-        >
-          <h3 className="text-lg font-semibold text-[#e5e4dd] mb-4">Deployment History</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[#404040]">
-                  <th className="text-left py-2 px-3 text-[#dcdbd5] font-medium">Timestamp</th>
-                  <th className="text-left py-2 px-3 text-[#dcdbd5] font-medium">Status</th>
-                  <th className="text-left py-2 px-3 text-[#dcdbd5] font-medium">Duration</th>
-                  <th className="text-left py-2 px-3 text-[#dcdbd5] font-medium">URL</th>
-                </tr>
-              </thead>
-              <tbody>
-                {deploymentHistory.slice(0, 5).map((deployment) => (
-                  <tr key={deployment.id} className="border-b border-[#404040]/50 hover:bg-[#404040]/20">
-                    <td className="py-2 px-3 text-[#e5e4dd]">
-                      {formatDate(deployment.timestamp)}
-                    </td>
-                    <td className="py-2 px-3">
-                      <span className={`inline-flex items-center gap-1 ${
-                        deployment.status === 'success'
-                          ? 'text-[#00ff88]'
-                          : deployment.status === 'failed'
-                          ? 'text-red-400'
-                          : 'text-[#ffd700]'
-                      }`}>
-                        {deployment.status === 'success' ? (
-                          <CheckCircle className="w-3 h-3" />
-                        ) : deployment.status === 'failed' ? (
-                          <XCircle className="w-3 h-3" />
-                        ) : (
-                          <Clock className="w-3 h-3" />
-                        )}
-                        <span className="capitalize">{deployment.status}</span>
-                      </span>
-                    </td>
-                    <td className="py-2 px-3 text-[#e5e4dd]">
-                      {formatDuration(deployment.duration)}
-                    </td>
-                    <td className="py-2 px-3">
-                      {deployment.url ? (
-                        <a
-                          href={deployment.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#00ff88] hover:underline"
-                        >
-                          View
-                        </a>
-                      ) : (
-                        <span className="text-[#dcdbd5]">N/A</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
 
       {/* Info Footer */}
       <div className="p-4 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
