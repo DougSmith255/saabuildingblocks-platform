@@ -1,56 +1,71 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 /**
  * Client-side animations for homepage
- * - Custom counter animation loop
+ * - Custom counter with scramble animation (always 4 digits)
  * - Hydration state management
  */
 export function HomepageClient() {
-  const [count, setCount] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [displayValue, setDisplayValue] = useState('0000');
+  const animationRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Start first animation after mount
     const startDelay = setTimeout(() => {
-      animateCounter();
+      animateScramble();
     }, 500);
 
     // Loop animation every 5 seconds
     const interval = setInterval(() => {
-      animateCounter();
+      animateScramble();
     }, 5000);
 
     return () => {
       clearTimeout(startDelay);
       clearInterval(interval);
+      if (animationRef.current) clearInterval(animationRef.current);
     };
   }, []);
 
-  const animateCounter = () => {
-    setIsAnimating(true);
-    setCount(0);
-
-    const duration = 2000; // 2 second animation
+  const animateScramble = () => {
     const target = 3700;
-    const steps = 60;
-    const increment = target / steps;
-    const stepDuration = duration / steps;
+    const duration = 2000; // 2 seconds
+    const fps = 30;
+    const frames = (duration / 1000) * fps;
+    let frame = 0;
 
-    let current = 0;
-    let step = 0;
+    if (animationRef.current) clearInterval(animationRef.current);
 
-    const timer = setInterval(() => {
-      step++;
-      current = Math.min(Math.floor(step * increment), target);
-      setCount(current);
+    animationRef.current = setInterval(() => {
+      frame++;
+      const progress = frame / frames;
 
-      if (current >= target) {
-        clearInterval(timer);
-        setIsAnimating(false);
+      if (progress >= 1) {
+        // End animation - show final value
+        setDisplayValue('3700');
+        if (animationRef.current) {
+          clearInterval(animationRef.current);
+          animationRef.current = null;
+        }
+      } else {
+        // Scramble effect - show random numbers that gradually approach target
+        const currentValue = Math.floor(target * progress);
+        const scrambleIntensity = 1 - progress; // Less scrambling as we approach target
+
+        const digits = currentValue.toString().padStart(4, '0').split('');
+        const scrambled = digits.map((digit, i) => {
+          // Randomly scramble digits based on intensity
+          if (Math.random() < scrambleIntensity * 0.3) {
+            return Math.floor(Math.random() * 10).toString();
+          }
+          return digit;
+        });
+
+        setDisplayValue(scrambled.join(''));
       }
-    }, stepDuration);
+    }, 1000 / fps);
   };
 
   return (
@@ -63,47 +78,23 @@ export function HomepageClient() {
         }}
       >
         <div
-          className="flex items-center"
+          className="counter-container flex items-center"
           style={{
-            fontFamily: 'Amulya, serif',
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
           }}
         >
           {/* Counter Numbers */}
-          <div
-            className="counter-numbers"
-            style={{
-              fontFamily: 'Amulya, serif',
-              fontSize: '80px',
-              transition: isAnimating ? 'none' : 'opacity 0.3s',
-            }}
-          >
-            {count.toString().padStart(4, '0')}
+          <div className="counter-numbers">
+            {displayValue}
           </div>
 
           {/* + Symbol */}
-          <span
-            className="counter-plus"
-            style={{
-              fontFamily: 'Amulya, serif',
-              fontSize: '90px',
-            }}
-          >
-            +
-          </span>
+          <span className="counter-plus">+</span>
 
           {/* AGENTS Text */}
-          <span
-            className="counter-text"
-            style={{
-              fontFamily: 'Amulya, serif',
-              fontSize: '90px',
-            }}
-          >
-            AGENTS
-          </span>
+          <span className="counter-text">AGENTS</span>
         </div>
       </div>
     </>

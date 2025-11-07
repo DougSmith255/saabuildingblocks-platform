@@ -33,14 +33,38 @@
   overflow: visible !important;
 }
 
-/* Counter responsive sizing - inline styles handle desktop, CSS handles mobile */
+/* FORCE AMULYA FONT ON ALL COUNTER ELEMENTS - HIGHEST PRIORITY */
+.counter-container,
+.counter-container *,
+.counter-numbers,
+.counter-numbers *,
+.counter-plus,
+.counter-text {
+  font-family: Amulya, serif !important;
+}
+
+/* Desktop sizes */
+.counter-numbers {
+  font-size: 80px !important;
+  font-family: Amulya, serif !important;
+}
+
+.counter-plus,
+.counter-text {
+  font-size: 90px !important;
+  font-family: Amulya, serif !important;
+}
+
+/* Counter responsive sizing - mobile overrides */
 @media (max-width: 1450px) {
   .counter-numbers {
     font-size: 50px !important;
+    font-family: Amulya, serif !important;
   }
   .counter-plus,
   .counter-text {
     font-size: 45px !important;
+    font-family: Amulya, serif !important;
   }
 }
 
