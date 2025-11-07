@@ -35,7 +35,7 @@ export default function Home() {
           <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
-              className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
+              className="absolute top-[15%] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
@@ -45,7 +45,7 @@ export default function Home() {
             />
             {/* Main image with tighter gradient attached to image base */}
             <div
-              className="absolute top-[30%] left-1/2 -translate-x-1/2 w-full h-full"
+              className="absolute top-[15%] left-1/2 -translate-x-1/2 w-full h-full"
               style={{
                 backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
                 backgroundSize: 'contain',
