@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Rocket, RefreshCw, Cloud, CheckCircle, XCircle, Clock, FileCode, AlertCircle } from 'lucide-react';
+import { Rocket, RefreshCw, Cloud, CheckCircle, XCircle, Clock, FileCode, AlertCircle, GitBranch, GitCommit } from 'lucide-react';
 
 interface DeploymentHistory {
   id: string;
@@ -22,18 +22,34 @@ interface CSSGenerationStats {
   generatedAt: string;
 }
 
+interface GitStatus {
+  branch: string;
+  hasChanges: boolean;
+  modifiedFiles: string[];
+  untrackedFiles: string[];
+  lastCommit: {
+    sha: string;
+    message: string;
+    author: string;
+    date: string;
+  };
+}
+
 export function DeploymentTab() {
   const [isUpdatingStaticFiles, setIsUpdatingStaticFiles] = useState(false);
   const [isDeploying, setIsDeploying] = useState(false);
+  const [isCommitting, setIsCommitting] = useState(false);
   const [cssStats, setCSSStats] = useState<CSSGenerationStats | null>(null);
   const [lastDeployment, setLastDeployment] = useState<DeploymentHistory | null>(null);
   const [deploymentHistory, setDeploymentHistory] = useState<DeploymentHistory[]>([]);
+  const [gitStatus, setGitStatus] = useState<GitStatus | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'info'; text: string } | null>(null);
 
   // Load deployment history on mount
   useEffect(() => {
     loadDeploymentHistory();
     loadCSSStats();
+    loadGitStatus();
   }, []);
 
   const loadDeploymentHistory = async () => {
@@ -73,6 +89,57 @@ export function DeploymentTab() {
       }
     } catch (error) {
       console.error('[Deployment] Failed to load CSS stats:', error);
+    }
+  };
+
+  const loadGitStatus = async () => {
+    try {
+      const response = await fetch('/api/master-controller/git-status');
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.data) {
+          setGitStatus(result.data);
+        }
+      }
+    } catch (error) {
+      console.error('[Deployment] Failed to load git status:', error);
+    }
+  };
+
+  const handleCommit = async () => {
+    setIsCommitting(true);
+    setMessage(null);
+
+    try {
+      const response = await fetch('/api/master-controller/commit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setMessage({
+          type: 'success',
+          text: `✓ Committed successfully! SHA: ${result.data.commitSha.substring(0, 7)}`,
+        });
+        loadGitStatus(); // Reload git status
+        // Auto-clear message after 5 seconds
+        setTimeout(() => setMessage(null), 5000);
+      } else {
+        throw new Error(result.error || result.details || 'Failed to commit changes');
+      }
+    } catch (error) {
+      console.error('[Deployment] Commit error:', error);
+      setMessage({
+        type: 'error',
+        text: `❌ Error: ${error instanceof Error ? error.message : 'Failed to commit'}`,
+      });
+      setTimeout(() => setMessage(null), 5000);
+    } finally {
+      setIsCommitting(false);
     }
   };
 
@@ -190,7 +257,7 @@ export function DeploymentTab() {
             Deployment Controls
           </h2>
           <p className="text-[clamp(0.8125rem,0.125vw+0.75rem,0.875rem)] leading-[1.75] text-[#dcdbd5] mt-1">
-            Regenerate static CSS and deploy to Cloudflare Pages
+            Update static files and deploy to Cloudflare Pages
           </p>
         </div>
       </div>
@@ -274,6 +341,81 @@ export function DeploymentTab() {
               </div>
             </div>
           </div>
+        )}
+      </div>
+
+      {/* Git Commit Section */}
+      <div
+        className="p-6 rounded-lg border"
+        style={{
+          background: 'rgba(64, 64, 64, 0.5)',
+          backdropFilter: 'blur(8px)',
+          borderColor: 'rgba(255, 136, 0, 0.2)',
+        }}
+      >
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-[#ff8800] flex items-center gap-2">
+              <GitBranch className="w-5 h-5" />
+              Commit Changes
+            </h3>
+            <p className="text-sm text-[#dcdbd5] mt-1">
+              Commit and push changes to GitHub before deploying
+            </p>
+          </div>
+          <button
+            onClick={handleCommit}
+            disabled={isCommitting || !gitStatus?.hasChanges}
+            className={`px-4 py-2 rounded-md font-medium text-sm leading-[1.5] tracking-[0.01em] transition-all flex items-center gap-2 ${
+              isCommitting || !gitStatus?.hasChanges
+                ? 'bg-[#404040] text-[#dcdbd5] border border-[#404040] opacity-50 cursor-not-allowed'
+                : 'bg-[#ff8800] text-[#191818] border border-[#ff8800] hover:bg-[#ff8800]/90 hover:shadow-lg hover:shadow-[#ff8800]/30'
+            }`}
+          >
+            <GitCommit className={`w-4 h-4 ${isCommitting ? 'animate-pulse' : ''}`} />
+            {isCommitting ? 'Committing...' : 'Commit & Push'}
+          </button>
+        </div>
+
+        {/* Git Status Display */}
+        {gitStatus && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+            <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
+              <div className="text-xs text-[#dcdbd5] mb-1">Branch</div>
+              <div className="text-sm font-medium text-[#e5e4dd]">
+                {gitStatus.branch}
+              </div>
+            </div>
+            <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
+              <div className="text-xs text-[#dcdbd5] mb-1">Files Changed</div>
+              <div className="text-sm font-medium text-[#e5e4dd]">
+                {gitStatus.modifiedFiles.length + gitStatus.untrackedFiles.length}
+              </div>
+            </div>
+            <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
+              <div className="text-xs text-[#dcdbd5] mb-1">Last Commit</div>
+              <div className="text-sm font-medium text-[#e5e4dd]">
+                {gitStatus.lastCommit.message.substring(0, 30)}...
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* File list (collapsible) */}
+        {gitStatus?.hasChanges && (
+          <details className="mt-4">
+            <summary className="cursor-pointer text-sm text-[#dcdbd5]">
+              Files to commit ({gitStatus.modifiedFiles.length + gitStatus.untrackedFiles.length})
+            </summary>
+            <ul className="mt-2 text-xs text-[#dcdbd5] space-y-1 ml-4">
+              {gitStatus.modifiedFiles.slice(0, 10).map(file => (
+                <li key={file}>• {file}</li>
+              ))}
+              {gitStatus.untrackedFiles.slice(0, 10).map(file => (
+                <li key={file}>• {file} (new)</li>
+              ))}
+            </ul>
+          </details>
         )}
       </div>
 

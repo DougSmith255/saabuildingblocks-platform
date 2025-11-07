@@ -65,6 +65,7 @@ export function ComponentCard({ component, onInstall, onUpdateStatus, onEdit, on
       gallery: 'bg-purple-500/20 text-purple-400 border-purple-500/30',
       effects: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
       interactive: 'bg-rose-500/20 text-rose-400 border-rose-500/30',
+      typography: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30',
     };
     return colors[category as keyof typeof colors] || 'bg-[#404040]/30 text-[#dcdbd5] border-[#404040]';
   };

@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
 
-// Rate limiting: 1 deploy per 5 minutes
-const deploymentCooldown = 5 * 60 * 1000; // 5 minutes in milliseconds
+// Rate limiting: 1 deploy per 30 seconds (temporary for testing)
+const deploymentCooldown = 30 * 1000; // 30 seconds in milliseconds
 let lastDeploymentTime = 0;
 
 /**

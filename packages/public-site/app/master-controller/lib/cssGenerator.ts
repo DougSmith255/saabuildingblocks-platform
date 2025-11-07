@@ -51,6 +51,11 @@ export class CSSGenerator {
         cssLines.push(`--font-style-${key}: ${settings.fontStyle};`);
       }
 
+      // Add text-transform if specified
+      if (settings.textTransform && settings.textTransform !== 'none') {
+        cssLines.push(`--text-transform-${key}: ${settings.textTransform};`);
+      }
+
       // Add text color - use direct hex value to avoid race condition with CSS variables
       const validColors = ['accentGreen', 'brandGold', 'headingText', 'bodyText', 'darkGray', 'mediumGray'];
       const colorValue = validColors.includes(settings.color) ? settings.color : 'bodyText';
@@ -209,6 +214,17 @@ export class CSSGenerator {
   font-weight: var(--font-weight-tagline);
   font-family: var(--font-family-tagline);
   font-style: var(--font-style-tagline, normal);
+}
+
+.text-button {
+  color: var(--text-color-button);
+  font-size: var(--font-size-button);
+  line-height: var(--line-height-button);
+  letter-spacing: var(--letter-spacing-button);
+  font-weight: var(--font-weight-button);
+  font-family: var(--font-family-button);
+  font-style: var(--font-style-button, normal);
+  text-transform: var(--text-transform-button, none);
 }
 
 /* Grid Utilities */

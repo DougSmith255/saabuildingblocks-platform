@@ -112,6 +112,15 @@ const modernPreset: TypographySettings = {
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
   },
+  button: {
+    size: { min: 16, max: 24, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
   tagline: {
     size: DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig,
     lineHeight: 1.5,
@@ -220,6 +229,15 @@ const compactPreset: TypographySettings = {
     fontWeight: 500,
     fontFamily: 'var(--font-taskor)',
     color: 'accentGreen',
+  },
+  button: {
+    size: { min: 13, max: 19, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.3,
+    letterSpacing: 0.04,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
   },
   tagline: {
     size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 0.8),
@@ -330,6 +348,15 @@ const editorialPreset: TypographySettings = {
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
   },
+  button: {
+    size: { min: 18, max: 26, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.5,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
+  },
   tagline: {
     size: scaleClamp(DEFAULT_TYPOGRAPHY_CLAMPS['tagline'] as ClampConfig, 1.1),
     lineHeight: scaleLineHeight(1.5, 1.1),
@@ -438,6 +465,15 @@ const saaDefaultPreset: TypographySettings = {
     fontWeight: 400,
     fontFamily: 'var(--font-synonym)',
     color: 'accentGreen',
+  },
+  button: {
+    size: { min: 16, max: 24, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+    lineHeight: 1.4,
+    letterSpacing: 0.05,
+    fontWeight: 600,
+    fontFamily: 'var(--font-taskor)',
+    color: 'headingText',
+    textTransform: 'uppercase',
   },
   tagline: {
     size: { min: 16, max: 21, viewportMin: 250, viewportMax: 3000, unit: 'px' },
