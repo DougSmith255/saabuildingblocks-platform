@@ -49,7 +49,7 @@ export default function Home() {
               style={{
                 backgroundImage: `
                   linear-gradient(to bottom, transparent 0%, transparent 70%, rgba(13,13,26,0.3) 80%, rgba(13,13,26,0.6) 88%, rgba(13,13,26,0.85) 94%, rgba(13,13,26,1) 100%),
-                  url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance-2.webp)
+                  url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)
                 `,
                 backgroundSize: 'contain, contain',
                 backgroundRepeat: 'no-repeat, no-repeat',
