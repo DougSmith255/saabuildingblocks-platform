@@ -43,16 +43,14 @@ export default function Home() {
                 transform: 'translateZ(-70px)',
               }}
             />
-            {/* Main image - with radial gradient mask at bottom like wolf pack */}
-            <div
-              className="absolute top-[8%] left-1/2 -translate-x-1/2 w-full h-full"
+            {/* Main image - using img tag so mask applies to actual image bounds */}
+            <img
+              src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
+              alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
+              className="absolute top-[8%] left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
-                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center top',
-                maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.9) 75%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.3) 92%, transparent 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.9) 75%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.3) 92%, transparent 100%)',
+                maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 transformStyle: 'preserve-3d',
                 transform: 'translateZ(-50px) rotateX(5deg)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
