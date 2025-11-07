@@ -39,15 +39,20 @@ export function generateClamp(config: ClampConfig): string {
  * Default clamp configurations for typography
  */
 export const DEFAULT_TYPOGRAPHY_CLAMPS: Record<string, ClampConfig> = {
-  h1: { min: 32, max: 150, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  h2: { min: 28, max: 48, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  h3: { min: 24, max: 36, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  h4: { min: 20, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  h5: { min: 18, max: 24, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  h6: { min: 16, max: 20, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  body: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  quote: { min: 16, max: 22, viewportMin: 250, viewportMax: 3000, unit: 'px' },
-  link: { min: 14, max: 18, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h1: { min: 50, max: 150, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h2: { min: 40, max: 96, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h3: { min: 32, max: 72, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h4: { min: 26, max: 56, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h5: { min: 22, max: 44, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  h6: { min: 18, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  body: { min: 16, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  quote: { min: 18, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  link: { min: 16, max: 28, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  button: { min: 16, max: 32, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  caption: { min: 12, max: 16, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  tagline: { min: 30, max: 60, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  menuSubItem: { min: 18, max: 17, viewportMin: 250, viewportMax: 3000, unit: 'px' },
+  menuMainItem: { min: 20, max: 25, viewportMin: 250, viewportMax: 3000, unit: 'px' },
 };
 
 /**
