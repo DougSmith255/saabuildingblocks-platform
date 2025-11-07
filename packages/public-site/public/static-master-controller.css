@@ -1,26 +1,24 @@
 /**
  * Master Controller Static CSS
- * Auto-generated from database (Supabase)
- * Generated: 2025-11-06T19:09:27.776Z
+ * Auto-generated from Supabase database (SINGLE SOURCE OF TRUTH)
+ * Generated: 2025-11-07T00:50:00.097Z
  *
  * This file contains design system tokens from the Master Controller.
  * Include this in your static HTML exports to apply typography, colors,
  * and spacing settings without requiring dynamic JavaScript.
  *
- * Settings source:
- * - Typography: DATABASE
- * - Colors: DATABASE
- * - Spacing: DEFAULTS
- *
- * Database timestamps:
- * - Typography: 2025-11-06T19:09:20.727+00:00
+ * Database timestamps (last updated):
+ * - Typography: 2025-11-06T21:58:47.663+00:00
  * - Colors: 2025-11-05T00:51:06.405+00:00
  * - Spacing: N/A
  *
- * For custom settings:
+ * How to update settings:
  * 1. Use the Master Controller UI (https://saabuildingblocks.com/master-controller)
- * 2. Settings persist to Supabase database and are injected via useLiveCSS hook
- * 3. Regenerate this file to bake database settings into static export
+ * 2. Click "Save Settings" to persist to database
+ * 3. Click "Update Static Files" to regenerate this CSS from database
+ * 4. Click "Deploy to Cloudflare" to push changes live
+ *
+ * DATABASE IS THE SINGLE SOURCE OF TRUTH - No hardcoded defaults!
  *
  * DO NOT EDIT MANUALLY - Regenerate with: npm run generate:css
  */
@@ -45,7 +43,7 @@
       --line-height-h2: 1.2;
       --letter-spacing-h2: -0.01em;
       --font-weight-h2: 700;
-      --font-family-h2: var(--font-amulya), sans-serif;
+      --font-family-h2: var(--font-taskor), sans-serif;
       --text-color-h2: #e5e4dd;
       --font-size-h3: clamp(32px, calc(28.36px + 1.45vw), 72px);
       --line-height-h3: 1.3;
@@ -109,7 +107,7 @@
       --font-weight-tagline: 400;
       --font-family-tagline: var(--font-taskor), sans-serif;
       --text-color-tagline: #bfbdb0;
-      --font-size-menuSubItem: clamp(18px, calc(18.00px + 0.00vw), 18px);
+      --font-size-menuSubItem: clamp(18px, calc(17.73px + 0.11vw), 21px);
       --line-height-menuSubItem: 1.4;
       --letter-spacing-menuSubItem: 0em;
       --font-weight-menuSubItem: 400;

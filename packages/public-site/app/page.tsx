@@ -1,4 +1,4 @@
-import { CTAButton } from '@saa/shared/components/saa';
+import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { HomepageClient } from './components/HomepageClient';
 
 /**
@@ -93,71 +93,13 @@ export default function Home() {
         <div className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8 mt-[28vh]">
           {/* Headline Group */}
           <div className="space-y-10 text-center" style={{ perspective: '1000px' }}>
-            {/* H1: 3D Neon Sign with individual letter flicker */}
-            <h1
-              id="hero-heading"
-              className="text-h1 text-display"
-              style={{
-                transformStyle: 'preserve-3d',
-                transform: 'rotateX(15deg)',
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                rowGap: 0,
-                columnGap: '0.5em',
-              }}
-            >
-              {['SMART', 'AGENT', 'ALLIANCE'].map((word, wordIndex) => (
-                <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-                  {word.split('').map((char, charIndex) => {
-                    // Alt glyphs: N = U+f015, E = U+f011, M = U+f016
-                    let displayChar = char;
-                    if (char === 'N') displayChar = '\uf015';
-                    if (char === 'E') displayChar = '\uf011';
-                    if (char === 'M') displayChar = '\uf016';
-
-                    const globalIndex = wordIndex * 10 + charIndex;
-
-                    return (
-                      <span
-                        key={charIndex}
-                        className="neon-char"
-                        data-char={displayChar}
-                        style={{
-                          transform: 'translateZ(20px)',
-                          animation: `neonFlicker${(globalIndex % 3) + 1} ${6.5 + (globalIndex * 0.1)}s linear infinite`,
-                          display: 'inline-block',
-                        }}
-                      >
-                        {displayChar}
-                      </span>
-                    );
-                  })}
-                </span>
-              ))}
-            </h1>
-            <p
-              className="text-tagline"
-              style={{
-                transformStyle: 'preserve-3d',
-                transform: 'rotateX(15deg) translateZ(20px)',
-                color: '#dcdbd5',
-                textShadow: `
-                  -1px -1px 0 rgba(255,255,255, 0.4),
-                  1px -1px 0 rgba(255,255,255, 0.4),
-                  -1px 1px 0 rgba(255,255,255, 0.4),
-                  1px 1px 0 rgba(255,255,255, 0.4),
-                  0 -2px 8px #dcdbd5,
-                  0 0 2px #dcdbd5,
-                  0 0 5px #dcdbd5,
-                  0 0 15px rgba(220,219,213,0.5),
-                  0 0 2px #dcdbd5,
-                  0 2px 3px #000
-                `,
-              }}
-            >
+            {/* H1: Using Master Controller H1 component */}
+            <H1 id="hero-heading">
+              SMART AGENT ALLIANCE
+            </H1>
+            <Tagline>
               For Agents Who Want More
-            </p>
+            </Tagline>
           </div>
 
           {/* CTA Button Group */}

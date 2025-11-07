@@ -6,9 +6,10 @@ export interface HeadingProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
 }
 
-export default function H1({ children, className = '', style = {} }: HeadingProps) {
+export default function H1({ children, className = '', style = {}, id }: HeadingProps) {
   // Convert children to string for processing
   const text = typeof children === 'string' ? children : String(children);
 
@@ -18,6 +19,7 @@ export default function H1({ children, className = '', style = {} }: HeadingProp
   return (
     <>
       <h1
+        id={id}
         className={`text-h1 text-display ${className}`}
         style={{
           transformStyle: 'preserve-3d',
