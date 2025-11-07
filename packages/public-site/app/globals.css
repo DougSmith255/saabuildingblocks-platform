@@ -33,6 +33,14 @@
   overflow: visible !important;
 }
 
+/* Force SlotCounter internal elements to inherit size */
+.counter-numbers,
+.counter-numbers *,
+.counter-numbers [class*="slot"],
+.counter-numbers [class*="num"] {
+  font-size: inherit !important;
+}
+
 /* Counter responsive sizing - Mobile first, scale up to desktop */
 @media (max-width: 999px) {
   .counter-numbers {
