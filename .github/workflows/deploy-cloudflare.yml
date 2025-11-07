@@ -59,12 +59,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          # Caching disabled for guaranteed fresh builds
+          cache: 'npm'
 
-      # Install dependencies (monorepo root) - always fresh install
+      # Install dependencies (monorepo root) with caching
       - name: Install dependencies
         run: |
-          echo "📦 Installing dependencies (fresh install - caching disabled)..."
+          echo "📦 Installing dependencies (with npm cache enabled)..."
           npm ci --prefer-offline --no-audit
 
       # NEW: Type check BEFORE building to catch ALL errors at once
