@@ -48,7 +48,7 @@ export function HomepageClient() {
     <>
       {/* Agent Counter - Top Right on desktop, Centered on mobile */}
       <div
-        className="absolute z-50 left-1/2 -translate-x-1/2 xlg:left-auto xlg:translate-x-0 xlg:right-8"
+        className="agent-counter-wrapper absolute z-50 left-1/2 -translate-x-1/2 xlg:left-auto xlg:translate-x-0 xlg:right-8"
         style={{
           top: '120px',
         }}
@@ -64,8 +64,9 @@ export function HomepageClient() {
         >
           {/* SlotCounter Numbers - 2.5x on mobile (75px), 4x on desktop (120px) */}
           <div
+            className="counter-numbers"
             style={{
-              fontSize: 'clamp(75px, calc(75px + (120px - 75px) * ((100vw - 1000px) / 920)), 120px)',
+              fontSize: '120px',
               maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
               WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
             }}
@@ -85,9 +86,9 @@ export function HomepageClient() {
             />
           </div>
           {/* + Symbol - 1.5x on mobile (45px), 3x on desktop (90px) */}
-          <span style={{ fontSize: 'clamp(45px, calc(45px + (90px - 45px) * ((100vw - 1000px) / 920)), 90px)' }}>+</span>
+          <span className="counter-plus" style={{ fontSize: '90px' }}>+</span>
           {/* AGENTS Text - 1.5x on mobile (45px), 3x on desktop (90px) */}
-          <span style={{ fontSize: 'clamp(45px, calc(45px + (90px - 45px) * ((100vw - 1000px) / 920)), 90px)' }}>AGENTS</span>
+          <span className="counter-text" style={{ fontSize: '90px' }}>AGENTS</span>
         </div>
       </div>
 

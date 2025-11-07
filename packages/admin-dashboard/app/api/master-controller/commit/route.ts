@@ -71,24 +71,81 @@ export async function POST(request: NextRequest) {
     console.log('[Git Commit] Starting...');
     console.log('[Git Commit] Working directory:', WORKING_DIR);
 
-    // Step 1: Check for changes
-    console.log('[Git Commit] Checking for changes...');
+    // Step 1: Check for unpushed commits first
+    const branch = await getCurrentBranch();
+    console.log('[Git Commit] Checking for unpushed commits...');
+
+    const { stdout: unpushedCommits } = await execAsync(`git log origin/${branch}..HEAD --oneline`, {
+      cwd: WORKING_DIR,
+    }).catch(() => ({ stdout: '' })); // Ignore error if branch doesn't exist on remote
+
+    const hasUnpushedCommits = unpushedCommits.trim().length > 0;
+
+    // Step 2: Check for uncommitted changes
+    console.log('[Git Commit] Checking for uncommitted changes...');
     const { stdout: statusOutput } = await execAsync('git status --porcelain', {
       cwd: WORKING_DIR,
     });
 
-    if (!statusOutput.trim()) {
-      console.log('[Git Commit] No changes detected');
+    const hasUncommittedChanges = statusOutput.trim().length > 0;
+
+    // If no uncommitted changes and no unpushed commits, nothing to do
+    if (!hasUncommittedChanges && !hasUnpushedCommits) {
+      console.log('[Git Commit] No changes to commit or push');
       return NextResponse.json({
         success: true,
-        message: 'No changes to commit',
+        message: 'No changes to commit or push',
         data: {
           commitSha: '',
           filesChanged: [],
           timestamp: new Date().toISOString(),
-          branch: await getCurrentBranch(),
+          branch,
         },
       });
+    }
+
+    // If only unpushed commits (no new changes), skip to push
+    if (!hasUncommittedChanges && hasUnpushedCommits) {
+      console.log('[Git Commit] No new changes, but found unpushed commits. Pushing...');
+      console.log('[Git Commit] Unpushed commits:', unpushedCommits.trim());
+
+      // Get the latest commit SHA
+      const { stdout: shaOutput } = await execAsync('git rev-parse HEAD', {
+        cwd: WORKING_DIR,
+      });
+      const commitSha = shaOutput.trim();
+
+      // Push to origin
+      try {
+        await execAsync(`git push origin ${branch}`, {
+          cwd: WORKING_DIR,
+          timeout: 30000,
+        });
+        console.log('[Git Commit] Successfully pushed existing commits');
+
+        return NextResponse.json({
+          success: true,
+          message: 'Successfully pushed existing commits',
+          data: {
+            commitSha,
+            filesChanged: [],
+            timestamp: new Date().toISOString(),
+            branch,
+            unpushedCommits: unpushedCommits.trim().split('\n'),
+          },
+        });
+      } catch (pushError) {
+        console.error('[Git Commit] Push failed:', pushError);
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'Push failed',
+            message: 'Could not push existing commits to origin',
+            details: pushError instanceof Error ? pushError.message : 'Unknown push error',
+          },
+          { status: 500 }
+        );
+      }
     }
 
     // Step 2: Stage specific patterns first
@@ -173,12 +230,9 @@ Triggered by: Master Controller Deploy UI`;
     });
     const commitSha = shaOutput.trim();
     console.log('[Git Commit] Commit SHA:', commitSha);
-
-    // Step 6: Get current branch
-    const branch = await getCurrentBranch();
     console.log('[Git Commit] Current branch:', branch);
 
-    // Step 7: Push to origin
+    // Step 6: Push to origin
     console.log('[Git Commit] Pushing to origin...');
     try {
       await execAsync(`git push origin ${branch}`, {
