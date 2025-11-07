@@ -39,6 +39,13 @@ const STAGE_PATTERNS = [
   'packages/admin-dashboard/data/saa-component-registry.ts', // Component registry
   'packages/public-site/data/**/*.ts',              // Public site data files
   'packages/public-site/data/**/*.json',            // JSON data files
+
+  // ===== ADMIN DASHBOARD (Master Controller) =====
+  'packages/admin-dashboard/app/api/master-controller/**', // Master Controller APIs
+  'packages/admin-dashboard/app/master-controller/**',     // Master Controller UI
+
+  // ===== ROOT CONFIG =====
+  'ecosystem.config.js',                            // PM2 process config
 ];
 
 // Patterns to NEVER stage (security)

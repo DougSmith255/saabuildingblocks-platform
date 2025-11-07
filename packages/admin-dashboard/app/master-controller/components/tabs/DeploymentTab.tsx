@@ -379,19 +379,21 @@ export function DeploymentTab() {
 
         {/* Git Status Display */}
         {gitStatus && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <div className={`grid grid-cols-1 ${gitStatus.hasChanges ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4 mt-4`}>
             <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
               <div className="text-xs text-[#dcdbd5] mb-1">Branch</div>
               <div className="text-sm font-medium text-[#e5e4dd]">
                 {gitStatus.branch}
               </div>
             </div>
-            <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
-              <div className="text-xs text-[#dcdbd5] mb-1">Files Changed</div>
-              <div className="text-sm font-medium text-[#e5e4dd]">
-                {gitStatus.modifiedFiles.length + gitStatus.untrackedFiles.length}
+            {gitStatus.hasChanges && (
+              <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
+                <div className="text-xs text-[#dcdbd5] mb-1">Files Changed</div>
+                <div className="text-sm font-medium text-[#e5e4dd]">
+                  {gitStatus.modifiedFiles.length + gitStatus.untrackedFiles.length}
+                </div>
               </div>
-            </div>
+            )}
             <div className="p-3 rounded-md bg-[#191818]/50 border border-[#404040]">
               <div className="text-xs text-[#dcdbd5] mb-1">Last Commit</div>
               <div className="text-sm font-medium text-[#e5e4dd]">
