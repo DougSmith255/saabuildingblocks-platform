@@ -1,48 +1,57 @@
 'use client';
 
-import SlotCounter from 'react-slot-counter';
 import { useState, useEffect } from 'react';
 
 /**
  * Client-side animations for homepage
- * - SlotCounter animation loop
+ * - Custom counter animation loop
  * - Hydration state management
  */
 export function HomepageClient() {
-  // Counter animation loop state
-  const [counterValue, setCounterValue] = useState("0000");
-  const [startValue, setStartValue] = useState("0000");
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  // Wait for hydration
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const [count, setCount] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
-    // Initial animation from 0000 to 3700
-    const firstTimeout = setTimeout(() => {
-      setCounterValue("3700");
-    }, 100);
+    // Start first animation after mount
+    const startDelay = setTimeout(() => {
+      animateCounter();
+    }, 500);
 
-    // Loop: hold at 3700 for 3s, then reset instantly to 0000 and animate to 3700
+    // Loop animation every 5 seconds
     const interval = setInterval(() => {
-      // Instant reset to 0000 (no animation)
-      setStartValue("0000");
-      setCounterValue("0000");
-
-      // After a tiny delay, animate to 3700
-      setTimeout(() => {
-        setStartValue("0000");
-        setCounterValue("3700");
-      }, 50);
-    }, 5000); // 2s animation + 3s hold at 3700
+      animateCounter();
+    }, 5000);
 
     return () => {
-      clearTimeout(firstTimeout);
+      clearTimeout(startDelay);
       clearInterval(interval);
     };
   }, []);
+
+  const animateCounter = () => {
+    setIsAnimating(true);
+    setCount(0);
+
+    const duration = 2000; // 2 second animation
+    const target = 3700;
+    const steps = 60;
+    const increment = target / steps;
+    const stepDuration = duration / steps;
+
+    let current = 0;
+    let step = 0;
+
+    const timer = setInterval(() => {
+      step++;
+      current = Math.min(Math.floor(step * increment), target);
+      setCount(current);
+
+      if (current >= target) {
+        clearInterval(timer);
+        setIsAnimating(false);
+      }
+    }, stepDuration);
+  };
 
   return (
     <>
@@ -56,40 +65,47 @@ export function HomepageClient() {
         <div
           className="flex items-center"
           style={{
+            fontFamily: 'Amulya, serif',
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
           }}
         >
-          {/* SlotCounter Numbers - 50px on mobile, 80px on desktop (2/3 of original 120px) */}
+          {/* Counter Numbers */}
           <div
             className="counter-numbers"
             style={{
-              maskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 5%, rgba(0,0,0,0.2) 25%, rgba(0,0,0,0.5) 35%, black 45%, black 60%, rgba(0,0,0,0.7) 75%, rgba(0,0,0,0.3) 85%, transparent 100%)',
+              fontFamily: 'Amulya, serif',
+              fontSize: '80px',
+              transition: isAnimating ? 'none' : 'opacity 0.3s',
             }}
           >
-            <SlotCounter
-              value={counterValue}
-              startValue={startValue}
-              autoAnimationStart
-              duration={2.5}
-              {...({
-                dummyCharacterCount: 15,
-                hasInfiniteList: true,
-                startFromLastDigit: true,
-                animateUnchanged: true,
-                direction: "bottom-up"
-              } as any)}
-            />
+            {count.toString().padStart(4, '0')}
           </div>
-          {/* + Symbol - 45px on mobile, 90px on desktop */}
-          <span className="counter-plus">+</span>
-          {/* AGENTS Text - 45px on mobile, 90px on desktop */}
-          <span className="counter-text">AGENTS</span>
+
+          {/* + Symbol */}
+          <span
+            className="counter-plus"
+            style={{
+              fontFamily: 'Amulya, serif',
+              fontSize: '90px',
+            }}
+          >
+            +
+          </span>
+
+          {/* AGENTS Text */}
+          <span
+            className="counter-text"
+            style={{
+              fontFamily: 'Amulya, serif',
+              fontSize: '90px',
+            }}
+          >
+            AGENTS
+          </span>
         </div>
       </div>
-
     </>
   );
 }

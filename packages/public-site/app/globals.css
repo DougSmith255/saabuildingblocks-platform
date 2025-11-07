@@ -33,31 +33,7 @@
   overflow: visible !important;
 }
 
-/* Force Amulya font for counter - completely isolated from parent styles */
-.counter-numbers,
-.counter-numbers *,
-.counter-numbers [class*="slot"],
-.counter-numbers [class*="num"] {
-  font-family: Amulya !important;
-  font-size: inherit !important;
-}
-
-.counter-plus,
-.counter-text {
-  font-family: Amulya !important;
-}
-
-/* Desktop sizes (default) - 80px for numbers, 90px for + and AGENTS */
-.counter-numbers {
-  font-size: 80px !important;
-}
-
-.counter-plus,
-.counter-text {
-  font-size: 90px !important;
-}
-
-/* Mobile sizes - smaller at 1450px and below */
+/* Counter responsive sizing - inline styles handle desktop, CSS handles mobile */
 @media (max-width: 1450px) {
   .counter-numbers {
     font-size: 50px !important;
