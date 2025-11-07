@@ -496,7 +496,7 @@ export default function Header() {
                                   key={dropdownIndex}
                                   href={dropdownItem.href}
                                   onClick={() => setIsMobileMenuOpen(false)}
-                                  className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)] hover:text-[#ffe000]"
+                                  className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)]"
                                   style={{
                                     fontSize: 'var(--font-size-menuSubItem)',
                                     fontFamily: 'var(--font-family-menuSubItem)',
