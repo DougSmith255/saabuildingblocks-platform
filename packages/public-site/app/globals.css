@@ -45,13 +45,13 @@
 
 /* Desktop sizes */
 .counter-numbers {
-  font-size: 80px !important;
+  font-size: 64px !important;
   font-family: Amulya, serif !important;
   font-weight: 300 !important;
 }
 
 .counter-plus {
-  font-size: 90px !important;
+  font-size: 72px !important;
   font-family: Amulya, serif !important;
   font-weight: 300 !important;
 }
@@ -65,12 +65,12 @@
 /* Counter responsive sizing - mobile overrides */
 @media (max-width: 1450px) {
   .counter-numbers {
-    font-size: 50px !important;
+    font-size: 40px !important;
     font-family: Amulya, serif !important;
     font-weight: 300 !important;
   }
   .counter-plus {
-    font-size: 45px !important;
+    font-size: 36px !important;
     font-family: Amulya, serif !important;
     font-weight: 300 !important;
   }
@@ -1573,4 +1573,13 @@ html body .counter-numbers *,
 html body .counter-plus,
 html body .counter-text {
   font-family: Amulya, serif !important;
+}
+
+/* ========================================
+   MOBILE TAGLINE SPACING - SCREENS < 500px
+   ======================================== */
+@media (max-width: 500px) {
+  .hero-tagline-mobile-spacing {
+    margin-top: 20px;
+  }
 }

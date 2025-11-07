@@ -43,24 +43,18 @@ export default function Home() {
                 transform: 'translateZ(-70px)',
               }}
             />
-            {/* Main image with gradient extending to 100% bottom for complete fade */}
+            {/* Main image with gradient baked directly into the background layers */}
             <div
               className="absolute top-[8%] left-1/2 -translate-x-1/2 w-full h-full"
               style={{
-                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)',
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center top',
-                maskImage: `
-                  radial-gradient(ellipse 55% 60% at center 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.7) 55%, rgba(0,0,0,0.4) 65%, rgba(0,0,0,0.15) 75%, rgba(0,0,0,0.05) 85%, transparent 95%)
+                backgroundImage: `
+                  radial-gradient(ellipse 55% 60% at center 35%, transparent 0%, transparent 68%, rgba(13,13,26,0.6) 82%, rgba(13,13,26,1) 92%),
+                  linear-gradient(to bottom, transparent 0%, transparent 35%, rgba(13,13,26,0.1) 45%, rgba(13,13,26,0.3) 55%, rgba(13,13,26,0.6) 65%, rgba(13,13,26,0.85) 75%, rgba(13,13,26,0.95) 85%, rgba(13,13,26,1) 95%),
+                  url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)
                 `,
-                WebkitMaskImage: `
-                  radial-gradient(ellipse 55% 60% at center 35%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.95) 30%, rgba(0,0,0,0.8) 50%, rgba(0,0,0,0.4) 68%, rgba(0,0,0,0.1) 82%, transparent 92%),
-                  linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 35%, rgba(0,0,0,0.9) 45%, rgba(0,0,0,0.7) 55%, rgba(0,0,0,0.4) 65%, rgba(0,0,0,0.15) 75%, rgba(0,0,0,0.05) 85%, transparent 95%)
-                `,
-                maskComposite: 'intersect',
-                WebkitMaskComposite: 'source-in',
+                backgroundSize: 'contain, contain, contain',
+                backgroundRepeat: 'no-repeat, no-repeat, no-repeat',
+                backgroundPosition: 'center top, center top, center top',
                 transformStyle: 'preserve-3d',
                 transform: 'translateZ(-50px) rotateX(5deg)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
@@ -97,7 +91,7 @@ export default function Home() {
             <H1 id="hero-heading">
               SMART AGENT ALLIANCE
             </H1>
-            <Tagline>
+            <Tagline className="hero-tagline-mobile-spacing">
               For Agents Who Want More
             </Tagline>
           </div>
