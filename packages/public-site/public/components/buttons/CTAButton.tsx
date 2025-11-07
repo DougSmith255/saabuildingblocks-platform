@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // TODO: Store import removed for monorepo - needs Context provider pattern
 // import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
 
@@ -14,8 +14,15 @@ export interface CTAButtonProps {
 export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
+  const [animationDelay, setAnimationDelay] = useState('0s');
 
-  // Using default value until we implement Context provider pattern
+  useEffect(() => {
+    const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds
+    setAnimationDelay(`${randomDelay.toFixed(2)}s`);
+  }, []);
+
+  // Brand colors for glow effects (keep hardcoded for animation compatibility)
+  const brandGold = '#ffd700';
   const brandGreen = '#00ff88';
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -24,23 +31,34 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
     onClick?.(e);
   };
 
+  // Button styles - using CSS variables from Master Controller
+  const buttonStyles = {
+    color: 'var(--text-color-button, var(--color-headingText))',
+    fontSize: 'var(--font-size-button, 20px)',
+    fontFamily: 'var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)',
+    fontWeight: 'var(--font-weight-button, 600)' as any,
+    textTransform: 'var(--text-transform-button, uppercase)' as any,
+    letterSpacing: 'var(--letter-spacing-button, 0.05em)',
+    lineHeight: 'var(--line-height-button, 1.4)'
+  };
+
   return (
     <div className={`
       ${className}
       group
-      relative ${isFullWidth ? 'flex' : 'inline-flex w-fit mx-auto'} justify-center items-center
+      relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
       !my-[10px]
     `}>
       <a
         href={href}
         onClick={handleClick}
         className={`
-          text-button
           relative flex justify-center items-center
           ${isFullWidth ? 'w-full' : ''}
           h-[56px] px-5 py-2
           bg-[rgb(45,45,45)] backdrop-blur-[15px]
           rounded-xl border-t border-b border-white/10
+          uppercase tracking-wide
           z-10
           shadow-[0_15px_15px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1),inset_0_-1px_0_rgba(0,0,0,0.5)]
           transition-all duration-500
@@ -52,6 +70,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
           ${isClicked ? 'clicked' : ''}
         `}
+        style={buttonStyles}
       >
         {children}
       </a>
@@ -65,6 +84,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
           animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
+          animationDelay: isClicked ? '0s' : animationDelay,
           transition: 'all 0.3s ease-in-out',
         }}
       />
@@ -78,6 +98,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
           animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
+          animationDelay: isClicked ? '0s' : animationDelay,
           transition: 'all 0.3s ease-in-out',
         }}
       />

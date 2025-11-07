@@ -47,12 +47,19 @@
 .counter-numbers {
   font-size: 80px !important;
   font-family: Amulya, serif !important;
+  font-weight: 300 !important;
 }
 
-.counter-plus,
-.counter-text {
+.counter-plus {
   font-size: 90px !important;
   font-family: Amulya, serif !important;
+  font-weight: 300 !important;
+}
+
+.counter-text {
+  font-size: 60px !important;
+  font-family: Amulya, serif !important;
+  font-weight: 300 !important;
 }
 
 /* Counter responsive sizing - mobile overrides */
@@ -60,11 +67,17 @@
   .counter-numbers {
     font-size: 50px !important;
     font-family: Amulya, serif !important;
+    font-weight: 300 !important;
   }
-  .counter-plus,
-  .counter-text {
+  .counter-plus {
     font-size: 45px !important;
     font-family: Amulya, serif !important;
+    font-weight: 300 !important;
+  }
+  .counter-text {
+    font-size: 30px !important;
+    font-family: Amulya, serif !important;
+    font-weight: 300 !important;
   }
 }
 

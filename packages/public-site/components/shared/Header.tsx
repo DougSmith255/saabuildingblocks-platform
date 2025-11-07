@@ -499,7 +499,7 @@ export default function Header() {
                                     fontWeight: 'var(--font-weight-menuSubItem)',
                                     letterSpacing: 'var(--letter-spacing-menuSubItem)',
                                     lineHeight: 'var(--line-height-menuSubItem)',
-                                    color: 'var(--text-color-menuSubItem)',
+                                    color: 'var(--color-body-text)',
                                   }}
                                 >
                                   {dropdownItem.label}
@@ -733,6 +733,13 @@ export default function Header() {
           stroke-width: 3;
           transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
                       stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Force gold stroke at all times - prevent black flash */
+        .hamburger .line,
+        .hamburger.menu-open .line,
+        .hamburger-svg .line {
+          stroke: #ffd700 !important;
         }
 
         .line-top-bottom {
