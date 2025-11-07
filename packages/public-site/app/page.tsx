@@ -43,18 +43,14 @@ export default function Home() {
                 transform: 'translateZ(-70px)',
               }}
             />
-            {/* Main image with gradient baked directly into the background layers */}
+            {/* Main image - gradient already baked into the image */}
             <div
               className="absolute top-[8%] left-1/2 -translate-x-1/2 w-full h-full"
               style={{
-                backgroundImage: `
-                  radial-gradient(ellipse 55% 60% at center 35%, transparent 0%, transparent 68%, rgba(13,13,26,0.6) 82%, rgba(13,13,26,1) 92%),
-                  linear-gradient(to bottom, transparent 0%, transparent 35%, rgba(13,13,26,0.1) 45%, rgba(13,13,26,0.3) 55%, rgba(13,13,26,0.6) 65%, rgba(13,13,26,0.85) 75%, rgba(13,13,26,0.95) 85%, rgba(13,13,26,1) 95%),
-                  url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp)
-                `,
-                backgroundSize: 'contain, contain, contain',
-                backgroundRepeat: 'no-repeat, no-repeat, no-repeat',
-                backgroundPosition: 'center top, center top, center top',
+                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance-2.webp)',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center top',
                 transformStyle: 'preserve-3d',
                 transform: 'translateZ(-50px) rotateX(5deg)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
