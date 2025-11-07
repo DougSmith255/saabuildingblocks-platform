@@ -33,6 +33,17 @@
   overflow: visible !important;
 }
 
+/* Counter responsive sizing - Mobile first, scale up to desktop */
+@media (max-width: 999px) {
+  .counter-numbers {
+    font-size: 75px !important;
+  }
+  .counter-plus,
+  .counter-text {
+    font-size: 45px !important;
+  }
+}
+
 /* ========================================
    FONT-FACE DECLARATIONS REMOVED
    ======================================== */
