@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { writeFileSync, readFileSync } from 'fs';
+import { join } from 'path';
 
 // Force dynamic rendering - exclude from static export
 export const dynamic = 'force-dynamic';
@@ -75,6 +77,14 @@ export async function POST(request: NextRequest) {
 
     if (error) throw error;
 
+    // Auto-sync: Update clampCalculator.ts with the saved settings
+    try {
+      await syncClampCalculator(settings);
+    } catch (syncError) {
+      console.error('[Typography API] Failed to sync clampCalculator:', syncError);
+      // Don't fail the whole request, just log the error
+    }
+
     return NextResponse.json({
       success: true,
       message: 'Typography settings saved successfully',
@@ -87,4 +97,40 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+/**
+ * Auto-sync clampCalculator.ts with saved typography settings
+ * This ensures DEFAULT_TYPOGRAPHY_CLAMPS always matches the Master Controller UI
+ */
+async function syncClampCalculator(settings: any) {
+  const clampCalculatorPath = join(process.cwd(), 'app/master-controller/lib/clampCalculator.ts');
+
+  // Read current file
+  const fileContent = readFileSync(clampCalculatorPath, 'utf-8');
+
+  // Build the new DEFAULT_TYPOGRAPHY_CLAMPS object
+  const clampEntries: string[] = [];
+
+  const textTypes = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'body', 'quote', 'link', 'button', 'caption', 'tagline', 'menuSubItem', 'menuMainItem'];
+
+  for (const textType of textTypes) {
+    if (settings[textType]?.size) {
+      const { min, max, viewportMin, viewportMax, unit } = settings[textType].size;
+      clampEntries.push(`  ${textType}: { min: ${min}, max: ${max}, viewportMin: ${viewportMin}, viewportMax: ${viewportMax}, unit: '${unit}' }`);
+    }
+  }
+
+  const newClampObject = `export const DEFAULT_TYPOGRAPHY_CLAMPS: Record<string, ClampConfig> = {\n${clampEntries.join(',\n')},\n};`;
+
+  // Replace the DEFAULT_TYPOGRAPHY_CLAMPS object in the file
+  const updatedContent = fileContent.replace(
+    /export const DEFAULT_TYPOGRAPHY_CLAMPS: Record<string, ClampConfig> = \{[^}]+\};/s,
+    newClampObject
+  );
+
+  // Write back to file
+  writeFileSync(clampCalculatorPath, updatedContent, 'utf-8');
+
+  console.log('[Typography API] Successfully synced clampCalculator.ts with saved settings');
 }
