@@ -14,27 +14,27 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Home', href: 'https://saabuildingblocks.com/' },
-  { label: 'About eXp', href: 'https://saabuildingblocks.com/about-exp-realty/' },
+  { label: 'Home', href: 'https://saabuildingblocks.pages.dev/' },
+  { label: 'About eXp', href: '/about-exp-realty/' },
   {
     label: 'Our Team',
     dropdown: [
-      { label: 'Team Value', href: 'https://saabuildingblocks.com/team-value/' },
-      { label: 'About Us', href: 'https://saabuildingblocks.com/about-us/' },
+      { label: 'Team Value', href: '/exp-realty-sponsor/' },
+      { label: 'About Us', href: '/our-exp-team/' },
     ],
   },
   {
     label: 'Resources',
     dropdown: [
-      { label: 'Commission & Fees Calc', href: 'https://saabuildingblocks.com/agent-tools/exp-commission-and-fees-calculator/' },
-      { label: 'RevShare Calc', href: 'https://saabuildingblocks.com/agent-tools/exp-revshare-calculator/' },
-      { label: 'Compare Brokerages', href: 'https://saabuildingblocks.com/agent-tools/compare-brokerages/' },
-      { label: 'Agent Success Hub', href: 'https://saabuildingblocks.com/agent-success-hub/' },
-      { label: 'Agent Freebies', href: 'https://saabuildingblocks.com/agent-freebies/' },
-      { label: 'Become an Agent', href: 'https://saabuildingblocks.com/become-an-agent/' },
+      { label: 'Commission & Fees Calc', href: '/agent-tools/exp-commission-and-fees-calculator/' },
+      { label: 'RevShare Calc', href: '/agent-tools/exp-realty-revenue-share-calculator/' },
+      { label: 'Compare Brokerages', href: '/best-real-estate-brokerage/' },
+      { label: 'Agent Success Hub', href: '/real-estate-agent-job/' },
+      { label: 'Agent Freebies', href: '/freebies/' },
+      { label: 'Become an Agent', href: '/become-real-estate-agent/' },
     ],
   },
-  { label: 'Agent Portal', href: '/login' },
+  { label: 'Agent Portal', href: '/agent-portal' },
 ];
 
 export default function Header() {
@@ -214,7 +214,7 @@ export default function Header() {
             {/* Logo - Hidden on 404 */}
             {!is404Page && (
             <Link
-              href="https://saabuildingblocks.com/"
+              href="https://saabuildingblocks.pages.dev/"
               className="logo-container"
               aria-label="Smart Agent Alliance Home"
               style={{
@@ -366,7 +366,7 @@ export default function Header() {
           {/* CTA Button (Desktop) - Hidden on 404 */}
           {!is404Page && (
           <div className="header-btn hidden xlg:flex items-center">
-            <CTAButton href="https://saabuildingblocks.com/book-a-call/">
+            <CTAButton href="/join-exp-sponsor-team/">
               GET STARTED
             </CTAButton>
           </div>
@@ -559,7 +559,7 @@ export default function Header() {
 
                 {/* Mobile CTA Button */}
                 <div className="pt-8 pb-4 text-center">
-                  <CTAButton href="https://saabuildingblocks.com/book-a-call/">
+                  <CTAButton href="/join-exp-sponsor-team/">
                     GET STARTED
                   </CTAButton>
                 </div>

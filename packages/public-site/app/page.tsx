@@ -96,10 +96,10 @@ export default function Home() {
 
           {/* CTA Button Group */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <CTAButton href="/sign-up">
+            <CTAButton href="/join-exp-sponsor-team/">
               JOIN THE ALLIANCE
             </CTAButton>
-            <CTAButton href="/about">
+            <CTAButton href="/exp-realty-sponsor/">
               LEARN MORE
             </CTAButton>
           </div>
