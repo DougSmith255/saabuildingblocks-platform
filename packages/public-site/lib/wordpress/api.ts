@@ -487,3 +487,82 @@ export const searchPosts = cache(async (
     return { results: [], total: 0, totalPages: 0 };
   }
 });
+
+/**
+ * WordPress Category Type
+ */
+export interface WordPressCategory {
+  id: number;
+  count: number;
+  description: string;
+  link: string;
+  name: string;
+  slug: string;
+  taxonomy: string;
+  parent: number;
+}
+
+/**
+ * Category with count for display
+ */
+export interface CategoryWithCount {
+  slug: string;
+  name: string;
+  count: number;
+}
+
+/**
+ * Fetches all categories from WordPress
+ * Cached for build-time optimization
+ * @returns Array of categories with post counts, filtered to allowed categories only
+ */
+export const fetchCategories = cache(async (): Promise<CategoryWithCount[]> => {
+  try {
+    const authHeader = createAuthHeader();
+
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (authHeader) {
+      headers['Authorization'] = authHeader;
+    }
+
+    const response = await fetch(
+      `${WORDPRESS_URL}/wp-json/wp/v2/categories?per_page=100`,
+      {
+        headers,
+        next: {
+          revalidate: process.env.NODE_ENV === 'development' ? 300 : false
+        },
+      } as RequestInit & { next?: { revalidate: number | false } }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `WordPress Categories API error: ${response.status} ${response.statusText}. ${errorText}`
+      );
+    }
+
+    const categories: WordPressCategory[] = await response.json();
+
+    // Filter to only allowed categories and transform
+    const filteredCategories = categories
+      .filter(cat => ALLOWED_CATEGORIES.includes(cat.slug as any))
+      .map(cat => ({
+        slug: cat.slug,
+        name: cat.name,
+        count: cat.count,
+      }))
+      .filter(cat => cat.count > 0) // Only show categories with posts
+      .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically
+
+    console.log(`✅ Fetched ${filteredCategories.length} categories from WordPress`);
+
+    return filteredCategories;
+  } catch (error) {
+    console.error('❌ Error fetching WordPress categories:', error);
+    throw error;
+  }
+});
