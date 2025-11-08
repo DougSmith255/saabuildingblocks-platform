@@ -58,7 +58,7 @@ export function HomepageClient() {
     return () => {
       clearTimeout(startDelay);
       clearInterval(interval);
-      if (animationRef.current) clearInterval(animationRef.current);
+      if (animationRef.current) cancelAnimationFrame(animationRef.current as unknown as number);
       window.removeEventListener('resize', calculateH1Position);
       window.removeEventListener('load', calculateH1Position);
     };
@@ -67,30 +67,27 @@ export function HomepageClient() {
   const animateScramble = () => {
     const target = 3700;
     const duration = 2000; // 2 seconds
-    const fps = 30;
-    const frames = (duration / 1000) * fps;
-    let frame = 0;
+    const startTime = performance.now();
 
-    if (animationRef.current) clearInterval(animationRef.current);
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current as unknown as number);
+    }
 
-    animationRef.current = setInterval(() => {
-      frame++;
-      const progress = frame / frames;
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
 
       if (progress >= 1) {
         // End animation - show final value
         setDisplayValue('3700');
-        if (animationRef.current) {
-          clearInterval(animationRef.current);
-          animationRef.current = null;
-        }
+        animationRef.current = null;
       } else {
         // Scramble effect - show random numbers that gradually approach target
         const currentValue = Math.floor(target * progress);
         const scrambleIntensity = 1 - progress; // Less scrambling as we approach target
 
         const digits = currentValue.toString().padStart(4, '0').split('');
-        const scrambled = digits.map((digit, i) => {
+        const scrambled = digits.map((digit) => {
           // Randomly scramble digits based on intensity
           if (Math.random() < scrambleIntensity * 0.3) {
             return Math.floor(Math.random() * 10).toString();
@@ -99,8 +96,11 @@ export function HomepageClient() {
         });
 
         setDisplayValue(scrambled.join(''));
+        animationRef.current = requestAnimationFrame(animate) as unknown as NodeJS.Timeout;
       }
-    }, 1000 / fps);
+    };
+
+    animationRef.current = requestAnimationFrame(animate) as unknown as NodeJS.Timeout;
   };
 
   return (
