@@ -6,9 +6,11 @@ import { useState, useEffect, useRef } from 'react';
  * Client-side animations for homepage
  * - Custom counter with scramble animation (always 4 digits)
  * - Hydration state management
+ * - Dynamic H1 positioning relative to profile image
  */
 export function HomepageClient() {
   const [displayValue, setDisplayValue] = useState('0000');
+  const [h1MarginTop, setH1MarginTop] = useState('33.2vh');
   const animationRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -22,10 +24,31 @@ export function HomepageClient() {
       animateScramble();
     }, 5000);
 
+    // Calculate H1 position based on actual profile image
+    const calculateH1Position = () => {
+      const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
+      if (profileImg) {
+        const imgRect = profileImg.getBoundingClientRect();
+        const imgTop = imgRect.top;
+        const imgHeight = imgRect.height;
+
+        // Position H1 30% down into the image
+        const targetTop = imgTop + (imgHeight * 0.3);
+        setH1MarginTop(`${targetTop}px`);
+      }
+    };
+
+    // Calculate on mount and resize
+    calculateH1Position();
+    window.addEventListener('resize', calculateH1Position);
+    window.addEventListener('load', calculateH1Position);
+
     return () => {
       clearTimeout(startDelay);
       clearInterval(interval);
       if (animationRef.current) clearInterval(animationRef.current);
+      window.removeEventListener('resize', calculateH1Position);
+      window.removeEventListener('load', calculateH1Position);
     };
   }, []);
 
@@ -78,18 +101,21 @@ export function HomepageClient() {
         }}
       >
         <div
-          className="counter-container flex items-center"
+          className="counter-container flex items-center justify-center"
           style={{
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
-            background: 'radial-gradient(ellipse, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 50%, transparent 100%)',
+            // Star-grey gradient background (matches star field)
+            background: 'radial-gradient(ellipse 120% 60% at center, rgba(60,60,70,0.5) 0%, rgba(40,40,50,0.35) 50%, transparent 100%)',
             padding: '0.75rem 1.5rem',
-            borderRadius: '12px',
+            borderRadius: '16px',
+            // Fixed width to prevent resizing during animation
+            minWidth: '280px',
           }}
         >
           {/* Counter Numbers */}
-          <div className="counter-numbers">
+          <div className="counter-numbers" style={{ fontVariantNumeric: 'tabular-nums' }}>
             {displayValue}
           </div>
 
@@ -100,6 +126,13 @@ export function HomepageClient() {
           <span className="counter-text">AGENTS</span>
         </div>
       </div>
+
+      {/* H1 positioning data attribute */}
+      <div
+        id="h1-position-data"
+        data-margin-top={h1MarginTop}
+        style={{ display: 'none' }}
+      />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { HomepageClient } from './components/HomepageClient';
+import { DynamicH1Container } from './components/DynamicH1Container';
 
 /**
  * Homepage - Server Component with Static Content
@@ -47,7 +48,7 @@ export default function Home() {
             <img
               src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
-              className="absolute top-[8vh] left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
+              className="profile-image absolute top-[8vh] left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
@@ -79,8 +80,8 @@ export default function Home() {
         {/* Client-side animations (counter + neon flicker) */}
         <HomepageClient />
 
-        {/* Container - positioned to overlap image by 30% */}
-        <div className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8 mt-[33.2vh]">
+        {/* Container - dynamically positioned to overlap profile image by 30% */}
+        <DynamicH1Container>
           {/* Headline Group */}
           <div className="space-y-10 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component */}
@@ -101,7 +102,7 @@ export default function Home() {
               LEARN MORE
             </CTAButton>
           </div>
-        </div>
+        </DynamicH1Container>
       </section>
     </main>
   );
