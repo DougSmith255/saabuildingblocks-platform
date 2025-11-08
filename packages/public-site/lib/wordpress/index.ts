@@ -7,6 +7,7 @@ export {
   fetchAllPosts,
   fetchPostBySlug,
   fetchPostsByCategory,
+  fetchCategories,
   getAllowedCategories,
   isWordPressConfigured,
 } from './api';
@@ -16,3 +17,8 @@ export type {
   WordPressPost,
   WordPressAPIError,
 } from './types';
+
+export type { CategoryWithCount } from './api';
+
+// Re-export for convenience
+export { type CategoryWithCount as Category } from './api';

@@ -72,7 +72,7 @@ async function getPageData() {
     ]);
 
     // Transform categories to match CategoryInfo type
-    const categories: CategoryInfo[] = wpCategories.map(cat => ({
+    const categories: CategoryInfo[] = wpCategories.map((cat: { slug: string; name: string; count: number }) => ({
       slug: cat.slug as any, // Type assertion needed for CategorySlug union
       name: cat.name,
       count: cat.count,

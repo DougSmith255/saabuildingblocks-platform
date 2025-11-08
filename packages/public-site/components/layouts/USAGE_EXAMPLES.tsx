@@ -56,17 +56,22 @@ export function CenteredContentExample() {
 
 // ============================================
 // EXAMPLE 3: Edge-to-Edge Background Image
+// Note: Use Tailwind's bg-[url(...)] or a wrapper div with inline styles
 // ============================================
 export function BackgroundImageExample() {
   return (
     <FullWidthLayout
       horizontalPadding="none"
       verticalPadding="xl"
-      className="bg-cover bg-center relative"
-      style={{
-        backgroundImage: 'url(/images/hero-background.jpg)',
-      }}
+      className="relative"
+      backgroundColor="transparent"
     >
+      {/* Background image using wrapper div with inline style */}
+      <div
+        className="absolute inset-0 bg-cover bg-center"
+        style={{ backgroundImage: 'url(/images/hero-background.jpg)' }}
+      />
+
       {/* Dark overlay for text readability */}
       <div className="absolute inset-0 bg-black/50" />
 
