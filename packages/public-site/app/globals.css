@@ -1580,9 +1580,9 @@ html body .counter-text {
 }
 
 /* ========================================
-   MOBILE TAGLINE SPACING - SCREENS < 500px
+   MOBILE TAGLINE SPACING - SCREENS < 1400px
    ======================================== */
-@media (max-width: 500px) {
+@media (max-width: 1400px) {
   .hero-tagline-mobile-spacing {
     margin-top: 20px;
   }

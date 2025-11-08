@@ -18,13 +18,12 @@ const ALT_GLYPHS: Record<string, string> = {
 /**
  * Tagline Component
  *
- * Displays tagline text with H2-style 3D neon glow effects.
+ * Displays tagline text with 3D neon glow effects.
  * Pulls base typography settings from Master Controller's tagline text type.
  *
  * Features:
  * - Static neon glow (NO animation)
  * - 3D transform with rotateX and translateZ
- * - Metal backing plate
  * - Per-character rendering with alt glyphs
  * - Body text color (#bfbdb0) for neon effect
  * - Typography settings from var(--font-size-tagline), etc.
@@ -78,19 +77,6 @@ export default function Tagline({
           text-shadow: ${textShadow};
           transform: translateZ(20px);
           position: relative;
-        }
-
-        /* Metal backing plate */
-        .tagline-word::before {
-          content: "";
-          position: absolute;
-          inset: -0.2em -0.3em;
-          background: linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%);
-          border-radius: 0.1em;
-          z-index: -1;
-          transform: translateZ(-10px);
-          border: 1px solid rgba(150,150,150,0.2);
-          box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.5);
         }
       `}</style>
 
