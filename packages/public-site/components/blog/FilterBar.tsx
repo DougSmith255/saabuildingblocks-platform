@@ -32,7 +32,7 @@ export function FilterBar({ categories }: FilterBarProps) {
 
   return (
     <div className="
-      max-w-7xl mx-auto mb-8 p-6
+      w-full mb-8 p-6
       bg-[#404040]/30 backdrop-blur-sm
       border border-[#808080]/30
       rounded-lg

@@ -3,6 +3,14 @@
  * Wraps post list with client-side filtering and sorting
  * Phase 11.2 - Filtering & Sorting Implementation
  * Phase 11.3 - Pagination added
+ * Phase 11.4 - Full-width layout with enhanced grid breakpoints
+ *
+ * Grid breakpoints:
+ * - Mobile: 1 column
+ * - md (768px+): 2 columns
+ * - lg (1024px+): 3 columns
+ * - xl (1280px+): 4 columns
+ * - 2xl (1536px+): 5 columns
  */
 
 'use client';
@@ -109,7 +117,7 @@ export function FilterablePostList({ posts }: FilterablePostListProps) {
 
           {/* Regular Posts Grid - with equal height cards using grid-auto-rows */}
           {paginatedPosts.length > 0 && (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 auto-rows-fr">
               {(pagination.currentPage === 1 ? paginatedPosts.slice(1) : paginatedPosts).map(post => (
                 <BlogPostCard key={post.id} post={post} />
               ))}

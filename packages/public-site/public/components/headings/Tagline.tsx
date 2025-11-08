@@ -68,6 +68,7 @@ export default function Tagline({
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
         position: 'relative',
+        lineHeight: '1.2', // Reduced line-height for tighter spacing
         ...style
       }}
     >

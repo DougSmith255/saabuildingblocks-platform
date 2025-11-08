@@ -200,9 +200,10 @@ export default function Header() {
           <div
             className="header-container"
             style={{
-              maxWidth: is404Page ? 'min(400px, 95vw)' : 'min(1900px, 95vw)',
+              maxWidth: is404Page ? 'min(400px, 95vw)' : 'none',
+              width: '100%',
               margin: '0 auto',
-              padding: '8px 10px 8px 15px',
+              padding: is404Page ? '8px 10px 8px 15px' : '8px 80px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: is404Page ? 'center' : 'space-between',
@@ -390,7 +391,7 @@ export default function Header() {
             height: '60px',
             top: '50%',
             transform: 'translateY(-50%)',
-            right: '15px',
+            right: '80px',
           }}
           onClick={toggleMobileMenu}
           aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
@@ -450,7 +451,7 @@ export default function Header() {
                 WebkitOverflowScrolling: 'touch',
               }}
             >
-              <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
+              <nav className="px-20 space-y-2" role="navigation" aria-label="Mobile navigation">
                 {navItems.map((item, index) => (
                   <div key={index}>
                     {item.dropdown ? (
@@ -797,10 +798,6 @@ export default function Header() {
         }
 
         @media (max-width: 550px) {
-          .header-container {
-            padding-left: 5px !important;
-            padding-right: 0 !important;
-          }
           .header-container .header-btn,
           .header-container .cta-button {
             display: none !important;

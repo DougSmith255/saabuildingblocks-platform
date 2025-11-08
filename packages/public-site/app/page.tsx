@@ -11,12 +11,12 @@ export default function Home() {
     <main id="main-content">
       {/* Hero Section */}
       <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
+        className="relative min-h-screen flex items-center justify-center overflow-hidden py-16 sm:py-20 md:py-24"
         aria-labelledby="hero-heading"
       >
         {/* Wolf Pack Background Image - furthest back layer */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1] hero-animate-bg">
-          <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
+          <div className="relative w-full h-full">
             <div
               className="absolute inset-0"
               style={{
@@ -33,7 +33,7 @@ export default function Home() {
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1] hero-animate-profile" style={{ perspective: '1000px' }}>
-          <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
+          <div className="relative w-full h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
               className="absolute top-[8vh] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
@@ -62,7 +62,7 @@ export default function Home() {
 
         {/* Spaceman Background Image */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-0">
-          <div className="relative w-full max-w-[1200px] h-[80vh]">
+          <div className="relative w-full h-[80vh]">
             <div
               className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full"
               style={{
