@@ -107,10 +107,11 @@ jobs:
       - name: Build Static Export
         env:
           NODE_ENV: production
-          # WORKAROUND: Disable Turbopack due to Tailwind CSS v4 compatibility issue
+          # WORKAROUND: Force webpack instead of Turbopack (Next.js 16 defaults to Turbopack for builds)
           # Turbopack fails with "Module not found: Can't resolve '...'" in generated CSS
-          # TODO: Re-enable when Next.js/Tailwind compatibility improves
-          TURBOPACK: "0"
+          # Due to incompatibility with Tailwind CSS v4
+          # TODO: Re-enable Turbopack when Next.js/Tailwind compatibility improves
+          NEXT_USE_WEBPACK: "true"
           # Use properly formatted placeholder values (API routes excluded from export)
           NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzUyNjUyMDAsImV4cCI6MTk5MDg0MTIwMH0.cXVhY2toIHdvcmthcm91bmQ"
