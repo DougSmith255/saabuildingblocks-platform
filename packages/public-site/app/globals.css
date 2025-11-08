@@ -701,6 +701,282 @@ main {
       transform: none;
     }
   }
+
+  /* ========================================
+     BLOG PAGE ANIMATIONS
+     ======================================== */
+
+  /* Blog Card Staggered Fade-In Animation */
+  @keyframes blog-card-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Blog card animation with staggered delays */
+  .blog-card-animate {
+    opacity: 0;
+    animation: blog-card-fade-in 0.4s ease-out forwards;
+    will-change: opacity, transform;
+  }
+
+  /* Staggered animation delays for up to 12 cards */
+  .blog-card-animate:nth-child(1) { animation-delay: 0.05s; }
+  .blog-card-animate:nth-child(2) { animation-delay: 0.1s; }
+  .blog-card-animate:nth-child(3) { animation-delay: 0.15s; }
+  .blog-card-animate:nth-child(4) { animation-delay: 0.2s; }
+  .blog-card-animate:nth-child(5) { animation-delay: 0.25s; }
+  .blog-card-animate:nth-child(6) { animation-delay: 0.3s; }
+  .blog-card-animate:nth-child(7) { animation-delay: 0.35s; }
+  .blog-card-animate:nth-child(8) { animation-delay: 0.4s; }
+  .blog-card-animate:nth-child(9) { animation-delay: 0.45s; }
+  .blog-card-animate:nth-child(10) { animation-delay: 0.5s; }
+  .blog-card-animate:nth-child(11) { animation-delay: 0.55s; }
+  .blog-card-animate:nth-child(12) { animation-delay: 0.6s; }
+
+  /* Blog Card Hover Effects - GPU Accelerated */
+  .blog-card-hover {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    will-change: transform;
+  }
+
+  .blog-card-hover:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+      0 0 20px rgba(0, 255, 136, 0.2),
+      0 0 40px rgba(0, 255, 136, 0.1),
+      0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Blog card image scale on hover */
+  .blog-card-image-hover {
+    transition: transform 0.2s ease-in-out;
+    will-change: transform;
+  }
+
+  .blog-card-hover:hover .blog-card-image-hover {
+    transform: scale(1.05);
+  }
+
+  /* Featured Post Enhanced Hover */
+  .featured-post-hover {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    will-change: transform;
+  }
+
+  .featured-post-hover:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow:
+      0 0 30px rgba(255, 215, 0, 0.3),
+      0 0 60px rgba(255, 215, 0, 0.15),
+      0 0 90px rgba(0, 255, 136, 0.1),
+      0 15px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Filter Chip Animation */
+  .filter-chip {
+    transition: all 0.3s ease;
+    will-change: background-color, color, box-shadow, transform;
+  }
+
+  .filter-chip:hover {
+    transform: translateY(-2px);
+    background: rgba(0, 255, 136, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+  }
+
+  /* Active Filter Chip with Gold Glow */
+  .filter-chip-active {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 237, 128, 0.2) 100%);
+    color: #ffd700;
+    border: 1px solid #ffd700;
+    box-shadow:
+      0 0 10px rgba(255, 215, 0, 0.4),
+      0 0 20px rgba(255, 215, 0, 0.2),
+      inset 0 0 10px rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .filter-chip-active:hover {
+    box-shadow:
+      0 0 15px rgba(255, 215, 0, 0.5),
+      0 0 30px rgba(255, 215, 0, 0.3),
+      inset 0 0 15px rgba(255, 215, 0, 0.15);
+  }
+
+  /* Search Bar Focus Effect with Neon Green Glow */
+  .search-bar-focus {
+    transition: all 0.3s ease;
+    will-change: box-shadow, border-color;
+  }
+
+  .search-bar-focus:focus,
+  .search-bar-focus:focus-within {
+    outline: none;
+    border-color: #00ff88;
+    box-shadow:
+      0 0 0 1px #00ff88,
+      0 0 15px rgba(0, 255, 136, 0.3),
+      0 0 30px rgba(0, 255, 136, 0.15),
+      inset 0 0 10px rgba(0, 255, 136, 0.05);
+  }
+
+  /* Glassmorphism Effect */
+  .glass-effect {
+    background: rgba(25, 25, 25, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Border Glow - Neon Green */
+  .border-glow-green {
+    box-shadow:
+      0 0 5px rgba(0, 255, 136, 0.3),
+      0 0 10px rgba(0, 255, 136, 0.2),
+      0 0 15px rgba(0, 255, 136, 0.1);
+  }
+
+  /* Border Glow - Gold */
+  .border-glow-gold {
+    box-shadow:
+      0 0 5px rgba(255, 215, 0, 0.3),
+      0 0 10px rgba(255, 215, 0, 0.2),
+      0 0 15px rgba(255, 215, 0, 0.1);
+  }
+
+  /* Tag Hover Animation */
+  .tag-hover {
+    transition: all 0.2s ease-in-out;
+    will-change: background-color, transform;
+  }
+
+  .tag-hover:hover {
+    transform: scale(1.05);
+    background: rgba(0, 255, 136, 0.15);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  }
+
+  /* Pagination Button Hover */
+  .pagination-button {
+    transition: all 0.2s ease-in-out;
+    will-change: background-color, transform, box-shadow;
+  }
+
+  .pagination-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: rgba(255, 215, 0, 0.15);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+  }
+
+  .pagination-button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  /* Smooth Page Transitions */
+  .page-transition-enter {
+    animation: page-fade-in 0.3s ease-out;
+  }
+
+  @keyframes page-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Loading Skeleton Pulse */
+  @keyframes skeleton-pulse {
+    0%, 100% {
+      opacity: 0.6;
+    }
+    50% {
+      opacity: 0.3;
+    }
+  }
+
+  .skeleton-loading {
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+    background: linear-gradient(
+      90deg,
+      rgba(45, 45, 45, 0.5) 25%,
+      rgba(60, 60, 60, 0.5) 50%,
+      rgba(45, 45, 45, 0.5) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-loading {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Category Badge Pulse on Hover */
+  .category-badge-hover {
+    transition: all 0.2s ease-in-out;
+    will-change: transform, box-shadow;
+  }
+
+  .category-badge-hover:hover {
+    transform: scale(1.08);
+    box-shadow:
+      0 0 10px rgba(255, 215, 0, 0.4),
+      0 0 20px rgba(255, 215, 0, 0.2);
+  }
+
+  /* Read Time Badge */
+  .read-time-badge {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .read-time-badge:hover {
+    color: #00ff88;
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+  }
+
+  /* Accessibility: Disable animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .blog-card-animate,
+    .blog-card-hover,
+    .blog-card-image-hover,
+    .featured-post-hover,
+    .filter-chip,
+    .filter-chip-active,
+    .search-bar-focus,
+    .tag-hover,
+    .pagination-button,
+    .page-transition-enter,
+    .skeleton-loading,
+    .category-badge-hover,
+    .read-time-badge {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+      will-change: auto !important;
+    }
+
+    /* Keep focus states for accessibility */
+    .search-bar-focus:focus,
+    .search-bar-focus:focus-within {
+      outline: 2px solid #00ff88;
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+  }
 }
 
 @theme inline {
