@@ -106,10 +106,11 @@ export function HomepageClient() {
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
-            // Star-grey gradient background (matches star field)
-            background: 'radial-gradient(ellipse 120% 60% at center, rgba(60,60,70,0.5) 0%, rgba(40,40,50,0.35) 50%, transparent 100%)',
+            // Subtle oval gradient - blends with star background (rgb(40,40,40) to rgb(12,12,12))
+            // Very low opacity - nearly invisible over stars, provides contrast over images
+            background: 'radial-gradient(ellipse 200% 100% at center, rgba(30,30,30,0.25) 0%, rgba(20,20,20,0.15) 40%, rgba(12,12,12,0.05) 70%, transparent 100%)',
             padding: '0.75rem 1.5rem',
-            borderRadius: '16px',
+            borderRadius: '24px',
             // Fixed width to prevent resizing during animation
             minWidth: '280px',
           }}
