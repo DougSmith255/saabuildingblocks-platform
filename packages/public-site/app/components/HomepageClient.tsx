@@ -118,11 +118,11 @@ export function HomepageClient() {
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
-            // Subtle oval gradient - blends with star background (rgb(40,40,40) to rgb(12,12,12))
-            // Very low opacity - nearly invisible over stars, provides contrast over images
-            background: 'radial-gradient(ellipse 200% 100% at center, rgba(30,30,30,0.25) 0%, rgba(20,20,20,0.15) 40%, rgba(12,12,12,0.05) 70%, transparent 100%)',
+            // Oval gradient - darker in center, fades to transparent
+            // No hard edges - gradient stops well before container edges
+            background: 'radial-gradient(ellipse 80% 60% at center, rgba(20,20,20,0.8) 0%, rgba(18,18,18,0.6) 25%, rgba(15,15,15,0.3) 50%, rgba(12,12,12,0.1) 75%, transparent 100%)',
             padding: '0.75rem 1.5rem',
-            borderRadius: '24px',
+            borderRadius: '32px',
             // Fixed width to prevent resizing during animation
             minWidth: '280px',
           }}

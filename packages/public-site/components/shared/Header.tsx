@@ -384,12 +384,11 @@ export default function Header() {
         {/* Mobile Menu Toggle - Absolute when closed, fixed when menu open - Hidden on 404 */}
         {!is404Page && (
         <button
-          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isHamburgerFixed ? 'fixed' : 'absolute'} ${isMobileMenuOpen ? 'menu-open' : ''}`}
+          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center fixed ${isMobileMenuOpen ? 'menu-open' : ''}`}
           style={{
             width: '60px',
             height: '60px',
-            top: isHamburgerFixed ? 'clamp(30px, 4vh, 45px)' : '50%',
-            transform: 'translateY(-50%)',
+            top: 'clamp(30px, 4vh, 45px)',
             right: '15px',
           }}
           onClick={toggleMobileMenu}
