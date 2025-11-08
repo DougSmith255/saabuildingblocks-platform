@@ -129,8 +129,9 @@ jobs:
           echo ""
 
           # cd into package directory and build
+          # Use --no-turbo flag to disable Turbopack and use webpack instead
           cd packages/public-site
-          npx next build
+          npx next build --no-turbo
 
           # Quick verification
           [ -d "out/_next" ] && [ -f "out/index.html" ] || { echo "❌ Build failed"; exit 1; }
