@@ -3,28 +3,29 @@
 import { useState, useEffect } from 'react';
 
 /**
- * Dynamic H1 Container - Applies calculated margin-top from HomepageClient
- * Reads the h1-position-data element and applies the margin dynamically
+ * Dynamic H1 Container - Applies calculated position from HomepageClient
+ * Uses CSS transforms instead of margin to avoid layout shifts
+ * Reads the h1-position-data element and applies the transform dynamically
  */
 export function DynamicH1Container({ children }: { children: React.ReactNode }) {
-  const [marginTop, setMarginTop] = useState('33.2vh'); // Default fallback
+  const [translateY, setTranslateY] = useState('33.2vh'); // Default fallback
 
   useEffect(() => {
-    const updateMargin = () => {
+    const updatePosition = () => {
       const dataElement = document.getElementById('h1-position-data');
       if (dataElement) {
-        const newMargin = dataElement.getAttribute('data-margin-top');
-        if (newMargin) {
-          setMarginTop(newMargin);
+        const newPosition = dataElement.getAttribute('data-margin-top');
+        if (newPosition) {
+          setTranslateY(newPosition);
         }
       }
     };
 
     // Update immediately
-    updateMargin();
+    updatePosition();
 
     // Update on resize (the HomepageClient will update the data attribute)
-    const interval = setInterval(updateMargin, 100);
+    const interval = setInterval(updatePosition, 100);
 
     return () => clearInterval(interval);
   }, []);
@@ -32,7 +33,10 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
   return (
     <div
       className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8"
-      style={{ marginTop }}
+      style={{
+        transform: `translateY(${translateY})`,
+        willChange: 'transform',
+      }}
     >
       {children}
     </div>
