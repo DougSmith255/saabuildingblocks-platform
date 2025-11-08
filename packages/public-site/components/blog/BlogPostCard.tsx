@@ -34,10 +34,10 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
       className={featured ? 'col-span-full md:col-span-2' : ''}
     >
       <article className="flex flex-col h-full">
-        {/* Featured Image - Optimized with Next.js Image */}
-        {post.featuredImage && (
-          <Link href={`/blog/${post.slug}`} className="block mb-4 overflow-hidden rounded-lg group">
-            <div className={`relative ${featured ? 'h-80 md:h-96' : 'h-48 md:h-64'}`}>
+        {/* Featured Image - Always display with fallback, optimized with Next.js Image */}
+        <Link href={`/blog/${post.slug}`} className="block mb-4 overflow-hidden rounded-lg group">
+          <div className={`relative bg-gradient-to-br from-[#2a2a2a] to-[#191818] ${featured ? 'h-80 md:h-96' : 'h-48 md:h-64'}`}>
+            {post.featuredImage ? (
               <Image
                 src={post.featuredImage.url}
                 alt={post.featuredImage.alt || post.title}
@@ -47,9 +47,27 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
                 loading="lazy"
                 quality={85}
               />
-            </div>
-          </Link>
-        )}
+            ) : (
+              /* Fallback placeholder when no featured image */
+              <div className="w-full h-full flex items-center justify-center">
+                <svg
+                  className="w-12 h-12 text-[#808080]"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={1.5}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+            )}
+          </div>
+        </Link>
 
         {/* Categories */}
         {post.categories && post.categories.length > 0 && (
@@ -73,14 +91,14 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
 
         {/* Title */}
         <Link href={`/blog/${post.slug}`} className="block group mb-3">
-          <h2
+          <h3
             className={`
               font-bold text-[#e5e4dd] group-hover:text-[#00ff88] transition-colors
               ${featured ? 'text-3xl md:text-4xl' : 'text-2xl md:text-3xl'}
             `}
           >
             {post.title}
-          </h2>
+          </h3>
         </Link>
 
         {/* Excerpt */}

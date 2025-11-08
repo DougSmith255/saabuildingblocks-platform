@@ -3,14 +3,14 @@
  *
  * Displays a blog post card with:
  * - Featured image with hover effect
- * - Title (H2 - auto-applies display font)
+ * - Title (H3 - auto-applies display font)
  * - Excerpt with line clamp
  * - Author and date metadata
  * - Category badges
  * - Click area linking to full post
  *
  * Follows AI Agent Page Building Protocol:
- * - Typography: H2 auto-applies display font, body uses Amulya
+ * - Typography: H3 auto-applies display font, body uses Amulya
  * - Colors: Brand palette only (#e5e4dd, #dcdbd5, #00ff88)
  * - Responsive: Fluid typography with clamp()
  * - Accessibility: Semantic HTML, proper ARIA labels
@@ -35,42 +35,64 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
         hover:border-[#00ff88]/50
         transition-all duration-300
         hover:shadow-[0_0_20px_rgba(0,255,136,0.1)]
+        flex flex-col
+        h-full
         ${className}
       `.trim()}
     >
       <Link
         href={`/blog/${post.slug}`}
-        className="block group"
+        className="flex flex-col h-full group"
         aria-label={`Read full article: ${post.title}`}
       >
-        {/* Featured Image */}
-        {post.featuredImage && (
-          <div className="relative w-full h-64 overflow-hidden bg-[#191818]">
-            <Image
-              src={post.featuredImage.url}
-              alt={post.featuredImage.alt || post.title}
-              width={post.featuredImage.width}
-              height={post.featuredImage.height}
-              className="
-                w-full h-full
-                object-cover
-                group-hover:scale-105
-                transition-transform duration-500
-                group-hover:brightness-110
-              "
-              loading="lazy"
-            />
-            {/* Gradient overlay on hover */}
-            <div className="
-              absolute inset-0
-              bg-gradient-to-t from-black/60 to-transparent
-              opacity-0 group-hover:opacity-100
-              transition-opacity duration-300
-            " />
-          </div>
-        )}
+        {/* Featured Image - Always display, with fallback background */}
+        <div className="relative w-full h-64 flex-shrink-0 overflow-hidden bg-gradient-to-br from-[#2a2a2a] to-[#191818]">
+          {post.featuredImage ? (
+            <>
+              <Image
+                src={post.featuredImage.url}
+                alt={post.featuredImage.alt || post.title}
+                width={post.featuredImage.width}
+                height={post.featuredImage.height}
+                className="
+                  w-full h-full
+                  object-cover
+                  group-hover:scale-105
+                  transition-transform duration-500
+                  group-hover:brightness-110
+                "
+                loading="lazy"
+              />
+              {/* Gradient overlay on hover */}
+              <div className="
+                absolute inset-0
+                bg-gradient-to-t from-black/60 to-transparent
+                opacity-0 group-hover:opacity-100
+                transition-opacity duration-300
+              " />
+            </>
+          ) : (
+            /* Fallback placeholder when no featured image */
+            <div className="w-full h-full flex items-center justify-center">
+              <svg
+                className="w-16 h-16 text-[#808080]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+          )}
+        </div>
 
-        <div className="p-6">
+        <div className="p-6 flex flex-col flex-grow">
           {/* Category Badges */}
           {post.categories && post.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
@@ -96,10 +118,10 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
             </div>
           )}
 
-          {/* Title (H2 - auto-applies display font) */}
-          <h2
+          {/* Title (H3 - smaller and more appropriate for card grid) */}
+          <h3
             className="
-              text-h2
+              text-h3
               font-bold
               mb-3
               text-[#e5e4dd]
@@ -109,7 +131,7 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
             "
           >
             {post.title}
-          </h2>
+          </h3>
 
           {/* Excerpt with line clamp */}
           {post.excerpt && (
@@ -118,51 +140,75 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
                 font-[var(--font-amulya)]
                 text-body
                 text-[#dcdbd5]
-                mb-4
+                mb-6
                 line-clamp-3
                 leading-relaxed
+                flex-grow
               "
               dangerouslySetInnerHTML={{ __html: post.excerpt }}
             />
           )}
 
-          {/* Author and Date Metadata */}
+          {/* Author and Date Metadata - Professional Typography */}
           <div className="
             flex
-            flex-wrap
             items-center
-            gap-3
+            gap-4
+            pt-4
+            mt-auto
+            border-t border-[#e5e4dd]/15
             font-[var(--font-amulya)]
-            text-caption
-            text-[#dcdbd5]/70
+            text-xs
+            tracking-wider
           ">
             {/* Author */}
             {post.author.name && (
               <>
-                <span className="flex items-center gap-2">
+                <div className="flex items-center gap-2.5">
                   {post.author.avatar && (
                     <Image
                       src={post.author.avatar}
                       alt={post.author.name}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
+                      width={32}
+                      height={32}
+                      className="
+                        rounded-full
+                        ring-1.5
+                        ring-[#e5e4dd]/30
+                        flex-shrink-0
+                        bg-[#dcdbd5]/10
+                      "
                     />
                   )}
-                  <span>By {post.author.name}</span>
-                </span>
-                <span className="text-[#dcdbd5]/40">•</span>
+                  <span className="
+                    font-medium
+                    text-[#e5e4dd]
+                    group-hover:text-[#00ff88]
+                    transition-colors
+                    duration-300
+                    leading-snug
+                  ">
+                    {post.author.name}
+                  </span>
+                </div>
+                <span className="text-[#e5e4dd]/20">•</span>
               </>
             )}
 
             {/* Date */}
             <time
               dateTime={post.date}
-              className="group-hover:text-[#dcdbd5] transition-colors"
+              className="
+                text-[#dcdbd5]
+                group-hover:text-[#00ff88]
+                transition-colors
+                duration-300
+                leading-snug
+              "
             >
               {new Date(post.date).toLocaleDateString('en-US', {
                 year: 'numeric',
-                month: 'long',
+                month: 'short',
                 day: 'numeric',
               })}
             </time>
@@ -170,8 +216,14 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
             {/* Read time estimate (optional) */}
             {post.content && (
               <>
-                <span className="text-[#dcdbd5]/40">•</span>
-                <span>
+                <span className="text-[#e5e4dd]/20">•</span>
+                <span className="
+                  text-[#dcdbd5]
+                  group-hover:text-[#00ff88]/80
+                  transition-colors
+                  duration-300
+                  leading-snug
+                ">
                   {Math.ceil(post.content.split(' ').length / 200)} min read
                 </span>
               </>

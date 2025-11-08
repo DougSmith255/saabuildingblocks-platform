@@ -107,9 +107,9 @@ export function FilterablePostList({ posts }: FilterablePostListProps) {
             </div>
           )}
 
-          {/* Regular Posts Grid */}
+          {/* Regular Posts Grid - with equal height cards using grid-auto-rows */}
           {paginatedPosts.length > 0 && (
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
               {(pagination.currentPage === 1 ? paginatedPosts.slice(1) : paginatedPosts).map(post => (
                 <BlogPostCard key={post.id} post={post} />
               ))}

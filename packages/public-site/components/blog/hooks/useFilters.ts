@@ -34,7 +34,7 @@ export function useFilters(initialState?: FilterState) {
   );
 
   // Update URL when state changes
-  // Note: Using window.location.href for static export compatibility
+  // Using router.replace for client-side navigation without page reload
   const updateURL = useCallback((newCategories: CategorySlug[], newSort: SortOption, newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
 
@@ -65,9 +65,9 @@ export function useFilters(initialState?: FilterState) {
     }
 
     const queryString = params.toString();
-    // Use window.location.href for static export compatibility
-    window.location.href = `${pathname}${queryString ? `?${queryString}` : ''}`;
-  }, [searchParams, pathname, urlQuery]);
+    // Use router.replace for client-side filtering without page reload
+    router.replace(`${pathname}${queryString ? `?${queryString}` : ''}`, { scroll: false });
+  }, [searchParams, pathname, urlQuery, router]);
 
   // Category handlers (reset to page 1 when filters change)
   const toggleCategory = useCallback((slug: CategorySlug) => {
@@ -100,8 +100,10 @@ export function useFilters(initialState?: FilterState) {
     setPage(newPage);
     updateURL(categories, sort, newPage);
 
-    // Scroll to top of blog content
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to top of page content smoothly
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   }, [categories, sort, updateURL]);
 
   const nextPage = useCallback(() => {
@@ -117,16 +119,16 @@ export function useFilters(initialState?: FilterState) {
     setCategories([]);
     setSort('date-desc');
     setPage(1);
-    // Use window.location.href for static export compatibility
-    window.location.href = pathname; // Remove all query params
-  }, [pathname]);
+    // Use router.replace for client-side navigation without page reload
+    router.replace(pathname, { scroll: false }); // Remove all query params
+  }, [pathname, router]);
 
   // Sync with URL on back/forward
   useEffect(() => {
     setCategories(urlCategories);
     setSort(urlSort);
     setPage(urlPage);
-  }, [searchParams]); // Re-run when URL changes
+  }, [urlCategories.join(','), urlSort, urlPage]); // Re-run when URL changes
 
   return {
     categories,

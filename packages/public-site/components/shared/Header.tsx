@@ -388,7 +388,8 @@ export default function Header() {
           style={{
             width: '60px',
             height: '60px',
-            top: 'clamp(30px, 4vh, 45px)',
+            top: '50%',
+            transform: 'translateY(-50%)',
             right: '15px',
           }}
           onClick={toggleMobileMenu}
@@ -591,16 +592,22 @@ export default function Header() {
           font-family: 'Synonym', monospace !important;
         }
 
-        /* Mobile Menu Link Colors - Override global green (exclude CTAButton) */
-        .mobile-menu-overlay nav a:not(.agent-portal-mobile):not([class*="text-button"]),
-        .mobile-menu-overlay nav button:not([class*="text-button"]) {
+        /* Mobile Menu Main Item Colors - Override global green (exclude CTAButton and dropdown items) */
+        .mobile-menu-overlay nav > div > a:not(.agent-portal-mobile):not([class*="text-button"]),
+        .mobile-menu-overlay nav > div > button:not([class*="text-button"]) {
           color: #ffffff !important;
           font-family: 'Synonym', monospace !important;
         }
 
-        /* Mobile menu hover states (exclude CTAButton) */
-        .mobile-menu-overlay nav a:not(.agent-portal-mobile):not([class*="text-button"]):hover {
+        /* Mobile menu main item hover states (exclude CTAButton) */
+        .mobile-menu-overlay nav > div > a:not(.agent-portal-mobile):not([class*="text-button"]):hover,
+        .mobile-menu-overlay nav > div > button:not([class*="text-button"]):hover {
           color: #ffe000 !important;
+        }
+
+        /* Mobile menu dropdown/sub-items should use body text color */
+        .mobile-menu-overlay nav a[class*="block px-6 py-3"] {
+          color: var(--color-body-text) !important;
         }
 
         /* Sweeping holographic light animation - THE signature effect */
@@ -721,6 +728,15 @@ export default function Header() {
         /* Hamburger Menu Animation */
         .hamburger {
           cursor: pointer;
+          font-family: var(--font-taskor), Taskor, system-ui, sans-serif !important;
+          color: inherit !important;
+          background-color: transparent !important;
+        }
+
+        /* Prevent color change on hover */
+        .hamburger:hover {
+          color: inherit !important;
+          background-color: transparent !important;
         }
 
         .hamburger-svg {
