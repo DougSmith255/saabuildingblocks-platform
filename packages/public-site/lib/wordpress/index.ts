@@ -19,6 +19,3 @@ export type {
 } from './types';
 
 export type { CategoryWithCount } from './api';
-
-// Re-export for convenience
-export { type CategoryWithCount as Category } from './api';
