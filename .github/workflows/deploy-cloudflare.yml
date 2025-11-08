@@ -107,6 +107,10 @@ jobs:
       - name: Build Static Export
         env:
           NODE_ENV: production
+          # WORKAROUND: Disable Turbopack due to Tailwind CSS v4 compatibility issue
+          # Turbopack fails with "Module not found: Can't resolve '...'" in generated CSS
+          # TODO: Re-enable when Next.js/Tailwind compatibility improves
+          TURBOPACK: "0"
           # Use properly formatted placeholder values (API routes excluded from export)
           NEXT_PUBLIC_SUPABASE_URL: "https://placeholder.supabase.co"
           NEXT_PUBLIC_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzUyNjUyMDAsImV4cCI6MTk5MDg0MTIwMH0.cXVhY2toIHdvcmthcm91bmQ"
@@ -121,7 +125,7 @@ jobs:
           echo "🔨 Building static export for Cloudflare Pages"
           echo "   Config: next.config.ts (already has output: 'export')"
           echo "   Build context: Monorepo root (fixes tsconfig resolution)"
-          echo "   ✅ FIXED: Turbopack can now resolve '../../tsconfig.json'"
+          echo "   ⚠️  TURBOPACK DISABLED: Using webpack due to Tailwind CSS v4 compatibility issue"
           echo ""
 
           # cd into package directory and build
