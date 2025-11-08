@@ -83,7 +83,7 @@ export default function Home() {
         {/* Container - dynamically positioned to overlap profile image by 30% */}
         <DynamicH1Container>
           {/* Headline Group */}
-          <div className="space-y-10 text-center" style={{ perspective: '1000px' }}>
+          <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component */}
             <div className="hero-animate-h1">
               <H1 id="hero-heading">

@@ -44,8 +44,9 @@ export function HomepageClient() {
           percentage = Math.max(0.15, percentage); // Don't go below 15%
         }
 
-        // Position H1 using calculated percentage
-        const targetTop = imgTop + (imgHeight * percentage);
+        // Position H1 using calculated percentage, then move up by 15vh
+        const viewportHeight = window.innerHeight;
+        const targetTop = imgTop + (imgHeight * percentage) - (viewportHeight * 0.15);
         setH1MarginTop(`${targetTop}px`);
       }
     };
