@@ -32,8 +32,20 @@ export function HomepageClient() {
         const imgTop = imgRect.top;
         const imgHeight = imgRect.height;
 
-        // Position H1 30% down into the image
-        const targetTop = imgTop + (imgHeight * 0.3);
+        // Calculate responsive percentage based on viewport width
+        // Larger screens need smaller percentage to keep H1 at same visual position
+        const viewportWidth = window.innerWidth;
+        let percentage = 0.30; // Default 30% for smaller screens (looks good at 1024px)
+
+        if (viewportWidth > 1400) {
+          // Gradually reduce percentage as screen gets wider
+          // This compensates for the image getting taller on wider screens
+          percentage = 0.30 - ((viewportWidth - 1400) * 0.00008);
+          percentage = Math.max(0.15, percentage); // Don't go below 15%
+        }
+
+        // Position H1 using calculated percentage
+        const targetTop = imgTop + (imgHeight * percentage);
         setH1MarginTop(`${targetTop}px`);
       }
     };
