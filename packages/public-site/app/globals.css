@@ -213,6 +213,28 @@ main {
     }
   }
 
+  /* Hero Fade-In Animation - Simple fade */
+  @keyframes hero-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Hero Fade-In with Upward Movement */
+  @keyframes hero-fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @keyframes text-glow {
     0% {
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
@@ -619,6 +641,65 @@ main {
 
   .animate-fade-in-up {
     animation: fade-in-up 0.6s ease-out;
+  }
+
+  /* Hero Section Fade-In Animations with Staggered Delays */
+  /* All elements start invisible and animate to visible */
+
+  /* Wolf pack background - fade in immediately (0s delay) */
+  .hero-animate-bg {
+    opacity: 0;
+    animation: hero-fade-in 0.6s ease-out forwards;
+    animation-delay: 0s;
+  }
+
+  /* Profile image - fade in at 0.2s */
+  .hero-animate-profile {
+    opacity: 0;
+    animation: hero-fade-in 0.6s ease-out forwards;
+    animation-delay: 0.2s;
+  }
+
+  /* Agent counter - fade in at 0.4s */
+  .hero-animate-counter {
+    opacity: 0;
+    animation: hero-fade-in 0.6s ease-out forwards;
+    animation-delay: 0.4s;
+  }
+
+  /* H1 title - fade in at 0.6s with upward movement */
+  .hero-animate-h1 {
+    opacity: 0;
+    animation: hero-fade-in-up 0.6s ease-out forwards;
+    animation-delay: 0.6s;
+  }
+
+  /* Tagline - fade in at 0.8s with upward movement */
+  .hero-animate-tagline {
+    opacity: 0;
+    animation: hero-fade-in-up 0.6s ease-out forwards;
+    animation-delay: 0.8s;
+  }
+
+  /* CTA buttons - fade in at 1.0s with upward movement */
+  .hero-animate-cta {
+    opacity: 0;
+    animation: hero-fade-in-up 0.6s ease-out forwards;
+    animation-delay: 1.0s;
+  }
+
+  /* Accessibility: Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-animate-bg,
+    .hero-animate-profile,
+    .hero-animate-counter,
+    .hero-animate-h1,
+    .hero-animate-tagline,
+    .hero-animate-cta {
+      opacity: 1;
+      animation: none;
+      transform: none;
+    }
   }
 }
 

@@ -15,7 +15,7 @@ export default function Home() {
         aria-labelledby="hero-heading"
       >
         {/* Wolf Pack Background Image - furthest back layer */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1] hero-animate-bg">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
               className="absolute inset-0"
@@ -32,7 +32,7 @@ export default function Home() {
         </div>
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1] hero-animate-profile" style={{ perspective: '1000px' }}>
           <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
@@ -85,16 +85,20 @@ export default function Home() {
           {/* Headline Group */}
           <div className="space-y-10 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component */}
-            <H1 id="hero-heading">
-              SMART AGENT ALLIANCE
-            </H1>
-            <Tagline className="hero-tagline-mobile-spacing">
-              For Agents Who Want More
-            </Tagline>
+            <div className="hero-animate-h1">
+              <H1 id="hero-heading">
+                SMART AGENT ALLIANCE
+              </H1>
+            </div>
+            <div className="hero-animate-tagline">
+              <Tagline className="hero-tagline-mobile-spacing">
+                For Agents Who Want More
+              </Tagline>
+            </div>
           </div>
 
           {/* CTA Button Group */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center hero-animate-cta">
             <CTAButton href="/join-exp-sponsor-team/">
               JOIN THE ALLIANCE
             </CTAButton>

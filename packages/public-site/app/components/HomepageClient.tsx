@@ -107,7 +107,7 @@ export function HomepageClient() {
     <>
       {/* Agent Counter - Top Right on desktop, Centered on mobile */}
       <div
-        className="agent-counter-wrapper absolute z-50 left-1/2 -translate-x-1/2 xlg:left-auto xlg:translate-x-0 xlg:right-8"
+        className="agent-counter-wrapper absolute z-50 left-1/2 -translate-x-1/2 xlg:left-auto xlg:translate-x-0 xlg:right-8 hero-animate-counter"
         style={{
           top: '120px',
         }}
