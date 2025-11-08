@@ -129,6 +129,8 @@ jobs:
           echo ""
 
           # cd into package directory and build
+          # NOTE: Not using --turbo flag, so webpack is used by default
+          # Turbopack is incompatible with Tailwind CSS v4 (see TURBOPACK_CHECK.md)
           cd packages/public-site
           npx next build
 

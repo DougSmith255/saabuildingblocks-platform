@@ -11,10 +11,6 @@ const nextConfig: NextConfig = {
   // Enable static export for Cloudflare Pages deployment
   output: 'export',
 
-  // Disable Turbopack (use webpack) - Turbopack has compatibility issues with Tailwind CSS v4
-  // See: packages/public-site/.github/TURBOPACK_CHECK.md
-  turbo: false,
-
   // Disable image optimization for static export
   images: {
     unoptimized: true,
