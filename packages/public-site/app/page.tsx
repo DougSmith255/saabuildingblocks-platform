@@ -57,7 +57,7 @@ export default function Home() {
                 transform: 'translateZ(-50px) rotateX(5deg)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
                 opacity: 0,
-                animation: 'imgFadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both',
+                animation: 'imgFadeIn 3s linear 0s both',
               }}
             />
           </div>
