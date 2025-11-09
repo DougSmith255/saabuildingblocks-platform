@@ -692,10 +692,10 @@ main {
     }
   }
 
-  /* Wolf pack background - linear fade over 3 seconds */
+  /* Wolf pack background - linear fade over 3 seconds with delay */
   .hero-animate-bg {
     opacity: 0;
-    animation: bgZoom2025 3s linear 0s both;
+    animation: bgZoom2025 3s linear 0.5s both;
     will-change: opacity;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
