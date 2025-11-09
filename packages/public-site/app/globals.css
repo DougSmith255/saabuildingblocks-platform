@@ -651,6 +651,8 @@ main {
     opacity: 0;
     animation: hero-fade-in 0.6s ease-out forwards;
     animation-delay: 0s;
+    will-change: opacity;
+    backface-visibility: hidden;
   }
 
   /* Profile image - fade in at 0.2s */
@@ -658,6 +660,8 @@ main {
     opacity: 0;
     animation: hero-fade-in 0.6s ease-out forwards;
     animation-delay: 0.2s;
+    will-change: opacity;
+    backface-visibility: hidden;
   }
 
   /* Agent counter - fade in at 0.4s */
@@ -665,6 +669,8 @@ main {
     opacity: 0;
     animation: hero-fade-in 0.6s ease-out forwards;
     animation-delay: 0.4s;
+    will-change: opacity;
+    backface-visibility: hidden;
   }
 
   /* H1 title - fade in at 0.6s with upward movement */
@@ -672,6 +678,8 @@ main {
     opacity: 0;
     animation: hero-fade-in-up 0.6s ease-out forwards;
     animation-delay: 0.6s;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
   }
 
   /* Tagline - fade in at 0.8s with upward movement */
@@ -679,6 +687,8 @@ main {
     opacity: 0;
     animation: hero-fade-in-up 0.6s ease-out forwards;
     animation-delay: 0.8s;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
   }
 
   /* CTA buttons - fade in at 1.0s with upward movement */
@@ -686,6 +696,8 @@ main {
     opacity: 0;
     animation: hero-fade-in-up 0.6s ease-out forwards;
     animation-delay: 1.0s;
+    will-change: opacity, transform;
+    backface-visibility: hidden;
   }
 
   /* Accessibility: Respect prefers-reduced-motion */

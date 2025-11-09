@@ -80,9 +80,6 @@ export default function Home() {
         {/* Client-side animations (counter + neon flicker) */}
         <HomepageClient />
 
-        {/* TEST: Big yellow dot */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-yellow-500 rounded-full z-[9999]" />
-
         {/* Container - dynamically positioned to overlap profile image by 30% */}
         <DynamicH1Container>
           {/* Headline Group */}
