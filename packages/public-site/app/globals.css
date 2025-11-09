@@ -686,19 +686,17 @@ main {
   @keyframes bgZoom2025 {
     from {
       opacity: 0;
-      transform: scale3d(1.05, 1.05, 1);
     }
     to {
       opacity: 1;
-      transform: scale3d(1, 1, 1);
     }
   }
 
-  /* Wolf pack background - linear fade across entire animation sequence */
+  /* Wolf pack background - linear fade over 3 seconds */
   .hero-animate-bg {
     opacity: 0;
-    animation: bgZoom2025 3.4s linear 0s both;
-    will-change: opacity, transform;
+    animation: bgZoom2025 3s linear 0s both;
+    will-change: opacity;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
