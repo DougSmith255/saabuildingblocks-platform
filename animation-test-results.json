@@ -1,0 +1,363 @@
+{
+  "chromium": {
+    "browser": "chromium",
+    "h1Info": {
+      "found": true,
+      "text": "SARTAGTALLIAC",
+      "opacity": "1",
+      "transform": "matrix3d(1, 0, 0, 0, 0, 0.965926, 0.258819, 0, 0, -0.258819, 0.965926, 0, 0, 0, 0, 1)",
+      "transition": "all",
+      "animation": "0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s 1 normal both running fadeInUp2025",
+      "classList": [
+        "jsx-4864b474948a1db3",
+        "text-h1",
+        "text-display",
+        "hero-entrance-animate"
+      ],
+      "visibility": "visible",
+      "display": "flex"
+    },
+    "framerMotionLoaded": true,
+    "animationClassCount": 30,
+    "animationClasses": [
+      {
+        "tag": "DIV",
+        "classes": "jsx-d074fe078ba8a384 transition-transform duration-500 ease-in-out translate-y-0",
+        "computedTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+        "tag": "A",
+        "classes": "nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "A",
+        "classes": "nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "classes": "jsx-d074fe078ba8a384 nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "SPAN",
+        "classes": "jsx-d074fe078ba8a384 dropdown-arrow ml-2 inline-block transition-all duration-[400ms] ease-[ease] transform-gpu",
+        "computedTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      }
+    ],
+    "buttonInfo": [
+      {
+        "text": "Our Team",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "nav-link",
+          "flex",
+          "items-center",
+          "px-5",
+          "py-3",
+          "text-white",
+          "transition-all",
+          "duration-300",
+          "rounded-md",
+          "mx-[2px]",
+          "bg-transparent",
+          "hover:bg-[rgba(42,42,42,0.8)]",
+          "hover:text-white"
+        ]
+      },
+      {
+        "text": "Resources",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "nav-link",
+          "flex",
+          "items-center",
+          "px-5",
+          "py-3",
+          "text-white",
+          "transition-all",
+          "duration-300",
+          "rounded-md",
+          "mx-[2px]",
+          "bg-transparent",
+          "hover:bg-[rgba(42,42,42,0.8)]",
+          "hover:text-white"
+        ]
+      },
+      {
+        "text": "",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "all",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "hamburger",
+          "xlg:hidden",
+          "cursor-pointer",
+          "z-[10030]",
+          "flex",
+          "items-center",
+          "justify-center",
+          "fixed"
+        ]
+      }
+    ],
+    "consoleLogs": [
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()"
+    ]
+  },
+  "firefox": {
+    "browser": "firefox",
+    "h1Info": {
+      "found": true,
+      "text": "SARTAGTALLIAC",
+      "opacity": "1",
+      "transform": "matrix3d(1, 0, 0, 0, 0, 0.965926, 0.258819, 0, 0, -0.258819, 0.965926, 0, 0, 0, 0, 1)",
+      "transition": "all",
+      "animation": "0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both fadeInUp2025",
+      "classList": [
+        "jsx-4864b474948a1db3",
+        "text-h1",
+        "text-display",
+        "hero-entrance-animate"
+      ],
+      "visibility": "visible",
+      "display": "flex"
+    },
+    "framerMotionLoaded": true,
+    "animationClassCount": 30,
+    "animationClasses": [
+      {
+        "tag": "DIV",
+        "classes": "jsx-d074fe078ba8a384 transition-transform duration-500 ease-in-out translate-y-0",
+        "computedTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+        "tag": "A",
+        "classes": "nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "A",
+        "classes": "nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "classes": "jsx-d074fe078ba8a384 nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "SPAN",
+        "classes": "jsx-d074fe078ba8a384 dropdown-arrow ml-2 inline-block transition-all duration-[400ms] ease-[ease] transform-gpu",
+        "computedTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      }
+    ],
+    "buttonInfo": [
+      {
+        "text": "Our Team",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "nav-link",
+          "flex",
+          "items-center",
+          "px-5",
+          "py-3",
+          "text-white",
+          "transition-all",
+          "duration-300",
+          "rounded-md",
+          "mx-[2px]",
+          "bg-transparent",
+          "hover:bg-[rgba(42,42,42,0.8)]",
+          "hover:text-white"
+        ]
+      },
+      {
+        "text": "Resources",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "nav-link",
+          "flex",
+          "items-center",
+          "px-5",
+          "py-3",
+          "text-white",
+          "transition-all",
+          "duration-300",
+          "rounded-md",
+          "mx-[2px]",
+          "bg-transparent",
+          "hover:bg-[rgba(42,42,42,0.8)]",
+          "hover:text-white"
+        ]
+      },
+      {
+        "text": "",
+        "opacity": "1",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "transition": "all",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "hamburger",
+          "xlg:hidden",
+          "cursor-pointer",
+          "z-[10030]",
+          "flex",
+          "items-center",
+          "justify-center",
+          "fixed"
+        ]
+      }
+    ],
+    "consoleLogs": [
+      "[warning] [JavaScript Warning: \"Will-change memory consumption is too high. Budget limit is the document surface area multiplied by 3 (2073600 px). Occurrences of will-change over the budget will be ignored.\" {file: \"https://saabuildingblocks.pages.dev/\" line: 0}]",
+      "[warning] [JavaScript Warning: \"A resource is blocked by OpaqueResponseBlocking, please check browser console for details.\" {file: \"https://wp.saabuildingblocks.com/wp-content/uploads/2025/01/real-estate-agent-success-guide.jpg\" line: 0}]"
+    ]
+  },
+  "webkit": {
+    "browser": "webkit",
+    "h1Info": {
+      "found": true,
+      "text": "SARTAGTALLIAC",
+      "opacity": "1",
+      "transform": "matrix3d(1, 0, 0, 0, 0, 0.965926, 0.258819, 0, 0, -0.258819, 0.965926, 0, 0, 0, 0, 1)",
+      "transition": "all",
+      "animation": "0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both fadeInUp2025",
+      "classList": [
+        "jsx-4864b474948a1db3",
+        "text-h1",
+        "text-display",
+        "hero-entrance-animate"
+      ],
+      "visibility": "visible",
+      "display": "flex"
+    },
+    "framerMotionLoaded": true,
+    "animationClassCount": 30,
+    "animationClasses": [
+      {
+        "tag": "DIV",
+        "classes": "jsx-d074fe078ba8a384 transition-transform duration-500 ease-in-out translate-y-0",
+        "computedTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      {
+        "tag": "A",
+        "classes": "nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "A",
+        "classes": "nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "BUTTON",
+        "classes": "jsx-d074fe078ba8a384 nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white",
+        "computedTransform": "none"
+      },
+      {
+        "tag": "SPAN",
+        "classes": "jsx-d074fe078ba8a384 dropdown-arrow ml-2 inline-block transition-all duration-[400ms] ease-[ease] transform-gpu",
+        "computedTransform": "matrix(1, 0, 0, 1, 0, 0)"
+      }
+    ],
+    "buttonInfo": [
+      {
+        "text": "Our Team",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "nav-link",
+          "flex",
+          "items-center",
+          "px-5",
+          "py-3",
+          "text-white",
+          "transition-all",
+          "duration-300",
+          "rounded-md",
+          "mx-[2px]",
+          "bg-transparent",
+          "hover:bg-[rgba(42,42,42,0.8)]",
+          "hover:text-white"
+        ]
+      },
+      {
+        "text": "Resources",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "nav-link",
+          "flex",
+          "items-center",
+          "px-5",
+          "py-3",
+          "text-white",
+          "transition-all",
+          "duration-300",
+          "rounded-md",
+          "mx-[2px]",
+          "bg-transparent",
+          "hover:bg-[rgba(42,42,42,0.8)]",
+          "hover:text-white"
+        ]
+      },
+      {
+        "text": "",
+        "opacity": "1",
+        "transform": "none",
+        "transition": "all",
+        "classList": [
+          "jsx-d074fe078ba8a384",
+          "hamburger",
+          "xlg:hidden",
+          "cursor-pointer",
+          "z-[10030]",
+          "flex",
+          "items-center",
+          "justify-center",
+          "fixed"
+        ]
+      }
+    ],
+    "consoleLogs": [
+      "[error] Failed to preconnect to https://staging.saabuildingblocks.com/. Error: Error resolving “staging.saabuildingblocks.com”: Name or service not known",
+      "[info] Successfully preconnected to https://saabuildingblocks.com/",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    ]
+  }
+}

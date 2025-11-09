@@ -1,0 +1,1 @@
+/home/claude-flow/🔴-PROJECT-CONTEXT.md

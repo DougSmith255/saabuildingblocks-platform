@@ -55,7 +55,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
       `}
       style={heroAnimate ? {
         opacity: 0,
-        animation: `fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
+        animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
         willChange: 'opacity, transform',
       } : {}}
     >

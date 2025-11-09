@@ -1,0 +1,204 @@
+{
+  "chromium": {
+    "browser": "chromium",
+    "imageInfo": {
+      "profileImage": {
+        "found": true,
+        "src": "https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-f...",
+        "opacity": "1",
+        "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s 1 normal both running imgFadeIn",
+        "classList": [
+          "profile-image",
+          "absolute",
+          "top-[8vh]",
+          "left-1/2",
+          "-translate-x-1/2",
+          "w-full",
+          "h-auto",
+          "max-h-full",
+          "object-contain"
+        ],
+        "visibility": "visible",
+        "display": "block"
+      },
+      "wolfPackBg": {
+        "found": true,
+        "hasClass": true,
+        "opacity": "1",
+        "animation": "1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s 1 normal both running bgZoom2025",
+        "backgroundImage": "none...",
+        "visibility": "visible"
+      },
+      "profileWrapper": {
+        "found": true,
+        "hasClass": true,
+        "opacity": "1",
+        "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s 1 normal both running fadeIn2025",
+        "visibility": "visible"
+      },
+      "totalImages": 1,
+      "imagesSample": [
+        {
+          "src": "https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/...",
+          "opacity": "1",
+          "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s 1 normal both running imgFadeIn",
+          "classList": [
+            "profile-image",
+            "absolute",
+            "top-[8vh]",
+            "left-1/2",
+            "-translate-x-1/2",
+            "w-full",
+            "h-auto",
+            "max-h-full",
+            "object-contain"
+          ]
+        }
+      ]
+    },
+    "consoleLogs": [
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()",
+      "[error] Failed to load resource: the server responded with a status of 404 ()"
+    ]
+  },
+  "firefox": {
+    "browser": "firefox",
+    "imageInfo": {
+      "profileImage": {
+        "found": true,
+        "src": "https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-f...",
+        "opacity": "1",
+        "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both imgFadeIn",
+        "classList": [
+          "profile-image",
+          "absolute",
+          "top-[8vh]",
+          "left-1/2",
+          "-translate-x-1/2",
+          "w-full",
+          "h-auto",
+          "max-h-full",
+          "object-contain"
+        ],
+        "visibility": "visible",
+        "display": "block"
+      },
+      "wolfPackBg": {
+        "found": true,
+        "hasClass": true,
+        "opacity": "1",
+        "animation": "1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both bgZoom2025",
+        "backgroundImage": "none...",
+        "visibility": "visible"
+      },
+      "profileWrapper": {
+        "found": true,
+        "hasClass": true,
+        "opacity": "1",
+        "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both fadeIn2025",
+        "visibility": "visible"
+      },
+      "totalImages": 1,
+      "imagesSample": [
+        {
+          "src": "https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/...",
+          "opacity": "1",
+          "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both imgFadeIn",
+          "classList": [
+            "profile-image",
+            "absolute",
+            "top-[8vh]",
+            "left-1/2",
+            "-translate-x-1/2",
+            "w-full",
+            "h-auto",
+            "max-h-full",
+            "object-contain"
+          ]
+        }
+      ]
+    },
+    "consoleLogs": [
+      "[warning] [JavaScript Warning: \"Will-change memory consumption is too high. Budget limit is the document surface area multiplied by 3 (2073600 px). Occurrences of will-change over the budget will be ignored.\" {file: \"https://saabuildingblocks.pages.dev/\" line: 0}]",
+      "[warning] [JavaScript Warning: \"A resource is blocked by OpaqueResponseBlocking, please check browser console for details.\" {file: \"https://wp.saabuildingblocks.com/wp-content/uploads/2025/01/real-estate-agent-success-guide.jpg\" line: 0}]"
+    ]
+  },
+  "webkit": {
+    "browser": "webkit",
+    "imageInfo": {
+      "profileImage": {
+        "found": true,
+        "src": "https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-f...",
+        "opacity": "1",
+        "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both imgFadeIn",
+        "classList": [
+          "profile-image",
+          "absolute",
+          "top-[8vh]",
+          "left-1/2",
+          "-translate-x-1/2",
+          "w-full",
+          "h-auto",
+          "max-h-full",
+          "object-contain"
+        ],
+        "visibility": "visible",
+        "display": "block"
+      },
+      "wolfPackBg": {
+        "found": true,
+        "hasClass": true,
+        "opacity": "1",
+        "animation": "1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both bgZoom2025",
+        "backgroundImage": "none...",
+        "visibility": "visible"
+      },
+      "profileWrapper": {
+        "found": true,
+        "hasClass": true,
+        "opacity": "1",
+        "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both fadeIn2025",
+        "visibility": "visible"
+      },
+      "totalImages": 1,
+      "imagesSample": [
+        {
+          "src": "https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/...",
+          "opacity": "1",
+          "animation": "1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both imgFadeIn",
+          "classList": [
+            "profile-image",
+            "absolute",
+            "top-[8vh]",
+            "left-1/2",
+            "-translate-x-1/2",
+            "w-full",
+            "h-auto",
+            "max-h-full",
+            "object-contain"
+          ]
+        }
+      ]
+    },
+    "consoleLogs": [
+      "[error] Failed to preconnect to https://staging.saabuildingblocks.com/. Error: Error resolving “staging.saabuildingblocks.com”: Name or service not known",
+      "[info] Successfully preconnected to https://saabuildingblocks.com/",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "[error] Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ]
+  }
+}

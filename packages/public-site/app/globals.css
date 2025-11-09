@@ -694,10 +694,10 @@ main {
     }
   }
 
-  /* Wolf pack background - subtle zoom with modern easing */
+  /* Wolf pack background - fade in across entire animation sequence */
   .hero-animate-bg {
     opacity: 0;
-    animation: bgZoom2025 1.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+    animation: bgZoom2025 3.4s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
     will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
@@ -706,7 +706,7 @@ main {
   /* Profile image - fade in smoothly */
   .hero-animate-profile {
     opacity: 0;
-    animation: fadeIn2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    animation: fadeIn2025 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
     will-change: opacity;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;

@@ -33,7 +33,7 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
           columnGap: '0.5em',
           ...(heroAnimate ? {
             opacity: 0,
-            animation: `fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
+            animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
             willChange: 'opacity, transform',
           } : {}),
           ...style,
