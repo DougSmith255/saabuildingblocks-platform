@@ -694,10 +694,10 @@ main {
     }
   }
 
-  /* Wolf pack background - fade in across entire animation sequence */
+  /* Wolf pack background - linear fade across entire animation sequence */
   .hero-animate-bg {
     opacity: 0;
-    animation: bgZoom2025 3.4s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
+    animation: bgZoom2025 3.4s linear 0s both;
     will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;

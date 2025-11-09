@@ -1,0 +1,119 @@
+{
+  "chromium": {
+    "wolfPack": {
+      "element": "hero-animate-bg",
+      "animation": "3.4s cubic-bezier(0.16, 1, 0.3, 1) 0s 1 normal both running bgZoom2025",
+      "animationName": "bgZoom2025",
+      "animationDuration": "3.4s",
+      "animationDelay": "0s",
+      "animationTimingFunction": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "currentOpacity": "0.876315"
+    },
+    "otherElements": {
+      "h1": {
+        "element": "H1",
+        "animationDuration": "1.2s",
+        "animationDelay": "1s"
+      },
+      "tagline": {
+        "element": "Tagline",
+        "animationDuration": "1.2s",
+        "animationDelay": "1.4s"
+      },
+      "button1": {
+        "element": "Button 1",
+        "animationDuration": "0s",
+        "animationDelay": "0s"
+      },
+      "button2": {
+        "element": "Button 2",
+        "animationDuration": "0s",
+        "animationDelay": "0s"
+      }
+    },
+    "calculations": {
+      "lastButtonDelay": "1.8s",
+      "lastButtonDuration": "1.2s",
+      "totalEndTime": "3s",
+      "expectedWolfPackDuration": "3s"
+    }
+  },
+  "firefox": {
+    "wolfPack": {
+      "element": "hero-animate-bg",
+      "animation": "3.4s cubic-bezier(0.16, 1, 0.3, 1) both bgZoom2025",
+      "animationName": "bgZoom2025",
+      "animationDuration": "3.4s",
+      "animationDelay": "0s",
+      "animationTimingFunction": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "currentOpacity": "0.960236"
+    },
+    "otherElements": {
+      "h1": {
+        "element": "H1",
+        "animationDuration": "1.2s",
+        "animationDelay": "1s"
+      },
+      "tagline": {
+        "element": "Tagline",
+        "animationDuration": "1.2s",
+        "animationDelay": "1.4s"
+      },
+      "button1": {
+        "element": "Button 1",
+        "animationDuration": "0s",
+        "animationDelay": "0s"
+      },
+      "button2": {
+        "element": "Button 2",
+        "animationDuration": "0s",
+        "animationDelay": "0s"
+      }
+    },
+    "calculations": {
+      "lastButtonDelay": "1.8s",
+      "lastButtonDuration": "1.2s",
+      "totalEndTime": "3s",
+      "expectedWolfPackDuration": "3s"
+    }
+  },
+  "webkit": {
+    "wolfPack": {
+      "element": "hero-animate-bg",
+      "animation": "3.4s cubic-bezier(0.16, 1, 0.3, 1) both bgZoom2025",
+      "animationName": "bgZoom2025",
+      "animationDuration": "3.4s",
+      "animationDelay": "0s",
+      "animationTimingFunction": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "currentOpacity": "0.97787"
+    },
+    "otherElements": {
+      "h1": {
+        "element": "H1",
+        "animationDuration": "1.2s",
+        "animationDelay": "1s"
+      },
+      "tagline": {
+        "element": "Tagline",
+        "animationDuration": "1.2s",
+        "animationDelay": "1.4s"
+      },
+      "button1": {
+        "element": "Button 1",
+        "animationDuration": "0s",
+        "animationDelay": "0s"
+      },
+      "button2": {
+        "element": "Button 2",
+        "animationDuration": "0s",
+        "animationDelay": "0s"
+      }
+    },
+    "calculations": {
+      "lastButtonDelay": "1.8s",
+      "lastButtonDuration": "1.2s",
+      "totalEndTime": "3s",
+      "expectedWolfPackDuration": "3s"
+    }
+  }
+}
