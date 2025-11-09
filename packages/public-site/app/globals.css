@@ -643,67 +643,106 @@ main {
     animation: fade-in-up 0.6s ease-out;
   }
 
-  /* Hero Section Fade-In Animations with Staggered Delays */
-  /* All elements start invisible and animate to visible */
+  /* =======================
+     Hero Animation Classes - 2025 Optimized
+     ======================= */
 
-  /* Wolf pack background - fade in immediately (0s delay) */
+  /**
+   * 2025 HYBRID ANIMATION STACK:
+   * - CSS Keyframes for critical above-fold content (GPU-accelerated, instant)
+   * - Modern easing curves: cubic-bezier(0.16, 1, 0.3, 1) - Apple's signature curve
+   * - GPU-optimized: translate3d() instead of translateY()
+   * - Progressive enhancement: will-change only during animation
+   * - Staggered delays: 0.2s, 0.4s, 0.6s, 0.8s, 1.0s for natural cascade
+   * - Longer delays ensure visibility after SSR hydration completes
+   *
+   * Performance Considerations:
+   * - Only animate transform and opacity (60fps on all devices)
+   * - translate3d() forces GPU layer creation
+   * - Uses modern easing for buttery smooth deceleration
+   */
+
+  /* Base animation keyframes - 2025 GPU-optimized */
+  @keyframes fadeInUp2025 {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 30px, 0);  /* GPU-accelerated */
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes fadeIn2025 {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes bgZoom2025 {
+    from {
+      opacity: 0;
+      transform: scale3d(1.05, 1.05, 1);
+    }
+    to {
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
+    }
+  }
+
+  /* Wolf pack background - subtle zoom with modern easing */
   .hero-animate-bg {
     opacity: 0;
-    animation: hero-fade-in 0.6s ease-out forwards;
-    animation-delay: 0s;
-    will-change: opacity;
+    animation: bgZoom2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+    will-change: opacity, transform;
     backface-visibility: hidden;
-    transform: translate3d(0, 0, 0);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Profile image - fade in at 0.2s */
+  /* Profile image - fade in smoothly */
   .hero-animate-profile {
     opacity: 0;
-    animation: hero-fade-in 0.6s ease-out forwards;
-    animation-delay: 0.2s;
+    animation: fadeIn2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
     will-change: opacity;
     backface-visibility: hidden;
-    transform: translate3d(0, 0, 0);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Agent counter - fade in at 0.4s */
+  /* Agent counter - fade in */
   .hero-animate-counter {
     opacity: 0;
-    animation: hero-fade-in 0.6s ease-out forwards;
-    animation-delay: 0.4s;
+    animation: fadeIn2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
     will-change: opacity;
     backface-visibility: hidden;
-    transform: translate3d(0, 0, 0);
     -webkit-font-smoothing: antialiased;
   }
 
-  /* H1 title - fade in at 0.6s with upward movement */
+  /* H1 title - fade in with upward movement and Apple's easing curve */
   .hero-animate-h1 {
     opacity: 0;
-    animation: hero-fade-in-up 0.6s ease-out forwards;
-    animation-delay: 0.6s;
+    animation: fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
     will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Tagline - fade in at 0.8s with upward movement */
+  /* Tagline - fade in with upward movement */
   .hero-animate-tagline {
     opacity: 0;
-    animation: hero-fade-in-up 0.6s ease-out forwards;
-    animation-delay: 0.8s;
+    animation: fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
     will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* CTA buttons - fade in at 1.0s with upward movement */
+  /* CTA buttons - fade in with upward movement */
   .hero-animate-cta {
     opacity: 0;
-    animation: hero-fade-in-up 0.6s ease-out forwards;
-    animation-delay: 1.0s;
+    animation: fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s both;
     will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
@@ -1926,6 +1965,39 @@ article p a:focus-visible,
   .blog-content pre {
     padding: 1rem;
     font-size: 0.8125rem;
+  }
+
+  /* =======================
+     Universal Image Loading - 2025 Hybrid Approach
+     ======================= */
+
+  /**
+   * AUTOMATIC SMOOTH LOADING FOR ALL IMAGES
+   * - Applies to all <img> tags globally
+   * - Hero images can override with heroAnimate prop
+   * - Respects prefers-reduced-motion
+   * - GPU-accelerated fade-in
+   */
+
+  @keyframes imgFadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* Apply to all images by default */
+  img {
+    animation: imgFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Respect user motion preferences */
+  @media (prefers-reduced-motion: reduce) {
+    img {
+      animation: none;
+    }
   }
 
   .blog-content table {

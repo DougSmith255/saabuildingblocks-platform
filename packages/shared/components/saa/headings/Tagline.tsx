@@ -6,6 +6,8 @@ export interface TaglineProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  heroAnimate?: boolean;
+  animationDelay?: string;
 }
 
 // Map specific characters to alternate glyphs (same as H2)
@@ -36,7 +38,9 @@ const ALT_GLYPHS: Record<string, string> = {
 export default function Tagline({
   children,
   className = '',
-  style = {}
+  style = {},
+  heroAnimate = false,
+  animationDelay = '0.8s'
 }: TaglineProps) {
   // Convert children to string and split into words
   const text = React.Children.toArray(children).join('');
@@ -58,7 +62,7 @@ export default function Tagline({
 
   return (
     <p
-      className={`text-tagline ${className}`}
+      className={`text-tagline ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
       style={{
         display: 'flex',
         gap: '0.5em',
@@ -67,10 +71,27 @@ export default function Tagline({
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
         position: 'relative',
+        ...(heroAnimate ? {
+          opacity: 0,
+          animation: `fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
+          willChange: 'opacity, transform',
+        } : {}),
         ...style
       }}
     >
       <style jsx>{`
+        /* 2025 Hero Entrance Animation */
+        @keyframes fadeInUp2025 {
+          from {
+            opacity: 0;
+            transform: translate3d(0, 30px, 0) rotateX(15deg);
+          }
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) rotateX(15deg);
+          }
+        }
+
         .tagline-char {
           display: inline-block;
           color: #bfbdb0;

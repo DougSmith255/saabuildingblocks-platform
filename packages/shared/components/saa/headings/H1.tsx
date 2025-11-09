@@ -7,9 +7,11 @@ export interface HeadingProps {
   className?: string;
   style?: React.CSSProperties;
   id?: string;
+  heroAnimate?: boolean;
+  animationDelay?: string;
 }
 
-export default function H1({ children, className = '', style = {}, id }: HeadingProps) {
+export default function H1({ children, className = '', style = {}, id, heroAnimate = false, animationDelay = '0.6s' }: HeadingProps) {
   // Convert children to string for processing
   const text = typeof children === 'string' ? children : String(children);
 
@@ -20,7 +22,7 @@ export default function H1({ children, className = '', style = {}, id }: Heading
     <>
       <h1
         id={id}
-        className={`text-h1 text-display ${className}`}
+        className={`text-h1 text-display ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
         style={{
           transformStyle: 'preserve-3d',
           transform: 'rotateX(15deg)',
@@ -29,6 +31,11 @@ export default function H1({ children, className = '', style = {}, id }: Heading
           justifyContent: 'center',
           rowGap: 0,
           columnGap: '0.5em',
+          ...(heroAnimate ? {
+            opacity: 0,
+            animation: `fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
+            willChange: 'opacity, transform',
+          } : {}),
           ...style,
         }}
       >
@@ -65,6 +72,19 @@ export default function H1({ children, className = '', style = {}, id }: Heading
 
       {/* CSS Animations - 3D Neon Sign Effect with Dimming (not harsh flicker) */}
       <style jsx>{`
+        /* 2025 Hero Entrance Animation */
+        @keyframes fadeInUp2025 {
+          from {
+            opacity: 0;
+            transform: translate3d(0, 30px, 0) rotateX(15deg);
+          }
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) rotateX(15deg);
+          }
+        }
+
+
         /* IMPROVED Dimming effect - brightness reduces but glow persists */
         @keyframes neonFlicker1 {
           0%, 19.9%, 22%, 62.9%, 64%, 64.9%, 70%, 100% {

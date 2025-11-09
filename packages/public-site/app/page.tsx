@@ -84,25 +84,21 @@ export default function Home() {
         <DynamicH1Container>
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
-            {/* H1: Using Master Controller H1 component */}
-            <div className="hero-animate-h1">
-              <H1 id="hero-heading">
-                SMART AGENT ALLIANCE
-              </H1>
-            </div>
-            <div className="hero-animate-tagline">
-              <Tagline className="hero-tagline-mobile-spacing">
-                For Agents Who Want More
-              </Tagline>
-            </div>
+            {/* H1: Using Master Controller H1 component with hero animation */}
+            <H1 id="hero-heading" heroAnimate animationDelay="0.6s">
+              SMART AGENT ALLIANCE
+            </H1>
+            <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.8s">
+              For Agents Who Want More
+            </Tagline>
           </div>
 
           {/* CTA Button Group */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center hero-animate-cta">
-            <CTAButton href="/join-exp-sponsor-team/">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.0s">
               JOIN THE ALLIANCE
             </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
+            <CTAButton href="/exp-realty-sponsor/" heroAnimate animationDelay="1.2s">
               LEARN MORE
             </CTAButton>
           </div>

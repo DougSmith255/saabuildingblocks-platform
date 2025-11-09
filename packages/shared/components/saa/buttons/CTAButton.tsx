@@ -9,16 +9,18 @@ export interface CTAButtonProps {
   children: React.ReactNode;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  heroAnimate?: boolean;
+  animationDelay?: string;
 }
 
-export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
+export function CTAButton({ href = '#', children, className = '', onClick, heroAnimate = false, animationDelay: heroAnimationDelay = '1.0s' }: CTAButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
-  const [animationDelay, setAnimationDelay] = useState('0s');
+  const [lightPulseDelay, setLightPulseDelay] = useState('0s');
 
   useEffect(() => {
-    const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds
-    setAnimationDelay(`${randomDelay.toFixed(2)}s`);
+    const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds for light pulse
+    setLightPulseDelay(`${randomDelay.toFixed(2)}s`);
   }, []);
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
@@ -43,12 +45,20 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   };
 
   return (
-    <div className={`
-      ${className}
-      group
-      relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
-      !my-[10px]
-    `}>
+    <div
+      className={`
+        ${className}
+        group
+        relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
+        !my-[10px]
+        ${heroAnimate ? 'hero-entrance-animate' : ''}
+      `}
+      style={heroAnimate ? {
+        opacity: 0,
+        animation: `fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
+        willChange: 'opacity, transform',
+      } : {}}
+    >
       <a
         href={href}
         onClick={handleClick}
@@ -84,7 +94,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
           animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
-          animationDelay: isClicked ? '0s' : animationDelay,
+          animationDelay: isClicked ? '0s' : lightPulseDelay,
           transition: 'all 0.3s ease-in-out',
         }}
       />
@@ -98,12 +108,25 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
           animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
-          animationDelay: isClicked ? '0s' : animationDelay,
+          animationDelay: isClicked ? '0s' : lightPulseDelay,
           transition: 'all 0.3s ease-in-out',
         }}
       />
 
       <style jsx>{`
+        /* 2025 Hero Entrance Animation */
+        @keyframes fadeInUp2025 {
+          from {
+            opacity: 0;
+            transform: translate3d(0, 30px, 0);
+          }
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+          }
+        }
+
+
         @keyframes lightPulse {
           0%, 100% {
             opacity: 1;
