@@ -1,6 +1,7 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { HomepageClient } from './components/HomepageClient';
 import { DynamicH1Container } from './components/DynamicH1Container';
+import { ImageAnimationStyles } from './components/ImageAnimationStyles';
 
 /**
  * Homepage - Server Component with Static Content
@@ -105,6 +106,9 @@ export default function Home() {
             </CTAButton>
           </div>
         </DynamicH1Container>
+
+        {/* Image fade-in animation keyframes - Client component */}
+        <ImageAnimationStyles />
       </section>
     </main>
   );
