@@ -1,7 +1,7 @@
-/* Tailwind CSS - Standard Configuration */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind CSS v4 - CSS-First Configuration */
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
 
 /* Force SlotCounter to use Taskor font */
 .agent-counter-wrapper,
