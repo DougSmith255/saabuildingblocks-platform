@@ -28,9 +28,8 @@ export function HomepageClient() {
     const calculateH1Position = () => {
       const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
       if (profileImg) {
-        const imgRect = profileImg.getBoundingClientRect();
-        const imgTop = imgRect.top;
-        const imgHeight = imgRect.height;
+        // Use offsetHeight for the image height (not affected by scroll)
+        const imgHeight = profileImg.offsetHeight;
 
         // Calculate responsive percentage based on viewport width
         // Larger screens need smaller percentage to keep H1 at same visual position
@@ -44,9 +43,10 @@ export function HomepageClient() {
           percentage = Math.max(0.15, percentage); // Don't go below 15%
         }
 
-        // Position H1 using calculated percentage, then move up by 15vh
+        // Calculate position based on image size and viewport, not scroll position
+        // Use percentage of image height minus viewport offset
         const viewportHeight = window.innerHeight;
-        const targetTop = imgTop + (imgHeight * percentage) - (viewportHeight * 0.15);
+        const targetTop = (imgHeight * percentage) - (viewportHeight * 0.15);
         setH1MarginTop(`${targetTop}px`);
       }
     };
