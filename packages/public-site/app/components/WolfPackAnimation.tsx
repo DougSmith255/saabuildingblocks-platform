@@ -23,10 +23,8 @@ export function WolfPackAnimation() {
       }
     };
 
-    // Trigger after a tiny delay to ensure page is painted
-    requestAnimationFrame(() => {
-      setTimeout(triggerAnimations, 50);
-    });
+    // Trigger immediately - no delay
+    triggerAnimations();
   }, []);
 
   return null;
