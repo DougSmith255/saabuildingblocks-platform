@@ -712,7 +712,7 @@ main {
 
   /* Animation class added by JS after page is ready */
   .profile-image.animate-in {
-    animation: imgFadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
+    animation: imgFadeIn 4s cubic-bezier(0.16, 1, 0.3, 1) 0s both;
   }
 
   /* Profile image wrapper - fade in smoothly */
