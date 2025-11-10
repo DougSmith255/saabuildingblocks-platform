@@ -24,10 +24,10 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
     // Update immediately
     updatePosition();
 
-    // Update on resize (the HomepageClient will update the data attribute)
-    const interval = setInterval(updatePosition, 100);
+    // Update only on resize, not constantly
+    window.addEventListener('resize', updatePosition);
 
-    return () => clearInterval(interval);
+    return () => window.removeEventListener('resize', updatePosition);
   }, []);
 
   return (
