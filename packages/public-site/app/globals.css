@@ -705,7 +705,17 @@ main {
     animation: bgZoom2025 3s linear 0s both;
   }
 
-  /* Profile image - fade in smoothly */
+  /* Profile image - starts hidden, animation triggered by JS when ready */
+  .profile-image {
+    opacity: 0;
+  }
+
+  /* Animation class added by JS after page is ready */
+  .profile-image.animate-in {
+    animation: imgFadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  }
+
+  /* Profile image wrapper - fade in smoothly */
   .hero-animate-profile {
     opacity: 0;
     animation: fadeIn2025 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
