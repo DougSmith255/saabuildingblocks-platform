@@ -18,7 +18,7 @@ export default function Home() {
       >
         {/* Wolf Pack Background Image - furthest back layer */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
-          <div className="relative w-full h-full">
+          <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
               className="absolute inset-0 hero-animate-bg"
               style={{
@@ -35,7 +35,7 @@ export default function Home() {
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
-          <div className="relative w-[64vw] h-[84vh]">
+          <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
               className="absolute top-[8vh] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
@@ -50,10 +50,8 @@ export default function Home() {
             <img
               src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
-              className="profile-image absolute top-[8vh] left-1/2 -translate-x-1/2 w-full h-auto object-contain"
+              className="profile-image absolute top-[8vh] left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
-                maxHeight: '100%',
-                aspectRatio: 'auto',
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 transformStyle: 'preserve-3d',
@@ -66,7 +64,7 @@ export default function Home() {
 
         {/* Spaceman Background Image */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-0">
-          <div className="relative w-[85vw] h-[80vh]">
+          <div className="relative w-full max-w-[1200px] h-[80vh]">
             <div
               className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full"
               style={{
