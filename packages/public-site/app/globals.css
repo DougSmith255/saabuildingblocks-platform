@@ -2001,7 +2001,7 @@ article p a:focus-visible,
   }
 
   /* Apply to all images by default - slower and more noticeable */
-  img {
+  img:not(.profile-image) {
     opacity: 0;
     animation: imgFadeIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
   }
