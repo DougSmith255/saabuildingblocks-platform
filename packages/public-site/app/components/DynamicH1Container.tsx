@@ -44,9 +44,9 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
 
   return (
     <div
-      className="relative z-10 w-[clamp(95%,calc(95%+(80%-95%)*((100vw-300px)/1750)),80%)] mx-auto space-y-8"
+      className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
       style={{
-        transform: `translateY(${translateY})`,
+        top: translateY,
         willChange: 'transform',
       }}
     >

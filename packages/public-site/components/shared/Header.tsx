@@ -384,13 +384,14 @@ export default function Header() {
         {/* Mobile Menu Toggle - Absolute when closed, fixed when menu open - Hidden on 404 */}
         {!is404Page && (
         <button
-          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'fixed' : 'absolute'} ${isMobileMenuOpen ? 'menu-open' : ''}`}
+          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center absolute ${isMobileMenuOpen ? 'menu-open !fixed' : ''}`}
           style={{
             width: '60px',
             height: '60px',
             top: isMobileMenuOpen ? '15px' : '50%',
             transform: isMobileMenuOpen ? 'none' : 'translateY(-50%)',
             right: '15px',
+            willChange: 'transform',
           }}
           onClick={toggleMobileMenu}
           aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}

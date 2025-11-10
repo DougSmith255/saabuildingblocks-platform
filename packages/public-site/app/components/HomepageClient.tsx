@@ -28,47 +28,19 @@ export function HomepageClient() {
     const calculateH1Position = () => {
       const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
       if (profileImg) {
-        const imgHeight = profileImg.offsetHeight;
-        const imgTop = profileImg.offsetTop;
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
 
-        // Mobile: 15% overlap + ensure content fits above fold
-        if (viewportWidth < 768) {
-          const overlapPercentage = 0.15;
-          const profileBottom = imgTop + imgHeight;
-          const h1Top = profileBottom - (imgHeight * overlapPercentage);
+        // Get bounding rect for accurate viewport-relative positioning
+        const rect = profileImg.getBoundingClientRect();
+        const imgTop = rect.top;
+        const imgHeight = rect.height;
+        const imgBottom = rect.bottom;
 
-          // Ensure all content (H1 + tagline + buttons) fits above fold
-          const contentHeight = 300; // Conservative estimate
-          const maxTop = viewportHeight - contentHeight - 30;
+        // Lock H1 at exactly 25% overlap with profile image (75% down the profile)
+        const finalPosition = imgTop + (imgHeight * 0.75);
 
-          setH1MarginTop(`${Math.min(h1Top, maxTop)}px`);
-          return;
-        }
-
-        // Desktop: 10-25% overlap based on viewport width
-        let overlapPercentage = 0.15; // Default 15% overlap
-
-        if (viewportWidth > 1800) {
-          overlapPercentage = 0.10; // Wider screens: 10% overlap
-        } else if (viewportWidth < 1400) {
-          overlapPercentage = 0.25; // Narrower screens: 25% overlap
-        } else {
-          // Scale linearly between 1400-1800px
-          const scaleFactor = (viewportWidth - 1400) / 400; // 0 to 1
-          overlapPercentage = 0.25 - (scaleFactor * 0.15); // 25% to 10%
-        }
-
-        // Calculate H1 position to achieve desired overlap
-        const profileBottom = imgTop + imgHeight;
-        const h1Top = profileBottom - (imgHeight * overlapPercentage);
-
-        // Ensure buttons stay 30px above fold
-        const contentHeight = 300; // H1 + spacing + tagline + spacing + buttons
-        const maxTop = viewportHeight - contentHeight - 30;
-
-        setH1MarginTop(`${Math.min(h1Top, maxTop)}px`);
+        setH1MarginTop(`${finalPosition}px`);
       }
     };
 
