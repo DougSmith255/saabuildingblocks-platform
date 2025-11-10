@@ -3,6 +3,7 @@ import { HomepageClient } from './components/HomepageClient';
 import { DynamicH1Container } from './components/DynamicH1Container';
 import { ImageAnimationStyles } from './components/ImageAnimationStyles';
 import { WolfPackAnimation } from './components/WolfPackAnimation';
+import { MobileDebugOverlay } from './components/MobileDebugOverlay';
 
 /**
  * Homepage - Server Component with Static Content
@@ -108,6 +109,9 @@ export default function Home() {
         {/* Image fade-in animation keyframes - Client component */}
         <ImageAnimationStyles />
       </section>
+
+      {/* Mobile Debug Overlay - Press and hold 2s to toggle */}
+      <MobileDebugOverlay />
     </main>
   );
 }
