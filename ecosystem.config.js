@@ -1,15 +1,15 @@
 module.exports = {
   apps: [{
     name: 'nextjs-saa',
-    script: 'npm',
-    args: 'start -- -p 3002 -H 127.0.0.1',
-    cwd: '/home/claude-flow/packages/admin-dashboard',
+    script: 'npx',
+    args: 'serve@latest out -l 3001',
+    cwd: '/home/claude-flow/packages/public-site',
     instances: 1,
     exec_mode: 'fork',
     autorestart: true,
     watch: false,
     max_memory_restart: '2G',
-    env_file: '/home/claude-flow/packages/admin-dashboard/.env.local',
+    env_file: '/home/claude-flow/packages/public-site/.env.local',
     env: {
       NODE_ENV: 'production',
       PORT: 3001,
