@@ -49,5 +49,5 @@
 
 .starfieldCanvas[width] {
   opacity: 1;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 1.5s ease-in-out;
 }

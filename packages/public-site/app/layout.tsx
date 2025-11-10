@@ -54,7 +54,7 @@ ${masterControllerCSS}
 const taskor = localFont({
   src: '../public/fonts/taskor-regular-webfont.woff2',
   variable: '--font-taskor',
-  display: 'swap',
+  display: 'block',
   preload: true,
   weight: '400',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],

@@ -702,7 +702,7 @@ main {
 
   /* Animation class added by JS after page is ready */
   .hero-animate-bg.animate-in {
-    animation: bgZoom2025 3s linear 0s both;
+    animation: bgZoom2025 3s linear 0.3s both;
   }
 
   /* Profile image - starts hidden, animation triggered by JS when ready */
