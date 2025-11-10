@@ -42,12 +42,18 @@
   }
 }
 
-/* Prevent flash during load */
+/* Prevent flash during load - keep hidden until ready */
 .starfieldCanvas:not([width]) {
   opacity: 0;
 }
 
+/* Keep hidden even after width is set - wait for ready class */
 .starfieldCanvas[width] {
+  opacity: 0;
+}
+
+/* Only fade in when explicitly marked ready */
+.starfieldCanvas.stars-ready {
   opacity: 1;
   transition: opacity 1.5s ease-in-out;
 }

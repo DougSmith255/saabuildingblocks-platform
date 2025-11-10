@@ -231,6 +231,13 @@ export default function StarBackground() {
     // Initial setup
     resizeCanvas();
     debugLog('🚀 Starting animation loop');
+
+    // Mark canvas as ready after stars are created
+    requestAnimationFrame(() => {
+      canvas.classList.add('stars-ready');
+      debugLog('⭐ Stars ready, triggering fade-in');
+    });
+
     animate(canvas, ctx);
 
     // Setup resize listeners
