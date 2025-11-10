@@ -122,3 +122,32 @@ p a {
 #master-controller-vars {
   /* CSS variables injected here by Master Controller */
 }
+
+/* Critical Responsive Breakpoints - Prevents FOUC on navigation */
+/* xlg breakpoint: 1400px - Controls desktop nav vs mobile burger menu */
+@media (min-width: 1400px) {
+  .xlg\:hidden {
+    display: none !important;
+  }
+
+  .xlg\:flex {
+    display: flex !important;
+  }
+
+  .xlg\:block {
+    display: block !important;
+  }
+
+  .xlg\:left-auto {
+    left: auto !important;
+  }
+
+  .xlg\:translate-x-0 {
+    --tw-translate-x: 0 !important;
+    transform: translate(var(--tw-translate-x, 0), var(--tw-translate-y, 0)) !important;
+  }
+
+  .xlg\:right-8 {
+    right: 2rem !important;
+  }
+}

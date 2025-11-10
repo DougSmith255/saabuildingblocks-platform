@@ -2082,7 +2082,8 @@ html body .counter-text {
 
 .hero-3d-image {
   transform-style: flat;
-  transform: none;
+  transform: translate3d(0, 0, 0); /* Create rendering layer for animations on all screen sizes */
+  will-change: opacity; /* Hint browser to optimize for opacity changes */
 }
 
 @media (min-width: 768px) {
