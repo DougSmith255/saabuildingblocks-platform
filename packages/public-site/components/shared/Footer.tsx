@@ -18,7 +18,7 @@ const socialIcons: SocialIcon[] = [
   },
   {
     name: 'Webinar',
-    href: 'https://saabuildingblocks.com/join-exp-sponsor-team/webinar-registration/',
+    href: '/join-exp-sponsor-team/webinar-registration/',
     icon: "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2724%27 viewBox=%27-3 -3 30 30%27%3E%3Cg fill=%27none%27%3E%3Cpath fill=%27%2366e1ff%27 d=%27M3.984 3.04A1.886 1.886 0 0 1 5.87 1.155h12.26a1.886 1.886 0 0 1 1.886 1.887v7.544a1.887 1.887 0 0 1-1.886 1.886H5.87a1.886 1.886 0 0 1-1.886-1.886z%27/%3E%3Cpath fill=%27%23c2f3ff%27 d=%27M5.87 1.154a1.886 1.886 0 0 0-1.886 1.887v7.544a1.88 1.88 0 0 0 1.037 1.678L16.137 1.154z%27/%3E%3Cpath stroke=%27%23191919%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 d=%27M3.984 3.04A1.886 1.886 0 0 1 5.87 1.155h12.26a1.886 1.886 0 0 1 1.886 1.887v7.544a1.887 1.887 0 0 1-1.886 1.886H5.87a1.886 1.886 0 0 1-1.886-1.886z%27 stroke-width=%271%27/%3E%3Cpath fill=%27%23fff%27 d=%27M16.432 10.609c-.365-.566-1.573-.971-3.087-1.532c-.427-.159-.357-1.274-.168-1.482a3.15 3.15 0 0 0 .82-2.444a2.003 2.003 0 1 0-4 0a3.15 3.15 0 0 0 .821 2.444c.189.208.26 1.32-.168 1.482c-1.509.566-2.718.969-3.083 1.532%27/%3E%3Cpath stroke=%27%23191919%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 d=%27M16.432 10.609c-.365-.566-1.573-.971-3.087-1.532c-.427-.159-.357-1.274-.168-1.482a3.15 3.15 0 0 0 .82-2.444a2.003 2.003 0 1 0-4 0a3.15 3.15 0 0 0 .821 2.444c.189.208.26 1.32-.168 1.482c-1.509.566-2.718.969-3.083 1.532%27 stroke-width=%271%27/%3E%3Cpath fill=%27%23ffdda1%27 d=%27M16.244 22.846a3.75 3.75 0 0 0-.37-1.497c-.26-.52-1.346-.882-2.71-1.387c-.37-.136-.309-.997-.146-1.177a2.72 2.72 0 0 0 .709-2.111a1.73 1.73 0 1 0-3.454 0a2.72 2.72 0 0 0 .708 2.11c.163.18.225 1.038-.145 1.178c-1.365.505-2.452.866-2.711 1.387a3.8 3.8 0 0 0-.37 1.497%27/%3E%3Cpath stroke=%27%23191919%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 d=%27M16.244 22.846a3.75 3.75 0 0 0-.37-1.497c-.26-.52-1.346-.882-2.71-1.387c-.37-.136-.309-.997-.146-1.177a2.72 2.72 0 0 0 .709-2.111a1.73 1.73 0 1 0-3.454 0a2.72 2.72 0 0 0 .708 2.11c.163.18.225 1.038-.145 1.178c-1.365.505-2.452.866-2.711 1.387a3.8 3.8 0 0 0-.37 1.497%27/%3E%3Cpath fill=%27%23ffdda1%27 d=%27M22.845 20.408c-.358-.14-.762-.283-1.194-.447c-.37-.135-.308-.996-.145-1.176a2.72 2.72 0 0 0 .708-2.111a1.73 1.73 0 1 0-3.453 0a2.72 2.72 0 0 0 .708 2.11c.163.18.224 1.038-.145 1.177c-1.365.506-2.452.867-2.712 1.388c-.225.468-.35.977-.368 1.496h5.47c1.219-.064 1.508-.957 1.131-2.437%27/%3E%3Cpath stroke=%27%23191919%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 d=%27M22.845 20.408c-.358-.14-.762-.283-1.194-.447c-.37-.135-.308-.996-.145-1.176a2.72 2.72 0 0 0 .708-2.111a1.73 1.73 0 1 0-3.453 0a2.72 2.72 0 0 0 .708 2.11c.163.18.224 1.038-.145 1.177c-1.365.506-2.452.867-2.712 1.388c-.225.468-.35.977-.368 1.496%27 stroke-width=%271%27/%3E%3Cpath fill=%27%23ffdda1%27 d=%27M1.155 20.408c.358-.14.762-.283 1.194-.447c.37-.135.308-.996.145-1.176a2.72 2.72 0 0 1-.709-2.111a1.73 1.73 0 1 1 3.454 0a2.72 2.72 0 0 1-.708 2.11c-.163.18-.225 1.038.145 1.177c1.365.506 2.452.867 2.711 1.388c.226.468.351.978.37 1.496h-5.47c-1.22-.064-1.51-.957-1.132-2.437%27/%3E%3Cpath stroke=%27%23191919%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 d=%27M1.155 20.408c.358-.14.762-.283 1.194-.447c.37-.135.308-.996.145-1.176a2.72 2.72 0 0 1-.708-2.111a1.73 1.73 0 1 1 3.453 0a2.72 2.72 0 0 1-.708 2.11c-.163.18-.224 1.038.145 1.177c1.365.506 2.452.867 2.712 1.388c.225.468.35.978.368 1.496%27 stroke-width=%271%27/%3E%3C/g%3E%3C/svg%3E')",
     label: 'Webinar'
   },
@@ -36,7 +36,7 @@ const socialIcons: SocialIcon[] = [
   },
   {
     name: 'Book a Call',
-    href: 'https://saabuildingblocks.com/join-exp-sponsor-team/book-a-call/',
+    href: '/join-exp-sponsor-team/book-a-call/',
     icon: "url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271em%27 height=%271em%27 viewBox=%270 0 48 48%27%3E%3Cpath fill=%27%23CFD8DC%27 d=%27M5 38V14h38v24c0 2.2-1.8 4-4 4H9c-2.2 0-4-1.8-4-4%27/%3E%3Cpath fill=%27%23F44336%27 d=%27M43 10v6H5v-6c0-2.2 1.8-4 4-4h30c2.2 0 4 1.8 4 4%27/%3E%3Cg fill=%27%23B71C1C%27%3E%3Ccircle cx=%2733%27 cy=%2710%27 r=%273%27/%3E%3Ccircle cx=%2715%27 cy=%2710%27 r=%273%27/%3E%3C/g%3E%3Cpath fill=%27%23B0BEC5%27 d=%27M33 3c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2M15 3c-1.1 0-2 .9-2 2v5c0 1.1.9 2 2 2s2-.9 2-2V5c0-1.1-.9-2-2-2%27/%3E%3Cpath fill=%27%2390A4AE%27 d=%27M13 20h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm-18 6h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm-18 6h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4zm6 0h4v4h-4z%27/%3E%3C/svg%3E')",
     label: 'Book a Call'
   }
@@ -133,7 +133,7 @@ export default function Footer() {
       <div className="footer-container">
         {/* Logo Section */}
         <div className="footer-logo">
-          <a href="https://saabuildingblocks.com/" className="footer-logo-container" aria-label="Smart Agent Alliance Home">
+          <a href="/" className="footer-logo-container" aria-label="Smart Agent Alliance Home">
             <svg width="120px" height="45px" viewBox="0 0 201.96256 75.736626" version="1.1" className="footer-logo-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="presentation">
               <defs>
                 <linearGradient id="footerLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -176,9 +176,9 @@ export default function Footer() {
         {/* Footer Bottom */}
         <div className="footer-bottom">
           <div className="footer-nav-links">
-            <a href="https://saabuildingblocks.com/privacy-policy/" className="footer-nav-link">Privacy Policy</a>
-            <a href="https://saabuildingblocks.com/disclaimer/" className="footer-nav-link">Disclaimer</a>
-            <a href="https://saabuildingblocks.com/terms-of-use/" className="footer-nav-link">Terms of Use</a>
+            <a href="/privacy-policy/" className="footer-nav-link">Privacy Policy</a>
+            <a href="/disclaimer/" className="footer-nav-link">Disclaimer</a>
+            <a href="/terms-of-use/" className="footer-nav-link">Terms of Use</a>
           </div>
           <div className="footer-copyright">
             Copyright © {new Date().getFullYear()} – SmartAgentAlliance.com

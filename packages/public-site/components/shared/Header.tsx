@@ -14,7 +14,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { label: 'Home', href: 'https://saabuildingblocks.pages.dev/' },
+  { label: 'Home', href: '/' },
   { label: 'About eXp', href: '/about-exp-realty/' },
   {
     label: 'Our Team',
@@ -214,7 +214,7 @@ export default function Header() {
             {/* Logo - Hidden on 404 */}
             {!is404Page && (
             <Link
-              href="https://saabuildingblocks.pages.dev/"
+              href="/"
               className="logo-container"
               aria-label="Smart Agent Alliance Home"
               style={{
