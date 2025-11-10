@@ -24,10 +24,22 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
     // Update immediately
     updatePosition();
 
-    // Update only on resize, not constantly
+    // Watch for changes to the data attribute
+    const dataElement = document.getElementById('h1-position-data');
+    let observer: MutationObserver | null = null;
+
+    if (dataElement) {
+      observer = new MutationObserver(updatePosition);
+      observer.observe(dataElement, { attributes: true, attributeFilter: ['data-margin-top'] });
+    }
+
+    // Also update on resize
     window.addEventListener('resize', updatePosition);
 
-    return () => window.removeEventListener('resize', updatePosition);
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener('resize', updatePosition);
+    };
   }, []);
 
   return (
