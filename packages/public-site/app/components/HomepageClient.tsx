@@ -25,17 +25,19 @@ export function HomepageClient() {
     }, 5000);
 
     // Calculate H1 position to overlap 10-25% of profile image bottom
+    let resizeTimeout: NodeJS.Timeout | null = null;
+    let rafId: number | null = null;
+
     const calculateH1Position = () => {
       const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
       if (profileImg) {
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
+        // Use visualViewport for accurate mobile viewport dimensions
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
 
         // Get bounding rect for accurate viewport-relative positioning
         const rect = profileImg.getBoundingClientRect();
         const imgTop = rect.top;
         const imgHeight = rect.height;
-        const imgBottom = rect.bottom;
 
         // Lock H1 at exactly 25% overlap with profile image (75% down the profile)
         const finalPosition = imgTop + (imgHeight * 0.75);
@@ -44,16 +46,30 @@ export function HomepageClient() {
       }
     };
 
-    // Calculate on mount and resize
+    // Debounced resize handler with RAF batching (prevents mobile scroll jank)
+    const debouncedCalculate = () => {
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      if (rafId) cancelAnimationFrame(rafId);
+
+      resizeTimeout = setTimeout(() => {
+        rafId = requestAnimationFrame(() => {
+          calculateH1Position();
+        });
+      }, 150); // 150ms debounce for mobile browser chrome changes
+    };
+
+    // Calculate on mount and load
     calculateH1Position();
-    window.addEventListener('resize', calculateH1Position);
+    window.addEventListener('resize', debouncedCalculate);
     window.addEventListener('load', calculateH1Position);
 
     return () => {
       clearTimeout(startDelay);
       clearInterval(interval);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
+      if (rafId) cancelAnimationFrame(rafId);
       if (animationRef.current) cancelAnimationFrame(animationRef.current as unknown as number);
-      window.removeEventListener('resize', calculateH1Position);
+      window.removeEventListener('resize', debouncedCalculate);
       window.removeEventListener('load', calculateH1Position);
     };
   }, []);
