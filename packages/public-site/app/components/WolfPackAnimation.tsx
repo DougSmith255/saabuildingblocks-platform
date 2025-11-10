@@ -16,10 +16,17 @@ export function WolfPackAnimation() {
         wolfPack.classList.add('animate-in');
       }
 
-      // Trigger profile image fade
+      // Trigger profile image fade with delay to ensure user sees full animation
       const profileImg = document.querySelector('.profile-image');
       if (profileImg) {
-        profileImg.classList.add('animate-in');
+        // Use requestAnimationFrame twice to ensure paint has happened
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              profileImg.classList.add('animate-in');
+            }, 200); // Additional 200ms delay after paint
+          });
+        });
       }
     };
 
