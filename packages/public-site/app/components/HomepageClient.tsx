@@ -31,6 +31,12 @@ export function HomepageClient() {
     const calculateH1Position = () => {
       const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
       if (profileImg) {
+        // CRITICAL: Only calculate when scrollY is 0 to get consistent positioning
+        // Otherwise getBoundingClientRect() gives viewport-relative position which changes during scroll
+        if (window.scrollY !== 0) {
+          return; // Don't recalculate during scroll
+        }
+
         // Use visualViewport for accurate mobile viewport dimensions
         const viewportHeight = window.visualViewport?.height || window.innerHeight;
 
