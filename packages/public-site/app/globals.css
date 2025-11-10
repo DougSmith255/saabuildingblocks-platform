@@ -696,7 +696,6 @@ main {
   .hero-animate-bg {
     opacity: 0;
     visibility: hidden;
-    will-change: opacity, visibility;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -721,7 +720,6 @@ main {
   .hero-animate-profile {
     opacity: 0;
     animation: fadeIn2025 2s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
-    will-change: opacity;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -730,7 +728,6 @@ main {
   .hero-animate-counter {
     opacity: 0;
     animation: fadeIn2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
-    will-change: opacity;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -739,7 +736,6 @@ main {
   .hero-animate-h1 {
     opacity: 0;
     animation: fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
-    will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -748,7 +744,6 @@ main {
   .hero-animate-tagline {
     opacity: 0;
     animation: fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
-    will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -757,7 +752,6 @@ main {
   .hero-animate-cta {
     opacity: 0;
     animation: fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s both;
-    will-change: opacity, transform;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
@@ -796,7 +790,6 @@ main {
   .blog-card-animate {
     opacity: 0;
     animation: blog-card-fade-in 0.4s ease-out forwards;
-    will-change: opacity, transform;
   }
 
   /* Staggered animation delays for up to 12 cards */
@@ -816,6 +809,9 @@ main {
   /* Blog Card Hover Effects - GPU Accelerated */
   .blog-card-hover {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .blog-card-hover:hover {
     will-change: transform;
   }
 
@@ -830,6 +826,9 @@ main {
   /* Blog card image scale on hover */
   .blog-card-image-hover {
     transition: transform 0.2s ease-in-out;
+  }
+
+  .blog-card-hover:hover .blog-card-image-hover {
     will-change: transform;
   }
 
@@ -840,6 +839,9 @@ main {
   /* Featured Post Enhanced Hover */
   .featured-post-hover {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .featured-post-hover:hover {
     will-change: transform;
   }
 
@@ -855,7 +857,10 @@ main {
   /* Filter Chip Animation */
   .filter-chip {
     transition: all 0.3s ease;
-    will-change: background-color, color, box-shadow, transform;
+  }
+
+  .filter-chip:hover {
+    will-change: background-color, transform;
   }
 
   .filter-chip:hover {
@@ -886,6 +891,10 @@ main {
   /* Search Bar Focus Effect with Neon Green Glow */
   .search-bar-focus {
     transition: all 0.3s ease;
+  }
+
+  .search-bar-focus:focus,
+  .search-bar-focus:focus-within {
     will-change: box-shadow, border-color;
   }
 
@@ -926,6 +935,9 @@ main {
   /* Tag Hover Animation */
   .tag-hover {
     transition: all 0.2s ease-in-out;
+  }
+
+  .tag-hover:hover {
     will-change: background-color, transform;
   }
 
@@ -938,6 +950,9 @@ main {
   /* Pagination Button Hover */
   .pagination-button {
     transition: all 0.2s ease-in-out;
+  }
+
+  .pagination-button:hover:not(:disabled) {
     will-change: background-color, transform, box-shadow;
   }
 
@@ -1002,6 +1017,9 @@ main {
   /* Category Badge Pulse on Hover */
   .category-badge-hover {
     transition: all 0.2s ease-in-out;
+  }
+
+  .category-badge-hover:hover {
     will-change: transform, box-shadow;
   }
 

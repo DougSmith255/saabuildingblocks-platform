@@ -44,14 +44,19 @@ export default function StarBackground() {
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastAnimationTimeRef = useRef<number>(0);
   const animationErrorsRef = useRef<number>(0);
+  const frameSkipCounterRef = useRef<number>(0);
+  const isMobileRef = useRef<boolean>(false);
+  const isLowPerformanceRef = useRef<boolean>(false);
 
   // Configuration constants
   const LAYER_COUNT = 3;
   const SPEEDS = [0.08, 0.15, 0.25]; // Slower parallax speeds to match WordPress
   const BASE_STAR_COUNT = typeof window !== 'undefined' &&
     (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
-    ? 12 // 10% more than 11 (rounded)
+    ? 8 // Reduced from 12 for mobile performance
     : 21; // 10% more than 19 (rounded)
+  const MOBILE_FRAME_SKIP = 2; // Skip every other frame on mobile
+  const LOW_PERF_FRAME_SKIP = 3; // Skip 2 out of 3 frames on low-performance devices
 
   // Create stars for all layers
   const createStars = useCallback((canvas: HTMLCanvasElement) => {
@@ -107,36 +112,67 @@ export default function StarBackground() {
     });
   }, []);
 
-  // Draw stars on canvas
+  // Draw stars on canvas with batch rendering optimization
   const drawStars = useCallback((canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     // Clear canvas completely (transparent background - gradient is on body element)
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw all stars with white color and varying opacity
+    // Batch drawing by opacity for better performance
     const stars = starsRef.current;
-    stars.forEach((star) => {
-      ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(star.opacity, 0.4)})`;
-      ctx.fillRect(star.x, star.y, star.size, star.size);
-    });
+
+    // Use requestIdleCallback for non-critical work if available
+    if (isMobileRef.current && isLowPerformanceRef.current) {
+      // Simplified rendering for low-performance devices
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      stars.forEach((star) => {
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+      });
+    } else {
+      // Full rendering with varying opacity
+      stars.forEach((star) => {
+        ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(star.opacity, 0.4)})`;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+      });
+    }
   }, []);
 
-  // Animation loop
+  // Animation loop with frame skipping for mobile
   const animate = useCallback((canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     try {
       const now = performance.now();
       const deltaTime = now - lastAnimationTimeRef.current;
 
-      // Track slow frames (< 30fps)
+      // Track slow frames and enable performance mode
       if (deltaTime > 33.33 && lastAnimationTimeRef.current > 0) {
+        const fps = 1000 / deltaTime;
+
+        // Enable low-performance mode if FPS < 30 consistently
+        if (fps < 30 && !isLowPerformanceRef.current) {
+          isLowPerformanceRef.current = true;
+          debugLog('🔧 Low performance detected, enabling frame skipping', {
+            fps: fps.toFixed(1),
+          });
+        }
+
         debugLog('⚠️ Slow frame detected', {
           deltaTime: deltaTime.toFixed(2),
-          fps: (1000 / deltaTime).toFixed(1),
+          fps: fps.toFixed(1),
         });
       }
 
-      updateStars(canvas);
-      drawStars(canvas, ctx);
-      lastAnimationTimeRef.current = now;
+      // Frame skipping logic
+      frameSkipCounterRef.current++;
+      const shouldRender = isLowPerformanceRef.current
+        ? frameSkipCounterRef.current % LOW_PERF_FRAME_SKIP === 0
+        : isMobileRef.current
+        ? frameSkipCounterRef.current % MOBILE_FRAME_SKIP === 0
+        : true;
+
+      if (shouldRender) {
+        updateStars(canvas);
+        drawStars(canvas, ctx);
+        lastAnimationTimeRef.current = now;
+      }
 
       // Continue animation loop
       animationFrameRef.current = requestAnimationFrame(() => animate(canvas, ctx));
@@ -228,6 +264,14 @@ export default function StarBackground() {
       clientHeight: canvas.clientHeight,
     });
 
+    // Detect mobile device
+    isMobileRef.current = window.innerWidth <= 768 ||
+      /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobileRef.current) {
+      debugLog('📱 Mobile device detected, enabling optimizations');
+    }
+
     // Initial setup
     resizeCanvas();
     debugLog('🚀 Starting animation loop');
@@ -244,8 +288,7 @@ export default function StarBackground() {
     window.addEventListener('resize', handleResize, { passive: true });
 
     // Mobile-specific listeners
-    const isMobile = window.innerWidth <= 768;
-    if (isMobile) {
+    if (isMobileRef.current) {
       debugLog('📱 Setting up mobile listeners');
       window.addEventListener('orientationchange', () => {
         setTimeout(handleResize, 500);
