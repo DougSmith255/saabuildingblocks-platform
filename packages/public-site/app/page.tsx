@@ -34,7 +34,7 @@ export default function Home() {
         </div>
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1] hero-animate-profile" style={{ perspective: '1000px' }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
           <div className="relative w-[64vw] min-w-[400px] max-w-[960px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
