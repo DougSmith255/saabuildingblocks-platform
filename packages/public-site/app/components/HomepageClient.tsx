@@ -31,10 +31,24 @@ export function HomepageClient() {
         // Use offsetHeight for the image height (not affected by scroll)
         const imgHeight = profileImg.offsetHeight;
 
-        // Calculate responsive percentage based on viewport width
-        // Larger screens need smaller percentage to keep H1 at same visual position
+        // Calculate responsive percentage based on viewport width and height
         const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
         let percentage = 0.30; // Default 30% for smaller screens (looks good at 1024px)
+
+        // Mobile screens: position higher to avoid covering faces and ensure content above fold
+        if (viewportWidth < 768) {
+          // On mobile, use viewport height to calculate positioning
+          // Ensure H1 starts at least 40% down the viewport but not covering faces
+          const mobileTargetTop = Math.max(
+            viewportHeight * 0.35,  // Start at 35% of viewport height
+            imgHeight * 0.20        // Or 20% of image height, whichever is lower
+          );
+          // Ensure content stays well above fold (leave room for buttons)
+          const maxAllowedTop = viewportHeight * 0.50; // Max 50% of viewport
+          setH1MarginTop(`${Math.min(mobileTargetTop, maxAllowedTop)}px`);
+          return;
+        }
 
         if (viewportWidth > 1400) {
           // Gradually reduce percentage as screen gets wider
@@ -45,9 +59,14 @@ export function HomepageClient() {
 
         // Calculate position based on image size and viewport, not scroll position
         // Use percentage of image height minus viewport offset
-        const viewportHeight = window.innerHeight;
         const targetTop = (imgHeight * percentage) - (viewportHeight * 0.15);
-        setH1MarginTop(`${targetTop}px`);
+
+        // Ensure minimum clearance from top (don't push H1 too high)
+        const minTop = viewportHeight * 0.25;
+        // Ensure maximum position (don't push H1 below fold)
+        const maxTop = viewportHeight * 0.45;
+
+        setH1MarginTop(`${Math.max(minTop, Math.min(targetTop, maxTop))}px`);
       }
     };
 
