@@ -16,8 +16,9 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  // Production URL
-  assetPrefix: process.env.NODE_ENV === 'production'
+  // Production URL - only use CDN when explicitly deploying to Cloudflare
+  // Use CLOUDFLARE_DEPLOY=true during CI/CD, not NODE_ENV=production
+  assetPrefix: process.env.CLOUDFLARE_DEPLOY === 'true'
     ? 'https://saabuildingblocks.pages.dev'
     : undefined,
 

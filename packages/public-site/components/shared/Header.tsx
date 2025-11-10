@@ -392,11 +392,13 @@ export default function Header() {
             transform: isMobileMenuOpen ? 'none' : 'translateY(-50%)',
             right: '15px',
             willChange: 'transform',
+            opacity: 1,
           }}
           onClick={toggleMobileMenu}
           aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
           aria-expanded={isMobileMenuOpen}
           aria-controls="mobile-menu"
+          suppressHydrationWarning
         >
           <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
             <path
@@ -572,6 +574,12 @@ export default function Header() {
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`
+        /* Ensure hamburger menu is visible immediately, even before hydration */
+        .hamburger {
+          opacity: 1 !important;
+          visibility: visible !important;
+        }
+
         /* Header Navigation Links - Override global green link color */
         header .nav-link,
         header .nav-link a {
