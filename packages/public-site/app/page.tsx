@@ -16,10 +16,10 @@ export default function Home() {
         aria-labelledby="hero-heading"
       >
         {/* Wolf Pack Background Image - furthest back layer */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1] hero-animate-bg">
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
-              className="absolute inset-0"
+              className="absolute inset-0 hero-animate-bg"
               style={{
                 backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Smart-agent-alliance-and-the-wolf-pack.webp)',
                 backgroundSize: 'cover',
