@@ -195,7 +195,28 @@ export default async function RootLayout({
         {/* Performance Hints - Establish early connections */}
         <PerformanceHints />
 
-        {/* Font Preloading handled automatically by Next.js localFont with preload: true */}
+        {/* Font Preloading - Critical fonts loaded with highest priority */}
+        <link
+          rel="preload"
+          href="/fonts/taskor-regular-webfont.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Amulya-Variable.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/Amulya-VariableItalic.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
 
         {/* Favicon and app icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
