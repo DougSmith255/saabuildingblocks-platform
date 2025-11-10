@@ -16,11 +16,6 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  // Production URL
-  assetPrefix: process.env.NODE_ENV === 'production'
-    ? 'https://saabuildingblocks.pages.dev'
-    : undefined,
-
   // Trailing slashes for better CDN caching
   trailingSlash: true,
 
