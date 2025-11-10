@@ -2,6 +2,7 @@ import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { HomepageClient } from './components/HomepageClient';
 import { DynamicH1Container } from './components/DynamicH1Container';
 import { ImageAnimationStyles } from './components/ImageAnimationStyles';
+import { WolfPackAnimation } from './components/WolfPackAnimation';
 
 /**
  * Homepage - Server Component with Static Content
@@ -82,6 +83,9 @@ export default function Home() {
 
         {/* Client-side animations (counter + neon flicker) */}
         <HomepageClient />
+
+        {/* Wolf pack animation trigger */}
+        <WolfPackAnimation />
 
         {/* Container - dynamically positioned to overlap profile image by 30% */}
         <DynamicH1Container>
