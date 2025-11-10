@@ -714,7 +714,7 @@ main {
 
   /* Animation class added by JS after page is ready */
   .profile-image.animate-in {
-    animation: imgFadeIn 2.5s ease-out 0s both;
+    animation: imgFadeIn 2.5s linear 0s both;
   }
 
   /* Profile image wrapper - fade in smoothly */
