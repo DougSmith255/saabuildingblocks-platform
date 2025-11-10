@@ -589,14 +589,14 @@ export default function Header() {
         /* Dropdown buttons should use Synonym, not Taskor from critical.css */
         header .nav-link button,
         header button.nav-link:not(.agent-portal) {
-          font-family: 'Synonym', monospace !important;
+          font-family: var(--font-synonym) !important;
         }
 
         /* Mobile Menu Main Item Colors - Override global green (exclude CTAButton and dropdown items) */
         .mobile-menu-overlay nav > div > a:not(.agent-portal-mobile):not([class*="text-button"]),
         .mobile-menu-overlay nav > div > button:not([class*="text-button"]) {
           color: #ffffff !important;
-          font-family: 'Synonym', monospace !important;
+          font-family: var(--font-synonym) !important;
         }
 
         /* Mobile menu main item hover states (exclude CTAButton) */
