@@ -1999,41 +1999,6 @@ article p a:focus-visible,
     font-size: 0.8125rem;
   }
 
-  /* =======================
-     Universal Image Loading - 2025 Hybrid Approach
-     ======================= */
-
-  /**
-   * AUTOMATIC SMOOTH LOADING FOR ALL IMAGES
-   * - Applies to all <img> tags globally
-   * - Hero images can override with heroAnimate prop
-   * - Respects prefers-reduced-motion
-   * - GPU-accelerated fade-in
-   */
-
-  @keyframes imgFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* Apply to all images by default - slower and more noticeable */
-  img:not(.profile-image) {
-    opacity: 0;
-    animation: imgFadeIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
-  }
-
-  /* Respect user motion preferences */
-  @media (prefers-reduced-motion: reduce) {
-    img {
-      opacity: 1;
-      animation: none;
-    }
-  }
-
   .blog-content table {
     font-size: 0.875rem;
   }
@@ -2041,6 +2006,42 @@ article p a:focus-visible,
   .blog-content th,
   .blog-content td {
     padding: 0.5rem 0.75rem;
+  }
+}
+
+/* =======================
+   Universal Image Loading - 2025 Hybrid Approach
+   MOVED OUTSIDE MEDIA QUERY - Must apply globally to all screen sizes
+   ======================= */
+
+/**
+ * AUTOMATIC SMOOTH LOADING FOR ALL IMAGES
+ * - Applies to all <img> tags globally
+ * - Hero images can override with heroAnimate prop
+ * - Respects prefers-reduced-motion
+ * - GPU-accelerated fade-in
+ */
+
+@keyframes imgFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Apply to all images by default - slower and more noticeable */
+img:not(.profile-image) {
+  opacity: 0;
+  animation: imgFadeIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  img {
+    opacity: 1;
+    animation: none;
   }
 }
 

@@ -151,3 +151,32 @@ p a {
     right: 2rem !important;
   }
 }
+
+/* Hamburger Menu - Prevent FOUC by providing base positioning immediately */
+.hamburger {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+}
+
+.hamburger-svg {
+  height: 3.75em;
+}
+
+.line {
+  fill: none;
+  stroke: #ffd700;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.line-top-bottom {
+  stroke-dasharray: 12 63;
+}
