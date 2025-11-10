@@ -44,9 +44,9 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
 
   return (
     <div
-      className="absolute left-1/2 z-10 w-[95%] space-y-8"
+      className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
       style={{
-        transform: `translate(-50%, ${translateY})`,
+        top: translateY,
         willChange: 'transform',
       }}
     >
