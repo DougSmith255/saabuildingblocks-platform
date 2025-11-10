@@ -57,7 +57,7 @@ export default function Home() {
                 transform: 'translateZ(-50px) rotateX(5deg)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
                 opacity: 0,
-                animation: 'imgFadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both',
+                animation: 'imgFadeIn 2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both',
               }}
             />
           </div>
@@ -88,20 +88,20 @@ export default function Home() {
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
-            <H1 id="hero-heading" heroAnimate animationDelay="1.0s">
+            <H1 id="hero-heading" heroAnimate animationDelay="0.5s">
               SMART AGENT ALLIANCE
             </H1>
-            <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="1.4s">
+            <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.9s">
               For Agents Who Want More
             </Tagline>
           </div>
 
           {/* CTA Button Group */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.8s">
+            <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.3s">
               JOIN THE ALLIANCE
             </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/" heroAnimate animationDelay="2.2s">
+            <CTAButton href="/exp-realty-sponsor/" heroAnimate animationDelay="1.7s">
               LEARN MORE
             </CTAButton>
           </div>
