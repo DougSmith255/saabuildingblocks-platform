@@ -1,7 +1,7 @@
 [
   {
     "namespace": "default",
-    "env_file": "/home/claude-flow/packages/admin-dashboard/.env.local",
+    "env_file": "/home/claude-flow/packages/public-site/.env.local",
     "kill_retry_time": 100,
     "windowsHide": true,
     "username": "claude-flow",
@@ -30,7 +30,6 @@
       "PM2_JSON_PROCESSING": "true",
       "PM2_USAGE": "CLI",
       "_": "/usr/bin/pm2",
-      "OLDPWD": "/home/claude-flow",
       "MAIL": "/var/mail/claude-flow",
       "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
       "XDG_DATA_DIRS": "/usr/local/share:/usr/share:/var/lib/snapd/desktop",
@@ -40,24 +39,22 @@
       "LANG": "C.UTF-8",
       "HOME": "/home/claude-flow",
       "LOGNAME": "claude-flow",
-      "PWD": "/home/claude-flow/packages/admin-dashboard",
+      "PWD": "/home/claude-flow/packages/public-site",
       "SHELL": "/bin/bash",
-      "unique_id": "f18b1670-d884-4192-8b8c-bede19cf5466"
+      "unique_id": "6228fadf-2aeb-461a-b2e4-263bf0658c26"
     },
     "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
     "args": [
-      "start",
-      "--",
-      "-p",
-      "3002",
-      "-H",
-      "127.0.0.1"
+      "serve@latest",
+      "out",
+      "-l",
+      "3001"
     ],
-    "cwd": "/home/claude-flow/packages/admin-dashboard",
+    "cwd": "/home/claude-flow/packages/public-site",
     "name": "nextjs-saa",
     "node_args": [],
-    "pm_exec_path": "/usr/bin/npm",
-    "pm_cwd": "/home/claude-flow/packages/admin-dashboard",
+    "pm_exec_path": "/usr/bin/npx",
+    "pm_cwd": "/home/claude-flow/packages/public-site",
     "exec_interpreter": "/usr/bin/node",
     "pm_out_log_path": "/home/claude-flow/.pm2/logs/nextjs-saa-out.log",
     "pm_err_log_path": "/home/claude-flow/.pm2/logs/nextjs-saa-error.log",
@@ -73,7 +70,6 @@
     "PM2_JSON_PROCESSING": "true",
     "PM2_USAGE": "CLI",
     "_": "/usr/bin/pm2",
-    "OLDPWD": "/home/claude-flow",
     "MAIL": "/var/mail/claude-flow",
     "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin",
     "XDG_DATA_DIRS": "/usr/local/share:/usr/share:/var/lib/snapd/desktop",
@@ -83,11 +79,11 @@
     "LANG": "C.UTF-8",
     "HOME": "/home/claude-flow",
     "LOGNAME": "claude-flow",
-    "PWD": "/home/claude-flow/packages/admin-dashboard",
+    "PWD": "/home/claude-flow/packages/public-site",
     "SHELL": "/bin/bash",
-    "unique_id": "f18b1670-d884-4192-8b8c-bede19cf5466",
+    "unique_id": "6228fadf-2aeb-461a-b2e4-263bf0658c26",
     "status": "online",
-    "pm_uptime": 1762665186756,
+    "pm_uptime": 1762748385502,
     "axm_actions": [
       {
         "action_name": "km:heapdump",
@@ -142,7 +138,7 @@
       "module_version": "6.0.13"
     },
     "axm_dynamic": {},
-    "created_at": 1762665186756,
+    "created_at": 1762748385502,
     "restart_time": 0,
     "unstable_restarts": 0,
     "version": "N/A",

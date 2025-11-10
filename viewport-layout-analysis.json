@@ -1,0 +1,1720 @@
+[
+  {
+    "viewport": {
+      "width": 375,
+      "height": 667
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 375,
+        "height": 77,
+        "bottom": 77,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 9,
+        "width": 356,
+        "height": 75,
+        "bottom": 75,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 107,
+        "left": -12,
+        "width": 400,
+        "height": 221,
+        "bottom": 329,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 313,
+        "left": 11,
+        "width": 353,
+        "height": 203,
+        "bottom": 516,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 539,
+        "left": 14,
+        "width": 346,
+        "height": 69,
+        "bottom": 608,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "20px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 15,
+        "left": 14,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 16,
+        "text": "",
+        "top": 9,
+        "left": 300,
+        "width": 60,
+        "height": 60,
+        "position": "absolute"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 651,
+        "left": 63,
+        "width": 248,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 739,
+        "left": 98,
+        "width": 179,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 1497,
+        "left": 128,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 1572,
+        "left": 58,
+        "width": 40,
+        "height": 40,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 1572,
+        "left": 113,
+        "width": 40,
+        "height": 40,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 1572,
+        "left": 168,
+        "width": 40,
+        "height": 40,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 1572,
+        "left": 223,
+        "width": 40,
+        "height": 40,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 1572,
+        "left": 278,
+        "width": 40,
+        "height": 40,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 1731,
+        "left": 143,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 1764,
+        "left": 143,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 1797,
+        "left": 143,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  },
+  {
+    "viewport": {
+      "width": 414,
+      "height": 896
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 414,
+        "height": 89,
+        "bottom": 89,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 10,
+        "width": 393,
+        "height": 87,
+        "bottom": 87,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 144,
+        "left": 7,
+        "width": 400,
+        "height": 221,
+        "bottom": 365,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 504,
+        "left": 10,
+        "width": 393,
+        "height": 208,
+        "bottom": 713,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 735,
+        "left": 14,
+        "width": 386,
+        "height": 72,
+        "bottom": 807,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "20px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 21,
+        "left": 15,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 16,
+        "text": "",
+        "top": 14,
+        "left": 339,
+        "width": 60,
+        "height": 60,
+        "position": "absolute"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 850,
+        "left": 83,
+        "width": 248,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 938,
+        "left": 117,
+        "width": 179,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 1726,
+        "left": 147,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 1801,
+        "left": 65,
+        "width": 45,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 1801,
+        "left": 125,
+        "width": 45,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 1801,
+        "left": 185,
+        "width": 45,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 1801,
+        "left": 244,
+        "width": 45,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 1801,
+        "left": 304,
+        "width": 45,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 1965,
+        "left": 162,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 1998,
+        "left": 162,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 2031,
+        "left": 162,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  },
+  {
+    "viewport": {
+      "width": 768,
+      "height": 1024
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 768,
+        "height": 99,
+        "bottom": 99,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 19,
+        "width": 730,
+        "height": 97,
+        "bottom": 97,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 164,
+        "left": 138,
+        "width": 492,
+        "height": 272,
+        "bottom": 436,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 589,
+        "left": 40,
+        "width": 688,
+        "height": 172,
+        "bottom": 760,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 782,
+        "left": 46,
+        "width": 675,
+        "height": 39,
+        "bottom": 821,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "20px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 26,
+        "left": 34,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 16,
+        "text": "",
+        "top": 19,
+        "left": 693,
+        "width": 60,
+        "height": 60,
+        "position": "absolute"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 864,
+        "left": 143,
+        "width": 273,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 864,
+        "left": 428,
+        "width": 197,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 1864,
+        "left": 324,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 1949,
+        "left": 194,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 1949,
+        "left": 273,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 1949,
+        "left": 352,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 1949,
+        "left": 431,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 1949,
+        "left": 510,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 2132,
+        "left": 239,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 2132,
+        "left": 353,
+        "width": 65,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 2132,
+        "left": 443,
+        "width": 86,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  },
+  {
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 1280,
+        "height": 81,
+        "bottom": 81,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 32,
+        "width": 1216,
+        "height": 79,
+        "bottom": 79,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 129,
+        "left": 230,
+        "width": 819,
+        "height": 453,
+        "bottom": 582,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 393,
+        "left": 30,
+        "width": 1220,
+        "height": 218,
+        "bottom": 611,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 633,
+        "left": 44,
+        "width": 1192,
+        "height": 51,
+        "bottom": 683,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "20px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 17,
+        "left": 47,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 16,
+        "text": "",
+        "top": 11,
+        "left": 1205,
+        "width": 60,
+        "height": 60,
+        "position": "absolute"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 726,
+        "left": 370,
+        "width": 308,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 726,
+        "left": 689,
+        "width": 221,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 1650,
+        "left": 580,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 1735,
+        "left": 450,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 1735,
+        "left": 529,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 1735,
+        "left": 608,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 1735,
+        "left": 687,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 1735,
+        "left": 766,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 1918,
+        "left": 52,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 1918,
+        "left": 166,
+        "width": 65,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 1918,
+        "left": 256,
+        "width": 86,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  },
+  {
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 1440,
+        "height": 89,
+        "bottom": 89,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 36,
+        "width": 1368,
+        "height": 87,
+        "bottom": 87,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 145,
+        "left": 259,
+        "width": 922,
+        "height": 510,
+        "bottom": 655,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 469,
+        "left": 26,
+        "width": 1388,
+        "height": 233,
+        "bottom": 702,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 703,
+        "left": 43,
+        "width": 1354,
+        "height": 54,
+        "bottom": 758,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 21,
+        "left": 51,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 16,
+        "text": "",
+        "top": 15,
+        "left": 1365,
+        "width": 60,
+        "height": 60,
+        "position": "absolute"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 800,
+        "left": 438,
+        "width": 324,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 800,
+        "left": 774,
+        "width": 228,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 1750,
+        "left": 660,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 1835,
+        "left": 530,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 1835,
+        "left": 609,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 1835,
+        "left": 688,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 1835,
+        "left": 767,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 1835,
+        "left": 846,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 2018,
+        "left": 56,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 2018,
+        "left": 170,
+        "width": 65,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 2018,
+        "left": 260,
+        "width": 86,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  },
+  {
+    "viewport": {
+      "width": 1920,
+      "height": 1080
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 1920,
+        "height": 94,
+        "bottom": 94,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 48,
+        "width": 1824,
+        "height": 92,
+        "bottom": 92,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 174,
+        "left": 480,
+        "width": 960,
+        "height": 531,
+        "bottom": 705,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 644,
+        "left": 138,
+        "width": 1643,
+        "height": 138,
+        "bottom": 782,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 784,
+        "left": 147,
+        "width": 1627,
+        "height": 64,
+        "bottom": 848,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 24,
+        "left": 63,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 2,
+        "text": "Home",
+        "top": 17,
+        "left": 464,
+        "width": 108,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 3,
+        "text": "About eXp",
+        "top": 17,
+        "left": 576,
+        "width": 159,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 4,
+        "text": "Our Team",
+        "top": 17,
+        "left": 739,
+        "width": 162,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 5,
+        "text": "Team Value",
+        "top": 88,
+        "left": 748,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 6,
+        "text": "About Us",
+        "top": 142,
+        "left": 748,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 7,
+        "text": "Resources",
+        "top": 17,
+        "left": 905,
+        "width": 166,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 8,
+        "text": "Commission & Fees Calc",
+        "top": 88,
+        "left": 914,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 9,
+        "text": "RevShare Calc",
+        "top": 142,
+        "left": 914,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 10,
+        "text": "Compare Brokerages",
+        "top": 195,
+        "left": 914,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 11,
+        "text": "Agent Success Hub",
+        "top": 249,
+        "left": 914,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 12,
+        "text": "Agent Freebies",
+        "top": 302,
+        "left": 914,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 13,
+        "text": "Become an Agent",
+        "top": 356,
+        "left": 914,
+        "width": 248,
+        "height": 48,
+        "position": "static"
+      },
+      {
+        "index": 14,
+        "text": "agent portal",
+        "top": 17,
+        "left": 1075,
+        "width": 250,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 15,
+        "text": "GET STARTED",
+        "top": 18,
+        "left": 1601,
+        "width": 261,
+        "height": 56,
+        "position": "relative"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 892,
+        "left": 649,
+        "width": 358,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 892,
+        "left": 1019,
+        "width": 253,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 1930,
+        "left": 900,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 2015,
+        "left": 770,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 2015,
+        "left": 849,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 2015,
+        "left": 928,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 2015,
+        "left": 1007,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 2015,
+        "left": 1086,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 2198,
+        "left": 68,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 2198,
+        "left": 182,
+        "width": 65,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 2198,
+        "left": 272,
+        "width": 86,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  },
+  {
+    "viewport": {
+      "width": 2560,
+      "height": 1440
+    },
+    "elements": {
+      "header": {
+        "description": "Header/Nav",
+        "selector": "header, nav, [class*=\"header\"], [class*=\"nav\"]",
+        "top": 0,
+        "left": 0,
+        "width": 2560,
+        "height": 94,
+        "bottom": 94,
+        "position": "fixed",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "main": {
+        "description": "Main Container",
+        "selector": "main, [class*=\"hero\"], [class*=\"container\"]",
+        "top": 0,
+        "left": 330,
+        "width": 1900,
+        "height": 92,
+        "bottom": 92,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "8px",
+        "paddingBottom": "8px"
+      },
+      "profileImg": {
+        "description": "Profile Image",
+        "selector": "img",
+        "top": 231,
+        "left": 800,
+        "width": 960,
+        "height": 531,
+        "bottom": 763,
+        "position": "absolute",
+        "display": "block",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "h1": {
+        "description": "H1 Title",
+        "selector": "h1",
+        "top": 893,
+        "left": 284,
+        "width": 1992,
+        "height": 167,
+        "bottom": 1059,
+        "position": "static",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      },
+      "tagline": {
+        "description": "Tagline",
+        "selector": "h1 + p, p",
+        "top": 1062,
+        "left": 296,
+        "width": 1967,
+        "height": 79,
+        "bottom": 1141,
+        "position": "relative",
+        "display": "flex",
+        "marginTop": "0px",
+        "marginBottom": "0px",
+        "paddingTop": "0px",
+        "paddingBottom": "0px"
+      }
+    },
+    "buttons": [
+      {
+        "index": 0,
+        "text": "Skip to main content",
+        "top": 0,
+        "left": -9999,
+        "width": 193,
+        "height": 40,
+        "position": "absolute"
+      },
+      {
+        "index": 1,
+        "text": "",
+        "top": 24,
+        "left": 345,
+        "width": 126,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 2,
+        "text": "Home",
+        "top": 17,
+        "left": 764,
+        "width": 109,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 3,
+        "text": "About eXp",
+        "top": 17,
+        "left": 877,
+        "width": 161,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 4,
+        "text": "Our Team",
+        "top": 17,
+        "left": 1042,
+        "width": 164,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 5,
+        "text": "Team Value",
+        "top": 89,
+        "left": 1051,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 6,
+        "text": "About Us",
+        "top": 143,
+        "left": 1051,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 7,
+        "text": "Resources",
+        "top": 17,
+        "left": 1210,
+        "width": 168,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 8,
+        "text": "Commission & Fees Calc",
+        "top": 89,
+        "left": 1219,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 9,
+        "text": "RevShare Calc",
+        "top": 143,
+        "left": 1219,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 10,
+        "text": "Compare Brokerages",
+        "top": 197,
+        "left": 1219,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 11,
+        "text": "Agent Success Hub",
+        "top": 251,
+        "left": 1219,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 12,
+        "text": "Agent Freebies",
+        "top": 305,
+        "left": 1219,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 13,
+        "text": "Become an Agent",
+        "top": 359,
+        "left": 1219,
+        "width": 248,
+        "height": 49,
+        "position": "static"
+      },
+      {
+        "index": 14,
+        "text": "agent portal",
+        "top": 17,
+        "left": 1382,
+        "width": 257,
+        "height": 58,
+        "position": "static"
+      },
+      {
+        "index": 15,
+        "text": "GET STARTED",
+        "top": 18,
+        "left": 1933,
+        "width": 287,
+        "height": 56,
+        "position": "relative"
+      },
+      {
+        "index": 17,
+        "text": "JOIN THE ALLIANCE",
+        "top": 1184,
+        "left": 935,
+        "width": 399,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 18,
+        "text": "LEARN MORE",
+        "top": 1184,
+        "left": 1346,
+        "width": 279,
+        "height": 54,
+        "position": "relative"
+      },
+      {
+        "index": 19,
+        "text": "",
+        "top": 2290,
+        "left": 1220,
+        "width": 120,
+        "height": 45,
+        "position": "relative"
+      },
+      {
+        "index": 20,
+        "text": "",
+        "top": 2375,
+        "left": 1090,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 21,
+        "text": "",
+        "top": 2375,
+        "left": 1169,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 22,
+        "text": "",
+        "top": 2375,
+        "left": 1248,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 23,
+        "text": "",
+        "top": 2375,
+        "left": 1327,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 24,
+        "text": "",
+        "top": 2375,
+        "left": 1406,
+        "width": 64,
+        "height": 64,
+        "position": "relative"
+      },
+      {
+        "index": 25,
+        "text": "Privacy Policy",
+        "top": 2558,
+        "left": 350,
+        "width": 89,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 26,
+        "text": "Disclaimer",
+        "top": 2558,
+        "left": 464,
+        "width": 65,
+        "height": 21,
+        "position": "static"
+      },
+      {
+        "index": 27,
+        "text": "Terms of Use",
+        "top": 2558,
+        "left": 554,
+        "width": 86,
+        "height": 21,
+        "position": "static"
+      }
+    ],
+    "scrollY": 0
+  }
+]
