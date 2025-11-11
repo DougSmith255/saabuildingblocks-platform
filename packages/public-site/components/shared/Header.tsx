@@ -733,7 +733,7 @@ export default function Header() {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          right: 0px;
+          right: 15px;
           width: 60px;
           height: 60px;
           will-change: transform;
@@ -752,10 +752,10 @@ export default function Header() {
           background-color: transparent !important;
         }
 
-        /* Mobile: flush with container edge (container has 15px padding) */
+        /* Mobile: 15px from right edge to mirror logo's 15px from left */
         @media (max-width: 550px) {
           .hamburger {
-            right: 0px;
+            right: 15px;
           }
         }
 
