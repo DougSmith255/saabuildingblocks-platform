@@ -3,9 +3,6 @@ import { HomepageClient } from './components/HomepageClient';
 import { DynamicH1Container } from './components/DynamicH1Container';
 import { ImageAnimationStyles } from './components/ImageAnimationStyles';
 import { WolfPackAnimation } from './components/WolfPackAnimation';
-import { MobileDebugOverlay } from './components/MobileDebugOverlay';
-import { PositionTracker } from './components/PositionTracker';
-import { BurgerMenuTracker } from './components/BurgerMenuTracker';
 
 /**
  * Homepage - Server Component with Static Content
@@ -128,14 +125,6 @@ export default function Home() {
         <ImageAnimationStyles />
       </section>
 
-      {/* Mobile Debug Overlay - Press and hold 2s to toggle */}
-      <MobileDebugOverlay />
-
-      {/* Position Tracker - Logs jumps to server console */}
-      <PositionTracker />
-
-      {/* Burger Menu Tracker - Logs timing to server console */}
-      <BurgerMenuTracker />
     </main>
   );
 }
