@@ -257,7 +257,7 @@ export default function RealEstateAgentBlogPage() {
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6 hero-animate-h1">
             <H1 id="blog-heading">
-              REAL ESTATE AGENT RESOURCES
+              Agent Success Hub
             </H1>
           </div>
 
