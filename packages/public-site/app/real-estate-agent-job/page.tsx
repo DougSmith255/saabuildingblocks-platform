@@ -250,7 +250,7 @@ export default function RealEstateAgentBlogPage() {
     <main id="main-content" className="min-h-screen">
       {/* Hero Section */}
       <section
-        className="relative px-4 sm:px-8 md:px-12 pt-32 pb-16"
+        className="relative px-4 sm:px-8 md:px-12 min-h-screen flex items-center"
         aria-labelledby="blog-heading"
       >
         <div className="max-w-[2500px] mx-auto text-center">
