@@ -143,9 +143,6 @@ export function HomepageClient() {
             fontWeight: 100,
             color: 'var(--color-body-text)',
             gap: 'clamp(0.5rem, 0.75rem, 1rem)',
-            // Oval gradient - darker in center, fades to transparent
-            // No hard edges - gradient stops well before container edges
-            background: 'radial-gradient(ellipse 80% 60% at center, rgba(20,20,20,0.8) 0%, rgba(18,18,18,0.6) 25%, rgba(15,15,15,0.3) 50%, rgba(12,12,12,0.1) 75%, transparent 100%)',
             padding: '0.75rem 1.5rem',
             borderRadius: '32px',
             // Fixed width to prevent resizing during animation
