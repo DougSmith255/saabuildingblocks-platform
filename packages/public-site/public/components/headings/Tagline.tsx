@@ -6,6 +6,8 @@ export interface TaglineProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  heroAnimate?: boolean;
+  animationDelay?: string;
 }
 
 // Map specific characters to alternate glyphs (same as H2)
@@ -18,13 +20,12 @@ const ALT_GLYPHS: Record<string, string> = {
 /**
  * Tagline Component
  *
- * Displays tagline text with H2-style 3D neon glow effects.
+ * Displays tagline text with 3D neon glow effects.
  * Pulls base typography settings from Master Controller's tagline text type.
  *
  * Features:
  * - Static neon glow (NO animation)
  * - 3D transform with rotateX and translateZ
- * - Metal backing plate
  * - Per-character rendering with alt glyphs
  * - Body text color (#bfbdb0) for neon effect
  * - Typography settings from var(--font-size-tagline), etc.
@@ -37,7 +38,9 @@ const ALT_GLYPHS: Record<string, string> = {
 export default function Tagline({
   children,
   className = '',
-  style = {}
+  style = {},
+  heroAnimate = false,
+  animationDelay = '0.8s'
 }: TaglineProps) {
   // Convert children to string and split into words
   const text = React.Children.toArray(children).join('');
@@ -59,7 +62,7 @@ export default function Tagline({
 
   return (
     <p
-      className={`text-tagline ${className}`}
+      className={`text-tagline ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
       style={{
         display: 'flex',
         gap: '0.5em',
@@ -68,29 +71,33 @@ export default function Tagline({
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
         position: 'relative',
+        ...(heroAnimate ? {
+          opacity: 0,
+          animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
+          willChange: 'opacity, transform',
+        } : {}),
         ...style
       }}
     >
       <style jsx>{`
+        /* 2025 Hero Entrance Animation */
+        @keyframes fadeInUp2025 {
+          from {
+            opacity: 0;
+            transform: translate3d(0, 30px, 0) rotateX(15deg);
+          }
+          to {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) rotateX(15deg);
+          }
+        }
+
         .tagline-char {
           display: inline-block;
           color: #bfbdb0;
           text-shadow: ${textShadow};
           transform: translateZ(20px);
           position: relative;
-        }
-
-        /* Metal backing plate */
-        .tagline-word::before {
-          content: "";
-          position: absolute;
-          inset: -0.2em -0.3em;
-          background: linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%);
-          border-radius: 0.1em;
-          z-index: -1;
-          transform: translateZ(-10px);
-          border: 1px solid rgba(150,150,150,0.2);
-          box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.5);
         }
       `}</style>
 
