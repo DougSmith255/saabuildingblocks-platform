@@ -180,3 +180,10 @@ p a {
 .line-top-bottom {
   stroke-dasharray: 12 63;
 }
+
+/* Header Container - Prevent height change on hydration */
+@media (max-width: 1399px) {
+  .header-container {
+    min-height: calc(clamp(60px, 8vh, 90px) + 15px) !important;
+  }
+}
