@@ -187,3 +187,18 @@ p a {
     min-height: calc(clamp(60px, 8vh, 90px) + 15px) !important;
   }
 }
+
+/* Logo Container - Prevent width change on hydration */
+@media (max-width: 75rem) {
+  .logo-container {
+    width: 110px !important;
+    height: 39px !important;
+  }
+}
+
+@media (max-width: 50rem) {
+  .logo-container {
+    width: 95px !important;
+    height: 34px !important;
+  }
+}
