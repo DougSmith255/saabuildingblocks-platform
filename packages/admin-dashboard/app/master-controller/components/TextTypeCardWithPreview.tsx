@@ -181,6 +181,14 @@ export const TextTypeCardWithPreview: React.FC<TextTypeCardWithPreviewProps> = (
     updateTextType(textType, { color });
   };
 
+  const handleLineHeightChange = (lineHeight: number) => {
+    updateTextType(textType, { lineHeight });
+  };
+
+  const handleLetterSpacingChange = (letterSpacing: number) => {
+    updateTextType(textType, { letterSpacing });
+  };
+
   // Get the actual hex color value from the brand colors
   const getColorValue = () => {
     const colorKey = config.color as keyof typeof brandColors;
@@ -255,6 +263,28 @@ export const TextTypeCardWithPreview: React.FC<TextTypeCardWithPreviewProps> = (
             textType={textType}
           />
         </div>
+
+        {/* Line Height */}
+        <SliderControl
+          label="Line Height"
+          value={config.lineHeight ?? 1.5}
+          min={0.8}
+          max={3}
+          step={0.1}
+          unit=""
+          onChange={handleLineHeightChange}
+        />
+
+        {/* Letter Spacing */}
+        <SliderControl
+          label="Letter Spacing"
+          value={config.letterSpacing ?? 0}
+          min={-0.1}
+          max={0.3}
+          step={0.01}
+          unit="em"
+          onChange={handleLetterSpacingChange}
+        />
 
         {/* Font Weight */}
         <WeightSelector value={config.fontWeight} onChange={handleWeightChange} />
