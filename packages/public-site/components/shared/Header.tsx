@@ -813,8 +813,8 @@ export default function Header() {
 
         @media (max-width: 550px) {
           .header-container {
-            padding-left: 5px !important;
-            padding-right: 5px !important;
+            padding-left: 15px !important;
+            padding-right: 15px !important;
           }
           .header-container .header-btn,
           .header-container .cta-button {
