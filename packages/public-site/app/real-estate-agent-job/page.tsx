@@ -253,7 +253,7 @@ export default function RealEstateAgentBlogPage() {
         className="relative px-4 sm:px-8 md:px-12 pt-32 pb-16"
         aria-labelledby="blog-heading"
       >
-        <div className="max-w-7xl mx-auto text-center">
+        <div className="max-w-[2500px] mx-auto text-center">
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6 hero-animate-h1">
             <H1 id="blog-heading">
@@ -280,7 +280,7 @@ export default function RealEstateAgentBlogPage() {
         className="relative px-4 sm:px-8 md:px-12 pb-12"
         aria-labelledby="featured-heading"
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[2500px] mx-auto">
           <h2
             id="featured-heading"
             className="
@@ -301,7 +301,7 @@ export default function RealEstateAgentBlogPage() {
 
       {/* Filter/Category Bar with Glassmorphism */}
       <section className="relative px-4 sm:px-8 md:px-12 pb-8">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[2500px] mx-auto">
           <div className="
             p-6 rounded-lg
             glass-effect
@@ -323,7 +323,7 @@ export default function RealEstateAgentBlogPage() {
         className="relative px-4 sm:px-8 md:px-12 pb-24"
         aria-labelledby="posts-heading"
       >
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-[2500px] mx-auto">
           <h2 id="posts-heading" className="sr-only">
             Recent Articles
           </h2>
