@@ -161,6 +161,26 @@ All Master Controller components are responsive by default. Test:
 
 ## 🎨 Styling Guidelines
 
+### Page Width Standards
+**All pages must support wide screens up to 2500px:**
+
+```tsx
+// ✅ CORRECT - Use max-w-[2500px] for all page containers
+<div className="max-w-[2500px] mx-auto px-4 sm:px-8 md:px-12">
+  <H1>Content Here</H1>
+</div>
+
+// ❌ WRONG - Don't use max-w-7xl (1280px limit)
+<div className="max-w-7xl mx-auto">
+  <H1>Content Here</H1>
+</div>
+```
+
+**Why 2500px?**
+- Ensures content utilizes ultra-wide monitors effectively
+- Prevents awkward whitespace on large displays
+- Maintains readability with appropriate padding
+
 ### Use Tailwind Classes
 ```tsx
 <div className="flex flex-col gap-4 items-center justify-center min-h-screen">
