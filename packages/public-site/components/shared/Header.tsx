@@ -729,11 +729,11 @@ export default function Header() {
           font-family: var(--font-taskor), Taskor, system-ui, sans-serif !important;
           color: inherit !important;
           background-color: transparent !important;
-          /* Default positioning - absolute, centered vertically */
+          /* Position at container edge - container's 15px padding provides visual spacing */
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          right: 15px;
+          right: 0px;
           width: 60px;
           height: 60px;
           will-change: transform;
@@ -752,10 +752,10 @@ export default function Header() {
           background-color: transparent !important;
         }
 
-        /* Mobile: 15px from right edge to mirror logo's 15px from left */
+        /* Mobile: flush with container edge (container has 15px padding) */
         @media (max-width: 550px) {
           .hamburger {
-            right: 15px;
+            right: 0px;
           }
         }
 
