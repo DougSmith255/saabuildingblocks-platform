@@ -27,6 +27,7 @@ export function HomepageClient() {
     // Calculate H1 position to overlap 10-25% of profile image bottom
     let resizeTimeout: NodeJS.Timeout | null = null;
     let rafId: number | null = null;
+    let lastWidth = window.innerWidth; // Track width to detect actual screen size changes
 
     const calculateH1Position = () => {
       const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
@@ -52,16 +53,24 @@ export function HomepageClient() {
       }
     };
 
-    // Debounced resize handler with RAF batching (prevents mobile scroll jank)
+    // Debounced resize handler - ONLY recalculate if screen WIDTH changes (not height)
+    // This prevents mobile browser chrome expanding/collapsing from causing jitter
     const debouncedCalculate = () => {
-      if (resizeTimeout) clearTimeout(resizeTimeout);
-      if (rafId) cancelAnimationFrame(rafId);
+      const currentWidth = window.innerWidth;
 
-      resizeTimeout = setTimeout(() => {
-        rafId = requestAnimationFrame(() => {
-          calculateH1Position();
-        });
-      }, 150); // 150ms debounce for mobile browser chrome changes
+      // Only recalculate if width actually changed (screen rotated or window resized)
+      if (currentWidth !== lastWidth) {
+        lastWidth = currentWidth;
+
+        if (resizeTimeout) clearTimeout(resizeTimeout);
+        if (rafId) cancelAnimationFrame(rafId);
+
+        resizeTimeout = setTimeout(() => {
+          rafId = requestAnimationFrame(() => {
+            calculateH1Position();
+          });
+        }, 150); // 150ms debounce
+      }
     };
 
     // Calculate on mount and load
@@ -121,9 +130,9 @@ export function HomepageClient() {
 
   return (
     <>
-      {/* Agent Counter - Top Right on desktop, Centered on mobile */}
+      {/* Agent Counter - Top Right on desktop, Top Left on mobile */}
       <div
-        className="agent-counter-wrapper absolute z-50 left-1/2 -translate-x-1/2 xlg:left-auto xlg:translate-x-0 xlg:right-8 hero-animate-counter"
+        className="agent-counter-wrapper absolute z-50 left-4 xlg:left-auto xlg:right-8 hero-animate-counter"
         style={{
           top: '120px',
         }}
