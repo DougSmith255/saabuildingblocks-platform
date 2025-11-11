@@ -10,6 +10,7 @@ import GlassScrollbar from '@/components/shared/GlassScrollbar';
 import LayoutWrapper from './components/LayoutWrapper';
 import PerformanceHints from './components/PerformanceHints';
 import { SkipLink } from './components/SkipLink';
+import SmoothScroll from '@/components/SmoothScroll';
 import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -240,6 +241,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         {/* Public-site package: Always static export with baked-in CSS */}
+        <SmoothScroll />
         <SkipLink />
         <StarBackground />
         <ScrollProgress />
