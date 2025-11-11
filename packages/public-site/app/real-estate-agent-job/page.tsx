@@ -262,15 +262,27 @@ export default function RealEstateAgentBlogPage() {
           </div>
 
           {/* Tagline: Using Master Controller Tagline component */}
-          <div className="mb-12 hero-animate-tagline">
+          <div className="mb-16 hero-animate-tagline">
             <Tagline>
               Expert Insights, Career Guidance, and Industry Trends
             </Tagline>
           </div>
 
-          {/* Search Bar with Glassmorphism - Client Component */}
-          <div className="hero-animate-cta">
-            <SearchBarClient />
+          {/* Filter/Category Bar at base of hero */}
+          <div className="max-w-4xl mx-auto">
+            <div className="
+              p-6 rounded-lg
+              glass-effect
+              border border-[#808080]/30
+            ">
+              <h3 className="
+                text-sm font-[var(--font-taskor)] text-[#dcdbd5]
+                mb-4 uppercase tracking-wider text-center
+              ">
+                Filter by Category:
+              </h3>
+              <CategoryChipsClient categories={MOCK_CATEGORIES} />
+            </div>
           </div>
         </div>
       </section>
@@ -295,25 +307,6 @@ export default function RealEstateAgentBlogPage() {
 
           <div className="featured-post-hover">
             <FeaturedBlogCard post={featuredPost} />
-          </div>
-        </div>
-      </section>
-
-      {/* Filter/Category Bar with Glassmorphism */}
-      <section className="relative px-4 sm:px-8 md:px-12 pb-8">
-        <div className="max-w-[2500px] mx-auto">
-          <div className="
-            p-6 rounded-lg
-            glass-effect
-            border border-[#808080]/30
-          ">
-            <h3 className="
-              text-sm font-[var(--font-taskor)] text-[#dcdbd5]
-              mb-4 uppercase tracking-wider
-            ">
-              Filter by Category:
-            </h3>
-            <CategoryChipsClient categories={MOCK_CATEGORIES} />
           </div>
         </div>
       </section>
@@ -464,61 +457,12 @@ function FeaturedBlogCard({ post }: { post: BlogPost }) {
 }
 
 /**
- * Search Bar Client Component
- * Glassmorphism search with real-time filtering
- * Separated for client-side interactivity
- */
-function SearchBarClient() {
-  return (
-    <div className="relative max-w-2xl mx-auto">
-      <div className="
-        relative
-        glass-effect
-        border border-[#808080]/30
-        rounded-lg
-        search-bar-focus
-      ">
-        <input
-          type="search"
-          placeholder="Search articles..."
-          aria-label="Search blog posts"
-          className="
-            w-full px-6 py-4 pl-14
-            bg-transparent
-            text-[#e5e4dd] placeholder:text-[#dcdbd5]/60
-            font-[var(--font-taskor)] text-lg
-            focus:outline-none
-            rounded-lg
-          "
-        />
-
-        {/* Search Icon */}
-        <svg
-          className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#808080]"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-          />
-        </svg>
-      </div>
-    </div>
-  );
-}
-
-/**
  * Category Chips Client Component
  * Animated filter chips with multi-select
  */
 function CategoryChipsClient({ categories }: { categories: typeof MOCK_CATEGORIES }) {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 justify-center">
       {/* All Categories Chip */}
       <button
         className="
