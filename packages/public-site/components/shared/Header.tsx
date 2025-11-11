@@ -747,6 +747,13 @@ export default function Header() {
           background-color: transparent !important;
         }
 
+        /* Mobile: Mirror logo spacing (logo has 5px from edge via container padding) */
+        @media (max-width: 550px) {
+          .hamburger {
+            right: 0px;
+          }
+        }
+
         .hamburger-svg {
           height: 3.75em;
           transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
