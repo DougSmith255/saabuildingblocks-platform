@@ -49,7 +49,7 @@ export default function Home() {
             <div
               className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
-                top: '8dvh', // Use dvh to prevent mobile chrome jitter
+                top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
@@ -60,7 +60,7 @@ export default function Home() {
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
               className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
-                top: '8dvh', // Use dvh to prevent mobile chrome jitter
+                top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
