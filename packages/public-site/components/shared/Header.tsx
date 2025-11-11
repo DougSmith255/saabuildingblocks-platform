@@ -48,8 +48,14 @@ export default function Header() {
   const [isPortalClicked, setIsPortalClicked] = useState(false);
   const [is404Page, setIs404Page] = useState(false);
   const [isHamburgerFixed, setIsHamburgerFixed] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hamburgerUnfixTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Track mount state to prevent animation on initial load
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   // Detect 404 page
   useEffect(() => {
@@ -175,7 +181,7 @@ export default function Header() {
       >
         {/* Sliding container for background and content */}
         <div
-          className={`transition-transform duration-500 ease-in-out ${
+          className={`${hasMounted ? 'transition-transform duration-500' : ''} ease-in-out ${
             isMobileMenuOpen || isHidden ? '-translate-y-full' : 'translate-y-0'
           }`}
           style={{
@@ -230,7 +236,6 @@ export default function Header() {
                 justifyContent: 'center',
                 position: 'relative',
                 overflow: 'visible',
-                transition: 'transform 0.3s ease',
                 willChange: 'transform',
                 transform: 'translateZ(0)',
               }}
