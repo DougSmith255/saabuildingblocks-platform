@@ -73,7 +73,7 @@ export default function Tagline({
         position: 'relative',
         ...(heroAnimate ? {
           opacity: 0,
-          animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
+          animation: `fadeInUp2025 2.2s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
           willChange: 'opacity, transform',
         } : {}),
         ...style
