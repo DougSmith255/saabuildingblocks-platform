@@ -94,17 +94,7 @@ export default function Home() {
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
-            <H1
-              id="hero-heading"
-              heroAnimate
-              animationDelay="0.5s"
-              style={{
-                // Hero-specific override: scale down slightly quicker than global setting
-                // Global: clamp(50px, calc(40.91px + 3.64vw), 150px)
-                // Hero: clamp(50px, calc(40.91px + 4.2vw), 150px) - 15% faster scaling
-                fontSize: 'clamp(50px, calc(40.91px + 4.2vw), 150px)'
-              }}
-            >
+            <H1 id="hero-heading" heroAnimate animationDelay="0.5s">
               SMART AGENT ALLIANCE
             </H1>
             <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.9s">
