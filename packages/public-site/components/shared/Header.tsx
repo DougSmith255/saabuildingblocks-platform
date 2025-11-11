@@ -200,7 +200,7 @@ export default function Header() {
           <div
             className="header-container"
             style={{
-              maxWidth: is404Page ? 'min(400px, 95vw)' : 'min(1900px, 95vw)',
+              maxWidth: is404Page ? 'min(400px, 95vw)' : 'min(1900px, 100vw)',
               margin: '0 auto',
               padding: '8px 10px 8px 15px',
               display: 'flex',
