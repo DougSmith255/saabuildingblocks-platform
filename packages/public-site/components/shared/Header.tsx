@@ -200,15 +200,15 @@ export default function Header() {
           <div
             className="header-container"
             style={{
-              maxWidth: is404Page ? 'min(400px, 95vw)' : 'min(1900px, 100vw)',
-              margin: '0 auto',
-              padding: '8px 10px 8px 15px',
+              maxWidth: is404Page ? 'min(400px, 95vw)' : '100vw',
+              margin: is404Page ? '0 auto' : '0',
+              padding: '8px 15px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: is404Page ? 'center' : 'space-between',
               height: 'auto',
               minHeight: 'clamp(60px, 8vh, 90px)',
-              transition: 'max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1), justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
             {/* Logo - Hidden on 404 */}
@@ -747,10 +747,10 @@ export default function Header() {
           background-color: transparent !important;
         }
 
-        /* Mobile: Mirror logo spacing (logo has 5px from edge via container padding) */
+        /* Mobile: 15px from right edge to mirror logo's 15px from left */
         @media (max-width: 550px) {
           .hamburger {
-            right: 0px;
+            right: 15px;
           }
         }
 
