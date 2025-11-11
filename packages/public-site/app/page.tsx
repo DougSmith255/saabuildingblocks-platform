@@ -38,16 +38,18 @@ export default function Home() {
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
-          <div className="relative min-w-[400px] max-w-[900px] h-[84vh]" style={{
+          <div className="relative min-w-[400px] max-w-[900px]" style={{
             // At 1900px screen width: 47.37vw = 900px (starts scaling)
             // Below 1900px: scales down linearly
             // Above 1900px: clamped at 900px max
             width: 'clamp(400px, 47.37vw, 900px)',
+            height: '84dvh', // Use dvh (dynamic viewport height) to prevent mobile chrome jitter
           }}>
             {/* Space cloud/mist backdrop */}
             <div
-              className="hero-3d-backdrop absolute top-[8vh] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
+              className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
+                top: '8dvh', // Use dvh to prevent mobile chrome jitter
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
@@ -56,8 +58,9 @@ export default function Home() {
             <img
               src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
-              className="hero-3d-image profile-image absolute top-[8vh] left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
+              className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
+                top: '8dvh', // Use dvh to prevent mobile chrome jitter
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
