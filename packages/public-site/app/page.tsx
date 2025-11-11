@@ -5,6 +5,7 @@ import { ImageAnimationStyles } from './components/ImageAnimationStyles';
 import { WolfPackAnimation } from './components/WolfPackAnimation';
 import { MobileDebugOverlay } from './components/MobileDebugOverlay';
 import { PositionTracker } from './components/PositionTracker';
+import { BurgerMenuTracker } from './components/BurgerMenuTracker';
 
 /**
  * Homepage - Server Component with Static Content
@@ -15,7 +16,7 @@ export default function Home() {
     <main id="main-content">
       {/* Hero Section */}
       <section
-        className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
+        className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
         aria-labelledby="hero-heading"
       >
         {/* Wolf Pack Background Image - furthest back layer */}
@@ -37,7 +38,7 @@ export default function Home() {
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
-          <div className="relative w-[64vw] min-w-[400px] max-w-[900px] h-[84vh]">
+          <div className="relative w-[900px] 2xl:w-[64vw] min-w-[400px] max-w-[900px] h-[84vh]">
             {/* Space cloud/mist backdrop */}
             <div
               className="hero-3d-backdrop absolute top-[8vh] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
@@ -88,7 +89,17 @@ export default function Home() {
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
-            <H1 id="hero-heading" heroAnimate animationDelay="0.5s">
+            <H1
+              id="hero-heading"
+              heroAnimate
+              animationDelay="0.5s"
+              style={{
+                // Hero-specific override: scale down slightly quicker than global setting
+                // Global: clamp(50px, calc(40.91px + 3.64vw), 150px)
+                // Hero: clamp(50px, calc(40.91px + 4.2vw), 150px) - 15% faster scaling
+                fontSize: 'clamp(50px, calc(40.91px + 4.2vw), 150px)'
+              }}
+            >
               SMART AGENT ALLIANCE
             </H1>
             <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.9s">
@@ -116,6 +127,9 @@ export default function Home() {
 
       {/* Position Tracker - Logs jumps to server console */}
       <PositionTracker />
+
+      {/* Burger Menu Tracker - Logs timing to server console */}
+      <BurgerMenuTracker />
     </main>
   );
 }
