@@ -6,3 +6,4 @@
  */
 
 export { CyberCardHolographic, type CyberCardHolographicProps } from './CyberCardHolographic';
+export { GlossyCategoryCard, PlaceholderIcon, type GlossyCategoryCardProps } from './GlossyCategoryCard';

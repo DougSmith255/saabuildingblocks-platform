@@ -21,6 +21,7 @@
  */
 
 import { H1, Tagline } from '@saa/shared/components/saa';
+import { GlossyCategoryCard } from '@saa/shared/components/saa/cards';
 import { BlogCard } from '@/components/blog/BlogCard';
 import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
@@ -225,16 +226,80 @@ const MOCK_POSTS: BlogPost[] = [
 ];
 
 /**
- * Mock categories data
- * Will be replaced with actual category counts from WordPress
+ * WordPress categories data (from actual WordPress API)
+ * Fetched from: https://wp.saabuildingblocks.com/wp-json/wp/v2/categories
  */
-const MOCK_CATEGORIES = [
-  { slug: 'agent-career-info' as const, name: 'Agent Career Info', count: 15 },
-  { slug: 'best-real-estate-brokerage' as const, name: 'Best Brokerage', count: 8 },
-  { slug: 'brokerage-comparison' as const, name: 'Brokerage Comparison', count: 12 },
-  { slug: 'industry-trends' as const, name: 'Industry Trends', count: 10 },
-  { slug: 'marketing-mastery' as const, name: 'Marketing Mastery', count: 18 },
-  { slug: 'winning-clients' as const, name: 'Winning Clients', count: 14 },
+const WORDPRESS_CATEGORIES = [
+  {
+    slug: 'brokerage-comparison',
+    name: 'Brokerage Comparison',
+    count: 70,
+    description: 'Compare different real estate brokerages and find the perfect fit for your career goals.',
+    icon: '🏢',
+  },
+  {
+    slug: 'about-exp-realty',
+    name: 'About eXp Realty',
+    count: 58,
+    description: 'Learn about eXp Realty\'s cloud-based model, agent benefits, and unique commission structure.',
+    icon: '☁️',
+  },
+  {
+    slug: 'exp-realty-sponsor',
+    name: 'eXp Realty Sponsor',
+    count: 32,
+    description: 'Discover how eXp\'s sponsorship program can accelerate your real estate career.',
+    icon: '🤝',
+  },
+  {
+    slug: 'marketing-mastery',
+    name: 'Marketing Mastery',
+    count: 28,
+    description: 'Master digital marketing strategies to attract more clients and grow your business.',
+    icon: '📱',
+  },
+  {
+    slug: 'agent-career-info',
+    name: 'Agent Career Info',
+    count: 21,
+    description: 'Essential guidance for building a successful and sustainable real estate career.',
+    icon: '💼',
+  },
+  {
+    slug: 'winning-clients',
+    name: 'Winning Clients',
+    count: 12,
+    description: 'Proven strategies for attracting, converting, and retaining loyal real estate clients.',
+    icon: '🎯',
+  },
+  {
+    slug: 'real-estate-schools',
+    name: 'Real Estate Schools',
+    count: 12,
+    description: 'Reviews and comparisons of top real estate education programs and licensing courses.',
+    icon: '🎓',
+  },
+  {
+    slug: 'become-an-agent',
+    name: 'Become an Agent',
+    count: 12,
+    description: 'Everything you need to know to start your journey as a licensed real estate professional.',
+    icon: '🚀',
+  },
+  {
+    slug: 'industry-trends',
+    name: 'Industry Trends',
+    count: 8,
+    description: 'Stay ahead with insights on market shifts, technology changes, and industry innovations.',
+    icon: '📊',
+  },
+  {
+    slug: 'fun-for-agents',
+    name: 'Fun for Agents',
+    count: 8,
+    description: 'Work-life balance tips, agent lifestyle content, and fun industry stories.',
+    icon: '🎉',
+  },
 ];
 
 /**
@@ -268,21 +333,17 @@ export default function RealEstateAgentBlogPage() {
             </Tagline>
           </div>
 
-          {/* Filter/Category Bar at base of hero */}
-          <div className="max-w-4xl mx-auto">
-            <div className="
-              p-6 rounded-lg
-              glass-effect
-              border border-[#808080]/30
+          {/* Category Cards Grid at base of hero */}
+          <div className="max-w-7xl mx-auto mt-16">
+            <h3 className="
+              text-h3 font-bold mb-8
+              text-[#ffd700]
+              font-[var(--font-taskor)]
+              uppercase tracking-wider text-center
             ">
-              <h3 className="
-                text-sm font-[var(--font-taskor)] text-[#dcdbd5]
-                mb-4 uppercase tracking-wider text-center
-              ">
-                Filter by Category:
-              </h3>
-              <CategoryChipsClient categories={MOCK_CATEGORIES} />
-            </div>
+              Explore by Category
+            </h3>
+            <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
           </div>
         </div>
       </section>
@@ -457,40 +518,27 @@ function FeaturedBlogCard({ post }: { post: BlogPost }) {
 }
 
 /**
- * Category Chips Client Component
- * Animated filter chips with multi-select
+ * Category Cards Grid Component
+ * Displays category cards in responsive grid using GlossyCategoryCard
  */
-function CategoryChipsClient({ categories }: { categories: typeof MOCK_CATEGORIES }) {
+function CategoryCardsGrid({ categories }: { categories: typeof WORDPRESS_CATEGORIES }) {
   return (
-    <div className="flex flex-wrap gap-2 justify-center">
-      {/* All Categories Chip */}
-      <button
-        className="
-          px-4 py-2 rounded-full text-sm
-          font-[var(--font-taskor)]
-          filter-chip filter-chip-active
-        "
-        aria-label="Show all categories"
-      >
-        All
-      </button>
-
-      {/* Category Chips */}
-      {categories.map((cat) => (
-        <button
-          key={cat.slug}
-          className="
-            px-4 py-2 rounded-full text-sm
-            font-[var(--font-taskor)]
-            bg-[#404040] text-[#dcdbd5]
-            border border-[#808080]
-            filter-chip
-          "
-          aria-label={`Filter by ${cat.name}, ${cat.count} posts`}
-        >
-          {cat.name}
-          <span className="ml-1.5 text-xs opacity-70">{cat.count}</span>
-        </button>
+    <div className="
+      grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
+      gap-4 md:gap-6
+    ">
+      {categories.map((category) => (
+        <GlossyCategoryCard
+          key={category.slug}
+          icon={<span className="text-4xl">{category.icon}</span>}
+          title={category.name}
+          description={category.description}
+          count={category.count}
+          onClick={() => {
+            // TODO: Implement filter functionality
+            console.log(`Filter by: ${category.slug}`);
+          }}
+        />
       ))}
     </div>
   );
