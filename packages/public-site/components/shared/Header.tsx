@@ -185,6 +185,9 @@ export default function Header() {
             isMobileMenuOpen || isHidden ? '-translate-y-full' : 'translate-y-0'
           }`}
           style={{
+            width: '100%',
+            maxWidth: '100vw',
+            boxSizing: 'border-box',
             borderRadius: '0 0 20px 20px',
             borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
@@ -206,9 +209,11 @@ export default function Header() {
           <div
             className="header-container"
             style={{
+              width: '100%',
               maxWidth: is404Page ? 'min(400px, 95vw)' : '100vw',
               margin: is404Page ? '0 auto' : '0',
               padding: '8px 15px',
+              boxSizing: 'border-box',
               display: 'flex',
               alignItems: 'center',
               justifyContent: is404Page ? 'center' : 'space-between',
@@ -729,11 +734,11 @@ export default function Header() {
           font-family: var(--font-taskor), Taskor, system-ui, sans-serif !important;
           color: inherit !important;
           background-color: transparent !important;
-          /* Position at container edge - container's 15px padding provides visual spacing */
+          /* Position 15px from edge to mirror logo spacing */
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          right: 0px;
+          right: 15px;
           width: 60px;
           height: 60px;
           will-change: transform;
