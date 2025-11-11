@@ -38,7 +38,12 @@ export default function Home() {
 
         {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
-          <div className="relative w-[900px] 2xl:w-[64vw] min-w-[400px] max-w-[900px] h-[84vh]">
+          <div className="relative min-w-[400px] max-w-[900px] h-[84vh]" style={{
+            // At 1900px screen width: 47.37vw = 900px (starts scaling)
+            // Below 1900px: scales down linearly
+            // Above 1900px: clamped at 900px max
+            width: 'clamp(400px, 47.37vw, 900px)',
+          }}>
             {/* Space cloud/mist backdrop */}
             <div
               className="hero-3d-backdrop absolute top-[8vh] left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
