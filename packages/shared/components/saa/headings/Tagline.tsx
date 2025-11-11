@@ -39,8 +39,8 @@ export default function Tagline({
   children,
   className = '',
   style = {},
-  heroAnimate = false,
-  animationDelay = '0.8s'
+  heroAnimate = true,
+  animationDelay = '0.9s'
 }: TaglineProps) {
   // Convert children to string and split into words
   const text = React.Children.toArray(children).join('');

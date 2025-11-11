@@ -11,7 +11,7 @@ export interface HeadingProps {
   animationDelay?: string;
 }
 
-export default function H1({ children, className = '', style = {}, id, heroAnimate = false, animationDelay = '0.6s' }: HeadingProps) {
+export default function H1({ children, className = '', style = {}, id, heroAnimate = true, animationDelay = '0.6s' }: HeadingProps) {
   // Convert children to string for processing
   const text = typeof children === 'string' ? children : String(children);
 
