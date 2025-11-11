@@ -97,13 +97,13 @@ export default function Home() {
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
-            {/* Non-linear scaling: faster above 1200px, gradual below - adjustable curve strength */}
+            {/* Aggressive curve: 50px drop 3000→1920, 25px drop 1920→1200, 25px drop 1200→400 */}
             <H1
               id="hero-heading"
               heroAnimate
               animationDelay="0.5s"
               style={{
-                fontSize: 'clamp(50px, calc(20px + 5vw + 0.5vh), 150px)',
+                fontSize: 'clamp(50px, calc(10px + 6.5vw + 1vh), 150px)',
               }}
             >
               SMART AGENT ALLIANCE
