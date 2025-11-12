@@ -22,6 +22,7 @@
 
 import { H1, Tagline } from '@saa/shared/components/saa';
 import { BlogCard } from '@/components/blog/BlogCard';
+import FilterSection from './FilterSection';
 import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
 
@@ -330,6 +331,9 @@ export default function RealEstateAgentBlogPage() {
           </div>
         </div>
       </section>
+
+      {/* Filter Section */}
+      <FilterSection categories={WORDPRESS_CATEGORIES} />
 
       {/* Blog Posts Grid */}
       <section
