@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2, HolographicCard } from '@saa/shared/components/saa';
 
 /**
  * WordPress categories data type
@@ -36,43 +36,33 @@ export default function FilterSection({
   return (
     <section className="relative px-4 sm:px-8 md:px-12 py-16">
       <div className="max-w-[2500px] mx-auto">
-        {/* Holographic Card Background */}
-        <div className="relative overflow-hidden rounded-2xl p-8 md:p-12">
-          {/* Holographic gradient background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-[#191818]/80 via-[#191818]/60 to-[#191818]/80 backdrop-blur-md" />
+        <HolographicCard className="p-8 md:p-12">
+          {/* Filter Label and Buttons */}
+          <div className="flex flex-wrap items-center gap-4">
+            <H2>Filter:</H2>
 
-          {/* Holographic border effect */}
-          <div className="absolute inset-0 rounded-2xl border border-[#e5e4dd]/20" />
+            {categories.map((category) => {
+              const isSelected = selectedCategories.includes(category.slug);
 
-          {/* Content */}
-          <div className="relative z-10">
-            {/* Filter Label and Buttons */}
-            <div className="flex flex-wrap items-center gap-4">
-              <H2>Filter:</H2>
-
-              {categories.map((category) => {
-                const isSelected = selectedCategories.includes(category.slug);
-
-                return (
-                  <button
-                    key={category.slug}
-                    onClick={() => toggleCategory(category.slug)}
-                    className="filter-button"
-                    data-selected={isSelected}
-                    aria-pressed={isSelected}
-                    aria-label={`Filter by ${category.name}`}
-                  >
-                    <div className="filter-button-inner">
-                      <span className="font-[var(--font-amulya)] text-body">
-                        {category.name}
-                      </span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
+              return (
+                <button
+                  key={category.slug}
+                  onClick={() => toggleCategory(category.slug)}
+                  className="filter-button"
+                  data-selected={isSelected}
+                  aria-pressed={isSelected}
+                  aria-label={`Filter by ${category.name}`}
+                >
+                  <div className="filter-button-inner">
+                    <span className="font-[var(--font-amulya)] text-body">
+                      {category.name}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
-        </div>
+        </HolographicCard>
       </div>
 
       <style jsx>{`
