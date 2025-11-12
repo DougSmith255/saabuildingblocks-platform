@@ -21,8 +21,8 @@
  */
 
 import { H1, Tagline } from '@saa/shared/components/saa';
-import { GlossyCategoryCard } from '@saa/shared/components/saa/cards';
 import { BlogCard } from '@/components/blog/BlogCard';
+import CategoryCardsGrid from './CategoryCardsGrid';
 import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
 
@@ -335,14 +335,6 @@ export default function RealEstateAgentBlogPage() {
 
           {/* Category Cards Grid at base of hero */}
           <div className="max-w-7xl mx-auto mt-16">
-            <h3 className="
-              text-h3 font-bold mb-8
-              text-[#ffd700]
-              font-[var(--font-taskor)]
-              uppercase tracking-wider text-center
-            ">
-              Explore by Category
-            </h3>
             <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
           </div>
         </div>
@@ -517,29 +509,3 @@ function FeaturedBlogCard({ post }: { post: BlogPost }) {
   );
 }
 
-/**
- * Category Cards Grid Component
- * Displays category cards in responsive grid using GlossyCategoryCard
- */
-function CategoryCardsGrid({ categories }: { categories: typeof WORDPRESS_CATEGORIES }) {
-  return (
-    <div className="
-      grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5
-      gap-4 md:gap-6
-    ">
-      {categories.map((category) => (
-        <GlossyCategoryCard
-          key={category.slug}
-          icon={<span className="text-4xl">{category.icon}</span>}
-          title={category.name}
-          description={category.description}
-          count={category.count}
-          onClick={() => {
-            // TODO: Implement filter functionality
-            console.log(`Filter by: ${category.slug}`);
-          }}
-        />
-      ))}
-    </div>
-  );
-}
