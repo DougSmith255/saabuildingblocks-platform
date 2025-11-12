@@ -53,12 +53,12 @@ export default function FilterSection({
     <section className="relative py-16">
       <div className="px-4 sm:px-8 md:px-12">
         <div className="max-w-[2500px] mx-auto">
-          <div className="flex items-start gap-12">
+          <div className="flex flex-col xl:flex-row xl:items-start gap-6 xl:gap-12">
             {/* Filter Label */}
             <H2>Filter:</H2>
 
             {/* Filter Buttons */}
-            <div className="flex flex-wrap gap-3 flex-1">
+            <div className="flex flex-wrap gap-3 xl:flex-1">
             {/* All Button */}
             <button
               onClick={handleAllClick}
