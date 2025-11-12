@@ -122,8 +122,6 @@ html {
   background: transparent !important;
   background-color: transparent !important;
   scroll-behavior: smooth;
-  /* Reserve space for scrollbar to prevent layout shifts */
-  scrollbar-gutter: stable;
 }
 
 body {
