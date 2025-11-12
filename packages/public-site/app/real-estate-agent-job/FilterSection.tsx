@@ -106,7 +106,7 @@ export default function FilterSection({
           height: 51px;
           border-radius: 15px;
           cursor: pointer;
-          transition: all 0.3s ease;
+          transition: background 0.3s ease, background-color 0.3s ease;
           background: linear-gradient(
             to bottom right,
             #ffd700 0%,
@@ -117,6 +117,9 @@ export default function FilterSection({
           align-items: center;
           justify-content: center;
           padding: 2px;
+        }
+
+        .filter-button[data-selected="false"] {
           box-shadow: none !important;
         }
 
@@ -125,10 +128,6 @@ export default function FilterSection({
           background-color: rgba(255, 215, 0, 0.4);
           box-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
           outline: none;
-        }
-
-        .filter-button[data-selected="false"]:not(:hover):not(:focus) {
-          box-shadow: none !important;
         }
 
         .filter-button[data-selected="true"] {
