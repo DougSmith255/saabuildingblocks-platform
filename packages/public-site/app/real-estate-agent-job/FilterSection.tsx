@@ -36,10 +36,13 @@ export default function FilterSection({
   return (
     <section className="relative px-4 sm:px-8 md:px-12 py-16">
       <div className="max-w-[2500px] mx-auto">
-        {/* Filter Label and Buttons */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+        {/* Filter Label */}
+        <div className="mb-6">
           <H2>Filter:</H2>
+        </div>
 
+        {/* Filter Buttons */}
+        <div className="flex flex-wrap gap-3">
           {categories.map((category) => {
             const isSelected = selectedCategories.includes(category.slug);
 
