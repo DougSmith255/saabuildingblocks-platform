@@ -36,7 +36,7 @@ export default function FilterSection({
   return (
     <section className="relative px-4 sm:px-8 md:px-12 py-16">
       <div className="max-w-[2500px] mx-auto">
-        <div className="flex items-start gap-6">
+        <div className="flex items-start gap-12">
           {/* Filter Label */}
           <H2>Filter:</H2>
 
