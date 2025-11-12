@@ -20,6 +20,7 @@
  * - Neon: #00ff88 (for interactive elements)
  */
 
+import { H1, Tagline } from '@saa/shared/components/saa';
 import { BlogCard } from '@/components/blog/BlogCard';
 import CategoryCardsGrid from './CategoryCardsGrid';
 import type { BlogPost } from '@/lib/wordpress/types';
@@ -321,11 +322,31 @@ export default function RealEstateAgentBlogPage() {
 
       {/* Filter Section - Below the fold */}
       <section
-        className="relative px-4 sm:px-8 md:px-12 py-12"
-        aria-label="Category filters"
+        className="relative px-4 sm:px-8 md:px-12 py-16"
+        aria-labelledby="blog-heading"
       >
-        <div className="max-w-7xl mx-auto">
-          <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
+        <div className="max-w-7xl mx-auto text-center">
+          {/* H1: Using Master Controller H1 component */}
+          <div className="mb-6">
+            <H1 id="blog-heading">
+              Agent Success Hub
+            </H1>
+          </div>
+
+          {/* Tagline: Using Master Controller Tagline component */}
+          <div className="mb-12">
+            <Tagline>
+              Expert Insights, Career Guidance, and Industry Trends
+            </Tagline>
+          </div>
+
+          {/* Category Filter Buttons */}
+          <div className="mb-8">
+            <h2 className="text-h4 font-bold text-saa-white mb-4">
+              Filter by Category
+            </h2>
+            <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
+          </div>
         </div>
       </section>
 
