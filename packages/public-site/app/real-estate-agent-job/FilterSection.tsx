@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { H2 } from '@saa/shared/components/saa';
 
 /**
  * WordPress categories data type
@@ -47,9 +48,7 @@ export default function FilterSection({
           <div className="relative z-10">
             {/* Filter Label and Buttons */}
             <div className="flex flex-wrap items-center gap-4">
-              <span className="text-[#e5e4dd] font-[var(--font-taskor)] text-xl font-semibold tracking-wide">
-                Filter:
-              </span>
+              <H2>Filter:</H2>
 
               {categories.map((category) => {
                 const isSelected = selectedCategories.includes(category.slug);
@@ -64,7 +63,7 @@ export default function FilterSection({
                     aria-label={`Filter by ${category.name}`}
                   >
                     <div className="filter-button-inner">
-                      <span className="font-[var(--font-taskor)] text-sm font-semibold tracking-wide">
+                      <span className="font-[var(--font-amulya)] text-body">
                         {category.name}
                       </span>
                     </div>
