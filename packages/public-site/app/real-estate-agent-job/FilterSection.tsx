@@ -24,8 +24,17 @@ export default function FilterSection({
   categories: CategoryData[]
 }) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [showAll, setShowAll] = useState(true);
+
+  const handleAllClick = () => {
+    setShowAll(true);
+    setSelectedCategories([]);
+  };
 
   const toggleCategory = (slug: string) => {
+    // Deselect "All" when any category is clicked
+    setShowAll(false);
+
     setSelectedCategories(prev =>
       prev.includes(slug)
         ? prev.filter(s => s !== slug)
@@ -42,6 +51,22 @@ export default function FilterSection({
 
           {/* Filter Buttons */}
           <div className="flex flex-wrap gap-3 flex-1">
+            {/* All Button */}
+            <button
+              onClick={handleAllClick}
+              className="filter-button"
+              data-selected={showAll}
+              aria-pressed={showAll}
+              aria-label="Show all posts"
+            >
+              <div className="filter-button-inner">
+                <span className="font-[var(--font-amulya)] text-body">
+                  All
+                </span>
+              </div>
+            </button>
+
+            {/* Category Buttons */}
             {categories.map((category) => {
               const isSelected = selectedCategories.includes(category.slug);
 
