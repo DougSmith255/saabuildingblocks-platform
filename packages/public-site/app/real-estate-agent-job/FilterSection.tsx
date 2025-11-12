@@ -32,14 +32,21 @@ export default function FilterSection({
   };
 
   const toggleCategory = (slug: string) => {
-    // Deselect "All" when any category is clicked
-    setShowAll(false);
-
-    setSelectedCategories(prev =>
-      prev.includes(slug)
+    setSelectedCategories(prev => {
+      const newSelection = prev.includes(slug)
         ? prev.filter(s => s !== slug)
-        : [...prev, slug]
-    );
+        : [...prev, slug];
+
+      // If all filters are turned off, automatically activate "All"
+      if (newSelection.length === 0) {
+        setShowAll(true);
+      } else {
+        // Deselect "All" when any category is clicked
+        setShowAll(false);
+      }
+
+      return newSelection;
+    });
   };
 
   return (
