@@ -108,30 +108,33 @@ export default function FilterSection({
           height: 51px;
           border-radius: 15px;
           cursor: pointer;
-          transition: background 0.3s ease, background-color 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 2px;
+          transition: none;
+          box-shadow: none;
+        }
+
+        /* Inactive button - default state */
+        .filter-button[data-selected="false"] {
           background: linear-gradient(
             to bottom right,
             #ffd700 0%,
             rgba(255, 215, 0, 0) 30%
           );
           background-color: rgba(255, 215, 0, 0.2);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2px;
+          box-shadow: none;
         }
 
-        .filter-button[data-selected="false"] {
-          box-shadow: none !important;
-        }
-
-        .filter-button[data-selected="false"]:hover,
-        .filter-button[data-selected="false"]:focus {
+        /* Inactive button - hover state */
+        .filter-button[data-selected="false"]:hover {
           background-color: rgba(255, 215, 0, 0.4);
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
+          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
           outline: none;
         }
 
+        /* Active button - default state */
         .filter-button[data-selected="true"] {
           background: linear-gradient(
             to bottom right,
@@ -139,13 +142,13 @@ export default function FilterSection({
             rgba(0, 255, 136, 0) 30%
           );
           background-color: rgba(0, 255, 136, 0.3);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
+          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
-        .filter-button[data-selected="true"]:hover,
-        .filter-button[data-selected="true"]:focus {
+        /* Active button - hover state */
+        .filter-button[data-selected="true"]:hover {
           background-color: rgba(0, 255, 136, 0.5);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
+          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
         .filter-button-inner {
