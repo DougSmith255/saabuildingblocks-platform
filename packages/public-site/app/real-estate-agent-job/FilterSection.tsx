@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { H2, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H2 } from '@saa/shared/components/saa';
 
 /**
  * WordPress categories data type
@@ -36,33 +36,31 @@ export default function FilterSection({
   return (
     <section className="relative px-4 sm:px-8 md:px-12 py-16">
       <div className="max-w-[2500px] mx-auto">
-        <CyberCardHolographic className="p-8 md:p-12">
-          {/* Filter Label and Buttons */}
-          <div className="flex flex-wrap items-center gap-4">
-            <H2>Filter:</H2>
+        {/* Filter Label and Buttons */}
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <H2>Filter:</H2>
 
-            {categories.map((category) => {
-              const isSelected = selectedCategories.includes(category.slug);
+          {categories.map((category) => {
+            const isSelected = selectedCategories.includes(category.slug);
 
-              return (
-                <button
-                  key={category.slug}
-                  onClick={() => toggleCategory(category.slug)}
-                  className="filter-button"
-                  data-selected={isSelected}
-                  aria-pressed={isSelected}
-                  aria-label={`Filter by ${category.name}`}
-                >
-                  <div className="filter-button-inner">
-                    <span className="font-[var(--font-amulya)] text-body">
-                      {category.name}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </CyberCardHolographic>
+            return (
+              <button
+                key={category.slug}
+                onClick={() => toggleCategory(category.slug)}
+                className="filter-button"
+                data-selected={isSelected}
+                aria-pressed={isSelected}
+                aria-label={`Filter by ${category.name}`}
+              >
+                <div className="filter-button-inner">
+                  <span className="font-[var(--font-amulya)] text-body">
+                    {category.name}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <style jsx>{`
@@ -99,13 +97,13 @@ export default function FilterSection({
             rgba(0, 255, 136, 0) 30%
           );
           background-color: rgba(0, 255, 136, 0.3);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
         }
 
         .filter-button[data-selected="true"]:hover,
         .filter-button[data-selected="true"]:focus {
           background-color: rgba(0, 255, 136, 0.5);
-          box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
         }
 
         .filter-button-inner {
