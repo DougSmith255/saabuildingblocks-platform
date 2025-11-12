@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { H2, HolographicCard } from '@saa/shared/components/saa';
+import { H2, CyberCardHolographic } from '@saa/shared/components/saa';
 
 /**
  * WordPress categories data type
@@ -36,7 +36,7 @@ export default function FilterSection({
   return (
     <section className="relative px-4 sm:px-8 md:px-12 py-16">
       <div className="max-w-[2500px] mx-auto">
-        <HolographicCard className="p-8 md:p-12">
+        <CyberCardHolographic className="p-8 md:p-12">
           {/* Filter Label and Buttons */}
           <div className="flex flex-wrap items-center gap-4">
             <H2>Filter:</H2>
@@ -62,7 +62,7 @@ export default function FilterSection({
               );
             })}
           </div>
-        </HolographicCard>
+        </CyberCardHolographic>
       </div>
 
       <style jsx>{`
