@@ -93,6 +93,7 @@ export default function FilterSection({
           align-items: center;
           justify-content: center;
           padding: 2px;
+          box-shadow: none;
         }
 
         .filter-button:hover,
@@ -109,12 +110,13 @@ export default function FilterSection({
             rgba(0, 255, 136, 0) 30%
           );
           background-color: rgba(0, 255, 136, 0.3);
+          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
         .filter-button[data-selected="true"]:hover,
         .filter-button[data-selected="true"]:focus {
           background-color: rgba(0, 255, 136, 0.5);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
         }
 
         .filter-button-inner {
