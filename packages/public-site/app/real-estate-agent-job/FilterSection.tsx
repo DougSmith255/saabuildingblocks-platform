@@ -54,8 +54,10 @@ export default function FilterSection({
       <div className="px-4 sm:px-8 md:px-12">
         <div className="max-w-[2500px] mx-auto">
           <div className="flex flex-col xl:flex-row xl:items-start gap-6 xl:gap-12">
-            {/* Filter Label */}
-            <H2>Filter:</H2>
+            {/* Filter Label - add left margin to account for metal plate effect */}
+            <div className="ml-4">
+              <H2>Filter:</H2>
+            </div>
 
             {/* Filter Buttons */}
             <div className="flex flex-wrap gap-3 xl:flex-1">
