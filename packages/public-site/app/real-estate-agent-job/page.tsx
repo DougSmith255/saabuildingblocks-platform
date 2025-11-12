@@ -22,7 +22,6 @@
 
 import { H1, Tagline } from '@saa/shared/components/saa';
 import { BlogCard } from '@/components/blog/BlogCard';
-import CategoryCardsGrid from './CategoryCardsGrid';
 import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
 
@@ -328,22 +327,6 @@ export default function RealEstateAgentBlogPage() {
             <Tagline>
               Expert Insights, Career Guidance, and Industry Trends
             </Tagline>
-          </div>
-        </div>
-      </section>
-
-      {/* Filter Section - Below the fold */}
-      <section
-        className="relative px-4 sm:px-8 md:px-12 py-16"
-        aria-label="Category filters"
-      >
-        <div className="max-w-7xl mx-auto text-center">
-          {/* Category Filter Buttons */}
-          <div className="mb-8">
-            <h2 className="text-h4 font-bold text-saa-white mb-4">
-              Filter by Category
-            </h2>
-            <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
           </div>
         </div>
       </section>
