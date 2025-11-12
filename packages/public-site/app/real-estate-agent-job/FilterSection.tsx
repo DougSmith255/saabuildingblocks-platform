@@ -83,13 +83,13 @@ export default function FilterSection({
           align-items: center;
           justify-content: center;
           padding: 2px;
-          box-shadow: none;
+          box-shadow: none !important;
         }
 
         .filter-button:hover,
         .filter-button:focus {
           background-color: rgba(255, 215, 0, 0.4);
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5) !important;
           outline: none;
         }
 
@@ -107,6 +107,10 @@ export default function FilterSection({
         .filter-button[data-selected="true"]:focus {
           background-color: rgba(0, 255, 136, 0.5);
           box-shadow: 0 0 10px rgba(0, 255, 136, 0.5) !important;
+        }
+
+        .filter-button[data-selected="false"]:not(:hover):not(:focus) {
+          box-shadow: none !important;
         }
 
         .filter-button-inner {
