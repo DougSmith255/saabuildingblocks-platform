@@ -50,14 +50,15 @@ export default function FilterSection({
   };
 
   return (
-    <section className="relative px-4 sm:px-8 md:px-12 py-16">
-      <div className="max-w-[2500px] mx-auto">
-        <div className="flex items-start gap-12">
-          {/* Filter Label */}
-          <H2>Filter:</H2>
+    <section className="relative py-16">
+      <div className="px-4 sm:px-8 md:px-12">
+        <div className="max-w-[2500px] mx-auto">
+          <div className="flex items-start gap-12">
+            {/* Filter Label */}
+            <H2>Filter:</H2>
 
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-3 flex-1">
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap gap-3 flex-1">
             {/* All Button */}
             <button
               onClick={handleAllClick}
@@ -96,6 +97,7 @@ export default function FilterSection({
             })}
           </div>
         </div>
+      </div>
       </div>
 
       <style jsx>{`
