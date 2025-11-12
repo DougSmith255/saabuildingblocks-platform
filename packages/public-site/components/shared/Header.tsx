@@ -186,7 +186,7 @@ export default function Header() {
           }`}
           style={{
             width: '100%',
-            maxWidth: '100vw',
+            maxWidth: '100%',
             boxSizing: 'border-box',
             borderRadius: '0 0 20px 20px',
             borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
@@ -210,7 +210,7 @@ export default function Header() {
             className="header-container"
             style={{
               width: '100%',
-              maxWidth: is404Page ? 'min(400px, 95vw)' : '100vw',
+              maxWidth: is404Page ? 'min(400px, 95%)' : '100%',
               margin: is404Page ? '0 auto' : '0',
               padding: '8px 15px',
               boxSizing: 'border-box',
@@ -757,10 +757,10 @@ export default function Header() {
           background-color: transparent !important;
         }
 
-        /* Mobile: add margin to prevent scrollbar pushing burger off screen */
+        /* Mobile: consistent positioning (fixed by using 100% instead of 100vw above) */
         @media (max-width: 550px) {
           .hamburger {
-            right: 8px;
+            right: 15px;
           }
         }
 
