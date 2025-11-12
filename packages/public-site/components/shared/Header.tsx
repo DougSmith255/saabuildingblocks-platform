@@ -757,10 +757,10 @@ export default function Header() {
           background-color: transparent !important;
         }
 
-        /* Mobile: flush with container edge (container has 15px padding) */
+        /* Mobile: add margin to prevent scrollbar pushing burger off screen */
         @media (max-width: 550px) {
           .hamburger {
-            right: 0px;
+            right: 8px;
           }
         }
 
