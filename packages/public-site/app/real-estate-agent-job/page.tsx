@@ -20,7 +20,6 @@
  * - Neon: #00ff88 (for interactive elements)
  */
 
-import { H1, Tagline } from '@saa/shared/components/saa';
 import { BlogCard } from '@/components/blog/BlogCard';
 import CategoryCardsGrid from './CategoryCardsGrid';
 import type { BlogPost } from '@/lib/wordpress/types';
@@ -308,59 +307,25 @@ const WORDPRESS_CATEGORIES = [
  * Renders static content, delegates interactivity to client components
  */
 export default function RealEstateAgentBlogPage() {
-  // Separate featured post from regular posts
-  const [featuredPost, ...regularPosts] = MOCK_POSTS;
-
   return (
     <main id="main-content" className="min-h-screen">
-      {/* Hero Section */}
+      {/* Hero Section - Empty/Minimal */}
       <section
         className="relative px-4 sm:px-8 md:px-12 min-h-screen flex items-center"
-        aria-labelledby="blog-heading"
+        aria-label="Hero section"
       >
-        <div className="max-w-[2500px] mx-auto text-center">
-          {/* H1: Using Master Controller H1 component */}
-          <div className="mb-6 hero-animate-h1">
-            <H1 id="blog-heading">
-              Agent Success Hub
-            </H1>
-          </div>
-
-          {/* Tagline: Using Master Controller Tagline component */}
-          <div className="mb-16 hero-animate-tagline">
-            <Tagline>
-              Expert Insights, Career Guidance, and Industry Trends
-            </Tagline>
-          </div>
-
-          {/* Category Cards Grid at base of hero */}
-          <div className="max-w-7xl mx-auto mt-16">
-            <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
-          </div>
+        <div className="max-w-[2500px] mx-auto w-full">
+          {/* Hero content removed - just spacing */}
         </div>
       </section>
 
-      {/* Featured Post Section */}
+      {/* Filter Section - Below the fold */}
       <section
-        className="relative px-4 sm:px-8 md:px-12 pb-12"
-        aria-labelledby="featured-heading"
+        className="relative px-4 sm:px-8 md:px-12 py-12"
+        aria-label="Category filters"
       >
-        <div className="max-w-[2500px] mx-auto">
-          <h2
-            id="featured-heading"
-            className="
-              text-h3 font-bold mb-6
-              text-[#ffd700]
-              font-[var(--font-taskor)]
-              uppercase tracking-wider
-            "
-          >
-            Featured Article
-          </h2>
-
-          <div className="featured-post-hover">
-            <FeaturedBlogCard post={featuredPost} />
-          </div>
+        <div className="max-w-7xl mx-auto">
+          <CategoryCardsGrid categories={WORDPRESS_CATEGORIES} />
         </div>
       </section>
 
@@ -371,7 +336,7 @@ export default function RealEstateAgentBlogPage() {
       >
         <div className="max-w-[2500px] mx-auto">
           <h2 id="posts-heading" className="sr-only">
-            Recent Articles
+            Blog Articles
           </h2>
 
           {/* Responsive Grid: 3 cols desktop, 2 tablet, 1 mobile */}
@@ -379,7 +344,7 @@ export default function RealEstateAgentBlogPage() {
             grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3
             gap-6 md:gap-8
           ">
-            {regularPosts.map((post) => (
+            {MOCK_POSTS.map((post) => (
               <div
                 key={post.id}
                 className="blog-card-hover"
@@ -394,118 +359,4 @@ export default function RealEstateAgentBlogPage() {
   );
 }
 
-/**
- * Featured Blog Card Component
- * Large card format for featured post with enhanced styling
- */
-function FeaturedBlogCard({ post }: { post: BlogPost }) {
-  return (
-    <article className="
-      border border-[#e5e4dd]/20 rounded-lg overflow-hidden
-      hover:border-[#00ff88]/50
-      transition-all duration-300
-      hover:shadow-[0_0_30px_rgba(0,255,136,0.15)]
-      bg-[#191818]/50
-    ">
-      <a
-        href={`/blog/${post.slug}`}
-        className="block group"
-        aria-label={`Read featured article: ${post.title}`}
-      >
-        <div className="grid md:grid-cols-2 gap-0">
-          {/* Featured Image */}
-          {post.featuredImage && (
-            <div className="relative w-full h-80 md:h-full overflow-hidden bg-[#191818]">
-              <img
-                src={post.featuredImage.url}
-                alt={post.featuredImage.alt || post.title}
-                className="
-                  w-full h-full object-cover
-                  group-hover:scale-105
-                  transition-transform duration-500
-                  group-hover:brightness-110
-                "
-                loading="eager"
-              />
-              {/* Gradient overlay on hover */}
-              <div className="
-                absolute inset-0
-                bg-gradient-to-r from-black/60 to-transparent
-                opacity-0 group-hover:opacity-100
-                transition-opacity duration-300
-              " />
-            </div>
-          )}
-
-          {/* Content */}
-          <div className="p-8 md:p-10 flex flex-col justify-center">
-            {/* Category Badges */}
-            {post.categories && post.categories.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-6">
-                {post.categories.slice(0, 2).map((category) => (
-                  <span
-                    key={category}
-                    className="
-                      inline-block px-4 py-2
-                      text-xs font-[var(--font-taskor)]
-                      text-[#ffd700] bg-[#ffd700]/10
-                      border border-[#ffd700]/30
-                      rounded-full uppercase tracking-wider
-                    "
-                  >
-                    {category.replace(/-/g, ' ')}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Title (H2 - auto-applies display font) */}
-            <h2 className="
-              text-h2 md:text-h1 font-bold mb-4
-              text-[#e5e4dd]
-              group-hover:text-[#00ff88]
-              transition-colors duration-300
-              leading-tight
-            ">
-              {post.title}
-            </h2>
-
-            {/* Excerpt */}
-            {post.excerpt && (
-              <div
-                className="
-                  font-[var(--font-amulya)] text-body md:text-lg
-                  text-[#dcdbd5] mb-6
-                  line-clamp-3 leading-relaxed
-                "
-                dangerouslySetInnerHTML={{ __html: post.excerpt }}
-              />
-            )}
-
-            {/* Author and Date */}
-            <div className="
-              flex items-center gap-3
-              font-[var(--font-amulya)] text-caption
-              text-[#dcdbd5]/70
-            ">
-              {post.author.name && (
-                <>
-                  <span>By {post.author.name}</span>
-                  <span className="text-[#dcdbd5]/40">•</span>
-                </>
-              )}
-              <time dateTime={post.date}>
-                {new Date(post.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-            </div>
-          </div>
-        </div>
-      </a>
-    </article>
-  );
-}
 
