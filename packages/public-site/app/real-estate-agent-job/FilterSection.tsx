@@ -36,33 +36,33 @@ export default function FilterSection({
   return (
     <section className="relative px-4 sm:px-8 md:px-12 py-16">
       <div className="max-w-[2500px] mx-auto">
-        {/* Filter Label */}
-        <div className="mb-6">
+        <div className="flex items-start gap-6">
+          {/* Filter Label */}
           <H2>Filter:</H2>
-        </div>
 
-        {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-3">
-          {categories.map((category) => {
-            const isSelected = selectedCategories.includes(category.slug);
+          {/* Filter Buttons */}
+          <div className="flex flex-wrap gap-3 flex-1">
+            {categories.map((category) => {
+              const isSelected = selectedCategories.includes(category.slug);
 
-            return (
-              <button
-                key={category.slug}
-                onClick={() => toggleCategory(category.slug)}
-                className="filter-button"
-                data-selected={isSelected}
-                aria-pressed={isSelected}
-                aria-label={`Filter by ${category.name}`}
-              >
-                <div className="filter-button-inner">
-                  <span className="font-[var(--font-amulya)] text-body">
-                    {category.name}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={category.slug}
+                  onClick={() => toggleCategory(category.slug)}
+                  className="filter-button"
+                  data-selected={isSelected}
+                  aria-pressed={isSelected}
+                  aria-label={`Filter by ${category.name}`}
+                >
+                  <div className="filter-button-inner">
+                    <span className="font-[var(--font-amulya)] text-body">
+                      {category.name}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
