@@ -196,7 +196,7 @@ export default function Footer() {
         }
 
         .footer-container {
-          max-width: min(1900px, 95vw);
+          width: 100%;
           margin: 0 auto;
           padding: 50px 20px 20px;
         }

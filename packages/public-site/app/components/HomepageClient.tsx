@@ -31,26 +31,57 @@ export function HomepageClient() {
 
     const calculateH1Position = () => {
       const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
-      if (profileImg) {
-        // CRITICAL: Only calculate when scrollY is 0 to get consistent positioning
-        // Otherwise getBoundingClientRect() gives viewport-relative position which changes during scroll
-        if (window.scrollY !== 0) {
-          return; // Don't recalculate during scroll
+      if (!profileImg) return;
+
+      // CRITICAL: Only calculate when scrollY is 0 to get consistent positioning
+      // Otherwise getBoundingClientRect() gives viewport-relative position which changes during scroll
+      if (window.scrollY !== 0) {
+        return; // Don't recalculate during scroll
+      }
+
+      // Helper function to get dimensions - handles cached images
+      const getDimensions = () => {
+        const rect = profileImg.getBoundingClientRect();
+
+        // If cached image has zero dimensions, wait for paint
+        if (rect.height === 0 || rect.width === 0) {
+          // Use naturalHeight as fallback for cached images
+          if (profileImg.complete && profileImg.naturalHeight > 0) {
+            return {
+              top: rect.top,
+              height: profileImg.naturalHeight
+            };
+          }
+          return null; // Dimensions not ready yet
         }
 
-        // Use visualViewport for accurate mobile viewport dimensions
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        return {
+          top: rect.top,
+          height: rect.height
+        };
+      };
 
-        // Get bounding rect for accurate viewport-relative positioning
-        const rect = profileImg.getBoundingClientRect();
-        const imgTop = rect.top;
-        const imgHeight = rect.height;
-
-        // Lock H1 at exactly 25% overlap with profile image (75% down the profile)
-        const finalPosition = imgTop + (imgHeight * 0.75);
-
-        setH1MarginTop(`${finalPosition}px`);
+      const dimensions = getDimensions();
+      if (!dimensions) {
+        // Dimensions not ready - retry after paint
+        requestAnimationFrame(() => {
+          const retryDimensions = getDimensions();
+          if (retryDimensions) {
+            const finalPosition = retryDimensions.top + (retryDimensions.height * 0.75);
+            setH1MarginTop(`${finalPosition}px`);
+          } else {
+            // Final fallback - retry after a small delay
+            setTimeout(() => {
+              calculateH1Position();
+            }, 100);
+          }
+        });
+        return;
       }
+
+      // Lock H1 at exactly 25% overlap with profile image (75% down the profile)
+      const finalPosition = dimensions.top + (dimensions.height * 0.75);
+      setH1MarginTop(`${finalPosition}px`);
     };
 
     // Debounced resize handler - ONLY recalculate if screen WIDTH changes (not height)
@@ -73,10 +104,40 @@ export function HomepageClient() {
       }
     };
 
-    // Calculate on mount and load
-    calculateH1Position();
-    window.addEventListener('resize', debouncedCalculate);
+    // Calculate H1 position with proper timing for cached images
+    const initializePosition = () => {
+      const profileImg = document.querySelector('.profile-image') as HTMLImageElement;
+
+      if (!profileImg) {
+        // Image not in DOM yet - retry after next frame
+        requestAnimationFrame(initializePosition);
+        return;
+      }
+
+      // Check if image is cached and already loaded
+      if (profileImg.complete) {
+        // Cached image - wait for next frame to ensure dimensions are painted
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            calculateH1Position();
+          });
+        });
+      } else {
+        // Image not cached - wait for load event
+        profileImg.addEventListener('load', calculateH1Position, { once: true });
+        // Calculate immediately as fallback
+        calculateH1Position();
+      }
+    };
+
+    // Initialize position after mount
+    initializePosition();
+
+    // Recalculate on window load (handles late-loading images)
     window.addEventListener('load', calculateH1Position);
+
+    // Handle window resize
+    window.addEventListener('resize', debouncedCalculate);
 
     return () => {
       clearTimeout(startDelay);

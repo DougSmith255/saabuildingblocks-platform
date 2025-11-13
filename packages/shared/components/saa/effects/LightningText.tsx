@@ -1,4 +1,5 @@
 import React from 'react';
+import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface LightningTextProps {
   text: string;
@@ -26,6 +27,8 @@ export const LightningText: React.FC<LightningTextProps> = ({
   glassStyle = 'frosted',
   lightningIntensity = 'medium'
 }) => {
+  // Extract plain text for SEO/accessibility
+  const plainText = extractPlainText(text);
   const letters = text.split('');
 
   // Lightning intensity settings
@@ -39,6 +42,9 @@ export const LightningText: React.FC<LightningTextProps> = ({
 
   return (
     <div className={`lightning-text ${className}`}>
+      {/* SEO-friendly hidden text for search engines and screen readers */}
+      <span className="sr-only">{plainText}</span>
+
       <style jsx>{`
         .lightning-text {
           display: inline-flex;

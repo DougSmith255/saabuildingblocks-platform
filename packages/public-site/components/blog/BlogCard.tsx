@@ -14,8 +14,12 @@
  * - Colors: Brand palette only (#e5e4dd, #dcdbd5, #00ff88)
  * - Responsive: Fluid typography with clamp()
  * - Accessibility: Semantic HTML, proper ARIA labels
+ *
+ * Performance optimization:
+ * - Wrapped with React.memo to prevent re-renders when props haven't changed
  */
 
+import { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
@@ -25,7 +29,7 @@ export interface BlogCardProps {
   className?: string;
 }
 
-export function BlogCard({ post, className = '' }: BlogCardProps) {
+function BlogCardComponent({ post, className = '' }: BlogCardProps) {
   return (
     <article
       className={`
@@ -195,9 +199,9 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
               </>
             )}
 
-            {/* Date */}
+            {/* Date (Published or Updated based on modification) */}
             <time
-              dateTime={post.date}
+              dateTime={post.modified && post.modified !== post.date ? post.modified : post.date}
               className="
                 text-[#dcdbd5]
                 group-hover:text-[#00ff88]
@@ -205,8 +209,18 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
                 duration-300
                 leading-snug
               "
+              title={`${post.modified && post.modified !== post.date ? 'Last updated' : 'Published'}: ${new Date(
+                post.modified && post.modified !== post.date ? post.modified : post.date
+              ).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}`}
             >
-              {new Date(post.date).toLocaleDateString('en-US', {
+              {post.modified && post.modified !== post.date ? 'Updated' : 'Published'}{' '}
+              {new Date(
+                post.modified && post.modified !== post.date ? post.modified : post.date
+              ).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric',
@@ -234,5 +248,9 @@ export function BlogCard({ post, className = '' }: BlogCardProps) {
     </article>
   );
 }
+
+// Memoize the component to prevent re-renders when props haven't changed
+// This is crucial for performance when filtering - only new/removed posts will re-render
+export const BlogCard = memo(BlogCardComponent);
 
 export default BlogCard;

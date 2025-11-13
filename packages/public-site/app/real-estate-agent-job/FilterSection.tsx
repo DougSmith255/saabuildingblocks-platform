@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { useState, useEffect } from 'react';
+import { H2, GenericButton } from '@saa/shared/components/saa';
 
 /**
  * WordPress categories data type
@@ -15,38 +15,116 @@ type CategoryData = {
 };
 
 /**
+ * Parse hash parameters from URL
+ */
+function getHashParams(): URLSearchParams {
+  if (typeof window === 'undefined') return new URLSearchParams();
+  const hash = window.location.hash.slice(1); // Remove '#'
+  return new URLSearchParams(hash);
+}
+
+/**
+ * Update hash in URL without triggering page reload or scroll
+ */
+function setHashParams(params: URLSearchParams) {
+  const hashString = params.toString();
+
+  // Save current scroll position
+  const scrollY = window.scrollY;
+
+  // Update hash (this may cause scroll)
+  if (hashString) {
+    window.location.hash = `#${hashString}`;
+  } else {
+    // Use replaceState to clear hash without scrolling
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+
+  // Restore scroll position
+  window.scrollTo(0, scrollY);
+}
+
+/**
  * Filter Section Component
  * Full-width holographic card with brand-styled filter buttons
+ * Supports multi-select filtering
+ * Uses URL hash for static export compatibility
  */
 export default function FilterSection({
-  categories
+  categories,
+  onFilterChange
 }: {
-  categories: CategoryData[]
+  categories: CategoryData[];
+  onFilterChange: (categories: string[]) => void;
 }) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [showAll, setShowAll] = useState(true);
+  const showAll = selectedCategories.length === 0;
+
+  // Read hash params on mount and when hash changes
+  useEffect(() => {
+    const updateFromHash = () => {
+      const params = getHashParams();
+      const categoryParam = params.get('category');
+      const categories = categoryParam ? categoryParam.split(',').filter(Boolean) : [];
+      setSelectedCategories(categories);
+      onFilterChange(categories);
+    };
+
+    updateFromHash();
+    window.addEventListener('hashchange', updateFromHash);
+    return () => window.removeEventListener('hashchange', updateFromHash);
+  }, [onFilterChange]);
 
   const handleAllClick = () => {
-    setShowAll(true);
+    // When "All" is clicked, clear all category filters
+    const params = getHashParams();
+    params.delete('category');
+    params.delete('page'); // Reset to page 1
+    setHashParams(params);
+
+    // Force immediate state update (don't wait for hashchange)
     setSelectedCategories([]);
+    onFilterChange([]);
   };
 
-  const toggleCategory = (slug: string) => {
-    setSelectedCategories(prev => {
-      const newSelection = prev.includes(slug)
-        ? prev.filter(s => s !== slug)
-        : [...prev, slug];
+  const handleCategoryClick = (slug: string) => {
+    const params = getHashParams();
+    let newCategories: string[];
 
-      // If all filters are turned off, automatically activate "All"
-      if (newSelection.length === 0) {
-        setShowAll(true);
-      } else {
-        // Deselect "All" when any category is clicked
-        setShowAll(false);
+    if (selectedCategories.includes(slug)) {
+      // Remove category (toggle off)
+      newCategories = selectedCategories.filter(cat => cat !== slug);
+
+      // If this was the last selected category, automatically activate "All"
+      // (Don't allow zero filters - automatically show all posts)
+      if (newCategories.length === 0) {
+        params.delete('category');
+        params.delete('page');
+        setHashParams(params);
+
+        // Force immediate state update
+        setSelectedCategories([]);
+        onFilterChange([]);
+        return;
       }
+    } else {
+      // Add category (toggle on)
+      newCategories = [...selectedCategories, slug];
+    }
 
-      return newSelection;
-    });
+    // Update URL with multi-select categories
+    if (newCategories.length > 0) {
+      params.set('category', newCategories.join(','));
+    } else {
+      params.delete('category');
+    }
+    params.delete('page'); // Reset to page 1 when filtering changes
+
+    setHashParams(params);
+
+    // Force immediate state update
+    setSelectedCategories(newCategories);
+    onFilterChange(newCategories);
   };
 
   return (
@@ -62,107 +140,33 @@ export default function FilterSection({
             {/* Filter Buttons */}
             <div className="flex flex-wrap gap-3 xl:flex-1">
             {/* All Button */}
-            <button
+            <GenericButton
               onClick={handleAllClick}
-              className="filter-button"
-              data-selected={showAll}
-              aria-pressed={showAll}
+              selected={showAll}
               aria-label="Show all posts"
             >
-              <div className="filter-button-inner">
-                <span className="font-[var(--font-amulya)] text-body">
-                  All
-                </span>
-              </div>
-            </button>
+              All
+            </GenericButton>
 
             {/* Category Buttons */}
             {categories.map((category) => {
               const isSelected = selectedCategories.includes(category.slug);
 
               return (
-                <button
+                <GenericButton
                   key={category.slug}
-                  onClick={() => toggleCategory(category.slug)}
-                  className="filter-button"
-                  data-selected={isSelected}
-                  aria-pressed={isSelected}
-                  aria-label={`Filter by ${category.name}`}
+                  onClick={() => handleCategoryClick(category.slug)}
+                  selected={isSelected}
+                  aria-label={`${isSelected ? 'Remove' : 'Add'} ${category.name} filter`}
                 >
-                  <div className="filter-button-inner">
-                    <span className="font-[var(--font-amulya)] text-body">
-                      {category.name}
-                    </span>
-                  </div>
-                </button>
+                  {category.name}
+                </GenericButton>
               );
             })}
           </div>
         </div>
       </div>
       </div>
-
-      <style jsx>{`
-        .filter-button {
-          min-width: 131px;
-          height: 51px;
-          border-radius: 15px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2px;
-          transition: none;
-          box-shadow: none;
-        }
-
-        /* Inactive button - default state */
-        .filter-button[data-selected="false"] {
-          background: linear-gradient(
-            to bottom right,
-            #ffd700 0%,
-            rgba(255, 215, 0, 0) 30%
-          );
-          background-color: rgba(255, 215, 0, 0.2);
-          box-shadow: none;
-        }
-
-        /* Inactive button - hover state */
-        .filter-button[data-selected="false"]:hover {
-          background-color: rgba(255, 215, 0, 0.4);
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-          outline: none;
-        }
-
-        /* Active button - default state */
-        .filter-button[data-selected="true"] {
-          background: linear-gradient(
-            to bottom right,
-            #00ff88 0%,
-            rgba(0, 255, 136, 0) 30%
-          );
-          background-color: rgba(0, 255, 136, 0.3);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-
-        /* Active button - hover state */
-        .filter-button[data-selected="true"]:hover {
-          background-color: rgba(0, 255, 136, 0.5);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
-
-        .filter-button-inner {
-          width: 100%;
-          height: 47px;
-          border-radius: 13px;
-          background-color: #1a1a1a;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0 20px;
-          color: #fff;
-        }
-      `}</style>
     </section>
   );
 }

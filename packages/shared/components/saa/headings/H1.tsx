@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface HeadingProps {
   children: React.ReactNode;
@@ -12,6 +13,9 @@ export interface HeadingProps {
 }
 
 export default function H1({ children, className = '', style = {}, id, heroAnimate = true, animationDelay = '0.6s' }: HeadingProps) {
+  // Extract plain text for SEO/accessibility
+  const plainText = extractPlainText(children);
+
   // Convert children to string for processing
   const text = typeof children === 'string' ? children : String(children);
 
@@ -39,6 +43,9 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
           ...style,
         }}
       >
+        {/* SEO-friendly hidden text for search engines and screen readers */}
+        <span className="sr-only">{plainText}</span>
+
         {words.map((word, wordIndex) => (
           <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
             {word.split('').map((char, charIndex) => {

@@ -1,5 +1,5 @@
-/* Star Background Canvas Styles - EXACT WordPress copy */
-.starfieldCanvas {
+/* Star Background Container - CSS Animation Based (Fixed Speed) */
+.starfieldContainer {
   /* CRITICAL: Position fixed to cover entire viewport */
   position: fixed !important;
   top: 0 !important;
@@ -8,6 +8,7 @@
   height: 100vh !important;
   z-index: -1 !important;
   pointer-events: none !important;
+  overflow: hidden !important;
 
   /* CRITICAL: Transparent background (not black) */
   background-color: transparent !important;
@@ -21,9 +22,55 @@
   visibility: visible !important;
 }
 
+/* Individual star element */
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  will-change: transform;
+
+  /* CSS animation - FIXED DURATION regardless of screen size */
+  animation-name: starFloat;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* Star floating animation - moves from bottom to top */
+@keyframes starFloat {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  100% {
+    transform: translateY(-110vh) translateX(0);
+  }
+}
+
+/* Twinkle effect using opacity animation */
+.star::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: inherit;
+  border-radius: inherit;
+  animation: starTwinkle 3s ease-in-out infinite;
+  animation-delay: inherit;
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
 /* Mobile viewport stability */
 @media screen and (max-width: 768px) {
-  .starfieldCanvas {
+  .starfieldContainer {
     height: 100vh;
     min-height: -webkit-fill-available;
     contain: layout style paint;
@@ -36,23 +83,7 @@
 
 /* Fix for iOS viewport units */
 @supports (-webkit-touch-callout: none) {
-  .starfieldCanvas {
+  .starfieldContainer {
     height: -webkit-fill-available;
   }
-}
-
-/* Prevent flash during load - keep hidden until ready */
-.starfieldCanvas:not([width]) {
-  opacity: 0;
-}
-
-/* Keep hidden even after width is set - wait for ready class */
-.starfieldCanvas[width] {
-  opacity: 0;
-}
-
-/* Only fade in when explicitly marked ready */
-.starfieldCanvas.stars-ready {
-  opacity: 1;
-  transition: opacity 1.5s ease-in-out;
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface HeadingProps {
   children: React.ReactNode;
@@ -38,6 +39,9 @@ export default function H2({
   className = '',
   style = {}
 }: HeadingProps) {
+  // Extract plain text for SEO/accessibility
+  const plainText = extractPlainText(children);
+
   // Convert children to string and split into words
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
@@ -69,6 +73,9 @@ export default function H2({
         ...style
       }}
     >
+      {/* SEO-friendly hidden text for search engines and screen readers */}
+      <span className="sr-only">{plainText}</span>
+
       <style jsx>{`
         .h2-char {
           display: inline-block;

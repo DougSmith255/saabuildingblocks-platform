@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface TaglineProps {
   children: React.ReactNode;
@@ -42,6 +43,9 @@ export default function Tagline({
   heroAnimate = true,
   animationDelay = '0.9s'
 }: TaglineProps) {
+  // Extract plain text for SEO/accessibility
+  const plainText = extractPlainText(children);
+
   // Convert children to string and split into words
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
@@ -79,6 +83,9 @@ export default function Tagline({
         ...style
       }}
     >
+      {/* SEO-friendly hidden text for search engines and screen readers */}
+      <span className="sr-only">{plainText}</span>
+
       <style jsx>{`
         /* 2025 Hero Entrance Animation */
         @keyframes fadeInUp2025 {
