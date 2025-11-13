@@ -27,9 +27,9 @@
     "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
+    "next": "^16.0.0",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "next": "^16.0.0"
+    "react-dom": "^19.2.0"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -51,7 +51,6 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "framer-motion": "^12.23.22",
     "lucide-react": "^0.544.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",

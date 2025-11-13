@@ -9,7 +9,9 @@ import { useState, useEffect, useRef } from 'react';
  * - Dynamic H1 positioning relative to profile image
  */
 export function HomepageClient() {
-  const [displayValue, setDisplayValue] = useState('0000');
+  // PERFORMANCE: Start with final value to eliminate 2.8s LCP render delay
+  // The counter shows "3700" immediately (server-rendered), then animates after hydration
+  const [displayValue, setDisplayValue] = useState('3700');
   const [h1MarginTop, setH1MarginTop] = useState('33.2vh');
   const animationRef = useRef<NodeJS.Timeout | null>(null);
 
