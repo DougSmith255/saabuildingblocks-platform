@@ -1,28 +1,12 @@
-/* Static Counter CSS Animations */
+/* Static Counter CSS - NO ANIMATION DELAYS FOR LCP OPTIMIZATION */
 
-/* Fade in counter on page load */
-@keyframes counterFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Counter is immediately visible - no fade-in animation */
 .agent-counter-wrapper {
-  animation: counterFadeIn 0.6s ease-out 0.3s both;
-  will-change: opacity, transform;
+  opacity: 1;
+  will-change: auto;
 }
 
-/* Optional: Subtle number cycling effect (pure CSS) */
-@keyframes numberCycle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
+/* No CSS animations on counter numbers - let CounterAnimation.tsx handle scramble effect */
 .counter-animate {
-  animation: numberCycle 3s ease-in-out 1s infinite;
+  /* No animation - prevents CSS animation delays from affecting LCP measurement */
 }
