@@ -70,7 +70,7 @@
     "SHELL": "/bin/bash",
     "unique_id": "08eec9b5-cc46-48e8-9915-af9e21129513",
     "status": "online",
-    "pm_uptime": 1762993614328,
+    "pm_uptime": 1763059204495,
     "axm_actions": [
       {
         "action_name": "km:heapdump",
@@ -125,11 +125,12 @@
       "module_version": "6.0.13"
     },
     "axm_dynamic": {},
-    "created_at": 1762993609196,
-    "restart_time": 1,
+    "created_at": 1763059199355,
+    "restart_time": 7,
     "unstable_restarts": 0,
     "version": "N/A",
-    "node_version": "20.19.4"
+    "node_version": "20.19.4",
+    "filter_env": []
   },
   {
     "namespace": "default",
@@ -214,7 +215,7 @@
     "SHELL": "/bin/bash",
     "unique_id": "46412048-486c-467e-abd7-1315594d6156",
     "status": "online",
-    "pm_uptime": 1762993614337,
+    "pm_uptime": 1763054533103,
     "axm_actions": [
       {
         "action_name": "km:heapdump",
@@ -242,7 +243,48 @@
         "arity": 1
       }
     ],
-    "axm_monitor": {},
+    "axm_monitor": {
+      "Used Heap Size": {
+        "value": "9.17",
+        "type": "internal/v8/heap/used",
+        "unit": "MiB",
+        "historic": true
+      },
+      "Heap Usage": {
+        "value": 87.57,
+        "type": "internal/v8/heap/usage",
+        "unit": "%",
+        "historic": true
+      },
+      "Heap Size": {
+        "value": "10.48",
+        "type": "internal/v8/heap/total",
+        "unit": "MiB",
+        "historic": true
+      },
+      "Event Loop Latency p95": {
+        "value": "1.46",
+        "type": "internal/libuv/latency/p95",
+        "unit": "ms",
+        "historic": true
+      },
+      "Event Loop Latency": {
+        "value": "0.42",
+        "type": "internal/libuv/latency/p50",
+        "unit": "ms",
+        "historic": true
+      },
+      "Active handles": {
+        "value": 5,
+        "type": "internal/libuv/handles",
+        "historic": true
+      },
+      "Active requests": {
+        "value": 0,
+        "type": "internal/libuv/requests",
+        "historic": true
+      }
+    },
     "axm_options": {
       "error": true,
       "heapdump": true,
@@ -269,10 +311,12 @@
       "module_version": "6.0.13"
     },
     "axm_dynamic": {},
-    "created_at": 1762993614337,
-    "restart_time": 0,
+    "created_at": 1763054527962,
+    "restart_time": 16,
     "unstable_restarts": 0,
     "version": "N/A",
-    "node_version": "20.19.4"
+    "node_version": "20.19.4",
+    "filter_env": [],
+    "exit_code": 0
   }
 ]
