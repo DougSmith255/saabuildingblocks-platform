@@ -13,17 +13,24 @@
 packages/public-site/app/my-new-page/page.tsx
 ```
 
-### 2. Basic Page Structure
+### 2. Basic Page Structure (With Hero Image Preload)
 
 ```typescript
 // app/my-new-page/page.tsx
 import { H1 } from '@saa/shared/components/saa';
+import { HeroImagePreload } from '@saa/shared/components/performance';
 
 export default function MyNewPage() {
   return (
     <>
+      {/* ⚡ CRITICAL: Preload hero image for faster LCP */}
+      <HeroImagePreload src="/images/my-hero-bg.jpg" />
+
       {/* Hero Section - loads immediately */}
-      <section className="min-h-screen flex items-center justify-center">
+      <section
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundImage: 'url(/images/my-hero-bg.jpg)' }}
+      >
         <H1>My Page Hero</H1>
       </section>
 
@@ -37,7 +44,7 @@ export default function MyNewPage() {
 }
 ```
 
-**That's it!** The footer will automatically defer, and Core Web Vitals will be optimized.
+**That's it!** The footer will automatically defer, hero image preloads for fast LCP, and Core Web Vitals will be optimized.
 
 ---
 
@@ -231,7 +238,133 @@ export default function MyPage() {
 
 ---
 
-## 🖼️ Image Loading Optimization
+## 🖼️ Hero Image Preloading (Critical for LCP!)
+
+**Hero images are often the LCP (Largest Contentful Paint) element.** Preloading them is CRITICAL for performance scores.
+
+### Basic Hero Image Preload
+
+```typescript
+import { HeroImagePreload } from '@saa/shared/components/performance';
+
+export default function MyPage() {
+  return (
+    <>
+      {/* ⚡ Preload hero background image */}
+      <HeroImagePreload src="/images/hero-bg.jpg" />
+
+      {/* Hero section with background image */}
+      <section
+        className="h-screen"
+        style={{ backgroundImage: 'url(/images/hero-bg.jpg)' }}
+      >
+        <h1>Welcome</h1>
+      </section>
+    </>
+  );
+}
+```
+
+### Hero Image as <img> Tag
+
+```typescript
+import { HeroImagePreload } from '@saa/shared/components/performance';
+
+export default function MyPage() {
+  return (
+    <>
+      {/* ⚡ Preload hero image */}
+      <HeroImagePreload src="/images/hero.jpg" />
+
+      {/* Hero with <img> tag */}
+      <section>
+        <img
+          src="/images/hero.jpg"
+          alt="Hero"
+          loading="eager"
+          fetchPriority="high"
+          className="w-full h-screen object-cover"
+        />
+      </section>
+    </>
+  );
+}
+```
+
+### Multiple Hero Images (Slideshow/Parallax)
+
+```typescript
+import { HeroImagesPreload } from '@saa/shared/components/performance';
+
+export default function MyPage() {
+  const heroImages = [
+    '/images/hero-1.jpg',  // First image gets highest priority
+    '/images/hero-2.jpg',
+    '/images/hero-3.jpg',
+  ];
+
+  return (
+    <>
+      {/* ⚡ Preload all hero images */}
+      <HeroImagesPreload images={heroImages} />
+
+      {/* Hero slideshow */}
+      <HeroSlideshow images={heroImages} />
+    </>
+  );
+}
+```
+
+### Responsive Hero Images
+
+```typescript
+import { HeroImagePreload } from '@saa/shared/components/performance';
+
+export default function MyPage() {
+  return (
+    <>
+      {/* ⚡ Preload responsive hero with srcset */}
+      <HeroImagePreload
+        src="/images/hero-desktop.jpg"
+        imageSrcSet="/images/hero-mobile.jpg 768w, /images/hero-desktop.jpg 1920w"
+        imageSizes="(max-width: 768px) 100vw, 1920px"
+      />
+
+      {/* Responsive hero image */}
+      <img
+        src="/images/hero-desktop.jpg"
+        srcSet="/images/hero-mobile.jpg 768w, /images/hero-desktop.jpg 1920w"
+        sizes="(max-width: 768px) 100vw, 1920px"
+        alt="Hero"
+        loading="eager"
+        fetchPriority="high"
+      />
+    </>
+  );
+}
+```
+
+### Why Preloading Hero Images Matters
+
+**Without preload:**
+1. Browser downloads HTML
+2. Browser parses CSS
+3. Browser discovers background-image in CSS
+4. **THEN** browser starts downloading image
+5. LCP happens after image loads (slow!)
+
+**With preload:**
+1. Browser downloads HTML
+2. Browser sees `<HeroImagePreload>` component
+3. **Browser immediately starts downloading image** (parallel with CSS)
+4. Image is cached when hero renders
+5. LCP happens much faster! ✨
+
+**Impact:** 30-50% faster LCP for image-heavy heroes
+
+---
+
+## 🖼️ Below-Fold Image Optimization
 
 Combine deferred content with lazy image loading:
 
@@ -239,7 +372,8 @@ Combine deferred content with lazy image loading:
 export default function MyPage() {
   return (
     <>
-      {/* Hero image - load immediately */}
+      {/* Hero image - preload and load immediately */}
+      <HeroImagePreload src="/hero.jpg" />
       <img
         src="/hero.jpg"
         alt="Hero"
@@ -446,7 +580,9 @@ export default function AboutPage() {
 
 Before deploying a new page:
 
+- [ ] **Hero image preloaded** using `<HeroImagePreload src="..." />`
 - [ ] Hero section loads immediately (not wrapped in DeferredContent)
+- [ ] Hero image uses `loading="eager"` and `fetchPriority="high"`
 - [ ] Images below fold use `loading="lazy"`
 - [ ] Large sections use `DeferredContent` or `DeferredSection`
 - [ ] Placeholders reserve space (prevent CLS)
@@ -454,6 +590,7 @@ Before deploying a new page:
 - [ ] TypeScript type-check passes (`npm run type-check`)
 - [ ] Test page in browser (check Network tab for deferred loading)
 - [ ] Test scroll behavior (sections load smoothly)
+- [ ] Check browser console for `[HeroImagePreload]` log confirming preload
 
 ---
 
