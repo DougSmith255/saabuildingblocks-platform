@@ -88,8 +88,16 @@ export default function Home() {
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
 
-        {/* Container - static positioning with CSS only */}
-        <div className="relative z-10 flex flex-col items-center justify-center gap-8" style={{ marginTop: '33.2vh' }}>
+        {/* Container - positioned to overlap profile image by 25% (locked at 75% down the image) */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
+          style={{
+            // Profile image container: height=84dvh, top=8dvh+15px
+            // H1 position at 75% down the image = 8dvh + 15px + (84dvh × 0.75)
+            // = 8dvh + 15px + 63dvh = 71dvh + 15px
+            top: 'calc(71dvh + 15px)',
+          }}
+        >
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
