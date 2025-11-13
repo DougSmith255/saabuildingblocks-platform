@@ -2130,3 +2130,13 @@ html body .counter-text {
     transform: translateZ(-50px) rotateX(5deg);
   }
 }
+
+/* Image fade-in animation */
+@keyframes imgFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
