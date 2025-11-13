@@ -74,18 +74,40 @@ export default function PaginationControls({
     setHashParams(params);
 
     // Scroll to the blog posts section (not filter, not top of page)
-    // Account for fixed header height
+    // Account for fixed header height + 15px spacing
     setTimeout(() => {
       const postsHeading = document.getElementById('posts-heading');
       if (postsHeading) {
-        const headerHeight = 90; // Approximate header height
+        const headerHeight = 90; // Fixed header height
+        const spacing = 15; // Additional spacing from header
         const elementPosition = postsHeading.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - headerHeight;
+        const offsetPosition = elementPosition - headerHeight - spacing;
 
+        // Flag to track if user interrupts the scroll
+        let scrollCancelled = false;
+
+        // Cancel smooth scroll if user tries to scroll manually
+        const cancelScroll = () => {
+          scrollCancelled = true;
+        };
+
+        // Listen for user scroll attempts (wheel, touch, or keyboard)
+        window.addEventListener('wheel', cancelScroll, { once: true, passive: true });
+        window.addEventListener('touchstart', cancelScroll, { once: true, passive: true });
+        window.addEventListener('keydown', cancelScroll, { once: true, passive: true });
+
+        // Perform the scroll
         window.scrollTo({
           top: offsetPosition,
           behavior: 'smooth'
         });
+
+        // Clean up listeners after scroll animation completes (~500ms for smooth scroll)
+        setTimeout(() => {
+          window.removeEventListener('wheel', cancelScroll);
+          window.removeEventListener('touchstart', cancelScroll);
+          window.removeEventListener('keydown', cancelScroll);
+        }, 600);
       }
     }, 100);
   };
