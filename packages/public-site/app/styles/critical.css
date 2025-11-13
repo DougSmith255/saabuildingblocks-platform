@@ -26,6 +26,14 @@
   --color-body-text: #dcdbd5; /* Alias for consistency */
   --color-darkGray: #2a2a2a;
   --color-mediumGray: #5a5a5a;
+
+  /* Header Menu Typography - Prevents FOUC on menu items */
+  --font-size-menuMainItem: clamp(23px, calc(22.82px + 0.07vw), 25px);
+  --line-height-menuMainItem: 1.4;
+  --letter-spacing-menuMainItem: 0em;
+  --font-weight-menuMainItem: 500;
+  --font-family-menuMainItem: var(--font-synonym), sans-serif;
+  --text-color-menuMainItem: #e5e4dd;
 }
 
 /* Base Layout - Prevents FOUC */
