@@ -5,12 +5,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3001",
+    "prebuild": "npm run generate:blog-posts",
     "build": "next build",
     "start": "next start -p 3001",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "export": "npm run build",
     "generate:css": "tsx scripts/generate-static-css.ts",
+    "generate:blog-posts": "tsx scripts/generate-blog-posts-json.ts",
     "test:performance": "node scripts/performance-test.js"
   },
   "dependencies": {
