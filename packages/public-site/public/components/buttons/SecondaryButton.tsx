@@ -36,9 +36,13 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     onClick?.(e);
   };
 
+  // Extract width classes from className to apply to button element
+  const widthMatch = className?.match(/(min-w-\[[\d]+px\]|w-full|w-\[[\d]+px\])/);
+  const widthClass = widthMatch ? widthMatch[0] : '';
+
   const buttonClasses = `
     relative flex justify-center items-center
-    ${className?.includes('w-full') ? 'w-full' : ''}
+    ${widthClass}
     h-[56px] px-5 py-2
     bg-[rgb(45,45,45)] backdrop-blur-[15px]
     rounded-xl border-t border-b border-white/10
@@ -72,7 +76,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     <div className={`
       ${className}
       group
-      relative ${className?.includes('w-full') ? 'flex' : 'inline-flex'} justify-center items-center
+      relative flex justify-center items-center
       !my-[10px]
     `}>
       <ButtonElement

@@ -82,8 +82,8 @@ export default function SmoothScroll() {
     }
 
     // Initialize smooth scrolling
-    // speed: 160 (higher = faster), smooth: 2 (lower = quicker start/stop)
-    const smoothScroll = new SmoothScrollHandler(document, 160, 2);
+    // speed: 130 (higher = faster), smooth: 2.5 (lower = quicker start/stop)
+    const smoothScroll = new SmoothScrollHandler(document, 130, 2.5);
 
     // Cleanup on unmount
     return () => {

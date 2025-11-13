@@ -15,6 +15,24 @@ html {
   }
 }
 
+/* Disable text selection and copy/paste site-wide (SEO-safe) */
+* {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Allow selection only for input fields and textareas (important for forms) */
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
 /* Force SlotCounter to use Taskor font */
 .agent-counter-wrapper,
 .agent-counter-wrapper *,
@@ -1350,13 +1368,13 @@ main {
 }
 
 /* ========================================
-   GLOBAL FOOTER SPACING - 400px MINIMUM
+   GLOBAL FOOTER SPACING - 150px MINIMUM
    ======================================== */
 
-/* Ensure all main content has minimum 400px space before footer */
+/* Ensure all main content has minimum 150px space before footer */
 main {
-  min-height: calc(100vh - 400px);
-  padding-bottom: 400px;
+  min-height: calc(100vh - 150px);
+  padding-bottom: 150px;
 }
 
 /* Remove footer spacing on pages without footer */
