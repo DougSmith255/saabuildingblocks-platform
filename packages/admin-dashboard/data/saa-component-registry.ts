@@ -3,6 +3,15 @@
  *
  * Central registry for all SAA Design System components with metadata,
  * file paths, and conversion status tracking.
+ *
+ * ⚠️ ADDING A NEW COMPONENT? Read this first:
+ * 📘 /home/claude-flow/📘-NEW-COMPONENT-GUIDE.md
+ *
+ * Critical reminders:
+ * - Use relative paths (../shared/...) NOT package aliases (@saa/shared/...)
+ * - Check for utility dependencies (extractPlainText, etc.)
+ * - Add preview mapping to ComponentEditor.tsx
+ * - Test locally before deploying
  */
 
 export type SAAComponentCategory =

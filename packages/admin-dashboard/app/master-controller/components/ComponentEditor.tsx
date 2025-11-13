@@ -212,6 +212,12 @@ interface ComponentPreviewProps {
 }
 
 function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
+  /**
+   * ⚠️ ADDING A NEW COMPONENT PREVIEW?
+   * Add a case to the switch statement below.
+   * See: 📘 /home/claude-flow/📘-NEW-COMPONENT-GUIDE.md
+   */
+
   // Map component IDs to their actual imports (same as standalone ComponentPreview.tsx)
   const PreviewComponent = React.useMemo(() => {
     const id = component.id;
