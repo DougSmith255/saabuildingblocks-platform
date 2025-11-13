@@ -65,7 +65,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
         className={`
           relative flex justify-center items-center
           ${isFullWidth ? 'w-full' : ''}
-          h-[56px] px-5 py-2
+          px-5 py-2
           bg-[rgb(45,45,45)] backdrop-blur-[15px]
           rounded-xl border-t border-b border-white/10
           uppercase tracking-wide
@@ -81,6 +81,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
         `}
         style={{
           ...buttonStyles,
+          height: '56px',
           boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
         }}
       >
