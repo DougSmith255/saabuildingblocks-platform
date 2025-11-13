@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
   // Enable static export for Cloudflare Pages deployment
   output: 'export',
 
+  // Experimental: Inline CSS to eliminate render-blocking CSS requests
+  experimental: {
+    inlineCss: true,
+  },
+
   // Disable image optimization for static export
   images: {
     unoptimized: true,
