@@ -61,22 +61,24 @@ const taskor = localFont({
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
+// Split Amulya into normal and italic to control preloading independently
 const amulya = localFont({
-  src: [
-    {
-      path: '../public/fonts/Amulya-Variable.woff2',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/Amulya-VariableItalic.woff2',
-      style: 'italic',
-    },
-  ],
+  src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
   display: 'swap',
-  preload: true,
+  preload: true, // Preload normal variant (used in hero)
   weight: '100 900',
   fallback: ['Georgia', 'serif'],
+});
+
+const amulyaItalic = localFont({
+  src: '../public/fonts/Amulya-VariableItalic.woff2',
+  variable: '--font-amulya-italic',
+  display: 'swap',
+  preload: false, // Don't preload italic (not used above-fold)
+  weight: '100 900',
+  fallback: ['Georgia', 'serif'],
+  style: 'italic',
 });
 
 const synonym = localFont({
@@ -182,7 +184,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={`${taskor.variable} ${amulya.variable} ${synonym.variable}`}
+      className={`${taskor.variable} ${amulya.variable} ${amulyaItalic.variable} ${synonym.variable}`}
       suppressHydrationWarning
     >
       <head>
