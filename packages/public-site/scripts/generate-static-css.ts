@@ -478,18 +478,12 @@ async function generateAndWriteCSS() {
   console.log('   CSS injected dynamically via useLiveCSS hook');
   console.log('   Changes apply instantly without rebuild\n');
 
-  // Copy component files
-  const componentsCopied = copyComponentFiles();
-
-  if (componentsCopied > 0) {
-    console.log('\n✅ Component files copied successfully!\n');
-    console.log('💡 Components available at:');
-    console.log('   /components/ (in static export)');
-    console.log('\n💡 Import in your app:');
-    console.log('   import { CTAButton } from "@/components/buttons/CTAButton"');
-  } else {
-    console.log('\n⚠️  No components copied (source not found or all excluded)\n');
-  }
+  // DISABLED: Component file copying no longer needed
+  // All components should be imported directly from @saa/shared package
+  // const componentsCopied = copyComponentFiles();
+  console.log('\n💡 Components:');
+  console.log('   Import directly from @saa/shared package');
+  console.log('   Example: import { H1 } from "@saa/shared/components/saa/headings/H1"');
 }
 
 // Run the generator
