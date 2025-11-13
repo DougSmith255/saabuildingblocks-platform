@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
+import { useIsDesktop } from '../../../hooks/useMediaQuery';
 
 export interface HeadingProps {
   children: React.ReactNode;
@@ -13,6 +14,20 @@ export interface HeadingProps {
 }
 
 export default function H1({ children, className = '', style = {}, id, heroAnimate = true, animationDelay = '0.6s' }: HeadingProps) {
+  // Check if desktop viewport (1024px+)
+  const isDesktop = useIsDesktop();
+
+  // On initial render (SSR), assume desktop to prevent flash on desktop browsers
+  // The hook will update on client-side mount if actually mobile
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // Use desktop behavior until hydrated and viewport is confirmed
+  const shouldUseDesktopAnimation = !isHydrated || isDesktop;
+
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
 
@@ -65,8 +80,28 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                   data-char={displayChar}
                   style={{
                     transform: 'translateZ(20px)',
-                    animation: `neonFlicker${(globalIndex % 3) + 1} ${6.5 + (globalIndex * 0.1)}s linear ${animationDelay} infinite`,
+                    // Only apply neon flicker animation on desktop (1024px+)
+                    animation: shouldUseDesktopAnimation
+                      ? `neonFlicker${(globalIndex % 3) + 1} ${6.5 + (globalIndex * 0.1)}s linear ${animationDelay} infinite`
+                      : 'none',
                     display: 'inline-block',
+                    // Mobile: static neon glow (no flicker)
+                    ...(!shouldUseDesktopAnimation && {
+                      color: '#ffd700',
+                      opacity: 0.99,
+                      textShadow: `
+                        -1px -1px 0 rgba(255,255,255, 0.4),
+                        1px -1px 0 rgba(255,255,255, 0.4),
+                        -1px 1px 0 rgba(255,255,255, 0.4),
+                        1px 1px 0 rgba(255,255,255, 0.4),
+                        0 -2px 8px #ffd700,
+                        0 0 2px #ffd700,
+                        0 0 5px #ffd700,
+                        0 0 15px #ffb347,
+                        0 0 2px #ffd700,
+                        0 2px 3px #000
+                      `,
+                    }),
                   }}
                 >
                   {displayChar}
