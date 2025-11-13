@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
  */
 export function DynamicH1Container({ children }: { children: React.ReactNode }) {
   const [translateY, setTranslateY] = useState('33.2vh'); // Default fallback
+  const [isPositioned, setIsPositioned] = useState(false); // Track if position is calculated
 
   useEffect(() => {
     const updatePosition = () => {
@@ -17,6 +18,7 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
         const newPosition = dataElement.getAttribute('data-margin-top');
         if (newPosition) {
           setTranslateY(newPosition);
+          setIsPositioned(true); // Mark as positioned once we have the calculated value
         }
       }
     };
@@ -47,7 +49,9 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
       className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
       style={{
         top: translateY,
-        willChange: 'transform',
+        opacity: isPositioned ? 1 : 0, // Hide until positioned
+        willChange: 'transform, opacity',
+        transition: 'none', // No transition on initial render
       }}
     >
       {children}

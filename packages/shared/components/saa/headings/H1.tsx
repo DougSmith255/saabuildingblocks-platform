@@ -65,7 +65,7 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                   data-char={displayChar}
                   style={{
                     transform: 'translateZ(20px)',
-                    animation: `neonFlicker${(globalIndex % 3) + 1} ${6.5 + (globalIndex * 0.1)}s linear infinite`,
+                    animation: `neonFlicker${(globalIndex % 3) + 1} ${6.5 + (globalIndex * 0.1)}s linear ${animationDelay} infinite`,
                     display: 'inline-block',
                   }}
                 >
