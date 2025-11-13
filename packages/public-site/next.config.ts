@@ -16,6 +16,12 @@ const nextConfig: NextConfig = {
     inlineCss: true,
   },
 
+  // Compiler optimizations for modern browsers
+  compiler: {
+    // Remove console.log in production
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
   // Disable image optimization for static export
   images: {
     unoptimized: true,

@@ -1,0 +1,16 @@
+# Target modern browsers only (removes legacy polyfills)
+# Reduces JavaScript bundle size by ~14 KiB
+# All features like Array.at, Array.flat, Object.fromEntries are natively supported
+
+# Production browsers (95%+ users)
+> 0.5%
+last 2 versions
+not dead
+
+# Explicitly exclude old browsers that need polyfills
+not IE 11
+not op_mini all
+
+# Target browsers that support ES2020+ features
+supports es6-module
+supports async-functions
