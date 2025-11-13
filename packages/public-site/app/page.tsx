@@ -1,10 +1,6 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
-import { HomepageClient } from './components/HomepageClient';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
-import { DynamicH1Container } from './components/DynamicH1Container';
-import { ImageAnimationStyles } from './components/ImageAnimationStyles';
-import { WolfPackAnimation } from './components/WolfPackAnimation';
 
 /**
  * Homepage - Server Component with Static Content
@@ -92,14 +88,8 @@ export default function Home() {
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
 
-        {/* Client-side H1 positioning only */}
-        <HomepageClient />
-
-        {/* Wolf pack animation trigger */}
-        <WolfPackAnimation />
-
-        {/* Container - dynamically positioned to overlap profile image by 30% */}
-        <DynamicH1Container>
+        {/* Container - static positioning with CSS only */}
+        <div className="relative z-10 flex flex-col items-center justify-center gap-8" style={{ marginTop: '33.2vh' }}>
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
@@ -128,10 +118,7 @@ export default function Home() {
               LEARN MORE
             </CTAButton>
           </div>
-        </DynamicH1Container>
-
-        {/* Image fade-in animation keyframes - Client component */}
-        <ImageAnimationStyles />
+        </div>
       </section>
 
     </main>
