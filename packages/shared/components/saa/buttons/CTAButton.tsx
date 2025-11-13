@@ -70,7 +70,6 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           rounded-xl border-t border-b border-white/10
           uppercase tracking-wide
           z-10
-          shadow-[0_15px_15px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1),inset_0_-1px_0_rgba(0,0,0,0.5)]
           transition-all duration-500
           overflow-hidden
 
@@ -80,7 +79,10 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
 
           ${isClicked ? 'clicked' : ''}
         `}
-        style={buttonStyles}
+        style={{
+          ...buttonStyles,
+          boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
+        }}
       >
         {children}
       </a>
