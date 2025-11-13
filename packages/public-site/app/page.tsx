@@ -1,5 +1,6 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { HomepageClient } from './components/HomepageClient';
+import { StaticCounter } from './components/StaticCounter';
 import { DynamicH1Container } from './components/DynamicH1Container';
 import { ImageAnimationStyles } from './components/ImageAnimationStyles';
 import { WolfPackAnimation } from './components/WolfPackAnimation';
@@ -84,7 +85,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Client-side animations (counter + neon flicker) */}
+        {/* Static Counter - Server Component (No Hydration Delay) */}
+        <StaticCounter />
+
+        {/* Client-side H1 positioning only */}
         <HomepageClient />
 
         {/* Wolf pack animation trigger */}
