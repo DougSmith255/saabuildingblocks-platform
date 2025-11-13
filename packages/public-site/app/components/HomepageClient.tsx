@@ -40,16 +40,20 @@ export function HomepageClient() {
       }
 
       // Helper function to get dimensions - handles cached images
+      // OPTIMIZATION: Batch read operation to avoid forced reflow
       const getDimensions = () => {
+        // Read all geometric properties in ONE batch to minimize reflows
         const rect = profileImg.getBoundingClientRect();
+        const complete = profileImg.complete;
+        const naturalHeight = profileImg.naturalHeight;
 
         // If cached image has zero dimensions, wait for paint
         if (rect.height === 0 || rect.width === 0) {
           // Use naturalHeight as fallback for cached images
-          if (profileImg.complete && profileImg.naturalHeight > 0) {
+          if (complete && naturalHeight > 0) {
             return {
               top: rect.top,
-              height: profileImg.naturalHeight
+              height: naturalHeight
             };
           }
           return null; // Dimensions not ready yet
