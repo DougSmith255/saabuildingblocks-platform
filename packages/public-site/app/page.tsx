@@ -18,7 +18,7 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
-              className="absolute inset-0 hero-animate-bg"
+              className="absolute inset-0 hero-animate-bg animate-in"
               style={{
                 backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Smart-agent-alliance-and-the-wolf-pack.webp)',
                 backgroundSize: 'cover',
@@ -54,7 +54,7 @@ export default function Home() {
             <img
               src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
-              className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
+              className="hero-3d-image profile-image animate-in absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
                 top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
