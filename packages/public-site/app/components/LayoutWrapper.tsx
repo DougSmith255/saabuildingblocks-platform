@@ -4,24 +4,7 @@ import { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
-import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
 
-/**
- * LayoutWrapper - Global layout with automatic performance optimization
- *
- * AUTOMATIC OPTIMIZATIONS (applied to ALL pages):
- * - Footer is automatically deferred (loads when user scrolls near bottom)
- * - Improves LCP (Largest Contentful Paint) by 25-35%
- * - Works with static site export
- *
- * OVERRIDE BEHAVIOR (when building pages):
- * Use data-defer-priority attribute on any element:
- * - data-defer-priority="immediate" - Load right away (hero content)
- * - data-defer-priority="high" - Load after hero but before scroll
- * - data-defer-priority="low" - Load when user scrolls near it
- *
- * @see /home/claude-flow/📘-PAGE-BUILDER-GUIDE.md for full documentation
- */
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
@@ -58,12 +41,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       >
         {children}
       </main>
-      {/* Footer is ALWAYS deferred to improve Core Web Vitals (LCP) */}
-      {!shouldHideHeaderFooter && (
-        <DeferredFooter>
-          <Footer />
-        </DeferredFooter>
-      )}
+      {!shouldHideHeaderFooter && <Footer />}
     </>
   );
 }
