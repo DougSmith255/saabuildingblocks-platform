@@ -103,6 +103,14 @@ jobs:
             echo "⚠️  Static CSS not generated, proceeding without it"
           fi
 
+      # Clean Next.js cache before build
+      - name: Clean Next.js cache
+        run: |
+          echo "🧹 Cleaning Next.js build cache..."
+          cd packages/public-site
+          rm -rf .next out
+          echo "✅ Cache cleaned"
+
       # Build static export (FROM MONOREPO ROOT - fixes tsconfig resolution)
       - name: Build Static Export
         env:
