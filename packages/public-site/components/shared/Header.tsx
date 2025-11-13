@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
 import styles from './GlassShimmer.module.css';
 import { CTAButton } from '@saa/shared/components/saa';
 import { usePathname } from 'next/navigation';
@@ -419,40 +418,30 @@ export default function Header() {
       </header>
 
       {/* Mobile Menu Overlay - Slides down from top */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            id="mobile-menu"
-            role="dialog"
-            aria-label="Mobile navigation menu"
-            initial={{ y: '-100%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '-100%' }}
-            transition={{
-              duration: 0.4,
-              ease: [0.4, 0, 0.2, 1],
-            }}
-            className="mobile-menu-overlay fixed top-0 left-0 right-0 z-[9990] h-screen overflow-hidden"
+      {isMobileMenuOpen && (
+        <div
+          id="mobile-menu"
+          role="dialog"
+          aria-label="Mobile navigation menu"
+          className="mobile-menu-overlay fixed top-0 left-0 right-0 z-[9990] h-screen overflow-hidden"
+          style={{
+            background: 'rgba(15, 15, 15, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            willChange: 'transform',
+            transform: 'translateZ(0)',
+            overscrollBehavior: 'contain',
+            animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+          }}
+        >
+          <div
+            className="mobile-menu-content h-full overflow-y-auto overflow-x-hidden pt-24 pb-32"
             style={{
-              background: 'rgba(15, 15, 15, 0.95)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              willChange: 'transform',
-              transform: 'translateZ(0)',
-              overscrollBehavior: 'contain',
+              touchAction: 'pan-y',
+              WebkitOverflowScrolling: 'touch',
+              animation: 'fadeIn 0.3s ease-out 0.1s both',
             }}
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
-              className="h-full overflow-y-auto overflow-x-hidden pt-24 pb-32"
-              style={{
-                touchAction: 'pan-y',
-                WebkitOverflowScrolling: 'touch',
-              }}
-            >
               <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
                 {navItems.map((item, index) => (
                   <div key={index}>
@@ -485,15 +474,13 @@ export default function Header() {
                             }}
                           />
                         </button>
-                        <AnimatePresence>
-                          {openDropdown === index && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3 }}
-                              className="overflow-hidden pl-4"
-                            >
+                        {openDropdown === index && (
+                          <div
+                            className="mobile-dropdown overflow-hidden pl-4"
+                            style={{
+                              animation: 'expandHeight 0.3s ease-out forwards',
+                            }}
+                          >
                               {item.dropdown.map((dropdownItem, dropdownIndex) => (
                                 <a
                                   key={dropdownIndex}
@@ -512,9 +499,8 @@ export default function Header() {
                                   {dropdownItem.label}
                                 </a>
                               ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                            </div>
+                        )}
                       </>
                     ) : item.label === 'Agent Portal' ? (
                       <Link
@@ -567,13 +553,44 @@ export default function Header() {
                   </CTAButton>
                 </div>
               </nav>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </div>
+      )}
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`
+        /* CSS Animations (replacing framer-motion) */
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes expandHeight {
+          from {
+            max-height: 0;
+            opacity: 0;
+          }
+          to {
+            max-height: 500px;
+            opacity: 1;
+          }
+        }
+
         /* Header Navigation Links - Override global green link color */
         header .nav-link,
         header .nav-link a {
