@@ -28,15 +28,21 @@ export function ComponentEditor({ component, onClose, onSave }: ComponentEditorP
         if (component.reactPath) {
           // Add cache-busting timestamp to force fresh fetch
           const timestamp = Date.now();
+          console.log('[ComponentEditor] Loading component:', component.name, 'Path:', component.reactPath);
           const response = await fetch(`/api/master-controller/components/read?path=${component.reactPath}&t=${timestamp}`);
+          console.log('[ComponentEditor] Response status:', response.status, response.statusText);
           if (response.ok) {
             const data = await response.json();
+            console.log('[ComponentEditor] Loaded code length:', data.content?.length, 'chars');
             setCode(data.content);
             setOriginalCode(data.content);
+          } else {
+            const errorData = await response.json();
+            console.error('[ComponentEditor] API error:', errorData);
           }
         }
       } catch (error) {
-        console.error('Failed to load component code:', error);
+        console.error('[ComponentEditor] Failed to load component code:', error);
       }
     };
 
@@ -216,6 +222,8 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
         return lazy(() => import('@/components/saa/buttons/CTAButton').then(m => ({ default: () => <m.CTAButton>Get Started</m.CTAButton> })));
       case 'secondary-button':
         return lazy(() => import('@/components/saa/buttons/SecondaryButton').then(m => ({ default: () => <m.SecondaryButton>Learn More</m.SecondaryButton> })));
+      case 'generic-button':
+        return lazy(() => import('@saa/shared/components/saa/buttons/GenericButton').then(m => ({ default: () => <m.GenericButton>Filter Option</m.GenericButton> })));
 
       // Cards
       case 'cyber-card-prismatic-glass':

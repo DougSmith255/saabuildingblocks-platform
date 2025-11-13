@@ -6,3 +6,4 @@
 
 export { CTAButton, type CTAButtonProps } from './CTAButton';
 export { SecondaryButton, type SecondaryButtonProps } from './SecondaryButton';
+export { GenericButton } from './GenericButton';

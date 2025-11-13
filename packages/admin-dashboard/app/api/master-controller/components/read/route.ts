@@ -17,11 +17,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Security: Ensure path is within project directory
+    // Security: Ensure path is within monorepo
     const projectRoot = process.cwd();
-    const absolutePath = path.join(projectRoot, filePath);
+    const absolutePath = path.resolve(projectRoot, filePath);
 
-    if (!absolutePath.startsWith(projectRoot)) {
+    // Allow access to files within the monorepo (parent directory of packages)
+    const monorepoRoot = path.resolve(projectRoot, '..');
+
+    if (!absolutePath.startsWith(monorepoRoot)) {
       return NextResponse.json(
         { error: 'Invalid file path' },
         { status: 403 }

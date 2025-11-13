@@ -32,11 +32,11 @@ export interface SAAComponent {
 }
 
 /**
- * Complete SAA Component Registry (6 components)
+ * Complete SAA Component Registry (7 components)
  * Note: Prismatic Glass and Stacked Animation Cards have been deprecated
  */
 export const saaComponentRegistry: SAAComponent[] = [
-  // Buttons (2)
+  // Buttons (3)
   {
     id: 'cta-button',
     name: 'CTA Button',
@@ -56,6 +56,16 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'wordpress',
     tags: ['button', 'secondary', 'animation', 'wordpress', 'vertical-glow'],
+  },
+  {
+    id: 'generic-button',
+    name: 'Generic Button',
+    category: 'buttons',
+    description: 'Reusable filter/toggle button with active/inactive states and gold/green gradient effects',
+    reactPath: '../shared/components/saa/buttons/GenericButton.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['button', 'filter', 'toggle', 'generic', 'category', 'multi-select'],
   },
 
   // Cards (1)
@@ -77,7 +87,7 @@ export const saaComponentRegistry: SAAComponent[] = [
     name: 'H1 Heading',
     category: 'typography',
     description: '3D neon heading with animated flicker effect and alt glyphs',
-    reactPath: '@saa/shared/components/saa/headings/H1.tsx',
+    reactPath: '../shared/components/saa/headings/H1.tsx',
     converted: true,
     source: 'custom',
     tags: ['heading', 'h1', 'neon', 'typography', '3d', 'animation'],
@@ -87,7 +97,7 @@ export const saaComponentRegistry: SAAComponent[] = [
     name: 'H2 Heading',
     category: 'typography',
     description: 'Static 3D neon heading with metal backing and alt glyphs',
-    reactPath: '@saa/shared/components/saa/headings/H2.tsx',
+    reactPath: '../shared/components/saa/headings/H2.tsx',
     converted: true,
     source: 'custom',
     tags: ['heading', 'h2', 'neon', 'typography', '3d', 'static'],

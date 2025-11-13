@@ -181,6 +181,20 @@ All Master Controller components are responsive by default. Test:
 - Prevents awkward whitespace on large displays
 - Maintains readability with appropriate padding
 
+### SEO & Accessibility (Built-In)
+
+**You don't need to do anything special** - the Master Controller components already handle SEO optimization:
+
+- **H1 Component**: Automatically includes hidden screen-reader text (`.sr-only`) that search engines read, while displaying custom Taskor font ligatures visually
+  - Bots read: "SMART AGENT ALLIANCE" ✅
+  - Users see: "SȺRT ȺGɆNT ȺLLIȺNCɆ" (stylized glyphs)
+  - No extra code needed - just use `<H1>` normally
+
+**Copy/Paste Protection (Site-Wide)**:
+- Text selection is disabled across the entire site via `user-select: none` in `globals.css`
+- Form inputs remain selectable for usability
+- This protects visual design without affecting SEO (bots don't copy/paste)
+
 ### Use Tailwind Classes
 ```tsx
 <div className="flex flex-col gap-4 items-center justify-center min-h-screen">
