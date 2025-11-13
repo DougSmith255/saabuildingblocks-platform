@@ -7,4 +7,6 @@
 
 export { CyberCardHolographic, type CyberCardHolographicProps } from './CyberCardHolographic';
 
+export { CyberCardHolographic as HolographicCard, type CyberCardHolographicProps as HolographicCardProps } from './HolographicCard';
+
 export { CyberCardPrismaticGlass, type CyberCardPrismaticGlassProps } from './CyberCardPrismaticGlass';

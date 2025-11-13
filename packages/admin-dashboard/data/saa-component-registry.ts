@@ -82,12 +82,12 @@ export const saaComponentRegistry: SAAComponent[] = [
     id: 'cyber-card-holographic',
     name: 'Holographic Card',
     category: 'cards',
-    description: 'Futuristic card with holographic border and glow effects',
+    description: 'Futuristic card with holographic effects, digital glitches, chromatic aberration, and greyscale shimmer. Features 3 CSS keyframe animations (holographic, chromatic, glitch-effect) with randomized shimmer timings, hover states, and complete style definitions inline via styled-jsx.',
     previewPath: '/saa-components/cards/cyber-card-holographic.html',
-    reactPath: '/components/saa/cards/CyberCardHolographic.tsx',
+    reactPath: '../shared/components/saa/cards/CyberCardHolographic.tsx',
     converted: true,
     source: 'wordpress',
-    tags: ['card', 'holographic', 'futuristic', 'border', 'glow'],
+    tags: ['card', 'holographic', 'futuristic', 'border', 'glow', 'shimmer', 'chromatic-aberration', 'glitch', 'animation', 'cyberpunk', '3d-effect'],
   },
 
   // Typography (2)
