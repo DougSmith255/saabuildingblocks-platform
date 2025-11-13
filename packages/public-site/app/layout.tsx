@@ -55,7 +55,7 @@ ${masterControllerCSS}
 const taskor = localFont({
   src: '../public/fonts/taskor-regular-webfont.woff2',
   variable: '--font-taskor',
-  display: 'block',
+  display: 'swap',
   preload: true,
   weight: '400',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
@@ -84,7 +84,7 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'block',
+  display: 'swap',
   preload: true, // Preload because it's used in header menu (above-the-fold)
   weight: '100 900',
   fallback: ['sans-serif'],
