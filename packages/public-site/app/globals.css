@@ -70,55 +70,47 @@ textarea,
   overflow: visible !important;
 }
 
-/* FORCE AMULYA FONT ON ALL COUNTER ELEMENTS - HIGHEST PRIORITY */
-.counter-container,
-.counter-container *,
-.counter-numbers,
-.counter-numbers *,
-.counter-plus,
-.counter-text {
-  font-family: Amulya, serif !important;
+/* USE TASKOR FONT (PRELOADED) - Fast LCP */
+.counter-container {
+  font-family: 'Taskor', sans-serif;
 }
 
 /* Desktop sizes */
 .counter-numbers {
-  font-size: 64px !important;
-  font-family: Amulya, serif !important;
-  font-weight: 300 !important;
+  font-size: 64px;
+  font-weight: 400;
+  color: var(--color-heading-text);
 }
 
 .counter-plus {
-  font-size: 72px !important;
-  font-family: Amulya, serif !important;
-  font-weight: 300 !important;
+  font-size: 72px;
+  font-weight: 400;
+  color: var(--color-heading-text);
   position: relative;
   top: -5px;
 }
 
 .counter-text {
-  font-size: 40px !important;
-  font-family: Amulya, serif !important;
-  font-weight: 100 !important;
+  font-size: 40px;
+  font-weight: 400;
+  color: var(--color-heading-text);
 }
 
 /* Counter responsive sizing - mobile overrides */
 @media (max-width: 1450px) {
   .counter-numbers {
-    font-size: 40px !important;
-    font-family: Amulya, serif !important;
-    font-weight: 300 !important;
+    font-size: 40px;
+    font-weight: 400;
   }
   .counter-plus {
-    font-size: 36px !important;
-    font-family: Amulya, serif !important;
-    font-weight: 300 !important;
+    font-size: 36px;
+    font-weight: 400;
     position: relative;
     top: -5px;
   }
   .counter-text {
-    font-size: 20px !important;
-    font-family: Amulya, serif !important;
-    font-weight: 100 !important;
+    font-size: 20px;
+    font-weight: 400;
   }
 }
 
@@ -2102,23 +2094,9 @@ img:not(.profile-image) {
 }
 
 /* ========================================
-   COUNTER FONT OVERRIDE - MUST BE LAST
-   Overrides body.font-sans (Taskor)
+   COUNTER USES TASKOR (PRELOADED FONT)
+   No override needed - inherits from body
    ======================================== */
-body .counter-container,
-body .counter-container *,
-body .counter-numbers,
-body .counter-numbers *,
-body .counter-plus,
-body .counter-text,
-html body .counter-container,
-html body .counter-container *,
-html body .counter-numbers,
-html body .counter-numbers *,
-html body .counter-plus,
-html body .counter-text {
-  font-family: Amulya, serif !important;
-}
 
 /* ========================================
    MOBILE TAGLINE SPACING - SCREENS < 1400px
