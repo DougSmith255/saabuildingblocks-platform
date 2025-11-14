@@ -131,6 +131,11 @@ textarea,
     0 3px 3px #000;
 }
 
+/* Wrapper for glow characters */
+.counter-glow-wrapper {
+  display: inline-flex;
+}
+
 /* ========================================
    FONT-FACE DECLARATIONS REMOVED
    ======================================== */
