@@ -18,24 +18,20 @@ function getHashParams(): URLSearchParams {
 }
 
 /**
- * Update hash in URL without triggering page reload or scroll
+ * Update hash in URL without auto-scrolling
+ * Note: We handle scroll position manually after this function
  */
 function setHashParams(params: URLSearchParams) {
   const hashString = params.toString();
 
-  // Save current scroll position
-  const scrollY = window.scrollY;
-
-  // Update hash (this may cause scroll)
+  // Update hash using replaceState to avoid browser auto-scroll
   if (hashString) {
-    window.location.hash = `#${hashString}`;
+    history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${hashString}`);
   } else {
-    // Use replaceState to clear hash without scrolling
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
 
-  // Restore scroll position
-  window.scrollTo(0, scrollY);
+  // Do NOT restore scroll here - let goToPage handle it
 }
 
 /**
