@@ -52,13 +52,20 @@ export default function Header() {
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hamburgerUnfixTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state and check if this is first visit in session
+  // Track mount state and check if this is a fresh page load (not from cache)
   useEffect(() => {
     setHasMounted(true);
 
-    // Check if header has been shown in this session
+    // Check if page was loaded from cache using Navigation Timing API
+    const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+    const isFromCache = navigationEntry && (
+      navigationEntry.type === 'back_forward' ||
+      navigationEntry.transferSize === 0
+    );
+
+    // Only show slide-down animation if NOT from cache and not shown in this session
     const headerShown = sessionStorage.getItem('headerShown');
-    if (!headerShown) {
+    if (!isFromCache && !headerShown) {
       setShouldFadeIn(true);
       sessionStorage.setItem('headerShown', 'true');
     }
