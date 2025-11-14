@@ -22,9 +22,11 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Disable image optimization for static export
+  // Cloudflare Image Resizing integration
+  // Uses Cloudflare's Image Resizing service ($5/month) for automatic responsive images
   images: {
-    unoptimized: true,
+    loader: 'custom',
+    loaderFile: './lib/cloudflare-image-loader.ts',
   },
 
   // Trailing slashes for better CDN caching
