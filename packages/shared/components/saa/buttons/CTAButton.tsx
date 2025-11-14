@@ -87,7 +87,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
         `}
         style={{
           ...buttonStyles,
-          height: 'clamp(45px, calc(42.273px + 1.091vw), 75px)',
+          height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
           boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
         }}
       >

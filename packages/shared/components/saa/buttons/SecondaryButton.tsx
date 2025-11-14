@@ -77,7 +77,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     textTransform: 'var(--text-transform-button, uppercase)' as any,
     letterSpacing: 'var(--letter-spacing-button, 0.05em)',
     lineHeight: 'var(--line-height-button, 1.4)',
-    height: 'clamp(45px, calc(42.273px + 1.091vw), 75px)'
+    height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)'
   };
 
   const ButtonElement = as === 'button' ? 'button' : 'a';
