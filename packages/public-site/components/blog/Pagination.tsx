@@ -71,7 +71,7 @@ export function Pagination({
       aria-label="Blog pagination"
     >
       {/* Previous Button */}
-      <div className={isFirstPage ? 'opacity-40 pointer-events-none' : ''}>
+      <div className={`px-[10px] ${isFirstPage ? 'opacity-40 pointer-events-none' : ''}`}>
         <SecondaryButton
           as="button"
           onClick={() => handlePageChange(currentPage - 1)}
@@ -95,7 +95,7 @@ export function Pagination({
       </div>
 
       {/* Next Button */}
-      <div className={isLastPage ? 'opacity-40 pointer-events-none' : ''}>
+      <div className={`px-[10px] ${isLastPage ? 'opacity-40 pointer-events-none' : ''}`}>
         <SecondaryButton
           as="button"
           onClick={() => handlePageChange(currentPage + 1)}

@@ -46,7 +46,7 @@ export function PaginationControls({
       pb-8
     ">
       {/* Previous Button */}
-      <div className="w-full sm:w-auto">
+      <div className="w-full sm:w-auto px-[10px]">
         {hasPrevPage ? (
           <SecondaryButton
             as="button"
@@ -90,7 +90,7 @@ export function PaginationControls({
       </div>
 
       {/* Next Button */}
-      <div className="w-full sm:w-auto">
+      <div className="w-full sm:w-auto px-[10px]">
         {hasNextPage ? (
           <SecondaryButton
             as="button"

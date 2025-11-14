@@ -61,15 +61,17 @@ export function FilterBar({ categories }: FilterBarProps) {
         />
 
         {hasActiveFilters && (
-          <SecondaryButton
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              clearAll();
-            }}
-          >
-            Clear Filters
-          </SecondaryButton>
+          <div className="px-[10px]">
+            <SecondaryButton
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                clearAll();
+              }}
+            >
+              Clear Filters
+            </SecondaryButton>
+          </div>
         )}
       </div>
     </div>
