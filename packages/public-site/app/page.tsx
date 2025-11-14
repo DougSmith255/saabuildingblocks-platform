@@ -1,8 +1,11 @@
+import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
-import { HomepageClient } from './components/HomepageClient';
-import { DynamicH1Container } from './components/DynamicH1Container';
+
+// Defer loading of desktop-only positioning components (loaded separately from main bundle)
+const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
+const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container').then(mod => mod.DynamicH1Container));
 
 /**
  * Homepage - Server Component with Static Content
