@@ -58,16 +58,24 @@ export default function Header() {
 
     // Check if page was loaded from cache using Navigation Timing API
     const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+
+    // Debug logging
+    console.log('Navigation Entry:', {
+      type: navigationEntry?.type,
+      transferSize: navigationEntry?.transferSize,
+      decodedBodySize: navigationEntry?.decodedBodySize
+    });
+
     const isFromCache = navigationEntry && (
       navigationEntry.type === 'back_forward' ||
       navigationEntry.transferSize === 0
     );
 
-    // Only show slide-down animation if NOT from cache and not shown in this session
-    const headerShown = sessionStorage.getItem('headerShown');
-    if (!isFromCache && !headerShown) {
+    console.log('isFromCache:', isFromCache, 'shouldFadeIn will be:', !isFromCache);
+
+    // Show slide-down animation only if page was NOT loaded from cache
+    if (!isFromCache) {
       setShouldFadeIn(true);
-      sessionStorage.setItem('headerShown', 'true');
     }
   }, []);
 
