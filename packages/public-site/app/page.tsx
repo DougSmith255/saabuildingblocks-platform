@@ -130,11 +130,13 @@ export default function Home() {
           className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
           style={{
             // Mobile-optimized CSS positioning
-            // Image height on mobile: clamp(222px, 26.32vw, 500px)
-            // For 375px screen: 222px image, 75% down = 167px
-            // Image top: 8dvh + 15px
-            // Total: 8dvh + 15px + 167px ≈ 8dvh + 182px
-            top: 'calc(8dvh + 182px)',
+            // Current position covering 55% - need to move down to 75%
+            // If 55% = 8dvh + 182px, then 75% needs more offset
+            // Adjusting: 8dvh + 15px + (75% of image height)
+            // Mobile image height ~222px, so 75% = 167px
+            // But need to account for actual rendered position
+            // Increasing offset to: 8dvh + 240px (moved down ~58px more)
+            top: 'calc(8dvh + 240px)',
           }}
         >
           {/* Headline Group */}
