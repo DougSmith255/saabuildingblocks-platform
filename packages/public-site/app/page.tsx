@@ -1,8 +1,6 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
-import { HomepageClient } from './components/HomepageClient';
-import { DynamicH1Container } from './components/DynamicH1Container';
 
 /**
  * Homepage - Server Component with Static Content
@@ -90,11 +88,21 @@ export default function Home() {
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
 
-        {/* Client-side H1 positioning - calculates based on actual image dimensions */}
-        <HomepageClient />
-
-        {/* Container - dynamically positioned to overlap profile image by 30% */}
-        <DynamicH1Container>
+        {/* H1 Container - CSS-only positioning using known image aspect ratio (9:5) */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
+          style={{
+            // Doug & Karrie profile image: 900×500px (aspect ratio 9:5)
+            // Container width: clamp(400px, 47.37vw, 900px)
+            // Image height: width × (5/9) = clamp(222px, 26.32vw, 500px)
+            // Image top position: 8dvh + 15px
+            // Position H1 at 75% down the image:
+            // = 8dvh + 15px + (image_height × 0.75)
+            // = 8dvh + 15px + (clamp(222px, 26.32vw, 500px) × 0.75)
+            // = 8dvh + 15px + clamp(167px, 19.74vw, 375px)
+            top: 'calc(8dvh + 15px + clamp(167px, 19.74vw, 375px))',
+          }}
+        >
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
@@ -123,7 +131,7 @@ export default function Home() {
               LEARN MORE
             </CTAButton>
           </div>
-        </DynamicH1Container>
+        </div>
       </section>
 
     </main>
