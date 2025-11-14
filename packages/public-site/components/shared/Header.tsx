@@ -58,14 +58,25 @@ export default function Header() {
   }, []);
 
   // Wait for fonts to load before showing header to prevent text flashes
+  // Only on first visit - subsequent navigations show header immediately
   useEffect(() => {
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(() => {
-        setFontsLoaded(true);
-      });
-    } else {
-      // Fallback if Font Loading API not supported
+    const headerReady = sessionStorage.getItem('headerReady');
+
+    if (headerReady) {
+      // Header already shown in this session, show immediately
       setFontsLoaded(true);
+    } else {
+      // First time - wait for fonts
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          setFontsLoaded(true);
+          sessionStorage.setItem('headerReady', 'true');
+        });
+      } else {
+        // Fallback if Font Loading API not supported
+        setFontsLoaded(true);
+        sessionStorage.setItem('headerReady', 'true');
+      }
     }
   }, []);
 
