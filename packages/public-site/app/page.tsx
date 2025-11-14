@@ -1,6 +1,8 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
+import { HomepageClient } from './components/HomepageClient';
+import { DynamicH1Container } from './components/DynamicH1Container';
 
 /**
  * Homepage - Server Component with Static Content
@@ -88,18 +90,11 @@ export default function Home() {
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
 
-        {/* Container - positioned to overlap profile image by 25% (locked at 75% down the image) */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
-          style={{
-            // Profile image (Doug & Karrie):
-            // - Image top: 8dvh + 15px
-            // - Image uses object-contain with max-h-full in 84dvh container
-            // - Actual image height varies, but ~70dvh on average (portrait aspect ratio)
-            // - H1 at 75% down image ≈ 8dvh + 15px + (70dvh × 0.75) = 60.5dvh + 15px
-            top: 'calc(60.5dvh + 15px)',
-          }}
-        >
+        {/* Client-side H1 positioning - calculates based on actual image dimensions */}
+        <HomepageClient />
+
+        {/* Container - dynamically positioned to overlap profile image by 30% */}
+        <DynamicH1Container>
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
@@ -128,7 +123,7 @@ export default function Home() {
               LEARN MORE
             </CTAButton>
           </div>
-        </div>
+        </DynamicH1Container>
       </section>
 
     </main>
