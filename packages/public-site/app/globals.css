@@ -114,6 +114,23 @@ textarea,
   }
 }
 
+/* Neon glow effect - shared by Tagline and Counter */
+.neon-glow {
+  display: inline-block;
+  color: #bfbdb0;
+  text-shadow:
+    -1px -1px 0 rgba(255,255,255, 0.4),
+    1px -1px 0 rgba(255,255,255, 0.4),
+    -1px 1px 0 rgba(255,255,255, 0.4),
+    1px 1px 0 rgba(255,255,255, 0.4),
+    0 -3px 8px #bfbdb0,
+    0 0 2px #bfbdb0,
+    0 0 5px #bfbdb0,
+    0 0 15px #9a9888,
+    0 0 3px #bfbdb0,
+    0 3px 3px #000;
+}
+
 /* ========================================
    FONT-FACE DECLARATIONS REMOVED
    ======================================== */

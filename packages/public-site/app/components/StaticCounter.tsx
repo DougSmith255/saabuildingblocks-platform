@@ -45,8 +45,14 @@ export function StaticCounter() {
         {/* + Symbol */}
         <span className="counter-plus">+</span>
 
-        {/* AGENTS Text */}
-        <span className="counter-text">AGENTS</span>
+        {/* AGENTS Text - Split into characters for neon glow effect */}
+        <span className="counter-text" style={{ display: 'inline-flex' }}>
+          {'AGENTS'.split('').map((char, i) => (
+            <span key={i} className="neon-glow">
+              {char}
+            </span>
+          ))}
+        </span>
       </div>
     </div>
   );

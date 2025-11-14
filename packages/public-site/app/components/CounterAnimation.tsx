@@ -47,10 +47,13 @@ export function CounterAnimation() {
           const scrambleIntensity = 1 - progress; // Less scrambling as we approach target
 
           const digits = currentValue.toString().padStart(4, '0').split('');
-          const scrambled = digits.map((digit) => {
+          const scrambled = digits.map((digit, index) => {
             // Randomly scramble digits based on intensity
             if (Math.random() < scrambleIntensity * 0.3) {
-              return Math.floor(Math.random() * 10).toString();
+              // Exclude "1" to prevent width changes (use 2-9)
+              // First digit stays 3 to keep 3xxx range
+              if (index === 0) return '3';
+              return (Math.floor(Math.random() * 8) + 2).toString(); // 2-9
             }
             return digit;
           });
