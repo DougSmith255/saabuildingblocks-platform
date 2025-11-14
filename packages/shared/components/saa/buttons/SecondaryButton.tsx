@@ -87,6 +87,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
       ${className}
       ${widthClass}
       py-2
+      px-[10px]
     `}>
       <div className={`
         group

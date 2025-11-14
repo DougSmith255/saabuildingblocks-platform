@@ -117,15 +117,13 @@ export default function PaginationControls({
       {/* Navigation Buttons */}
       <div className="flex items-center gap-6">
         {/* Previous Button */}
-        <div className="px-[10px]">
-          <SecondaryButton
+        <SecondaryButton
             as="button"
             onClick={() => goToPage(currentPage - 1)}
             className={`min-w-[180px] ${isFirstPage ? 'opacity-40 pointer-events-none' : ''}`}
           >
             Previous
           </SecondaryButton>
-        </div>
 
         {/* Page Numbers (optional - show current and nearby pages) */}
         <div className="hidden md:flex items-center gap-2">
@@ -205,15 +203,13 @@ export default function PaginationControls({
         </div>
 
         {/* Next Button */}
-        <div className="px-[10px]">
-          <SecondaryButton
+        <SecondaryButton
             as="button"
             onClick={() => goToPage(currentPage + 1)}
             className={`min-w-[180px] ${isLastPage ? 'opacity-40 pointer-events-none' : ''}`}
           >
             Next
           </SecondaryButton>
-        </div>
       </div>
 
       {/* Mobile-only page jumper */}
