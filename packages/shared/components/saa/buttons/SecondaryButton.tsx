@@ -90,6 +90,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         py-2
       `}
       style={{
+        perspective: '1000px',
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
         paddingLeft: '10px',
