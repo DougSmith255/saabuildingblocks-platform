@@ -73,8 +73,8 @@ textarea,
 }
 
 .counter-glow-container {
-  /* + and AGENTS use Amulya with neon glow - isolated container */
-  font-family: var(--font-amulya), serif;
+  /* + and AGENTS use Taskor with neon glow - isolated container */
+  font-family: var(--font-taskor), sans-serif;
   display: flex;
   align-items: center;
   gap: clamp(0.5rem, 0.75rem, 1rem);
@@ -88,7 +88,7 @@ textarea,
 }
 
 .counter-plus {
-  font-family: var(--font-amulya), serif !important;
+  font-family: var(--font-taskor), sans-serif !important;
   font-size: 72px;
   font-weight: 400;
   color: var(--color-heading-text);
@@ -97,7 +97,7 @@ textarea,
 }
 
 .counter-text {
-  font-family: var(--font-amulya), serif !important;
+  font-family: var(--font-taskor), sans-serif !important;
   font-size: 40px;
   font-weight: 400;
   color: var(--color-heading-text);
