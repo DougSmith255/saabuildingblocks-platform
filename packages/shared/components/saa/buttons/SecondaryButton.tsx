@@ -88,11 +88,12 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         ${className}
         ${widthClass}
         py-2
-        px-[10px]
       `}
       style={{
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
+        paddingLeft: '10px',
+        paddingRight: '10px',
       }}
     >
       <div className={`
@@ -111,8 +112,11 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
       {/* Left side glow bar */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 left-[-5px] w-[10px] h-[18px] rounded-md transition-all duration-300 group-hover:h-[80%]"
+        className="absolute top-1/2 -translate-y-1/2 rounded-md transition-all duration-300 group-hover:h-[80%]"
         style={{
+          left: '-5px',
+          width: '10px',
+          height: '18px',
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
@@ -125,8 +129,11 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
       {/* Right side glow bar */}
       <div
-        className="absolute top-1/2 -translate-y-1/2 right-[-5px] w-[10px] h-[18px] rounded-md transition-all duration-300 group-hover:h-[80%]"
+        className="absolute top-1/2 -translate-y-1/2 rounded-md transition-all duration-300 group-hover:h-[80%]"
         style={{
+          right: '-5px',
+          width: '10px',
+          height: '18px',
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
