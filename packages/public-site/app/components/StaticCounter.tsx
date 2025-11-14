@@ -23,37 +23,42 @@ export function StaticCounter() {
         top: '80px',
       }}
     >
+      {/* Outer wrapper - no font-family set here */}
       <div
-        className="counter-container flex items-center justify-center"
+        className="flex items-center justify-center"
         style={{
           fontWeight: 100,
-          color: 'var(--color-body-text)',
           gap: 'clamp(0.5rem, 0.75rem, 1rem)',
           padding: '0.75rem 1.5rem',
           borderRadius: '32px',
           minWidth: '280px',
         }}
       >
-        {/* Counter Numbers - Static HTML, body font (Taskor), no glow */}
-        <div
-          className="counter-numbers counter-animate"
-          style={{ fontVariantNumeric: 'tabular-nums' }}
-        >
-          3700
+        {/* Numbers container - body font only */}
+        <div className="counter-numbers-wrapper">
+          <div
+            className="counter-numbers counter-animate"
+            style={{ fontVariantNumeric: 'tabular-nums' }}
+          >
+            3700
+          </div>
         </div>
 
-        {/* + Symbol with neon glow */}
-        <span className="counter-plus neon-glow">+</span>
+        {/* Glow effects container - Amulya font with neon glow */}
+        <div className="counter-glow-container">
+          {/* + Symbol with neon glow */}
+          <span className="counter-plus neon-glow">+</span>
 
-        {/* AGENTS Text - Static HTML with neon glow */}
-        <span className="counter-text counter-glow-wrapper">
-          <span className="neon-glow">A</span>
-          <span className="neon-glow">G</span>
-          <span className="neon-glow">E</span>
-          <span className="neon-glow">N</span>
-          <span className="neon-glow">T</span>
-          <span className="neon-glow">S</span>
-        </span>
+          {/* AGENTS Text - Static HTML with neon glow */}
+          <span className="counter-text counter-glow-wrapper">
+            <span className="neon-glow">A</span>
+            <span className="neon-glow">G</span>
+            <span className="neon-glow">E</span>
+            <span className="neon-glow">N</span>
+            <span className="neon-glow">T</span>
+            <span className="neon-glow">S</span>
+          </span>
+        </div>
       </div>
     </div>
   );

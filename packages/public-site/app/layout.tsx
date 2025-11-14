@@ -65,8 +65,8 @@ const taskor = localFont({
 const amulya = localFont({
   src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
-  display: 'swap',
-  preload: true, // Preload normal variant (used in hero)
+  display: 'block', // Block rendering until font loads (counter + AGENTS needs correct font)
+  preload: true, // Preload normal variant (used in hero and counter)
   weight: '100 900',
   fallback: ['Georgia', 'serif'],
 });
@@ -84,10 +84,10 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'swap',
-  preload: true, // Preload because it's used in header menu (above-the-fold)
+  display: 'block', // Block rendering until font loads (counter needs correct font immediately)
+  preload: true, // Preload because it's used in counter (above-the-fold)
   weight: '100 900',
-  fallback: ['sans-serif'],
+  fallback: ['monospace'], // Monospace fallback to match counter styling
 });
 
 /**

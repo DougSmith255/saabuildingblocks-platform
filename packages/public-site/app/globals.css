@@ -40,12 +40,9 @@ textarea,
   -ms-user-select: text !important;
 }
 
-/* Force SlotCounter to use Taskor font */
-.agent-counter-wrapper,
-.agent-counter-wrapper *,
-.agent-counter-wrapper div,
-.agent-counter-wrapper span {
-  font-family: 'Taskor', sans-serif !important;
+/* Counter numbers ONLY use Synonym font - targeted override */
+.counter-numbers {
+  font-family: var(--font-synonym), monospace !important;
 }
 
 /* SlotCounter Vertical Positioning Fix - Prevent bottom cutoff */
@@ -70,9 +67,17 @@ textarea,
   overflow: visible !important;
 }
 
-/* Counter fonts - numbers use body font (Amulya), + and AGENTS inherit */
-.counter-container {
+/* Counter containers - separate font control */
+.counter-numbers-wrapper {
+  /* Container inherits default font - child .counter-numbers gets Synonym via !important rule */
+}
+
+.counter-glow-container {
+  /* + and AGENTS use Amulya with neon glow - isolated container */
   font-family: var(--font-amulya), serif;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.5rem, 0.75rem, 1rem);
 }
 
 /* Desktop sizes */
@@ -80,11 +85,10 @@ textarea,
   font-size: 64px;
   font-weight: 400;
   color: var(--color-heading-text);
-  /* Explicitly use body font (Amulya) for numbers */
-  font-family: var(--font-amulya), serif;
 }
 
 .counter-plus {
+  font-family: var(--font-amulya), serif !important;
   font-size: 72px;
   font-weight: 400;
   color: var(--color-heading-text);
@@ -93,6 +97,7 @@ textarea,
 }
 
 .counter-text {
+  font-family: var(--font-amulya), serif !important;
   font-size: 40px;
   font-weight: 400;
   color: var(--color-heading-text);
