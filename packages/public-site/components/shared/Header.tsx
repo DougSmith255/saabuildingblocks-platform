@@ -194,7 +194,6 @@ export default function Header() {
             transform: 'translateZ(0)',
             WebkitTransform: 'translateZ(0)',
             contain: 'layout style',
-            overflow: 'hidden',
           }}
         >
           {/* Enhanced Glassmorphism Background with Prismatic Shimmer Effect */}
