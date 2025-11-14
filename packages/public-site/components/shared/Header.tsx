@@ -219,6 +219,7 @@ export default function Header() {
               height: 'auto',
               minHeight: 'clamp(60px, 8vh, 90px)',
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+              overflowX: 'hidden',
             }}
           >
             {/* Logo - Hidden on 404 */}
