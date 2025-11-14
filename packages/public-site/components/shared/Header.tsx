@@ -231,7 +231,7 @@ export default function Header() {
               style={{
                 width: '126px',
                 height: '45px',
-                minWidth: '126px',
+                minWidth: '0',
                 minHeight: '45px',
                 maxWidth: '126px',
                 maxHeight: '45px',
