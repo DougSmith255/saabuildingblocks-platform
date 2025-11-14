@@ -52,7 +52,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   const buttonClasses = `
     relative flex justify-center items-center
     ${widthClass}
-    h-[56px] px-5 py-2
+    px-5 py-2
     bg-[rgb(45,45,45)] backdrop-blur-[15px]
     rounded-xl border-t border-b border-white/10
     text-button uppercase tracking-wide
@@ -76,7 +76,8 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     fontWeight: 'var(--font-weight-button, 600)' as any,
     textTransform: 'var(--text-transform-button, uppercase)' as any,
     letterSpacing: 'var(--letter-spacing-button, 0.05em)',
-    lineHeight: 'var(--line-height-button, 1.4)'
+    lineHeight: 'var(--line-height-button, 1.4)',
+    height: 'clamp(45px, calc(29.55px + 0.618vw), 75px)'
   };
 
   const ButtonElement = as === 'button' ? 'button' : 'a';
