@@ -49,7 +49,16 @@ export default function Header() {
   const [isHamburgerFixed, setIsHamburgerFixed] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  // Initialize shouldAnimate based on session storage to prevent flash
+  // If no session storage = first visit = should animate
+  const [shouldAnimate, setShouldAnimate] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !sessionStorage.getItem('headerAnimated');
+    }
+    return true; // Server-side default: assume first visit
+  });
+
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hamburgerUnfixTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -66,19 +75,18 @@ export default function Header() {
     if (headerAnimated) {
       // Header already animated in this session, show immediately
       setFontsLoaded(true);
-      setShouldAnimate(false);
+      // shouldAnimate already false from useState initialization
     } else {
       // First time - wait for fonts, then animate
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
           setFontsLoaded(true);
-          setShouldAnimate(true);
+          // shouldAnimate already true from useState initialization
           sessionStorage.setItem('headerAnimated', 'true');
         });
       } else {
         // Fallback if Font Loading API not supported
         setFontsLoaded(true);
-        setShouldAnimate(true);
         sessionStorage.setItem('headerAnimated', 'true');
       }
     }
