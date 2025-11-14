@@ -721,6 +721,10 @@ main {
     }
   }
 
+  .animate-fadeIn {
+    animation: fadeIn2025 0.3s ease-out forwards;
+  }
+
   @keyframes bgZoom2025 {
     from {
       opacity: 0;

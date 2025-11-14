@@ -48,12 +48,20 @@ export default function Header() {
   const [is404Page, setIs404Page] = useState(false);
   const [isHamburgerFixed, setIsHamburgerFixed] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [shouldFadeIn, setShouldFadeIn] = useState(false);
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hamburgerUnfixTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state to prevent animation on initial load
+  // Track mount state and check if this is first visit in session
   useEffect(() => {
     setHasMounted(true);
+
+    // Check if header has been shown in this session
+    const headerShown = sessionStorage.getItem('headerShown');
+    if (!headerShown) {
+      setShouldFadeIn(true);
+      sessionStorage.setItem('headerShown', 'true');
+    }
   }, []);
 
   // Detect 404 page
@@ -172,7 +180,7 @@ export default function Header() {
       {/* Header */}
       <header
         role="banner"
-        className="fixed top-0 left-0 right-0 z-[10010]"
+        className={`fixed top-0 left-0 right-0 z-[10010] transition-opacity duration-300 ${shouldFadeIn ? 'opacity-0 animate-fadeIn' : 'opacity-100'}`}
         style={{
           background: 'transparent',
           overflow: 'visible',
@@ -374,7 +382,7 @@ export default function Header() {
 
           {/* CTA Button (Desktop) - Hidden on 404 */}
           {!is404Page && (
-          <div className={`header-btn hidden xlg:flex items-center transition-opacity duration-200 ${hasMounted ? 'opacity-100' : 'opacity-0'}`}>
+          <div className="header-btn hidden xlg:flex items-center">
             <CTAButton href="/join-exp-sponsor-team/">
               GET STARTED
             </CTAButton>
