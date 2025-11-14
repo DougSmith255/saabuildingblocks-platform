@@ -204,7 +204,7 @@ export default function Header() {
         style={{
           background: 'transparent',
           overflow: 'visible',
-          opacity: fontsLoaded ? 1 : 0,
+          opacity: 1, // Always visible - no black flash on refresh
           transform: shouldAnimate ? 'translateY(-100%)' : 'translateY(0)',
           willChange: shouldAnimate ? 'transform' : 'auto',
         }}
@@ -592,9 +592,18 @@ export default function Header() {
       <style jsx global>{`
         /* CSS Animations (replacing framer-motion) */
 
-        /* Header - NO slide-in animation */
+        /* Header slide-in animation - first visit only, 0.8s duration */
+        @keyframes headerSlideDown {
+          from {
+            transform: translateY(-100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+
         .header-slide-in {
-          /* Removed animation - instant appearance */
+          animation: headerSlideDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         /* Mobile menu slide down animation */
