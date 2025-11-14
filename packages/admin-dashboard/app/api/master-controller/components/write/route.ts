@@ -17,25 +17,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Security: Ensure path is within project directory
+    // Security: Ensure path is within monorepo (same logic as read route)
     const projectRoot = process.cwd();
+    const absolutePath = path.resolve(projectRoot, filePath);
 
-    // Normalize path by removing leading slash if present
-    const normalizedPath = filePath.startsWith('/') ? filePath.slice(1) : filePath;
-    const absolutePath = path.join(projectRoot, normalizedPath);
+    // Allow access to files within the monorepo (parent directory of packages)
+    const monorepoRoot = path.resolve(projectRoot, '..');
 
-    // Validate path is within project directory
-    const resolvedPath = path.resolve(absolutePath);
-    if (!resolvedPath.startsWith(projectRoot)) {
+    if (!absolutePath.startsWith(monorepoRoot)) {
       console.error('Invalid file path attempted:', {
         filePath,
-        normalizedPath,
         absolutePath,
-        resolvedPath,
-        projectRoot
+        projectRoot,
+        monorepoRoot
       });
       return NextResponse.json(
-        { error: 'Invalid file path - must be within project directory' },
+        { error: 'Invalid file path - must be within monorepo' },
         { status: 403 }
       );
     }
@@ -48,8 +45,7 @@ export async function POST(request: NextRequest) {
     await fs.writeFile(absolutePath, content, 'utf-8');
 
     console.log('Successfully wrote file:', {
-      originalPath: filePath,
-      normalizedPath,
+      path: filePath,
       absolutePath,
       size: content.length
     });

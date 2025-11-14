@@ -225,15 +225,15 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
     switch (id) {
       // Buttons
       case 'cta-button':
-        return lazy(() => import('@/components/saa/buttons/CTAButton').then(m => ({ default: () => <m.CTAButton>Get Started</m.CTAButton> })));
+        return lazy(() => import('@saa/shared/components/saa/buttons/CTAButton').then(m => ({ default: () => <m.CTAButton>Get Started</m.CTAButton> })));
       case 'secondary-button':
-        return lazy(() => import('@/components/saa/buttons/SecondaryButton').then(m => ({ default: () => <m.SecondaryButton>Learn More</m.SecondaryButton> })));
+        return lazy(() => import('@saa/shared/components/saa/buttons/SecondaryButton').then(m => ({ default: () => <m.SecondaryButton>Learn More</m.SecondaryButton> })));
       case 'generic-button':
         return lazy(() => import('@saa/shared/components/saa/buttons/GenericButton').then(m => ({ default: () => <m.GenericButton>Filter Option</m.GenericButton> })));
 
       // Cards
       case 'cyber-card-prismatic-glass':
-        return lazy(() => import('@/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
+        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
           default: () => (
             <m.CyberCardPrismaticGlass className="w-full max-w-md">
               <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Prismatic Glass</h3>
@@ -242,7 +242,7 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
           )
         })));
       case 'cyber-card-holographic':
-        return lazy(() => import('@/components/saa/cards/CyberCardHolographic').then(m => ({
+        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardHolographic').then(m => ({
           default: () => (
             <m.CyberCardHolographic className="w-full max-w-md">
               <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Holographic Card</h3>
@@ -252,7 +252,7 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
         })));
       // Interactive
       case 'icon-library':
-        return lazy(() => import('@/components/saa/icons/IconLibrary').then(m => ({
+        return lazy(() => import('@saa/shared/components/saa/icons/IconLibrary').then(m => ({
           default: () => (
             <div className="w-full h-full p-8">
               <m.IconLibrary size="large" showLabels />
