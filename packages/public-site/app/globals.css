@@ -725,6 +725,19 @@ main {
     animation: fadeIn2025 0.3s ease-out forwards;
   }
 
+  @keyframes slideDownHeader {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slideDown {
+    animation: slideDownHeader 0.5s ease-out forwards;
+  }
+
   @keyframes bgZoom2025 {
     from {
       opacity: 0;

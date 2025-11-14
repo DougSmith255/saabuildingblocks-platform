@@ -180,7 +180,7 @@ export default function Header() {
       {/* Header */}
       <header
         role="banner"
-        className={`fixed top-0 left-0 right-0 z-[10010] transition-opacity duration-300 ${shouldFadeIn ? 'opacity-0 animate-fadeIn' : 'opacity-100'}`}
+        className={`fixed top-0 left-0 right-0 z-[10010] ${shouldFadeIn ? 'animate-slideDown' : ''}`}
         style={{
           background: 'transparent',
           overflow: 'visible',
