@@ -83,12 +83,18 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   const ButtonElement = as === 'button' ? 'button' : 'a';
 
   return (
-    <div className={`
-      ${className}
-      ${widthClass}
-      py-2
-      px-[10px]
-    `}>
+    <div
+      className={`
+        ${className}
+        ${widthClass}
+        py-2
+        px-[10px]
+      `}
+      style={{
+        transformStyle: 'preserve-3d',
+        transform: 'rotateX(15deg)',
+      }}
+    >
       <div className={`
         group
         relative flex justify-center items-center
