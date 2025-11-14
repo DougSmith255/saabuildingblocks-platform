@@ -34,15 +34,12 @@ export function StaticCounter() {
           minWidth: '280px',
         }}
       >
-        {/* Counter Numbers - Static HTML with neon glow */}
+        {/* Counter Numbers - Static HTML, body font (Taskor), no glow */}
         <div
-          className="counter-numbers counter-animate counter-glow-wrapper"
-          style={{ fontVariantNumeric: 'tabular-nums', display: 'inline-flex' }}
+          className="counter-numbers counter-animate"
+          style={{ fontVariantNumeric: 'tabular-nums' }}
         >
-          <span className="neon-glow">3</span>
-          <span className="neon-glow">7</span>
-          <span className="neon-glow">0</span>
-          <span className="neon-glow">0</span>
+          3700
         </div>
 
         {/* + Symbol with neon glow */}

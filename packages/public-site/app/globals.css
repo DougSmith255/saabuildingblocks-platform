@@ -70,9 +70,9 @@ textarea,
   overflow: visible !important;
 }
 
-/* USE TASKOR FONT (PRELOADED) - Fast LCP */
+/* Counter fonts - numbers use body font, + and AGENTS inherit from container */
 .counter-container {
-  font-family: 'Taskor', sans-serif;
+  font-family: var(--font-taskor), sans-serif;
 }
 
 /* Desktop sizes */
@@ -80,6 +80,8 @@ textarea,
   font-size: 64px;
   font-weight: 400;
   color: var(--color-heading-text);
+  /* Explicitly use body font for numbers */
+  font-family: var(--font-taskor), sans-serif;
 }
 
 .counter-plus {
