@@ -1,6 +1,8 @@
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
+import { HomepageClient } from './components/HomepageClient';
+import { DynamicH1Container } from './components/DynamicH1Container';
 
 /**
  * Homepage - Server Component with Static Content
@@ -88,25 +90,10 @@ export default function Home() {
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
 
-        {/* H1 Container - CSS-only positioning targeting 75% down Doug & Karrie image */}
-        <div
-          className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
-          style={{
-            // Doug & Karrie profile image: 900×500px (1.8:1 aspect ratio)
-            // Container: width=clamp(400px, 47.37vw, 900px), height=84dvh
-            // Image: object-contain, so height = width / 1.8 = clamp(222px, 26.32vw, 500px)
-            // Image top: 8dvh + 15px
-            //
-            // Target: H1 at 75% down the image (25% overlap)
-            // Calculation: 8dvh + 15px + (image_height × 0.75)
-            //            = 8dvh + 15px + (clamp(222px, 26.32vw, 500px) × 0.75)
-            //            = 8dvh + 15px + clamp(167px, 19.74vw, 375px)
-            //
-            // Using mid-range value for better accuracy: 8dvh + 15px + 35vh
-            // This provides ~70-75% overlap across different screen sizes
-            top: 'calc(8dvh + 15px + 35vh)',
-          }}
-        >
+        {/* Desktop: JavaScript positioning (accurate) - Hidden on mobile */}
+        <div className="hidden md:block">
+          <HomepageClient />
+          <DynamicH1Container>
           {/* Headline Group */}
           <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
             {/* H1: Using Master Controller H1 component with hero animation */}
@@ -127,6 +114,48 @@ export default function Home() {
           </div>
 
           {/* CTA Button Group - ensure 15px+ clearance from fold */}
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pb-6">
+            <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.3s">
+              JOIN THE ALLIANCE
+            </CTAButton>
+            <CTAButton href="/exp-realty-sponsor/" heroAnimate animationDelay="1.7s">
+              LEARN MORE
+            </CTAButton>
+          </div>
+          </DynamicH1Container>
+        </div>
+
+        {/* Mobile: CSS-only positioning (optimized for performance) - Visible only on mobile */}
+        <div
+          className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
+          style={{
+            // Mobile-optimized CSS positioning
+            // Image height on mobile: clamp(222px, 26.32vw, 500px)
+            // For 375px screen: 222px image, 75% down = 167px
+            // Image top: 8dvh + 15px
+            // Total: 8dvh + 15px + 167px ≈ 8dvh + 182px
+            top: 'calc(8dvh + 182px)',
+          }}
+        >
+          {/* Headline Group */}
+          <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
+            {/* H1: Using Master Controller H1 component with hero animation */}
+            <H1
+              id="hero-heading-mobile"
+              heroAnimate
+              animationDelay="0.5s"
+              style={{
+                fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
+              }}
+            >
+              SMART AGENT ALLIANCE
+            </H1>
+            <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.9s">
+              For Agents Who Want More
+            </Tagline>
+          </div>
+
+          {/* CTA Button Group */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pb-6">
             <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.3s">
               JOIN THE ALLIANCE
