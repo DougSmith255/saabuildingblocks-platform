@@ -70,7 +70,7 @@ export default function PaginationControls({
     setHashParams(params);
 
     // Scroll to the blog posts section - FORCE immediate scroll that overrides any animations
-    // Use instant scroll to stop any ongoing scroll animations (footer icons, etc.)
+    // and cancels scroll momentum
     const postsHeading = document.getElementById('posts-heading');
     if (postsHeading) {
       const headerHeight = 90; // Fixed header height
@@ -78,11 +78,27 @@ export default function PaginationControls({
       const elementPosition = postsHeading.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - headerHeight - spacing;
 
+      // Cancel any ongoing scroll momentum by stopping all scroll events
+      const preventScroll = (e: Event) => {
+        e.preventDefault();
+        e.stopPropagation();
+      };
+
+      // Block scroll events temporarily
+      document.addEventListener('wheel', preventScroll, { passive: false, capture: true });
+      document.addEventListener('touchmove', preventScroll, { passive: false, capture: true });
+
       // IMMEDIATELY stop any ongoing scroll with instant behavior
       window.scrollTo({
         top: offsetPosition,
         behavior: 'instant'
       });
+
+      // Remove scroll block after a short delay to allow user control
+      setTimeout(() => {
+        document.removeEventListener('wheel', preventScroll, { capture: true });
+        document.removeEventListener('touchmove', preventScroll, { capture: true });
+      }, 100);
     }
   };
 
