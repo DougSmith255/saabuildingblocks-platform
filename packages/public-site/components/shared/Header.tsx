@@ -376,7 +376,7 @@ export default function Header() {
           {/* CTA Button (Desktop) - Hidden on 404 */}
           {!is404Page && (
           <div className="header-btn hidden xlg:flex items-center">
-            <CTAButton href="/join-exp-sponsor-team/">
+            <CTAButton href="/join-exp-sponsor-team/" className="min-w-[175px]">
               GET STARTED
             </CTAButton>
           </div>
