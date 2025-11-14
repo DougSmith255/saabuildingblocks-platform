@@ -70,9 +70,9 @@ textarea,
   overflow: visible !important;
 }
 
-/* Counter fonts - numbers use body font, + and AGENTS inherit from container */
+/* Counter fonts - numbers use body font (Amulya), + and AGENTS inherit */
 .counter-container {
-  font-family: var(--font-taskor), sans-serif;
+  font-family: var(--font-amulya), serif;
 }
 
 /* Desktop sizes */
@@ -80,8 +80,8 @@ textarea,
   font-size: 64px;
   font-weight: 400;
   color: var(--color-heading-text);
-  /* Explicitly use body font for numbers */
-  font-family: var(--font-taskor), sans-serif;
+  /* Explicitly use body font (Amulya) for numbers */
+  font-family: var(--font-amulya), serif;
 }
 
 .counter-plus {
