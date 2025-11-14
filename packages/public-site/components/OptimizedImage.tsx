@@ -32,6 +32,7 @@ interface OptimizedImageProps {
   className?: string;
   priority?: boolean;
   sizes?: string;
+  style?: React.CSSProperties;
 }
 
 export function OptimizedImage({
@@ -43,6 +44,7 @@ export function OptimizedImage({
   className = '',
   priority = false,
   sizes = '100vw',
+  style,
 }: OptimizedImageProps) {
   // Generate Cloudflare Image Resizing URL
   const cloudflareUrl = (imgSrc: string, imgWidth: number, imgQuality: number = quality) => {
@@ -83,6 +85,7 @@ export function OptimizedImage({
       style={{
         maxWidth: '100%',
         height: 'auto',
+        ...style,
       }}
     />
   );

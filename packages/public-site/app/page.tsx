@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
+import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
 
@@ -25,7 +26,7 @@ export default function Home() {
             <div
               className="absolute inset-0 hero-animate-bg animate-in"
               style={{
-                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/10/Smart-agent-alliance-and-the-wolf-pack.webp)',
+                backgroundImage: 'url(/images/hero/Smart-agent-alliance-and-the-wolf-pack.webp)',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center 55%',
@@ -55,10 +56,13 @@ export default function Home() {
                 filter: 'blur(40px)',
               }}
             />
-            {/* Main image - using img tag so mask applies to actual image bounds */}
-            <img
-              src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
+            {/* Main image - using OptimizedImage for Cloudflare Image Resizing */}
+            <OptimizedImage
+              src="/images/hero/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
+              width={900}
+              height={500}
+              priority={true}
               className="hero-3d-image profile-image animate-in absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
                 top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
