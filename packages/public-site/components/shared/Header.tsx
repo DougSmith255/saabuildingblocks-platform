@@ -48,34 +48,24 @@ export default function Header() {
   const [is404Page, setIs404Page] = useState(false);
   const [isHamburgerFixed, setIsHamburgerFixed] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
-  const [shouldFadeIn, setShouldFadeIn] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hamburgerUnfixTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state and check if this is a fresh page load (not from cache)
+  // Track mount state
   useEffect(() => {
     setHasMounted(true);
+  }, []);
 
-    // Check if page was loaded from cache using Navigation Timing API
-    const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-
-    // Debug logging
-    console.log('Navigation Entry:', {
-      type: navigationEntry?.type,
-      transferSize: navigationEntry?.transferSize,
-      decodedBodySize: navigationEntry?.decodedBodySize
-    });
-
-    const isFromCache = navigationEntry && (
-      navigationEntry.type === 'back_forward' ||
-      navigationEntry.transferSize === 0
-    );
-
-    console.log('isFromCache:', isFromCache, 'shouldFadeIn will be:', !isFromCache);
-
-    // Show slide-down animation only if page was NOT loaded from cache
-    if (!isFromCache) {
-      setShouldFadeIn(true);
+  // Wait for fonts to load before showing header to prevent text flashes
+  useEffect(() => {
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        setFontsLoaded(true);
+      });
+    } else {
+      // Fallback if Font Loading API not supported
+      setFontsLoaded(true);
     }
   }, []);
 
@@ -195,7 +185,7 @@ export default function Header() {
       {/* Header */}
       <header
         role="banner"
-        className={`fixed top-0 left-0 right-0 z-[10010] ${shouldFadeIn ? 'animate-slideDown' : ''}`}
+        className={`fixed top-0 left-0 right-0 z-[10010] transition-opacity duration-200 ${fontsLoaded ? 'opacity-100' : 'opacity-0'}`}
         style={{
           background: 'transparent',
           overflow: 'visible',
