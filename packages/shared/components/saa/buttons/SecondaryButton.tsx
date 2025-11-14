@@ -85,10 +85,14 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   return (
     <div className={`
       ${className}
-      group
-      relative flex justify-center items-center
-      !my-[10px] py-2
+      ${widthClass}
+      py-2
     `}>
+      <div className={`
+        group
+        relative flex justify-center items-center
+        !my-[10px]
+      `}>
       <ButtonElement
         {...(as === 'a' ? { href } : { type: 'button' as const })}
         onClick={handleClick}
@@ -138,6 +142,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           }
         }
       `}</style>
+      </div>
     </div>
   );
 }

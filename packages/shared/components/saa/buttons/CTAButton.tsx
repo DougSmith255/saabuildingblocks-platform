@@ -48,17 +48,23 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
     <div
       className={`
         ${className}
-        group
-        relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
-        !my-[10px] py-2
-        ${heroAnimate ? 'hero-entrance-animate' : ''}
+        ${isFullWidth ? 'flex' : 'inline-flex w-fit'}
+        py-2
       `}
-      style={heroAnimate ? {
-        opacity: 0,
-        animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
-        willChange: 'opacity, transform',
-      } : {}}
     >
+      <div
+        className={`
+          group
+          relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
+          !my-[10px]
+          ${heroAnimate ? 'hero-entrance-animate' : ''}
+        `}
+        style={heroAnimate ? {
+          opacity: 0,
+          animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
+          willChange: 'opacity, transform',
+        } : {}}
+      >
       <a
         href={href}
         onClick={handleClick}
@@ -141,6 +147,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           }
         }
       `}</style>
+      </div>
     </div>
   );
 }
