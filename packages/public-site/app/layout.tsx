@@ -65,10 +65,11 @@ const taskor = localFont({
 const amulya = localFont({
   src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
-  display: 'block', // Block rendering until font loads (counter + AGENTS needs correct font)
+  display: 'optional', // Don't block rendering - show fallback if font takes >100ms
   preload: true, // Preload normal variant (used in hero and counter)
   weight: '100 900',
   fallback: ['Georgia', 'serif'],
+  adjustFontFallback: 'Georgia', // Next.js auto-generates matching fallback metrics
 });
 
 const amulyaItalic = localFont({
@@ -84,10 +85,11 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'swap', // Show fallback immediately, swap when loaded
-  preload: true, // Preload because it's used in counter (above-the-fold)
+  display: 'optional', // Don't block rendering - critical for LCP performance
+  preload: false, // Don't preload - counter is not LCP element, load after critical resources
   weight: '100 900',
-  fallback: ['monospace'], // Monospace fallback to match counter styling
+  fallback: ['Courier New', 'monospace'], // Courier New provides better metric matching
+  adjustFontFallback: 'Courier New', // Next.js auto-generates matching fallback metrics
 });
 
 /**

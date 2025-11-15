@@ -48,7 +48,7 @@ textarea,
 /* Fixed width for each digit to prevent horizontal movement during animation */
 .counter-digit {
   display: inline-block;
-  min-width: 0.6em; /* Fixed width based on font size (64px * 0.6 = ~38px per digit) */
+  width: 0.6em; /* Fixed width - works with any font, no OpenType features needed */
   text-align: center;
 }
 
