@@ -162,6 +162,23 @@ export default function Header() {
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
+
+      // Enable mouse wheel scrolling for the mobile menu
+      const menu = document.getElementById('mobile-menu');
+      const handleWheel = (e: WheelEvent) => {
+        // Let the menu handle its own scrolling
+        e.stopPropagation();
+      };
+
+      if (menu) {
+        menu.addEventListener('wheel', handleWheel, { passive: true });
+      }
+
+      return () => {
+        if (menu) {
+          menu.removeEventListener('wheel', handleWheel);
+        }
+      };
     } else {
       // Restore scroll position
       const scrollY = document.body.style.top;
