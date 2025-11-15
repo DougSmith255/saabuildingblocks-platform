@@ -143,12 +143,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // Lock body scroll when mobile menu is open (without position fixed to keep background)
+  // Don't lock body scroll when mobile menu is open - let page scroll naturally
+  // Menu fills viewport and uses page scroll instead of creating internal scrollbar
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+      // Scroll to top when menu opens for better UX
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [isMobileMenuOpen]);
 
@@ -463,7 +463,7 @@ export default function Header() {
           id="mobile-menu"
           role="dialog"
           aria-label="Mobile navigation menu"
-          className="mobile-menu-overlay fixed top-0 left-0 right-0 z-[9990] h-screen overflow-hidden"
+          className="mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990]"
           style={{
             background: 'rgba(15, 15, 15, 0.95)',
             backdropFilter: 'blur(20px)',
@@ -475,10 +475,8 @@ export default function Header() {
           }}
         >
           <div
-            className="mobile-menu-content h-full overflow-y-auto overflow-x-hidden pt-24 pb-32"
+            className="mobile-menu-content pt-24 pb-32"
             style={{
-              touchAction: 'pan-y',
-              WebkitOverflowScrolling: 'touch',
               animation: 'fadeIn 0.3s ease-out 0.1s both',
             }}
           >
