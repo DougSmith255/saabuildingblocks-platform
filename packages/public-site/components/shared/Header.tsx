@@ -806,10 +806,11 @@ export default function Header() {
           font-family: var(--font-taskor), Taskor, system-ui, sans-serif !important;
           color: inherit !important;
           background-color: transparent !important;
-          /* Position within header - centered vertically */
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
+          /* Fixed positioning so it stays in place when header slides up */
+          position: fixed;
+          /* Center vertically within header height: clamp(60px, 8vh, 90px) */
+          /* Calculate: 50% of max header height (90px) = 45px, minus half button height (30px) = 15px */
+          top: calc(clamp(30px, 4vh, 45px) - 30px);
           right: 15px;
           width: 60px;
           height: 60px;
