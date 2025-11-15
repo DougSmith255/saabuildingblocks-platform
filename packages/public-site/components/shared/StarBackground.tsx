@@ -14,9 +14,28 @@ interface Star {
 }
 
 export default function StarBackground() {
-  const [stars, setStars] = useState<Star[]>([]);
+  // Initialize stars immediately to prevent flash on page navigation
+  // Stars only generate once per session using sessionStorage
+  const [stars, setStars] = useState<Star[]>(() => {
+    // Server-side: return empty array (will populate on client)
+    if (typeof window === 'undefined') return [];
+
+    // Check if we have cached stars from this session
+    const cachedStars = sessionStorage.getItem('starBackground');
+    if (cachedStars) {
+      try {
+        return JSON.parse(cachedStars);
+      } catch {
+        // If parsing fails, regenerate below
+      }
+    }
+    return [];
+  });
 
   useEffect(() => {
+    // Only generate stars if we don't have them already
+    if (stars.length > 0) return;
+
     // Generate stars on mount - scale with screen size
     const screenArea = window.innerWidth * window.innerHeight;
     const baseArea = 1920 * 1080; // Full HD reference
@@ -44,7 +63,15 @@ export default function StarBackground() {
     }
 
     setStars(generatedStars);
-  }, []);
+
+    // Cache stars in sessionStorage so they persist across page navigations
+    // This prevents the flash when navigating between pages
+    try {
+      sessionStorage.setItem('starBackground', JSON.stringify(generatedStars));
+    } catch {
+      // Ignore storage errors (e.g., quota exceeded)
+    }
+  }, [stars.length]);
 
   return (
     <div className={styles.starfieldContainer} aria-hidden="true">

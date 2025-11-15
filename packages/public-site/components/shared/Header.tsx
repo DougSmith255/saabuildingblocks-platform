@@ -50,11 +50,12 @@ export default function Header() {
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
-  // Initialize shouldAnimate based on session storage to prevent flash
-  // If no session storage = first visit = should animate
+  // Initialize shouldAnimate - NEVER animate after first page load
+  // Use sessionStorage to track across page navigations
   const [shouldAnimate, setShouldAnimate] = useState(() => {
     if (typeof window !== 'undefined') {
-      return !sessionStorage.getItem('headerAnimated');
+      const hasAnimated = sessionStorage.getItem('headerAnimated');
+      return hasAnimated !== 'true'; // Only animate if never animated before
     }
     return true; // Server-side default: assume first visit
   });
@@ -70,18 +71,18 @@ export default function Header() {
   // Wait for fonts to load before showing header to prevent text flashes
   // Only on first visit - subsequent navigations show header immediately
   useEffect(() => {
-    const headerAnimated = sessionStorage.getItem('headerAnimated');
+    const hasAnimated = sessionStorage.getItem('headerAnimated');
 
-    if (headerAnimated) {
-      // Header already animated in this session, show immediately
+    if (hasAnimated === 'true') {
+      // Header already animated in this session, show immediately (no animation)
       setFontsLoaded(true);
       // shouldAnimate already false from useState initialization
     } else {
-      // First time - wait for fonts, then animate
+      // First time in session - wait for fonts, then animate
       if (document.fonts && document.fonts.ready) {
         document.fonts.ready.then(() => {
           setFontsLoaded(true);
-          // shouldAnimate already true from useState initialization
+          // Mark as animated so subsequent page navigations skip animation
           sessionStorage.setItem('headerAnimated', 'true');
         });
       } else {
