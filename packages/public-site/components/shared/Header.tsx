@@ -530,14 +530,9 @@ export default function Header() {
                           />
                         </button>
                         <div
-                          className="mobile-dropdown overflow-hidden pl-4"
-                          style={{
-                            maxHeight: openDropdown === index ? '500px' : '0',
-                            opacity: openDropdown === index ? 1 : 0,
-                            transition: openDropdown === index
-                              ? 'max-height 0.4s ease-out, opacity 0.4s ease-out'
-                              : 'max-height 0.4s ease-in, opacity 0.4s ease-in',
-                          }}
+                          className={`mobile-dropdown overflow-hidden pl-4 ${
+                            openDropdown === index ? 'dropdown-open' : 'dropdown-closed'
+                          }`}
                         >
                             {item.dropdown.map((dropdownItem, dropdownIndex) => (
                               <Link
@@ -651,6 +646,21 @@ export default function Header() {
             opacity: 1;
             transform: translateY(0);
           }
+        }
+
+        /* Mobile dropdown animations - simultaneous open/close */
+        .mobile-dropdown {
+          transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        .dropdown-open {
+          max-height: 500px;
+          opacity: 1;
+        }
+
+        .dropdown-closed {
+          max-height: 0;
+          opacity: 0;
         }
 
         /* Header Navigation Links - Override global green link color */
