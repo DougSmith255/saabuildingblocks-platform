@@ -48,9 +48,21 @@ export default function SmoothScroll() {
       private scrolled(e: Event) {
         e.preventDefault();
         const wheelEvent = e as WheelEvent;
-        // Modern browsers: deltaY is positive when scrolling down
-        // Normalize to a reasonable value and apply speed
-        const delta = wheelEvent.deltaY;
+
+        // Normalize deltaY across browsers
+        // Firefox reports in lines (deltaMode = 1), Chrome/Edge in pixels (deltaMode = 0)
+        let delta = wheelEvent.deltaY;
+
+        if (wheelEvent.deltaMode === 1) {
+          // Firefox: deltaMode = 1 (lines) - convert to pixels
+          // Firefox uses ~3 lines per scroll, multiply by ~40px per line
+          delta = delta * 40;
+        } else if (wheelEvent.deltaMode === 2) {
+          // Safari: deltaMode = 2 (pages) - convert to pixels
+          delta = delta * this.frame.clientHeight;
+        }
+        // deltaMode = 0 (pixels) - use as-is (Chrome, Edge)
+
         this.pos += delta * this.speed;
         this.pos = Math.max(0, Math.min(this.pos, this.target.scrollHeight - this.frame.clientHeight));
         if (!this.moving) this.update();
