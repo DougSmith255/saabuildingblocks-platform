@@ -33,7 +33,48 @@
       "module_name": "admin-dashboard",
       "module_version": "6.0.13"
     },
-    "axm_monitor": {},
+    "axm_monitor": {
+      "Used Heap Size": {
+        "value": "9.76",
+        "type": "internal/v8/heap/used",
+        "unit": "MiB",
+        "historic": true
+      },
+      "Heap Usage": {
+        "value": 93.17,
+        "type": "internal/v8/heap/usage",
+        "unit": "%",
+        "historic": true
+      },
+      "Heap Size": {
+        "value": "10.48",
+        "type": "internal/v8/heap/total",
+        "unit": "MiB",
+        "historic": true
+      },
+      "Event Loop Latency p95": {
+        "value": "1.49",
+        "type": "internal/libuv/latency/p95",
+        "unit": "ms",
+        "historic": true
+      },
+      "Event Loop Latency": {
+        "value": "0.55",
+        "type": "internal/libuv/latency/p50",
+        "unit": "ms",
+        "historic": true
+      },
+      "Active handles": {
+        "value": 5,
+        "type": "internal/libuv/handles",
+        "historic": true
+      },
+      "Active requests": {
+        "value": 0,
+        "type": "internal/libuv/requests",
+        "historic": true
+      }
+    },
     "axm_actions": [
       {
         "action_name": "km:heapdump",
@@ -139,7 +180,7 @@
     "version": "N/A",
     "unstable_restarts": 0,
     "restart_time": 0,
-    "created_at": 1763228549634,
+    "created_at": 1763236213943,
     "axm_dynamic": {},
     "axm_options": {
       "error": true,
@@ -166,48 +207,7 @@
       "module_name": "nextjs-saa",
       "module_version": "6.0.13"
     },
-    "axm_monitor": {
-      "Used Heap Size": {
-        "value": "42.46",
-        "type": "internal/v8/heap/used",
-        "unit": "MiB",
-        "historic": true
-      },
-      "Heap Usage": {
-        "value": 56.9,
-        "type": "internal/v8/heap/usage",
-        "unit": "%",
-        "historic": true
-      },
-      "Heap Size": {
-        "value": "74.63",
-        "type": "internal/v8/heap/total",
-        "unit": "MiB",
-        "historic": true
-      },
-      "Event Loop Latency p95": {
-        "value": "1.13",
-        "type": "internal/libuv/latency/p95",
-        "unit": "ms",
-        "historic": true
-      },
-      "Event Loop Latency": {
-        "value": "0.14",
-        "type": "internal/libuv/latency/p50",
-        "unit": "ms",
-        "historic": true
-      },
-      "Active handles": {
-        "value": 5,
-        "type": "internal/libuv/handles",
-        "historic": true
-      },
-      "Active requests": {
-        "value": 0,
-        "type": "internal/libuv/requests",
-        "historic": true
-      }
-    },
+    "axm_monitor": {},
     "axm_actions": [
       {
         "action_name": "km:heapdump",
@@ -235,7 +235,7 @@
         "arity": 1
       }
     ],
-    "pm_uptime": 1763228549634,
+    "pm_uptime": 1763236213943,
     "status": "online",
     "unique_id": "52fd6ad8-e37c-4fa6-905c-c359edabc11b",
     "SHELL": "/bin/bash",
@@ -302,6 +302,7 @@
     "windowsHide": true,
     "kill_retry_time": 100,
     "env_file": "/home/claude-flow/packages/public-site/.env.local",
-    "namespace": "default"
+    "namespace": "default",
+    "filter_env": []
   }
 ]

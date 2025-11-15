@@ -155,8 +155,7 @@ export default function Header() {
       // Lock scroll - page stays in place exactly as it was
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
+      document.body.style.width = '100%'; // Use width instead of left/right to contain content properly
       document.body.style.overflow = 'hidden';
 
       // Add padding to prevent layout shift (only on browsers with scrollbar width)
@@ -168,8 +167,7 @@ export default function Header() {
       const scrollY = document.body.style.top;
       document.body.style.position = '';
       document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
+      document.body.style.width = '';
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
@@ -481,24 +479,25 @@ export default function Header() {
         )}
       </header>
 
-      {/* Mobile Menu Overlay - Slides down from top */}
-      {isMobileMenuOpen && (
-          <div
-            id="mobile-menu"
-            role="dialog"
-            aria-label="Mobile navigation menu"
-            className="mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden"
-            style={{
-              background: 'rgba(15, 15, 15, 0.95)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              willChange: 'transform',
-              transform: 'translateZ(0)',
-              overscrollBehavior: 'contain',
-              animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
-              pointerEvents: 'auto', // Ensure menu captures scroll events
-              WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
-            }}
+      {/* Mobile Menu Overlay - Slides down/up */}
+      <div
+        id="mobile-menu"
+        role="dialog"
+        aria-label="Mobile navigation menu"
+        className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden ${
+          isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
+        }`}
+        style={{
+          background: 'rgba(15, 15, 15, 0.95)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          willChange: 'transform',
+          transform: 'translateZ(0)',
+          overscrollBehavior: 'contain',
+          pointerEvents: isMobileMenuOpen ? 'auto' : 'none', // Only capture events when open
+          WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
+          display: isMobileMenuOpen ? undefined : 'none', // Hide after close animation
+        }}
           >
             <div
               className="mobile-menu-content pt-24 pb-32 min-h-screen"
@@ -616,7 +615,6 @@ export default function Header() {
               </nav>
             </div>
           </div>
-      )}
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`
@@ -636,7 +634,7 @@ export default function Header() {
           animation: headerSlideDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
-        /* Mobile menu slide down animation */
+        /* Mobile menu slide animations */
         @keyframes slideDown {
           from {
             transform: translateY(-100%);
@@ -644,6 +642,46 @@ export default function Header() {
           to {
             transform: translateY(0);
           }
+        }
+
+        @keyframes slideUp {
+          from {
+            transform: translateY(0);
+          }
+          to {
+            transform: translateY(-100%);
+          }
+        }
+
+        .menu-opening {
+          animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .menu-closing {
+          animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Dark mode scrollbar for mobile menu */
+        .mobile-menu-overlay {
+          scrollbar-width: thin; /* Firefox */
+          scrollbar-color: #3a3a3a #1a1a1a; /* Firefox: thumb track */
+        }
+
+        .mobile-menu-overlay::-webkit-scrollbar {
+          width: 12px; /* Chrome, Safari, Edge */
+        }
+
+        .mobile-menu-overlay::-webkit-scrollbar-track {
+          background: #1a1a1a;
+        }
+
+        .mobile-menu-overlay::-webkit-scrollbar-thumb {
+          background: #3a3a3a;
+          border-radius: 6px;
+        }
+
+        .mobile-menu-overlay::-webkit-scrollbar-thumb:hover {
+          background: #4a4a4a;
         }
 
         @keyframes fadeIn {
