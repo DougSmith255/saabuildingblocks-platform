@@ -350,7 +350,7 @@ export default function Header() {
                       }}
                     >
                       {item.dropdown.map((dropdownItem, dropdownIndex) => (
-                        <a
+                        <Link
                           key={dropdownIndex}
                           href={dropdownItem.href}
                           className="dropdown-item block px-4 py-3 transition-all duration-300 bg-[rgba(42,42,42,0.8)] rounded-lg my-[5.5px] hover:bg-[rgba(58,58,58,0.8)] hover:text-white"
@@ -365,7 +365,7 @@ export default function Header() {
                           }}
                         >
                           {dropdownItem.label}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </>
@@ -522,7 +522,7 @@ export default function Header() {
                             }}
                           >
                               {item.dropdown.map((dropdownItem, dropdownIndex) => (
-                                <a
+                                <Link
                                   key={dropdownIndex}
                                   href={dropdownItem.href}
                                   onClick={() => setIsMobileMenuOpen(false)}
@@ -537,7 +537,7 @@ export default function Header() {
                                   }}
                                 >
                                   {dropdownItem.label}
-                                </a>
+                                </Link>
                               ))}
                             </div>
                         )}
