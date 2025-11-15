@@ -139,6 +139,10 @@ p a {
   opacity: 0;
 }
 
+.profile-image.animate-in {
+  animation: imgFadeIn 2.5s linear 0s both;
+}
+
 /* Master Controller Variables - Injected by useLiveCSS */
 /* Placeholder for dynamic CSS variables */
 #master-controller-vars {

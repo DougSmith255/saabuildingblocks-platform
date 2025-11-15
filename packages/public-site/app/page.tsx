@@ -3,6 +3,7 @@ import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
 import { CounterAnimation } from './components/CounterAnimation';
+import { WolfPackAnimation } from './components/WolfPackAnimation';
 
 // Defer loading of desktop-only positioning components (loaded separately from main bundle)
 const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
@@ -98,6 +99,9 @@ export default function Home() {
 
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
+
+        {/* Trigger hero animations (wolf pack background and profile image fade-in) */}
+        <WolfPackAnimation />
 
         {/* Desktop: JavaScript positioning (accurate) - Hidden on mobile */}
         <div className="hidden md:block">
