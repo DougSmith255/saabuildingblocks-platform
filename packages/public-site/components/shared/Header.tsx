@@ -143,31 +143,24 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // Lock page scroll and hide scrollbar when mobile menu is open
+  // When menu opens, hide page content and let menu use document scroll
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Store current scroll position
-      const scrollY = window.scrollY;
+      // Scroll to top
+      window.scrollTo(0, 0);
 
-      // Lock body completely and hide scrollbar
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
-
-      // Hide html scrollbar too
-      document.documentElement.style.overflow = 'hidden';
+      // Hide everything except the menu overlay
+      // The menu will naturally extend the document and use browser scrollbar
+      const mainContent = document.querySelector('main');
+      if (mainContent) {
+        (mainContent as HTMLElement).style.display = 'none';
+      }
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-
-      // Restore scroll position
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      // Restore page content
+      const mainContent = document.querySelector('main');
+      if (mainContent) {
+        (mainContent as HTMLElement).style.display = '';
+      }
     }
   }, [isMobileMenuOpen]);
 
@@ -482,7 +475,7 @@ export default function Header() {
           id="mobile-menu"
           role="dialog"
           aria-label="Mobile navigation menu"
-          className="mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden"
+          className="mobile-menu-overlay absolute top-0 left-0 right-0 z-[9990]"
           style={{
             background: 'rgba(15, 15, 15, 0.95)',
             backdropFilter: 'blur(20px)',
@@ -491,10 +484,11 @@ export default function Header() {
             transform: 'translateZ(0)',
             overscrollBehavior: 'contain',
             animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+            minHeight: '100vh',
           }}
         >
           <div
-            className="mobile-menu-content pt-24 pb-32 min-h-screen"
+            className="mobile-menu-content pt-24 pb-32"
             style={{
               animation: 'fadeIn 0.3s ease-out 0.1s both',
             }}
