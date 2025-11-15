@@ -20,9 +20,12 @@ export function CounterAnimation() {
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Find the counter element that was server-rendered
+    // Find the counter element and individual digit spans
     const counterElement = document.querySelector('.counter-numbers');
     if (!counterElement) return;
+
+    const digitElements = counterElement.querySelectorAll('.counter-digit');
+    if (digitElements.length !== 4) return;
 
     const animateScramble = () => {
       const target = 3700;
@@ -39,7 +42,10 @@ export function CounterAnimation() {
 
         if (progress >= 1) {
           // End animation - show final value
-          counterElement.textContent = '3700';
+          digitElements[0].textContent = '3';
+          digitElements[1].textContent = '7';
+          digitElements[2].textContent = '0';
+          digitElements[3].textContent = '0';
           animationRef.current = null;
         } else {
           // Scramble effect - show random numbers that gradually approach target
@@ -58,7 +64,11 @@ export function CounterAnimation() {
             return digit;
           });
 
-          counterElement.textContent = scrambled.join('');
+          // Update each digit span individually
+          scrambled.forEach((digit, index) => {
+            digitElements[index].textContent = digit;
+          });
+
           animationRef.current = requestAnimationFrame(animate);
         }
       };

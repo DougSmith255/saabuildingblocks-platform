@@ -40,7 +40,10 @@ export function StaticCounter() {
             className="counter-numbers counter-animate"
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
-            3700
+            <span className="counter-digit">3</span>
+            <span className="counter-digit">7</span>
+            <span className="counter-digit">0</span>
+            <span className="counter-digit">0</span>
           </div>
         </div>
 

@@ -45,6 +45,13 @@ textarea,
   font-family: var(--font-synonym), monospace !important;
 }
 
+/* Fixed width for each digit to prevent horizontal movement during animation */
+.counter-digit {
+  display: inline-block;
+  width: 1ch; /* 1 character width - perfect for monospace digits */
+  text-align: center;
+}
+
 /* SlotCounter Vertical Positioning Fix - Prevent bottom cutoff */
 /* Target internal SlotCounter classes to shift numbers DOWN */
 .agent-counter-wrapper [class*="slot__"],
