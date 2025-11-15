@@ -33,10 +33,18 @@ export function HomepageClient() {
       // Helper function to get dimensions - handles cached images
       // OPTIMIZATION: Batch read operation to avoid forced reflow
       const getDimensions = () => {
+        // Force style recalculation to ensure accurate measurements
+        // Different browsers (Chrome vs Firefox/Edge) may calculate rect differently
+        void profileImg.offsetHeight; // Trigger reflow
+
         // Read all geometric properties in ONE batch to minimize reflows
         const rect = profileImg.getBoundingClientRect();
         const complete = profileImg.complete;
         const naturalHeight = profileImg.naturalHeight;
+        const computedStyle = window.getComputedStyle(profileImg);
+
+        // Get the rendered height accounting for object-fit and max-height
+        const renderedHeight = parseFloat(computedStyle.height);
 
         // If cached image has zero dimensions, wait for paint
         if (rect.height === 0 || rect.width === 0) {
@@ -50,9 +58,12 @@ export function HomepageClient() {
           return null; // Dimensions not ready yet
         }
 
+        // Use rendered height if available (more accurate across browsers)
+        const finalHeight = renderedHeight > 0 ? renderedHeight : rect.height;
+
         return {
           top: rect.top,
-          height: rect.height
+          height: finalHeight
         };
       };
 
