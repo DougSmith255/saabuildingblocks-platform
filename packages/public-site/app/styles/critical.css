@@ -240,6 +240,7 @@ p a {
   color-scheme: dark !important;
   scrollbar-width: thin !important;
   scrollbar-color: #3a3a3a #1a1a1a !important;
+  scroll-behavior: smooth !important;
 }
 
 #mobile-menu::-webkit-scrollbar {
