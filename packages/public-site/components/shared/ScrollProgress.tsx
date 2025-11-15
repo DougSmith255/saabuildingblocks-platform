@@ -9,15 +9,13 @@ export default function ScrollProgress() {
     let ticking = false;
 
     const updateScrollProgress = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const docHeight = Math.max(
-        document.body.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.clientHeight,
-        document.documentElement.scrollHeight,
-        document.documentElement.offsetHeight
-      );
-      const windowHeight = window.innerHeight;
+      // Use scrollingElement for consistent cross-browser behavior
+      const scrollElement = document.scrollingElement || document.documentElement;
+      const scrollTop = scrollElement.scrollTop;
+
+      // Use scrollHeight directly from scrollingElement for accuracy
+      const docHeight = scrollElement.scrollHeight;
+      const windowHeight = scrollElement.clientHeight;
       const scrollableDistance = docHeight - windowHeight;
 
       // Calculate percentage (0-100)
