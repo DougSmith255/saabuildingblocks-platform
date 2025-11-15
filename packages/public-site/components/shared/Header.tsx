@@ -150,6 +150,8 @@ export default function Header() {
       const scrollY = window.scrollY;
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
       document.body.style.width = '100%';
       document.body.style.overflowY = 'scroll'; // Keep scrollbar space to prevent layout shift
     } else {
@@ -157,6 +159,8 @@ export default function Header() {
       const scrollY = document.body.style.top;
       document.body.style.position = '';
       document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
       document.body.style.width = '';
       document.body.style.overflowY = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
@@ -483,6 +487,8 @@ export default function Header() {
               transform: 'translateZ(0)',
               overscrollBehavior: 'contain',
               animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+              pointerEvents: 'auto', // Ensure menu captures scroll events
+              WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
             }}
           >
             <div
