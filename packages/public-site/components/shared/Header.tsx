@@ -534,7 +534,9 @@ export default function Header() {
                           style={{
                             maxHeight: openDropdown === index ? '500px' : '0',
                             opacity: openDropdown === index ? 1 : 0,
-                            transition: 'max-height 0.4s ease-out, opacity 0.4s ease-out',
+                            transition: openDropdown === index
+                              ? 'max-height 0.4s ease-out, opacity 0.4s ease-out'
+                              : 'max-height 0.4s ease-in, opacity 0.4s ease-in',
                           }}
                         >
                             {item.dropdown.map((dropdownItem, dropdownIndex) => (
