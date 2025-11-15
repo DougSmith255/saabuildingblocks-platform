@@ -5,7 +5,6 @@ import Link from 'next/link';
 import styles from './GlassShimmer.module.css';
 import { CTAButton } from '@saa/shared/components/saa';
 import { usePathname } from 'next/navigation';
-import { RemoveScroll } from 'react-remove-scroll';
 
 interface NavItem {
   label: string;
@@ -144,7 +143,25 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // No need for manual scroll lock - react-remove-scroll handles it
+  // Manual scroll lock using position:fixed (works across all browsers)
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflowY = 'scroll'; // Keep scrollbar space to prevent layout shift
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflowY = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+  }, [isMobileMenuOpen]);
 
   const toggleMobileMenu = () => {
     const willBeOpen = !isMobileMenuOpen;
@@ -453,7 +470,6 @@ export default function Header() {
 
       {/* Mobile Menu Overlay - Slides down from top */}
       {isMobileMenuOpen && (
-        <RemoveScroll>
           <div
             id="mobile-menu"
             role="dialog"
@@ -588,7 +604,6 @@ export default function Header() {
               </nav>
             </div>
           </div>
-        </RemoveScroll>
       )}
 
       {/* Custom CSS for animations matching WordPress exactly */}

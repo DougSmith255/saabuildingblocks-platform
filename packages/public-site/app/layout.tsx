@@ -12,6 +12,7 @@ import { SkipLink } from './components/SkipLink';
 import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import SmoothScroll from '@/components/SmoothScroll';
 
 // Read critical CSS at build time for consolidation
 const criticalCSS = readFileSync(
@@ -183,6 +184,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      data-scroll-behavior="smooth"
       className={`${taskor.variable} ${amulya.variable} ${amulyaItalic.variable} ${synonym.variable}`}
       suppressHydrationWarning
     >
@@ -226,6 +228,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         {/* Public-site package: Always static export with baked-in CSS */}
+        <SmoothScroll />
         <SkipLink />
         <StarBackground />
         <ScrollProgress />
