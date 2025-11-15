@@ -807,20 +807,12 @@ export default function Header() {
           color: inherit !important;
           background-color: transparent !important;
           /* Position 15px from edge to mirror logo spacing */
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
+          position: fixed;
+          top: 15px;
           right: 15px;
           width: 60px;
           height: 60px;
           will-change: transform;
-        }
-
-        /* Menu open state - switch to fixed positioning */
-        .hamburger.menu-open {
-          position: fixed !important;
-          top: 15px !important;
-          transform: none !important;
         }
 
         /* Prevent color change on hover */

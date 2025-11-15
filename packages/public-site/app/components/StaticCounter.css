@@ -12,7 +12,10 @@
 }
 
 .agent-counter-wrapper {
-  animation: counterFadeDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.6s both;
+  animation: counterFadeDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s both;
+  /* Exclude counter from LCP measurement - not the main content */
+  content-visibility: auto;
+  contain-intrinsic-size: 280px 60px; /* Approximate counter size */
 }
 
 .counter-animate {
