@@ -41,28 +41,19 @@ export default function SmoothScroll() {
         this.frame = this.target === document.body && document.documentElement
                      ? document.documentElement : this.target;
 
-        // Bind event listeners with passive: false for Chrome 73+
-        this.target.addEventListener('mousewheel', this.scrolled.bind(this), { passive: false } as EventListenerOptions);
-        this.target.addEventListener('DOMMouseScroll', this.scrolled.bind(this), { passive: false } as EventListenerOptions);
+        // Use modern 'wheel' event for all browsers
+        this.target.addEventListener('wheel', this.scrolled.bind(this), { passive: false } as EventListenerOptions);
       }
 
       private scrolled(e: Event) {
         e.preventDefault();
-        const delta = this.normalizeWheelDelta(e as WheelEvent);
-        this.pos += -delta * this.speed;
+        const wheelEvent = e as WheelEvent;
+        // Modern browsers: deltaY is positive when scrolling down
+        // Normalize to a reasonable value and apply speed
+        const delta = wheelEvent.deltaY;
+        this.pos += delta * this.speed;
         this.pos = Math.max(0, Math.min(this.pos, this.target.scrollHeight - this.frame.clientHeight));
         if (!this.moving) this.update();
-      }
-
-      private normalizeWheelDelta(e: WheelEvent): number {
-        // Handle Firefox
-        if ((e as any).detail) {
-          if (e.deltaY)
-            return e.deltaY / (e as any).detail / 40 * ((e as any).detail > 0 ? 1 : -1);
-          return -(e as any).detail / 3;
-        }
-        // Handle Chrome, Safari, IE
-        return e.deltaY / 120;
       }
 
       private update() {
@@ -76,14 +67,14 @@ export default function SmoothScroll() {
       }
 
       public destroy() {
-        this.target.removeEventListener('mousewheel', this.scrolled.bind(this));
-        this.target.removeEventListener('DOMMouseScroll', this.scrolled.bind(this));
+        this.target.removeEventListener('wheel', this.scrolled.bind(this));
       }
     }
 
     // Initialize smooth scrolling
-    // speed: 130 (higher = faster), smooth: 2.5 (lower = quicker start/stop)
-    const smoothScroll = new SmoothScrollHandler(document, 130, 2.5);
+    // speed: 1.5 (multiplier for deltaY, higher = faster)
+    // smooth: 10 (smoothness factor, higher = smoother but slower to start/stop)
+    const smoothScroll = new SmoothScrollHandler(document, 1.5, 10);
 
     // Cleanup on unmount
     return () => {
