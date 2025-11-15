@@ -6,7 +6,6 @@ import StarBackground from '@/components/shared/StarBackground';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
 import ScrollProgress from '@/components/shared/ScrollProgress';
-import GlassScrollbar from '@/components/shared/GlassScrollbar';
 import LayoutWrapper from './components/LayoutWrapper';
 import PerformanceHints from './components/PerformanceHints';
 import { SkipLink } from './components/SkipLink';
@@ -232,7 +231,6 @@ export default async function RootLayout({
         <SkipLink />
         <StarBackground />
         <ScrollProgress />
-        <GlassScrollbar />
         <LayoutWrapper>{children}</LayoutWrapper>
 
         {/* SAA Grainy Glow Filters - Global */}
