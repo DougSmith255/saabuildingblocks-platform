@@ -143,23 +143,39 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // When menu opens, hide page content and let menu use document scroll
+  // When menu opens, completely lock body and let menu use document scroll
   useEffect(() => {
     if (isMobileMenuOpen) {
+      // Store current scroll position
+      const scrollY = window.scrollY;
+
       // Scroll to top
       window.scrollTo(0, 0);
 
-      // Hide everything except the menu overlay
-      // The menu will naturally extend the document and use browser scrollbar
-      const mainContent = document.querySelector('main');
-      if (mainContent) {
-        (mainContent as HTMLElement).style.display = 'none';
-      }
+      // LOCK the body completely - position fixed prevents ANY scrolling of body content
+      document.body.style.position = 'fixed';
+      document.body.style.top = '0';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+
+      // Store scroll position for restoration
+      document.body.setAttribute('data-scroll-y', scrollY.toString());
     } else {
-      // Restore page content
-      const mainContent = document.querySelector('main');
-      if (mainContent) {
-        (mainContent as HTMLElement).style.display = '';
+      // Get stored scroll position
+      const scrollY = document.body.getAttribute('data-scroll-y');
+
+      // Restore body
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.removeAttribute('data-scroll-y');
+
+      // Restore scroll position
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY));
       }
     }
   }, [isMobileMenuOpen]);
