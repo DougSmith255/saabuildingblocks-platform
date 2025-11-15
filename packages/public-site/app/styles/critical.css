@@ -38,15 +38,16 @@
 
 /* Base Layout - Prevents FOUC */
 html {
-  background: transparent;
+  background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
+  background-color: rgb(12, 12, 12);
+  background-attachment: fixed;
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   padding: 0;
-  background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
-  background-color: rgb(12, 12, 12);
+  background: transparent;
   color: var(--color-text-secondary);
   font-family: var(--font-amulya), Georgia, serif;
   -webkit-font-smoothing: antialiased;
