@@ -180,8 +180,9 @@ p a {
 
 /* Hamburger Menu - Prevent FOUC by providing base positioning immediately */
 .hamburger {
-  position: fixed;
-  top: 15px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   right: 15px;
   width: 60px;
   height: 60px;

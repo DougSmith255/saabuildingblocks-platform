@@ -806,9 +806,10 @@ export default function Header() {
           font-family: var(--font-taskor), Taskor, system-ui, sans-serif !important;
           color: inherit !important;
           background-color: transparent !important;
-          /* Position 15px from edge to mirror logo spacing */
-          position: fixed;
-          top: 15px;
+          /* Position within header - centered vertically */
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
           right: 15px;
           width: 60px;
           height: 60px;
