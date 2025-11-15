@@ -143,17 +143,20 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // Lock page scroll when mobile menu is open
+  // Lock page scroll and hide scrollbar when mobile menu is open
   useEffect(() => {
     if (isMobileMenuOpen) {
       // Store current scroll position
       const scrollY = window.scrollY;
 
-      // Lock body completely (no scrollbar)
+      // Lock body completely and hide scrollbar
       document.body.style.position = 'fixed';
       document.body.style.top = `-${scrollY}px`;
       document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
+
+      // Hide html scrollbar too
+      document.documentElement.style.overflow = 'hidden';
     } else {
       // Restore scroll position
       const scrollY = document.body.style.top;
@@ -161,6 +164,7 @@ export default function Header() {
       document.body.style.top = '';
       document.body.style.width = '';
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
 
       // Restore scroll position
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
