@@ -5,8 +5,8 @@
     "node_version": "20.19.4",
     "version": "N/A",
     "unstable_restarts": 0,
-    "restart_time": 33,
-    "created_at": 1763227733758,
+    "restart_time": 35,
+    "created_at": 1763228037148,
     "axm_dynamic": {},
     "axm_options": {
       "error": true,
@@ -61,7 +61,7 @@
         "arity": 1
       }
     ],
-    "pm_uptime": 1763227738895,
+    "pm_uptime": 1763228042291,
     "status": "online",
     "unique_id": "46412048-486c-467e-abd7-1315594d6156",
     "SHELL": "/bin/bash",
@@ -139,7 +139,7 @@
     "version": "N/A",
     "unstable_restarts": 0,
     "restart_time": 0,
-    "created_at": 1763227733758,
+    "created_at": 1763228037149,
     "axm_dynamic": {},
     "axm_options": {
       "error": true,
@@ -168,31 +168,31 @@
     },
     "axm_monitor": {
       "Used Heap Size": {
-        "value": "52.75",
+        "value": "49.88",
         "type": "internal/v8/heap/used",
         "unit": "MiB",
         "historic": true
       },
       "Heap Usage": {
-        "value": 70.22,
+        "value": 65.95,
         "type": "internal/v8/heap/usage",
         "unit": "%",
         "historic": true
       },
       "Heap Size": {
-        "value": "75.13",
+        "value": "75.63",
         "type": "internal/v8/heap/total",
         "unit": "MiB",
         "historic": true
       },
       "Event Loop Latency p95": {
-        "value": "0.67",
+        "value": "1.90",
         "type": "internal/libuv/latency/p95",
         "unit": "ms",
         "historic": true
       },
       "Event Loop Latency": {
-        "value": "0.39",
+        "value": "0.72",
         "type": "internal/libuv/latency/p50",
         "unit": "ms",
         "historic": true
@@ -235,7 +235,7 @@
         "arity": 1
       }
     ],
-    "pm_uptime": 1763227733759,
+    "pm_uptime": 1763228037149,
     "status": "online",
     "unique_id": "52fd6ad8-e37c-4fa6-905c-c359edabc11b",
     "SHELL": "/bin/bash",
