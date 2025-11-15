@@ -50,18 +50,37 @@ export default function SmoothScroll() {
         const wheelEvent = e as WheelEvent;
 
         // Normalize deltaY across browsers
-        // Firefox reports in lines (deltaMode = 1), Chrome/Edge in pixels (deltaMode = 0)
+        // Different browsers report wildly different deltaY values
         let delta = wheelEvent.deltaY;
+        const originalDelta = delta;
 
         if (wheelEvent.deltaMode === 1) {
-          // Firefox: deltaMode = 1 (lines) - convert to pixels
-          // Firefox uses ~3 lines per scroll, multiply by ~40px per line
-          delta = delta * 40;
+          // Firefox: deltaMode = 1 (lines) - typically reports ~3 per scroll
+          // Multiply by larger value to compensate for small line values
+          delta = delta * 120; // 3 lines * 120 = 360px (similar to Chrome's ~100px)
         } else if (wheelEvent.deltaMode === 2) {
           // Safari: deltaMode = 2 (pages) - convert to pixels
           delta = delta * this.frame.clientHeight;
+        } else {
+          // Chrome/Edge: deltaMode = 0 (pixels)
+          // But Edge reports much larger values than Chrome
+          // Apply browser-specific adjustment
+          const isEdge = /Edg/.test(navigator.userAgent);
+          if (isEdge) {
+            delta = delta * 0.3; // Reduce Edge's large values
+          }
         }
-        // deltaMode = 0 (pixels) - use as-is (Chrome, Edge)
+
+        // Debug logging (remove after testing)
+        if (Math.random() < 0.1) { // Log 10% of events to avoid spam
+          console.log('Scroll:', {
+            browser: /Firefox/.test(navigator.userAgent) ? 'Firefox' : /Edg/.test(navigator.userAgent) ? 'Edge' : 'Chrome',
+            deltaMode: wheelEvent.deltaMode,
+            originalDelta,
+            normalizedDelta: delta,
+            finalSpeed: delta * this.speed
+          });
+        }
 
         this.pos += delta * this.speed;
         this.pos = Math.max(0, Math.min(this.pos, this.target.scrollHeight - this.frame.clientHeight));
