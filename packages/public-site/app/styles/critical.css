@@ -237,7 +237,7 @@ p a {
 
 /* Dark mode scrollbar for entire page - Chrome/Edge/Safari */
 body::-webkit-scrollbar {
-  width: 17px;
+  width: 12px;
 }
 
 body::-webkit-scrollbar-track {
@@ -259,7 +259,7 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 #mobile-menu::-webkit-scrollbar {
-  width: 17px;
+  width: 12px;
 }
 
 #mobile-menu::-webkit-scrollbar-track {
