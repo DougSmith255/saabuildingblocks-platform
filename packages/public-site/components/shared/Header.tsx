@@ -808,9 +808,10 @@ export default function Header() {
           background-color: transparent !important;
           /* Fixed positioning so it stays in place when header slides up */
           position: fixed;
-          /* Center vertically within header height: clamp(60px, 8vh, 90px) */
-          /* Button is 60px tall, so center = (header height - button height) / 2 */
-          top: calc((clamp(60px, 8vh, 90px) - 60px) / 2);
+          /* Center vertically within header: clamp(60px, 8vh, 90px) + 16px padding (8px top + 8px bottom) */
+          /* Total height: clamp(76px, calc(8vh + 16px), 106px) */
+          /* Button is 60px tall, so center = (total height - button height) / 2 */
+          top: calc((clamp(76px, calc(8vh + 16px), 106px) - 60px) / 2);
           right: 15px;
           width: 60px;
           height: 60px;

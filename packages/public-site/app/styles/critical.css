@@ -181,7 +181,7 @@ p a {
 /* Hamburger Menu - Prevent FOUC by providing base positioning immediately */
 .hamburger {
   position: fixed;
-  top: calc((clamp(60px, 8vh, 90px) - 60px) / 2);
+  top: calc((clamp(76px, calc(8vh + 16px), 106px) - 60px) / 2);
   right: 15px;
   width: 60px;
   height: 60px;
