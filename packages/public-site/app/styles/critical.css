@@ -235,32 +235,22 @@ p a {
 
 /* Removed conflicting mobile padding - Header.tsx has correct symmetric padding */
 
-/* Dark mode scrollbar for entire page - Use @supports to prevent conflicts */
-/* Modern browsers: scrollbar-color overrides webkit, so use @supports to isolate */
-@supports selector(::-webkit-scrollbar) {
-  body::-webkit-scrollbar {
-    width: 17px;
-  }
-
-  body::-webkit-scrollbar-track {
-    background: #1a1a1a;
-  }
-
-  body::-webkit-scrollbar-thumb {
-    background: #3a3a3a;
-    border-radius: 4px;
-  }
-
-  body::-webkit-scrollbar-thumb:hover {
-    background: #4a4a4a;
-  }
+/* Dark mode scrollbar for entire page - Chrome/Edge/Safari */
+body::-webkit-scrollbar {
+  width: 17px;
 }
 
-/* Firefox fallback */
-@supports (scrollbar-color: auto) {
-  body {
-    scrollbar-color: #3a3a3a #1a1a1a;
-  }
+body::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
 }
 
 /* Dark mode scrollbar for mobile menu overlay - matches body scrollbar exactly */
@@ -268,28 +258,19 @@ p a {
   scroll-behavior: smooth !important;
 }
 
-@supports selector(::-webkit-scrollbar) {
-  #mobile-menu::-webkit-scrollbar {
-    width: 17px;
-  }
-
-  #mobile-menu::-webkit-scrollbar-track {
-    background: #1a1a1a;
-  }
-
-  #mobile-menu::-webkit-scrollbar-thumb {
-    background: #3a3a3a;
-    border-radius: 4px;
-  }
-
-  #mobile-menu::-webkit-scrollbar-thumb:hover {
-    background: #4a4a4a;
-  }
+#mobile-menu::-webkit-scrollbar {
+  width: 17px;
 }
 
-/* Firefox fallback */
-@supports (scrollbar-color: auto) {
-  #mobile-menu {
-    scrollbar-color: #3a3a3a #1a1a1a;
-  }
+#mobile-menu::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+#mobile-menu::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+#mobile-menu::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
 }
