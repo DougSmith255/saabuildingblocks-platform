@@ -143,12 +143,31 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // Don't lock body scroll when mobile menu is open - let page scroll naturally
-  // Menu fills viewport and uses page scroll instead of creating internal scrollbar
+  // Lock page scroll and transfer scroll to html element for browser scrollbar
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Scroll to top when menu opens for better UX
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Store current scroll position
+      const scrollY = window.scrollY;
+
+      // Lock body and transfer scroll to html element
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+
+      // Allow html to scroll (this shows browser scrollbar for menu)
+      document.documentElement.style.overflow = 'auto';
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+
+      // Restore scroll position
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
   }, [isMobileMenuOpen]);
 
@@ -463,7 +482,7 @@ export default function Header() {
           id="mobile-menu"
           role="dialog"
           aria-label="Mobile navigation menu"
-          className="mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990]"
+          className="mobile-menu-overlay absolute top-0 left-0 right-0 z-[9990]"
           style={{
             background: 'rgba(15, 15, 15, 0.95)',
             backdropFilter: 'blur(20px)',
@@ -472,6 +491,7 @@ export default function Header() {
             transform: 'translateZ(0)',
             overscrollBehavior: 'contain',
             animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
+            minHeight: '100vh',
           }}
         >
           <div
