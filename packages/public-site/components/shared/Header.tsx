@@ -504,14 +504,14 @@ export default function Header() {
                       <>
                         <button
                           onClick={() => toggleDropdown(index)}
-                          className="w-full flex items-center justify-between px-6 py-4 text-white transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
+                          className="w-full flex items-center justify-between px-6 py-4 transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
                           style={{
                             fontSize: 'var(--font-size-menuMainItem)',
                             fontFamily: 'var(--font-family-menuMainItem)',
                             fontWeight: 'var(--font-weight-menuMainItem)',
                             letterSpacing: 'var(--letter-spacing-menuMainItem)',
                             lineHeight: 'var(--line-height-menuMainItem)',
-                            color: 'var(--text-color-menuMainItem)',
+                            color: openDropdown === index ? '#ffd700' : '#ffffff',
                           }}
                         >
                           {item.label}
@@ -529,33 +529,33 @@ export default function Header() {
                             }}
                           />
                         </button>
-                        {openDropdown === index && (
-                          <div
-                            className="mobile-dropdown overflow-hidden pl-4"
-                            style={{
-                              animation: 'expandHeight 0.3s ease-out forwards',
-                            }}
-                          >
-                              {item.dropdown.map((dropdownItem, dropdownIndex) => (
-                                <Link
-                                  key={dropdownIndex}
-                                  href={dropdownItem.href}
-                                  onClick={() => setIsMobileMenuOpen(false)}
-                                  className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)]"
-                                  style={{
-                                    fontSize: 'var(--font-size-menuSubItem)',
-                                    fontFamily: 'var(--font-family-menuSubItem)',
-                                    fontWeight: 'var(--font-weight-menuSubItem)',
-                                    letterSpacing: 'var(--letter-spacing-menuSubItem)',
-                                    lineHeight: 'var(--line-height-menuSubItem)',
-                                    color: 'var(--color-body-text)',
-                                  }}
-                                >
-                                  {dropdownItem.label}
-                                </Link>
-                              ))}
-                            </div>
-                        )}
+                        <div
+                          className="mobile-dropdown overflow-hidden pl-4"
+                          style={{
+                            maxHeight: openDropdown === index ? '500px' : '0',
+                            opacity: openDropdown === index ? 1 : 0,
+                            transition: 'max-height 0.4s ease-out, opacity 0.4s ease-out',
+                          }}
+                        >
+                            {item.dropdown.map((dropdownItem, dropdownIndex) => (
+                              <Link
+                                key={dropdownIndex}
+                                href={dropdownItem.href}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)]"
+                                style={{
+                                  fontSize: 'var(--font-size-menuSubItem)',
+                                  fontFamily: 'var(--font-family-menuSubItem)',
+                                  fontWeight: 'var(--font-weight-menuSubItem)',
+                                  letterSpacing: 'var(--letter-spacing-menuSubItem)',
+                                  lineHeight: 'var(--line-height-menuSubItem)',
+                                  color: 'var(--color-body-text)',
+                                }}
+                              >
+                                {dropdownItem.label}
+                              </Link>
+                            ))}
+                          </div>
                       </>
                     ) : item.label === 'Agent Portal' ? (
                       <Link
@@ -648,17 +648,6 @@ export default function Header() {
           to {
             opacity: 1;
             transform: translateY(0);
-          }
-        }
-
-        @keyframes expandHeight {
-          from {
-            max-height: 0;
-            opacity: 0;
-          }
-          to {
-            max-height: 500px;
-            opacity: 1;
           }
         }
 
