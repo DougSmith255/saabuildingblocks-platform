@@ -146,6 +146,9 @@ export default function Header() {
   // Manual scroll lock using position:fixed (works across all browsers)
   useEffect(() => {
     if (isMobileMenuOpen) {
+      // Calculate scrollbar width before hiding it
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
       // Save current scroll position
       const scrollY = window.scrollY;
       document.body.style.position = 'fixed';
@@ -153,7 +156,12 @@ export default function Header() {
       document.body.style.left = '0';
       document.body.style.right = '0';
       document.body.style.width = '100%';
-      document.body.style.overflowY = 'scroll'; // Keep scrollbar space to prevent layout shift
+      document.body.style.overflow = 'hidden';
+
+      // Add padding to prevent layout shift (only on browsers with scrollbar width)
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
     } else {
       // Restore scroll position
       const scrollY = document.body.style.top;
@@ -162,7 +170,8 @@ export default function Header() {
       document.body.style.left = '';
       document.body.style.right = '';
       document.body.style.width = '';
-      document.body.style.overflowY = '';
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
       window.scrollTo(0, parseInt(scrollY || '0') * -1);
     }
   }, [isMobileMenuOpen]);
