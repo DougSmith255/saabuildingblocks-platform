@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styles from './GlassShimmer.module.css';
 import { CTAButton } from '@saa/shared/components/saa';
 import { usePathname } from 'next/navigation';
+import { RemoveScroll } from 'react-remove-scroll';
 
 interface NavItem {
   label: string;
@@ -143,42 +144,7 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // When menu opens, completely lock body and let menu use document scroll
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      // Store current scroll position
-      const scrollY = window.scrollY;
-
-      // Scroll to top
-      window.scrollTo(0, 0);
-
-      // LOCK the body completely - position fixed prevents ANY scrolling of body content
-      document.body.style.position = 'fixed';
-      document.body.style.top = '0';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.overflow = 'hidden';
-
-      // Store scroll position for restoration
-      document.body.setAttribute('data-scroll-y', scrollY.toString());
-    } else {
-      // Get stored scroll position
-      const scrollY = document.body.getAttribute('data-scroll-y');
-
-      // Restore body
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.overflow = '';
-      document.body.removeAttribute('data-scroll-y');
-
-      // Restore scroll position
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY));
-      }
-    }
-  }, [isMobileMenuOpen]);
+  // No need for manual scroll lock - react-remove-scroll handles it
 
   const toggleMobileMenu = () => {
     const willBeOpen = !isMobileMenuOpen;
@@ -487,28 +453,28 @@ export default function Header() {
 
       {/* Mobile Menu Overlay - Slides down from top */}
       {isMobileMenuOpen && (
-        <div
-          id="mobile-menu"
-          role="dialog"
-          aria-label="Mobile navigation menu"
-          className="mobile-menu-overlay absolute top-0 left-0 right-0 z-[9990]"
-          style={{
-            background: 'rgba(15, 15, 15, 0.95)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            willChange: 'transform',
-            transform: 'translateZ(0)',
-            overscrollBehavior: 'contain',
-            animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
-            minHeight: '100vh',
-          }}
-        >
+        <RemoveScroll>
           <div
-            className="mobile-menu-content pt-24 pb-32"
+            id="mobile-menu"
+            role="dialog"
+            aria-label="Mobile navigation menu"
+            className="mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden"
             style={{
-              animation: 'fadeIn 0.3s ease-out 0.1s both',
+              background: 'rgba(15, 15, 15, 0.95)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              willChange: 'transform',
+              transform: 'translateZ(0)',
+              overscrollBehavior: 'contain',
+              animation: 'slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards',
             }}
           >
+            <div
+              className="mobile-menu-content pt-24 pb-32 min-h-screen"
+              style={{
+                animation: 'fadeIn 0.3s ease-out 0.1s both',
+              }}
+            >
               <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
                 {navItems.map((item, index) => (
                   <div key={index}>
@@ -622,6 +588,7 @@ export default function Header() {
               </nav>
             </div>
           </div>
+        </RemoveScroll>
       )}
 
       {/* Custom CSS for animations matching WordPress exactly */}
