@@ -52,6 +52,13 @@ textarea,
   text-align: center;
 }
 
+/* Hide alt text for profile image while loading - prevent filename flash on hard refresh */
+.profile-image {
+  color: transparent; /* Make alt text invisible */
+  font-size: 0; /* Collapse alt text completely */
+  text-indent: -9999px; /* Move alt text off-screen */
+}
+
 /* SlotCounter Vertical Positioning Fix - Prevent bottom cutoff */
 /* Target internal SlotCounter classes to shift numbers DOWN */
 .agent-counter-wrapper [class*="slot__"],
@@ -805,7 +812,7 @@ main {
 
   /* Animation class added by JS after page is ready */
   .profile-image.animate-in {
-    animation: imgFadeIn 2.5s linear 0s both;
+    animation: imgFadeIn 2.5s linear 0.2s both;
   }
 
   /* Profile image wrapper - fade in smoothly */

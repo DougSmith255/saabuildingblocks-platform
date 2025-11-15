@@ -55,7 +55,7 @@ ${masterControllerCSS}
 const taskor = localFont({
   src: '../public/fonts/taskor-regular-webfont.woff2',
   variable: '--font-taskor',
-  display: 'swap',
+  display: 'block', // Wait for font to load - don't show fallback unless it fails
   preload: true,
   weight: '400',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
@@ -65,11 +65,10 @@ const taskor = localFont({
 const amulya = localFont({
   src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
-  display: 'optional', // Don't block rendering - show fallback if font takes >100ms
-  preload: true, // Preload normal variant (used in hero and counter)
+  display: 'block', // Block rendering until font loads (counter + AGENTS needs correct font)
+  preload: true,
   weight: '100 900',
   fallback: ['Georgia', 'serif'],
-  adjustFontFallback: 'Georgia', // Next.js auto-generates matching fallback metrics
 });
 
 const amulyaItalic = localFont({
@@ -85,11 +84,10 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'optional', // Don't block rendering - critical for LCP performance
-  preload: false, // Don't preload - counter is not LCP element, load after critical resources
+  display: 'block', // Wait for font - don't show fallback (prevents flash)
+  preload: true,
   weight: '100 900',
-  fallback: ['Courier New', 'monospace'], // Courier New provides better metric matching
-  adjustFontFallback: 'Courier New', // Next.js auto-generates matching fallback metrics
+  fallback: ['monospace'],
 });
 
 /**
