@@ -64,7 +64,7 @@ export default function Home() {
               height={500}
               loading="eager"
               decoding="sync"
-              className="hero-3d-image profile-image animate-in absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
+              className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
                 top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
