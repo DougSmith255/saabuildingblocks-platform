@@ -779,12 +779,15 @@ main {
     animation: slideDownHeader 0.5s ease-out forwards;
   }
 
-  @keyframes bgZoom2025 {
+  /* Background images (wolf pack, Agent Success Hub) - LCP-friendly scale/blur animation */
+  @keyframes bgZoomScale {
     from {
-      opacity: 0;
+      transform: scale(1.05);
+      filter: blur(8px);
     }
     to {
-      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
     }
   }
 
@@ -797,24 +800,24 @@ main {
     }
   }
 
-  /* Wolf pack background - starts at opacity 0 (not visibility hidden) for LCP detection */
+  /* Hero background (wolf pack, Agent Success Hub) - visible from start for LCP */
   .hero-animate-bg {
-    opacity: 0;
+    opacity: 1;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Animation class added by JS after page is ready - uses opacity animation for LCP */
+  /* Animation class for background images - scale and blur for polish */
   .hero-animate-bg.animate-in {
-    animation: bgZoom2025 3s linear 0.3s both;
+    animation: bgZoomScale 2.5s ease-out 0.2s both;
   }
 
-  /* Profile image - starts hidden, animation triggered by JS when ready */
+  /* Profile image (Doug & Karrie) - keep original opacity animation */
   .profile-image {
     opacity: 0;
   }
 
-  /* Animation class added by JS after page is ready */
+  /* Animation class for profile image - keep original fade */
   .profile-image.animate-in {
     animation: imgFadeIn 2.5s linear 0.2s both;
   }
