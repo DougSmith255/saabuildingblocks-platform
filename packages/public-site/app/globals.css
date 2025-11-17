@@ -821,9 +821,9 @@ main {
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Animation class for background images - scale and blur for polish */
+  /* Animation class for background images - scale and blur for polish, no delay */
   .hero-animate-bg.animate-in {
-    animation: bgZoomScale 2.5s ease-out 0.2s both;
+    animation: bgZoomScale 2.5s ease-out 0s both;
   }
 
   /* Blog page specific - Agent Success Hub background same as homepage */
@@ -831,9 +831,9 @@ main {
     opacity: 1;
   }
 
-  /* Blog page animation - same scale/blur as homepage */
+  /* Blog page animation - same scale/blur as homepage, no delay */
   .agent-hero-bg.animate-in {
-    animation: bgZoomScale 2.5s ease-out 0.2s both;
+    animation: bgZoomScale 2.5s ease-out 0s both;
   }
 
   /* Profile image (Doug & Karrie) - keep original opacity animation */
