@@ -826,14 +826,14 @@ main {
     animation: bgZoomScale 2.5s ease-out 0.2s both;
   }
 
-  /* Blog page specific - Agent Success Hub background NO ANIMATION for LCP */
+  /* Blog page specific - Agent Success Hub background same as homepage */
   .agent-hero-bg {
     opacity: 1;
   }
 
-  /* Blog page - NO animation to ensure immediate LCP detection */
+  /* Blog page animation - same scale/blur as homepage */
   .agent-hero-bg.animate-in {
-    animation: none;
+    animation: bgZoomScale 2.5s ease-out 0.2s both;
   }
 
   /* Profile image (Doug & Karrie) - keep original opacity animation */
