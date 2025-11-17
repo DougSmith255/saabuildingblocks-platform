@@ -138,9 +138,9 @@ export default async function RealEstateAgentBlogPage() {
         </div>
 
         <div className="relative z-10 max-w-[2500px] mx-auto w-full text-center">
-          {/* H1: Using Master Controller H1 component */}
+          {/* H1: Using Master Controller H1 component - no animation delay for LCP */}
           <div className="mb-6">
-            <H1 id="blog-heading">
+            <H1 id="blog-heading" animationDelay="0s">
               Agent Success Hub
             </H1>
           </div>
