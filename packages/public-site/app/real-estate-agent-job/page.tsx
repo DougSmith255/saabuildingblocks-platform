@@ -120,33 +120,27 @@ export default async function RealEstateAgentBlogPage() {
         style={{ minHeight: '100vh', paddingTop: '50px' }}
         aria-labelledby="blog-heading"
       >
-        {/* Agent Success Hub Background Image - furthest back layer */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
+        {/* Agent Success Hub Background Image - LCP candidate, loads immediately */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
-            <div
-              className="absolute inset-0 hero-animate-bg agent-hero-bg animate-in"
+            <Image
+              src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp"
+              alt="Agent Success Hub - Real estate professionals collaborating"
+              fill
+              priority
+              quality={90}
+              sizes="(max-width: 768px) 80vw, 100vw"
               style={{
+                objectFit: 'cover',
+                objectPosition: 'center 55%',
                 maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
                 WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
               }}
-            >
-              <Image
-                src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp"
-                alt="Agent Success Hub - Real estate professionals collaborating"
-                fill
-                priority
-                quality={90}
-                sizes="(max-width: 768px) 80vw, 100vw"
-                style={{
-                  objectFit: 'cover',
-                  objectPosition: 'center 55%',
-                }}
-              />
-            </div>
+            />
           </div>
         </div>
 
-        <div className="max-w-[2500px] mx-auto w-full text-center">
+        <div className="relative z-10 max-w-[2500px] mx-auto w-full text-center">
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6">
             <H1 id="blog-heading">
