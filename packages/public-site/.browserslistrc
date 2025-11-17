@@ -1,16 +1,13 @@
-# Target modern browsers only (removes legacy polyfills)
-# Reduces JavaScript bundle size by ~14 KiB
-# All features like Array.at, Array.flat, Object.fromEntries are natively supported
+# Target modern browsers only - no legacy polyfills needed
+# Matches package.json browserslist for consistency
+# All ES2022 features natively supported
 
-# Production browsers (95%+ users)
-> 0.5%
-last 2 versions
-not dead
+chrome >= 111
+edge >= 111
+firefox >= 111
+safari >= 16.4
 
-# Explicitly exclude old browsers that need polyfills
+# Exclude old browsers
 not IE 11
 not op_mini all
-
-# Target browsers that support ES2020+ features
-supports es6-module
-supports async-functions
+not dead
