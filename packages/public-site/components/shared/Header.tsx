@@ -5,6 +5,7 @@ import Link from 'next/link';
 import styles from './GlassShimmer.module.css';
 import { CTAButton } from '@saa/shared/components/saa';
 import { usePathname } from 'next/navigation';
+import Lenis from 'lenis';
 
 interface NavItem {
   label: string;
@@ -38,6 +39,7 @@ const navItems: NavItem[] = [
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const [hoveredDropdown, setHoveredDropdown] = useState<number | null>(null);
   const [isHidden, setIsHidden] = useState(false);
@@ -163,20 +165,36 @@ export default function Header() {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
 
-      // Enable mouse wheel scrolling for the mobile menu
+      // Initialize Lenis smooth scroll for mobile menu
       const menu = document.getElementById('mobile-menu');
-      const handleWheel = (e: WheelEvent) => {
-        // Let the menu handle its own scrolling
-        e.stopPropagation();
-      };
+      let menuLenis: Lenis | null = null;
 
       if (menu) {
-        menu.addEventListener('wheel', handleWheel, { passive: true });
+        menuLenis = new Lenis({
+          wrapper: menu,
+          content: menu,
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          orientation: 'vertical',
+          gestureOrientation: 'vertical',
+          smoothWheel: true,
+          wheelMultiplier: 1,
+          touchMultiplier: 2,
+          infinite: false,
+        });
+
+        // Animation frame loop for menu Lenis
+        function raf(time: number) {
+          menuLenis?.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
       }
 
       return () => {
-        if (menu) {
-          menu.removeEventListener('wheel', handleWheel);
+        // Cleanup Lenis instance
+        if (menuLenis) {
+          menuLenis.destroy();
         }
       };
     } else {
@@ -194,9 +212,6 @@ export default function Header() {
   const toggleMobileMenu = () => {
     const willBeOpen = !isMobileMenuOpen;
 
-    setIsMobileMenuOpen(willBeOpen);
-    setOpenDropdown(null);
-
     // Clear any pending unfix timeout
     if (hamburgerUnfixTimeoutRef.current) {
       clearTimeout(hamburgerUnfixTimeoutRef.current);
@@ -204,14 +219,22 @@ export default function Header() {
     }
 
     if (willBeOpen) {
-      // Opening menu: make hamburger fixed immediately
+      // Opening: render menu immediately, then trigger open animation
+      setShouldRenderMenu(true);
+      setTimeout(() => setIsMobileMenuOpen(true), 10);
       setIsHamburgerFixed(true);
     } else {
+      // Closing: trigger close animation, then hide menu after animation completes
+      setIsMobileMenuOpen(false);
+      setTimeout(() => setShouldRenderMenu(false), 300); // Match animation duration
+
       // Closing menu: unfix after 1.5 second delay
       hamburgerUnfixTimeoutRef.current = setTimeout(() => {
         setIsHamburgerFixed(false);
       }, 1500);
     }
+
+    setOpenDropdown(null);
   };
 
   const toggleDropdown = (index: number) => {
@@ -513,14 +536,11 @@ export default function Header() {
           overscrollBehavior: 'contain',
           pointerEvents: isMobileMenuOpen ? 'auto' : 'none', // Only capture events when open
           WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
-          display: isMobileMenuOpen ? undefined : 'none', // Hide after close animation
+          display: shouldRenderMenu ? undefined : 'none', // Hide after close animation
         }}
           >
             <div
               className="mobile-menu-content pt-24 pb-32 min-h-screen"
-              style={{
-                animation: 'fadeIn 0.3s ease-out 0.1s both',
-              }}
             >
               <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
                 {navItems.map((item, index) => (
