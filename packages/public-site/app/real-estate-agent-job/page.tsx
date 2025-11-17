@@ -24,7 +24,6 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
-import Image from 'next/image';
 
 /**
  * WordPress categories data (from actual WordPress API)
@@ -120,29 +119,21 @@ export default async function RealEstateAgentBlogPage() {
         style={{ minHeight: '100vh', paddingTop: '50px' }}
         aria-labelledby="blog-heading"
       >
-        {/* Agent Success Hub Background Image - LCP candidate with smooth animation */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        {/* Agent Success Hub Background Image - CSS background-image like homepage */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
               className="absolute inset-0 hero-animate-bg agent-hero-bg animate-in"
               style={{
+                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp)',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center 55%',
+                backgroundAttachment: 'fixed',
                 maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
                 WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
               }}
-            >
-              <Image
-                src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp"
-                alt="Agent Success Hub - Real estate professionals collaborating"
-                fill
-                priority
-                quality={90}
-                sizes="(max-width: 768px) 80vw, 100vw"
-                style={{
-                  objectFit: 'cover',
-                  objectPosition: 'center 55%',
-                }}
-              />
-            </div>
+            />
           </div>
         </div>
 
