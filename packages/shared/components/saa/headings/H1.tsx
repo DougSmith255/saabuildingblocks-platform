@@ -51,7 +51,7 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
           rowGap: 0,
           columnGap: '0.5em',
           ...(heroAnimate ? {
-            opacity: 0,
+            opacity: 0.1,
             animation: `fadeInUp2025 2.0s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
             willChange: 'opacity, transform',
           } : {}),
@@ -114,10 +114,10 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
 
       {/* CSS Animations - 3D Neon Sign Effect with Dimming (not harsh flicker) */}
       <style jsx>{`
-        /* 2025 Hero Entrance Animation */
+        /* 2025 Hero Entrance Animation - starts at 0.1 for LCP detection */
         @keyframes fadeInUp2025 {
           from {
-            opacity: 0;
+            opacity: 0.1;
             transform: translate3d(0, 30px, 0) rotateX(15deg);
           }
           to {
