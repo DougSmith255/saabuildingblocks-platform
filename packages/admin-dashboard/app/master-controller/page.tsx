@@ -18,7 +18,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Lock, Rocket } from 'lucide-react';
+import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Lock, Rocket, Gauge } from 'lucide-react';
 import { useUserRole, RoleBadge, canAccessTokenVault } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
@@ -57,12 +57,17 @@ const DeploymentTab = dynamicImport(() => import('./components/tabs/DeploymentTa
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Deployment tab...</div>
 });
 
+const WebPerformanceTab = dynamicImport(() => import('./components/tabs/WebPerformanceTab').then(mod => ({ default: mod.WebPerformanceTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Web Performance tab...</div>
+});
+
 // Store hooks - only used in client component after mount
 import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
 
-type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'vault' | 'deployment';
+type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'vault' | 'deployment' | 'performance';
 
 function MasterControllerContent() {
   const router = useRouter();
@@ -71,7 +76,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'typography'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'vault', 'deployment'];
+    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'vault', 'deployment', 'performance'];
     return (tabParam && validTabs.includes(tabParam as TabId)) ? tabParam as TabId : 'typography';
   });
 
@@ -98,6 +103,7 @@ function MasterControllerContent() {
     { id: 'components' as TabId, label: 'Components', icon: Layers },
     { id: 'vault' as TabId, label: 'Token Vault', icon: Lock },
     { id: 'deployment' as TabId, label: 'Deployment', icon: Rocket },
+    { id: 'performance' as TabId, label: 'Web Performance', icon: Gauge },
   ];
 
   return (
@@ -212,6 +218,8 @@ function MasterControllerContent() {
         {activeTab === 'vault' && <TokenVaultTab />}
 
         {activeTab === 'deployment' && <DeploymentTab />}
+
+        {activeTab === 'performance' && <WebPerformanceTab />}
       </div>
 
       {/* Footer Info */}

@@ -124,7 +124,7 @@ export default function Tagline({
             return (
               <span
                 key={charIndex}
-                className="tagline-char"
+                className="tagline-char neon-glow"
               >
                 {displayChar}
               </span>
