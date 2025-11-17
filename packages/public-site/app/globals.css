@@ -791,6 +791,20 @@ main {
     }
   }
 
+  /* Blog page background - LCP-friendly fade+scale animation starting at 0.1 opacity */
+  @keyframes blogBgFadeScale {
+    from {
+      opacity: 0.1;
+      transform: scale(1.05);
+      filter: blur(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
   @keyframes imgFadeIn {
     from {
       opacity: 0;
@@ -810,6 +824,16 @@ main {
   /* Animation class for background images - scale and blur for polish */
   .hero-animate-bg.animate-in {
     animation: bgZoomScale 2.5s ease-out 0.2s both;
+  }
+
+  /* Blog page specific - Agent Success Hub background starts at 0.1 opacity for LCP */
+  .agent-hero-bg {
+    opacity: 0.1;
+  }
+
+  /* Blog page animation - fade from 0.1 to 1 with scale/blur */
+  .agent-hero-bg.animate-in {
+    animation: blogBgFadeScale 2.5s ease-out 0.2s both;
   }
 
   /* Profile image (Doug & Karrie) - keep original opacity animation */
