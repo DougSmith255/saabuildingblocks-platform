@@ -532,7 +532,7 @@ export default function Header() {
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           willChange: 'transform',
-          transform: 'translateZ(0)',
+          transform: isMobileMenuOpen ? 'translateZ(0)' : 'translateY(-100%) translateZ(0)',
           overscrollBehavior: 'contain',
           pointerEvents: isMobileMenuOpen ? 'auto' : 'none', // Only capture events when open
           WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
