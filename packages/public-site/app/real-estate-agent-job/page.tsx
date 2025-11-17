@@ -115,7 +115,8 @@ export default async function RealEstateAgentBlogPage() {
     <main id="main-content" className="min-h-screen">
       {/* Hero Section - Renders first, immediately visible */}
       <section
-        className="relative px-4 sm:px-8 md:px-12 min-h-screen flex items-center"
+        className="relative px-4 sm:px-8 md:px-12 flex items-center justify-center"
+        style={{ minHeight: '100vh' }}
         aria-labelledby="blog-heading"
       >
         <div className="max-w-[2500px] mx-auto w-full text-center">

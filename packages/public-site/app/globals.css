@@ -3,6 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* CSS Variables - Global */
+:root {
+  /* Header height - matches Header.tsx minHeight: clamp(60px, 8vh, 90px) */
+  --header-height: clamp(60px, 8vh, 90px);
+}
+
 /* Smooth scroll for entire site */
 html {
   scroll-behavior: smooth;
@@ -985,6 +991,111 @@ main {
       0 0 15px rgba(255, 215, 0, 0.5),
       0 0 30px rgba(255, 215, 0, 0.3),
       inset 0 0 15px rgba(255, 215, 0, 0.15);
+  }
+
+  /* Mobile menu background slide animations */
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeOutDown {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  }
+
+  /* Start menu off-screen by default to prevent flash */
+  .mobile-menu-overlay {
+    transform: translateY(-100%);
+  }
+
+  .menu-opening {
+    animation: slideDown 0.3s ease-out forwards;
+  }
+
+  .menu-closing {
+    animation: slideUp 0.3s ease-in forwards;
+  }
+
+  .menu-opening .mobile-menu-content {
+    animation: fadeInUp 0.4s ease-out 0.1s both;
+  }
+
+  .menu-closing .mobile-menu-content {
+    animation: fadeOutDown 0.25s ease-in both;
+  }
+
+  /* Make mobile menu OverlayScrollbars look like default browser scrollbar */
+  .mobile-menu-overlay .os-scrollbar-handle {
+    background: #3a3a3a !important;
+    border-radius: 0 !important;
+  }
+
+  .mobile-menu-overlay .os-scrollbar-track {
+    background: #1a1a1a !important;
+  }
+
+  .mobile-menu-overlay .os-scrollbar {
+    width: 15px !important;
+  }
+
+  /* Prevent content from going under scrollbar */
+  .mobile-menu-overlay .mobile-menu-content {
+    padding-right: 15px !important;
+  }
+
+  /* Make browser scrollbar match mobile menu scrollbar */
+  ::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #3a3a3a;
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #4a4a4a;
+  }
+
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3a3a3a #1a1a1a;
   }
 
   /* Search Bar Focus Effect with Neon Green Glow */

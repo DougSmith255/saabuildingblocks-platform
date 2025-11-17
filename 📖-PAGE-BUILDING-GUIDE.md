@@ -181,6 +181,36 @@ All Master Controller components are responsive by default. Test:
 - Prevents awkward whitespace on large displays
 - Maintains readability with appropriate padding
 
+### Hero Section Layout Standards
+
+**Hero sections must account for the fixed header:**
+
+```tsx
+// ✅ CORRECT - Hero takes full viewport height, content centered vertically
+<section
+  className="relative px-4 sm:px-8 md:px-12 flex items-center justify-center"
+  style={{ minHeight: '100vh' }}
+>
+  <div className="max-w-[2500px] mx-auto w-full text-center">
+    <H1>Your Heading</H1>
+    <Tagline>Your tagline</Tagline>
+  </div>
+</section>
+
+// ❌ WRONG - Without flex centering, content won't be vertically centered
+<section className="min-h-screen">
+  <div className="max-w-[2500px] mx-auto w-full text-center">
+    <H1>Your Heading</H1>
+  </div>
+</section>
+```
+
+**Key Points:**
+- Use `minHeight: '100vh'` for full viewport height (header floats over it)
+- Add `flex items-center justify-center` to section for vertical centering
+- The fixed header overlays the hero, so hero should use full viewport height
+- Content will be perfectly centered in the visible area below the header
+
 ### SEO & Accessibility (Built-In)
 
 **You don't need to do anything special** - the Master Controller components already handle SEO optimization:
