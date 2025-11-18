@@ -58,6 +58,10 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     // Faster webpack builds
     webpackBuildWorker: true,
+    // Inline critical CSS to eliminate render-blocking stylesheets
+    // WARNING: May break Tailwind arbitrary values like bg-[rgb(45,45,45)]
+    // Testing to see if it improves LCP performance
+    inlineCss: true,
   },
 
   // Trailing slashes for better CDN caching
