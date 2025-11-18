@@ -37,82 +37,32 @@ export function GenericButton({
   'aria-pressed': ariaPressed,
 }: GenericButtonProps) {
   return (
-    <>
-      <button
-        onClick={onClick}
-        className={`filter-button ${className}`}
-        data-selected={selected}
-        aria-pressed={ariaPressed ?? selected}
-        aria-label={ariaLabel}
-      >
-        <div className="filter-button-inner">
-          <span className="text-body">
-            {children}
-          </span>
-        </div>
-      </button>
-
-      <style jsx>{`
-        .filter-button {
-          min-width: 131px;
-          height: 51px;
-          border-radius: 15px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 2px;
-          transition: none;
-          box-shadow: none;
+    <button
+      onClick={onClick}
+      className={`
+        min-w-[131px] h-[51px] rounded-[15px]
+        cursor-pointer flex items-center justify-center p-[2px]
+        transition-all duration-300
+        ${selected
+          ? 'bg-[rgba(0,255,136,0.6)] hover:bg-[rgba(0,255,136,0.8)] shadow-[0_0_15px_rgba(0,255,136,0.6)] hover:shadow-[0_0_20px_rgba(0,255,136,0.7)]'
+          : 'bg-[rgba(255,215,0,0.5)] hover:bg-[rgba(255,215,0,0.7)] hover:shadow-[0_0_15px_rgba(255,215,0,0.6)]'
         }
-
-        /* Inactive button - default state */
-        .filter-button[data-selected="false"] {
-          background: linear-gradient(
-            to bottom right,
-            #ffd700 0%,
-            rgba(255, 215, 0, 0) 30%
-          );
-          background-color: rgba(255, 215, 0, 0.5);
-          box-shadow: none;
-        }
-
-        /* Inactive button - hover state */
-        .filter-button[data-selected="false"]:hover {
-          background-color: rgba(255, 215, 0, 0.7);
-          box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-          outline: none;
-        }
-
-        /* Active button - default state */
-        .filter-button[data-selected="true"] {
-          background: linear-gradient(
-            to bottom right,
-            #00ff88 0%,
-            rgba(0, 255, 136, 0) 30%
-          );
-          background-color: rgba(0, 255, 136, 0.6);
-          box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
-        }
-
-        /* Active button - hover state */
-        .filter-button[data-selected="true"]:hover {
-          background-color: rgba(0, 255, 136, 0.8);
-          box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
-        }
-
-        .filter-button-inner {
-          width: 100%;
-          height: 47px;
-          border-radius: 13px;
-          background-color: #1a1a1a;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 0 20px;
-          color: #fff;
-        }
-      `}</style>
-    </>
+        ${className}
+      `}
+      style={{
+        background: selected
+          ? 'linear-gradient(to bottom right, #00ff88 0%, rgba(0, 255, 136, 0) 30%)'
+          : 'linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%)',
+        backgroundColor: selected ? 'rgba(0, 255, 136, 0.6)' : 'rgba(255, 215, 0, 0.5)',
+      }}
+      aria-pressed={ariaPressed ?? selected}
+      aria-label={ariaLabel}
+    >
+      <div className="w-full h-[47px] rounded-[13px] bg-[#1a1a1a] flex items-center justify-center px-5 text-white">
+        <span className="text-body">
+          {children}
+        </span>
+      </div>
+    </button>
   );
 }
