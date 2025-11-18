@@ -3,16 +3,12 @@ import Image from 'next/image';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
+import { CounterAnimation } from './components/CounterAnimation';
+import { WolfPackAnimation } from './components/WolfPackAnimation';
 
 // Defer loading of desktop-only positioning components (loaded separately from main bundle)
 const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
 const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container').then(mod => mod.DynamicH1Container));
-
-// Dynamic imports for heavy animation components (reduces initial bundle size)
-// Note: In Next.js 16 Server Components, ssr:false is not supported, but dynamic imports
-// still reduce bundle size by code-splitting these heavy components
-const CounterAnimation = dynamic(() => import('./components/CounterAnimation').then(mod => mod.CounterAnimation));
-const WolfPackAnimation = dynamic(() => import('./components/WolfPackAnimation').then(mod => mod.WolfPackAnimation));
 
 /**
  * Homepage - Server Component with Static Content
