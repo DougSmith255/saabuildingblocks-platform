@@ -14,17 +14,17 @@ export default function TestingPage() {
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
         aria-labelledby="hero-heading"
       >
-        {/* Hero Image - Doug and Karrie Co-Founders */}
-        <div className="relative w-full max-w-[1200px]">
+        {/* Hero Image - Agent Success Hub */}
+        <div className="relative w-full max-w-[1238px]">
           <Image
-            src="/images/hero/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
-            alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
-            width={1200}
-            height={675}
+            src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp"
+            alt="Agent Success Hub - Your Path to Real Estate Excellence"
+            width={1238}
+            height={688}
             priority
             fetchPriority="high"
             quality={90}
-            sizes="(max-width: 768px) 100vw, 1200px"
+            sizes="(max-width: 768px) 100vw, 1238px"
             className="w-full h-auto"
           />
         </div>
