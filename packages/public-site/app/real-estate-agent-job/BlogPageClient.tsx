@@ -181,7 +181,16 @@ export default function BlogPageClient({ categories }: BlogPageClientProps) {
   const allPosts = useMemo((): BlogPost[] => {
     const posts: BlogPost[] = [];
 
-    // Combine all loaded chunks in order
+    // If no categories selected, only use the current page chunk
+    if (selectedCategories.length === 0) {
+      const currentChunk = loadedChunks.get(currentPage);
+      if (currentChunk) {
+        return currentChunk;
+      }
+      return [];
+    }
+
+    // With categories selected, combine all loaded chunks in order
     Array.from(loadedChunks.entries())
       .sort((a, b) => a[0] - b[0]) // Sort by chunk number
       .forEach(([, chunkPosts]) => {
@@ -189,12 +198,12 @@ export default function BlogPageClient({ categories }: BlogPageClientProps) {
       });
 
     return posts;
-  }, [loadedChunks]);
+  }, [loadedChunks, selectedCategories, currentPage]);
 
   // Client-side filtering using loaded chunks
   const filteredPosts = useMemo(() => {
     if (selectedCategories.length === 0) {
-      return allPosts; // Show all loaded posts
+      return allPosts; // Already filtered to current page chunk in allPosts
     }
 
     // Filter posts that have ANY of the selected categories

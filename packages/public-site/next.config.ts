@@ -1,18 +1,32 @@
 import type { NextConfig } from 'next';
+import bundleAnalyzer from '@next/bundle-analyzer';
 
 /**
  * Next.js Configuration for Public Site (Static Export)
  *
  * This configuration is for the public-facing static site deployed to Cloudflare Pages.
  * It uses static export to generate HTML files for all public routes.
+ *
+ * Performance Tools (2025):
+ * - Bundle Analyzer: Run with ANALYZE=true to visualize bundle sizes
+ * - React Compiler: Stable in Next.js 16 - automatically memoizes components
  */
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const nextConfig: NextConfig = {
   // Enable static export for Cloudflare Pages deployment
   output: 'export',
 
-  // Experimental: Inline CSS to eliminate render-blocking CSS requests
+  // React Compiler (stable in Next.js 16) - automatic memoization
+  // Reduces unnecessary re-renders without manual optimization
+  reactCompiler: true,
+
+  // Experimental features (2025)
   experimental: {
+    // Inline CSS to eliminate render-blocking CSS requests
     inlineCss: true,
   },
 
@@ -48,4 +62,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);
