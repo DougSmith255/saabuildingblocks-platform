@@ -219,15 +219,39 @@ export default function BlogPageClient({ categories }: BlogPageClientProps) {
   }, [allPosts, selectedCategories]);
 
   // Client-side pagination
-  const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
-  const startIndex = (currentPage - 1) * postsPerPage;
-  const endIndex = startIndex + postsPerPage;
-  const currentPosts = filteredPosts.slice(startIndex, endIndex);
+  const totalPages = useMemo(() => {
+    // When no categories selected, use total chunks count from index
+    if (selectedCategories.length === 0 && index) {
+      return index.totalChunks; // Total pages available (23)
+    }
 
-  const handleFilterChange = () => {
-    // Filter change is handled by URL updates in FilterSection
-    // This triggers the useEffect above to reload needed chunks
-  };
+    // When categories selected, calculate from filtered posts
+    return Math.ceil(filteredPosts.length / postsPerPage);
+  }, [selectedCategories, index, filteredPosts.length, postsPerPage]);
+
+  // Determine which posts to display
+  const currentPosts = useMemo(() => {
+    // When no categories selected, we already have the correct chunk loaded
+    // No need for additional slicing - just return all posts from current chunk
+    if (selectedCategories.length === 0) {
+      return filteredPosts; // Already contains only current page's 9 posts
+    }
+
+    // When categories selected, do client-side pagination on filtered results
+    const startIndex = (currentPage - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    return filteredPosts.slice(startIndex, endIndex);
+  }, [selectedCategories, filteredPosts, currentPage, postsPerPage]);
+
+  const handleFilterChange = useCallback((categories: string[]) => {
+    // Force immediate state update to prevent stale data while waiting for hashchange
+    setSelectedCategories(categories);
+
+    // If switching to "All" (no categories), also reset to page 1
+    if (categories.length === 0) {
+      setCurrentPage(1);
+    }
+  }, []);
 
   return (
     <>

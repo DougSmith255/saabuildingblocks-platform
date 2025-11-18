@@ -137,35 +137,94 @@ export default function FilterSection({
               <H2>Filter:</H2>
             </div>
 
-            {/* Filter Buttons */}
-            <div className="flex flex-wrap gap-3 xl:flex-1">
-            {/* All Button */}
-            <GenericButton
-              onClick={handleAllClick}
-              selected={showAll}
-              aria-label="Show all posts"
-            >
-              All
-            </GenericButton>
+            {/* Desktop: Filter Buttons (show above 1340px) */}
+            <div className="hidden min-[1340px]:flex flex-wrap gap-3 xl:flex-1">
+              {/* All Button */}
+              <GenericButton
+                onClick={handleAllClick}
+                selected={showAll}
+                aria-label="Show all posts"
+              >
+                All
+              </GenericButton>
 
-            {/* Category Buttons */}
-            {categories.map((category) => {
-              const isSelected = selectedCategories.includes(category.slug);
+              {/* Category Buttons */}
+              {categories.map((category) => {
+                const isSelected = selectedCategories.includes(category.slug);
 
-              return (
-                <GenericButton
-                  key={category.slug}
-                  onClick={() => handleCategoryClick(category.slug)}
-                  selected={isSelected}
-                  aria-label={`${isSelected ? 'Remove' : 'Add'} ${category.name} filter`}
-                >
-                  {category.name}
-                </GenericButton>
-              );
-            })}
+                return (
+                  <GenericButton
+                    key={category.slug}
+                    onClick={() => handleCategoryClick(category.slug)}
+                    selected={isSelected}
+                    aria-label={`${isSelected ? 'Remove' : 'Add'} ${category.name} filter`}
+                  >
+                    {category.name}
+                  </GenericButton>
+                );
+              })}
+            </div>
+
+            {/* Mobile/Tablet: Dropdown (show below 1340px) */}
+            <div className="min-[1340px]:hidden xl:flex-1">
+              <select
+                id="category-filter-dropdown"
+                value={selectedCategories.length > 0 ? selectedCategories[0] : 'all'}
+                onChange={(e) => {
+                  if (e.target.value === 'all') {
+                    handleAllClick();
+                  } else {
+                    // For dropdown, replace current selection with single category
+                    const params = getHashParams();
+                    params.set('category', e.target.value);
+                    params.delete('page');
+                    setHashParams(params);
+                    setSelectedCategories([e.target.value]);
+                    onFilterChange([e.target.value]);
+                  }
+                }}
+                style={{
+                  fontSize: 'clamp(12px, calc(12px + (30 - 12) * ((100vw - 250px) / (3000 - 250))), 30px)',
+                  backgroundPosition: 'right 15px center',
+                }}
+                className="w-full px-6 py-3 pr-12 rounded-lg bg-[#1a1a1a] border border-[#e5e4dd]/20 text-[#e5e4dd] font-[var(--font-amulya)] focus:border-[#00ff88]/50 focus:outline-none transition-colors cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3e%3cpath%20fill%3D%22%23e5e4dd%22%20d%3D%22M6%208L0%200h12z%22%2F%3e%3c%2Fsvg%3e')] bg-no-repeat"
+                aria-label="Filter by category"
+              >
+                <option value="all">All Categories</option>
+                {categories.map((category) => (
+                  <option key={category.slug} value={category.slug}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+
+              <style jsx>{`
+                #category-filter-dropdown option {
+                  padding: 12px 16px;
+                  background-color: #1a1a1a;
+                  color: #e5e4dd;
+                  position: relative;
+                  transition: all 0.3s ease;
+                }
+
+                #category-filter-dropdown option:hover,
+                #category-filter-dropdown option:focus {
+                  background: linear-gradient(
+                    to right,
+                    rgba(0, 255, 136, 0.2) 0%,
+                    rgba(0, 255, 136, 0.1) 100%
+                  );
+                  color: #00ff88;
+                }
+
+                #category-filter-dropdown option:checked {
+                  background-color: rgba(0, 255, 136, 0.15);
+                  color: #00ff88;
+                }
+              `}</style>
+            </div>
           </div>
         </div>
-      </div>
       </div>
     </section>
   );

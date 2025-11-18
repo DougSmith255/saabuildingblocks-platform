@@ -199,6 +199,26 @@ export default async function RootLayout({
         {/* Performance Hints - Establish early connections */}
         <PerformanceHints />
 
+        {/* LCP Image Preloading - Critical for Core Web Vitals */}
+        <link
+          rel="preload"
+          as="image"
+          href="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/images/hero/Smart-agent-alliance-and-the-wolf-pack.webp"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp"
+          fetchPriority="high"
+        />
+
         {/*
           Font Preloading Note:
           Fonts are automatically preloaded by Next.js localFont() with preload: true.

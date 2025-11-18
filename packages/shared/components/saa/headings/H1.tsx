@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
-import { useIsDesktop } from '../../../hooks/useMediaQuery';
 
 export interface HeadingProps {
   children: React.ReactNode;
@@ -13,20 +12,9 @@ export interface HeadingProps {
   animationDelay?: string;
 }
 
-export default function H1({ children, className = '', style = {}, id, heroAnimate = true, animationDelay = '0.6s' }: HeadingProps) {
-  // Check if desktop viewport (1024px+)
-  const isDesktop = useIsDesktop();
-
-  // On initial render (SSR), assume desktop to prevent flash on desktop browsers
-  // The hook will update on client-side mount if actually mobile
-  const [isHydrated, setIsHydrated] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  // Use desktop behavior until hydrated and viewport is confirmed
-  const shouldUseDesktopAnimation = !isHydrated || isDesktop;
+export default function H1({ children, className = '', style = {}, id, heroAnimate = true, animationDelay = '0.3s' }: HeadingProps) {
+  // Always use desktop animation on all screen sizes
+  const shouldUseDesktopAnimation = true;
 
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
@@ -84,23 +72,6 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                     display: 'inline-block',
                     '--flicker-duration': `${6.5 + (globalIndex * 0.1)}s`,
                     '--flicker-delay': animationDelay,
-                    // Mobile: static neon glow (no flicker)
-                    ...(!shouldUseDesktopAnimation && {
-                      color: '#ffd700',
-                      opacity: 0.99,
-                      textShadow: `
-                        -1px -1px 0 rgba(255,255,255, 0.4),
-                        1px -1px 0 rgba(255,255,255, 0.4),
-                        -1px 1px 0 rgba(255,255,255, 0.4),
-                        1px 1px 0 rgba(255,255,255, 0.4),
-                        0 -2px 8px #ffd700,
-                        0 0 2px #ffd700,
-                        0 0 5px #ffd700,
-                        0 0 15px #ffb347,
-                        0 0 2px #ffd700,
-                        0 2px 3px #000
-                      `,
-                    }),
                   } as React.CSSProperties}
                 >
                   {displayChar}
