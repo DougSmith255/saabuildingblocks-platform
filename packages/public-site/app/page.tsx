@@ -115,8 +115,6 @@ export default function Home() {
             {/* Aggressive curve: reaches 150px at 3000px, drops fast to 1920px, then gradual */}
             <H1
               id="hero-heading"
-              heroAnimate
-              animationDelay="0.5s"
               style={{
                 fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
               }}
@@ -159,8 +157,6 @@ export default function Home() {
             {/* H1: Using Master Controller H1 component with hero animation */}
             <H1
               id="hero-heading-mobile"
-              heroAnimate
-              animationDelay="0.5s"
               style={{
                 fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
               }}

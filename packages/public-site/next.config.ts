@@ -25,10 +25,11 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 
   // Experimental features (2025)
-  experimental: {
-    // Inline CSS to eliminate render-blocking CSS requests
-    inlineCss: true,
-  },
+  // NOTE: inlineCss breaks Tailwind arbitrary values like bg-[rgb(45,45,45)]
+  // Disabled until Turbopack properly supports it
+  // experimental: {
+  //   inlineCss: true,
+  // },
 
   // Compiler optimizations for modern browsers
   compiler: {

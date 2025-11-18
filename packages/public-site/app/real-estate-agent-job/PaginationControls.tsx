@@ -18,16 +18,18 @@ function getHashParams(): URLSearchParams {
 }
 
 /**
- * Update hash in URL without auto-scrolling
+ * Update hash in URL and trigger hashchange event
  * Note: We handle scroll position manually after this function
  */
 function setHashParams(params: URLSearchParams) {
   const hashString = params.toString();
 
-  // Update hash using replaceState to avoid browser auto-scroll
+  // Update hash directly to trigger hashchange event
+  // This ensures BlogPageClient's useEffect listens and loads the new page
   if (hashString) {
-    history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${hashString}`);
+    window.location.hash = `#${hashString}`;
   } else {
+    // Use replaceState only when clearing hash
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
 
@@ -78,14 +80,21 @@ export default function PaginationControls({
       const elementPosition = postsHeading.getBoundingClientRect().top + window.scrollY;
       const offsetPosition = elementPosition - headerHeight - spacing;
 
-      // IMMEDIATELY stop any ongoing scroll with instant behavior
+      // CRITICAL: Stop ALL ongoing scroll animations and momentum
+      // This is a hack but it works - we scroll to current position with instant behavior
+      // which cancels any pending smooth scrolls
+      window.scrollTo({
+        top: window.scrollY,
+        behavior: 'instant'
+      });
+
+      // Now perform the actual scroll to target position
       window.scrollTo({
         top: offsetPosition,
         behavior: 'instant'
       });
 
-      // Cancel any queued scroll momentum by forcing another instant scroll
-      // This clears the browser's scroll queue without blocking user input
+      // Double-check in next frame to ensure position is locked
       requestAnimationFrame(() => {
         window.scrollTo({
           top: offsetPosition,
@@ -102,8 +111,14 @@ export default function PaginationControls({
         {/* Previous Button */}
         <SecondaryButton
             as="button"
-            onClick={() => goToPage(currentPage - 1)}
-            className={`min-w-[180px] ${isFirstPage ? 'opacity-40 pointer-events-none' : ''}`}
+            onClick={(e) => {
+              if (isFirstPage) {
+                e.preventDefault();
+                return;
+              }
+              goToPage(currentPage - 1);
+            }}
+            className={`min-w-[180px] ${isFirstPage ? 'opacity-40' : ''}`}
           >
             Previous
           </SecondaryButton>
@@ -188,8 +203,14 @@ export default function PaginationControls({
         {/* Next Button */}
         <SecondaryButton
             as="button"
-            onClick={() => goToPage(currentPage + 1)}
-            className={`min-w-[180px] ${isLastPage ? 'opacity-40 pointer-events-none' : ''}`}
+            onClick={(e) => {
+              if (isLastPage) {
+                e.preventDefault();
+                return;
+              }
+              goToPage(currentPage + 1);
+            }}
+            className={`min-w-[180px] ${isLastPage ? 'opacity-40' : ''}`}
           >
             Next
           </SecondaryButton>

@@ -88,7 +88,7 @@ export default function Footer() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    // window.addEventListener('scroll', handleScroll, { passive: true }); // Disabled - scroll trigger removed
 
     return () => {
       window.removeEventListener('scroll', handleScroll);

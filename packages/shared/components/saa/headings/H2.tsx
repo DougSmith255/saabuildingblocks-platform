@@ -46,47 +46,29 @@ export default function H2({
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
 
-  // Static neon text-shadow (always at full brightness) - using body text color
-  const textShadow = `
-    -1px -1px 0 rgba(255,255,255, 0.4),
-    1px -1px 0 rgba(255,255,255, 0.4),
-    -1px 1px 0 rgba(255,255,255, 0.4),
-    1px 1px 0 rgba(255,255,255, 0.4),
-    0 -3px 8px #bfbdb0,
-    0 0 2px #bfbdb0,
-    0 0 5px #bfbdb0,
-    0 0 15px #9a9888,
-    0 0 3px #bfbdb0,
-    0 3px 3px #000
-  `;
-
   return (
-    <h2
-      className={`text-h2 ${className}`}
-      style={{
-        display: 'flex',
-        gap: '0.5em',
-        flexWrap: 'wrap',
-        transformStyle: 'preserve-3d',
-        transform: 'rotateX(15deg)',
-        position: 'relative',
-        ...style
-      }}
-    >
-      {/* SEO-friendly hidden text for search engines and screen readers */}
-      <span className="sr-only">{plainText}</span>
-
-      <style jsx>{`
-        .h2-char {
+    <>
+      <style jsx global>{`
+        :global(.h2-char) {
           display: inline-block;
           color: #bfbdb0;
-          text-shadow: ${textShadow};
+          text-shadow:
+            -1px -1px 0 rgba(255,255,255, 0.4),
+            1px -1px 0 rgba(255,255,255, 0.4),
+            -1px 1px 0 rgba(255,255,255, 0.4),
+            1px 1px 0 rgba(255,255,255, 0.4),
+            0 -3px 8px #bfbdb0,
+            0 0 2px #bfbdb0,
+            0 0 5px #bfbdb0,
+            0 0 15px #9a9888,
+            0 0 3px #bfbdb0,
+            0 3px 3px #000;
           transform: translateZ(20px);
           position: relative;
         }
 
         /* Metal backing plate */
-        .h2-word::before {
+        :global(.h2-word::before) {
           content: "";
           position: absolute;
           inset: -0.2em -0.3em;
@@ -99,30 +81,46 @@ export default function H2({
         }
       `}</style>
 
-      {words.map((word, wordIndex) => (
-        <span
-          key={wordIndex}
-          className="h2-word"
-          style={{
-            display: 'inline-flex',
-            position: 'relative'
-          }}
-        >
-          {word.split('').map((char, charIndex) => {
-            // Apply alt glyph if available
-            const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
+      <h2
+        className={`text-h2 ${className}`}
+        style={{
+          display: 'flex',
+          gap: '0.5em',
+          flexWrap: 'wrap',
+          transformStyle: 'preserve-3d',
+          transform: 'rotateX(15deg)',
+          position: 'relative',
+          ...style
+        }}
+      >
+        {/* SEO-friendly hidden text for search engines and screen readers */}
+        <span className="sr-only">{plainText}</span>
 
-            return (
-              <span
-                key={charIndex}
-                className="h2-char"
-              >
-                {displayChar}
-              </span>
-            );
-          })}
-        </span>
-      ))}
-    </h2>
+        {words.map((word, wordIndex) => (
+          <span
+            key={wordIndex}
+            className="h2-word"
+            style={{
+              display: 'inline-flex',
+              position: 'relative'
+            }}
+          >
+            {word.split('').map((char, charIndex) => {
+              // Apply alt glyph if available
+              const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
+
+              return (
+                <span
+                  key={charIndex}
+                  className="h2-char"
+                >
+                  {displayChar}
+                </span>
+              );
+            })}
+          </span>
+        ))}
+      </h2>
+    </>
   );
 }

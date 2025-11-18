@@ -66,6 +66,20 @@ function categoryNameToSlug(name: string): string {
     .replace(/[^a-z0-9-]/g, '');
 }
 
+/**
+ * Transform WordPress API response to match frontend BlogPost interface
+ * Converts snake_case to camelCase
+ */
+function transformPost(apiPost: any): BlogPost {
+  return {
+    ...apiPost,
+    // Convert featured_image (snake_case) to featuredImage (camelCase)
+    featuredImage: apiPost.featured_image || null,
+    // Remove the snake_case version
+    featured_image: undefined,
+  };
+}
+
 async function generateBlogPostsJson() {
   console.log('\n📝 Generating chunked blog posts with category index...');
 
@@ -76,7 +90,8 @@ async function generateBlogPostsJson() {
       per_page: 100,
     });
 
-    let allPosts: BlogPost[] = allPostsData.posts;
+    // Transform posts to use camelCase
+    let allPosts: BlogPost[] = allPostsData.posts.map(transformPost);
     const totalPages = allPostsData.pagination.total_pages;
 
     // Fetch remaining pages if needed
@@ -86,7 +101,8 @@ async function generateBlogPostsJson() {
       for (const page of remainingPages) {
         try {
           const pageData = await fetchBlogPosts({ page, per_page: 100 });
-          allPosts = [...allPosts, ...pageData.posts];
+          // Transform each post to camelCase
+          allPosts = [...allPosts, ...pageData.posts.map(transformPost)];
         } catch (error) {
           console.warn(`⚠️  Skipping page ${page} due to error:`, (error as Error).message);
         }

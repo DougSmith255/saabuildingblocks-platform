@@ -133,6 +133,9 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
               transition-colors duration-300
               leading-tight
             "
+            style={{
+              fontSize: 'clamp(20px, calc(20px + (50 - 20) * ((100vw - 250px) / (3000 - 250))), 50px)'
+            }}
           >
             {post.title}
           </h3>

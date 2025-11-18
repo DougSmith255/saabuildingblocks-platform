@@ -36,29 +36,61 @@ export function GenericButton({
   'aria-label': ariaLabel,
   'aria-pressed': ariaPressed,
 }: GenericButtonProps) {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  // Base styles that don't change
+  const baseStyles: React.CSSProperties = {
+    minWidth: '131px',
+    height: '51px',
+    borderRadius: '15px',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2px',
+    transition: 'all 0.3s ease',
+  };
+
+  // Dynamic styles based on selected state and hover
+  const dynamicStyles: React.CSSProperties = selected
+    ? {
+        // Active/Selected state (green)
+        background: 'linear-gradient(to bottom right, #00ff88 0%, rgba(0, 255, 136, 0) 30%)',
+        backgroundColor: isHovered ? 'rgba(0, 255, 136, 0.8)' : 'rgba(0, 255, 136, 0.6)',
+        boxShadow: isHovered
+          ? '0 0 20px rgba(0, 255, 136, 0.7)'
+          : '0 0 15px rgba(0, 255, 136, 0.6)',
+      }
+    : {
+        // Inactive state (gold)
+        background: 'linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%)',
+        backgroundColor: isHovered ? 'rgba(255, 215, 0, 0.7)' : 'rgba(255, 215, 0, 0.5)',
+        boxShadow: isHovered ? '0 0 15px rgba(255, 215, 0, 0.6)' : 'none',
+      };
+
+  const innerStyles: React.CSSProperties = {
+    width: '100%',
+    height: '47px',
+    borderRadius: '13px',
+    backgroundColor: '#1a1a1a',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0 20px',
+    color: '#fff',
+  };
+
   return (
     <button
       onClick={onClick}
-      className={`
-        min-w-[131px] h-[51px] rounded-[15px]
-        cursor-pointer flex items-center justify-center p-[2px]
-        transition-all duration-300
-        ${selected
-          ? 'bg-[rgba(0,255,136,0.6)] hover:bg-[rgba(0,255,136,0.8)] shadow-[0_0_15px_rgba(0,255,136,0.6)] hover:shadow-[0_0_20px_rgba(0,255,136,0.7)]'
-          : 'bg-[rgba(255,215,0,0.5)] hover:bg-[rgba(255,215,0,0.7)] hover:shadow-[0_0_15px_rgba(255,215,0,0.6)]'
-        }
-        ${className}
-      `}
-      style={{
-        background: selected
-          ? 'linear-gradient(to bottom right, #00ff88 0%, rgba(0, 255, 136, 0) 30%)'
-          : 'linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%)',
-        backgroundColor: selected ? 'rgba(0, 255, 136, 0.6)' : 'rgba(255, 215, 0, 0.5)',
-      }}
+      className={className}
+      style={{ ...baseStyles, ...dynamicStyles }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       aria-pressed={ariaPressed ?? selected}
       aria-label={ariaLabel}
     >
-      <div className="w-full h-[47px] rounded-[13px] bg-[#1a1a1a] flex items-center justify-center px-5 text-white">
+      <div style={innerStyles}>
         <span className="text-body">
           {children}
         </span>
