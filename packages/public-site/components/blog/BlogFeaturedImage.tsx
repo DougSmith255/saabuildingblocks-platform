@@ -99,7 +99,8 @@ export default function BlogFeaturedImage({
         src={featuredImage.url}
         alt={featuredImage.alt || title}
         fill
-        priority={priority}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
         className="object-cover"
         placeholder="blur"

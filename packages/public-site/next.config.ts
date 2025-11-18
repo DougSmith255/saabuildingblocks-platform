@@ -42,6 +42,22 @@ const nextConfig: NextConfig = {
   images: {
     loader: 'custom',
     loaderFile: './lib/cloudflare-image-loader.ts',
+    // Remote patterns for WordPress images (improves caching)
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'wp.saabuildingblocks.com',
+        pathname: '/wp-content/uploads/**',
+      },
+    ],
+  },
+
+  // Experimental webpack optimizations for faster builds
+  experimental: {
+    // Optimize CSS handling
+    optimizeCss: true,
+    // Faster webpack builds
+    webpackBuildWorker: true,
   },
 
   // Trailing slashes for better CDN caching

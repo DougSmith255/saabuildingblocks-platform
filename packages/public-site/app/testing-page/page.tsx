@@ -21,7 +21,7 @@ export default function TestingPage() {
             alt="Agent Success Hub - Your Path to Real Estate Excellence"
             width={1238}
             height={688}
-            priority
+            loading="eager"
             fetchPriority="high"
             quality={90}
             sizes="(max-width: 768px) 100vw, 1238px"

@@ -54,7 +54,7 @@ ${masterControllerCSS}
 const taskor = localFont({
   src: '../public/fonts/taskor-regular-webfont.woff2',
   variable: '--font-taskor',
-  display: 'block', // Wait for font to load - don't show fallback unless it fails
+  display: 'optional', // Never block render - show fallback immediately if font not cached
   preload: true,
   weight: '400',
   fallback: ['system-ui', '-apple-system', 'sans-serif'],
@@ -64,7 +64,7 @@ const taskor = localFont({
 const amulya = localFont({
   src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
-  display: 'block', // Block rendering until font loads (counter + AGENTS needs correct font)
+  display: 'optional', // Never block render - prevents render-blocking delays
   preload: true,
   weight: '100 900',
   fallback: ['Georgia', 'serif'],
@@ -73,7 +73,7 @@ const amulya = localFont({
 const amulyaItalic = localFont({
   src: '../public/fonts/Amulya-VariableItalic.woff2',
   variable: '--font-amulya-italic',
-  display: 'swap',
+  display: 'optional', // Never block render
   preload: false, // Don't preload italic (not used above-fold)
   weight: '100 900',
   fallback: ['Georgia', 'serif'],
@@ -83,7 +83,7 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'block', // Wait for font - don't show fallback (prevents flash)
+  display: 'optional', // Never block render - eliminates font-loading delays
   preload: true,
   weight: '100 900',
   fallback: ['monospace'],

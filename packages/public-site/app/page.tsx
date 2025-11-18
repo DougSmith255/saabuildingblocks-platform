@@ -3,12 +3,16 @@ import Image from 'next/image';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
-import { CounterAnimation } from './components/CounterAnimation';
-import { WolfPackAnimation } from './components/WolfPackAnimation';
 
 // Defer loading of desktop-only positioning components (loaded separately from main bundle)
 const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
 const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container').then(mod => mod.DynamicH1Container));
+
+// Dynamic imports for heavy animation components (reduces initial bundle size)
+// Note: In Next.js 16 Server Components, ssr:false is not supported, but dynamic imports
+// still reduce bundle size by code-splitting these heavy components
+const CounterAnimation = dynamic(() => import('./components/CounterAnimation').then(mod => mod.CounterAnimation));
+const WolfPackAnimation = dynamic(() => import('./components/WolfPackAnimation').then(mod => mod.WolfPackAnimation));
 
 /**
  * Homepage - Server Component with Static Content
@@ -58,13 +62,14 @@ export default function Home() {
                 filter: 'blur(40px)',
               }}
             />
-            {/* Main image - Next.js Image component with priority for LCP */}
+            {/* Main image - Next.js Image component with preload for LCP */}
             <Image
               src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
               width={900}
               height={500}
-              priority
+              loading="eager"
+              fetchPriority="high"
               quality={90}
               sizes="(max-width: 768px) 90vw, 900px"
               className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
