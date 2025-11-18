@@ -7,7 +7,7 @@
     "dev": "next dev -p 3001",
     "prebuild": "npm run generate:blog-posts",
     "build": "next build",
-    "postbuild": "npm run sync-images",
+    "postbuild": "npm run sync-images && cp -r functions out/functions",
     "start": "next start -p 3001",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
