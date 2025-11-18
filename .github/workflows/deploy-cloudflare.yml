@@ -196,6 +196,7 @@ jobs:
       # Deploy to Cloudflare Pages with retry logic
       - name: Deploy to Cloudflare Pages
         id: deploy
+        working-directory: packages/public-site
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -203,7 +204,8 @@ jobs:
           # Retry logic in bash (simpler than multiple workflow steps)
           for attempt in 1 2 3; do
             echo "🚀 Deployment attempt $attempt/3..."
-            if wrangler pages deploy packages/public-site/out --project-name=saabuildingblocks --branch=main --commit-dirty=true; then
+            # Run from packages/public-site/ so wrangler detects ./functions directory
+            if wrangler pages deploy ./out --project-name=saabuildingblocks --branch=main --commit-dirty=true; then
               echo "✅ Deployment successful on attempt $attempt"
               echo "status=success" >> $GITHUB_OUTPUT
               exit 0
