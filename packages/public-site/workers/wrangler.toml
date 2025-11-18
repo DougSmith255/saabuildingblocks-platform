@@ -1,0 +1,21 @@
+name = "saabuildingblocks-image-optimizer"
+main = "image-optimizer.js"
+compatibility_date = "2025-11-18"
+
+# Worker will run on these routes
+routes = [
+  { pattern = "saabuildingblocks.com/wp-content/uploads/*", zone_name = "saabuildingblocks.com" },
+  { pattern = "*.saabuildingblocks.pages.dev/wp-content/uploads/*" }
+]
+
+# Cloudflare Pages integration
+# This Worker runs BEFORE the static site serves files
+# So it intercepts /wp-content/uploads/* requests and redirects them
+
+# Performance settings
+[placement]
+mode = "smart" # Cloudflare automatically places Worker at optimal edge location
+
+# Usage limits (free tier: 100,000 requests/day)
+[limits]
+cpu_ms = 10 # Each request should complete in <10ms

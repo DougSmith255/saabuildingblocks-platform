@@ -7,12 +7,15 @@
     "dev": "next dev -p 3001",
     "prebuild": "npm run generate:blog-posts",
     "build": "next build",
+    "postbuild": "npm run sync-images",
     "start": "next start -p 3001",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "export": "npm run build",
     "generate:css": "tsx scripts/generate-static-css.ts",
     "generate:blog-posts": "tsx scripts/generate-blog-posts-json.ts",
+    "sync-images": "tsx scripts/sync-cloudflare-images.ts",
+    "build:full": "npm run build",
     "test:performance": "node scripts/performance-test.js"
   },
   "dependencies": {
@@ -37,6 +40,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "autoprefixer": "^10.4.20",
     "babel-plugin-react-compiler": "^1.0.0",
+    "dotenv": "^17.2.3",
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.3",
     "postcss": "^8.4.49",

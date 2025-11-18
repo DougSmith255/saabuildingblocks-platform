@@ -1,17 +1,25 @@
 /**
- * Cloudflare Image Resizing Loader for Next.js
+ * Cloudflare Images Loader for Next.js (GLOBAL DOMINANCE MODE)
  *
- * This loader integrates Next.js Image component with Cloudflare's Image Resizing service.
- * Automatically generates optimized image URLs with responsive sizing.
+ * RESPONSIVE VARIANT SELECTION
  *
- * Requires Cloudflare Image Resizing to be enabled ($5/month):
- * https://developers.cloudflare.com/images/image-resizing/
+ * This loader automatically selects the optimal Cloudflare Images variant
+ * based on the requested width:
+ * - mobile (375px) for widths ≤ 375
+ * - tablet (768px) for widths ≤ 768
+ * - desktop (1280px) for widths ≤ 1280
+ * - public (original) for larger sizes
  *
- * How it works:
- * - Desktop: Full quality, larger sizes
- * - Tablet: Medium quality, medium sizes
- * - Mobile: Lower quality, smaller sizes
- * - Automatic format conversion (WebP/AVIF for modern browsers)
+ * Next.js Image component automatically generates srcset with multiple widths,
+ * and this loader returns the appropriate variant URL for each width.
+ *
+ * The heavy lifting is done by:
+ * 1. sync-cloudflare-images.ts (uploads images to Cloudflare)
+ * 2. _redirects file (301 redirects WordPress URLs → Cloudflare Images)
+ * 3. Cloudflare Images variants (automatically resize images)
+ *
+ * Requires Cloudflare Images ($5/month):
+ * https://developers.cloudflare.com/images/cloudflare-images/
  */
 
 export default function cloudflareLoader({ src, width, quality }: {
@@ -19,21 +27,36 @@ export default function cloudflareLoader({ src, width, quality }: {
   width: number;
   quality?: number;
 }) {
-  // Default quality settings
-  const defaultQuality = quality || 85;
+  // Check if this is a Cloudflare Images URL
+  const isCloudflareImage = src.includes('imagedelivery.net');
 
-  // Handle external URLs (pass through without modification)
-  if (src.startsWith('http://') || src.startsWith('https://')) {
+  if (!isCloudflareImage) {
+    // For non-Cloudflare images (local images, external URLs)
+    // just return as-is - they'll be handled by _redirects if needed
     return src;
   }
 
-  // Build Cloudflare Image Resizing URL
-  // Format: /cdn-cgi/image/[options]/[image-path]
-  const params = [
-    `width=${width}`,
-    `quality=${defaultQuality}`,
-    'format=auto', // Automatically serve WebP/AVIF to modern browsers
-  ];
+  // For Cloudflare Images URLs, select the appropriate variant
+  // based on the requested width (Next.js provides this)
+  let variant = 'public'; // default fallback
 
-  return `/cdn-cgi/image/${params.join(',')}${src}`;
+  if (width <= 375) {
+    variant = 'mobile';   // 375px variant
+  } else if (width <= 768) {
+    variant = 'tablet';   // 768px variant
+  } else if (width <= 1280) {
+    variant = 'desktop';  // 1280px variant
+  }
+
+  // Replace the variant in the URL
+  // URL format: https://imagedelivery.net/{hash}/{id}/{variant}
+  const urlParts = src.split('/');
+  if (urlParts.length >= 6) {
+    // Replace the last part (current variant) with the selected variant
+    urlParts[urlParts.length - 1] = variant;
+    return urlParts.join('/');
+  }
+
+  // If URL format doesn't match expected pattern, return as-is
+  return src;
 }
