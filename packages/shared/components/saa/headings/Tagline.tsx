@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
 
@@ -19,17 +17,19 @@ const ALT_GLYPHS: Record<string, string> = {
 };
 
 /**
- * Tagline Component
+ * Tagline Component - Server Component (No JavaScript Required)
  *
- * Displays tagline text with 3D neon glow effects.
- * Pulls base typography settings from Master Controller's tagline text type.
+ * PERFORMANCE OPTIMIZATIONS:
+ * - Pure Server Component (no 'use client')
+ * - CSS-only fade-in animation (no React hydration needed)
+ * - Static neon glow (always on, no flicker)
+ * - Static HTML rendered on server
  *
  * Features:
  * - Static neon glow (NO animation)
  * - 3D transform with rotateX and translateZ
  * - Per-character rendering with alt glyphs
  * - Body text color (#bfbdb0) for neon effect
- * - Typography settings from var(--font-size-tagline), etc.
  *
  * @example
  * ```tsx
@@ -86,28 +86,6 @@ export default function Tagline({
       {/* SEO-friendly hidden text for search engines and screen readers */}
       <span className="sr-only">{plainText}</span>
 
-      <style jsx>{`
-        /* 2025 Hero Entrance Animation */
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0) rotateX(15deg);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) rotateX(15deg);
-          }
-        }
-
-        .tagline-char {
-          display: inline-block;
-          color: #bfbdb0;
-          text-shadow: ${textShadow};
-          transform: translateZ(20px);
-          position: relative;
-        }
-      `}</style>
-
       {words.map((word, wordIndex) => (
         <span
           key={wordIndex}
@@ -125,6 +103,13 @@ export default function Tagline({
               <span
                 key={charIndex}
                 className="tagline-char neon-glow"
+                style={{
+                  display: 'inline-block',
+                  color: '#bfbdb0',
+                  textShadow,
+                  transform: 'translateZ(20px)',
+                  position: 'relative',
+                }}
               >
                 {displayChar}
               </span>
