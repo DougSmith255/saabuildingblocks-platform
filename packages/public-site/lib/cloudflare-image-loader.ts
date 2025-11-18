@@ -27,12 +27,23 @@ export default function cloudflareLoader({ src, width, quality }: {
   width: number;
   quality?: number;
 }) {
+  // Convert WordPress absolute URLs to relative paths
+  // This allows the Pages Function to intercept and select variants
+  if (src.includes('wp.saabuildingblocks.com/wp-content/uploads/')) {
+    // Extract the /wp-content/uploads/... path
+    const match = src.match(/\/wp-content\/uploads\/.+$/);
+    if (match) {
+      // Return relative path with width parameter for Pages Function
+      return `${match[0]}?w=${width}`;
+    }
+  }
+
   // Check if this is a Cloudflare Images URL
   const isCloudflareImage = src.includes('imagedelivery.net');
 
   if (!isCloudflareImage) {
     // For non-Cloudflare images (local images, external URLs)
-    // just return as-is - they'll be handled by _redirects if needed
+    // just return as-is
     return src;
   }
 
