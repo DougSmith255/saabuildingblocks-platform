@@ -14,11 +14,11 @@ export default function TestingPage() {
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
         aria-labelledby="hero-heading"
       >
-        {/* Hero Image - Agent Success Hub */}
+        {/* Hero Image - Doug and Karrie Co-Founders */}
         <div className="relative w-full max-w-[1200px]">
           <Image
-            src="/images/hero/agent-success-hub-hero-image.webp"
-            alt="Agent Success Hub - Your Path to Real Estate Excellence"
+            src="/images/hero/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
+            alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
             width={1200}
             height={675}
             priority
