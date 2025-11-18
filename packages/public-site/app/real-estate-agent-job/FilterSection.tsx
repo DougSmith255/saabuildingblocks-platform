@@ -187,7 +187,7 @@ export default function FilterSection({
                   fontSize: 'clamp(12px, calc(12px + (30 - 12) * ((100vw - 250px) / (3000 - 250))), 30px)',
                   backgroundPosition: 'right 15px center',
                 }}
-                className="w-full px-6 py-3 pr-12 rounded-lg bg-[#1a1a1a] border border-[#e5e4dd]/20 text-[#e5e4dd] font-[var(--font-amulya)] focus:border-[#00ff88]/50 focus:outline-none transition-colors cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3e%3cpath%20fill%3D%22%23e5e4dd%22%20d%3D%22M6%208L0%200h12z%22%2F%3e%3c%2Fsvg%3e')] bg-no-repeat"
+                className="w-full px-6 py-3 pr-12 rounded-lg bg-[#1a1a1a] border border-[#e5e4dd]/20 text-[#e5e4dd] text-body focus:border-[#00ff88]/50 focus:outline-none transition-colors cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3e%3cpath%20fill%3D%22%23e5e4dd%22%20d%3D%22M6%208L0%200h12z%22%2F%3e%3c%2Fsvg%3e')] bg-no-repeat"
                 aria-label="Filter by category"
               >
                 <option value="all">All Categories</option>

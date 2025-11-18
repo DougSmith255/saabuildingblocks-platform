@@ -46,7 +46,7 @@ export function GenericButton({
         aria-label={ariaLabel}
       >
         <div className="filter-button-inner">
-          <span className="font-[var(--font-amulya)] text-body">
+          <span className="text-body">
             {children}
           </span>
         </div>
@@ -73,14 +73,14 @@ export function GenericButton({
             #ffd700 0%,
             rgba(255, 215, 0, 0) 30%
           );
-          background-color: rgba(255, 215, 0, 0.2);
+          background-color: rgba(255, 215, 0, 0.5);
           box-shadow: none;
         }
 
         /* Inactive button - hover state */
         .filter-button[data-selected="false"]:hover {
-          background-color: rgba(255, 215, 0, 0.4);
-          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+          background-color: rgba(255, 215, 0, 0.7);
+          box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
           outline: none;
         }
 
@@ -91,14 +91,14 @@ export function GenericButton({
             #00ff88 0%,
             rgba(0, 255, 136, 0) 30%
           );
-          background-color: rgba(0, 255, 136, 0.3);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+          background-color: rgba(0, 255, 136, 0.6);
+          box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
         }
 
         /* Active button - hover state */
         .filter-button[data-selected="true"]:hover {
-          background-color: rgba(0, 255, 136, 0.5);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+          background-color: rgba(0, 255, 136, 0.8);
+          box-shadow: 0 0 20px rgba(0, 255, 136, 0.7);
         }
 
         .filter-button-inner {
