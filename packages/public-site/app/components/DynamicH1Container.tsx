@@ -8,7 +8,9 @@ import { useState, useEffect } from 'react';
  * Reads the h1-position-data element and applies the transform dynamically
  */
 export function DynamicH1Container({ children }: { children: React.ReactNode }) {
-  const [translateY, setTranslateY] = useState('33.2vh'); // Default fallback
+  // Better default that matches typical calculated position (~432px)
+  // This reduces CLS by starting closer to the final position
+  const [translateY, setTranslateY] = useState('calc(8dvh + 240px)'); // Matches typical desktop calculation
   const [isPositioned, setIsPositioned] = useState(false); // Track if position is calculated
 
   useEffect(() => {
@@ -49,9 +51,11 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
       className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
       style={{
         top: translateY,
-        opacity: isPositioned ? 1 : 0, // Hide until positioned
+        opacity: 1, // Always visible - position is close enough now
         willChange: 'transform, opacity',
         transition: 'none', // No transition on initial render
+        // Contain layout to prevent shifts affecting other elements
+        contain: 'layout style',
       }}
     >
       {children}
