@@ -780,30 +780,28 @@ main {
   }
 
   /* Background images (wolf pack, Agent Success Hub) - smooth fade-in with scale */
+  /* COMPOSITED: Uses only transform and opacity (GPU-accelerated) */
   @keyframes bgZoomScale {
     from {
       opacity: 0.3;
-      transform: scale(1.05);
-      filter: blur(8px);
+      transform: scale(1.05) translateZ(0);
     }
     to {
       opacity: 1;
-      transform: scale(1);
-      filter: blur(0);
+      transform: scale(1) translateZ(0);
     }
   }
 
   /* Blog page background - LCP-friendly fade+scale animation starting at 0.1 opacity */
+  /* COMPOSITED: Uses only transform and opacity (GPU-accelerated) */
   @keyframes blogBgFadeScale {
     from {
       opacity: 0.1;
-      transform: scale(1.05);
-      filter: blur(8px);
+      transform: scale(1.05) translateZ(0);
     }
     to {
       opacity: 1;
-      transform: scale(1);
-      filter: blur(0);
+      transform: scale(1) translateZ(0);
     }
   }
 
@@ -817,10 +815,12 @@ main {
   }
 
   /* Hero background (wolf pack, Agent Success Hub) - starts at 0.3 for smooth fade-in */
+  /* COMPOSITED: Only animates opacity and transform (GPU-accelerated) */
   .hero-animate-bg {
     opacity: 0.3;
     backface-visibility: hidden;
     -webkit-font-smoothing: antialiased;
+    will-change: opacity, transform;
   }
 
   /* Animation class for background images - scale and blur for polish, no delay */
@@ -829,8 +829,10 @@ main {
   }
 
   /* Blog page specific - Agent Success Hub background same as homepage */
+  /* COMPOSITED: Only animates opacity and transform (GPU-accelerated) */
   .agent-hero-bg {
     opacity: 0.3;
+    will-change: opacity, transform;
   }
 
   /* Blog page animation - same scale/blur as homepage, no delay */

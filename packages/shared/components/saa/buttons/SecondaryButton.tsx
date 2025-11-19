@@ -110,7 +110,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
       {/* Left side glow bar */}
       <div
-        className="absolute"
+        className="absolute light-bar"
         style={{
           top: '50%',
           left: '-5px',
@@ -131,7 +131,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
       {/* Right side glow bar */}
       <div
-        className="absolute"
+        className="absolute light-bar"
         style={{
           top: '50%',
           right: '-5px',
@@ -151,15 +151,38 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
       />
 
       <style jsx>{`
+        /* Light bar container styles */
+        .light-bar {
+          position: relative;
+        }
+
+        /* Pseudo-element for glow effect */
+        .light-bar::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: inherit;
+          filter: blur(15px);
+          opacity: 0.8;
+        }
+
+        /* Animation using transform and opacity instead of box-shadow */
         @keyframes lightPulse {
           0%, 100% {
             opacity: 1;
-            box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+            transform: scale(1);
           }
           50% {
             opacity: 0.7;
-            box-shadow: 0 0 8px #ffd700, 0 0 20px #ffd700, 0 0 35px #ffd700, 0 0 70px #ffd700;
+            transform: scale(1.15);
           }
+        }
+
+        /* Apply animation to pseudo-element */
+        .light-bar::before {
+          animation: inherit;
+          animation-delay: inherit;
         }
       `}</style>
     </div>

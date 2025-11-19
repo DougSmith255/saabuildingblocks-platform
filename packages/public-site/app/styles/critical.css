@@ -184,6 +184,7 @@ p a {
 }
 
 /* Hamburger Menu - Prevent FOUC by providing base positioning immediately */
+/* COMPOSITED: Uses only transform and opacity (GPU-accelerated) */
 .hamburger {
   position: fixed;
   top: calc((clamp(76px, calc(8vh + 16px), 106px) - 60px) / 2);
@@ -196,7 +197,8 @@ p a {
 }
 
 .hamburger-svg {
-  height: 3.75em;
+  width: 24px;
+  height: 24px;
 }
 
 .line {
@@ -204,11 +206,7 @@ p a {
   stroke: #ffd700;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 3;
-}
-
-.line-top-bottom {
-  stroke-dasharray: 12 63;
+  stroke-width: 2;
 }
 
 /* Header Container - Prevent height change on hydration */
