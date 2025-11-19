@@ -27,15 +27,12 @@ export default function cloudflareLoader({ src, width, quality }: {
   width: number;
   quality?: number;
 }) {
-  // Convert WordPress absolute URLs to relative paths
-  // This allows the Pages Function to intercept and select variants
+  // For WordPress images, keep the absolute URL (don't convert to relative)
+  // The _redirects file will handle proxying to Cloudflare Images
   if (src.includes('wp.saabuildingblocks.com/wp-content/uploads/')) {
-    // Extract the /wp-content/uploads/... path
-    const match = src.match(/\/wp-content\/uploads\/.+$/);
-    if (match) {
-      // Return relative path with width parameter for Pages Function
-      return `${match[0]}?w=${width}`;
-    }
+    // Return the WordPress URL as-is with width parameter
+    // The browser will request the image directly from WordPress
+    return `${src}?w=${width}`;
   }
 
   // Check if this is a Cloudflare Images URL
