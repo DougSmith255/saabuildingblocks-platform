@@ -1,6 +1,15 @@
 name: Deploy to Cloudflare Pages
 
 "on":
+  # Auto-deploy on push to main
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/public-site/**'
+      - 'packages/shared/**'
+      - '.github/workflows/deploy-cloudflare.yml'
+
   # Trigger from n8n workflow
   repository_dispatch:
     types: [deploy-wordpress-content]
