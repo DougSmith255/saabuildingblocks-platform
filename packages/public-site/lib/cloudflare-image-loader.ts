@@ -15,24 +15,34 @@
  *
  * The heavy lifting is done by:
  * 1. sync-cloudflare-images.ts (uploads images to Cloudflare)
- * 2. _redirects file (301 redirects WordPress URLs → Cloudflare Images)
+ * 2. cloudflare-images-mapping.json (WordPress URL → Cloudflare Images mapping)
  * 3. Cloudflare Images variants (automatically resize images)
  *
  * Requires Cloudflare Images ($5/month):
  * https://developers.cloudflare.com/images/cloudflare-images/
  */
 
+// Import the mapping file at build time
+import imageMapping from '../cloudflare-images-mapping.json';
+
 export default function cloudflareLoader({ src, width, quality }: {
   src: string;
   width: number;
   quality?: number;
 }) {
-  // For WordPress images, keep the absolute URL (don't convert to relative)
-  // The _redirects file will handle proxying to Cloudflare Images
+  // For WordPress images, transform to Cloudflare Images URL
   if (src.includes('wp.saabuildingblocks.com/wp-content/uploads/')) {
-    // Return the WordPress URL as-is with width parameter
-    // The browser will request the image directly from WordPress
-    return `${src}?w=${width}`;
+    // Look up the Cloudflare Images URL from the mapping
+    const mapping = imageMapping.find(m => m.wordpressUrl === src);
+
+    if (mapping) {
+      // Use the Cloudflare Images URL with variant selection
+      src = mapping.cloudflareUrl;
+    } else {
+      // Fallback: if not in mapping, return WordPress URL
+      // This handles images that haven't been synced yet
+      return `${src}?w=${width}`;
+    }
   }
 
   // Check if this is a Cloudflare Images URL
