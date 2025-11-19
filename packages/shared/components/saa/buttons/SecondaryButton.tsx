@@ -108,50 +108,55 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         {children}
       </ButtonElement>
 
-      {/* Left side glow bar */}
+      {/* Left side glow bar - FIXED positioning */}
       <div
-        className="absolute light-bar"
+        className="light-bar"
         style={{
+          position: 'absolute',
           top: '50%',
           left: '-5px',
           width: '10px',
-          height: isHovered ? '80%' : '18px',
+          height: '80%',
           borderRadius: '6px',
           transform: 'translateY(-50%)',
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          animation: isClicked ? 'none' : `lightPulse 3s ease-in-out infinite`,
-          animationDelay: leftGlowDelay,
           transition: 'all 0.3s ease-in-out',
-          position: 'absolute',
+          ...(isClicked ? {} : { '--pulse-delay': leftGlowDelay } as any),
         }}
+        data-pulse-active={!isClicked}
       />
 
-      {/* Right side glow bar */}
+      {/* Right side glow bar - FIXED positioning */}
       <div
-        className="absolute light-bar"
+        className="light-bar"
         style={{
+          position: 'absolute',
           top: '50%',
           right: '-5px',
           width: '10px',
-          height: isHovered ? '80%' : '18px',
+          height: '80%',
           borderRadius: '6px',
           transform: 'translateY(-50%)',
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          animation: isClicked ? 'none' : `lightPulse 3s ease-in-out infinite`,
-          animationDelay: rightGlowDelay,
           transition: 'all 0.3s ease-in-out',
-          position: 'absolute',
+          ...(isClicked ? {} : { '--pulse-delay': rightGlowDelay } as any),
         }}
+        data-pulse-active={!isClicked}
       />
 
       <style jsx>{`
-        /* Pseudo-element for glow effect */
+        /* Light bar positioning */
+        .light-bar {
+          z-index: 1;
+        }
+
+        /* Pseudo-element for glow effect - this is what pulses */
         .light-bar::before {
           content: '';
           position: absolute;
@@ -160,24 +165,25 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           background: inherit;
           filter: blur(15px);
           opacity: 0.8;
+          z-index: -1;
         }
 
-        /* Animation using transform and opacity instead of box-shadow */
+        /* Pulsing animation for glow only */
         @keyframes lightPulse {
           0%, 100% {
-            opacity: 1;
+            opacity: 0.8;
             transform: scale(1);
           }
           50% {
-            opacity: 0.7;
+            opacity: 0.5;
             transform: scale(1.15);
           }
         }
 
-        /* Apply animation to pseudo-element */
-        .light-bar::before {
-          animation: inherit;
-          animation-delay: inherit;
+        /* Apply animation ONLY to pseudo-element when pulse is active */
+        .light-bar[data-pulse-active="true"]::before {
+          animation: lightPulse 3s ease-in-out infinite;
+          animation-delay: var(--pulse-delay, 0s);
         }
       `}</style>
     </div>
