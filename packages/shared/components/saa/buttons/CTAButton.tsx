@@ -138,6 +138,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
         /* Light bar container styles */
         .light-bar {
           position: relative;
+          z-index: 1;
         }
 
         /* Pseudo-element for glow effect - this is what pulses */
@@ -149,6 +150,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           background: inherit;
           filter: blur(15px);
           opacity: 0.8;
+          z-index: -1;
         }
 
         /* Pulsing animation for glow only - affects opacity and scale of the glow */
