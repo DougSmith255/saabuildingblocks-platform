@@ -16,13 +16,14 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "jsx": "react-jsx",
-    "types": ["node"],
+    "types": ["node", "styled-jsx"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
   },
   "include": [
+    "styled-jsx.d.ts",
     "components/saa/**/*.ts",
     "components/saa/**/*.tsx",
     "utils/**/*.ts",
