@@ -102,10 +102,10 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
-          animationDelay: isClicked ? '0s' : lightPulseDelay,
           transition: 'all 0.3s ease-in-out',
+          ...(isClicked ? {} : { '--pulse-delay': lightPulseDelay } as any),
         }}
+        data-pulse-active={!isClicked}
       />
 
       {/* Top light bar */}
@@ -116,10 +116,10 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          animation: isClicked ? 'none' : 'lightPulse 3s ease-in-out infinite',
-          animationDelay: isClicked ? '0s' : lightPulseDelay,
           transition: 'all 0.3s ease-in-out',
+          ...(isClicked ? {} : { '--pulse-delay': lightPulseDelay } as any),
         }}
+        data-pulse-active={!isClicked}
       />
 
       <style jsx>{`
@@ -140,7 +140,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           position: relative;
         }
 
-        /* Pseudo-element for glow effect */
+        /* Pseudo-element for glow effect - this is what pulses */
         .light-bar::before {
           content: '';
           position: absolute;
@@ -151,22 +151,22 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           opacity: 0.8;
         }
 
-        /* Animation using transform and opacity instead of box-shadow */
+        /* Pulsing animation for glow only - affects opacity and scale of the glow */
         @keyframes lightPulse {
           0%, 100% {
-            opacity: 1;
+            opacity: 0.8;
             transform: scale(1);
           }
           50% {
-            opacity: 0.7;
+            opacity: 0.5;
             transform: scale(1.15);
           }
         }
 
-        /* Apply animation to pseudo-element */
-        .light-bar::before {
-          animation: inherit;
-          animation-delay: inherit;
+        /* Apply animation ONLY to pseudo-element when pulse is active */
+        .light-bar[data-pulse-active="true"]::before {
+          animation: lightPulse 3s ease-in-out infinite;
+          animation-delay: var(--pulse-delay, 0s);
         }
       `}</style>
       </div>
