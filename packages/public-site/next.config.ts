@@ -64,6 +64,10 @@ const nextConfig: NextConfig = {
     inlineCss: true,
   },
 
+  // Turbopack configuration (Next.js 16+)
+  // Empty config to silence the Turbopack warning while using webpack
+  turbopack: {},
+
   // Trailing slashes for better CDN caching
   trailingSlash: true,
 
