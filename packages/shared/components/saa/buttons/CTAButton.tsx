@@ -48,23 +48,17 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
     <div
       className={`
         ${className}
-        ${isFullWidth ? 'flex' : 'inline-flex w-fit'}
-        py-2
+        group
+        relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
+        !my-[10px]
+        ${heroAnimate ? 'hero-entrance-animate' : ''}
       `}
+      style={heroAnimate ? {
+        opacity: 0,
+        animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
+        willChange: 'opacity, transform',
+      } : {}}
     >
-      <div
-        className={`
-          group
-          relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
-          !my-[10px]
-          ${heroAnimate ? 'hero-entrance-animate' : ''}
-        `}
-        style={heroAnimate ? {
-          opacity: 0,
-          animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
-          willChange: 'opacity, transform',
-        } : {}}
-      >
       <a
         href={href}
         onClick={handleClick}
@@ -137,11 +131,10 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
 
         /* Light bar container styles */
         .light-bar {
-          position: relative;
           z-index: 1;
         }
 
-        /* Pseudo-element for glow effect - this is what pulses */
+        /* Pseudo-element for glow effect - GPU COMPOSITED - this is what pulses */
         .light-bar::before {
           content: '';
           position: absolute;
@@ -151,27 +144,28 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           filter: blur(15px);
           opacity: 0.8;
           z-index: -1;
+          transform: translateZ(0); /* GPU compositing */
+          will-change: transform, opacity; /* Hint for compositor */
         }
 
-        /* Pulsing animation for glow only - affects opacity and scale of the glow */
+        /* Pulsing animation for glow only - DRAMATIC - uses compositor-friendly properties */
         @keyframes lightPulse {
           0%, 100% {
-            opacity: 0.8;
-            transform: scale(1);
+            opacity: 1;
+            transform: translateZ(0) scaleY(1);
           }
           50% {
-            opacity: 0.5;
-            transform: scale(1.15);
+            opacity: 0.3;
+            transform: translateZ(0) scaleY(1.8);
           }
         }
 
         /* Apply animation ONLY to pseudo-element when pulse is active */
         .light-bar[data-pulse-active="true"]::before {
-          animation: lightPulse 3s ease-in-out infinite;
+          animation: lightPulse 1s ease-in-out infinite;
           animation-delay: var(--pulse-delay, 0s);
         }
       `}</style>
-      </div>
     </div>
   );
 }

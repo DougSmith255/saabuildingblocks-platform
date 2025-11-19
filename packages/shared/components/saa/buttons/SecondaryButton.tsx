@@ -108,7 +108,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         {children}
       </ButtonElement>
 
-      {/* Left side glow bar - FIXED positioning */}
+      {/* Left side glow bar - GPU COMPOSITED */}
       <div
         className="light-bar"
         style={{
@@ -116,20 +116,21 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           top: '50%',
           left: '-5px',
           width: '10px',
-          height: '80%',
+          height: '44.8px', // 80% of 56px - base size
           borderRadius: '6px',
-          transform: 'translateY(-50%)',
+          transform: `translateY(-50%) translateZ(0) scaleY(${isHovered ? 1 : 0.4018})`, // 18px / 44.8px = 0.4018
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          transition: 'all 0.3s ease-in-out',
+          transition: 'transform 0.3s ease-in-out, background 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+          willChange: 'transform',
           ...(isClicked ? {} : { '--pulse-delay': leftGlowDelay } as any),
         }}
         data-pulse-active={!isClicked}
       />
 
-      {/* Right side glow bar - FIXED positioning */}
+      {/* Right side glow bar - GPU COMPOSITED */}
       <div
         className="light-bar"
         style={{
@@ -137,14 +138,15 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           top: '50%',
           right: '-5px',
           width: '10px',
-          height: '80%',
+          height: '44.8px', // 80% of 56px - base size
           borderRadius: '6px',
-          transform: 'translateY(-50%)',
+          transform: `translateY(-50%) translateZ(0) scaleY(${isHovered ? 1 : 0.4018})`, // 18px / 44.8px = 0.4018
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
             : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          transition: 'all 0.3s ease-in-out',
+          transition: 'transform 0.3s ease-in-out, background 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+          willChange: 'transform',
           ...(isClicked ? {} : { '--pulse-delay': rightGlowDelay } as any),
         }}
         data-pulse-active={!isClicked}
@@ -156,7 +158,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           z-index: 1;
         }
 
-        /* Pseudo-element for glow effect - this is what pulses */
+        /* Pseudo-element for glow effect - GPU COMPOSITED - this is what pulses */
         .light-bar::before {
           content: '';
           position: absolute;
@@ -166,23 +168,25 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           filter: blur(15px);
           opacity: 0.8;
           z-index: -1;
+          transform: translateZ(0); /* GPU compositing */
+          will-change: transform, opacity; /* Hint for compositor */
         }
 
-        /* Pulsing animation for glow only */
+        /* Pulsing animation for glow only - DRAMATIC - uses compositor-friendly properties */
         @keyframes lightPulse {
           0%, 100% {
-            opacity: 0.8;
-            transform: scale(1);
+            opacity: 1;
+            transform: translateZ(0) scale(1);
           }
           50% {
-            opacity: 0.5;
-            transform: scale(1.15);
+            opacity: 0.3;
+            transform: translateZ(0) scale(1.8);
           }
         }
 
         /* Apply animation ONLY to pseudo-element when pulse is active */
         .light-bar[data-pulse-active="true"]::before {
-          animation: lightPulse 3s ease-in-out infinite;
+          animation: lightPulse 1s ease-in-out infinite;
           animation-delay: var(--pulse-delay, 0s);
         }
       `}</style>
