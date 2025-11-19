@@ -584,11 +584,11 @@ export default function Header() {
           position: fixed;
           /* Center vertically within header: clamp(60px, 8vh, 90px) + 16px padding (8px top + 8px bottom) */
           /* Total height: clamp(76px, calc(8vh + 16px), 106px) */
-          /* Button is 60px tall, so center = (total height - button height) / 2 */
-          top: calc((clamp(76px, calc(8vh + 16px), 106px) - 60px) / 2);
+          /* Button is 45px tall, so center = (total height - button height) / 2 */
+          top: calc((clamp(76px, calc(8vh + 16px), 106px) - 45px) / 2);
           right: 15px;
-          width: 60px;
-          height: 60px;
+          width: 45px;
+          height: 45px;
           will-change: transform;
         }
 
@@ -606,7 +606,8 @@ export default function Header() {
         }
 
         .hamburger-svg {
-          height: 3.75em;
+          width: 45px;
+          height: 45px;
           transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
