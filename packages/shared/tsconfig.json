@@ -23,12 +23,17 @@
     }
   },
   "include": [
+    "components/saa/**/*.ts",
+    "components/saa/**/*.tsx",
+    "utils/**/*.ts",
+    "utils/**/*.tsx",
     "master-controller/**/*.ts",
     "master-controller/**/*.tsx"
   ],
   "exclude": [
     "node_modules",
     "dist",
+    "components/ui/**",
     "**/*.test.ts",
     "**/*.test.tsx"
   ]
