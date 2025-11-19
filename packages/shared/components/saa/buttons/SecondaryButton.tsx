@@ -151,11 +151,6 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
       />
 
       <style jsx>{`
-        /* Light bar container styles */
-        .light-bar {
-          position: relative;
-        }
-
         /* Pseudo-element for glow effect */
         .light-bar::before {
           content: '';
