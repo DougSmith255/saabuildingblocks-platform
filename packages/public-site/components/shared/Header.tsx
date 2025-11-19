@@ -2,53 +2,34 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import styles from './GlassShimmer.module.css';
-import { CTAButton } from '@saa/shared/components/saa';
 import { usePathname } from 'next/navigation';
-import Lenis from 'lenis';
+import { CTAButton } from '@saa/shared/components/saa';
 
-interface NavItem {
-  label: string;
-  href?: string;
-  dropdown?: { label: string; href: string }[];
-}
+// Breakpoint: 1450px (90.625rem) - matches xlg breakpoint
+const DESKTOP_BREAKPOINT = 1450;
 
-const navItems: NavItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'About eXp', href: '/about-exp-realty/' },
-  {
-    label: 'Our Team',
-    dropdown: [
-      { label: 'Team Value', href: '/exp-realty-sponsor/' },
-      { label: 'About Us', href: '/our-exp-team/' },
-    ],
-  },
-  {
-    label: 'Resources',
-    dropdown: [
-      { label: 'Commission & Fees Calc', href: '/agent-tools/exp-commission-and-fees-calculator/' },
-      { label: 'RevShare Calc', href: '/agent-tools/exp-realty-revenue-share-calculator/' },
-      { label: 'Compare Brokerages', href: '/best-real-estate-brokerage/' },
-      { label: 'Agent Success Hub', href: '/real-estate-agent-job/' },
-      { label: 'Agent Freebies', href: '/freebies/' },
-      { label: 'Become an Agent', href: '/become-real-estate-agent/' },
-    ],
-  },
-  { label: 'Agent Portal', href: '/agent-portal' },
-];
+// Lazy-load nav components for code splitting
+const DesktopNav = dynamic(() => import('./DesktopNav'), {
+  ssr: false,
+});
+
+const MobileMenu = dynamic(() => import('./MobileMenu'), {
+  ssr: false,
+});
 
 export default function Header() {
+  // Screen size detection for code splitting
+  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<number | null>(null);
-  const [hoveredDropdown, setHoveredDropdown] = useState<number | null>(null);
+  const [shouldLoadMobileMenu, setShouldLoadMobileMenu] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [scrollAnchor, setScrollAnchor] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [isPortalClicked, setIsPortalClicked] = useState(false);
   const [is404Page, setIs404Page] = useState(false);
-  const [isHamburgerFixed, setIsHamburgerFixed] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
@@ -63,7 +44,26 @@ export default function Header() {
   });
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const hamburgerUnfixTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Detect screen size for conditional rendering
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
+    };
+
+    checkScreenSize();
+
+    // Listen for resize events
+    const handleResize = () => {
+      checkScreenSize();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   // Track mount state
   useEffect(() => {
@@ -145,100 +145,16 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, scrollAnchor, scrollDirection]);
 
-  // Scroll lock - prevent page scrolling while keeping all content visible
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      // Calculate scrollbar width before hiding it
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-      // Save current scroll position
-      const scrollY = window.scrollY;
-
-      // Lock scroll - page stays in place exactly as it was
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%'; // Use width instead of left/right to contain content properly
-      document.body.style.overflow = 'hidden';
-
-      // Add padding to prevent layout shift (only on browsers with scrollbar width)
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-
-      // Initialize Lenis smooth scroll for mobile menu
-      const menu = document.getElementById('mobile-menu');
-      let menuLenis: Lenis | null = null;
-
-      if (menu) {
-        menuLenis = new Lenis({
-          wrapper: menu,
-          content: menu,
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          orientation: 'vertical',
-          gestureOrientation: 'vertical',
-          smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 2,
-          infinite: false,
-        });
-
-        // Animation frame loop for menu Lenis
-        function raf(time: number) {
-          menuLenis?.raf(time);
-          requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-      }
-
-      return () => {
-        // Cleanup Lenis instance
-        if (menuLenis) {
-          menuLenis.destroy();
-        }
-      };
+  // Handle hamburger menu click - lazy load mobile menu on first click
+  const handleHamburgerClick = () => {
+    if (!shouldLoadMobileMenu) {
+      setShouldLoadMobileMenu(true);
+      // Give it a moment to load before opening
+      setTimeout(() => setIsMobileMenuOpen(true), 50);
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      setIsMobileMenuOpen(!isMobileMenuOpen);
     }
-  }, [isMobileMenuOpen]);
-
-  const toggleMobileMenu = () => {
-    const willBeOpen = !isMobileMenuOpen;
-
-    // Clear any pending unfix timeout
-    if (hamburgerUnfixTimeoutRef.current) {
-      clearTimeout(hamburgerUnfixTimeoutRef.current);
-      hamburgerUnfixTimeoutRef.current = null;
-    }
-
-    if (willBeOpen) {
-      // Opening: render menu immediately, then trigger open animation
-      setShouldRenderMenu(true);
-      setTimeout(() => setIsMobileMenuOpen(true), 10);
-      setIsHamburgerFixed(true);
-    } else {
-      // Closing: trigger close animation, then hide menu after animation completes
-      setIsMobileMenuOpen(false);
-      setTimeout(() => setShouldRenderMenu(false), 300); // Match animation duration
-
-      // Closing menu: unfix after 1.5 second delay
-      hamburgerUnfixTimeoutRef.current = setTimeout(() => {
-        setIsHamburgerFixed(false);
-      }, 1500);
-    }
-
-    setOpenDropdown(null);
-  };
-
-  const toggleDropdown = (index: number) => {
-    setOpenDropdown(openDropdown === index ? null : index);
   };
 
   // Handle Agent Portal click with 3-second green state
@@ -260,9 +176,6 @@ export default function Header() {
       if (portalClickTimeoutRef.current) {
         clearTimeout(portalClickTimeoutRef.current);
       }
-      if (hamburgerUnfixTimeoutRef.current) {
-        clearTimeout(hamburgerUnfixTimeoutRef.current);
-      }
     };
   }, []);
 
@@ -283,7 +196,7 @@ export default function Header() {
         {/* Sliding container for background and content */}
         <div
           className={`${hasMounted ? 'transition-transform duration-500' : ''} ease-in-out ${
-            isMobileMenuOpen || isHidden ? '-translate-y-full' : 'translate-y-0'
+            isHidden ? '-translate-y-full' : 'translate-y-0'
           }`}
           style={{
             width: '100%',
@@ -361,127 +274,10 @@ export default function Header() {
             </Link>
             )}
 
-            {/* Desktop Navigation - Hidden on 404 */}
-            {!is404Page && (
-            <nav className="nav hidden xlg:flex items-center gap-0" role="navigation" aria-label="Main navigation">
-            {navItems.map((item, index) => (
-              <div
-                key={index}
-                className="nav-item relative"
-                onMouseEnter={() => item.dropdown && setHoveredDropdown(index)}
-                onMouseLeave={() => item.dropdown && setHoveredDropdown(null)}
-              >
-                {item.dropdown ? (
-                  <>
-                    <button
-                      className="nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
-                      style={{
-                        fontSize: 'var(--font-size-menuMainItem)',
-                        fontFamily: 'var(--font-family-menuMainItem)',
-                        fontWeight: 'var(--font-weight-menuMainItem)',
-                        letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                        lineHeight: 'var(--line-height-menuMainItem)',
-                        color: 'var(--text-color-menuMainItem)',
-                        willChange: 'background-color, color',
-                      }}
-                      aria-expanded={hoveredDropdown === index}
-                      aria-haspopup="true"
-                    >
-                      {item.label}
-                      <span
-                        className="dropdown-arrow ml-2 inline-block transition-all duration-[400ms] ease-[ease] transform-gpu"
-                        style={{
-                          width: 0,
-                          height: 0,
-                          borderLeft: '6px solid #ffffff',
-                          borderTop: '4px solid transparent',
-                          borderBottom: '4px solid transparent',
-                          transform: hoveredDropdown === index ? 'rotate(90deg) translateZ(0)' : 'rotate(0deg) translateZ(0)',
-                          transformOrigin: 'center',
-                          willChange: 'transform, border-left-color',
-                        }}
-                      />
-                    </button>
-                    <div
-                      className="dropdown absolute top-full left-0 mt-[7px] min-w-[270px] bg-[rgba(26,26,26,0.8)] rounded-xl p-[11px] transition-all duration-300 z-[1001] overflow-hidden"
-                      style={{
-                        opacity: hoveredDropdown === index ? 1 : 0,
-                        visibility: hoveredDropdown === index ? 'visible' : 'hidden',
-                        transform: hoveredDropdown === index ? 'translateY(0) translateZ(0)' : 'translateY(-10px) translateZ(0)',
-                        willChange: 'opacity, visibility, transform',
-                      }}
-                    >
-                      {item.dropdown.map((dropdownItem, dropdownIndex) => (
-                        <Link
-                          key={dropdownIndex}
-                          href={dropdownItem.href}
-                          className="dropdown-item block px-4 py-3 transition-all duration-300 bg-[rgba(42,42,42,0.8)] rounded-lg my-[5.5px] hover:bg-[rgba(58,58,58,0.8)] hover:text-white"
-                          style={{
-                            fontSize: 'var(--font-size-menuSubItem)',
-                            fontFamily: 'var(--font-family-menuSubItem)',
-                            fontWeight: 'var(--font-weight-menuSubItem)',
-                            letterSpacing: 'var(--letter-spacing-menuSubItem)',
-                            lineHeight: 'var(--line-height-menuSubItem)',
-                            color: 'var(--text-color-menuSubItem)',
-                            willChange: 'background-color, color',
-                          }}
-                        >
-                          {dropdownItem.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </>
-                ) : item.label === 'Agent Portal' ? (
-                  <Link
-                    href={item.href!}
-                    onClick={handlePortalClick}
-                    className={`nav-link agent-portal flex items-center px-5 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
-                    style={{
-                      fontSize: 'var(--font-size-menuMainItem)',
-                      fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                      fontWeight: 'var(--font-weight-menuMainItem)',
-                      letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                      lineHeight: 'var(--line-height-menuMainItem)',
-                      color: 'var(--text-color-menuMainItem)',
-                      willChange: 'background-color, color',
-                    }}
-                  >
-                    <span className="agent-portal-styled">
-                      ag<span className="alt-glyph">e</span>
-                      <span className="alt-glyph">n</span>
-                      <span>t</span> po<span className="alt-glyph">r</span>
-                      <span>t</span>al
-                    </span>
-                  </Link>
-                ) : (
-                  <Link
-                    href={item.href!}
-                    className="nav-link flex items-center px-5 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
-                    style={{
-                      fontSize: 'var(--font-size-menuMainItem)',
-                      fontFamily: 'var(--font-family-menuMainItem)',
-                      fontWeight: 'var(--font-weight-menuMainItem)',
-                      letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                      lineHeight: 'var(--line-height-menuMainItem)',
-                      color: 'var(--text-color-menuMainItem)',
-                    }}
-                  >
-                    {item.label}
-                  </Link>
-                )}
-              </div>
-            ))}
-          </nav>
-          )}
-
-          {/* CTA Button (Desktop) - Hidden on 404 */}
-          {!is404Page && (
-          <div className="header-btn hidden xlg:flex items-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              GET STARTED
-            </CTAButton>
-          </div>
-          )}
+            {/* Desktop Navigation - Only loads on desktop (≥1450px) - Hidden on 404 */}
+            {!is404Page && isDesktop !== null && isDesktop && (
+              <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
+            )}
 
           {/* Go Home Button - Only on 404 */}
           {is404Page && (
@@ -492,166 +288,43 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu Toggle - Absolute when closed, fixed when menu open - Hidden on 404 */}
+        {/* Hamburger Menu Button - Only on mobile/tablet (<1450px) - Hidden on 404 */}
         {!is404Page && (
-        <button
-          className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
-          onClick={toggleMobileMenu}
-          aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
-          aria-expanded={isMobileMenuOpen}
-          aria-controls="mobile-menu"
-        >
-          <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
-            <path
-              className="line line-top-bottom"
-              d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
-              stroke="none"
-              fill="none"
-            />
-            <path
-              className="line"
-              d="M7 16 27 16"
-              stroke="none"
-              fill="none"
-            />
-          </svg>
-        </button>
+          <button
+            className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
+            onClick={handleHamburgerClick}
+            aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
+              <path
+                className="line line-top-bottom"
+                d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                stroke="none"
+                fill="none"
+              />
+              <path
+                className="line"
+                d="M7 16 27 16"
+                stroke="none"
+                fill="none"
+              />
+            </svg>
+          </button>
         )}
       </header>
 
-      {/* Mobile Menu Overlay - Slides down/up */}
-      <div
-        id="mobile-menu"
-        role="dialog"
-        aria-label="Mobile navigation menu"
-        className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden ${
-          isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
-        }`}
-        style={{
-          background: 'rgba(15, 15, 15, 0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          willChange: 'transform',
-          transform: isMobileMenuOpen ? 'translateZ(0)' : 'translateY(-100%) translateZ(0)',
-          overscrollBehavior: 'contain',
-          pointerEvents: isMobileMenuOpen ? 'auto' : 'none', // Only capture events when open
-          WebkitOverflowScrolling: 'touch', // Enable momentum scrolling on iOS
-          display: shouldRenderMenu ? undefined : 'none', // Hide after close animation
-        }}
-          >
-            <div
-              className="mobile-menu-content pt-24 pb-32 min-h-screen"
-            >
-              <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
-                {navItems.map((item, index) => (
-                  <div key={index}>
-                    {item.dropdown ? (
-                      <>
-                        <button
-                          onClick={() => toggleDropdown(index)}
-                          className="w-full flex items-center justify-between px-6 py-4 transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
-                          style={{
-                            fontSize: 'var(--font-size-menuMainItem)',
-                            fontFamily: 'var(--font-family-menuMainItem)',
-                            fontWeight: 'var(--font-weight-menuMainItem)',
-                            letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                            lineHeight: 'var(--line-height-menuMainItem)',
-                            color: openDropdown === index ? '#ffd700' : '#ffffff',
-                          }}
-                        >
-                          {item.label}
-                          <span
-                            className="inline-block transition-all duration-[400ms]"
-                            style={{
-                              width: 0,
-                              height: 0,
-                              borderLeft: '8px solid #ffffff',
-                              borderTop: '5px solid transparent',
-                              borderBottom: '5px solid transparent',
-                              transform: openDropdown === index ? 'rotate(90deg) translateZ(0)' : 'rotate(0deg) translateZ(0)',
-                              borderLeftColor: openDropdown === index ? '#ffe000' : '#ffffff',
-                              filter: openDropdown === index ? 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.8))' : 'none',
-                            }}
-                          />
-                        </button>
-                        <div
-                          className={`mobile-dropdown overflow-hidden pl-4 ${
-                            openDropdown === index ? 'dropdown-open' : 'dropdown-closed'
-                          }`}
-                        >
-                            {item.dropdown.map((dropdownItem, dropdownIndex) => (
-                              <Link
-                                key={dropdownIndex}
-                                href={dropdownItem.href}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                                className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)]"
-                                style={{
-                                  fontSize: 'var(--font-size-menuSubItem)',
-                                  fontFamily: 'var(--font-family-menuSubItem)',
-                                  fontWeight: 'var(--font-weight-menuSubItem)',
-                                  letterSpacing: 'var(--letter-spacing-menuSubItem)',
-                                  lineHeight: 'var(--line-height-menuSubItem)',
-                                  color: 'var(--color-body-text)',
-                                }}
-                              >
-                                {dropdownItem.label}
-                              </Link>
-                            ))}
-                          </div>
-                      </>
-                    ) : item.label === 'Agent Portal' ? (
-                      <Link
-                        href={item.href!}
-                        onClick={() => {
-                          handlePortalClick();
-                          setIsMobileMenuOpen(false);
-                        }}
-                        className={`agent-portal-mobile block px-6 py-4 transition-all duration-300 rounded-lg relative text-white ${isPortalClicked ? 'clicked' : ''}`}
-                        style={{
-                          fontSize: 'var(--font-size-menuMainItem)',
-                          fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                          fontWeight: 'var(--font-weight-menuMainItem)',
-                          letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                          lineHeight: 'var(--line-height-menuMainItem)',
-                          color: 'var(--text-color-menuMainItem)',
-                        }}
-                      >
-                        <span className="agent-portal-styled">
-                          ag<span className="alt-glyph">e</span>
-                          <span className="alt-glyph">n</span>
-                          <span>t</span> po<span className="alt-glyph">r</span>
-                          <span>t</span>al
-                        </span>
-                      </Link>
-                    ) : (
-                      <Link
-                        href={item.href!}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="block px-6 py-4 text-white transition-all duration-300 rounded-lg hover:bg-[rgba(42,42,42,0.8)]"
-                        style={{
-                          fontSize: 'var(--font-size-menuMainItem)',
-                          fontFamily: 'var(--font-family-menuMainItem)',
-                          fontWeight: 'var(--font-weight-menuMainItem)',
-                          letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                          lineHeight: 'var(--line-height-menuMainItem)',
-                          color: 'var(--text-color-menuMainItem)',
-                        }}
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </div>
-                ))}
-
-                {/* Mobile CTA Button */}
-                <div className="pt-8 pb-4 text-center">
-                  <CTAButton href="/join-exp-sponsor-team/">
-                    GET STARTED
-                  </CTAButton>
-                </div>
-              </nav>
-            </div>
-          </div>
+      {/* Mobile Menu Component - Only loaded when hamburger is clicked */}
+      {!is404Page && shouldLoadMobileMenu && (
+        <MobileMenu
+          isPortalClicked={isPortalClicked}
+          handlePortalClick={handlePortalClick}
+          is404Page={is404Page}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+        />
+      )}
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`

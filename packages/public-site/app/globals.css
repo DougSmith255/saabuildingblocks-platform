@@ -1082,26 +1082,7 @@ main {
     animation: fadeOutDown 0.25s ease-in both;
   }
 
-  /* Make mobile menu OverlayScrollbars look like default browser scrollbar */
-  .mobile-menu-overlay .os-scrollbar-handle {
-    background: #3a3a3a !important;
-    border-radius: 0 !important;
-  }
-
-  .mobile-menu-overlay .os-scrollbar-track {
-    background: #1a1a1a !important;
-  }
-
-  .mobile-menu-overlay .os-scrollbar {
-    width: 15px !important;
-  }
-
-  /* Prevent content from going under scrollbar */
-  .mobile-menu-overlay .mobile-menu-content {
-    padding-right: 15px !important;
-  }
-
-  /* Make browser scrollbar match mobile menu scrollbar */
+  /* Browser scrollbar styling for mobile menu and all pages */
   ::-webkit-scrollbar {
     width: 15px;
   }

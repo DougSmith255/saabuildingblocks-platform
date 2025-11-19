@@ -97,12 +97,29 @@ async function findUsedImages(): Promise<Set<string>> {
   for (const file of htmlFiles) {
     const content = await fs.readFile(file, 'utf-8');
 
-    // Match image URLs in src, srcset, data-src, etc.
+    // Match image URLs in src, srcset, data-src, href attributes
     const imgRegex = /(src|srcset|data-src|href)=["']([^"']+)["']/gi;
     let match;
 
     while ((match = imgRegex.exec(content)) !== null) {
       const url = match[2];
+
+      // Check if it's a WordPress image
+      if (wpDomains.some(domain => url.includes(domain)) &&
+          /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)) {
+        // Normalize URL (remove query params, ensure https)
+        const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
+        imageUrls.add(cleanUrl);
+      }
+    }
+
+    // ALSO match CSS background-image URLs (style="background-image:url(...)")
+    // This catches hero images and other images loaded via inline CSS
+    const cssRegex = /background(?:-image)?:\s*url\((['"]?)([^'"()]+)\1\)/gi;
+    let cssMatch;
+
+    while ((cssMatch = cssRegex.exec(content)) !== null) {
+      const url = cssMatch[2];
 
       // Check if it's a WordPress image
       if (wpDomains.some(domain => url.includes(domain)) &&

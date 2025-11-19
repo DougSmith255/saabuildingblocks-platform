@@ -83,7 +83,7 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'optional', // Never block render - eliminates font-loading delays
+  display: 'swap', // Always swap to custom font once loaded (critical for body text visibility)
   preload: true,
   weight: '100 900',
   fallback: ['monospace'],
