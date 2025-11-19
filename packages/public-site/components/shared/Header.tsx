@@ -297,17 +297,23 @@ export default function Header() {
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
           >
-            <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
+            <svg viewBox="0 0 100 100" className="hamburger-svg" aria-hidden="true" focusable="false">
+              {/* Top curved line - becomes top part of X */}
               <path
-                className="line line-top-bottom"
-                d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
-                stroke="none"
+                className="line line-top"
+                d="M 20,29 H 80 C 80,29 95,29 95,44 95,55 85,60 75,60 L 25,60"
                 fill="none"
               />
+              {/* Middle line - fades out */}
               <path
-                className="line"
-                d="M7 16 27 16"
-                stroke="none"
+                className="line line-middle"
+                d="M 20,50 H 80"
+                fill="none"
+              />
+              {/* Bottom curved line - becomes bottom part of X */}
+              <path
+                className="line line-bottom"
+                d="M 20,71 H 80 C 80,71 95,71 95,56 95,45 85,40 75,40 L 25,40"
                 fill="none"
               />
             </svg>
@@ -605,19 +611,23 @@ export default function Header() {
           }
         }
 
+        /* COMPOSITED BURGER MENU - Uses only transform and opacity */
         .hamburger-svg {
-          height: 3.75em;
-          transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+          width: 60px;
+          height: 60px;
+          display: block;
         }
 
         .line {
           fill: none;
           stroke: #ffd700;
+          stroke-width: 6;
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-width: 3;
-          transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
-                      stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+          transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                      opacity 600ms cubic-bezier(0.4, 0, 0.2, 1);
+          transform-origin: center;
+          will-change: transform, opacity;
         }
 
         /* Force gold stroke at all times - prevent black flash */
@@ -627,18 +637,32 @@ export default function Header() {
           stroke: #ffd700 !important;
         }
 
-        .line-top-bottom {
-          stroke-dasharray: 12 63;
+        /* Default state - hamburger icon */
+        .line-top {
+          transform: translateY(0) rotate(0deg) translateZ(0);
         }
 
-        /* Animate to X when menu is open */
-        .hamburger.menu-open .hamburger-svg {
-          transform: rotate(-45deg);
+        .line-middle {
+          opacity: 1;
+          transform: scaleX(1) translateZ(0);
         }
 
-        .hamburger.menu-open .line-top-bottom {
-          stroke-dasharray: 20 300;
-          stroke-dashoffset: -32.42;
+        .line-bottom {
+          transform: translateY(0) rotate(0deg) translateZ(0);
+        }
+
+        /* Animate to X when menu is open - composited transforms only */
+        .hamburger.menu-open .line-top {
+          transform: translateY(21px) rotate(45deg) translateZ(0);
+        }
+
+        .hamburger.menu-open .line-middle {
+          opacity: 0;
+          transform: scaleX(0) translateZ(0);
+        }
+
+        .hamburger.menu-open .line-bottom {
+          transform: translateY(-21px) rotate(-45deg) translateZ(0);
         }
 
         /* Responsive adjustments */

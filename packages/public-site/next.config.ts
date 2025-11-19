@@ -81,6 +81,54 @@ const nextConfig: NextConfig = {
     // Type checking happens in workspace root
     ignoreBuildErrors: false,
   },
+
+  // Webpack optimizations to reduce long main-thread tasks
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Split chunks more aggressively to avoid long main-thread tasks
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            // Split large vendor libraries into separate chunks
+            default: false,
+            vendors: false,
+            // Framework chunk (React, Next.js core)
+            framework: {
+              name: 'framework',
+              chunks: 'all',
+              test: /[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+              priority: 40,
+              enforce: true,
+            },
+            // Common libraries chunk
+            lib: {
+              test: /[\\/]node_modules[\\/]/,
+              name(module: any) {
+                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1];
+                return `npm.${packageName?.replace('@', '')}`;
+              },
+              priority: 30,
+              minChunks: 1,
+              reuseExistingChunk: true,
+            },
+            // Commons chunk for shared code
+            commons: {
+              name: 'commons',
+              minChunks: 2,
+              priority: 20,
+            },
+          },
+          // Limit max initial requests to avoid too many small chunks
+          maxInitialRequests: 25,
+          // Minimum size for a chunk to be generated (20KB)
+          minSize: 20000,
+        },
+      };
+    }
+    return config;
+  },
 };
 
 export default withBundleAnalyzer(nextConfig);
