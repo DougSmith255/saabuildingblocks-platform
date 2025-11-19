@@ -598,8 +598,8 @@ export default function Header() {
 
         /* COMPOSITED HAMBURGER: Uses only transform and opacity (GPU-accelerated) */
         .hamburger-svg {
-          width: 24px;
-          height: 24px;
+          width: 60px;
+          height: 60px;
         }
 
         .line {

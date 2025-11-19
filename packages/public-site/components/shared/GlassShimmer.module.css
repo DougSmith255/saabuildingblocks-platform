@@ -62,21 +62,20 @@
   overflow: hidden;
 }
 
-/* Shimmer animation using transform on pseudo-element */
+/* Static shimmer gradient (no animation) */
 .shimmerLayer::before {
   content: '';
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    45deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(255, 255, 255, 0.30) 25%,
-    rgba(255, 255, 255, 0.50) 50%,
-    rgba(255, 255, 255, 0.28) 75%,
-    rgba(255, 255, 255, 0.12) 100%
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0.25) 40%,
+    rgba(255, 255, 255, 0.15) 60%,
+    rgba(255, 255, 255, 0.05) 80%,
+    rgba(255, 255, 255, 0.02) 100%
   );
-  background-size: 200% 100%;
-  animation: radarShimmer 6s ease-in-out infinite;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -88,36 +87,11 @@
   display: none;
 }
 
-/* Radar Interface shimmer animation - ENHANCED SWEEP */
-@keyframes radarShimmer {
-  0%, 100% {
-    transform: translateX(-100%) translateZ(0);
-    filter: brightness(1.1);
-  }
-  50% {
-    transform: translateX(0%) translateZ(0);
-    filter: brightness(2.2);
-  }
-}
-
-/* Performance optimization: reduce motion for accessibility */
-@media (prefers-reduced-motion: reduce) {
-  .shimmerLayer {
-    animation: none;
-    opacity: 0.4;
-  }
-}
-
-/* Mobile optimization: slower breathing on smaller screens */
+/* Mobile optimization */
 @media (max-width: 768px) {
   .glassBase {
     backdrop-filter: blur(28px) saturate(1.4);
     -webkit-backdrop-filter: blur(28px) saturate(1.4);
-  }
-
-  .shimmerLayer {
-    animation-duration: 6s;
-    background-size: 350% 100%;
   }
 }
 
