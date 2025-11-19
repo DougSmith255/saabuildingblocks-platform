@@ -68,8 +68,9 @@ async function findUsedImages(): Promise<Set<string>> {
 
   const imageUrls = new Set<string>();
   const htmlFiles: string[] = [];
+  const jsonFiles: string[] = [];
 
-  // Recursively find all HTML files
+  // Recursively find all HTML and JSON files
   async function walkDir(dir: string) {
     const entries = await fs.readdir(dir, { withFileTypes: true });
 
@@ -80,12 +81,15 @@ async function findUsedImages(): Promise<Set<string>> {
         await walkDir(fullPath);
       } else if (entry.name.endsWith('.html')) {
         htmlFiles.push(fullPath);
+      } else if (entry.name.endsWith('.json') && entry.name.startsWith('blog-posts-chunk-')) {
+        jsonFiles.push(fullPath);
       }
     }
   }
 
   await walkDir(OUT_DIR);
-  console.log(`  ✅ Found ${htmlFiles.length} HTML files\n`);
+  console.log(`  ✅ Found ${htmlFiles.length} HTML files`);
+  console.log(`  ✅ Found ${jsonFiles.length} blog post JSON files\n`);
 
   // Extract WordPress image URLs from HTML
   const wpDomains = [
@@ -127,6 +131,27 @@ async function findUsedImages(): Promise<Set<string>> {
         // Normalize URL (remove query params, ensure https)
         const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
         imageUrls.add(cleanUrl);
+      }
+    }
+  }
+
+  // Extract WordPress image URLs from blog post JSON files
+  for (const file of jsonFiles) {
+    const content = await fs.readFile(file, 'utf-8');
+    const blogPosts = JSON.parse(content);
+
+    // Iterate through blog posts and extract featured image URLs
+    for (const post of blogPosts) {
+      if (post.featuredImage && post.featuredImage.url) {
+        const url = post.featuredImage.url;
+
+        // Check if it's a WordPress image
+        if (wpDomains.some(domain => url.includes(domain)) &&
+            /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)) {
+          // Normalize URL (remove query params, ensure https)
+          const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
+          imageUrls.add(cleanUrl);
+        }
       }
     }
   }
@@ -210,6 +235,44 @@ async function uploadToCloudflare(
 
     if (!response.ok) {
       const errorText = await response.text();
+      const errorData = JSON.parse(errorText);
+
+      // Handle 409: Image already exists - fetch existing image info
+      if (response.status === 409) {
+        console.log(`    ⏭️  Image already exists in Cloudflare, fetching info...`);
+
+        // Fetch existing image details by ID
+        const getResponse = await fetch(
+          `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/images/v1/${imageId}`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+            },
+          }
+        );
+
+        if (getResponse.ok) {
+          const getData: CloudflareImageResponse = await getResponse.json();
+
+          // Get image size
+          const sizeResponse = await fetch(imageUrl, { method: 'HEAD' });
+          const size = parseInt(sizeResponse.headers.get('content-length') || '0');
+
+          const mapping: ImageMapping = {
+            wordpressUrl: imageUrl,
+            cloudflareId: getData.result.id,
+            cloudflareUrl: `https://imagedelivery.net/${CLOUDFLARE_IMAGES_HASH}/${getData.result.id}/public`,
+            hash,
+            uploadedAt: getData.result.uploaded,
+            size,
+          };
+
+          console.log(`    ✅ Retrieved existing: ${mapping.cloudflareUrl}`);
+          return mapping;
+        }
+      }
+
       throw new Error(`Upload failed (${response.status}): ${errorText}`);
     }
 

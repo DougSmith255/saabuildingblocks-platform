@@ -2,26 +2,17 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import styles from './GlassShimmer.module.css';
 import { usePathname } from 'next/navigation';
 import { CTAButton } from '@saa/shared/components/saa';
+import DesktopNav from './DesktopNav';
+import MobileMenu from './MobileMenu';
 
 // Breakpoint: 1450px (90.625rem) - matches xlg breakpoint
+// Desktop nav shows at ≥1450px, mobile menu shows at <1450px
 const DESKTOP_BREAKPOINT = 1450;
 
-// Lazy-load nav components for code splitting
-const DesktopNav = dynamic(() => import('./DesktopNav'), {
-  ssr: false,
-});
-
-const MobileMenu = dynamic(() => import('./MobileMenu'), {
-  ssr: false,
-});
-
 export default function Header() {
-  // Screen size detection for code splitting
-  const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [shouldLoadMobileMenu, setShouldLoadMobileMenu] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
@@ -44,26 +35,6 @@ export default function Header() {
   });
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Detect screen size for conditional rendering
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
-    };
-
-    checkScreenSize();
-
-    // Listen for resize events
-    const handleResize = () => {
-      checkScreenSize();
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
 
   // Track mount state
   useEffect(() => {
@@ -274,9 +245,11 @@ export default function Header() {
             </Link>
             )}
 
-            {/* Desktop Navigation - Only loads on desktop (≥1450px) - Hidden on 404 */}
-            {!is404Page && isDesktop !== null && isDesktop && (
-              <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
+            {/* Desktop Navigation - Always render, CSS hides on mobile - Hidden on 404 */}
+            {!is404Page && (
+              <div className="hidden xlg:block">
+                <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
+              </div>
             )}
 
           {/* Go Home Button - Only on 404 */}
