@@ -297,10 +297,19 @@ export default function Header() {
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
           >
-            <svg viewBox="0 0 24 24" className="hamburger-svg" aria-hidden="true" focusable="false">
-              <line className="line line-top" x1="3" y1="6" x2="21" y2="6" />
-              <line className="line line-middle" x1="3" y1="12" x2="21" y2="12" />
-              <line className="line line-bottom" x1="3" y1="18" x2="21" y2="18" />
+            <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
+              <path
+                className="line line-top-bottom"
+                d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                stroke="none"
+                fill="none"
+              />
+              <path
+                className="line"
+                d="M7 16 27 16"
+                stroke="none"
+                fill="none"
+              />
             </svg>
           </button>
         )}
@@ -596,10 +605,9 @@ export default function Header() {
           }
         }
 
-        /* COMPOSITED HAMBURGER: Uses only transform and opacity (GPU-accelerated) */
         .hamburger-svg {
-          width: 60px;
-          height: 60px;
+          height: 3.75em;
+          transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .line {
@@ -607,11 +615,9 @@ export default function Header() {
           stroke: #ffd700;
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-width: 2;
-          transition: transform 400ms cubic-bezier(0.4, 0, 0.2, 1),
-                      opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
-          transform-origin: center;
-          will-change: transform, opacity;
+          stroke-width: 3;
+          transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+                      stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Force gold stroke at all times - prevent black flash */
@@ -621,32 +627,18 @@ export default function Header() {
           stroke: #ffd700 !important;
         }
 
-        /* Default state - three horizontal lines */
-        .line-top {
-          transform: translateY(0) rotate(0deg) translateZ(0);
-        }
-
-        .line-middle {
-          opacity: 1;
-          transform: scaleX(1) translateZ(0);
-        }
-
-        .line-bottom {
-          transform: translateY(0) rotate(0deg) translateZ(0);
+        .line-top-bottom {
+          stroke-dasharray: 12 63;
         }
 
         /* Animate to X when menu is open */
-        .hamburger.menu-open .line-top {
-          transform: translateY(6px) rotate(45deg) translateZ(0);
+        .hamburger.menu-open .hamburger-svg {
+          transform: rotate(-45deg);
         }
 
-        .hamburger.menu-open .line-middle {
-          opacity: 0;
-          transform: scaleX(0) translateZ(0);
-        }
-
-        .hamburger.menu-open .line-bottom {
-          transform: translateY(-6px) rotate(-45deg) translateZ(0);
+        .hamburger.menu-open .line-top-bottom {
+          stroke-dasharray: 20 300;
+          stroke-dashoffset: -32.42;
         }
 
         /* Responsive adjustments */
