@@ -222,7 +222,7 @@ jobs:
           for attempt in 1 2 3; do
             echo "🚀 Deployment attempt $attempt/3..."
             # Run from packages/public-site/ so wrangler detects ./functions directory
-            if wrangler pages deploy ./out --project-name=saabuildingblocks --branch=main --commit-dirty=true --production; then
+            if wrangler pages deploy ./out --project-name=saabuildingblocks --branch=main --commit-dirty=true; then
               echo "✅ Deployment successful on attempt $attempt"
               echo "status=success" >> $GITHUB_OUTPUT
               exit 0
