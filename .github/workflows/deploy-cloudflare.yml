@@ -112,6 +112,14 @@ jobs:
             echo "⚠️  Static CSS not generated, proceeding without it"
           fi
 
+      # Build shared package first (required for public-site to use updated components)
+      - name: Build shared package
+        run: |
+          echo "🔨 Building shared package..."
+          cd packages/shared
+          npm run build
+          echo "✅ Shared package built"
+
       # Clean Next.js cache before build
       - name: Clean Next.js cache
         run: |
