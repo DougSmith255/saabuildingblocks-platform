@@ -187,18 +187,18 @@ p a {
 /* COMPOSITED: Uses only transform and opacity (GPU-accelerated) */
 .hamburger {
   position: fixed;
-  top: calc((clamp(76px, calc(8vh + 16px), 106px) - 60px) / 2);
+  top: calc((clamp(76px, calc(8vh + 16px), 106px) - 45px) / 2);
   right: 15px;
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   cursor: pointer;
   background-color: transparent;
   border: none;
 }
 
 .hamburger-svg {
-  width: 24px;
-  height: 24px;
+  width: 45px;
+  height: 45px;
 }
 
 .line {
@@ -206,7 +206,7 @@ p a {
   stroke: #ffd700;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 2;
+  stroke-width: 3;
 }
 
 /* Header Container - Prevent height change on hydration */

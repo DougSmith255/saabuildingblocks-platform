@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // TODO: Store import removed for monorepo - needs Context provider pattern
 // import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
 
@@ -16,12 +16,13 @@ export interface CTAButtonProps {
 export function CTAButton({ href = '#', children, className = '', onClick, heroAnimate = false, animationDelay: heroAnimationDelay = '1.0s' }: CTAButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
-  const [lightPulseDelay, setLightPulseDelay] = useState('0s');
-
-  useEffect(() => {
+  // Initialize with a function to generate random delay immediately during render
+  // This ensures both SSR and CSR get a random value, avoiding hydration mismatch
+  const [lightPulseDelay] = useState(() => {
+    // Use lazy initialization - this runs once during component creation
     const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds for light pulse
-    setLightPulseDelay(`${randomDelay.toFixed(2)}s`);
-  }, []);
+    return `${randomDelay.toFixed(2)}s`;
+  });
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';

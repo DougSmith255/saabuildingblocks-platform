@@ -53,8 +53,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="nav hidden xlg:flex items-center gap-0" role="navigation" aria-label="Main navigation">
+      {/* Desktop Navigation - Centered in grid */}
+      <nav className="nav hidden xlg:flex items-center gap-0 justify-center" role="navigation" aria-label="Main navigation">
         {navItems.map((item, index) => (
           <div
             key={index}
@@ -164,8 +164,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
         ))}
       </nav>
 
-      {/* CTA Button (Desktop) */}
-      <div className="header-btn hidden xlg:flex items-center">
+      {/* CTA Button (Desktop) - Right-aligned in grid */}
+      <div className="header-btn hidden xlg:flex items-center justify-end">
         <CTAButton href="/join-exp-sponsor-team/">
           GET STARTED
         </CTAButton>

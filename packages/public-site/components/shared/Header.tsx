@@ -199,9 +199,10 @@ export default function Header() {
               margin: is404Page ? '0 auto' : '0',
               padding: '8px 15px',
               boxSizing: 'border-box',
-              display: 'flex',
+              display: is404Page ? 'flex' : 'grid',
+              gridTemplateColumns: is404Page ? 'unset' : '1fr auto 1fr',
               alignItems: 'center',
-              justifyContent: is404Page ? 'center' : 'space-between',
+              justifyContent: is404Page ? 'center' : 'unset',
               height: 'auto',
               minHeight: 'clamp(60px, 8vh, 90px)',
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -633,6 +634,14 @@ export default function Header() {
         @media (max-width: 90.625rem) {
           .header-container {
             min-height: calc(clamp(60px, 8vh, 90px) + 15px) !important;
+          }
+        }
+
+        /* Desktop grid layout for perfect centering */
+        @media (min-width: 90.625rem) {
+          .header-container {
+            display: grid !important;
+            grid-template-columns: 1fr auto 1fr !important;
           }
         }
 
