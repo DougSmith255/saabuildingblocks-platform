@@ -89,17 +89,17 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   const ButtonElement = as === 'button' ? 'button' : 'a';
 
   return (
-    <div
-      className={`
-        ${className}
-        group
-        relative flex justify-center items-center
-        !my-[10px]
-        py-2
-      `}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <div className="py-2">
+      <div
+        className={`
+          ${className}
+          group
+          relative flex justify-center items-center
+          !my-[10px]
+        `}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
       <ButtonElement
         {...(as === 'a' ? { href } : { type: 'button' as const })}
         onClick={handleClick}
@@ -192,6 +192,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           animation-delay: var(--pulse-delay, 0s);
         }
       `}</style>
+      </div>
     </div>
   );
 }

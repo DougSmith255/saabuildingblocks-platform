@@ -64,7 +64,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
         style={{
           position: 'absolute',
           left: '50%',
-          transform: 'translateX(-50%)',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
           zIndex: 1,
         }}
       >
@@ -135,6 +136,28 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
                   ))}
                 </div>
               </>
+            ) : item.label === 'Agent Portal' ? (
+              <Link
+                href={item.href!}
+                onClick={handlePortalClick}
+                className={`nav-link agent-portal flex items-center px-5 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
+                style={{
+                  fontSize: 'var(--font-size-menuMainItem)',
+                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                  fontWeight: 'var(--font-weight-menuMainItem)',
+                  letterSpacing: 'var(--letter-spacing-menuMainItem)',
+                  lineHeight: 'var(--line-height-menuMainItem)',
+                  color: 'var(--text-color-menuMainItem)',
+                  willChange: 'background-color, color',
+                }}
+              >
+                <span className="agent-portal-styled">
+                  ag<span className="alt-glyph">e</span>
+                  <span className="alt-glyph">n</span>
+                  <span>t</span> po<span className="alt-glyph">r</span>
+                  <span>t</span>al
+                </span>
+              </Link>
             ) : (
               <Link
                 href={item.href!}
