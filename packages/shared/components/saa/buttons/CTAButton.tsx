@@ -52,6 +52,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
         group
         relative ${isFullWidth ? 'flex' : 'inline-flex w-fit'} justify-center items-center
         !my-[10px]
+        py-2
         ${heroAnimate ? 'hero-entrance-animate' : ''}
       `}
       style={heroAnimate ? {

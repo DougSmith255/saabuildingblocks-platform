@@ -51,8 +51,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
     return null;
   }
 
-  // Split navItems into navigation (first 3) and "Agent Portal" separately
-  const navigationItems = navItems.slice(0, 3);
+  // Render all navigation items including Resources and Agent Portal
+  const navigationItems = navItems;
 
   return (
     <>

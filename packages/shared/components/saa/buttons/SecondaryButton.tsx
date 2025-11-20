@@ -95,6 +95,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         group
         relative flex justify-center items-center
         !my-[10px]
+        py-2
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
