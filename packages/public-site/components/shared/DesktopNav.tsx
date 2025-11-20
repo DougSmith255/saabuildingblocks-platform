@@ -51,11 +51,24 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
     return null;
   }
 
+  // Split navItems into navigation (first 3) and "Agent Portal" separately
+  const navigationItems = navItems.slice(0, 3);
+
   return (
     <>
-      {/* Desktop Navigation - Centered in grid */}
-      <nav className="nav hidden xlg:flex items-center gap-0 justify-center" role="navigation" aria-label="Main navigation">
-        {navItems.map((item, index) => (
+      {/* Desktop Navigation - Centered with absolute positioning */}
+      <nav
+        className="nav hidden xlg:flex items-center gap-0"
+        role="navigation"
+        aria-label="Main navigation"
+        style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1,
+        }}
+      >
+        {navigationItems.map((item, index) => (
           <div
             key={index}
             className="nav-item relative"
@@ -122,28 +135,6 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
                   ))}
                 </div>
               </>
-            ) : item.label === 'Agent Portal' ? (
-              <Link
-                href={item.href!}
-                onClick={handlePortalClick}
-                className={`nav-link agent-portal flex items-center px-5 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
-                style={{
-                  fontSize: 'var(--font-size-menuMainItem)',
-                  fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
-                  fontWeight: 'var(--font-weight-menuMainItem)',
-                  letterSpacing: 'var(--letter-spacing-menuMainItem)',
-                  lineHeight: 'var(--line-height-menuMainItem)',
-                  color: 'var(--text-color-menuMainItem)',
-                  willChange: 'background-color, color',
-                }}
-              >
-                <span className="agent-portal-styled">
-                  ag<span className="alt-glyph">e</span>
-                  <span className="alt-glyph">n</span>
-                  <span>t</span> po<span className="alt-glyph">r</span>
-                  <span>t</span>al
-                </span>
-              </Link>
             ) : (
               <Link
                 href={item.href!}
@@ -164,8 +155,8 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
         ))}
       </nav>
 
-      {/* CTA Button (Desktop) - Right-aligned in grid */}
-      <div className="header-btn hidden xlg:flex items-center justify-end">
+      {/* CTA Button (Desktop) - Right-aligned */}
+      <div className="header-btn hidden xlg:flex items-center">
         <CTAButton href="/join-exp-sponsor-team/">
           GET STARTED
         </CTAButton>

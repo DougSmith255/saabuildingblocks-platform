@@ -197,12 +197,11 @@ export default function Header() {
               width: '100%',
               maxWidth: is404Page ? 'min(400px, 95%)' : '100%',
               margin: is404Page ? '0 auto' : '0',
-              padding: '8px 15px',
+              padding: '8px 32px',
               boxSizing: 'border-box',
-              display: is404Page ? 'flex' : 'grid',
-              gridTemplateColumns: is404Page ? 'unset' : '1fr auto 1fr',
+              display: 'flex',
               alignItems: 'center',
-              justifyContent: is404Page ? 'center' : 'unset',
+              justifyContent: is404Page ? 'center' : 'space-between',
               height: 'auto',
               minHeight: 'clamp(60px, 8vh, 90px)',
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -558,11 +557,11 @@ export default function Header() {
           position: fixed;
           /* Center vertically within header: clamp(60px, 8vh, 90px) + 16px padding (8px top + 8px bottom) */
           /* Total height: clamp(76px, calc(8vh + 16px), 106px) */
-          /* Button is 45px tall, so center = (total height - button height) / 2 */
-          top: calc((clamp(76px, calc(8vh + 16px), 106px) - 45px) / 2);
+          /* Button is 70px tall, so center = (total height - button height) / 2 */
+          top: calc((clamp(76px, calc(8vh + 16px), 106px) - 70px) / 2);
           right: 15px;
-          width: 45px;
-          height: 45px;
+          width: 70px;
+          height: 70px;
           will-change: transform;
         }
 
@@ -580,8 +579,8 @@ export default function Header() {
         }
 
         .hamburger-svg {
-          width: 45px;
-          height: 45px;
+          width: 70px;
+          height: 70px;
           transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -590,7 +589,7 @@ export default function Header() {
           stroke: #ffd700;
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-width: 3;
+          stroke-width: 4;
           transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
                       stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -637,14 +636,6 @@ export default function Header() {
           }
         }
 
-        /* Desktop grid layout for perfect centering */
-        @media (min-width: 90.625rem) {
-          .header-container {
-            display: grid !important;
-            grid-template-columns: 1fr auto 1fr !important;
-          }
-        }
-
         @media (max-width: 550px) {
           .header-container {
             padding-left: 15px !important;
@@ -653,6 +644,14 @@ export default function Header() {
           .header-container .header-btn,
           .header-container .cta-button {
             display: none !important;
+          }
+        }
+
+        /* Ensure header container maintains flexbox on desktop */
+        @media (min-width: 90.625rem) {
+          .header-container {
+            padding-left: 32px !important;
+            padding-right: 32px !important;
           }
         }
       `}</style>

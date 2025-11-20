@@ -118,7 +118,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           width: '10px',
           height: '44.8px', // 80% of 56px - base size
           borderRadius: '6px',
-          transform: `translateY(-50%) translateZ(0) scaleY(${isHovered ? 1 : 0.4018})`, // 18px / 44.8px = 0.4018
+          transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`, // Firefox-compatible: removed translateZ(0) and using scale() instead of scaleY()
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
@@ -140,7 +140,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           width: '10px',
           height: '44.8px', // 80% of 56px - base size
           borderRadius: '6px',
-          transform: `translateY(-50%) translateZ(0) scaleY(${isHovered ? 1 : 0.4018})`, // 18px / 44.8px = 0.4018
+          transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`, // Firefox-compatible: removed translateZ(0) and using scale() instead of scaleY()
           background: isClicked ? brandGreen : '#ffd700',
           boxShadow: isClicked
             ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
@@ -168,19 +168,20 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           filter: blur(15px);
           opacity: 0.8;
           z-index: -1;
-          transform: translateZ(0); /* GPU compositing */
+          /* Removed translateZ(0) - Firefox doesn't like mixing 3D/2D transforms */
           will-change: transform, opacity; /* Hint for compositor */
         }
 
         /* Pulsing animation for glow only - DRAMATIC - uses compositor-friendly properties */
+        /* Firefox-compatible: using scale() only, no translateZ() */
         @keyframes lightPulse {
           0%, 100% {
             opacity: 1;
-            transform: translateZ(0) scale(1);
+            transform: scale(1);
           }
           50% {
             opacity: 0.3;
-            transform: translateZ(0) scale(1.8);
+            transform: scale(1.8);
           }
         }
 

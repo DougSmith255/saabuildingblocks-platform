@@ -145,19 +145,20 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
           filter: blur(15px);
           opacity: 0.8;
           z-index: -1;
-          transform: translateZ(0); /* GPU compositing */
+          /* Removed translateZ(0) from here - will be handled by animation */
           will-change: transform, opacity; /* Hint for compositor */
         }
 
         /* Pulsing animation for glow only - DRAMATIC - uses compositor-friendly properties */
+        /* Firefox-compatible: using scale() instead of scaleY() + translateZ() */
         @keyframes lightPulse {
           0%, 100% {
             opacity: 1;
-            transform: translateZ(0) scaleY(1);
+            transform: scale(1);
           }
           50% {
             opacity: 0.3;
-            transform: translateZ(0) scaleY(1.8);
+            transform: scale(1.8);
           }
         }
 
