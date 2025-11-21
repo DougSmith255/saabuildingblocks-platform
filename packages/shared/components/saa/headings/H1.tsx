@@ -86,7 +86,7 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                 }}
               >
                 {displayChar}
-                {/* Static neon glow (always on, no flicker initially) */}
+                {/* Neon glow with flicker animation */}
                 <span
                   aria-hidden="true"
                   style={{
@@ -110,6 +110,7 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                     `,
                     transform: 'translateZ(1px)',
                     pointerEvents: 'none',
+                    animation: `neonFlicker${((charIndex + wordIndex) % 10) + 1} 5s linear infinite`,
                   }}
                 >
                   {displayChar}
