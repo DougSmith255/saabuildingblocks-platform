@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTokenVaultStore } from '../../stores/tokenVaultStore';
-import { validateMasterPassword } from '@/lib/encryption/tokenVault';
 import type { Token } from '../../stores/tokenVaultStore';
 
 interface AddTokenFormProps {
@@ -11,9 +9,6 @@ interface AddTokenFormProps {
 }
 
 export const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAdded }) => {
-  const { addToken } = useTokenVaultStore();
-
-  const [step, setStep] = useState<1 | 2>(1); // Step 1: Token details, Step 2: Master password
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,16 +26,13 @@ export const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAdded }) 
     tags: ''
   });
 
-  // Master password
-  const [masterPassword, setMasterPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
   // Common service names and token types
   const commonServices = [
     'Cloudflare',
     'Supabase',
     'GitHub',
     'WordPress',
+    'Postiz',
     'n8n',
     'GoHighLevel',
     'Stripe',
@@ -66,61 +58,54 @@ export const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAdded }) 
     'Other'
   ];
 
-  // Validate step 1
-  const validateStep1 = () => {
-    if (!formData.serviceName.trim()) {
-      setError('Service name is required');
-      return false;
-    }
-    if (!formData.tokenType.trim()) {
-      setError('Token type is required');
-      return false;
-    }
-    if (!formData.tokenValue.trim()) {
-      setError('Token value is required');
-      return false;
-    }
-    return true;
-  };
-
-  // Handle step 1 next
-  const handleStep1Next = () => {
-    setError('');
-    if (validateStep1()) {
-      setStep(2);
-    }
-  };
-
-  // Handle final submit
+  // Handle submit directly (no password required)
   const handleSubmit = async () => {
     setError('');
 
-    if (!masterPassword) {
-      setError('Master password is required');
+    // Validate required fields
+    if (!formData.serviceName.trim()) {
+      setError('Service name is required');
       return;
     }
-
-    const validation = validateMasterPassword(masterPassword);
-    if (!validation.valid) {
-      setError(validation.errors[0]);
+    if (!formData.tokenType.trim()) {
+      setError('Token type is required');
+      return;
+    }
+    if (!formData.tokenValue.trim()) {
+      setError('Token value is required');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
-      await addToken({
-        serviceName: formData.serviceName,
-        tokenType: formData.tokenType,
-        encryptedValue: formData.tokenValue, // Will be encrypted by addToken
-        regenerationUrl: formData.regenerationUrl || undefined,
-        regenerationInstructions: formData.regenerationInstructions || undefined,
-        expirationDate: formData.expirationDate || undefined,
-        usageNotes: formData.usageNotes || undefined,
-        priority: formData.priority,
+      // Store token as plain JSON (no encryption)
+      const tokenData = {
+        service_name: formData.serviceName,
+        token_type: formData.tokenType,
+        encrypted_value: JSON.stringify({
+          ciphertext: formData.tokenValue,
+          iv: 'not_encrypted',
+          salt: 'not_encrypted'
+        }),
+        regeneration_url: formData.regenerationUrl || undefined,
+        regeneration_instructions: formData.regenerationInstructions || undefined,
+        expiration_date: formData.expirationDate || undefined,
+        usage_notes: formData.usageNotes || undefined,
         status: formData.status,
+        priority: formData.priority,
         tags: formData.tags.split(',').map(t => t.trim()).filter(Boolean)
-      } as any, masterPassword);
+      };
+
+      // Insert directly via Supabase
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+
+      const { error: insertError } = await supabase
+        .from('master_controller_tokens')
+        .insert(tokenData);
+
+      if (insertError) throw insertError;
 
       onAdded?.();
       onClose();
@@ -137,10 +122,10 @@ export const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAdded }) 
         <div className="sticky top-0 bg-[#191818] border-b border-[#404040] p-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-semibold text-[#e5e4dd]">
-              {step === 1 ? 'Add New Token' : 'Encrypt & Save'}
+              Add New Token
             </h2>
             <p className="text-sm text-[#dcdbd5] mt-1">
-              {step === 1 ? 'Step 1 of 2: Enter token details' : 'Step 2 of 2: Confirm with master password'}
+              Enter your credentials or API keys to store in the vault
             </p>
           </div>
           <button
@@ -159,10 +144,7 @@ export const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAdded }) 
         )}
 
         {/* Form Content */}
-        <div className="p-6 space-y-6">
-          {step === 1 ? (
-            <>
-              {/* Step 1: Token Details */}
+        <div className="p-6 space-y-6">{/* Token Details */}
 
               {/* Service Name */}
               <div>
@@ -342,125 +324,35 @@ export const AddTokenForm: React.FC<AddTokenFormProps> = ({ onClose, onAdded }) 
                            focus:outline-none focus:border-[#00ff88] transition-colors"
                 />
               </div>
-            </>
-          ) : (
-            <>
-              {/* Step 2: Master Password Confirmation */}
-
-              {/* Summary of what will be saved */}
-              <div className="p-4 rounded-lg bg-[#404040]/30 border border-[#404040]">
-                <h3 className="text-sm font-medium text-[#e5e4dd] mb-3">Token Summary</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-[#dcdbd5]/60">Service:</span>
-                    <span className="text-[#e5e4dd] font-medium">{formData.serviceName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#dcdbd5]/60">Type:</span>
-                    <span className="text-[#e5e4dd]">{formData.tokenType}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#dcdbd5]/60">Priority:</span>
-                    <span className="text-[#e5e4dd]">{formData.priority.toUpperCase()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#dcdbd5]/60">Status:</span>
-                    <span className="text-[#e5e4dd]">{formData.status.toUpperCase()}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Master Password Input */}
-              <div>
-                <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
-                  Master Password <span className="text-[#ff4444]">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={masterPassword}
-                    onChange={(e) => setMasterPassword(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
-                    placeholder="Enter your master password to encrypt"
-                    className="w-full px-4 py-2 bg-[#191818] border border-[#404040] rounded-md
-                             text-[#e5e4dd] placeholder-[#dcdbd5]/40
-                             focus:outline-none focus:border-[#00ff88] transition-colors"
-                    autoFocus
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#dcdbd5] hover:text-[#e5e4dd]"
-                  >
-                    {showPassword ? '👁️' : '👁️‍🗨️'}
-                  </button>
-                </div>
-                <p className="text-xs text-[#dcdbd5]/60 mt-1">
-                  🔒 Your master password is required to encrypt this token
-                </p>
-              </div>
-
-              {/* Security Notice */}
-              <div className="p-4 rounded-lg bg-[#00ff88]/10 border border-[#00ff88]/30">
-                <p className="text-sm text-[#dcdbd5]">
-                  <strong className="text-[#00ff88]">🔐 Security:</strong> Your token will be encrypted with AES-256-GCM
-                  using your master password. The encrypted value will be stored in the database. Your master password
-                  is never stored.
-                </p>
-              </div>
-            </>
-          )}
         </div>
 
         {/* Footer Actions */}
         <div className="sticky bottom-0 bg-[#191818] border-t border-[#404040] p-6 flex justify-between">
-          {step === 1 ? (
-            <>
-              <button
-                onClick={onClose}
-                className="px-4 py-2 rounded-md bg-[#404040] text-[#dcdbd5]
-                         hover:bg-[#404040]/80 transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleStep1Next}
-                className="px-6 py-2 rounded-md bg-[#00ff88] text-[#191818] font-medium
-                         hover:bg-[#00ff88]/90 transition-all"
-              >
-                Next: Encrypt & Save →
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={() => setStep(1)}
-                disabled={isSubmitting}
-                className="px-4 py-2 rounded-md bg-[#404040] text-[#dcdbd5]
-                         hover:bg-[#404040]/80 transition-all disabled:opacity-50"
-              >
-                ← Back
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="px-6 py-2 rounded-md bg-[#00ff88] text-[#191818] font-medium
-                         hover:bg-[#00ff88]/90 transition-all disabled:opacity-50
-                         flex items-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#191818]"></div>
-                    <span>Encrypting...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>💾 Save Token</span>
-                  </>
-                )}
-              </button>
-            </>
-          )}
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-md bg-[#404040] text-[#dcdbd5]
+                     hover:bg-[#404040]/80 transition-all"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="px-6 py-2 rounded-md bg-[#00ff88] text-[#191818] font-medium
+                     hover:bg-[#00ff88]/90 transition-all disabled:opacity-50
+                     flex items-center gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#191818]"></div>
+                <span>Saving...</span>
+              </>
+            ) : (
+              <>
+                <span>💾 Save Token</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>

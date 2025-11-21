@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useTokenVaultStore } from '../../stores/tokenVaultStore';
 import type { Token } from '../../stores/tokenVaultStore';
+import { AddTokenForm } from './AddTokenForm';
 
 export const TokenList: React.FC = () => {
   const {
@@ -17,6 +18,7 @@ export const TokenList: React.FC = () => {
   const [newTokenValue, setNewTokenValue] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [showAddTokenForm, setShowAddTokenForm] = useState(false);
 
   // Load tokens on mount (empty deps to prevent infinite loop)
   useEffect(() => {
@@ -115,6 +117,18 @@ export const TokenList: React.FC = () => {
 
   return (
     <div className="w-full space-y-6">
+      {/* Add Token Button */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => setShowAddTokenForm(true)}
+          className="px-6 py-3 rounded-md bg-[#00ff88] text-[#191818] font-semibold
+                   hover:bg-[#00ff88]/90 transition-all flex items-center gap-2 shadow-lg"
+        >
+          <span className="text-xl">+</span>
+          <span>Add New Token</span>
+        </button>
+      </div>
+
       {/* Expiring Tokens Warning Banner */}
       {expiringTokens.length > 0 && (
         <div className="p-4 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
@@ -315,6 +329,17 @@ export const TokenList: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Add Token Form Modal */}
+      {showAddTokenForm && (
+        <AddTokenForm
+          onClose={() => setShowAddTokenForm(false)}
+          onAdded={() => {
+            fetchTokens();
+            setShowAddTokenForm(false);
+          }}
+        />
       )}
     </div>
   );
