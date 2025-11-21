@@ -74,66 +74,7 @@ export default function CTAButton({ href, children, className = '', onClick }: C
         <div className="absolute inset-0 rounded-md animate-[lightPulseGlow_3s_ease-in-out_infinite]" />
       </div>
 
-      <style jsx>{`
-        @keyframes lightPulse {
-          0%, 100% {
-            opacity: 1;
-            filter: drop-shadow(0 0 5px #ffd700) drop-shadow(0 0 15px #ffd700) drop-shadow(0 0 30px #ffd700) brightness(1.2);
-          }
-          50% {
-            opacity: 0.7;
-            filter: drop-shadow(0 0 8px #ffd700) drop-shadow(0 0 20px #ffd700) drop-shadow(0 0 35px #ffd700) brightness(1.4);
-          }
-        }
-
-        @keyframes lightPulseGlow {
-          0%, 100% {
-            opacity: 0.8;
-            filter: blur(4px) brightness(1.2);
-          }
-          50% {
-            opacity: 1;
-            filter: blur(6px) brightness(1.5);
-          }
-        }
-
-        @keyframes textGlow {
-          0% {
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-          }
-          33% {
-            text-shadow: 0 0 10px rgba(255, 237, 78, 0.5);
-          }
-          66% {
-            text-shadow: 0 0 10px rgba(255, 183, 0, 0.5);
-          }
-          100% {
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-          }
-        }
-
-        .clicked-glow-bottom,
-        .clicked-glow-top {
-          background: #00ff88 !important;
-          filter: drop-shadow(0 0 5px #00ff88) drop-shadow(0 0 15px #00ff88) drop-shadow(0 0 30px #00ff88) brightness(1.3) !important;
-          animation: greenClick 3s ease-out forwards;
-        }
-
-        @keyframes greenClick {
-          0% {
-            background: #00ff88;
-            filter: drop-shadow(0 0 5px #00ff88) drop-shadow(0 0 15px #00ff88) drop-shadow(0 0 30px #00ff88) brightness(1.3);
-          }
-          90% {
-            background: #00ff88;
-            filter: drop-shadow(0 0 5px #00ff88) drop-shadow(0 0 15px #00ff88) drop-shadow(0 0 30px #00ff88) brightness(1.3);
-          }
-          100% {
-            background: #ffd700;
-            filter: drop-shadow(0 0 5px #ffd700) drop-shadow(0 0 15px #ffd700) drop-shadow(0 0 30px #ffd700) brightness(1.2);
-          }
-        }
-      `}</style>
+{/* Animations defined in globals.css for cross-browser compatibility */}
     </div>
   );
 }
