@@ -19,10 +19,7 @@ export default function CTAButton({ href, children, className = '', onClick }: C
   };
 
   return (
-    <div className={`
-      relative inline-flex justify-center items-center
-      ${className}
-    `}>
+    <div className={`relative inline-flex justify-center items-center ${className}`}>
       <a
         href={href}
         onClick={handleClick}
@@ -36,7 +33,7 @@ export default function CTAButton({ href, children, className = '', onClick }: C
           shadow-[0_15px_15px_rgba(0,0,0,0.3)]
           transition-all duration-500
           animate-[textGlow_3s_ease-in-out_infinite]
-          overflow-hidden
+          overflow-visible
 
           before:content-[''] before:absolute before:inset-0
           before:bg-gradient-to-l before:from-white/15 before:to-transparent
@@ -46,33 +43,33 @@ export default function CTAButton({ href, children, className = '', onClick }: C
         `}
       >
         {children}
+
+        {/* Bottom glow bar - half hidden behind button face */}
+        <div className={`
+          absolute left-1/2 -translate-x-1/2 bottom-[-5px]
+          w-[30px] h-[10px] rounded-md
+          bg-gold-primary shadow-gold-glow
+          transition-all duration-500 delay-500
+          animate-[lightPulse_3s_ease-in-out_infinite]
+
+          group-hover:w-4/5
+          ${isClicked ? 'clicked-glow-bottom' : ''}
+        `} />
+
+        {/* Top glow bar - half hidden behind button face */}
+        <div className={`
+          absolute left-1/2 -translate-x-1/2 top-[-5px]
+          w-[30px] h-[10px] rounded-md
+          bg-gold-primary
+          transition-all duration-500 delay-500
+          animate-[lightPulse_3s_ease-in-out_infinite]
+
+          group-hover:w-4/5
+          ${isClicked ? 'clicked-glow-top' : ''}
+        `}>
+          <div className="absolute inset-0 rounded-md animate-[lightPulseGlow_3s_ease-in-out_infinite]" />
+        </div>
       </a>
-
-      {/* Bottom glow bar */}
-      <div className={`
-        absolute left-1/2 -translate-x-1/2 bottom-[-5px]
-        w-[30px] h-[10px] rounded-md
-        bg-gold-primary shadow-gold-glow
-        transition-all duration-500 delay-500
-        animate-[lightPulse_3s_ease-in-out_infinite]
-
-        group-hover:w-4/5
-        ${isClicked ? 'clicked-glow-bottom' : ''}
-      `} />
-
-      {/* Top glow bar */}
-      <div className={`
-        absolute left-1/2 -translate-x-1/2 top-[-5px]
-        w-[30px] h-[10px] rounded-md
-        bg-gold-primary
-        transition-all duration-500 delay-500
-        animate-[lightPulse_3s_ease-in-out_infinite]
-
-        group-hover:w-4/5
-        ${isClicked ? 'clicked-glow-top' : ''}
-      `}>
-        <div className="absolute inset-0 rounded-md animate-[lightPulseGlow_3s_ease-in-out_infinite]" />
-      </div>
 
 {/* Animations defined in globals.css for cross-browser compatibility */}
     </div>
