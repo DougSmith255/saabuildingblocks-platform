@@ -28,23 +28,7 @@ body {
   }
 }
 
-/* Disable text selection and copy/paste site-wide (SEO-safe) */
-* {
-  user-select: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-
-/* Allow selection only for input fields and textareas (important for forms) */
-input,
-textarea,
-[contenteditable="true"] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
-}
+/* Text selection enabled site-wide for accessibility */
 
 /* Counter numbers ONLY use Synonym font - targeted override */
 .counter-numbers {
