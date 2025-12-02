@@ -1,17 +1,20 @@
 'use client';
 
+import Image from 'next/image';
 import { H2 } from '@saa/shared/components/saa';
 
 const teamMembers = [
   {
-    name: 'Doug Damon',
-    role: 'Team Leader',
-    bio: 'Doug brings decades of real estate experience and a passion for helping agents build sustainable businesses. His leadership has helped grow the Smart Agent Alliance into one of the fastest-growing teams at eXp Realty.',
+    name: 'Doug Smart',
+    role: 'Co-Founder & Full-Stack Architect',
+    image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png',
+    bio: "Top 0.1% eXp team builder. Architect of the systems that make passive income possible. This website, the CRMs, the automations—Doug built them all. He transforms complex technology into unfair advantages for agents ready to dominate their market.",
   },
   {
-    name: 'Karrie Damon',
-    role: 'Team Leader',
-    bio: 'Karrie specializes in agent development and training, ensuring every team member has the tools and support they need to thrive. Her dedication to agent success is the foundation of our team culture.',
+    name: 'Karrie Smart',
+    role: 'Co-Founder & Strategic Advisor',
+    image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png',
+    bio: "UC Berkeley Law (top 5%), eXp Certified Mentor, and the strategic mind behind agent success. Built a six-figure business in year one—no cold calls, no door knocking. Now she's engineering the same results for agents who refuse to settle.",
   },
 ];
 
@@ -23,22 +26,26 @@ export function WhoWeAre() {
         <div className="text-center mb-12">
           <H2>Who We Are</H2>
           <p className="text-[#dcdbd5] mt-4 text-lg max-w-3xl mx-auto">
-            Meet the leaders behind the Smart Agent Alliance.
+            The architects of your unfair advantage.
           </p>
         </div>
 
         {/* Team Members */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {teamMembers.map((member, index) => (
             <div
               key={index}
               className="p-6 md:p-8 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
             >
-              {/* Photo placeholder - will add images later */}
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#ffd700]/10 mx-auto mb-6 flex items-center justify-center">
-                <span className="text-3xl md:text-4xl text-[#ffd700] font-bold">
-                  {member.name.split(' ').map(n => n[0]).join('')}
-                </span>
+              {/* Photo */}
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto mb-6 overflow-hidden border-2 border-[#ffd700]/30">
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                />
               </div>
 
               {/* Name */}
@@ -52,7 +59,7 @@ export function WhoWeAre() {
               </p>
 
               {/* Bio */}
-              <p className="text-[#dcdbd5]/80 text-center">
+              <p className="text-[#dcdbd5]/80 text-center leading-relaxed">
                 {member.bio}
               </p>
             </div>
