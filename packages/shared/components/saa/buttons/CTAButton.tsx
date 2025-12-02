@@ -93,13 +93,15 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
       <div
         className={`
           cta-light-bar
-          absolute left-1/2 -translate-x-1/2
           w-[30px] h-[10px] rounded-md
           transition-all duration-500 group-hover:w-4/5
           ${!isClicked ? 'cta-light-bar-pulse' : ''}
         `}
           style={{
-            top: '-5px', // Half of 10px height, so 5px above button edge, 5px behind
+            position: 'absolute',
+            top: '-5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
             background: isClicked ? brandGreen : '#ffd700',
             boxShadow: isClicked
               ? `0 0 3px ${brandGreen}, 0 0 8px ${brandGreen}, 0 -20px 20px ${brandGreen}`
@@ -113,13 +115,15 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
       <div
         className={`
           cta-light-bar
-          absolute left-1/2 -translate-x-1/2
           w-[30px] h-[10px] rounded-md
           transition-all duration-500 group-hover:w-4/5
           ${!isClicked ? 'cta-light-bar-pulse' : ''}
         `}
           style={{
-            bottom: '-5px', // Half of 10px height, so 5px below button edge, 5px behind
+            position: 'absolute',
+            bottom: '-5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
             background: isClicked ? brandGreen : '#ffd700',
             boxShadow: isClicked
               ? `0 0 3px ${brandGreen}, 0 0 8px ${brandGreen}, 0 20px 20px ${brandGreen}`
