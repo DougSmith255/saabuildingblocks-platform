@@ -26,10 +26,11 @@ const BCRYPT_ROUNDS = 12;
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = getSupabaseServiceClient();
+    const { id } = await params;
 
     if (!supabase) {
       return NextResponse.json(
@@ -41,7 +42,7 @@ export async function GET(
     const { data: user, error } = await supabase
       .from('users')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !user) {
@@ -74,10 +75,11 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = getSupabaseServiceClient();
+    const { id } = await params;
 
     if (!supabase) {
       return NextResponse.json(
@@ -143,7 +145,7 @@ export async function PUT(
     const { data: updatedUser, error: updateError } = await supabase
       .from('users')
       .update(updates)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -182,10 +184,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = getSupabaseServiceClient();
+    const { id } = await params;
 
     if (!supabase) {
       return NextResponse.json(
@@ -194,7 +197,7 @@ export async function DELETE(
       );
     }
 
-    const userId = params.id;
+    const userId = id;
 
     // Verify user exists before attempting deletion
     const { data: existingUser, error: checkError } = await supabase

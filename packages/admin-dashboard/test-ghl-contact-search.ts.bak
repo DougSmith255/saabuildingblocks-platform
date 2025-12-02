@@ -1,0 +1,129 @@
+/**
+ * Test GoHighLevel Contact Search API
+ * Try different endpoints and methods to find the correct API format
+ */
+
+const GHL_API_KEY = 'pit-5d46cc6b-dbcf-441c-822e-d69a57dc9a95';
+const GHL_LOCATION_ID = 'wfdo2pKXw0XoQ7zxjIX2';
+const TEST_EMAIL = 'doug@smartagentalliance.com';
+
+async function testContactSearch() {
+  console.log('🔍 Testing GoHighLevel Contact Search API\n');
+
+  // Method 1: POST to /contacts/search
+  console.log('📝 Method 1: POST /contacts/search');
+  try {
+    const response1 = await fetch(
+      `https://services.leadconnectorhq.com/contacts/search`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GHL_API_KEY}`,
+          'Version': '2021-07-28',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          locationId: GHL_LOCATION_ID,
+          email: TEST_EMAIL
+        })
+      }
+    );
+
+    console.log(`   Status: ${response1.status} ${response1.statusText}`);
+    const data1 = await response1.text();
+    console.log(`   Response: ${data1.substring(0, 200)}\n`);
+  } catch (error) {
+    console.error('   Error:', error);
+  }
+
+  // Method 2: GET with query=email
+  console.log('📝 Method 2: GET /contacts?query=email');
+  try {
+    const response2 = await fetch(
+      `https://services.leadconnectorhq.com/contacts/?locationId=${GHL_LOCATION_ID}&query=${TEST_EMAIL}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${GHL_API_KEY}`,
+          'Version': '2021-07-28',
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log(`   Status: ${response2.status} ${response2.statusText}`);
+    const data2 = await response2.text();
+    console.log(`   Response: ${data2.substring(0, 200)}\n`);
+  } catch (error) {
+    console.error('   Error:', error);
+  }
+
+  // Method 3: POST to /contacts/lookup
+  console.log('📝 Method 3: POST /contacts/lookup');
+  try {
+    const response3 = await fetch(
+      `https://services.leadconnectorhq.com/contacts/lookup`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${GHL_API_KEY}`,
+          'Version': '2021-07-28',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          locationId: GHL_LOCATION_ID,
+          email: TEST_EMAIL
+        })
+      }
+    );
+
+    console.log(`   Status: ${response3.status} ${response3.statusText}`);
+    const data3 = await response3.text();
+    console.log(`   Response: ${data3.substring(0, 200)}\n`);
+  } catch (error) {
+    console.error('   Error:', error);
+  }
+
+  // Method 4: GET /contacts/{locationId}/search
+  console.log('📝 Method 4: GET /contacts/{locationId}/search');
+  try {
+    const response4 = await fetch(
+      `https://services.leadconnectorhq.com/contacts/${GHL_LOCATION_ID}/search?query=${TEST_EMAIL}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${GHL_API_KEY}`,
+          'Version': '2021-07-28',
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log(`   Status: ${response4.status} ${response4.statusText}`);
+    const data4 = await response4.text();
+    console.log(`   Response: ${data4.substring(0, 200)}\n`);
+  } catch (error) {
+    console.error('   Error:', error);
+  }
+
+  // Method 5: GET /locations/{locationId}/contacts with filter
+  console.log('📝 Method 5: GET /locations/{locationId}/contacts');
+  try {
+    const response5 = await fetch(
+      `https://services.leadconnectorhq.com/locations/${GHL_LOCATION_ID}/contacts?email=${TEST_EMAIL}`,
+      {
+        headers: {
+          'Authorization': `Bearer ${GHL_API_KEY}`,
+          'Version': '2021-07-28',
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    console.log(`   Status: ${response5.status} ${response5.statusText}`);
+    const data5 = await response5.text();
+    console.log(`   Response: ${data5.substring(0, 200)}\n`);
+  } catch (error) {
+    console.error('   Error:', error);
+  }
+}
+
+testContactSearch();

@@ -21,10 +21,11 @@ export async function generateStaticParams() {
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = getSupabaseServiceClient();
+    const { id } = await params;
 
     if (!supabase) {
       return NextResponse.json(
@@ -51,7 +52,7 @@ export async function PATCH(
         role,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 

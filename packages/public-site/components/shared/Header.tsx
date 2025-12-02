@@ -589,7 +589,7 @@ export default function Header() {
           stroke: #ffd700;
           stroke-linecap: round;
           stroke-linejoin: round;
-          stroke-width: 3;
+          stroke-width: 2;
           transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
                       stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }

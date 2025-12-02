@@ -29,26 +29,6 @@ const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container
 export default function Home() {
   return (
     <main id="main-content">
-      {/* DEBUG: Big yellow circle to test deployment */}
-      <div style={{
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '300px',
-        height: '300px',
-        borderRadius: '50%',
-        backgroundColor: 'yellow',
-        zIndex: 99999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '24px',
-        fontWeight: 'bold',
-        color: 'black',
-      }}>
-        DEPLOYMENT TEST
-      </div>
       {/* Hero Section */}
       <section
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"

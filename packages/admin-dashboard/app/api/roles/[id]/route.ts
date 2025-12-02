@@ -28,7 +28,7 @@ export async function GET(
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { id } = params;
+    const { id } = await params;
 
     const { data: role, error } = await supabase
       .from('roles')
@@ -95,7 +95,7 @@ export async function PUT(
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const { name, description, permission_ids } = body;
 
@@ -241,7 +241,7 @@ export async function DELETE(
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    const { id } = params;
+    const { id } = await params;
 
     // Get role details
     const { data: role, error: fetchError } = await supabase
