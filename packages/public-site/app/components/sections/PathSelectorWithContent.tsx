@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { H2, GenericButton, CTAButton } from '@saa/shared/components/saa';
 import { UserPlus, Briefcase, Users, Crown } from 'lucide-react';
 import { BuiltForFuture } from './BuiltForFuture';
@@ -47,7 +47,27 @@ const pathContent: Record<Exclude<PathType, null>, PathContent> = {
 
 export function PathSelectorWithContent() {
   const [selectedPath, setSelectedPath] = useState<PathType>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayedPath, setDisplayedPath] = useState<PathType>(null);
   const hasSelection = selectedPath !== null;
+
+  // Handle path changes with transition animation
+  const handlePathSelect = (pathId: PathType) => {
+    if (pathId === selectedPath) return;
+
+    // Start transition - blur everything out
+    setIsTransitioning(true);
+
+    // After blur out, update the path and blur back in
+    setTimeout(() => {
+      setSelectedPath(pathId);
+      setDisplayedPath(pathId);
+      // Small delay then remove transition state
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 50);
+    }, 300);
+  };
 
   return (
     <>
@@ -68,7 +88,7 @@ export function PathSelectorWithContent() {
               <GenericButton
                 key={path.id}
                 selected={selectedPath === path.id}
-                onClick={() => setSelectedPath(path.id)}
+                onClick={() => handlePathSelect(path.id)}
                 aria-pressed={selectedPath === path.id}
               >
                 <span className="flex items-center gap-2">
@@ -80,51 +100,58 @@ export function PathSelectorWithContent() {
           </div>
 
           {/* Path Content - Reveal on Selection */}
-          {selectedPath && (
-            <div className="mt-8 p-6 md:p-8 rounded-xl bg-white/5 border border-white/10 animate-fadeIn">
-              {/* Problem */}
-              <div className="mb-6">
-                <h3 className="text-[#ffd700] font-semibold text-lg mb-2">The Problem</h3>
-                <p className="text-[#dcdbd5]">
-                  {pathContent[selectedPath].problem}
-                </p>
-              </div>
+          <div
+            className="transition-all duration-300 ease-out"
+            style={{
+              filter: isTransitioning ? 'blur(8px)' : 'blur(0px)',
+              opacity: isTransitioning ? 0.5 : 1,
+            }}
+          >
+            {displayedPath && (
+              <div className="mt-8 p-6 md:p-8 rounded-xl bg-white/5 border border-white/10">
+                {/* Problem */}
+                <div className="mb-6">
+                  <h3 className="text-[#ffd700] font-semibold text-lg mb-2">The Problem</h3>
+                  <p className="text-[#dcdbd5]">
+                    {pathContent[displayedPath].problem}
+                  </p>
+                </div>
 
-              {/* Answer */}
-              <div className="mb-6">
-                <h3 className="text-[#00ff88] font-semibold text-lg mb-2">The Answer</h3>
-                <p className="text-[#dcdbd5]">
-                  {pathContent[selectedPath].answer}
-                </p>
-              </div>
+                {/* Answer */}
+                <div className="mb-6">
+                  <h3 className="text-[#00ff88] font-semibold text-lg mb-2">The Answer</h3>
+                  <p className="text-[#dcdbd5]">
+                    {pathContent[displayedPath].answer}
+                  </p>
+                </div>
 
-              {/* Proof */}
-              <div className="mb-8">
-                <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">The Proof</h3>
-                <p className="text-[#dcdbd5]">
-                  {pathContent[selectedPath].proof}
-                </p>
-              </div>
+                {/* Proof */}
+                <div className="mb-8">
+                  <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">The Proof</h3>
+                  <p className="text-[#dcdbd5]">
+                    {pathContent[displayedPath].proof}
+                  </p>
+                </div>
 
-              {/* CTA */}
-              <div className="text-center">
-                <CTAButton href="/join">
-                  Get Started as a {paths.find(p => p.id === selectedPath)?.label}
-                </CTAButton>
+                {/* CTA */}
+                <div className="text-center">
+                  <CTAButton href="/join">
+                    Get Started as a {paths.find(p => p.id === displayedPath)?.label}
+                  </CTAButton>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </section>
 
-      {/* Content Below - Blurred until selection, then reloads fresh */}
+      {/* Content Below - Blurred until selection, transitions on path change */}
       <div
-        className="relative transition-all duration-700 ease-out"
+        className="relative transition-all duration-500 ease-out"
         style={{
-          filter: hasSelection ? 'blur(0px)' : 'blur(8px)',
-          opacity: hasSelection ? 1 : 0.35,
+          filter: !hasSelection ? 'blur(8px)' : isTransitioning ? 'blur(6px)' : 'blur(0px)',
+          opacity: !hasSelection ? 0.35 : isTransitioning ? 0.6 : 1,
         }}
-        key={selectedPath || 'locked'}
       >
         <BuiltForFuture />
         <FAQ />
