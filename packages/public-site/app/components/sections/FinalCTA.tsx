@@ -1,0 +1,37 @@
+'use client';
+
+import { H2, CTAButton, SecondaryButton } from '@saa/shared/components/saa';
+
+export function FinalCTA() {
+  return (
+    <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+      <div className="max-w-4xl mx-auto">
+        {/* CTA Card */}
+        <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-[#ffd700]/20">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <H2>Ready to Transform Your Real Estate Career?</H2>
+            <p className="text-[#dcdbd5] mt-4 text-lg max-w-2xl mx-auto">
+              Join the fastest-growing team at eXp Realty and start building the career - and life - you deserve.
+            </p>
+          </div>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <CTAButton href="/join">
+              Get Started Now
+            </CTAButton>
+            <SecondaryButton href="/webinar">
+              Watch Free Webinar
+            </SecondaryButton>
+          </div>
+
+          {/* Trust Statement */}
+          <p className="text-center text-[#dcdbd5]/60 text-sm mt-8">
+            No commitment required. See if we're the right fit for you.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
