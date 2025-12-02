@@ -1,10 +1,28 @@
 'use client';
 
 import React from 'react';
+import { H1 } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
 import { calculateReadingTime } from '@/utils/readingTime';
+
+/**
+ * Extracts YouTube video ID from various URL formats
+ * Supports: youtu.be/ID, youtube.com/watch?v=ID, youtube.com/embed/ID
+ */
+function extractYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/))([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/, // Just the ID
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
 
 export interface BlogPostHeroProps {
   /** Post title */
@@ -19,6 +37,8 @@ export interface BlogPostHeroProps {
   content: string;
   /** Optional category hero image URL (leave blank for star background) */
   heroImage?: string;
+  /** Optional YouTube video URL */
+  youtubeVideoUrl?: string;
   /** Callback when theme changes */
   onThemeChange?: (isDark: boolean) => void;
 }
@@ -28,10 +48,11 @@ export interface BlogPostHeroProps {
  *
  * Features:
  * - Category badge with gold styling
- * - H1 title with display font (via Master Controller)
+ * - H1 title with Master Controller effects (neon glow, 3D, flicker)
  * - Meta info: author, date, reading time
  * - Theme switch (sun/moon toggle)
  * - Star background fallback when no hero image
+ * - All content centered
  * - Responsive design following PAGE_BUILDER_GUIDELINES
  *
  * @example
@@ -52,9 +73,11 @@ export function BlogPostHero({
   date,
   content,
   heroImage,
+  youtubeVideoUrl,
   onThemeChange,
 }: BlogPostHeroProps) {
   const readingTime = calculateReadingTime(content);
+  const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
@@ -66,33 +89,32 @@ export function BlogPostHero({
         />
       )}
 
-      {/* Content container */}
-      <div className="relative z-10 max-w-[1900px] mx-auto">
+      {/* Content container - centered */}
+      <div className="relative z-10 max-w-[1900px] mx-auto text-center">
         {/* Top row: Theme switch positioned right */}
         <div className="flex justify-end mb-8">
           <ThemeSwitch onToggle={onThemeChange} />
         </div>
 
-        {/* Category badge */}
-        <div className="mb-4">
+        {/* Category badge - centered */}
+        <div className="mb-6 flex justify-center">
           <CategoryBadge category={category} variant="featured" />
         </div>
 
-        {/* Title - Blog-specific sizing: 72px max, 32px min */}
-        <h1
-          className="mb-6 text-[#ffd700] leading-tight"
-          style={{
-            fontFamily: 'var(--font-taskor)',
-            fontSize: 'clamp(32px, 4vw + 16px, 72px)',
-            fontWeight: 400,
-            letterSpacing: '-0.02em',
-          }}
-        >
-          {title}
-        </h1>
+        {/* Title - H1 with Master Controller effects, blog-specific sizing */}
+        <div className="mb-8">
+          <H1
+            heroAnimate={true}
+            style={{
+              fontSize: 'clamp(32px, 4vw + 16px, 72px)',
+            }}
+          >
+            {title}
+          </H1>
+        </div>
 
-        {/* Meta info row */}
-        <div className="flex flex-wrap items-center gap-6 text-[#dcdbd5]">
+        {/* Meta info row - centered */}
+        <div className="flex flex-wrap items-center justify-center gap-6 text-[#dcdbd5]">
           {/* Author */}
           <div className="flex items-center gap-2">
             <User className="w-4 h-4 text-[#ffd700]" />
@@ -112,13 +134,39 @@ export function BlogPostHero({
           </div>
         </div>
 
-        {/* Quick CTA buttons placeholder - can be added later */}
-        {/*
-        <div className="mt-8 flex flex-wrap gap-4">
-          <CTAButton href="/webinar">Join Webinar</CTAButton>
-          <SecondaryButton href="/calculator">Commission Calculator</SecondaryButton>
-        </div>
-        */}
+        {/* YouTube Video - displayed if present */}
+        {youtubeId && (
+          <div className="mt-12">
+            {/* Futuristic video frame */}
+            <div className="relative max-w-4xl mx-auto">
+              {/* Video container with cyber frame */}
+              <div className="relative bg-[#191818] rounded-xl border border-[#ffd700]/30 overflow-hidden">
+                {/* Top accent bar */}
+                <div className="h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent" />
+
+                {/* Responsive 16:9 video embed */}
+                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
+                    title={title}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
+
+                {/* Bottom accent bar - primary grey */}
+                <div className="h-1 bg-gradient-to-r from-transparent via-[#191818] to-transparent" />
+              </div>
+
+              {/* Corner accents - gold top, grey bottom */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#ffd700] rounded-tl-lg" />
+              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#ffd700] rounded-tr-lg" />
+              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#2a2a2a] rounded-bl-lg" />
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#2a2a2a] rounded-br-lg" />
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

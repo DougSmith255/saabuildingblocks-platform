@@ -104,7 +104,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
             transform: 'translateX(-50%)',
             background: isClicked ? brandGreen : '#ffd700',
             animationDelay: lightPulseDelay,
-            zIndex: -1,
+            zIndex: 5,
           }}
         />
 
@@ -123,7 +123,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
             transform: 'translateX(-50%)',
             background: isClicked ? brandGreen : '#ffd700',
             animationDelay: lightPulseDelay,
-            zIndex: -1,
+            zIndex: 5,
           }}
         />
       </div>

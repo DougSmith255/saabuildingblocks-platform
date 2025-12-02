@@ -83,6 +83,7 @@ export function BlogPostTemplate({
         date={formattedDate}
         content={post.content}
         heroImage={post.featuredImage?.url}
+        youtubeVideoUrl={post.youtubeVideoUrl}
         onThemeChange={handleThemeChange}
       />
 

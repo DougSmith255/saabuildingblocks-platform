@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { BlogPostCard } from './BlogPostCard';
-import { CTAButton } from '@saa/shared/components/saa';
 import type { BlogPost } from '@/lib/wordpress/types';
 
 export interface RelatedPostsProps {
@@ -77,29 +76,13 @@ export function RelatedPosts({
     return null;
   }
 
-  // Format category name for display
-  const categoryName = currentCategory
-    ? currentCategory
-        .split('-')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
-    : null;
-
   return (
     <section className="mt-16 pt-8 border-t border-[#e5e4dd]/20">
       {/* H2 auto-applies display font (Taskor) - Protocol Section 2.1 */}
-      <h2 className="text-h2 mb-2 text-[#e5e4dd]">
+      {/* 20px margin below heading */}
+      <h2 className="text-h2 text-[#e5e4dd]" style={{ marginBottom: '20px' }}>
         Related Posts
       </h2>
-
-      {/* Category link if available */}
-      {currentCategory && categoryName && (
-        <div className="mb-8">
-          <CTAButton href={`/blog/category/${currentCategory}`}>
-            View All in {categoryName}
-          </CTAButton>
-        </div>
-      )}
 
       {/* Grid layout - responsive (1 col mobile, 2x2 desktop) */}
       <div className="grid gap-6 md:grid-cols-2">

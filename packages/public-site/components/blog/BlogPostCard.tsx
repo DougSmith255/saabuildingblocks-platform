@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { CyberCardHolographic } from '@saa/shared/components/saa';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { CTAButton } from '@saa/shared/components/saa';
 
@@ -30,10 +29,13 @@ export interface BlogPostCardProps {
  */
 export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
   return (
-    <CyberCardHolographic
-      className={featured ? 'col-span-full md:col-span-2' : ''}
+    <div
+      className={`${featured ? 'col-span-full md:col-span-2' : ''} h-full rounded-2xl overflow-hidden border border-[#ffd700]/20`}
+      style={{
+        background: 'linear-gradient(145deg, #1a1a1a 0%, #0f0f0f 100%)',
+      }}
     >
-      <article className="flex flex-col h-full">
+      <article className="flex flex-col h-full p-5">
         {/* Featured Image - Always display with fallback, optimized with Next.js Image */}
         <Link href={`/blog/${post.slug}`} className="block mb-4 overflow-hidden rounded-lg group">
           <div className={`relative bg-gradient-to-br from-[#2a2a2a] to-[#191818] ${featured ? 'h-80 md:h-96' : 'h-48 md:h-64'}`}>
@@ -93,7 +95,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         <Link href={`/blog/${post.slug}`} className="block group mb-3">
           <h3
             className={`
-              font-bold text-[#e5e4dd] group-hover:text-[#00ff88] transition-colors
+              font-bold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors
               ${featured ? 'text-3xl md:text-4xl' : 'text-2xl md:text-3xl'}
             `}
           >
@@ -105,7 +107,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         {post.excerpt && (
           <div
             className={`
-              text-[#dcdbd5] mb-4 flex-grow
+              text-[#dcdbd5] mb-4
               ${featured ? 'text-base md:text-lg' : 'text-sm md:text-base'}
             `}
             dangerouslySetInnerHTML={{
@@ -127,11 +129,14 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
           </time>
         </div>
 
-        {/* CTA Button */}
-        <CTAButton href={`/blog/${post.slug}`} className="mt-auto">
+        {/* Spacer to push button to bottom */}
+        <div className="flex-grow" />
+
+        {/* CTA Button - always aligned to bottom */}
+        <CTAButton href={`/blog/${post.slug}`} className="mt-4">
           READ MORE
         </CTAButton>
       </article>
-    </CyberCardHolographic>
+    </div>
   );
 }

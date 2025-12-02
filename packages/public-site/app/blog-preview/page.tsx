@@ -55,6 +55,7 @@ const samplePost: BlogPost = {
     avatar: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png',
   },
   categories: ['Business Growth', 'eXp Realty'],
+  youtubeVideoUrl: 'https://youtu.be/NZH2BpEIDhQ?si=dMVJFYnXEL10Zzht',
 };
 
 // Sample related posts
