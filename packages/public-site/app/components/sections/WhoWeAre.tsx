@@ -8,7 +8,7 @@ const teamMembers = [
     name: 'Doug Smart',
     role: 'Co-Founder & Full-Stack Architect',
     image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png',
-    bio: "Top 0.1% eXp team builder. Architect of the infrastructure powering Smart Agent Alliance—this website, the automation systems, the entire tech stack. He transforms complex technology into unfair advantages for agents ready to dominate their market.",
+    bio: "Top 0.1% eXp team builder. Architect of the infrastructure powering Smart Agent Alliance—this website, the automation systems, the entire value stack for our agents. He transforms complex technology into unfair advantages for agents ready to dominate their market.",
   },
   {
     name: 'Karrie Smart',
