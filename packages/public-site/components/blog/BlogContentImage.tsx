@@ -2,12 +2,14 @@
  * BlogContentImage Component
  * Images within blog post content with caption support
  * Handles lazy loading and optional lightbox functionality
+ * Supports futuristic frame styling
  */
 
 'use client';
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { FuturisticImageFrame } from './FuturisticImageFrame';
 
 export interface BlogContentImageProps {
   src: string;
@@ -16,6 +18,8 @@ export interface BlogContentImageProps {
   height?: number;
   caption?: string;
   enableLightbox?: boolean;
+  /** Use futuristic frame styling instead of simple frame */
+  useFuturisticFrame?: boolean;
   className?: string;
 }
 
@@ -87,10 +91,25 @@ export default function BlogContentImage({
   height,
   caption,
   enableLightbox = false,
+  useFuturisticFrame = false,
   className = ''
 }: BlogContentImageProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+
+  // Use FuturisticImageFrame if enabled
+  if (useFuturisticFrame) {
+    return (
+      <FuturisticImageFrame
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        caption={caption}
+        className={className}
+      />
+    );
+  }
 
   // Calculate aspect ratio if width and height provided
   const aspectRatio = width && height ? width / height : undefined;

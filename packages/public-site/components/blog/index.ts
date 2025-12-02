@@ -24,3 +24,9 @@ export { PaginationControls } from './PaginationControls';
 export { default as BlogFeaturedImage, FeaturedImageSkeleton, type BlogFeaturedImageProps } from './BlogFeaturedImage';
 export { default as BlogContentImage, type BlogContentImageProps } from './BlogContentImage';
 export { default as BlogThumbnail, type BlogThumbnailProps } from './BlogThumbnail';
+export { FuturisticImageFrame, type FuturisticImageFrameProps } from './FuturisticImageFrame';
+
+// Blog post page components
+export { BlogPostHero, type BlogPostHeroProps } from './BlogPostHero';
+export { ThemeSwitch, type ThemeSwitchProps } from './ThemeSwitch';
+export { BlogPostTemplate, type BlogPostTemplateProps } from './BlogPostTemplate';
