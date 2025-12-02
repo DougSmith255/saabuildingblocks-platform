@@ -24,6 +24,6 @@
     "npm": ">=10.0.0"
   },
   "dependencies": {
-    "puppeteer": "^24.28.0"
+    "puppeteer": "^24.31.0"
   }
 }
