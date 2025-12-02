@@ -103,9 +103,6 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
             left: '50%',
             transform: 'translateX(-50%)',
             background: isClicked ? brandGreen : '#ffd700',
-            boxShadow: isClicked
-              ? `0 0 3px ${brandGreen}, 0 0 8px ${brandGreen}, 0 -20px 20px ${brandGreen}`
-              : '0 0 3px #ffd700, 0 0 8px #ffd700, 0 -20px 20px #ffd700',
             animationDelay: lightPulseDelay,
             zIndex: -1,
           }}
@@ -125,9 +122,6 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
             left: '50%',
             transform: 'translateX(-50%)',
             background: isClicked ? brandGreen : '#ffd700',
-            boxShadow: isClicked
-              ? `0 0 3px ${brandGreen}, 0 0 8px ${brandGreen}, 0 20px 20px ${brandGreen}`
-              : '0 0 3px #ffd700, 0 0 8px #ffd700, 0 20px 20px #ffd700',
             animationDelay: lightPulseDelay,
             zIndex: -1,
           }}
