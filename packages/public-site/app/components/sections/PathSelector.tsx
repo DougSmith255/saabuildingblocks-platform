@@ -47,7 +47,7 @@ export function PathSelector() {
 
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-[1900px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
           <H2>Which Best Describes You?</H2>

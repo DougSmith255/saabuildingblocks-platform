@@ -32,7 +32,7 @@ export function FAQ() {
 
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-[1900px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
           <H2>Frequently Asked Questions</H2>

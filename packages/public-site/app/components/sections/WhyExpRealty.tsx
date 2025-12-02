@@ -39,7 +39,7 @@ const reasons = [
 export function WhyExpRealty() {
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-[1900px] mx-auto">
         {/* Section Header */}
         <div className="text-center mb-12">
           <H2>Why eXp Realty?</H2>

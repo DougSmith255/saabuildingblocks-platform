@@ -61,7 +61,7 @@ import { H1, H2, Tagline, CTAButton, SecondaryButton, GenericButton } from '@saa
 ### Standard Section Wrapper
 ```tsx
 <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-  <div className="max-w-6xl mx-auto">
+  <div className="max-w-[1900px] mx-auto">
     {/* Section content */}
   </div>
 </section>
@@ -70,7 +70,7 @@ import { H1, H2, Tagline, CTAButton, SecondaryButton, GenericButton } from '@saa
 ### Section Spacing
 - Vertical padding: `py-16 md:py-24`
 - Horizontal padding: `px-4 sm:px-8 md:px-12`
-- Max content width: `max-w-6xl mx-auto`
+- **Max content width: `max-w-[1900px] mx-auto`** - All pages must scale up to 1900px to utilize large screen space
 
 ---
 
