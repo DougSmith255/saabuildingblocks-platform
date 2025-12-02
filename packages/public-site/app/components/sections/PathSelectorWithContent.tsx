@@ -117,31 +117,52 @@ export function PathSelectorWithContent() {
         </div>
       </section>
 
-      {/* Content Below - Blurred until selection made */}
-      <div
-        className={`relative transition-all duration-700 ${
-          hasSelection
-            ? 'opacity-100 filter-none'
-            : 'opacity-40 blur-sm pointer-events-none'
-        }`}
-        style={{
-          filter: hasSelection ? 'none' : 'blur(4px)',
-        }}
-      >
-        {/* Overlay prompt when blurred */}
+      {/* Content Below - Hidden/teased until selection made */}
+      <div className="relative">
+        {/* Teaser overlay when no selection */}
         {!hasSelection && (
-          <div className="absolute inset-0 z-10 flex items-start justify-center pt-20">
-            <div className="bg-[#0a0a0a]/90 backdrop-blur-sm px-8 py-4 rounded-xl border border-[#ffd700]/30">
-              <p className="text-[#ffd700] text-lg font-semibold text-center">
-                Select your path above to continue
-              </p>
+          <div className="relative">
+            {/* Heavy blur overlay that teases content underneath */}
+            <div
+              className="h-[400px] overflow-hidden relative"
+              style={{
+                maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
+              }}
+            >
+              <div
+                className="pointer-events-none"
+                style={{
+                  filter: 'blur(12px)',
+                  opacity: 0.3,
+                }}
+              >
+                <BuiltForFuture />
+              </div>
+            </div>
+
+            {/* Floating unlock prompt */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="bg-[#0a0a0a]/95 backdrop-blur-md px-10 py-6 rounded-2xl border border-[#ffd700]/40 shadow-2xl shadow-[#ffd700]/10">
+                <p className="text-[#ffd700] text-xl md:text-2xl font-bold text-center mb-2">
+                  Unlock Your Roadmap
+                </p>
+                <p className="text-[#dcdbd5]/80 text-center text-sm md:text-base">
+                  Select your path above to reveal what's next
+                </p>
+              </div>
             </div>
           </div>
         )}
 
-        <BuiltForFuture />
-        <FAQ />
-        <FinalCTA />
+        {/* Actual content - only renders after selection */}
+        {hasSelection && (
+          <div className="animate-fadeIn">
+            <BuiltForFuture />
+            <FAQ />
+            <FinalCTA />
+          </div>
+        )}
       </div>
     </>
   );
