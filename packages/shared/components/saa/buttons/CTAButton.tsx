@@ -58,8 +58,8 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
         willChange: 'opacity, transform',
       } : {}}
     >
-      {/* Button wrapper - inline container */}
-      <div className={`${isFullWidth ? 'w-full' : 'inline-block'}`}>
+      {/* Button wrapper - inline container with relative positioning for light bars */}
+      <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
         <a
           href={href}
           onClick={handleClick}

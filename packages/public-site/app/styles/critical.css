@@ -206,7 +206,7 @@ p a {
   stroke: #ffd700;
   stroke-linecap: round;
   stroke-linejoin: round;
-  stroke-width: 4;
+  stroke-width: 2;
 }
 
 /* Header Container - Prevent height change on hydration */
