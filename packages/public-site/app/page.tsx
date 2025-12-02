@@ -9,10 +9,7 @@ import { ValueStack } from './components/sections/ValueStack';
 import { SocialProof } from './components/sections/SocialProof';
 import { WhyExpRealty } from './components/sections/WhyExpRealty';
 import { WhoWeAre } from './components/sections/WhoWeAre';
-import { PathSelector } from './components/sections/PathSelector';
-import { BuiltForFuture } from './components/sections/BuiltForFuture';
-import { FAQ } from './components/sections/FAQ';
-import { FinalCTA } from './components/sections/FinalCTA';
+import { PathSelectorWithContent } from './components/sections/PathSelectorWithContent';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load all JavaScript animations
 // This reduces initial bundle size and eliminates 74s mobile blocking time!
@@ -221,10 +218,7 @@ export default function Home() {
       <SocialProof />
       <WhyExpRealty />
       <WhoWeAre />
-      <PathSelector />
-      <BuiltForFuture />
-      <FAQ />
-      <FinalCTA />
+      <PathSelectorWithContent />
 
     </main>
   );
