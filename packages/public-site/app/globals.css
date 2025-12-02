@@ -2277,20 +2277,21 @@ img:not(.profile-image) {
 }
 
 /* Pulsing glow animation - box-shadow expands/contracts FROM the light bar */
+/* Glow is dimmer than the light bar itself so the source stands out */
 @keyframes ctaLightPulse {
   0%, 100% {
     box-shadow:
-      0 0 4px 2px #ffd700,
-      0 0 12px 4px rgba(255, 215, 0, 0.7),
-      0 0 24px 8px rgba(255, 215, 0, 0.4),
-      0 0 40px 12px rgba(255, 215, 0, 0.2);
+      0 0 3px 1px rgba(255, 215, 0, 0.5),
+      0 0 8px 3px rgba(255, 215, 0, 0.35),
+      0 0 16px 6px rgba(255, 215, 0, 0.2),
+      0 0 30px 10px rgba(255, 215, 0, 0.1);
   }
   50% {
     box-shadow:
-      0 0 6px 3px #ffd700,
-      0 0 20px 8px rgba(255, 215, 0, 0.8),
-      0 0 40px 16px rgba(255, 215, 0, 0.5),
-      0 0 70px 24px rgba(255, 215, 0, 0.25);
+      0 0 5px 2px rgba(255, 215, 0, 0.6),
+      0 0 14px 6px rgba(255, 215, 0, 0.4),
+      0 0 28px 12px rgba(255, 215, 0, 0.25),
+      0 0 50px 20px rgba(255, 215, 0, 0.12);
   }
 }
 
