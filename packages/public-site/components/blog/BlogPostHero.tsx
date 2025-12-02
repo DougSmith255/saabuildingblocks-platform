@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { H1 } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
@@ -75,14 +74,22 @@ export function BlogPostHero({
         </div>
 
         {/* Category badge */}
-        <div className="mb-6">
+        <div className="mb-4">
           <CategoryBadge category={category} variant="featured" />
         </div>
 
-        {/* Title */}
-        <div className="mb-8 max-w-4xl">
-          <H1>{title}</H1>
-        </div>
+        {/* Title - Blog-specific sizing: 72px max, 32px min */}
+        <h1
+          className="mb-6 text-[#ffd700] leading-tight"
+          style={{
+            fontFamily: 'var(--font-taskor)',
+            fontSize: 'clamp(32px, 4vw + 16px, 72px)',
+            fontWeight: 400,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          {title}
+        </h1>
 
         {/* Meta info row */}
         <div className="flex flex-wrap items-center gap-6 text-[#dcdbd5]">
