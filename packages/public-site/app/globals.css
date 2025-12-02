@@ -2273,37 +2273,39 @@ img:not(.profile-image) {
 
 /* Light bar base styles with glow pseudo-element */
 .cta-light-bar {
-  z-index: 1;
-  position: relative;
+  /* Position set via inline styles from component */
 }
 
-/* Glow pseudo-element - GPU composited */
+/* Glow pseudo-element - GPU composited, stays anchored to light bar */
 .cta-light-bar::before {
   content: '';
   position: absolute;
-  inset: 0;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
   border-radius: inherit;
   background: inherit;
-  filter: blur(15px);
-  opacity: 0.8;
+  filter: blur(12px);
+  opacity: 0.7;
   z-index: -1;
-  will-change: transform, opacity;
+  will-change: opacity, filter;
 }
 
-/* Pulsing animation keyframes for the glow effect */
+/* Pulsing animation keyframes - opacity and blur only, NO scale to keep glow attached */
 @keyframes ctaLightPulse {
   0%, 100% {
-    opacity: 1;
-    transform: scale(1);
+    opacity: 0.9;
+    filter: blur(12px);
   }
   50% {
-    opacity: 0.3;
-    transform: scale(1.8);
+    opacity: 0.4;
+    filter: blur(20px);
   }
 }
 
 /* Apply pulse animation to pseudo-element when active */
 .cta-light-bar-pulse::before {
-  animation: ctaLightPulse 1s ease-in-out infinite;
+  animation: ctaLightPulse 2s ease-in-out infinite;
   animation-delay: inherit;
 }
