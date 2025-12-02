@@ -32,7 +32,7 @@ const valueItems = [
     icon: Globe,
     title: 'Stay Inspired & Connected',
     subtitle: 'Get Private Referrals; Grow Globally',
-    savings: 'Save $4000/month - Priceless',
+    savings: 'Priceless',
   },
 ];
 
@@ -43,9 +43,6 @@ export function ValueStack() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <H2>Irresistible Value - No Cost to You</H2>
-          <p className="text-[#dcdbd5] mt-4 text-lg max-w-3xl mx-auto">
-            And MORE!
-          </p>
         </div>
 
         {/* Value Items */}
@@ -87,7 +84,7 @@ export function ValueStack() {
           <div className="inline-block px-6 py-4 rounded-xl bg-gradient-to-r from-[#ffd700]/10 to-[#00ff88]/10 border border-[#ffd700]/20">
             <p className="text-xl md:text-2xl font-bold text-[#e5e4dd]">
               No Team Fees. No Cost. Everything is{' '}
-              <span className="text-[#ffd700]">100% FREE</span> for Our Team.
+              <span className="text-[#ffd700]">100% FREE</span>.
             </p>
             <p className="text-[#dcdbd5] mt-2">
               We Invest in Your Success!

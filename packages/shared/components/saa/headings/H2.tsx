@@ -85,6 +85,7 @@ export default function H2({
         className={`text-h2 ${className}`}
         style={{
           display: 'flex',
+          justifyContent: 'center',
           gap: '0.5em',
           flexWrap: 'wrap',
           transformStyle: 'preserve-3d',
