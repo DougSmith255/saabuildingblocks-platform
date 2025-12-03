@@ -1612,6 +1612,7 @@ body.is-404-page footer {
 }
 
 /* H2 - Master Controller Typography with Per-Word Metal Plates */
+/* Matches H2.tsx from @saa/shared/components/saa/headings */
 .blog-content h2 {
   font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
   font-size: var(--font-size-h2, clamp(40px, calc(36.18px + 1.53vw), 82px));
@@ -1621,18 +1622,21 @@ body.is-404-page footer {
   color: var(--text-color-h2, #bfbdb0);
   margin-top: 3rem;
   margin-bottom: 1.5rem;
-  /* Flex layout for word spacing like Master Controller H2 */
+  /* Flex layout for word spacing - matches H2.tsx */
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4em;
+  gap: 0.5em;
+  /* 3D transforms for depth effect - matches H2.tsx */
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(15deg);
 }
 
-/* Per-word metal backing plate - matches Master Controller H2.tsx */
+/* Per-word metal backing plate - exact match to H2.tsx .h2-word */
 .blog-content h2 .h2-word {
-  display: inline-block;
+  display: inline-flex;
   position: relative;
-  padding: 0.15em 0.25em;
-  /* Neon glow text-shadow from Master Controller H2 */
+  /* Neon glow text-shadow - exact match to H2.tsx .h2-char */
+  color: #bfbdb0;
   text-shadow:
     -1px -1px 0 rgba(255,255,255, 0.4),
     1px -1px 0 rgba(255,255,255, 0.4),
@@ -1646,13 +1650,17 @@ body.is-404-page footer {
     0 3px 3px #000;
 }
 
+/* Metal backing plate - exact match to H2.tsx .h2-word::before */
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
-  inset: 0;
+  /* Negative inset extends plate beyond the word - key difference */
+  inset: -0.2em -0.3em;
   background: linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%);
   border-radius: 0.1em;
   z-index: -1;
+  /* 3D depth positioning */
+  transform: translateZ(-10px);
   border: 1px solid rgba(150,150,150,0.2);
   box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.5);
 }

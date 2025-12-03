@@ -127,8 +127,7 @@ export function ShareButtons({
     }
   };
 
-  // Button styles - 3D Metal plate with green hover
-  // 10px vertical padding (py-2.5 = 10px), 3D metal effect matching Master Controller
+  // Button base styles - layout and typography
   const buttonClass = `
     flex items-center justify-center gap-2
     px-5 py-2.5
@@ -136,14 +135,18 @@ export function ShareButtons({
     transition-all duration-200
     font-[var(--font-taskor)]
     text-sm uppercase tracking-wider
-    text-[var(--color-bodyText,#dcdbd5)]
-    hover:text-[var(--color-accentGreen,#00ff88)]
-    border border-[rgba(150,150,150,0.2)]
-    hover:border-[var(--color-accentGreen,#00ff88)]
-    bg-gradient-to-b from-[rgba(100,100,100,0.3)] to-[rgba(50,50,50,0.5)]
-    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.5)]
-    hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_12px_rgba(0,255,136,0.3)]
+    hover:text-[#00ff88]
+    hover:border-[#00ff88]
   `;
+
+  // Metal plate styles - inline for reliable rendering
+  const metalPlateStyle: React.CSSProperties = {
+    background: 'linear-gradient(135deg, rgba(100,100,100,0.4) 0%, rgba(50,50,50,0.6) 100%)',
+    backgroundColor: '#2d2d2d', // Solid fallback
+    border: '1px solid rgba(150,150,150,0.3)',
+    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 8px rgba(0,0,0,0.5)',
+    color: '#dcdbd5',
+  };
 
   return (
     <div className={`
@@ -170,6 +173,7 @@ export function ShareButtons({
         <button
           onClick={handleTwitterShare}
           className={buttonClass}
+          style={metalPlateStyle}
           aria-label="Share on Twitter"
         >
           <Twitter className="w-4 h-4" />
@@ -180,6 +184,7 @@ export function ShareButtons({
         <button
           onClick={handleFacebookShare}
           className={buttonClass}
+          style={metalPlateStyle}
           aria-label="Share on Facebook"
         >
           <Facebook className="w-4 h-4" />
@@ -190,6 +195,7 @@ export function ShareButtons({
         <button
           onClick={handleLinkedInShare}
           className={buttonClass}
+          style={metalPlateStyle}
           aria-label="Share on LinkedIn"
         >
           <Linkedin className="w-4 h-4" />
@@ -200,6 +206,7 @@ export function ShareButtons({
         <button
           onClick={handleEmailShare}
           className={buttonClass}
+          style={metalPlateStyle}
           aria-label="Share via Email"
         >
           <Mail className="w-4 h-4" />
@@ -210,12 +217,13 @@ export function ShareButtons({
         <button
           onClick={handleCopyLink}
           className={buttonClass}
+          style={metalPlateStyle}
           aria-label="Copy link to clipboard"
         >
           {copied ? (
             <>
-              <Check className="w-4 h-4 text-[var(--color-accentGreen,#00ff88)]" />
-              <span className="hidden sm:inline text-[var(--color-accentGreen,#00ff88)]">Copied!</span>
+              <Check className="w-4 h-4 text-[#00ff88]" />
+              <span className="hidden sm:inline text-[#00ff88]">Copied!</span>
             </>
           ) : (
             <>
