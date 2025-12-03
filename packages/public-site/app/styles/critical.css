@@ -59,6 +59,14 @@ body {
   overflow-x: hidden;
 }
 
+/* Mobile: Disable fixed background to prevent scroll glitch with browser address bar */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  html,
+  body {
+    background-attachment: scroll;
+  }
+}
+
 /* Critical Typography - H1 Hero Headlines */
 h1 {
   font-family: var(--font-taskor), system-ui, sans-serif;
