@@ -1,25 +1,25 @@
-/* Cloud Background Container - Daylight Sky Scene */
+/* Cloud Background Container - Daylight Sky Scene (Hero Only) */
 .skyContainer {
-  /* CRITICAL: Position fixed to cover entire viewport */
-  position: fixed !important;
+  /* Position absolute within hero section only */
+  position: absolute !important;
   top: 0 !important;
   left: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  width: 100% !important;
+  height: 100% !important;
   z-index: -1 !important;
   pointer-events: none !important;
   overflow: hidden !important;
 
-  /* Blue sky gradient - lighter at horizon (bottom), deeper blue at top */
+  /* Blue sky gradient - fades to off-white at bottom to blend with page */
   background: linear-gradient(
     to bottom,
     #4a90c2 0%,      /* Deep sky blue at top */
-    #6ab4e8 25%,     /* Medium sky blue */
-    #87ceeb 50%,     /* Sky blue */
-    #b0d8f0 75%,     /* Light sky blue */
-    #d4e9f7 100%     /* Very light blue near horizon */
+    #6ab4e8 20%,     /* Medium sky blue */
+    #87ceeb 40%,     /* Sky blue */
+    #b0d8f0 60%,     /* Light sky blue */
+    #d4e9f7 80%,     /* Very light blue */
+    #e5e4dd 100%     /* Fade to off-white (primary heading text color) */
   ) !important;
-  background-attachment: fixed !important;
 
   /* Performance optimizations */
   display: block;

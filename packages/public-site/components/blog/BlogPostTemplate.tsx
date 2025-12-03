@@ -89,9 +89,6 @@ export function BlogPostTemplate({
 
   return (
     <article className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-      {/* Light mode cloud background - daylight sky scene with animated clouds */}
-      {!isDarkMode && <CloudBackground />}
-
       {/* Breadcrumbs */}
       <div className="px-4 sm:px-8 md:px-12 pt-4">
         <div className="max-w-[1900px] mx-auto">
@@ -103,17 +100,21 @@ export function BlogPostTemplate({
         </div>
       </div>
 
-      {/* Hero Section */}
-      <BlogPostHero
-        title={post.title}
-        category={primaryCategory}
-        author={post.author.name}
-        date={formattedDate}
-        content={post.content}
-        heroImage={post.featuredImage?.url}
-        youtubeVideoUrl={post.youtubeVideoUrl}
-        onThemeChange={handleThemeChange}
-      />
+      {/* Hero Section - wrapped in relative container for cloud background */}
+      <div className="relative">
+        {/* Light mode cloud background - positioned within hero only */}
+        {!isDarkMode && <CloudBackground />}
+        <BlogPostHero
+          title={post.title}
+          category={primaryCategory}
+          author={post.author.name}
+          date={formattedDate}
+          content={post.content}
+          heroImage={post.featuredImage?.url}
+          youtubeVideoUrl={post.youtubeVideoUrl}
+          onThemeChange={handleThemeChange}
+        />
+      </div>
 
       {/* Main Content */}
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">

@@ -2203,79 +2203,79 @@ article p a:focus-visible,
    ======================================== */
 
 body.light-mode .blog-content {
-  /* Body text - dark blue-gray for better readability on sky background */
-  color: #1a2a3a;
+  /* Body text - medium gray (lighter than headings) */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content h3,
 body.light-mode .blog-content h4,
 body.light-mode .blog-content h5,
 body.light-mode .blog-content h6 {
-  /* Headings H3-H6 - deep navy for strong contrast */
-  color: #0d1b2a;
+  /* Headings H3-H6 - slightly lighter than black (dark gray) */
+  color: #3a3a3a;
 }
 
 body.light-mode .blog-content p {
-  /* Paragraphs - dark blue-gray */
-  color: #1a2a3a;
+  /* Paragraphs - medium gray (lighter than headings) */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content ul li,
 body.light-mode .blog-content ol li {
-  /* List items - dark blue-gray */
-  color: #1a2a3a;
+  /* List items - medium gray (lighter than headings) */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content ul li::marker,
 body.light-mode .blog-content ol li::marker {
-  /* Bullet/number markers - deep navy */
-  color: #0d1b2a;
+  /* Bullet/number markers - dark gray */
+  color: #3a3a3a;
 }
 
 body.light-mode .blog-content blockquote {
-  /* Blockquotes - dark blue-gray with gold accent border */
-  color: #1a2a3a;
+  /* Blockquotes - medium gray with gold accent border */
+  color: #4a4a4a;
   border-left-color: #ffd700;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .blog-content blockquote p {
-  color: #1a2a3a;
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content code {
-  /* Inline code - dark on semi-transparent white */
-  color: #0d1b2a;
-  background-color: rgba(255, 255, 255, 0.5);
+  /* Inline code - dark gray on light background */
+  color: #3a3a3a;
+  background-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .blog-content pre {
-  /* Code blocks - dark text on semi-transparent white */
-  color: #0d1b2a;
-  background-color: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  /* Code blocks - dark text on slightly darker off-white */
+  color: #3a3a3a;
+  background-color: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 body.light-mode .blog-content pre code {
-  color: #0d1b2a;
+  color: #3a3a3a;
   background-color: transparent;
 }
 
 body.light-mode .blog-content table {
-  /* Tables - dark text */
-  color: #1a2a3a;
+  /* Tables - medium gray text */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content th {
-  /* Table headers - deep navy on light background */
-  color: #0d1b2a;
-  background-color: rgba(255, 255, 255, 0.5);
+  /* Table headers - dark gray on light background */
+  color: #3a3a3a;
+  background-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .blog-content td {
-  color: #1a2a3a;
-  border-color: rgba(13, 27, 42, 0.2);
-  background-color: rgba(255, 255, 255, 0.2);
+  color: #4a4a4a;
+  border-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 body.light-mode .blog-content hr {
@@ -2285,13 +2285,13 @@ body.light-mode .blog-content hr {
 
 body.light-mode .blog-content strong,
 body.light-mode .blog-content b {
-  /* Bold text - deep navy */
-  color: #0d1b2a;
+  /* Bold text - dark gray */
+  color: #3a3a3a;
 }
 
 body.light-mode .blog-content figcaption {
-  /* Image captions - dark blue-gray */
-  color: #1a2a3a;
+  /* Image captions - medium gray */
+  color: #4a4a4a;
 }
 
 /* Hide default StarBackground in light mode - CloudBackground takes over */
@@ -2299,10 +2299,10 @@ body.light-mode .starfieldContainer {
   display: none !important;
 }
 
-/* Override body background in light mode - transparent to show CloudBackground */
+/* Override body background in light mode - off-white (primary heading text color) */
 body.light-mode {
-  background: transparent !important;
-  background-color: transparent !important;
+  background: #e5e4dd !important;
+  background-color: #e5e4dd !important;
 }
 
 /* Light mode link colors - keep gold/yellow for sunlight effect */
@@ -2319,28 +2319,29 @@ body.light-mode .blog-content a:not(.share-button):hover {
    LIGHT MODE - Hero Meta Info (Author, Date, Read Time)
    ======================================== */
 body.light-mode .blog-post section:first-of-type .flex.flex-wrap.items-center.justify-center {
-  color: #1a2a3a !important;
+  color: #3a3a3a !important;
 }
 
 body.light-mode .blog-post section:first-of-type .flex.flex-wrap.items-center.justify-center span {
-  color: #1a2a3a !important;
+  color: #3a3a3a !important;
 }
 
 /* ========================================
    LIGHT MODE - Share Buttons Section
+   "Share This Post" heading - slightly lighter than black
    ======================================== */
 body.light-mode .blog-post h3 {
-  color: #0d1b2a !important;
+  color: #3a3a3a !important;
 }
 
 body.light-mode .blog-post .flex.flex-wrap.gap-3 button {
-  background-color: rgba(255, 255, 255, 0.5) !important;
-  border-color: rgba(13, 27, 42, 0.3) !important;
-  color: #1a2a3a !important;
+  background-color: rgba(229, 228, 221, 0.8) !important;
+  border-color: rgba(58, 58, 58, 0.3) !important;
+  color: #3a3a3a !important;
 }
 
 body.light-mode .blog-post .flex.flex-wrap.gap-3 button:hover {
-  background-color: rgba(255, 255, 255, 0.7) !important;
+  background-color: rgba(229, 228, 221, 1) !important;
   border-color: #00ff88 !important;
   color: #00ff88 !important;
 }
@@ -2351,41 +2352,41 @@ body.light-mode .blog-post .flex.flex-wrap.gap-3 button span {
 
 /* ========================================
    LIGHT MODE - Related Posts Section
+   Title "Related Posts" - slightly lighter than black
+   Cards should keep ORIGINAL dark mode styling (off-white text, yellow hover)
    ======================================== */
 body.light-mode .blog-post section.mt-16 h2 {
-  color: #0d1b2a !important;
+  color: #3a3a3a !important;
 }
 
 body.light-mode .blog-post section.mt-16 {
-  border-top-color: rgba(13, 27, 42, 0.2) !important;
+  border-top-color: rgba(58, 58, 58, 0.2) !important;
 }
 
-/* ========================================
-   LIGHT MODE - Content Section White Blur Backdrop
-   Semi-transparent white background for readability
-   ======================================== */
-body.light-mode .blog-post .blog-content {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
-
-/* Share section also gets backdrop */
-body.light-mode .blog-post .blog-content + div {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 1.5rem 2rem;
-  border-radius: 16px;
-  margin-top: 1rem;
+/* IMPORTANT: Related Posts cards should NOT change from dark mode styling */
+/* Reset any color overrides for related post cards */
+body.light-mode .blog-post section.mt-16 .grid a,
+body.light-mode .blog-post section.mt-16 .grid h3,
+body.light-mode .blog-post section.mt-16 .grid span,
+body.light-mode .blog-post section.mt-16 .grid p {
+  color: inherit !important;
 }
 
 /* Border dividers in light mode */
 body.light-mode .blog-post .border-t {
-  border-top-color: rgba(13, 27, 42, 0.2) !important;
+  border-top-color: rgba(58, 58, 58, 0.2) !important;
+}
+
+/* ========================================
+   LIGHT MODE - H2 Metal Plate Darker Backing
+   Better contrast for H2 headings in light mode
+   ======================================== */
+body.light-mode .blog-content h2 .h2-word {
+  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 50%, #2a2a2a 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
 /* ========================================
