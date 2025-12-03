@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { BlogPostHero } from './BlogPostHero';
 import { RelatedPosts } from './RelatedPosts';
@@ -64,6 +64,7 @@ export function BlogPostTemplate({
   relatedPosts = [],
 }: BlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Format date for display
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
@@ -75,20 +76,36 @@ export function BlogPostTemplate({
   // Get primary category
   const primaryCategory = post.categories[0] || 'Uncategorized';
 
-  // Handle theme change
-  const handleThemeChange = (isDark: boolean) => {
-    setIsDarkMode(isDark);
-    // Theme change can be applied to body class if needed
-    if (typeof document !== 'undefined') {
-      document.body.classList.toggle('light-mode', !isDark);
-    }
-  };
+  // Handle theme change with blur transition
+  const handleThemeChange = useCallback((isDark: boolean) => {
+    // Start blur transition
+    setIsTransitioning(true);
+
+    // After blur is applied, change the theme
+    setTimeout(() => {
+      setIsDarkMode(isDark);
+      if (typeof document !== 'undefined') {
+        document.body.classList.toggle('light-mode', !isDark);
+      }
+
+      // Remove blur after theme has changed
+      setTimeout(() => {
+        setIsTransitioning(false);
+      }, 300); // Time for colors to settle
+    }, 150); // Time for blur to fully apply
+  }, []);
 
   // Build category slug
   const categorySlug = primaryCategory.toLowerCase().replace(/\s+/g, '-');
 
   return (
     <article className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+      {/* Theme transition blur overlay */}
+      <div
+        className={`theme-transition-overlay ${isTransitioning ? 'active' : ''}`}
+        aria-hidden="true"
+      />
+
       {/* Breadcrumbs */}
       <div className="px-4 sm:px-8 md:px-12 pt-4">
         <div className="max-w-[1900px] mx-auto">

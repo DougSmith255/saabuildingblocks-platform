@@ -2779,3 +2779,35 @@ img:not(.profile-image) {
 .theme-switch__circle-container:hover {
   left: calc(var(--circle-container-offset) + 0.187em);
 }
+
+/* ========================================
+   THEME TRANSITION BLUR OVERLAY
+   Full-page blur effect during light/dark mode switch
+   Creates smooth, dreamlike transition between themes
+   ======================================== */
+
+.theme-transition-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  pointer-events: none;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  background-color: transparent;
+  opacity: 0;
+  transition:
+    backdrop-filter 0.3s ease-in-out,
+    -webkit-backdrop-filter 0.3s ease-in-out,
+    opacity 0.3s ease-in-out,
+    background-color 0.3s ease-in-out;
+}
+
+.theme-transition-overlay.active {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(128, 128, 128, 0.15);
+  opacity: 1;
+}
