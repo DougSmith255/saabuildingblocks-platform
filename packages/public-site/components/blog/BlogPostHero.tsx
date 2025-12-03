@@ -80,7 +80,7 @@ export function BlogPostHero({
   const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
   return (
-    <section className="relative min-h-[100dvh] flex flex-col justify-center py-16 md:py-24 px-4 sm:px-8 md:px-12">
+    <section className="relative min-h-[calc(100dvh-var(--header-height)-3rem)] flex flex-col justify-center py-8 md:py-16 px-4 sm:px-8 md:px-12">
       {/* Hero background - uses star background by default */}
       {heroImage && (
         <div
@@ -90,7 +90,7 @@ export function BlogPostHero({
       )}
 
       {/* Theme switch - positioned absolutely so it doesn't affect content centering */}
-      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 md:right-12 z-20">
+      <div className="absolute top-2 right-4 sm:top-4 sm:right-8 md:right-12 z-20">
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
 

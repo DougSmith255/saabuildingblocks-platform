@@ -106,21 +106,22 @@ export function BlogPostTemplate({
         aria-hidden="true"
       />
 
-      {/* Breadcrumbs */}
-      <div className="px-4 sm:px-8 md:px-12 pt-4">
-        <div className="max-w-[1900px] mx-auto">
-          <Breadcrumbs
-            category={primaryCategory}
-            categorySlug={categorySlug}
-            postTitle={post.title}
-          />
-        </div>
-      </div>
-
-      {/* Hero Section - wrapped in relative container for cloud background */}
+      {/* Hero Section with Cloud Background - extends to top of page */}
       <div className="relative">
-        {/* Light mode cloud background - positioned within hero only */}
+        {/* Light mode cloud background - covers entire hero including breadcrumbs area */}
         {!isDarkMode && <CloudBackground />}
+
+        {/* Breadcrumbs - positioned below fixed header */}
+        <div className="relative z-10 px-4 sm:px-8 md:px-12 pt-[calc(var(--header-height)+1rem)]">
+          <div className="max-w-[1900px] mx-auto">
+            <Breadcrumbs
+              category={primaryCategory}
+              categorySlug={categorySlug}
+              postTitle={post.title}
+            />
+          </div>
+        </div>
+
         <BlogPostHero
           title={post.title}
           category={primaryCategory}
