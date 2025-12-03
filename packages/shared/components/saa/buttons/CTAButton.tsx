@@ -30,7 +30,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 3000);
+    setTimeout(() => setIsClicked(false), 2000); // Stay green for 2 seconds
     onClick?.(e);
   };
 

@@ -185,20 +185,21 @@ p a {
 
 /* Hamburger Menu - Prevent FOUC by providing base positioning immediately */
 /* COMPOSITED: Uses only transform and opacity (GPU-accelerated) */
+/* Fixed positioning for 80px mobile header - centered vertically */
 .hamburger {
   position: fixed;
-  top: calc((clamp(76px, calc(8vh + 16px), 106px) - 70px) / 2);
+  top: 7.5px; /* (80px header - 65px button) / 2 = 7.5px */
   right: 15px;
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
   cursor: pointer;
   background-color: transparent;
   border: none;
 }
 
 .hamburger-svg {
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
 }
 
 .line {
@@ -209,10 +210,12 @@ p a {
   stroke-width: 3;
 }
 
-/* Header Container - Prevent height change on hydration */
-@media (max-width: 1399px) {
+/* Header Container - Fixed 80px height for mobile (<1450px) */
+@media (max-width: 90.625rem) {
   .header-container {
-    min-height: calc(clamp(60px, 8vh, 90px) + 15px) !important;
+    height: 80px !important;
+    min-height: 80px !important;
+    max-height: 80px !important;
   }
 }
 

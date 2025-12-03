@@ -58,7 +58,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
     <>
       {/* Desktop Navigation - Centered with absolute positioning */}
       <nav
-        className="nav hidden xlg:flex items-center gap-0"
+        className="nav hidden xlg:flex items-center gap-0 flex-nowrap"
         role="navigation"
         aria-label="Main navigation"
         style={{
@@ -79,7 +79,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
             {item.dropdown ? (
               <>
                 <button
-                  className="nav-link flex items-center px-3 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
+                  className="nav-link flex items-center px-3 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                   style={{
                     fontSize: 'var(--font-size-menuMainItem)',
                     fontFamily: 'var(--font-family-menuMainItem)',
@@ -140,7 +140,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
               <Link
                 href={item.href!}
                 onClick={handlePortalClick}
-                className={`nav-link agent-portal flex items-center px-3 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white ${isPortalClicked ? 'clicked' : ''}`}
+                className={`nav-link agent-portal flex items-center px-3 py-3 transition-all duration-300 rounded-md mx-[2px] bg-transparent text-white whitespace-nowrap ${isPortalClicked ? 'clicked' : ''}`}
                 style={{
                   fontSize: 'var(--font-size-menuMainItem)',
                   fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
@@ -161,7 +161,7 @@ export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Pa
             ) : (
               <Link
                 href={item.href!}
-                className="nav-link flex items-center px-3 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white"
+                className="nav-link flex items-center px-3 py-3 text-white transition-all duration-300 rounded-md mx-[2px] bg-transparent hover:bg-[rgba(42,42,42,0.8)] hover:text-white whitespace-nowrap"
                 style={{
                   fontSize: 'var(--font-size-menuMainItem)',
                   fontFamily: 'var(--font-family-menuMainItem)',

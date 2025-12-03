@@ -42,7 +42,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 3000);
+    setTimeout(() => setIsClicked(false), 2000); // Stay green for 2 seconds
     onClick?.(e);
   };
 

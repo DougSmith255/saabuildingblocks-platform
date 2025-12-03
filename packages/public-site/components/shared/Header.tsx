@@ -202,8 +202,7 @@ export default function Header() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: is404Page ? 'center' : 'space-between',
-              height: 'auto',
-              minHeight: 'clamp(60px, 8vh, 90px)',
+              height: '85px', // Fixed height for desktop
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
@@ -555,13 +554,12 @@ export default function Header() {
           background-color: transparent !important;
           /* Fixed positioning so it stays in place when header slides up */
           position: fixed;
-          /* Center vertically within header: clamp(60px, 8vh, 90px) + 16px padding (8px top + 8px bottom) */
-          /* Total height: clamp(76px, calc(8vh + 16px), 106px) */
-          /* Button is 70px tall, so center = (total height - button height) / 2 */
-          top: calc((clamp(76px, calc(8vh + 16px), 106px) - 70px) / 2);
+          /* Center vertically within 80px mobile header height */
+          /* Button is 65px tall, so center = (80px - 65px) / 2 = 7.5px */
+          top: 7.5px;
           right: 15px;
-          width: 70px;
-          height: 70px;
+          width: 65px;
+          height: 65px;
           will-change: transform;
         }
 
@@ -579,8 +577,8 @@ export default function Header() {
         }
 
         .hamburger-svg {
-          width: 70px;
-          height: 70px;
+          width: 65px;
+          height: 65px;
           transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -630,9 +628,10 @@ export default function Header() {
           }
         }
 
+        /* Mobile header height - fixed 80px below 1450px breakpoint */
         @media (max-width: 90.625rem) {
           .header-container {
-            min-height: calc(clamp(60px, 8vh, 90px) + 15px) !important;
+            height: 80px !important;
           }
         }
 
