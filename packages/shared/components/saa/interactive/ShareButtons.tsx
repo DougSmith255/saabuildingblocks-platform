@@ -53,8 +53,8 @@ export interface ShareButtonsProps {
  * - LinkedIn share
  * - Email share
  * - Copy link button (with visual feedback)
- * - Master Controller colors via CSS variables
- * - Hover effects with accent green
+ * - 3D Metal plate backing (matches Master Controller style)
+ * - Hover effects with accent green (#00ff88)
  *
  * @example
  * ```tsx
@@ -127,113 +127,128 @@ export function ShareButtons({
     }
   };
 
-  // Button base styles - layout and typography
-  const buttonClass = `
-    flex items-center justify-center gap-2
-    px-5 py-2.5
-    rounded-lg
-    transition-all duration-200
-    font-[var(--font-taskor)]
-    text-sm uppercase tracking-wider
-    hover:text-[#00ff88]
-    hover:border-[#00ff88]
-  `;
-
-  // Metal plate styles - inline for reliable rendering
-  const metalPlateStyle: React.CSSProperties = {
-    background: 'linear-gradient(135deg, rgba(100,100,100,0.4) 0%, rgba(50,50,50,0.6) 100%)',
-    backgroundColor: '#2d2d2d', // Solid fallback
-    border: '1px solid rgba(150,150,150,0.3)',
-    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 8px rgba(0,0,0,0.5)',
-    color: '#dcdbd5',
-  };
-
   return (
-    <div className={`
-      ${showDivider ? 'mt-12 pt-8 border-t border-[var(--color-headingText,#e5e4dd)]/20' : ''}
-      ${className}
-    `}>
-      {showHeading && (
-        <h3
-          className="mb-4"
-          style={{
-            fontFamily: 'var(--font-family-h3, var(--font-taskor), sans-serif)',
-            fontSize: 'var(--font-size-h3, clamp(32px, calc(28.36px + 1.45vw), 72px))',
-            lineHeight: 'var(--line-height-h3, 1.3)',
-            color: 'var(--text-color-h3, #e5e4dd)',
-            fontWeight: 'var(--font-weight-h3, 700)',
-          }}
-        >
-          {heading}
-        </h3>
-      )}
+    <>
+      {/* Share button styles - 3D metal plate with green hover */}
+      <style jsx global>{`
+        .share-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.625rem 1.25rem;
+          border-radius: 0.5rem;
+          font-family: var(--font-taskor, sans-serif);
+          font-size: 0.875rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          transition: all 0.2s ease;
+          /* 3D Metal plate styling */
+          background: linear-gradient(135deg, rgba(100,100,100,0.4) 0%, rgba(50,50,50,0.6) 100%);
+          background-color: #2d2d2d;
+          color: #dcdbd5;
+          border: 1px solid rgba(150,150,150,0.3);
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 2px 8px rgba(0,0,0,0.5);
+          cursor: pointer;
+        }
 
-      <div className="flex flex-wrap gap-3">
-        {/* Twitter/X */}
-        <button
-          onClick={handleTwitterShare}
-          className={buttonClass}
-          style={metalPlateStyle}
-          aria-label="Share on Twitter"
-        >
-          <Twitter className="w-4 h-4" />
-          <span className="hidden sm:inline">Twitter</span>
-        </button>
+        .share-btn:hover {
+          color: #00ff88;
+          border-color: #00ff88;
+          box-shadow: inset 0 1px 1px rgba(255,255,255,0.15), 0 4px 12px rgba(0,255,136,0.3);
+        }
 
-        {/* Facebook */}
-        <button
-          onClick={handleFacebookShare}
-          className={buttonClass}
-          style={metalPlateStyle}
-          aria-label="Share on Facebook"
-        >
-          <Facebook className="w-4 h-4" />
-          <span className="hidden sm:inline">Facebook</span>
-        </button>
+        .share-btn svg {
+          width: 1rem;
+          height: 1rem;
+        }
 
-        {/* LinkedIn */}
-        <button
-          onClick={handleLinkedInShare}
-          className={buttonClass}
-          style={metalPlateStyle}
-          aria-label="Share on LinkedIn"
-        >
-          <Linkedin className="w-4 h-4" />
-          <span className="hidden sm:inline">LinkedIn</span>
-        </button>
+        .share-btn:hover svg {
+          color: #00ff88;
+        }
+      `}</style>
 
-        {/* Email */}
-        <button
-          onClick={handleEmailShare}
-          className={buttonClass}
-          style={metalPlateStyle}
-          aria-label="Share via Email"
-        >
-          <Mail className="w-4 h-4" />
-          <span className="hidden sm:inline">Email</span>
-        </button>
+      <div className={`
+        ${showDivider ? 'mt-12 pt-8 border-t border-[var(--color-headingText,#e5e4dd)]/20' : ''}
+        ${className}
+      `}>
+        {showHeading && (
+          <h3
+            className="mb-4"
+            style={{
+              fontFamily: 'var(--font-family-h3, var(--font-taskor), sans-serif)',
+              fontSize: 'var(--font-size-h3, clamp(32px, calc(28.36px + 1.45vw), 72px))',
+              lineHeight: 'var(--line-height-h3, 1.3)',
+              color: 'var(--text-color-h3, #e5e4dd)',
+              fontWeight: 'var(--font-weight-h3, 700)',
+            }}
+          >
+            {heading}
+          </h3>
+        )}
 
-        {/* Copy Link */}
-        <button
-          onClick={handleCopyLink}
-          className={buttonClass}
-          style={metalPlateStyle}
-          aria-label="Copy link to clipboard"
-        >
-          {copied ? (
-            <>
-              <Check className="w-4 h-4 text-[#00ff88]" />
-              <span className="hidden sm:inline text-[#00ff88]">Copied!</span>
-            </>
-          ) : (
-            <>
-              <Link2 className="w-4 h-4" />
-              <span className="hidden sm:inline">Copy Link</span>
-            </>
-          )}
-        </button>
+        <div className="flex flex-wrap gap-3">
+          {/* Twitter/X */}
+          <button
+            onClick={handleTwitterShare}
+            className="share-btn"
+            aria-label="Share on Twitter"
+          >
+            <Twitter />
+            <span className="hidden sm:inline">Twitter</span>
+          </button>
+
+          {/* Facebook */}
+          <button
+            onClick={handleFacebookShare}
+            className="share-btn"
+            aria-label="Share on Facebook"
+          >
+            <Facebook />
+            <span className="hidden sm:inline">Facebook</span>
+          </button>
+
+          {/* LinkedIn */}
+          <button
+            onClick={handleLinkedInShare}
+            className="share-btn"
+            aria-label="Share on LinkedIn"
+          >
+            <Linkedin />
+            <span className="hidden sm:inline">LinkedIn</span>
+          </button>
+
+          {/* Email */}
+          <button
+            onClick={handleEmailShare}
+            className="share-btn"
+            aria-label="Share via Email"
+          >
+            <Mail />
+            <span className="hidden sm:inline">Email</span>
+          </button>
+
+          {/* Copy Link */}
+          <button
+            onClick={handleCopyLink}
+            className="share-btn"
+            aria-label="Copy link to clipboard"
+          >
+            {copied ? (
+              <>
+                <Check style={{ color: '#00ff88' }} />
+                <span className="hidden sm:inline" style={{ color: '#00ff88' }}>Copied!</span>
+              </>
+            ) : (
+              <>
+                <Link2 />
+                <span className="hidden sm:inline">Copy Link</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
