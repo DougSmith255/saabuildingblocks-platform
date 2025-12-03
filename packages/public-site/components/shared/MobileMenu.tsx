@@ -50,6 +50,8 @@ interface MobileMenuProps {
 export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Page, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {
   const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const savedScrollY = useRef<number>(0);
 
   // Scroll lock - prevent page scrolling while keeping all content visible
   useEffect(() => {
@@ -58,11 +60,11 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
       // Save current scroll position
-      const scrollY = window.scrollY;
+      savedScrollY.current = window.scrollY;
 
       // Lock scroll - page stays in place exactly as it was
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
+      document.body.style.top = `-${savedScrollY.current}px`;
       document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
 
@@ -104,14 +106,26 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
         }
       };
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      // Show transition overlay to mask scroll restoration
+      setIsTransitioning(true);
+
+      // Small delay to ensure overlay is visible before scroll restoration
+      requestAnimationFrame(() => {
+        // Restore body styles
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+
+        // Restore scroll position instantly (no animation)
+        window.scrollTo({ top: savedScrollY.current, behavior: 'instant' });
+
+        // Fade out the transition overlay after scroll is restored
+        setTimeout(() => {
+          setIsTransitioning(false);
+        }, 150);
+      });
     }
   }, [isMobileMenuOpen]);
 
@@ -136,25 +150,46 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
   }
 
   return (
-    <div
-        id="mobile-menu"
-        role="dialog"
-        aria-label="Mobile navigation menu"
-        className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden ${
-          isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
-        }`}
-        style={{
-          background: 'rgba(15, 15, 15, 0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          willChange: 'transform',
-          transform: isMobileMenuOpen ? 'translateZ(0)' : 'translateY(-100%) translateZ(0)',
-          overscrollBehavior: 'contain',
-          pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
-          WebkitOverflowScrolling: 'touch',
-          display: shouldRenderMenu ? undefined : 'none',
-        }}
-      >
+    <>
+      {/* Transition overlay - masks scroll restoration when menu closes */}
+      {isTransitioning && (
+        <div
+          className="menu-transition-overlay"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9985,
+            background: 'rgba(15, 15, 15, 0.95)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            animation: 'menuTransitionFadeOut 200ms ease-out forwards',
+            pointerEvents: 'none',
+          }}
+          aria-hidden="true"
+        />
+      )}
+      <div
+          id="mobile-menu"
+          role="dialog"
+          aria-label="Mobile navigation menu"
+          className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden ${
+            isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
+          }`}
+          style={{
+            background: 'rgba(15, 15, 15, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            willChange: 'transform',
+            transform: isMobileMenuOpen ? 'translateZ(0)' : 'translateY(-100%) translateZ(0)',
+            overscrollBehavior: 'contain',
+            pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
+            WebkitOverflowScrolling: 'touch',
+            display: shouldRenderMenu ? undefined : 'none',
+          }}
+        >
         <div className="mobile-menu-content pt-24 pb-32 min-h-screen">
           <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
             {navItems.map((item, index) => (
@@ -266,5 +301,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
           </nav>
         </div>
       </div>
+    </>
   );
 }

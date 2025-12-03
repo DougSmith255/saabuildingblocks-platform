@@ -24,6 +24,9 @@ export default function Header() {
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
 
+  // Track pathname for route change detection
+  const pathname = usePathname();
+
   // Initialize shouldAnimate - NEVER animate after first page load
   // Use sessionStorage to track across page navigations
   const [shouldAnimate, setShouldAnimate] = useState(() => {
@@ -40,6 +43,14 @@ export default function Header() {
   useEffect(() => {
     setHasMounted(true);
   }, []);
+
+  // Reset header visibility on route change - ensures header is visible on new pages
+  useEffect(() => {
+    setIsHidden(false);
+    setLastScrollY(0);
+    setScrollAnchor(0);
+    setScrollDirection(null);
+  }, [pathname]);
 
   // Wait for fonts to load before showing header to prevent text flashes
   // Only on first visit - subsequent navigations show header immediately
@@ -102,8 +113,12 @@ export default function Header() {
       // Calculate scroll distance from anchor
       const scrollDistance = Math.abs(currentScrollY - scrollAnchor);
 
+      // Always show header at top of page
+      if (currentScrollY <= 0) {
+        setIsHidden(false);
+      }
       // Apply thresholds: 500px down to hide, 250px up to show
-      if (currentDirection === 'down' && scrollDistance >= 500) {
+      else if (currentDirection === 'down' && scrollDistance >= 500) {
         setIsHidden(true);
       } else if (currentDirection === 'up' && scrollDistance >= 250) {
         setIsHidden(false);
@@ -341,6 +356,20 @@ export default function Header() {
 
         .menu-closing {
           animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Menu transition overlay - fades out to mask scroll restoration */
+        @keyframes menuTransitionFadeOut {
+          from {
+            opacity: 1;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+          }
+          to {
+            opacity: 0;
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+          }
         }
 
         /* Dark mode scrollbar for mobile menu */
