@@ -59,7 +59,8 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
       } : {}}
     >
       {/* Button wrapper - inline container with relative positioning for light bars */}
-      <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
+      {/* py-2 (8px) provides clearance for light bars when buttons stack */}
+      <div className={`relative py-2 ${isFullWidth ? 'w-full' : 'inline-block'}`}>
         <a
           href={href}
           onClick={handleClick}

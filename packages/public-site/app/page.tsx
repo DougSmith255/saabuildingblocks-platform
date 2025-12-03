@@ -160,7 +160,7 @@ export default function Home() {
           </div>
 
           {/* CTA Button Group - ensure 15px+ clearance from fold */}
-          <div className="flex flex-col sm:flex-row gap-6 sm:gap-3 justify-center items-center pb-6">
+          <div className="flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center pb-6">
             <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.3s">
               JOIN THE ALLIANCE
             </CTAButton>
