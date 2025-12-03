@@ -7,4 +7,5 @@
 // export { SlotMachine3D } from '@/app/components/SlotMachine3D';
 // export type { SlotMachine3DProps } from '@/app/components/SlotMachine3D';
 
-export {};
+export { ShareButtons } from './ShareButtons';
+export type { ShareButtonsProps } from './ShareButtons';

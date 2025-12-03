@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { BlogPostHero } from './BlogPostHero';
 import { RelatedPosts } from './RelatedPosts';
-import { ShareButtons } from './ShareButtons';
+import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
 
@@ -97,21 +97,19 @@ export function BlogPostTemplate({
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
 
-            {/* Share Buttons */}
-            <div className="mt-12 pt-8 border-t border-white/10">
-              <ShareButtons
-                slug={post.slug}
-                title={post.title}
-                excerpt={post.excerpt}
-              />
-            </div>
+            {/* Share Buttons - from shared components */}
+            <ShareButtons
+              url={`https://saabuildingblocks.com/blog/${post.slug}`}
+              title={post.title}
+              excerpt={post.excerpt}
+            />
           </div>
         </div>
       </section>
 
-      {/* Related Posts */}
+      {/* Related Posts - No border-t here, divider handled by Share section */}
       {relatedPosts.length > 0 && (
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12 border-t border-white/10">
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <RelatedPosts
               posts={relatedPosts}
