@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import styles from './GlassShimmer.module.css';
 
 interface SocialIcon {
   name: string;
@@ -130,6 +131,14 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} role="contentinfo" className="footer-wrapper">
+      {/* Glassmorphism Background - Same as Header but with top rounded corners */}
+      <div className={styles['glassContainer']} style={{ borderRadius: '20px 20px 0 0', top: 0, bottom: '-5px' }}>
+        <div className={styles['glassBase']} style={{ borderRadius: '20px 20px 0 0' }} />
+        <div className={styles['shimmerLayer']} style={{ borderRadius: '20px 20px 0 0' }} />
+        <div className={styles['refractionLayer']} />
+        <div className={styles['textureLayer']} />
+        <div className={styles['edgeHighlight']} />
+      </div>
       <div className="footer-container">
         {/* Logo Section */}
         <div className="footer-logo">
@@ -188,14 +197,21 @@ export default function Footer() {
 
       <style jsx>{`
         /* Footer Container - Positioned at bottom of content */
+        /* Matches header styling with top rounded corners */
         .footer-wrapper {
           position: relative;
           width: 100%;
           background: transparent;
           margin-top: auto;
+          border-radius: 20px 20px 0 0;
+          border-top: 2px solid rgba(60, 60, 60, 0.8);
+          box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+          overflow: hidden;
         }
 
         .footer-container {
+          position: relative;
+          z-index: 1;
           width: 100%;
           margin: 0 auto;
           padding: 50px 20px 20px;

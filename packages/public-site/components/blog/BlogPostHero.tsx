@@ -80,7 +80,7 @@ export function BlogPostHero({
   const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
   return (
-    <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+    <section className="relative min-h-[100dvh] flex flex-col justify-center py-16 md:py-24 px-4 sm:px-8 md:px-12">
       {/* Hero background - uses star background by default */}
       {heroImage && (
         <div

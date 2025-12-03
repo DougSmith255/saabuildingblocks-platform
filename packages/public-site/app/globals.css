@@ -2294,9 +2294,18 @@ body.light-mode .blog-content figcaption {
   color: #4a4a4a;
 }
 
-/* Hide default StarBackground in light mode - CloudBackground takes over */
-body.light-mode .starfieldContainer {
+/* Hide default StarBackground COMPLETELY in light mode - CloudBackground takes over */
+/* Use multiple selectors for maximum specificity */
+body.light-mode .starfieldContainer,
+body.light-mode [class*="starfield"],
+body.light-mode [class*="Starfield"],
+body.light-mode [class*="star_"],
+body.light-mode [class*="Star_"],
+.light-mode .starfieldContainer {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Override body background in light mode - off-white (primary heading text color) */
@@ -2390,38 +2399,15 @@ body.light-mode .blog-content h2 .h2-word {
 }
 
 /* ========================================
-   LIGHT MODE - Preserve Fonts (CRITICAL)
-   Fonts should NOT change between themes
-   H1, H2: Taskor (display)
-   H3-H6: Amulya (serif)
-   Body: Synonym (monospace)
+   LIGHT MODE - Font Inheritance Notice
+   Fonts should NOT change between themes.
+   All fonts inherit from existing rules:
+   - H1, H2: .text-display -> var(--font-taskor)
+   - H3-H6: var(--font-amulya)
+   - Body: var(--font-synonym)
+
+   DO NOT override fonts in light mode - they should stay identical.
    ======================================== */
-body.light-mode {
-  font-family: var(--font-synonym), 'Courier New', monospace !important;
-}
-
-body.light-mode h1,
-body.light-mode h2 {
-  font-family: var(--font-taskor), system-ui, sans-serif !important;
-}
-
-body.light-mode h3,
-body.light-mode h4,
-body.light-mode h5,
-body.light-mode h6 {
-  font-family: var(--font-amulya), Georgia, serif !important;
-}
-
-body.light-mode button {
-  font-family: var(--font-taskor), system-ui, sans-serif !important;
-}
-
-body.light-mode p,
-body.light-mode li,
-body.light-mode span,
-body.light-mode .blog-content {
-  font-family: var(--font-synonym), 'Courier New', monospace !important;
-}
 
 /* =======================
    Universal Image Loading - 2025 Hybrid Approach
