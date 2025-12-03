@@ -2391,9 +2391,12 @@ body.light-mode .blog-post .border-t {
 /* ========================================
    LIGHT MODE - Preserve Fonts (CRITICAL)
    Fonts should NOT change between themes
+   H1, H2: Taskor (display)
+   H3-H6: Amulya (serif)
+   Body: Synonym (monospace)
    ======================================== */
 body.light-mode {
-  font-family: var(--font-amulya), Georgia, serif !important;
+  font-family: var(--font-synonym), 'Courier New', monospace !important;
 }
 
 body.light-mode h1,
@@ -2405,11 +2408,18 @@ body.light-mode h3,
 body.light-mode h4,
 body.light-mode h5,
 body.light-mode h6 {
-  font-family: var(--font-taskor), system-ui, sans-serif !important;
+  font-family: var(--font-amulya), Georgia, serif !important;
 }
 
 body.light-mode button {
   font-family: var(--font-taskor), system-ui, sans-serif !important;
+}
+
+body.light-mode p,
+body.light-mode li,
+body.light-mode span,
+body.light-mode .blog-content {
+  font-family: var(--font-synonym), 'Courier New', monospace !important;
 }
 
 /* =======================
