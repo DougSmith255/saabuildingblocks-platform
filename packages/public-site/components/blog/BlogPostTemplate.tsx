@@ -8,9 +8,10 @@ import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
 
-// Lazy load StarBackgroundAlt - only loaded when user switches to light mode
-const StarBackgroundAlt = dynamic(
-  () => import('@/components/shared/StarBackgroundAlt'),
+// Lazy load CloudBackground - only loaded when user switches to light mode
+// Displays daylight sky scene with animated clouds
+const CloudBackground = dynamic(
+  () => import('@/components/shared/CloudBackground'),
   { ssr: false }
 );
 
@@ -88,8 +89,8 @@ export function BlogPostTemplate({
 
   return (
     <article className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
-      {/* Light mode alternate star background - only rendered when in light mode */}
-      {!isDarkMode && <StarBackgroundAlt />}
+      {/* Light mode cloud background - daylight sky scene with animated clouds */}
+      {!isDarkMode && <CloudBackground />}
 
       {/* Breadcrumbs */}
       <div className="px-4 sm:px-8 md:px-12 pt-4">

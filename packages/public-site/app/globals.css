@@ -2194,6 +2194,127 @@ article p a:focus-visible,
   }
 }
 
+/* ========================================
+   LIGHT MODE - Daylight Sky Theme Override
+   Applied when body has .light-mode class
+   Background: Blue sky with animated clouds
+   Text: Dark colors for contrast, yellow H1/H2 for sunlight effect
+   Unchanged: share buttons (green), related posts styling
+   ======================================== */
+
+body.light-mode .blog-content {
+  /* Body text - dark blue-gray for better readability on sky background */
+  color: #1a2a3a;
+}
+
+body.light-mode .blog-content h3,
+body.light-mode .blog-content h4,
+body.light-mode .blog-content h5,
+body.light-mode .blog-content h6 {
+  /* Headings H3-H6 - deep navy for strong contrast */
+  color: #0d1b2a;
+}
+
+body.light-mode .blog-content p {
+  /* Paragraphs - dark blue-gray */
+  color: #1a2a3a;
+}
+
+body.light-mode .blog-content ul li,
+body.light-mode .blog-content ol li {
+  /* List items - dark blue-gray */
+  color: #1a2a3a;
+}
+
+body.light-mode .blog-content ul li::marker,
+body.light-mode .blog-content ol li::marker {
+  /* Bullet/number markers - deep navy */
+  color: #0d1b2a;
+}
+
+body.light-mode .blog-content blockquote {
+  /* Blockquotes - dark blue-gray with gold accent border */
+  color: #1a2a3a;
+  border-left-color: #ffd700;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+body.light-mode .blog-content blockquote p {
+  color: #1a2a3a;
+}
+
+body.light-mode .blog-content code {
+  /* Inline code - dark on semi-transparent white */
+  color: #0d1b2a;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-mode .blog-content pre {
+  /* Code blocks - dark text on semi-transparent white */
+  color: #0d1b2a;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+body.light-mode .blog-content pre code {
+  color: #0d1b2a;
+  background-color: transparent;
+}
+
+body.light-mode .blog-content table {
+  /* Tables - dark text */
+  color: #1a2a3a;
+}
+
+body.light-mode .blog-content th {
+  /* Table headers - deep navy on light background */
+  color: #0d1b2a;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+body.light-mode .blog-content td {
+  color: #1a2a3a;
+  border-color: rgba(13, 27, 42, 0.2);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+body.light-mode .blog-content hr {
+  /* Horizontal rule - gold accent */
+  border-color: rgba(255, 215, 0, 0.5);
+}
+
+body.light-mode .blog-content strong,
+body.light-mode .blog-content b {
+  /* Bold text - deep navy */
+  color: #0d1b2a;
+}
+
+body.light-mode .blog-content figcaption {
+  /* Image captions - dark blue-gray */
+  color: #1a2a3a;
+}
+
+/* Hide default StarBackground in light mode - CloudBackground takes over */
+body.light-mode .starfieldContainer {
+  display: none !important;
+}
+
+/* Override body background in light mode - transparent to show CloudBackground */
+body.light-mode {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Light mode link colors - keep gold/yellow for sunlight effect */
+body.light-mode .blog-content a:not(.share-button) {
+  color: #d4a800;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .blog-content a:not(.share-button):hover {
+  color: #ffd700;
+}
+
 /* =======================
    Universal Image Loading - 2025 Hybrid Approach
    MOVED OUTSIDE MEDIA QUERY - Must apply globally to all screen sizes
@@ -2407,14 +2528,14 @@ img:not(.profile-image) {
   --container-height: 2.5em;
   --container-radius: 6.25em;
   --container-light-bg: #3d7eae;
-  --container-night-bg: #1d1f2c;
+  --container-night-bg: rgb(12, 12, 12); /* SAA primary background - no blue tint */
   --circle-container-diameter: 3.375em;
   --sun-moon-diameter: 2.125em;
   --sun-bg: #ffd700;
-  --moon-bg: #c4c9d1;
-  --spot-color: #959db1;
+  --moon-bg: #dcdbd5; /* SAA body text color for moon */
+  --spot-color: #5a5a5a; /* SAA medium gray for moon spots */
   --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
-  --stars-color: #fff;
+  --stars-color: #e5e4dd; /* SAA heading text color for stars */
   --clouds-color: #f3fdff;
   --back-clouds-color: #aacadf;
   --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);

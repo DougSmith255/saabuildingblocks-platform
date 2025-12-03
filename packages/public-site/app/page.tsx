@@ -45,7 +45,7 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
-              className="absolute inset-0 hero-animate-bg animate-in"
+              className="absolute inset-0 hero-animate-bg animate-in wolf-pack-bg"
               style={{
                 // Responsive background images using CSS image-set() - browser picks the best size
                 // Mobile (<=375px): 28KB, Tablet (<=768px): 52KB, Desktop: 87KB (67% bandwidth savings on mobile!)
@@ -64,6 +64,7 @@ export default function Home() {
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center 55%',
+                // Note: backgroundAttachment set via CSS class for mobile override
                 backgroundAttachment: 'fixed',
                 maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
                 WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',

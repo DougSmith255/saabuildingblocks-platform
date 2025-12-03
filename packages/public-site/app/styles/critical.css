@@ -65,6 +65,11 @@ body {
   body {
     background-attachment: scroll;
   }
+
+  /* Wolf pack hero background - disable fixed attachment on mobile */
+  .wolf-pack-bg {
+    background-attachment: scroll !important;
+  }
 }
 
 /* Critical Typography - H1 Hero Headlines */
