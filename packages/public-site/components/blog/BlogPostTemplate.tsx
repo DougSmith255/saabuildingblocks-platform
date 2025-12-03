@@ -1,11 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
 import { BlogPostHero } from './BlogPostHero';
 import { RelatedPosts } from './RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
+
+// Lazy load StarBackgroundAlt - only loaded when user switches to light mode
+const StarBackgroundAlt = dynamic(
+  () => import('@/components/shared/StarBackgroundAlt'),
+  { ssr: false }
+);
 
 /**
  * Process HTML content to wrap H2 words in spans for per-word metal plate styling
@@ -81,6 +88,9 @@ export function BlogPostTemplate({
 
   return (
     <article className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+      {/* Light mode alternate star background - only rendered when in light mode */}
+      {!isDarkMode && <StarBackgroundAlt />}
+
       {/* Breadcrumbs */}
       <div className="px-4 sm:px-8 md:px-12 pt-4">
         <div className="max-w-[1900px] mx-auto">
