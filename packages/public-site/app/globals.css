@@ -2315,6 +2315,103 @@ body.light-mode .blog-content a:not(.share-button):hover {
   color: #ffd700;
 }
 
+/* ========================================
+   LIGHT MODE - Hero Meta Info (Author, Date, Read Time)
+   ======================================== */
+body.light-mode .blog-post section:first-of-type .flex.flex-wrap.items-center.justify-center {
+  color: #1a2a3a !important;
+}
+
+body.light-mode .blog-post section:first-of-type .flex.flex-wrap.items-center.justify-center span {
+  color: #1a2a3a !important;
+}
+
+/* ========================================
+   LIGHT MODE - Share Buttons Section
+   ======================================== */
+body.light-mode .blog-post h3 {
+  color: #0d1b2a !important;
+}
+
+body.light-mode .blog-post .flex.flex-wrap.gap-3 button {
+  background-color: rgba(255, 255, 255, 0.5) !important;
+  border-color: rgba(13, 27, 42, 0.3) !important;
+  color: #1a2a3a !important;
+}
+
+body.light-mode .blog-post .flex.flex-wrap.gap-3 button:hover {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: #00ff88 !important;
+  color: #00ff88 !important;
+}
+
+body.light-mode .blog-post .flex.flex-wrap.gap-3 button span {
+  color: inherit !important;
+}
+
+/* ========================================
+   LIGHT MODE - Related Posts Section
+   ======================================== */
+body.light-mode .blog-post section.mt-16 h2 {
+  color: #0d1b2a !important;
+}
+
+body.light-mode .blog-post section.mt-16 {
+  border-top-color: rgba(13, 27, 42, 0.2) !important;
+}
+
+/* ========================================
+   LIGHT MODE - Content Section White Blur Backdrop
+   Semi-transparent white background for readability
+   ======================================== */
+body.light-mode .blog-post .blog-content {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Share section also gets backdrop */
+body.light-mode .blog-post .blog-content + div {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  margin-top: 1rem;
+}
+
+/* Border dividers in light mode */
+body.light-mode .blog-post .border-t {
+  border-top-color: rgba(13, 27, 42, 0.2) !important;
+}
+
+/* ========================================
+   LIGHT MODE - Preserve Fonts (CRITICAL)
+   Fonts should NOT change between themes
+   ======================================== */
+body.light-mode {
+  font-family: var(--font-amulya), Georgia, serif !important;
+}
+
+body.light-mode h1,
+body.light-mode h2 {
+  font-family: var(--font-taskor), system-ui, sans-serif !important;
+}
+
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode h5,
+body.light-mode h6 {
+  font-family: var(--font-taskor), system-ui, sans-serif !important;
+}
+
+body.light-mode button {
+  font-family: var(--font-taskor), system-ui, sans-serif !important;
+}
+
 /* =======================
    Universal Image Loading - 2025 Hybrid Approach
    MOVED OUTSIDE MEDIA QUERY - Must apply globally to all screen sizes
