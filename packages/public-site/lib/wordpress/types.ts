@@ -24,6 +24,8 @@ export interface BlogPost {
     avatar?: string;
   };
   categories: string[];
+  /** YouTube video URL from ACF field (optional) */
+  youtubeVideoUrl?: string;
 }
 
 export interface WordPressPost {
@@ -36,6 +38,10 @@ export interface WordPressPost {
   excerpt: { rendered: string };
   date: string;
   modified: string;
+  /** ACF custom fields */
+  acf?: {
+    youtube_video_url?: string;
+  };
   _embedded?: {
     'wp:featuredmedia'?: Array<{
       source_url: string;
