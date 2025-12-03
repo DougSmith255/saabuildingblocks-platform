@@ -90,7 +90,7 @@ export function BlogPostTemplate({
       {/* Main Content */}
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-[1000px] mx-auto">
             {/* Blog Content - Uses blog-content class from globals.css */}
             <div
               className="blog-content prose prose-invert max-w-none"
