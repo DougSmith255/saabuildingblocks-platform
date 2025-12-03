@@ -112,7 +112,7 @@ export function BlogPostTemplate({
         {!isDarkMode && <CloudBackground />}
 
         {/* Breadcrumbs - positioned below fixed header */}
-        <div className="relative z-10 px-4 sm:px-8 md:px-12 pt-[calc(var(--header-height)+1rem)]">
+        <div className="relative z-10 px-4 sm:px-8 md:px-12 pt-[calc(var(--header-height)+1.625rem)]">
           <div className="max-w-[1900px] mx-auto">
             <Breadcrumbs
               category={primaryCategory}
