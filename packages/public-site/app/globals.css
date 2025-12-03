@@ -1857,30 +1857,162 @@ article p a:focus-visible,
   line-height: 1.7;
 }
 
-/* Images - Responsive with border */
+/* Images - CyberFrame styling (holographic glass with metal frame) */
+/* Matches CyberFrame component from @saa/shared/components/saa/media */
 .blog-content img {
-  border-radius: 0.5rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(229, 228, 221, 0.2);
   max-width: 100%;
   height: auto;
   display: block;
+  border-radius: 8px;
+  margin: 0;
 }
 
-/* Images with captions (WordPress figure) */
+/* WordPress figure wrapper - receives the CyberFrame styling */
 .blog-content figure {
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  /* 3D Metal Frame */
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-content figure:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+/* Inner container for holographic overlay */
+.blog-content figure img {
+  position: relative;
+  border-radius: 6px;
+}
+
+/* Holographic glass overlay - glossy sheen */
+.blog-content figure::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  z-index: 10;
+  pointer-events: none;
+  border-radius: 6px;
+  background: linear-gradient(
+    25deg,
+    transparent 0%,
+    transparent 25%,
+    rgba(255,255,255,0.08) 35%,
+    rgba(255,255,255,0.15) 40%,
+    rgba(255,255,255,0.08) 45%,
+    transparent 55%,
+    transparent 100%
+  );
+  transition: all 0.4s ease;
+}
+
+/* Holographic iridescent overlay */
+.blog-content figure::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  z-index: 11;
+  pointer-events: none;
+  border-radius: 6px;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 0, 128, 0.03) 0%,
+    rgba(128, 0, 255, 0.03) 20%,
+    rgba(0, 128, 255, 0.03) 40%,
+    rgba(0, 255, 128, 0.03) 60%,
+    rgba(255, 255, 0, 0.03) 80%,
+    rgba(255, 128, 0, 0.03) 100%
+  );
+  mix-blend-mode: overlay;
+  transition: all 0.4s ease;
+}
+
+/* Hover - sheen shifts */
+.blog-content figure:hover::before {
+  background: linear-gradient(
+    30deg,
+    transparent 0%,
+    transparent 45%,
+    rgba(255,255,255,0.12) 55%,
+    rgba(255,255,255,0.2) 60%,
+    rgba(255,255,255,0.12) 65%,
+    transparent 75%,
+    transparent 100%
+  );
+}
+
+/* Hover - holographic more visible */
+.blog-content figure:hover::after {
+  background: linear-gradient(
+    145deg,
+    rgba(255, 0, 128, 0.05) 0%,
+    rgba(128, 0, 255, 0.05) 20%,
+    rgba(0, 128, 255, 0.05) 40%,
+    rgba(0, 255, 128, 0.05) 60%,
+    rgba(255, 255, 0, 0.05) 80%,
+    rgba(255, 128, 0, 0.05) 100%
+  );
+}
+
+/* Standalone images (not in figure) - also get CyberFrame */
+.blog-content > p > img,
+.blog-content > img {
+  position: relative;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-content > p > img:hover,
+.blog-content > img:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
 }
 
 .blog-content figcaption {
   font-family: var(--font-amulya);
   font-size: 0.875rem;
   color: #808080;
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   text-align: center;
   font-style: italic;
+  position: relative;
+  z-index: 12;
 }
 
 /* Tables */

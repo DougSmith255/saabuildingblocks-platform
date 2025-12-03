@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { H1 } from '@saa/shared/components/saa';
+import { H1, CyberFrame } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
@@ -136,35 +136,15 @@ export function BlogPostHero({
 
         {/* YouTube Video - displayed if present */}
         {youtubeId && (
-          <div className="mt-12">
-            {/* Futuristic video frame */}
-            <div className="relative max-w-4xl mx-auto">
-              {/* Video container with cyber frame */}
-              <div className="relative bg-[#191818] rounded-xl border border-[#ffd700]/30 overflow-hidden">
-                {/* Top accent bar */}
-                <div className="h-1 bg-gradient-to-r from-transparent via-[#ffd700] to-transparent" />
-
-                {/* Responsive 16:9 video embed */}
-                <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
-                    title={title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 w-full h-full"
-                  />
-                </div>
-
-                {/* Bottom accent bar - primary grey */}
-                <div className="h-1 bg-gradient-to-r from-transparent via-[#191818] to-transparent" />
-              </div>
-
-              {/* Corner accents - gold top, grey bottom */}
-              <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#ffd700] rounded-tl-lg" />
-              <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#ffd700] rounded-tr-lg" />
-              <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#2a2a2a] rounded-bl-lg" />
-              <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#2a2a2a] rounded-br-lg" />
-            </div>
+          <div className="mt-12 max-w-4xl mx-auto">
+            <CyberFrame isVideo aspectRatio="16/9">
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
+                title={title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </CyberFrame>
           </div>
         )}
       </div>

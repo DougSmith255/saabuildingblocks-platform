@@ -33,3 +33,6 @@ export * from './text';
 
 // Headings
 export * from './headings';
+
+// Media (frames, players, galleries)
+export * from './media';
