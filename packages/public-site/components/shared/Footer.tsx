@@ -131,10 +131,10 @@ export default function Footer() {
 
   return (
     <footer ref={footerRef} role="contentinfo" className="footer-wrapper">
-      {/* Glassmorphism Background - Same as Header but with top rounded corners */}
-      <div className={styles['glassContainer']} style={{ borderRadius: '20px 20px 0 0', top: 0, bottom: '-5px' }}>
-        <div className={styles['glassBase']} style={{ borderRadius: '20px 20px 0 0' }} />
-        <div className={styles['shimmerLayer']} style={{ borderRadius: '20px 20px 0 0' }} />
+      {/* Glassmorphism Background - Same as Header but with top rounded corners only */}
+      <div className={`${styles['glassContainer']} footer-glass-container`}>
+        <div className={`${styles['glassBase']} footer-glass-base`} />
+        <div className={`${styles['shimmerLayer']} footer-shimmer`} />
         <div className={styles['refractionLayer']} />
         <div className={styles['textureLayer']} />
         <div className={styles['edgeHighlight']} />
@@ -197,7 +197,7 @@ export default function Footer() {
 
       <style jsx>{`
         /* Footer Container - Positioned at bottom of content */
-        /* Matches header styling with top rounded corners */
+        /* Matches header styling but with TOP rounded corners only */
         .footer-wrapper {
           position: relative;
           width: 100%;
@@ -207,6 +207,25 @@ export default function Footer() {
           border-top: 2px solid rgba(60, 60, 60, 0.8);
           box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
           overflow: hidden;
+        }
+
+        /* Override glassmorphism module styles for footer - TOP corners only */
+        :global(.footer-glass-container) {
+          border-radius: 20px 20px 0 0 !important;
+          top: 0 !important;
+          bottom: -5px !important;
+        }
+
+        :global(.footer-glass-base) {
+          border-radius: 20px 20px 0 0 !important;
+        }
+
+        :global(.footer-glass-base::after) {
+          border-radius: 18px 18px 0 0 !important;
+        }
+
+        :global(.footer-shimmer) {
+          border-radius: 20px 20px 0 0 !important;
         }
 
         .footer-container {

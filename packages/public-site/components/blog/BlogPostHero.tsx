@@ -89,13 +89,13 @@ export function BlogPostHero({
         />
       )}
 
+      {/* Theme switch - positioned absolutely so it doesn't affect content centering */}
+      <div className="absolute top-4 right-4 sm:top-8 sm:right-8 md:right-12 z-20">
+        <ThemeSwitch onToggle={onThemeChange} />
+      </div>
+
       {/* Content container - centered */}
       <div className="relative z-10 max-w-[1900px] mx-auto text-center">
-        {/* Top row: Theme switch positioned right */}
-        <div className="flex justify-end mb-8">
-          <ThemeSwitch onToggle={onThemeChange} />
-        </div>
-
         {/* Category badge - centered */}
         <div className="mb-6 flex justify-center">
           <CategoryBadge category={category} variant="featured" />
