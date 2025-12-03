@@ -60,19 +60,24 @@
 /* Base cloud styling - fluffy white clouds using CSS shapes */
 .cloud {
   position: absolute;
-  will-change: transform;
+  /* Use left animation instead of transform to avoid conflicts with scale */
   animation-name: cloudDrift;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  /* GPU acceleration */
+  will-change: left;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-/* Cloud drift animation - moves from left to right */
+/* Cloud drift animation - moves from left to right using left property */
+/* Using left instead of translateX to avoid transform conflicts with scale */
 @keyframes cloudDrift {
   0% {
-    transform: translateX(0) var(--cloud-scale, scale(1));
+    left: -30%;
   }
   100% {
-    transform: translateX(130vw) var(--cloud-scale, scale(1));
+    left: 110%;
   }
 }
 
@@ -132,27 +137,78 @@
     70px -60px 0 25px white;
 }
 
-/* Mobile adjustments - smaller clouds, fewer visible */
+/* Mobile adjustments - smaller clouds, smoother animations */
 @media screen and (max-width: 768px) {
   .skyContainer {
-    height: 100vh;
-    min-height: -webkit-fill-available;
+    height: 100%;
+    min-height: 100%;
     contain: layout style paint;
     background-attachment: scroll !important;
+    /* Prevent repaints from address bar changes */
+    position: absolute !important;
   }
 
   .sunGlow {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     top: 3%;
     right: 5%;
+    filter: blur(15px);
   }
 
-  .cloudVariant0,
-  .cloudVariant1,
-  .cloudVariant2,
+  /* Scale down cloud sizes directly in the variants for mobile */
+  .cloudVariant0 {
+    width: 100px;
+    height: 30px;
+    box-shadow:
+      20px -10px 0 5px white,
+      40px -5px 0 10px white,
+      60px -12px 0 8px white,
+      80px -3px 0 5px white;
+  }
+
+  .cloudVariant1 {
+    width: 80px;
+    height: 35px;
+    box-shadow:
+      15px -15px 0 10px white,
+      30px -20px 0 15px white,
+      50px -12px 0 12px white,
+      65px -5px 0 8px white;
+  }
+
+  .cloudVariant2 {
+    width: 60px;
+    height: 25px;
+    box-shadow:
+      15px -8px 0 8px white,
+      30px -10px 0 6px white,
+      45px -5px 0 5px white;
+  }
+
   .cloudVariant3 {
-    transform: scale(0.6);
+    width: 120px;
+    height: 40px;
+    box-shadow:
+      25px -18px 0 15px white,
+      50px -25px 0 20px white,
+      80px -18px 0 18px white,
+      100px -8px 0 10px white,
+      35px -30px 0 12px white;
+  }
+
+  /* Faster animation on mobile for smoother perceived movement */
+  .cloud {
+    animation-name: cloudDriftMobile;
+  }
+
+  @keyframes cloudDriftMobile {
+    0% {
+      left: -20%;
+    }
+    100% {
+      left: 120%;
+    }
   }
 }
 
@@ -161,11 +217,20 @@
   .skyContainer {
     background-attachment: scroll !important;
   }
+
+  /* Reduce blur on touch devices for performance */
+  .cloudVariant0,
+  .cloudVariant1,
+  .cloudVariant2,
+  .cloudVariant3 {
+    filter: blur(1px);
+  }
 }
 
 /* Fix for iOS viewport units */
 @supports (-webkit-touch-callout: none) {
   .skyContainer {
-    height: -webkit-fill-available;
+    height: 100% !important;
+    min-height: 100% !important;
   }
 }
