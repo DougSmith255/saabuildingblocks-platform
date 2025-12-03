@@ -1611,7 +1611,7 @@ body.is-404-page footer {
   letter-spacing: var(--letter-spacing-body, 0em);
 }
 
-/* H2 - Master Controller Typography with Neon Glow + Metal Plate */
+/* H2 - Master Controller Typography with Per-Word Metal Plates */
 .blog-content h2 {
   font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
   font-size: var(--font-size-h2, clamp(40px, calc(36.18px + 1.53vw), 82px));
@@ -1621,6 +1621,17 @@ body.is-404-page footer {
   color: var(--text-color-h2, #bfbdb0);
   margin-top: 3rem;
   margin-bottom: 1.5rem;
+  /* Flex layout for word spacing like Master Controller H2 */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+
+/* Per-word metal backing plate - matches Master Controller H2.tsx */
+.blog-content h2 .h2-word {
+  display: inline-block;
+  position: relative;
+  padding: 0.15em 0.25em;
   /* Neon glow text-shadow from Master Controller H2 */
   text-shadow:
     -1px -1px 0 rgba(255,255,255, 0.4),
@@ -1633,13 +1644,9 @@ body.is-404-page footer {
     0 0 15px #9a9888,
     0 0 3px #bfbdb0,
     0 3px 3px #000;
-  /* Metal backing plate */
-  position: relative;
-  display: inline-block;
-  padding: 0.2em 0.3em;
 }
 
-.blog-content h2::before {
+.blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
   inset: 0;

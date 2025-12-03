@@ -7,6 +7,23 @@ import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
 
+/**
+ * Process HTML content to wrap H2 words in spans for per-word metal plate styling
+ * This matches the Master Controller H2 component behavior
+ */
+function processH2WordWrapping(html: string): string {
+  // Match H2 tags and wrap each word in a span
+  return html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (match, attrs, content) => {
+    // Strip any existing HTML tags from the content for clean word splitting
+    const plainText = content.replace(/<[^>]*>/g, '');
+    // Split into words and wrap each in a span
+    const wrappedWords = plainText.split(/\s+/).map((word: string) =>
+      `<span class="h2-word">${word}</span>`
+    ).join(' ');
+    return `<h2${attrs}>${wrappedWords}</h2>`;
+  });
+}
+
 export interface BlogPostTemplateProps {
   /** The blog post data */
   post: BlogPost;
@@ -90,11 +107,12 @@ export function BlogPostTemplate({
       {/* Main Content */}
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
-          <div className="max-w-[1000px] mx-auto">
+          <div className="max-w-[1200px] mx-auto">
             {/* Blog Content - Uses blog-content class from globals.css */}
+            {/* H2s are processed to wrap words in spans for per-word metal plates */}
             <div
               className="blog-content prose prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: processH2WordWrapping(post.content) }}
             />
 
             {/* Share Buttons - from shared components */}

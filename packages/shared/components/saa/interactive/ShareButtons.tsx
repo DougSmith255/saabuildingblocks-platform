@@ -127,23 +127,22 @@ export function ShareButtons({
     }
   };
 
-  // Button styles - Metal plate background with green hover
-  // Similar styling to CTA buttons but smaller
+  // Button styles - 3D Metal plate with green hover
+  // 10px vertical padding (py-2.5 = 10px), 3D metal effect matching Master Controller
   const buttonClass = `
     flex items-center justify-center gap-2
-    px-4 py-2.5
-    bg-[rgb(45,45,45)]
-    hover:bg-[rgb(55,55,55)]
-    border border-white/10
-    hover:border-[var(--color-accentGreen,#00ff88)]
-    text-[var(--color-bodyText,#dcdbd5)]
-    hover:text-[var(--color-accentGreen,#00ff88)]
+    px-5 py-2.5
     rounded-lg
     transition-all duration-200
     font-[var(--font-taskor)]
     text-sm uppercase tracking-wider
-    shadow-[0_4px_8px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]
-    hover:shadow-[0_4px_12px_rgba(0,255,136,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]
+    text-[var(--color-bodyText,#dcdbd5)]
+    hover:text-[var(--color-accentGreen,#00ff88)]
+    border border-[rgba(150,150,150,0.2)]
+    hover:border-[var(--color-accentGreen,#00ff88)]
+    bg-gradient-to-b from-[rgba(100,100,100,0.3)] to-[rgba(50,50,50,0.5)]
+    shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_2px_8px_rgba(0,0,0,0.5)]
+    hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_12px_rgba(0,255,136,0.3)]
   `;
 
   return (
