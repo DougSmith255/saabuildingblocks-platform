@@ -1611,16 +1611,43 @@ body.is-404-page footer {
   letter-spacing: var(--letter-spacing-body, 0em);
 }
 
-/* H2 - Master Controller Typography */
+/* H2 - Master Controller Typography with Neon Glow + Metal Plate */
 .blog-content h2 {
   font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
   font-size: var(--font-size-h2, clamp(40px, calc(36.18px + 1.53vw), 82px));
   line-height: var(--line-height-h2, 1.1);
   letter-spacing: var(--letter-spacing-h2, -0.01em);
   font-weight: var(--font-weight-h2, 700);
-  color: var(--text-color-h2, #e5e4dd);
+  color: var(--text-color-h2, #bfbdb0);
   margin-top: 3rem;
   margin-bottom: 1.5rem;
+  /* Neon glow text-shadow from Master Controller H2 */
+  text-shadow:
+    -1px -1px 0 rgba(255,255,255, 0.4),
+    1px -1px 0 rgba(255,255,255, 0.4),
+    -1px 1px 0 rgba(255,255,255, 0.4),
+    1px 1px 0 rgba(255,255,255, 0.4),
+    0 -3px 8px #bfbdb0,
+    0 0 2px #bfbdb0,
+    0 0 5px #bfbdb0,
+    0 0 15px #9a9888,
+    0 0 3px #bfbdb0,
+    0 3px 3px #000;
+  /* Metal backing plate */
+  position: relative;
+  display: inline-block;
+  padding: 0.2em 0.3em;
+}
+
+.blog-content h2::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%);
+  border-radius: 0.1em;
+  z-index: -1;
+  border: 1px solid rgba(150,150,150,0.2);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.5);
 }
 
 /* H3 - Master Controller Typography */
@@ -1727,31 +1754,35 @@ article p a:focus-visible,
   border-radius: 2px;
 }
 
-/* Lists - Amulya font */
+/* Lists - Master Controller Body Typography */
 .blog-content ul {
-  font-family: var(--font-amulya);
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px));
+  line-height: var(--line-height-body, 1.4);
   list-style-type: disc;
   margin-left: 1.5rem;
   margin-bottom: 1.25rem;
-  color: #dcdbd5;
+  color: var(--text-color-body, #bfbdb0);
 }
 
 .blog-content ul li {
   margin-bottom: 0.5rem;
-  line-height: 1.7;
+  color: var(--text-color-body, #bfbdb0);
 }
 
 .blog-content ol {
-  font-family: var(--font-amulya);
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px));
+  line-height: var(--line-height-body, 1.4);
   list-style-type: decimal;
   margin-left: 1.5rem;
   margin-bottom: 1.25rem;
-  color: #dcdbd5;
+  color: var(--text-color-body, #bfbdb0);
 }
 
 .blog-content ol li {
   margin-bottom: 0.5rem;
-  line-height: 1.7;
+  color: var(--text-color-body, #bfbdb0);
 }
 
 /* Nested lists */

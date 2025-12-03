@@ -127,13 +127,14 @@ export function ShareButtons({
     }
   };
 
-  // Button styles using Master Controller CSS variables
+  // Button styles - Metal plate background with green hover
+  // Similar styling to CTA buttons but smaller
   const buttonClass = `
     flex items-center justify-center gap-2
-    px-4 py-2
-    bg-[var(--color-headingText,#e5e4dd)]/5
-    hover:bg-[var(--color-headingText,#e5e4dd)]/10
-    border border-[var(--color-headingText,#e5e4dd)]/20
+    px-4 py-2.5
+    bg-[rgb(45,45,45)]
+    hover:bg-[rgb(55,55,55)]
+    border border-white/10
     hover:border-[var(--color-accentGreen,#00ff88)]
     text-[var(--color-bodyText,#dcdbd5)]
     hover:text-[var(--color-accentGreen,#00ff88)]
@@ -141,6 +142,8 @@ export function ShareButtons({
     transition-all duration-200
     font-[var(--font-taskor)]
     text-sm uppercase tracking-wider
+    shadow-[0_4px_8px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.1)]
+    hover:shadow-[0_4px_12px_rgba(0,255,136,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]
   `;
 
   return (
