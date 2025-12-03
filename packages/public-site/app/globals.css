@@ -1626,9 +1626,10 @@ body.is-404-page footer {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5em;
-  /* 3D transforms for depth effect - matches H2.tsx */
+  /* 3D transforms for depth effect - exact match to H2.tsx */
   transform-style: preserve-3d;
-  transform: perspective(1000px) rotateX(15deg);
+  transform: rotateX(15deg);
+  position: relative;
 }
 
 /* Per-word metal backing plate - exact match to H2.tsx .h2-word */
