@@ -213,7 +213,6 @@ export function BlogPostTemplate({
           author={post.author.name}
           date={formattedDate}
           content={post.content}
-          heroImage={post.featuredImage?.url}
           youtubeVideoUrl={post.youtubeVideoUrl}
           onThemeChange={handleThemeChange}
         />
@@ -237,35 +236,28 @@ export function BlogPostTemplate({
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="max-w-[1200px] mx-auto">
-            {/* Featured Image at top of content */}
-            {post.featuredImage?.url && (
-              <figure className="blog-featured-image mb-8 md:mb-12">
-                <CyberFrame className="w-full">
-                  <div className="relative w-full aspect-[16/9]">
-                    <Image
-                      src={post.featuredImage.url}
-                      alt={post.featuredImage.alt || post.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                </CyberFrame>
-                {post.featuredImage.alt && (
-                  <figcaption className="mt-3 text-sm text-center text-[var(--text-color-body)] opacity-70">
-                    {post.featuredImage.alt}
-                  </figcaption>
-                )}
-              </figure>
-            )}
-
             {/* Blog Content - Uses blog-content class from globals.css */}
             {/* H2s are processed to wrap words in spans for per-word metal plates */}
-            <div
-              className="blog-content prose prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: processH2WordWrapping(post.content) }}
-            />
+            <div className="blog-content prose prose-invert max-w-none">
+              {/* Featured Image - floated inside content, max 500px */}
+              {post.featuredImage?.url && (
+                <div className="float-right ml-6 mb-4 w-full sm:w-[300px] md:w-[400px] lg:w-[500px] max-w-[500px]">
+                  <CyberFrame>
+                    <div className="relative w-full aspect-[16/9]">
+                      <Image
+                        src={post.featuredImage.url}
+                        alt={post.featuredImage.alt || post.title}
+                        fill
+                        sizes="500px"
+                        className="object-cover"
+                        priority
+                      />
+                    </div>
+                  </CyberFrame>
+                </div>
+              )}
+              <div dangerouslySetInnerHTML={{ __html: processH2WordWrapping(post.content) }} />
+            </div>
 
             {/* Share Buttons - from shared components */}
             <ShareButtons

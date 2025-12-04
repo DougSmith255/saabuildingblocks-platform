@@ -1874,8 +1874,10 @@ article p a:focus-visible,
 
 /* Images - CyberFrame styling (holographic glass with metal frame) */
 /* Matches CyberFrame component from @saa/shared/components/saa/media */
+/* Max 500px width for all blog images */
 .blog-content img {
-  max-width: 100%;
+  max-width: 500px;
+  width: 100%;
   height: auto;
   display: block;
   border-radius: 8px;
@@ -1883,9 +1885,11 @@ article p a:focus-visible,
 }
 
 /* WordPress figure wrapper - receives the CyberFrame styling */
+/* Max 500px width for all blog images */
 .blog-content figure {
   position: relative;
   display: inline-block;
+  max-width: 500px;
   margin-top: 2rem;
   margin-bottom: 2rem;
   /* 3D Metal Frame */
@@ -2416,15 +2420,16 @@ body.light-mode .blog-content a:not(.share-button):hover {
   text-shadow: 0 0 8px rgba(0, 255, 136, 0.6), 0 0 16px rgba(0, 255, 136, 0.4); /* Green glow */
 }
 
-/* Light mode breadcrumb links - darker green for visibility on blue sky background */
+/* Light mode breadcrumb links - gold/amber for visibility on blue sky background */
 body.light-mode .breadcrumb-link {
-  color: #007744 !important; /* Dark forest green for readability on light blue */
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  color: #b8860b !important; /* Dark goldenrod - visible on blue, matches theme */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
 }
 
 body.light-mode .breadcrumb-link:hover {
-  color: #00994d !important; /* Slightly brighter on hover */
-  text-shadow: 0 0 6px rgba(0, 153, 77, 0.4);
+  color: #ffd700 !important; /* Bright gold on hover */
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
 }
 
 /* ========================================
