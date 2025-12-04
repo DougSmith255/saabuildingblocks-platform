@@ -2605,12 +2605,13 @@ body.light-mode .blog-post .border-t {
    Target the ::before pseudo-element (the actual metal backing plate)
    Borders are darker than face for proper 3D depth effect
    NO white highlights - only dark shadows for recess effect
+   Keep sharp corners (no border-radius) to match dark mode
    ======================================== */
 body.light-mode .blog-content h2 .h2-word::before {
   background: linear-gradient(135deg, rgba(50,50,50,0.95) 0%, rgba(25,25,25,0.98) 100%) !important;
   border: 1px solid rgba(20,20,20,0.8) !important;
-  /* Rounded corners on bottom for softer 3D look */
-  border-radius: 0.1em !important;
+  /* Sharp corners - matches dark mode, no white strip */
+  border-radius: 0 !important;
   /* Dark inner shadow for depth - NO white highlights */
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 3px 12px rgba(0,0,0,0.7) !important;
 }
