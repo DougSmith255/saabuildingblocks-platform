@@ -49,7 +49,10 @@ const samplePost: BlogPost = {
   excerpt: 'Learn the three pillars of building a successful real estate empire with eXp Realty and the Smart Agent Alliance team.',
   date: '2025-12-02T12:00:00Z',
   modified: '2025-12-02T12:00:00Z',
-  featuredImage: undefined, // No hero image - will use star background
+  featuredImage: {
+    url: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/09/sponsoring-agents-as-a-new-exp-agent-featured.webp',
+    alt: 'Sample featured image for blog post preview'
+  },
   author: {
     name: 'Doug Smart',
     avatar: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png',

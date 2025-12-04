@@ -85,25 +85,27 @@ export function CyberFrame({
           background: #0a0a0a;
         }
 
-        /* Holographic glass overlay */
+        /* Holographic glass overlay - uses translate for smooth animation */
         .cyber-frame-inner::before {
           content: "";
           position: absolute;
-          inset: 0;
+          inset: -100% -50%;
           z-index: 10;
           pointer-events: none;
-          /* Glossy sheen gradient */
+          /* Glossy sheen gradient - wider to allow smooth sliding */
           background: linear-gradient(
             var(--sheen-angle, 25deg),
             transparent 0%,
-            transparent calc(var(--sheen-pos, 40%) - 15%),
-            rgba(255,255,255,0.08) calc(var(--sheen-pos, 40%) - 5%),
-            rgba(255,255,255,0.15) var(--sheen-pos, 40%),
-            rgba(255,255,255,0.08) calc(var(--sheen-pos, 40%) + 5%),
-            transparent calc(var(--sheen-pos, 40%) + 15%),
+            transparent 35%,
+            rgba(255,255,255,0.08) 42%,
+            rgba(255,255,255,0.15) 50%,
+            rgba(255,255,255,0.08) 58%,
+            transparent 65%,
             transparent 100%
           );
-          transition: all 0.4s ease;
+          /* Start position based on random value */
+          transform: translateX(calc(var(--sheen-pos, 40%) - 50%));
+          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
         }
 
         /* Holographic iridescent overlay */
@@ -116,37 +118,28 @@ export function CyberFrame({
           /* Rainbow gradient for holographic effect */
           background: linear-gradient(
             calc(var(--sheen-angle, 25deg) + 90deg),
-            rgba(255, 0, 128, var(--holo-opacity, 0.03)) 0%,
-            rgba(128, 0, 255, var(--holo-opacity, 0.03)) 20%,
-            rgba(0, 128, 255, var(--holo-opacity, 0.03)) 40%,
-            rgba(0, 255, 128, var(--holo-opacity, 0.03)) 60%,
-            rgba(255, 255, 0, var(--holo-opacity, 0.03)) 80%,
-            rgba(255, 128, 0, var(--holo-opacity, 0.03)) 100%
+            rgba(255, 0, 128, 0.03) 0%,
+            rgba(128, 0, 255, 0.03) 20%,
+            rgba(0, 128, 255, 0.03) 40%,
+            rgba(0, 255, 128, 0.03) 60%,
+            rgba(255, 255, 0, 0.03) 80%,
+            rgba(255, 128, 0, 0.03) 100%
           );
           mix-blend-mode: overlay;
           filter: hue-rotate(var(--hue-rotate, 0deg));
-          transition: all 0.4s ease;
+          opacity: var(--holo-opacity, 0.8);
+          transition: filter 0.6s ease, opacity 0.4s ease;
         }
 
-        /* Hover effect - sheen shifts like tilting glass */
+        /* Hover effect - sheen smoothly slides across */
         .cyber-frame:hover .cyber-frame-inner::before {
-          --sheen-pos: calc(var(--sheen-pos, 40%) + 20%);
-          background: linear-gradient(
-            calc(var(--sheen-angle, 25deg) + 5deg),
-            transparent 0%,
-            transparent calc(var(--sheen-pos, 60%) - 15%),
-            rgba(255,255,255,0.12) calc(var(--sheen-pos, 60%) - 5%),
-            rgba(255,255,255,0.2) var(--sheen-pos, 60%),
-            rgba(255,255,255,0.12) calc(var(--sheen-pos, 60%) + 5%),
-            transparent calc(var(--sheen-pos, 60%) + 15%),
-            transparent 100%
-          );
+          transform: translateX(calc(var(--sheen-pos, 40%) + 30%));
         }
 
-        /* Hover - holographic becomes slightly more visible */
+        /* Hover - holographic becomes slightly more visible and shifts hue */
         .cyber-frame:hover .cyber-frame-inner::after {
-          --holo-opacity: calc(var(--holo-opacity, 0.03) + 0.02);
           filter: hue-rotate(calc(var(--hue-rotate, 0deg) + 30deg));
+          opacity: 1;
         }
 
         /* Hover - frame glows more */
@@ -184,13 +177,14 @@ export function CyberFrame({
           border-radius: 6px;
         }
 
-        /* Corner tech accents */
+        /* Corner tech accents - L-shaped with rounded outer tip */
         .cyber-frame-corner {
           position: absolute;
-          width: 12px;
-          height: 12px;
+          width: 16px;
+          height: 16px;
           z-index: 12;
           pointer-events: none;
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .cyber-frame-corner-tl {
@@ -198,7 +192,11 @@ export function CyberFrame({
           left: 0;
           border-top: 2px solid rgba(0,255,136,0.5);
           border-left: 2px solid rgba(0,255,136,0.5);
-          border-top-left-radius: 4px;
+          /* Only round the outer corner (top-left of the L) */
+          border-top-left-radius: 6px;
+          border-top-right-radius: 0;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
         }
 
         .cyber-frame-corner-tr {
@@ -206,7 +204,11 @@ export function CyberFrame({
           right: 0;
           border-top: 2px solid rgba(0,255,136,0.5);
           border-right: 2px solid rgba(0,255,136,0.5);
-          border-top-right-radius: 4px;
+          /* Only round the outer corner (top-right of the L) */
+          border-top-left-radius: 0;
+          border-top-right-radius: 6px;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
         }
 
         .cyber-frame-corner-bl {
@@ -214,7 +216,11 @@ export function CyberFrame({
           left: 0;
           border-bottom: 2px solid rgba(0,255,136,0.3);
           border-left: 2px solid rgba(0,255,136,0.3);
-          border-bottom-left-radius: 4px;
+          /* Only round the outer corner (bottom-left of the L) */
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+          border-bottom-left-radius: 6px;
+          border-bottom-right-radius: 0;
         }
 
         .cyber-frame-corner-br {
@@ -222,7 +228,11 @@ export function CyberFrame({
           right: 0;
           border-bottom: 2px solid rgba(0,255,136,0.3);
           border-right: 2px solid rgba(0,255,136,0.3);
-          border-bottom-right-radius: 4px;
+          /* Only round the outer corner (bottom-right of the L) */
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 6px;
         }
 
         /* Hover - corners glow brighter */
