@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { BlogPostTemplate } from '@/components/blog';
 import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
 
 // Number of blog post chunks available
 // Updated to 29 chunks based on latest blog posts generation (261 posts)
@@ -9,21 +11,38 @@ const TOTAL_CHUNKS = 29;
 
 /**
  * Load all blog posts from chunked JSON files
+ * Uses fs.readFileSync for reliable build-time loading
+ * (Dynamic imports with variable paths don't work well with Turbopack)
  */
-async function getAllBlogPosts(): Promise<BlogPost[]> {
+function getAllBlogPosts(): BlogPost[] {
   const allPosts: BlogPost[] = [];
+  const publicDir = join(process.cwd(), 'public');
 
   for (let i = 1; i <= TOTAL_CHUNKS; i++) {
+    const chunkPath = join(publicDir, `blog-posts-chunk-${i}.json`);
     try {
-      // Dynamic import for each chunk
-      const chunk = await import(`@/public/blog-posts-chunk-${i}.json`);
-      allPosts.push(...(chunk.default || chunk));
+      if (existsSync(chunkPath)) {
+        const data = JSON.parse(readFileSync(chunkPath, 'utf-8'));
+        allPosts.push(...data);
+      } else {
+        console.warn(`Chunk file not found: ${chunkPath}`);
+      }
     } catch (error) {
       console.warn(`Failed to load blog-posts-chunk-${i}.json:`, error);
     }
   }
 
+  console.log(`📚 Loaded ${allPosts.length} blog posts from ${TOTAL_CHUNKS} chunks`);
   return allPosts;
+}
+
+// Cache the posts since this runs multiple times during build
+let cachedPosts: BlogPost[] | null = null;
+function getCachedBlogPosts(): BlogPost[] {
+  if (!cachedPosts) {
+    cachedPosts = getAllBlogPosts();
+  }
+  return cachedPosts;
 }
 
 /**
@@ -38,7 +57,7 @@ function categoryToSlug(category: string): string {
  * This pre-builds all blog post pages at build time
  */
 export async function generateStaticParams() {
-  const posts = await getAllBlogPosts();
+  const posts = getCachedBlogPosts();
 
   return posts.map((post) => {
     const category = post.categories[0] || 'uncategorized';
@@ -58,7 +77,7 @@ export async function generateMetadata({
   params: Promise<{ category: string; slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const posts = await getAllBlogPosts();
+  const posts = getCachedBlogPosts();
   const post = posts.find((p) => p.slug === slug);
 
   if (!post) {
@@ -119,7 +138,7 @@ export default async function BlogPostPage({
   params: Promise<{ category: string; slug: string }>;
 }) {
   const { slug } = await params;
-  const posts = await getAllBlogPosts();
+  const posts = getCachedBlogPosts();
   const post = posts.find((p) => p.slug === slug);
 
   if (!post) {
