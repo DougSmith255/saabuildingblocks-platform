@@ -2608,6 +2608,8 @@ body.light-mode .blog-post .border-t {
 body.light-mode .blog-content h2 .h2-word::before {
   background: linear-gradient(135deg, rgba(50,50,50,0.95) 0%, rgba(25,25,25,0.98) 100%) !important;
   border: 1px solid rgba(20,20,20,0.8) !important;
+  /* Rounded corners on bottom for softer 3D look */
+  border-radius: 0.1em !important;
   /* Dark inner shadow for depth - NO white highlights */
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 3px 12px rgba(0,0,0,0.7) !important;
 }
@@ -2844,8 +2846,8 @@ img:not(.profile-image) {
   --spot-color: #5a5a5a; /* SAA medium gray for moon spots */
   --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
   --stars-color: #e5e4dd; /* SAA heading text color for stars */
-  --clouds-color: #bfbdb0; /* SAA heading text color - cream clouds */
-  --back-clouds-color: #9a9888; /* Darker cream for back clouds */
+  --clouds-color: #f5f5f0; /* Light cream clouds - similar to main background */
+  --back-clouds-color: #e5e4dd; /* Slightly darker cream for back clouds */
   --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);
   --circle-transition: .3s cubic-bezier(0, -0.02, 0.35, 1.17);
   font-size: var(--toggle-size);

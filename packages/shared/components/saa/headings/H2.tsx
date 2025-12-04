@@ -82,9 +82,11 @@ export default function H2({
 
         /* Metal backing plate - Light mode (darker, no white highlights) */
         /* Borders are darker than face for 3D depth effect */
+        /* Rounded corners for softer 3D look */
         :global(body.light-mode .h2-word::before) {
           background: linear-gradient(135deg, rgba(50,50,50,0.95) 0%, rgba(25,25,25,0.98) 100%);
           border: 1px solid rgba(20,20,20,0.8);
+          border-radius: 0.1em;
           box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 3px 12px rgba(0,0,0,0.7);
         }
       `}</style>
