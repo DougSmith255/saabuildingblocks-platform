@@ -6,6 +6,13 @@ import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { CTAButton } from '@saa/shared/components/saa';
 
+/**
+ * Convert category name to URL slug
+ */
+function categoryToSlug(category: string): string {
+  return category.toLowerCase().replace(/\s+/g, '-');
+}
+
 export interface BlogPostCardProps {
   post: BlogPost;
   featured?: boolean;
@@ -28,6 +35,11 @@ export interface BlogPostCardProps {
  * ```
  */
 export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
+  // Get the primary category and convert to slug for URL
+  const primaryCategory = post.categories[0] || 'uncategorized';
+  const categorySlug = categoryToSlug(primaryCategory);
+  const postUrl = `/blog/${categorySlug}/${post.slug}`;
+
   return (
     <div
       className={`${featured ? 'col-span-full md:col-span-2' : ''} h-full rounded-2xl overflow-hidden border border-[#ffd700]/20`}
@@ -37,7 +49,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
     >
       <article className="flex flex-col h-full p-5">
         {/* Featured Image - Always display with fallback, optimized with Next.js Image */}
-        <Link href={`/blog/${post.slug}`} className="block mb-4 overflow-hidden rounded-lg group">
+        <Link href={postUrl} className="block mb-4 overflow-hidden rounded-lg group">
           <div className={`relative bg-gradient-to-br from-[#2a2a2a] to-[#191818] ${featured ? 'h-80 md:h-96' : 'h-48 md:h-64'}`}>
             {post.featuredImage ? (
               <Image
@@ -92,7 +104,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         )}
 
         {/* Title */}
-        <Link href={`/blog/${post.slug}`} className="block group mb-3">
+        <Link href={postUrl} className="block group mb-3">
           <h3
             className={`
               font-bold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors
@@ -133,7 +145,7 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         <div className="flex-grow" />
 
         {/* CTA Button - always aligned to bottom */}
-        <CTAButton href={`/blog/${post.slug}`} className="mt-4">
+        <CTAButton href={postUrl} className="mt-4">
           READ MORE
         </CTAButton>
       </article>

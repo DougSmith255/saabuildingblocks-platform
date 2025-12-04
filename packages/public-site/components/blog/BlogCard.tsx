@@ -29,7 +29,18 @@ export interface BlogCardProps {
   className?: string;
 }
 
+/**
+ * Convert category name to URL slug
+ */
+function categoryToSlug(category: string): string {
+  return category.toLowerCase().replace(/\s+/g, '-');
+}
+
 function BlogCardComponent({ post, className = '' }: BlogCardProps) {
+  // Get the primary category and convert to slug for URL
+  const primaryCategory = post.categories[0] || 'uncategorized';
+  const categorySlug = categoryToSlug(primaryCategory);
+
   return (
     <article
       className={`
@@ -45,7 +56,7 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
       `.trim()}
     >
       <Link
-        href={`/blog/${post.slug}`}
+        href={`/blog/${categorySlug}/${post.slug}`}
         className="flex flex-col h-full group"
         aria-label={`Read full article: ${post.title}`}
       >
