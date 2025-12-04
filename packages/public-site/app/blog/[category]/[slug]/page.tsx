@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { BlogPostTemplate } from '@/components/blog';
+import { CategoryBlogPostTemplate } from '@/components/blog';
 import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
 import { readFileSync, existsSync } from 'fs';
@@ -147,9 +147,11 @@ export default async function BlogPostPage({
 
   const relatedPosts = getRelatedPosts(post, posts);
 
+  const category = post.categories[0] || 'uncategorized';
+
   return (
     <main>
-      <BlogPostTemplate post={post} relatedPosts={relatedPosts} />
+      <CategoryBlogPostTemplate post={post} relatedPosts={relatedPosts} category={category} />
     </main>
   );
 }

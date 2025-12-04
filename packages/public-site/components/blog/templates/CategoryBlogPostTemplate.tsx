@@ -3,31 +3,29 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
-import { BlogPostHero } from './BlogPostHero';
-import { RelatedPosts } from './RelatedPosts';
+import { BlogPostHero } from '../BlogPostHero';
+import { RelatedPosts } from '../RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
-import { Breadcrumbs } from './Breadcrumbs';
+import { Breadcrumbs } from '../Breadcrumbs';
+import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import type { BlogPost } from '@/lib/wordpress/types';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
-// Displays daylight sky scene with animated clouds
 const CloudBackground = dynamic(
   () => import('@/components/shared/CloudBackground'),
   { ssr: false }
 );
 
-
 /**
  * Extract YouTube video ID from various URL formats
- * Supports: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID
  */
 function extractYouTubeVideoId(url: string): string | null {
   if (!url) return null;
 
   const patterns = [
     /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /^([a-zA-Z0-9_-]{11})$/ // Direct video ID
+    /^([a-zA-Z0-9_-]{11})$/
   ];
 
   for (const pattern of patterns) {
@@ -40,14 +38,10 @@ function extractYouTubeVideoId(url: string): string | null {
 
 /**
  * Process HTML content to wrap H2 words in spans for per-word metal plate styling
- * This matches the Master Controller H2 component behavior
  */
 function processH2WordWrapping(html: string): string {
-  // Match H2 tags and wrap each word in a span
   return html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (match, attrs, content) => {
-    // Strip any existing HTML tags from the content for clean word splitting
     const plainText = content.replace(/<[^>]*>/g, '');
-    // Split into words and wrap each in a span
     const wrappedWords = plainText.split(/\s+/).map((word: string) =>
       `<span class="h2-word">${word}</span>`
     ).join(' ');
@@ -55,47 +49,44 @@ function processH2WordWrapping(html: string): string {
   });
 }
 
-export interface BlogPostTemplateProps {
+export interface CategoryBlogPostTemplateProps {
   /** The blog post data */
   post: BlogPost;
   /** Related posts to display */
   relatedPosts?: BlogPost[];
+  /** Category for template customization (optional, defaults to post.categories[0]) */
+  category?: string;
 }
 
 /**
- * BlogPostTemplate - Complete layout for individual blog posts
+ * CategoryBlogPostTemplate - Category-aware blog post template
  *
- * Features:
- * - BlogPostHero with theme switch, category, meta info
- * - Blog content with futuristic image frames
- * - Share buttons
- * - Related posts section
- * - Theme switching (light/dark mode)
- * - Responsive design following PAGE_BUILDER_GUIDELINES
+ * Extends BlogPostTemplate with category-specific customizations:
+ * - Custom accent colors
+ * - Category-specific CTAs
+ * - Custom related posts limits
+ * - Category CSS classes for styling hooks
  *
- * @example
- * ```tsx
- * <BlogPostTemplate
- *   post={blogPost}
- *   relatedPosts={relatedPosts}
- *   baseUrl="https://smartagentalliance.com"
- * />
- * ```
+ * Each category can be further customized by editing the config in templateConfig.ts
  */
-export function BlogPostTemplate({
+export function CategoryBlogPostTemplate({
   post,
   relatedPosts = [],
-}: BlogPostTemplateProps) {
+  category,
+}: CategoryBlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  // Track which direction we're transitioning: 'to-light' or 'to-dark'
   const [transitionDirection, setTransitionDirection] = useState<'to-light' | 'to-dark' | null>(null);
 
-  // Reset to dark mode when navigating away from blog post
-  // This ensures other pages (which don't support light mode) display correctly
+  // Get category from prop or post
+  const primaryCategory = category || post.categories[0] || 'Uncategorized';
+
+  // Get template config for this category
+  const templateConfig = getTemplateConfig(primaryCategory);
+
+  // Reset to dark mode when navigating away
   useEffect(() => {
     return () => {
-      // Cleanup: remove light-mode class when component unmounts
       if (typeof document !== 'undefined') {
         document.body.classList.remove('light-mode');
       }
@@ -109,49 +100,53 @@ export function BlogPostTemplate({
     day: 'numeric',
   });
 
-  // Get primary category
-  const primaryCategory = post.categories[0] || 'Uncategorized';
-
   // Handle theme change with blur transition
   const handleThemeChange = useCallback((isDark: boolean) => {
-    // Set transition direction based on target mode
-    // If switching TO dark mode, use light blur; TO light mode, use dark blur
     setTransitionDirection(isDark ? 'to-dark' : 'to-light');
-    // Start blur transition
     setIsTransitioning(true);
 
-    // After blur is applied, change the theme
     setTimeout(() => {
       setIsDarkMode(isDark);
       if (typeof document !== 'undefined') {
         document.body.classList.toggle('light-mode', !isDark);
       }
 
-      // Remove blur after theme has changed
       setTimeout(() => {
         setIsTransitioning(false);
         setTransitionDirection(null);
-      }, 300); // Time for colors to settle
-    }, 150); // Time for blur to fully apply
+      }, 300);
+    }, 150);
   }, []);
 
   // Build category slug
   const categorySlug = primaryCategory.toLowerCase().replace(/\s+/g, '-');
 
+  // Limit related posts based on config
+  const limitedRelatedPosts = relatedPosts.slice(0, templateConfig.relatedPostsLimit || 3);
+
+  // Check if video should be emphasized
+  const hasVideo = post.youtubeVideoUrl && extractYouTubeVideoId(post.youtubeVideoUrl);
+  const showVideoSection = hasVideo && (templateConfig.emphasizeVideo || true);
+
   return (
-    <article className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
+    <article
+      className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'} ${templateConfig.customClassName || ''}`}
+      style={{
+        '--category-accent': templateConfig.accentColor,
+        '--category-accent-secondary': templateConfig.accentColorSecondary,
+      } as React.CSSProperties}
+    >
       {/* Theme transition blur overlay */}
       <div
         className={`theme-transition-overlay ${isTransitioning ? 'active' : ''} ${transitionDirection || ''}`}
         aria-hidden="true"
       />
 
-      {/* Hero Section with Cloud Background - extends to top of page */}
+      {/* Hero Section with Cloud Background */}
       <div className="relative">
-        {/* Light mode cloud background - covers entire hero including breadcrumbs area */}
         {!isDarkMode && <CloudBackground />}
 
-        {/* Breadcrumbs - positioned below fixed header */}
+        {/* Breadcrumbs */}
         <div className="relative z-10 px-4 sm:px-8 md:px-12 pt-[calc(var(--header-height)+1.625rem)]">
           <div className="max-w-[1900px] mx-auto">
             <Breadcrumbs
@@ -173,15 +168,14 @@ export function BlogPostTemplate({
         />
       </div>
 
-      {/* YouTube Video Embed - Only shown if ACF field has a URL */}
-      {/* Uses YouTubeFacade for performance - iframe only loads on user click */}
-      {post.youtubeVideoUrl && extractYouTubeVideoId(post.youtubeVideoUrl) && (
+      {/* YouTube Video Embed */}
+      {showVideoSection && hasVideo && (
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="max-w-[1200px] mx-auto">
               <CyberFrame isVideo aspectRatio="16/9" className="w-full">
                 <YouTubeFacade
-                  videoId={extractYouTubeVideoId(post.youtubeVideoUrl)!}
+                  videoId={hasVideo}
                   title={`Video: ${post.title}`}
                 />
               </CyberFrame>
@@ -194,10 +188,8 @@ export function BlogPostTemplate({
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="max-w-[1200px] mx-auto">
-            {/* Blog Content - Uses blog-content class from globals.css */}
-            {/* H2s are processed to wrap words in spans for per-word metal plates */}
             <div className="blog-content prose prose-invert max-w-none">
-              {/* Featured Image - floated inside content, max-height 270px */}
+              {/* Featured Image - max-height 270px */}
               {post.featuredImage?.url && (
                 <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
                   <CyberFrame>
@@ -219,7 +211,24 @@ export function BlogPostTemplate({
               <div dangerouslySetInnerHTML={{ __html: processH2WordWrapping(post.content) }} />
             </div>
 
-            {/* Share Buttons - from shared components */}
+            {/* Category-specific CTA (if configured) */}
+            {templateConfig.ctaText && templateConfig.ctaLink && (
+              <div className="mt-12 mb-8 text-center">
+                <a
+                  href={templateConfig.ctaLink}
+                  className="inline-block px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+                  style={{
+                    background: `linear-gradient(135deg, ${templateConfig.accentColor}, ${templateConfig.accentColorSecondary})`,
+                    color: '#000',
+                    boxShadow: `0 4px 15px ${templateConfig.accentColor}40`,
+                  }}
+                >
+                  {templateConfig.ctaText}
+                </a>
+              </div>
+            )}
+
+            {/* Share Buttons */}
             <ShareButtons
               url={`https://saabuildingblocks.com/blog/${post.slug}`}
               title={post.title}
@@ -229,12 +238,12 @@ export function BlogPostTemplate({
         </div>
       </section>
 
-      {/* Related Posts - No border-t here, divider handled by Share section */}
-      {relatedPosts.length > 0 && (
+      {/* Related Posts */}
+      {limitedRelatedPosts.length > 0 && (
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <RelatedPosts
-              posts={relatedPosts}
+              posts={limitedRelatedPosts}
               currentPostId={post.id}
               currentCategory={primaryCategory}
             />
@@ -245,4 +254,4 @@ export function BlogPostTemplate({
   );
 }
 
-export default BlogPostTemplate;
+export default CategoryBlogPostTemplate;

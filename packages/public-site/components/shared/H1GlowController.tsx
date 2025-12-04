@@ -65,8 +65,8 @@ export default function H1GlowController() {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
-      // Get all glow pulse elements
-      const glowElements = document.querySelectorAll('.h1-glow-pulse');
+      // Get all H1 elements with glow pulse class (whole H1, not per-character)
+      const glowElements = document.querySelectorAll('h1.h1-glow-pulse');
       if (glowElements.length === 0) return;
 
       // Start each element with a random initial delay for variety
@@ -105,8 +105,8 @@ export default function H1GlowController() {
         window.clearTimeout(timeout);
       });
       timeouts.clear();
-      // Reset animation styles
-      document.querySelectorAll('.h1-glow-pulse').forEach((el) => {
+      // Reset animation styles on H1 elements
+      document.querySelectorAll('h1.h1-glow-pulse').forEach((el) => {
         (el as HTMLElement).style.animation = '';
       });
     };

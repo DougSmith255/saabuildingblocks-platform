@@ -30,3 +30,14 @@ export { FuturisticImageFrame, type FuturisticImageFrameProps } from './Futurist
 export { BlogPostHero, type BlogPostHeroProps } from './BlogPostHero';
 export { ThemeSwitch, type ThemeSwitchProps } from './ThemeSwitch';
 export { BlogPostTemplate, type BlogPostTemplateProps } from './BlogPostTemplate';
+
+// Category-specific templates
+export {
+  CategoryBlogPostTemplate,
+  type CategoryBlogPostTemplateProps,
+  categoryTemplates,
+  getTemplateConfig,
+  categoryToSlug,
+  type CategorySlug,
+  type CategoryTemplateConfig,
+} from './templates';

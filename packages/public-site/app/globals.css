@@ -1874,25 +1874,26 @@ article p a:focus-visible,
 
 /* Images - CyberFrame styling (holographic glass with metal frame) */
 /* Matches CyberFrame component from @saa/shared/components/saa/media */
-/* Max 500px width for all blog images */
+/* Max height 270px to handle wide/short images properly */
 .blog-content img {
-  max-width: 500px;
-  width: 100%;
+  max-height: 270px;
+  width: auto;
   height: auto;
   display: block;
   border-radius: 8px;
   margin: 0;
+  object-fit: contain;
 }
 
 /* WordPress figure wrapper - receives the CyberFrame styling */
-/* Float right with text wrapping, max 500px width */
+/* Float right with text wrapping, auto width to fit max-height 270px images */
 .blog-content figure {
   position: relative;
   display: block;
   float: right;
   clear: right;
-  max-width: 500px;
-  width: 45%;
+  max-width: 100%;
+  width: auto;
   margin: 0.5rem 0 1rem 1.5rem;
   overflow: hidden; /* Clip the expanded sheen pseudo-element */
   /* 3D Metal Frame */

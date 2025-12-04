@@ -146,12 +146,13 @@ p a {
 /* H1 Glow Pulse Animation - Random organic brightness pulse for neon effect */
 /* GPU-accelerated using filter: brightness() - no layout thrashing */
 /* Animation timing controlled by H1GlowController.tsx for random organic feel */
+/* Applied to WHOLE H1 element (not per-character) for performance */
 @keyframes h1GlowPulse {
   0%, 100% {
     filter: brightness(1);
   }
   50% {
-    filter: brightness(1.35);
+    filter: brightness(1.5);
   }
 }
 

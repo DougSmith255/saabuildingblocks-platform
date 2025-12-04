@@ -38,7 +38,7 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
   return (
     <h1
       id={id}
-      className={`text-h1 text-display ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
+      className={`text-h1 text-display h1-glow-pulse ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',
@@ -90,10 +90,9 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                 }}
               >
                 {displayChar}
-                {/* Neon glow with subtle pulse animation */}
+                {/* Neon glow layer */}
                 <span
                   aria-hidden="true"
-                  className="h1-glow-pulse"
                   style={{
                     position: 'absolute',
                     top: 0,
