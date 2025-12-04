@@ -106,7 +106,7 @@ export function BlogPostHero({
           <H1
             heroAnimate={true}
             style={{
-              fontSize: 'clamp(32px, 4vw + 16px, 72px)',
+              fontSize: 'clamp(32px, 4vw + 16px, 82px)',
             }}
           >
             {title}
