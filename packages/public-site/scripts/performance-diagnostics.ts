@@ -124,10 +124,10 @@ async function measureCoreWebVitals(page: Page): Promise<PerformanceMetrics['cor
     // CLS (simplified calculation)
     const layoutShiftEntries = performance.getEntriesByType('layout-shift') as any[];
     if (layoutShiftEntries.length > 0) {
-      cls = layoutShiftEntries
+      const clsValue = layoutShiftEntries
         .filter(entry => !entry.hadRecentInput)
         .reduce((sum, entry) => sum + entry.value, 0);
-      cls = Math.round(cls * 1000) / 1000;
+      cls = Math.round(clsValue * 1000) / 1000;
     }
 
     return { lcp, cls, fcp, ttfb };
