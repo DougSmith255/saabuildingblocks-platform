@@ -1286,26 +1286,13 @@ main {
 }
 
 /* ===========================================
-   H1 HERO ENTRANCE ANIMATION - OUTSIDE @layer for highest specificity
-   This MUST be outside @layer utilities to override Tailwind's animation resets
+   H1 HERO - NO ANIMATION, ALWAYS VISIBLE
+   Animation was causing visibility issues, so H1 is now always visible
    =========================================== */
 
-/* Define keyframe outside @layer as well */
-@keyframes heroFadeInUp {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 30px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-
 .hero-entrance-animate {
-  opacity: 0 !important;
-  animation: heroFadeInUp 2.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both !important;
-  will-change: opacity, transform;
+  opacity: 1 !important;
+  animation: none !important;
 }
 
 @theme inline {
