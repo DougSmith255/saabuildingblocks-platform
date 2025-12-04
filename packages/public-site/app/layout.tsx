@@ -6,6 +6,7 @@ import StarBackground from '@/components/shared/StarBackground';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
 import ScrollProgress from '@/components/shared/ScrollProgress';
+import ScrollToTop from '@/components/shared/ScrollToTop';
 import LayoutWrapper from './components/LayoutWrapper';
 import PerformanceHints from './components/PerformanceHints';
 import { SkipLink } from './components/SkipLink';
@@ -249,6 +250,7 @@ export default async function RootLayout({
       >
         {/* Public-site package: Always static export with baked-in CSS */}
         <SmoothScroll />
+        <ScrollToTop />
         <SkipLink />
         <StarBackground />
         <ScrollProgress />

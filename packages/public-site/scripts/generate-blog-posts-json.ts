@@ -68,13 +68,29 @@ function categoryNameToSlug(name: string): string {
 
 /**
  * Transform WordPress API response to match frontend BlogPost interface
- * Converts snake_case to camelCase
+ * Converts snake_case to camelCase and normalizes data structures
  */
 function transformPost(apiPost: any): BlogPost {
+  // Handle featured_image - can be false, null, or an object
+  let featuredImage = null;
+  if (apiPost.featured_image && typeof apiPost.featured_image === 'object') {
+    featuredImage = apiPost.featured_image;
+  }
+
+  // Handle author - API returns string, frontend expects {name: string, avatar?: string}
+  let author = { name: 'Unknown Author' };
+  if (typeof apiPost.author === 'string') {
+    author = { name: apiPost.author };
+  } else if (apiPost.author && typeof apiPost.author === 'object') {
+    author = apiPost.author;
+  }
+
   return {
     ...apiPost,
     // Convert featured_image (snake_case) to featuredImage (camelCase)
-    featuredImage: apiPost.featured_image || null,
+    featuredImage,
+    // Normalize author to object format
+    author,
     // Remove the snake_case version
     featured_image: undefined,
   };

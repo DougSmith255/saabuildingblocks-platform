@@ -1885,13 +1885,16 @@ article p a:focus-visible,
 }
 
 /* WordPress figure wrapper - receives the CyberFrame styling */
-/* Max 500px width for all blog images */
+/* Float right with text wrapping, max 500px width */
 .blog-content figure {
   position: relative;
-  display: inline-block;
+  display: block;
+  float: right;
+  clear: right;
   max-width: 500px;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  width: 45%;
+  margin: 0.5rem 0 1rem 1.5rem;
+  overflow: hidden; /* Clip the expanded sheen pseudo-element */
   /* 3D Metal Frame */
   padding: 6px;
   background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
@@ -1920,28 +1923,26 @@ article p a:focus-visible,
   border-radius: 6px;
 }
 
-/* Holographic glass overlay - glossy sheen */
+/* Holographic glass overlay - glossy sheen with animated transform */
 .blog-content figure::before {
   content: "";
   position: absolute;
-  top: 6px;
-  left: 6px;
-  right: 6px;
-  bottom: 6px;
+  /* Expand beyond bounds for slide animation */
+  inset: -100% -50%;
   z-index: 10;
   pointer-events: none;
-  border-radius: 6px;
+  /* Static gradient - position controlled by transform */
   background: linear-gradient(
-    25deg,
-    transparent 0%,
-    transparent 25%,
-    rgba(255,255,255,0.08) 35%,
-    rgba(255,255,255,0.15) 40%,
-    rgba(255,255,255,0.08) 45%,
-    transparent 55%,
-    transparent 100%
+    105deg,
+    transparent 35%,
+    rgba(255,255,255,0.08) 40%,
+    rgba(255,255,255,0.15) 45%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 55%
   );
-  transition: all 0.4s ease;
+  /* Initial position - left side */
+  transform: translateX(-10%);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Holographic iridescent overlay */
@@ -1968,18 +1969,9 @@ article p a:focus-visible,
   transition: all 0.4s ease;
 }
 
-/* Hover - sheen shifts */
+/* Hover - sheen slides across smoothly */
 .blog-content figure:hover::before {
-  background: linear-gradient(
-    30deg,
-    transparent 0%,
-    transparent 45%,
-    rgba(255,255,255,0.12) 55%,
-    rgba(255,255,255,0.2) 60%,
-    rgba(255,255,255,0.12) 65%,
-    transparent 75%,
-    transparent 100%
-  );
+  transform: translateX(30%);
 }
 
 /* Hover - holographic more visible */
@@ -2032,6 +2024,106 @@ article p a:focus-visible,
   font-style: italic;
   position: relative;
   z-index: 12;
+}
+
+/* WordPress Media-Text Blocks - inline image with text wrap */
+.blog-content .wp-block-media-text {
+  display: block !important;
+  grid-template-columns: unset !important;
+}
+
+.blog-content .wp-block-media-text__media {
+  position: relative;
+  float: right;
+  clear: right;
+  max-width: 500px;
+  width: 45%;
+  margin: 0.5rem 0 1rem 1.5rem;
+  overflow: hidden; /* Clip the expanded sheen pseudo-element */
+  /* 3D Metal Frame styling to match figures */
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+/* Animated sheen for wp-block-media-text */
+.blog-content .wp-block-media-text__media::before {
+  content: "";
+  position: absolute;
+  inset: -100% -50%;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255,255,255,0.08) 40%,
+    rgba(255,255,255,0.15) 45%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 55%
+  );
+  transform: translateX(-10%);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.blog-content .wp-block-media-text__media:hover::before {
+  transform: translateX(30%);
+}
+
+.blog-content .wp-block-media-text__media:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+.blog-content .wp-block-media-text__media img {
+  border-radius: 6px;
+  width: 100%;
+  height: auto;
+}
+
+.blog-content .wp-block-media-text__content {
+  padding: 0 !important;
+}
+
+/* Media-text with media on right - float left instead */
+.blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__media {
+  float: left;
+  margin: 0.5rem 1.5rem 1rem 0;
+}
+
+/* Clear floats after media-text blocks */
+.blog-content .wp-block-media-text::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Mobile: Stack media-text vertically */
+@media (max-width: 768px) {
+  .blog-content .wp-block-media-text__media,
+  .blog-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__media {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 1rem 0;
+  }
+
+  .blog-content figure {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 1rem 0;
+  }
 }
 
 /* ========================================
@@ -2420,16 +2512,16 @@ body.light-mode .blog-content a:not(.share-button):hover {
   text-shadow: 0 0 8px rgba(0, 255, 136, 0.6), 0 0 16px rgba(0, 255, 136, 0.4); /* Green glow */
 }
 
-/* Light mode breadcrumb links - gold/amber for visibility on blue sky background */
+/* Light mode breadcrumb links - bright gold for visibility on blue sky background */
 body.light-mode .breadcrumb-link {
-  color: #b8860b !important; /* Dark goldenrod - visible on blue, matches theme */
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: #ffd700 !important; /* Bright gold - visible on blue, matches theme */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   font-weight: 500;
 }
 
 body.light-mode .breadcrumb-link:hover {
-  color: #ffd700 !important; /* Bright gold on hover */
-  text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+  color: #ffd700 !important; /* Same bright gold on hover */
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
 }
 
 /* ========================================
