@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import dynamic from 'next/dynamic';
 import './globals.css';
 import StarBackground from '@/components/shared/StarBackground';
 import Header from '@/components/shared/Header';
@@ -13,6 +14,11 @@ import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import SmoothScroll from '@/components/SmoothScroll';
+
+// Lazy load H1 glow controller - runs after page load, zero impact on LCP/FCP
+const H1GlowController = dynamic(() => import('@/components/shared/H1GlowController'), {
+  ssr: false, // Client-only, no server rendering needed
+});
 
 // Read critical CSS at build time for consolidation
 const criticalCSS = readFileSync(
@@ -310,6 +316,9 @@ export default async function RootLayout({
         <StarBackground />
         <ScrollProgress />
         <LayoutWrapper>{children}</LayoutWrapper>
+
+        {/* H1 Glow Controller - Deferred load, zero impact on page speed */}
+        <H1GlowController />
 
         {/* SAA Grainy Glow Filters - Global */}
         <svg width="0" height="0" style={{ position: 'absolute' }}>

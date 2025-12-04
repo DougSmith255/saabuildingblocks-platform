@@ -143,26 +143,28 @@ p a {
   font-family: var(--font-synonym), 'Courier New', monospace;
 }
 
-/* H1 Glow Pulse Animation - Subtle brightness pulse for neon effect */
+/* H1 Glow Pulse Animation - Random organic brightness pulse for neon effect */
 /* GPU-accelerated using filter: brightness() - no layout thrashing */
+/* Animation timing controlled by H1GlowController.tsx for random organic feel */
 @keyframes h1GlowPulse {
   0%, 100% {
     filter: brightness(1);
   }
   50% {
-    filter: brightness(1.15);
+    filter: brightness(1.35);
   }
 }
 
 .h1-glow-pulse {
-  animation: h1GlowPulse 4s ease-in-out infinite;
+  /* Animation applied dynamically by H1GlowController with random timing */
+  /* Pulse duration: 0.5-2s, Delay between pulses: 1-5s */
   will-change: filter;
 }
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   .h1-glow-pulse {
-    animation: none;
+    animation: none !important;
   }
 }
 
