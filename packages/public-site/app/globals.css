@@ -1621,11 +1621,11 @@ body.is-404-page footer {
   letter-spacing: var(--letter-spacing-body, 0em);
 }
 
-/* H2 - Master Controller Typography with Per-Word Metal Plates */
+/* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
 /* Matches H2.tsx from @saa/shared/components/saa/headings */
 .blog-content h2 {
   font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
-  font-size: var(--font-size-h2, clamp(40px, calc(36.18px + 1.53vw), 82px));
+  font-size: clamp(25px, calc(20.73px + 1.71vw), 72px);
   line-height: var(--line-height-h2, 1.1);
   letter-spacing: var(--letter-spacing-h2, -0.01em);
   font-weight: var(--font-weight-h2, 700);
@@ -2024,6 +2024,18 @@ article p a:focus-visible,
   font-style: italic;
   position: relative;
   z-index: 12;
+}
+
+/* CyberFrame component in blog content - must fill container width */
+/* Fixes issue where inline-block collapses with Next.js Image fill */
+.blog-content .cyber-frame {
+  display: block !important;
+  width: 100% !important;
+  max-width: 500px;
+}
+
+.blog-content .cyber-frame-inner {
+  width: 100% !important;
 }
 
 /* WordPress Media-Text Blocks - inline image with text wrap */
@@ -2590,13 +2602,14 @@ body.light-mode .blog-post .border-t {
    LIGHT MODE - H2 Metal Plate Darker Backing
    Better contrast for H2 headings in light mode
    Target the ::before pseudo-element (the actual metal backing plate)
-   Removed white top highlight strip - uses darker grey consistently
+   Borders are darker than face for proper 3D depth effect
+   NO white highlights - only dark shadows for recess effect
    ======================================== */
 body.light-mode .blog-content h2 .h2-word::before {
-  background: linear-gradient(135deg, rgba(55,55,55,0.95) 0%, rgba(30,30,30,0.98) 100%) !important;
-  border: 1px solid rgba(70,70,70,0.6) !important;
-  /* No white inner highlight - consistent dark metal look */
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 3px 12px rgba(0,0,0,0.75) !important;
+  background: linear-gradient(135deg, rgba(50,50,50,0.95) 0%, rgba(25,25,25,0.98) 100%) !important;
+  border: 1px solid rgba(20,20,20,0.8) !important;
+  /* Dark inner shadow for depth - NO white highlights */
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 3px 12px rgba(0,0,0,0.7) !important;
 }
 
 /* ========================================
@@ -2822,7 +2835,7 @@ img:not(.profile-image) {
   --container-width: 5.625em;
   --container-height: 2.5em;
   --container-radius: 6.25em;
-  --container-light-bg: #3d7eae;
+  --container-light-bg: #2d5a7e; /* Dimmed blue background */
   --container-night-bg: rgb(12, 12, 12); /* SAA primary background - no blue tint */
   --circle-container-diameter: 3.375em;
   --sun-moon-diameter: 2.125em;
@@ -2831,8 +2844,8 @@ img:not(.profile-image) {
   --spot-color: #5a5a5a; /* SAA medium gray for moon spots */
   --circle-container-offset: calc((var(--circle-container-diameter) - var(--container-height)) / 2 * -1);
   --stars-color: #e5e4dd; /* SAA heading text color for stars */
-  --clouds-color: #f3fdff;
-  --back-clouds-color: #aacadf;
+  --clouds-color: #bfbdb0; /* SAA heading text color - cream clouds */
+  --back-clouds-color: #9a9888; /* Darker cream for back clouds */
   --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);
   --circle-transition: .3s cubic-bezier(0, -0.02, 0.35, 1.17);
   font-size: var(--toggle-size);
