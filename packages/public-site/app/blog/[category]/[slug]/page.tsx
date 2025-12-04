@@ -4,7 +4,8 @@ import type { BlogPost } from '@/lib/wordpress/types';
 import type { Metadata } from 'next';
 
 // Number of blog post chunks available
-const TOTAL_CHUNKS = 9;
+// Updated to 23 chunks based on latest blog posts generation
+const TOTAL_CHUNKS = 23;
 
 /**
  * Load all blog posts from chunked JSON files
