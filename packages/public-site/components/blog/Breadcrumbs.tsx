@@ -4,6 +4,38 @@ import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 
+/**
+ * WordPress category name to slug mapping
+ * Maps display names to URL-safe slugs for hash-based filtering
+ */
+const CATEGORY_SLUG_MAP: Record<string, string> = {
+  'Brokerage Comparison': 'brokerage-comparison',
+  'About eXp Realty': 'about-exp-realty',
+  'eXp Realty Sponsor': 'exp-realty-sponsor',
+  'Marketing Mastery': 'marketing-mastery',
+  'Agent Career Info': 'agent-career-info',
+  'Winning Clients': 'winning-clients',
+  'Real Estate Schools': 'real-estate-schools',
+  'Become an Agent': 'become-an-agent',
+  'Industry Trends': 'industry-trends',
+  'Fun for Agents': 'fun-for-agents',
+  // Legacy/alternative names that might appear
+  'Business Growth': 'marketing-mastery',
+  'Clients': 'winning-clients',
+  'Uncategorized': '',
+};
+
+/**
+ * Get the URL slug for a category name
+ * Falls back to converting the name to a slug if not in the map
+ */
+function getCategorySlug(categoryName: string): string {
+  const mappedSlug = CATEGORY_SLUG_MAP[categoryName];
+  if (mappedSlug !== undefined) return mappedSlug;
+  // Fallback: convert name to slug format
+  return categoryName.toLowerCase().replace(/\s+/g, '-');
+}
+
 export interface BreadcrumbsProps {
   /**
    * Category name for the breadcrumb
@@ -51,16 +83,19 @@ export function Breadcrumbs({
   categorySlug,
   postTitle
 }: BreadcrumbsProps) {
+  // Get the proper slug - use mapping function to ensure correct WordPress slug
+  const resolvedSlug = category ? getCategorySlug(category) : categorySlug;
+
   // Build breadcrumb items
   const items = [
     { label: 'Home', href: '/', position: 1 },
-    { label: 'Blog', href: '/blog', position: 2 },
+    { label: 'Blog', href: '/real-estate-agent-job', position: 2 },
   ];
 
-  if (category && categorySlug) {
+  if (category && resolvedSlug) {
     items.push({
       label: category,
-      href: `/blog/category/${categorySlug}`,
+      href: `/real-estate-agent-job/#category=${resolvedSlug}`,
       position: 3
     });
   }

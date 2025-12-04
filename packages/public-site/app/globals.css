@@ -1234,6 +1234,16 @@ main {
       0 0 20px rgba(255, 215, 0, 0.2);
   }
 
+  /* Category Badge Text Color - supports light/dark mode */
+  .category-badge-text {
+    color: #ffd700; /* Gold text in dark mode (default) */
+  }
+
+  /* Light mode: black text, keeps yellow glow and frame */
+  body.light-mode .category-badge-text {
+    color: #000000 !important;
+  }
+
   /* Read Time Badge */
   .read-time-badge {
     transition: all 0.2s ease-in-out;
@@ -1630,6 +1640,10 @@ body.is-404-page footer {
   transform-style: preserve-3d;
   transform: rotateX(15deg);
   position: relative;
+  /* Padding to compensate for metal plate negative inset (-0.3em horizontal) */
+  /* Ensures plates don't extend beyond container edges */
+  padding-left: 0.35em;
+  padding-right: 0.35em;
 }
 
 /* Per-word metal backing plate - exact match to H2.tsx .h2-word */
@@ -2016,6 +2030,82 @@ article p a:focus-visible,
   z-index: 12;
 }
 
+/* ========================================
+   YOUTUBE VIDEO EMBED STYLING
+   CyberFrame-inspired metal frame for video embeds
+   ======================================== */
+
+.youtube-embed-container {
+  /* 3D Metal Frame - matches CyberFrame component */
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+.youtube-embed-container:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+.youtube-embed-container iframe {
+  border-radius: 6px;
+}
+
+/* ========================================
+   FEATURED IMAGE AT TOP OF CONTENT
+   Hero-style treatment with CyberFrame styling
+   ======================================== */
+
+.blog-featured-image {
+  position: relative;
+  margin: 0;
+  /* 3D Metal Frame - matches CyberFrame */
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-featured-image:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+.blog-featured-image > div {
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.blog-featured-image figcaption {
+  font-family: var(--font-amulya);
+  font-size: 0.875rem;
+  color: #808080;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-style: italic;
+}
+
 /* Tables */
 .blog-content table {
   width: 100%;
@@ -2392,11 +2482,13 @@ body.light-mode .blog-post .border-t {
    LIGHT MODE - H2 Metal Plate Darker Backing
    Better contrast for H2 headings in light mode
    Target the ::before pseudo-element (the actual metal backing plate)
+   Removed white top highlight strip - uses darker grey consistently
    ======================================== */
 body.light-mode .blog-content h2 .h2-word::before {
-  background: linear-gradient(135deg, rgba(60,60,60,0.9) 0%, rgba(35,35,35,0.95) 100%) !important;
-  border: 1px solid rgba(80,80,80,0.5) !important;
-  box-shadow: inset 0 1px 1px rgba(255,255,255,0.08), 0 3px 10px rgba(0,0,0,0.7) !important;
+  background: linear-gradient(135deg, rgba(55,55,55,0.95) 0%, rgba(30,30,30,0.98) 100%) !important;
+  border: 1px solid rgba(70,70,70,0.6) !important;
+  /* No white inner highlight - consistent dark metal look */
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3), 0 3px 12px rgba(0,0,0,0.75) !important;
 }
 
 /* ========================================
@@ -2805,9 +2897,18 @@ img:not(.profile-image) {
     background-color 0.3s ease-in-out;
 }
 
-.theme-transition-overlay.active {
+/* Transitioning TO light mode - use dark blur */
+.theme-transition-overlay.active.to-light {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background-color: rgba(128, 128, 128, 0.15);
+  background-color: rgba(20, 20, 30, 0.4);
+  opacity: 1;
+}
+
+/* Transitioning TO dark mode - use light blur */
+.theme-transition-overlay.active.to-dark {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(200, 210, 230, 0.35);
   opacity: 1;
 }

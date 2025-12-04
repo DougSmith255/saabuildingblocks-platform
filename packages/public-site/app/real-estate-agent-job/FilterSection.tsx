@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { H2, GenericButton } from '@saa/shared/components/saa';
+import { ChevronDown, Check } from 'lucide-react';
 
 /**
  * WordPress categories data type
@@ -58,7 +59,21 @@ export default function FilterSection({
   onFilterChange: (categories: string[]) => void;
 }) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const showAll = selectedCategories.length === 0;
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Read hash params on mount and when hash changes
   useEffect(() => {
@@ -165,63 +180,85 @@ export default function FilterSection({
               })}
             </div>
 
-            {/* Mobile/Tablet: Dropdown (show below 1340px) */}
-            <div className="min-[1340px]:hidden xl:flex-1">
-              <select
-                id="category-filter-dropdown"
-                value={selectedCategories.length > 0 ? selectedCategories[0] : 'all'}
-                onChange={(e) => {
-                  if (e.target.value === 'all') {
-                    handleAllClick();
-                  } else {
-                    // For dropdown, replace current selection with single category
-                    const params = getHashParams();
-                    params.set('category', e.target.value);
-                    params.delete('page');
-                    setHashParams(params);
-                    setSelectedCategories([e.target.value]);
-                    onFilterChange([e.target.value]);
-                  }
-                }}
+            {/* Mobile/Tablet: Custom Dropdown (show below 1340px) */}
+            <div className="min-[1340px]:hidden xl:flex-1 relative" ref={dropdownRef}>
+              {/* Dropdown Trigger Button */}
+              <button
+                type="button"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 style={{
                   fontSize: 'clamp(12px, calc(12px + (30 - 12) * ((100vw - 250px) / (3000 - 250))), 30px)',
-                  backgroundPosition: 'right 15px center',
                 }}
-                className="w-full px-6 py-3 pr-12 rounded-lg bg-[#1a1a1a] border border-[#e5e4dd]/20 text-[#e5e4dd] text-body focus:border-[#00ff88]/50 focus:outline-none transition-colors cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%228%22%20viewBox%3D%220%200%2012%208%22%3e%3cpath%20fill%3D%22%23e5e4dd%22%20d%3D%22M6%208L0%200h12z%22%2F%3e%3c%2Fsvg%3e')] bg-no-repeat"
+                className="w-full px-6 py-3 pr-12 rounded-lg bg-[#0a0a0a] border border-[#ffd700]/30 text-[#e5e4dd] text-left focus:border-[#ffd700]/50 focus:outline-none transition-all cursor-pointer relative hover:border-[#ffd700]/50 hover:shadow-[0_0_15px_rgba(255,215,0,0.15)]"
                 aria-label="Filter by category"
+                aria-expanded={isDropdownOpen}
               >
-                <option value="all">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category.slug} value={category.slug}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+                <span className="block truncate">
+                  {showAll
+                    ? 'All Categories'
+                    : categories.find(c => c.slug === selectedCategories[0])?.name || 'All Categories'}
+                </span>
+                <ChevronDown
+                  className={`absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#ffd700] transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
 
-              <style jsx>{`
-                #category-filter-dropdown option {
-                  padding: 12px 16px;
-                  background-color: #1a1a1a;
-                  color: #e5e4dd;
-                  position: relative;
-                  transition: all 0.3s ease;
-                }
+              {/* Dropdown Menu */}
+              {isDropdownOpen && (
+                <div className="absolute z-50 w-full mt-2 rounded-lg bg-[#0a0a0a] border border-[#ffd700]/30 shadow-[0_4px_20px_rgba(0,0,0,0.5),0_0_20px_rgba(255,215,0,0.1)] overflow-hidden">
+                  {/* All Categories Option */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleAllClick();
+                      setIsDropdownOpen(false);
+                    }}
+                    className={`w-full px-6 py-3 text-left flex items-center justify-between transition-all ${
+                      showAll
+                        ? 'bg-[#ffd700]/15 text-[#ffd700]'
+                        : 'text-[#e5e4dd] hover:bg-[#ffd700]/10 hover:text-[#ffd700]'
+                    }`}
+                    style={{
+                      fontSize: 'clamp(12px, calc(12px + (26 - 12) * ((100vw - 250px) / (3000 - 250))), 26px)',
+                    }}
+                  >
+                    <span>All Categories</span>
+                    {showAll && <Check className="w-5 h-5 text-[#ffd700]" />}
+                  </button>
 
-                #category-filter-dropdown option:hover,
-                #category-filter-dropdown option:focus {
-                  background: linear-gradient(
-                    to right,
-                    rgba(0, 255, 136, 0.2) 0%,
-                    rgba(0, 255, 136, 0.1) 100%
-                  );
-                  color: #00ff88;
-                }
-
-                #category-filter-dropdown option:checked {
-                  background-color: rgba(0, 255, 136, 0.15);
-                  color: #00ff88;
-                }
-              `}</style>
+                  {/* Category Options */}
+                  {categories.map((category) => {
+                    const isSelected = selectedCategories.includes(category.slug);
+                    return (
+                      <button
+                        key={category.slug}
+                        type="button"
+                        onClick={() => {
+                          // For dropdown, replace current selection with single category
+                          const params = getHashParams();
+                          params.set('category', category.slug);
+                          params.delete('page');
+                          setHashParams(params);
+                          setSelectedCategories([category.slug]);
+                          onFilterChange([category.slug]);
+                          setIsDropdownOpen(false);
+                        }}
+                        className={`w-full px-6 py-3 text-left flex items-center justify-between transition-all ${
+                          isSelected
+                            ? 'bg-[#ffd700]/15 text-[#ffd700]'
+                            : 'text-[#e5e4dd] hover:bg-[#ffd700]/10 hover:text-[#ffd700]'
+                        }`}
+                        style={{
+                          fontSize: 'clamp(12px, calc(12px + (26 - 12) * ((100vw - 250px) / (3000 - 250))), 26px)',
+                        }}
+                      >
+                        <span>{category.name}</span>
+                        {isSelected && <Check className="w-5 h-5 text-[#ffd700]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>

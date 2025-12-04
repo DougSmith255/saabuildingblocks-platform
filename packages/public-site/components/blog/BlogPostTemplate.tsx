@@ -2,9 +2,11 @@
 
 import React, { useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { BlogPostHero } from './BlogPostHero';
 import { RelatedPosts } from './RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
+import { CyberFrame } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
 
@@ -14,6 +16,72 @@ const CloudBackground = dynamic(
   () => import('@/components/shared/CloudBackground'),
   { ssr: false }
 );
+
+// Lazy load YouTube embed with intersection observer to prevent layout shift
+const LazyYouTubeEmbed = dynamic(
+  () => Promise.resolve(({ videoId, title }: { videoId: string; title: string }) => {
+    const [isLoaded, setIsLoaded] = React.useState(false);
+    const containerRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setIsLoaded(true);
+            observer.disconnect();
+          }
+        },
+        { rootMargin: '100px' }
+      );
+
+      if (containerRef.current) {
+        observer.observe(containerRef.current);
+      }
+
+      return () => observer.disconnect();
+    }, []);
+
+    return (
+      <div ref={containerRef}>
+        <CyberFrame isVideo aspectRatio="16/9" className="w-full">
+          {isLoaded ? (
+            <iframe
+              src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
+              title={title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          ) : (
+            <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center">
+              <div className="text-white/50 text-sm">Loading video...</div>
+            </div>
+          )}
+        </CyberFrame>
+      </div>
+    );
+  }),
+  { ssr: false }
+);
+
+/**
+ * Extract YouTube video ID from various URL formats
+ * Supports: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/embed/ID
+ */
+function extractYouTubeVideoId(url: string): string | null {
+  if (!url) return null;
+
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /^([a-zA-Z0-9_-]{11})$/ // Direct video ID
+  ];
+
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+
+  return null;
+}
 
 /**
  * Process HTML content to wrap H2 words in spans for per-word metal plate styling
@@ -65,6 +133,8 @@ export function BlogPostTemplate({
 }: BlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // Track which direction we're transitioning: 'to-light' or 'to-dark'
+  const [transitionDirection, setTransitionDirection] = useState<'to-light' | 'to-dark' | null>(null);
 
   // Format date for display
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
@@ -78,6 +148,9 @@ export function BlogPostTemplate({
 
   // Handle theme change with blur transition
   const handleThemeChange = useCallback((isDark: boolean) => {
+    // Set transition direction based on target mode
+    // If switching TO dark mode, use light blur; TO light mode, use dark blur
+    setTransitionDirection(isDark ? 'to-dark' : 'to-light');
     // Start blur transition
     setIsTransitioning(true);
 
@@ -91,6 +164,7 @@ export function BlogPostTemplate({
       // Remove blur after theme has changed
       setTimeout(() => {
         setIsTransitioning(false);
+        setTransitionDirection(null);
       }, 300); // Time for colors to settle
     }, 150); // Time for blur to fully apply
   }, []);
@@ -102,7 +176,7 @@ export function BlogPostTemplate({
     <article className={`blog-post ${isDarkMode ? 'dark-mode' : 'light-mode'}`}>
       {/* Theme transition blur overlay */}
       <div
-        className={`theme-transition-overlay ${isTransitioning ? 'active' : ''}`}
+        className={`theme-transition-overlay ${isTransitioning ? 'active' : ''} ${transitionDirection || ''}`}
         aria-hidden="true"
       />
 
@@ -134,10 +208,47 @@ export function BlogPostTemplate({
         />
       </div>
 
+      {/* YouTube Video Embed - Only shown if ACF field has a URL */}
+      {post.youtubeVideoUrl && extractYouTubeVideoId(post.youtubeVideoUrl) && (
+        <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1900px] mx-auto">
+            <div className="max-w-[1200px] mx-auto">
+              <LazyYouTubeEmbed
+                videoId={extractYouTubeVideoId(post.youtubeVideoUrl)!}
+                title={`Video: ${post.title}`}
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Main Content */}
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="max-w-[1200px] mx-auto">
+            {/* Featured Image at top of content */}
+            {post.featuredImage?.url && (
+              <figure className="blog-featured-image mb-8 md:mb-12">
+                <CyberFrame className="w-full">
+                  <div className="relative w-full aspect-[16/9]">
+                    <Image
+                      src={post.featuredImage.url}
+                      alt={post.featuredImage.alt || post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                </CyberFrame>
+                {post.featuredImage.alt && (
+                  <figcaption className="mt-3 text-sm text-center text-[var(--text-color-body)] opacity-70">
+                    {post.featuredImage.alt}
+                  </figcaption>
+                )}
+              </figure>
+            )}
+
             {/* Blog Content - Uses blog-content class from globals.css */}
             {/* H2s are processed to wrap words in spans for per-word metal plates */}
             <div

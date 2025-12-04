@@ -32,21 +32,22 @@ export function CategoryBadge({
   variant = 'default',
   className = ''
 }: CategoryBadgeProps) {
+  // Base styles without text color - text color handled separately for light/dark mode
   const variantStyles = {
     default: `
       px-3 py-1.5 text-xs uppercase tracking-wider
-      bg-[#ffd700]/10 text-[#ffd700]
+      bg-[#ffd700]/10
       border border-[#ffd700]/30
       rounded-md
       hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50
       transition-all duration-300
       shadow-[0_0_10px_rgba(255,215,0,0.1)]
       hover:shadow-[0_0_15px_rgba(255,215,0,0.3)]
+      category-badge-text
     `,
     featured: `
       px-4 py-2 text-sm uppercase tracking-widest font-bold
       bg-gradient-to-r from-[#ffd700]/20 to-[#ffd700]/10
-      text-[#ffd700]
       border-2 border-[#ffd700]/50
       rounded-lg
       hover:from-[#ffd700]/30 hover:to-[#ffd700]/20
@@ -67,15 +68,15 @@ export function CategoryBadge({
       hover:before:translate-x-[100%]
       before:transition-transform
       before:duration-700
+      category-badge-text
     `,
     minimal: `
       px-2 py-1 text-xs uppercase tracking-wide
-      text-[#ffd700]/80
       border border-[#ffd700]/20
       rounded
-      hover:text-[#ffd700]
       hover:border-[#ffd700]/40
       transition-colors duration-200
+      category-badge-text
     `
   };
 
