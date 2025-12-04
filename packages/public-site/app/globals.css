@@ -750,6 +750,14 @@ main {
     animation: fadeIn2025 0.3s ease-out forwards;
   }
 
+  /* H1 Hero entrance animation - fade in and slide up */
+  /* Applied to H1 elements with heroAnimate=true */
+  .hero-entrance-animate {
+    opacity: 0;
+    animation: fadeInUp2025 2.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    will-change: opacity, transform;
+  }
+
   @keyframes slideDownHeader {
     from {
       transform: translateY(-100%);
