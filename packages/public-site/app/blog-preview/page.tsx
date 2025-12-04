@@ -51,7 +51,9 @@ const samplePost: BlogPost = {
   modified: '2025-12-02T12:00:00Z',
   featuredImage: {
     url: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/09/sponsoring-agents-as-a-new-exp-agent-featured.webp',
-    alt: 'Sample featured image for blog post preview'
+    alt: 'Sample featured image for blog post preview',
+    width: 1200,
+    height: 675
   },
   author: {
     name: 'Doug Smart',

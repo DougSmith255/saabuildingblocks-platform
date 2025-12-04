@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { BlogPostHero } from './BlogPostHero';
@@ -135,6 +135,17 @@ export function BlogPostTemplate({
   const [isTransitioning, setIsTransitioning] = useState(false);
   // Track which direction we're transitioning: 'to-light' or 'to-dark'
   const [transitionDirection, setTransitionDirection] = useState<'to-light' | 'to-dark' | null>(null);
+
+  // Reset to dark mode when navigating away from blog post
+  // This ensures other pages (which don't support light mode) display correctly
+  useEffect(() => {
+    return () => {
+      // Cleanup: remove light-mode class when component unmounts
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('light-mode');
+      }
+    };
+  }, []);
 
   // Format date for display
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
