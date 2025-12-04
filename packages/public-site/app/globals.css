@@ -752,9 +752,10 @@ main {
 
   /* H1 Hero entrance animation - fade in and slide up */
   /* Applied to H1 elements with heroAnimate=true */
+  /* Uses !important to override any competing Tailwind animation resets */
   .hero-entrance-animate {
-    opacity: 0;
-    animation: fadeInUp2025 2.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    opacity: 0 !important;
+    animation: fadeInUp2025 2.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both !important;
     will-change: opacity, transform;
   }
 
@@ -1756,7 +1757,7 @@ body.is-404-page footer {
 }
 
 .blog-content a:hover {
-  color: var(--text-color-link, #ffd700);
+  /* Keep same color - NO color change on hover, only glow effect */
   text-decoration: none;
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.5), 0 0 16px rgba(255, 215, 0, 0.3);
 }
@@ -1779,7 +1780,7 @@ article p a,
 .blog-post-content p a:hover,
 article p a:hover,
 [role="article"] p a:hover {
-  color: var(--text-color-link, #ffd700);
+  /* Keep same color - NO color change on hover, only glow effect */
   text-decoration: none;
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.5), 0 0 16px rgba(255, 215, 0, 0.3);
 }
@@ -2525,12 +2526,12 @@ body.light-mode {
 body.light-mode .blog-content a:not(.share-button) {
   color: #00b366; /* Darker than brand green #00ff88 for better readability */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  transition: text-shadow 0.3s ease;
 }
 
 body.light-mode .blog-content a:not(.share-button):hover {
-  color: #00ff88; /* Brand green on hover */
-  text-shadow: 0 0 8px rgba(0, 255, 136, 0.6), 0 0 16px rgba(0, 255, 136, 0.4); /* Green glow */
+  /* Keep same color #00b366 - NO color change on hover, only glow effect */
+  text-shadow: 0 0 8px rgba(0, 179, 102, 0.6), 0 0 16px rgba(0, 179, 102, 0.4); /* Green glow matching base color */
 }
 
 /* Light mode breadcrumb links - bright gold for visibility on blue sky background */
@@ -2608,20 +2609,17 @@ body.light-mode .blog-post .border-t {
 }
 
 /* ========================================
-   LIGHT MODE - H2 Metal Plate Darker Backing
-   Better contrast for H2 headings in light mode
-   Target the ::before pseudo-element (the actual metal backing plate)
-   Borders are darker than face for proper 3D depth effect
-   NO white highlights - only dark shadows for recess effect
-   Keep sharp corners (no border-radius) to match dark mode
+   LIGHT MODE - H2 Metal Plate
+   EXACT COPY of dark mode styling with 95% opacity (nearly solid)
    ======================================== */
 body.light-mode .blog-content h2 .h2-word::before {
-  background: linear-gradient(135deg, rgba(50,50,50,0.95) 0%, rgba(25,25,25,0.98) 100%) !important;
-  border: 1px solid rgba(20,20,20,0.8) !important;
-  /* Sharp corners - matches dark mode, no white strip */
-  border-radius: 0 !important;
-  /* Dark inner shadow for depth - NO white highlights */
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 3px 12px rgba(0,0,0,0.7) !important;
+  /* Exact same as dark mode */
+  background: linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%) !important;
+  border-radius: 0.1em !important;
+  border: 1px solid rgba(150,150,150,0.2) !important;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.5) !important;
+  /* 95% opacity - nearly completely solid */
+  opacity: 0.95 !important;
 }
 
 /* ========================================
