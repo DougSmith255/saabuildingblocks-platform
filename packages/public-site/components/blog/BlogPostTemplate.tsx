@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { BlogPostHero } from './BlogPostHero';
 import { RelatedPosts } from './RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
-import { CyberFrame } from '@saa/shared/components/saa/media';
+import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from './Breadcrumbs';
 import type { BlogPost } from '@/lib/wordpress/types';
 
@@ -17,51 +17,6 @@ const CloudBackground = dynamic(
   { ssr: false }
 );
 
-// Lazy load YouTube embed with intersection observer to prevent layout shift
-const LazyYouTubeEmbed = dynamic(
-  () => Promise.resolve(({ videoId, title }: { videoId: string; title: string }) => {
-    const [isLoaded, setIsLoaded] = React.useState(false);
-    const containerRef = React.useRef<HTMLDivElement>(null);
-
-    React.useEffect(() => {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setIsLoaded(true);
-            observer.disconnect();
-          }
-        },
-        { rootMargin: '100px' }
-      );
-
-      if (containerRef.current) {
-        observer.observe(containerRef.current);
-      }
-
-      return () => observer.disconnect();
-    }, []);
-
-    return (
-      <div ref={containerRef}>
-        <CyberFrame isVideo aspectRatio="16/9" className="w-full">
-          {isLoaded ? (
-            <iframe
-              src={`https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`}
-              title={title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          ) : (
-            <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center">
-              <div className="text-white/50 text-sm">Loading video...</div>
-            </div>
-          )}
-        </CyberFrame>
-      </div>
-    );
-  }),
-  { ssr: false }
-);
 
 /**
  * Extract YouTube video ID from various URL formats
@@ -219,14 +174,17 @@ export function BlogPostTemplate({
       </div>
 
       {/* YouTube Video Embed - Only shown if ACF field has a URL */}
+      {/* Uses YouTubeFacade for performance - iframe only loads on user click */}
       {post.youtubeVideoUrl && extractYouTubeVideoId(post.youtubeVideoUrl) && (
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="max-w-[1200px] mx-auto">
-              <LazyYouTubeEmbed
-                videoId={extractYouTubeVideoId(post.youtubeVideoUrl)!}
-                title={`Video: ${post.title}`}
-              />
+              <CyberFrame isVideo aspectRatio="16/9" className="w-full">
+                <YouTubeFacade
+                  videoId={extractYouTubeVideoId(post.youtubeVideoUrl)!}
+                  title={`Video: ${post.title}`}
+                />
+              </CyberFrame>
             </div>
           </div>
         </section>

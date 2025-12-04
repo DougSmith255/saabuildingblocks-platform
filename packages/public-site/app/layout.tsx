@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import Script from 'next/script';
 import './globals.css';
 import StarBackground from '@/components/shared/StarBackground';
 import Header from '@/components/shared/Header';
@@ -237,6 +236,62 @@ export default async function RootLayout({
 
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#ffd700" />
+
+        {/* Organization Schema - JSON-LD for search engines and AI */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Organization',
+              name: 'Smart Agent Alliance',
+              url: 'https://smartagentalliance.com',
+              logo: 'https://smartagentalliance.com/logo.png',
+              description: 'Real estate coaching and training platform helping agents build sustainable businesses through proven systems, lead generation strategies, and community support.',
+              founder: [
+                {
+                  '@type': 'Person',
+                  name: 'Doug Smart',
+                },
+                {
+                  '@type': 'Person',
+                  name: 'Karrie Smart',
+                },
+              ],
+              sameAs: [
+                'https://www.facebook.com/smartagentalliance',
+                'https://www.youtube.com/@SmartAgentAlliance',
+                'https://www.instagram.com/smartagentalliance',
+              ],
+              contactPoint: {
+                '@type': 'ContactPoint',
+                contactType: 'customer support',
+                email: 'info@smartagentalliance.com',
+              },
+            }),
+          }}
+        />
+
+        {/* WebSite Schema - for sitelinks search box */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'Smart Agent Alliance',
+              url: 'https://smartagentalliance.com',
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: {
+                  '@type': 'EntryPoint',
+                  urlTemplate: 'https://smartagentalliance.com/blog?search={search_term_string}',
+                },
+                'query-input': 'required name=search_term_string',
+              },
+            }),
+          }}
+        />
       </head>
       <body
         className="font-sans antialiased"

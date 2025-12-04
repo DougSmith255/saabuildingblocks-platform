@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { H1, CyberFrame } from '@saa/shared/components/saa';
+import { H1, CyberFrame, YouTubeFacade } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
@@ -135,14 +135,13 @@ export function BlogPostHero({
         </div>
 
         {/* YouTube Video - displayed if present */}
+        {/* Uses YouTubeFacade for performance - iframe only loads on user click */}
         {youtubeId && (
           <div className="mt-12 max-w-4xl mx-auto">
             <CyberFrame isVideo aspectRatio="16/9">
-              <iframe
-                src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
+              <YouTubeFacade
+                videoId={youtubeId}
                 title={title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
               />
             </CyberFrame>
           </div>

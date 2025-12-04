@@ -7,7 +7,8 @@
     "dev": "next dev -p 3001",
     "prebuild": "npm run generate:blog-posts",
     "build": "next build",
-    "postbuild": "npm run sync-images && npm run generate:routes",
+    "postbuild": "npm run sync-images && npm run generate:sitemap && npm run generate:routes",
+    "generate:sitemap": "next-sitemap",
     "generate:routes": "echo '{\"version\":1,\"include\":[\"/wp-content/uploads/*\"],\"exclude\":[]}' > out/_routes.json && chmod 644 out/_routes.json",
     "start": "next start -p 3001",
     "lint": "next lint",
@@ -17,7 +18,9 @@
     "generate:blog-posts": "tsx scripts/generate-blog-posts-json.ts",
     "sync-images": "tsx scripts/sync-cloudflare-images.ts",
     "build:full": "npm run build",
-    "test:performance": "node scripts/performance-test.js"
+    "test:performance": "node scripts/performance-test.js",
+    "diagnostics": "npx tsx scripts/performance-diagnostics.ts",
+    "diagnostics:prod": "npx tsx scripts/performance-diagnostics.ts https://saabuildingblocks.com"
   },
   "dependencies": {
     "@saa/shared": "*",
@@ -41,6 +44,7 @@
     "dotenv": "^17.2.3",
     "eslint": "^9.17.0",
     "eslint-config-next": "^15.1.3",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.4.49",
     "postcss-import": "^16.1.1",
     "tailwindcss": "^4.1.17",

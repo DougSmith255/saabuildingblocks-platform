@@ -90,9 +90,10 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
                 }}
               >
                 {displayChar}
-                {/* Static neon glow - no animation */}
+                {/* Neon glow with subtle pulse animation */}
                 <span
                   aria-hidden="true"
+                  className="h1-glow-pulse"
                   style={{
                     position: 'absolute',
                     top: 0,

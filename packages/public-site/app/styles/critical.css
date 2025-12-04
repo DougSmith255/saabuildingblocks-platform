@@ -143,6 +143,29 @@ p a {
   font-family: var(--font-synonym), 'Courier New', monospace;
 }
 
+/* H1 Glow Pulse Animation - Subtle brightness pulse for neon effect */
+/* GPU-accelerated using filter: brightness() - no layout thrashing */
+@keyframes h1GlowPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.15);
+  }
+}
+
+.h1-glow-pulse {
+  animation: h1GlowPulse 4s ease-in-out infinite;
+  will-change: filter;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .h1-glow-pulse {
+    animation: none;
+  }
+}
+
 /* Profile Image Animation - Critical for fade-in */
 @keyframes imgFadeIn {
   from {
