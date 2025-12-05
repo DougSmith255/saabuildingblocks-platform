@@ -170,7 +170,7 @@ export default function Home() {
 
         {/* Mobile: CSS-only positioning (optimized for performance) - Visible only on mobile */}
         <div
-          className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
+          className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8 hero-content-animate"
           style={{
             // Mobile-optimized CSS positioning
             // Current position covering 55% - need to move down to 75%

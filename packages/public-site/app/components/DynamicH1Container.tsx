@@ -48,12 +48,10 @@ export function DynamicH1Container({ children }: { children: React.ReactNode }) 
 
   return (
     <div
-      className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
+      className="absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8 hero-content-animate"
       style={{
         top: translateY,
-        opacity: 1, // Always visible - position is close enough now
         willChange: 'transform, opacity',
-        transition: 'none', // No transition on initial render
         // Contain layout to prevent shifts affecting other elements
         contain: 'layout style',
       }}
