@@ -2653,13 +2653,19 @@ body.light-mode .blog-content h2 .h2-word::before {
   opacity: 1 !important;
 }
 
-/* Light grey background behind H2 in light mode to fill gaps around metal plates */
-body.light-mode .blog-content h2 {
-  background: linear-gradient(135deg, #d0d0d0 0%, #c0c0c0 100%);
-  padding: 0.4em 0.5em;
-  border-radius: 0.2em;
-  margin-left: -0.15em;
-  margin-right: -0.15em;
+/* Light grey fill behind each metal plate word in light mode to cover gaps */
+body.light-mode .blog-content h2 .h2-word::after {
+  content: "";
+  position: absolute;
+  /* Extend more on bottom (-0.5em) than top (-0.35em) due to 3D tilt */
+  top: -0.35em;
+  bottom: -0.5em;
+  left: -0.3em;
+  right: -0.3em;
+  background: #c8c8c8;
+  border-radius: 0.1em;
+  /* Behind the metal plate (z-index: -1), so this needs to be further back */
+  z-index: -2;
 }
 
 /* ========================================
