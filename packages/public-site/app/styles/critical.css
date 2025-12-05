@@ -166,32 +166,8 @@ p a {
   font-family: var(--font-synonym), 'Courier New', monospace;
 }
 
-/* H1 Glow Pulse Animation - Random organic brightness pulse for neon effect */
-/* GPU-accelerated using filter: brightness() + drop-shadow - no layout thrashing */
-/* Animation timing controlled by H1GlowController.tsx for random organic feel */
-/* Applied to WHOLE H1 element (not per-character) for performance */
-/* Pulse lightens the yellow face color and expands the surrounding glow */
-@keyframes h1GlowPulse {
-  0%, 100% {
-    filter: brightness(1) drop-shadow(0 0 0px transparent);
-  }
-  50% {
-    /* Strong brightness boost + glow expansion for visible "breathing" effect */
-    filter: brightness(1.5) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 40px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 60px rgba(255, 215, 0, 0.3));
-  }
-}
-
-.h1-glow-pulse {
-  /* Animation applied dynamically by H1GlowController with random timing */
-  /* Pulse duration: 1.5-3s, Delay between pulses: 2-6s */
-  will-change: filter;
-  /* Ensure filter doesn't clip the glow */
-  overflow: visible;
-}
-
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .h1-glow-pulse,
   .hero-entrance-animate {
     animation: none !important;
     opacity: 1 !important;

@@ -32,12 +32,22 @@ export function PageTransition() {
       const link = (e.target as HTMLElement).closest('a');
       if (!link) return;
 
-      const href = link.getAttribute('href');
+      let href = link.getAttribute('href');
       if (!href) return;
 
-      // Skip external links, hash-only links, and special links
+      // Convert absolute same-origin URLs to relative paths
+      // This ensures router.push() works correctly with static export
+      if (href.startsWith(window.location.origin)) {
+        href = href.slice(window.location.origin.length) || '/';
+      }
+
+      // Skip external links (different origin)
+      if (href.startsWith('http://') || href.startsWith('https://')) {
+        return;
+      }
+
+      // Skip hash-only links and special links
       if (
-        href.startsWith('http') && !href.startsWith(window.location.origin) ||
         href.startsWith('#') ||
         href.startsWith('mailto:') ||
         href.startsWith('tel:') ||

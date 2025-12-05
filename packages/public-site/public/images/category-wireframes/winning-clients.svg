@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Trophy Cup - Winning Clients -->
+  <!-- Championship trophy representing success and achievement -->
+  <defs>
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="shineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#ffd700" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Trophy cup body -->
+  <path d="M300 180 L300 280 Q300 350 400 380 Q500 350 500 280 L500 180"
+        stroke="url(#wireGrad)" stroke-width="2" fill="url(#shineGrad)" fill-opacity="0.2"/>
+
+  <!-- Cup rim -->
+  <ellipse cx="400" cy="180" rx="105" ry="25" stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.6"/>
+  <ellipse cx="400" cy="175" rx="90" ry="20" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+
+  <!-- Inner cup detail -->
+  <path d="M320 185 L320 270 Q320 330 400 355 Q480 330 480 270 L480 185"
+        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+
+  <!-- Left handle -->
+  <path d="M295 200 Q230 200 230 260 Q230 320 295 320"
+        stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M300 215 Q250 215 250 260 Q250 305 300 305"
+        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+
+  <!-- Right handle -->
+  <path d="M505 200 Q570 200 570 260 Q570 320 505 320"
+        stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+  <path d="M500 215 Q550 215 550 260 Q550 305 500 305"
+        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+
+  <!-- Trophy stem -->
+  <path d="M370 380 L370 420 Q370 430 380 430 L420 430 Q430 430 430 420 L430 380"
+        stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <line x1="375" y1="395" x2="425" y2="395" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="375" y1="410" x2="425" y2="410" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+
+  <!-- Trophy base -->
+  <path d="M340 430 L340 450 Q340 460 350 460 L450 460 Q460 460 460 450 L460 430"
+        stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- Base platform -->
+  <path d="M310 460 L310 480 Q310 490 320 490 L480 490 Q490 490 490 480 L490 460"
+        stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.6"/>
+  <line x1="320" y1="475" x2="480" y2="475" stroke="url(#wireGrad)" stroke-width="1" opacity="0.3"/>
+
+  <!-- Bottom platform -->
+  <path d="M280 490 L280 510 Q280 520 290 520 L510 520 Q520 520 520 510 L520 490"
+        stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+  <ellipse cx="400" cy="520" rx="120" ry="12" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+
+  <!-- Star decoration on trophy -->
+  <polygon points="400,210 408,230 430,230 413,243 420,265 400,253 380,265 387,243 370,230 392,230"
+           stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.15" opacity="0.6"/>
+
+  <!-- Number 1 inside star area -->
+  <text x="400" y="320" font-family="sans-serif" font-size="40" font-weight="bold"
+        fill="#ffd700" fill-opacity="0.4" text-anchor="middle" dominant-baseline="middle">1</text>
+
+  <!-- Decorative lines on base plate -->
+  <line x1="330" y1="500" x2="470" y2="500" stroke="url(#wireGrad)" stroke-width="0.75" opacity="0.3"/>
+  <line x1="350" y1="510" x2="450" y2="510" stroke="url(#wireGrad)" stroke-width="0.5" opacity="0.2"/>
+
+  <!-- Shine/highlight lines on cup -->
+  <path d="M340 200 L340 280 Q340 320 380 340" stroke="url(#wireGrad)" stroke-width="0.75" fill="none" opacity="0.3"/>
+  <path d="M350 195 L350 270" stroke="url(#wireGrad)" stroke-width="0.5" fill="none" opacity="0.25"/>
+
+  <!-- Sparkles around trophy -->
+  <circle cx="250" cy="150" r="4" fill="#ffd700" opacity="0.4"/>
+  <circle cx="550" cy="150" r="3" fill="#ffd700" opacity="0.35"/>
+  <circle cx="200" cy="280" r="2" fill="#ffd700" opacity="0.3"/>
+  <circle cx="600" cy="280" r="2" fill="#ffd700" opacity="0.3"/>
+</svg>

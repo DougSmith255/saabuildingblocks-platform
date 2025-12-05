@@ -13,7 +13,6 @@ import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import SmoothScroll from '@/components/SmoothScroll';
-import H1GlowWrapper from '@/components/shared/H1GlowWrapper';
 import PageTransition from '@/components/shared/PageTransition';
 
 // Read critical CSS at build time for consolidation
@@ -316,8 +315,6 @@ export default async function RootLayout({
         <ScrollProgress />
         <LayoutWrapper>{children}</LayoutWrapper>
 
-        {/* H1 Glow Controller - Deferred load, zero impact on page speed */}
-        <H1GlowWrapper />
 
         {/* SAA Grainy Glow Filters - Global */}
         <svg width="0" height="0" style={{ position: 'absolute' }}>

@@ -40,7 +40,7 @@ export default function H1({ children, className = '', style = {}, id }: Heading
   return (
     <h1
       id={id}
-      className={`text-h1 text-display h1-glow-pulse ${className}`}
+      className={`text-h1 text-display ${className}`}
       style={{
         transformStyle: 'preserve-3d',
         transform: 'rotateX(15deg)',

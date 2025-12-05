@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Fork in the Road - Brokerage Comparison -->
+  <!-- A diverging path representing choice between different options -->
+  <defs>
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="pathGrad" x1="50%" y1="100%" x2="50%" y2="0%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Main path starting from bottom center -->
+  <path d="M380 580 L380 380 Q380 340 340 300 L180 140"
+        stroke="url(#pathGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M420 580 L420 380 Q420 340 460 300 L620 140"
+        stroke="url(#pathGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- Path edges (creating road effect) -->
+  <path d="M360 580 L360 385 Q360 345 320 305 L160 145"
+        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M440 580 L440 385 Q440 345 480 305 L640 145"
+        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+
+  <!-- Fork point emphasis -->
+  <circle cx="400" cy="380" r="30" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <circle cx="400" cy="380" r="8" fill="#ffd700" opacity="0.4"/>
+
+  <!-- Left destination marker -->
+  <circle cx="160" cy="120" r="35" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="160" cy="120" r="20" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+  <circle cx="160" cy="120" r="6" fill="#ffd700" opacity="0.5"/>
+
+  <!-- Right destination marker -->
+  <circle cx="640" cy="120" r="35" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="640" cy="120" r="20" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+  <circle cx="640" cy="120" r="6" fill="#ffd700" opacity="0.5"/>
+
+  <!-- Road markings (dashed center lines) -->
+  <path d="M400 580 L400 420" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="10 10" fill="none" opacity="0.3"/>
+  <path d="M350 350 Q320 310 280 280 L200 200" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="8 8" fill="none" opacity="0.25"/>
+  <path d="M450 350 Q480 310 520 280 L600 200" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="8 8" fill="none" opacity="0.25"/>
+
+  <!-- Signpost at fork -->
+  <line x1="400" y1="420" x2="400" y2="340" stroke="url(#wireGrad)" stroke-width="2" opacity="0.5"/>
+  <!-- Left sign -->
+  <path d="M400 355 L350 355 L340 370 L350 385 L400 385" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
+  <!-- Right sign -->
+  <path d="M400 340 L450 340 L460 355 L450 370 L400 370" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
+
+  <!-- Decorative elements along paths -->
+  <circle cx="280" cy="250" r="4" fill="#ffd700" opacity="0.3"/>
+  <circle cx="240" cy="200" r="3" fill="#ffd700" opacity="0.25"/>
+  <circle cx="520" cy="250" r="4" fill="#ffd700" opacity="0.3"/>
+  <circle cx="560" cy="200" r="3" fill="#ffd700" opacity="0.25"/>
+
+  <!-- Perspective lines for depth -->
+  <line x1="340" y1="580" x2="140" y2="140" stroke="url(#wireGrad)" stroke-width="0.5" opacity="0.2"/>
+  <line x1="460" y1="580" x2="660" y2="140" stroke="url(#wireGrad)" stroke-width="0.5" opacity="0.2"/>
+</svg>

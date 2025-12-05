@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Cloud Network - About eXp Realty -->
+  <!-- Central cloud with connected nodes representing the cloud-based brokerage -->
+  <defs>
+    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Main central cloud -->
+  <path d="M280 280 Q280 240 320 240 Q320 200 380 200 Q400 160 450 180 Q500 160 540 200 Q580 200 580 240 Q620 240 620 280 Q620 320 580 320 Q580 360 520 360 L320 360 Q280 360 280 320 Q240 320 240 280 Q240 240 280 280"
+        stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.6"/>
+
+  <!-- Connection nodes around the cloud -->
+  <!-- Top nodes -->
+  <circle cx="350" cy="120" r="25" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="450" cy="100" r="20" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="540" cy="140" r="22" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- Side nodes -->
+  <circle cx="180" cy="260" r="28" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="680" cy="280" r="24" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="700" cy="380" r="18" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="160" cy="380" r="20" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- Bottom nodes -->
+  <circle cx="300" cy="440" r="22" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="420" cy="460" r="26" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <circle cx="560" cy="430" r="20" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- Connection lines to cloud -->
+  <line x1="350" y1="145" x2="380" y2="200" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="450" y1="120" x2="450" y2="180" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="540" y1="162" x2="520" y2="200" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="208" y1="260" x2="280" y2="280" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="656" y1="280" x2="620" y2="280" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="682" y1="380" x2="580" y2="340" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="180" y1="380" x2="280" y2="340" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="300" y1="418" x2="340" y2="360" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="420" y1="434" x2="420" y2="360" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <line x1="560" y1="410" x2="520" y2="360" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+
+  <!-- Inter-node connections -->
+  <line x1="350" y1="120" x2="450" y2="100" stroke="url(#wireGrad)" stroke-width="0.75" stroke-dasharray="4 4" opacity="0.3"/>
+  <line x1="450" y1="100" x2="540" y2="140" stroke="url(#wireGrad)" stroke-width="0.75" stroke-dasharray="4 4" opacity="0.3"/>
+  <line x1="300" y1="440" x2="420" y2="460" stroke="url(#wireGrad)" stroke-width="0.75" stroke-dasharray="4 4" opacity="0.3"/>
+  <line x1="420" y1="460" x2="560" y2="430" stroke="url(#wireGrad)" stroke-width="0.75" stroke-dasharray="4 4" opacity="0.3"/>
+
+  <!-- Small decorative dots -->
+  <circle cx="400" cy="280" r="4" fill="#ffd700" opacity="0.5"/>
+  <circle cx="380" cy="300" r="3" fill="#ffd700" opacity="0.4"/>
+  <circle cx="440" cy="290" r="3" fill="#ffd700" opacity="0.4"/>
+</svg>

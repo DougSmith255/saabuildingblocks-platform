@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from './StarBackground.module.css';
 
 interface Star {
@@ -14,6 +14,9 @@ interface Star {
 }
 
 export default function StarBackground() {
+  // Track if we've already initialized to prevent double-initialization
+  const hasInitialized = useRef(false);
+
   // Initialize stars immediately to prevent flash on page navigation
   // Stars only generate once per session using sessionStorage
   const [stars, setStars] = useState<Star[]>(() => {
@@ -24,7 +27,11 @@ export default function StarBackground() {
     const cachedStars = sessionStorage.getItem('starBackground');
     if (cachedStars) {
       try {
-        return JSON.parse(cachedStars);
+        const parsed = JSON.parse(cachedStars);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          hasInitialized.current = true;
+          return parsed;
+        }
       } catch {
         // If parsing fails, regenerate below
       }
@@ -33,8 +40,9 @@ export default function StarBackground() {
   });
 
   useEffect(() => {
-    // Only generate stars if we don't have them already
-    if (stars.length > 0) return;
+    // Only generate stars if we don't have them already and haven't initialized
+    if (stars.length > 0 || hasInitialized.current) return;
+    hasInitialized.current = true;
 
     // Generate stars on mount - scale with screen size
     const screenArea = window.innerWidth * window.innerHeight;
