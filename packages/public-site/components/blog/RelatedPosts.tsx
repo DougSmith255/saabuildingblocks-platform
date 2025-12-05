@@ -60,8 +60,8 @@ export function RelatedPosts({
   useEffect(() => {
     const updatePostCount = () => {
       const width = window.innerWidth;
-      // 1200px+ can fit 3 cards at 380px each
-      if (width >= 1200) {
+      // 1280px+ matches Tailwind xl: breakpoint for 3 columns
+      if (width >= 1280) {
         setPostCount(3);
       } else {
         setPostCount(2);
