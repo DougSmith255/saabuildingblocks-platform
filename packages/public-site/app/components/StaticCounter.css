@@ -1,18 +1,8 @@
-/* Static Counter CSS - Fade Down Animation */
-
-@keyframes counterFadeDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* Static Counter CSS - No animation (settling mask handles page load) */
 
 .agent-counter-wrapper {
-  animation: counterFadeDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s both;
+  /* No animation - visible immediately */
+  opacity: 1;
   /* Exclude counter from LCP measurement - not the main content */
   content-visibility: auto;
   contain-intrinsic-size: 280px 60px; /* Approximate counter size */
