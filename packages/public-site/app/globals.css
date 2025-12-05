@@ -2870,7 +2870,7 @@ img:not(.profile-image) {
   --container-width: 5.625em;
   --container-height: 2.5em;
   --container-radius: 6.25em;
-  --container-light-bg: #7ebbd8; /* Sky blue - slightly darker for toggle switch */
+  --container-light-bg: #5aa3c8; /* Sky blue - darker for toggle switch */
   --container-night-bg: rgb(12, 12, 12); /* SAA primary background - no blue tint */
   --circle-container-diameter: 3.375em;
   --sun-moon-diameter: 2.125em;

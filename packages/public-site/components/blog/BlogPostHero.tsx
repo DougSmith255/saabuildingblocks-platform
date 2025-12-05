@@ -95,12 +95,9 @@ export function BlogPostHero({
     <section
       className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12"
       style={{
-        // Full viewport height
-        minHeight: '100dvh',
-        // Use padding to create centering space: top padding = header height, bottom = 0
-        // This centers content in the visible area below header
-        paddingTop: 'calc(var(--header-height, 85px) * 2)',
-        paddingBottom: 'var(--header-height, 85px)',
+        // Height of the area below the header
+        minHeight: 'calc(100dvh - var(--header-height, 85px))',
+        // No extra padding - let flexbox center naturally
         boxSizing: 'border-box',
         opacity: isVisible ? 1 : 0,
         transition: 'opacity 0.5s ease-out',

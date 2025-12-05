@@ -28,36 +28,6 @@
   backface-visibility: hidden;
 }
 
-/* Sun glow effect - subtle warm radiance */
-.sunGlow {
-  position: absolute;
-  top: 5%;
-  right: 10%;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(
-    circle,
-    rgba(255, 230, 150, 0.6) 0%,
-    rgba(255, 220, 100, 0.3) 30%,
-    rgba(255, 215, 80, 0.1) 60%,
-    transparent 100%
-  );
-  border-radius: 50%;
-  filter: blur(20px);
-  animation: sunPulse 8s ease-in-out infinite;
-}
-
-@keyframes sunPulse {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
 /* Base cloud styling - fluffy white clouds using CSS shapes */
 .cloud {
   position: absolute;
@@ -147,14 +117,6 @@
     background-attachment: scroll !important;
     /* Prevent repaints from address bar changes */
     position: absolute !important;
-  }
-
-  .sunGlow {
-    width: 150px;
-    height: 150px;
-    top: 3%;
-    right: 5%;
-    filter: blur(15px);
   }
 
   /* Scale down cloud sizes directly in the variants for mobile */
