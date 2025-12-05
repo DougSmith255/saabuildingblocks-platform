@@ -9,11 +9,13 @@ export interface CTAButtonProps {
   children: React.ReactNode;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  /** @deprecated Animation removed - using page-level settling mask instead */
   heroAnimate?: boolean;
+  /** @deprecated Animation removed - using page-level settling mask instead */
   animationDelay?: string;
 }
 
-export function CTAButton({ href = '#', children, className = '', onClick, heroAnimate = false, animationDelay: heroAnimationDelay = '1.0s' }: CTAButtonProps) {
+export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
   const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
   // Initialize with a function to generate random delay immediately during render
@@ -50,13 +52,7 @@ export function CTAButton({ href = '#', children, className = '', onClick, heroA
       className={`
         group relative py-2
         ${className}
-        ${heroAnimate ? 'hero-entrance-animate' : ''}
       `}
-      style={heroAnimate ? {
-        opacity: 0,
-        animation: `fadeInUp2025 1.2s cubic-bezier(0.16, 1, 0.3, 1) ${heroAnimationDelay} both`,
-        willChange: 'opacity, transform',
-      } : {}}
     >
       {/* Button wrapper - inline container with relative positioning for light bars */}
       <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>

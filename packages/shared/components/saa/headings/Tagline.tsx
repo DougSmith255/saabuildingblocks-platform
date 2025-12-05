@@ -5,7 +5,9 @@ export interface TaglineProps {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  /** @deprecated Animation removed - using page-level settling mask instead */
   heroAnimate?: boolean;
+  /** @deprecated Animation removed - using page-level settling mask instead */
   animationDelay?: string;
 }
 
@@ -40,8 +42,6 @@ export default function Tagline({
   children,
   className = '',
   style = {},
-  heroAnimate = true,
-  animationDelay = '0.9s'
 }: TaglineProps) {
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
@@ -66,24 +66,15 @@ export default function Tagline({
 
   return (
     <p
-      className={`text-tagline ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
+      className={`text-tagline ${className}`}
       style={{
         display: 'flex',
         gap: '0.5em',
         flexWrap: 'wrap',
         justifyContent: 'center',
         transformStyle: 'preserve-3d',
+        transform: 'rotateX(15deg)',
         position: 'relative',
-        // Animation applied inline for fade-in and slide-up on page load
-        // Note: transform moved to CSS keyframes to avoid specificity conflict
-        ...(heroAnimate ? {
-          opacity: 0,
-          animation: `fadeInUp2025 2.2s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
-          willChange: 'opacity, transform',
-        } : {
-          // When not animating, apply the 3D tilt directly
-          transform: 'rotateX(15deg)',
-        }),
         ...style
       }}
     >

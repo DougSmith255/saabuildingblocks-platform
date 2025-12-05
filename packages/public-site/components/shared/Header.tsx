@@ -27,15 +27,7 @@ export default function Header() {
   // Track pathname for route change detection
   const pathname = usePathname();
 
-  // Initialize shouldAnimate - NEVER animate after first page load
-  // Use sessionStorage to track across page navigations
-  const [shouldAnimate, setShouldAnimate] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const hasAnimated = sessionStorage.getItem('headerAnimated');
-      return hasAnimated !== 'true'; // Only animate if never animated before
-    }
-    return true; // Server-side default: assume first visit
-  });
+  // Animation disabled - using page-level settling mask instead
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -52,29 +44,9 @@ export default function Header() {
     setScrollDirection(null);
   }, [pathname]);
 
-  // Wait for fonts to load before showing header to prevent text flashes
-  // Only on first visit - subsequent navigations show header immediately
+  // Font loading handled by page-level settling mask
   useEffect(() => {
-    const hasAnimated = sessionStorage.getItem('headerAnimated');
-
-    if (hasAnimated === 'true') {
-      // Header already animated in this session, show immediately (no animation)
-      setFontsLoaded(true);
-      // shouldAnimate already false from useState initialization
-    } else {
-      // First time in session - wait for fonts, then animate
-      if (document.fonts && document.fonts.ready) {
-        document.fonts.ready.then(() => {
-          setFontsLoaded(true);
-          // Mark as animated so subsequent page navigations skip animation
-          sessionStorage.setItem('headerAnimated', 'true');
-        });
-      } else {
-        // Fallback if Font Loading API not supported
-        setFontsLoaded(true);
-        sessionStorage.setItem('headerAnimated', 'true');
-      }
-    }
+    setFontsLoaded(true);
   }, []);
 
   // Detect 404 page
@@ -170,13 +142,10 @@ export default function Header() {
       {/* Header */}
       <header
         role="banner"
-        className={`fixed top-0 left-0 right-0 z-[10010] ${shouldAnimate ? 'header-slide-in' : ''}`}
+        className="fixed top-0 left-0 right-0 z-[10010]"
         style={{
           background: 'transparent',
           overflow: 'visible',
-          opacity: 1, // Always visible - no black flash on refresh
-          transform: shouldAnimate ? 'translateY(-100%)' : 'translateY(0)',
-          willChange: shouldAnimate ? 'transform' : 'auto',
         }}
       >
         {/* Sliding container for background and content */}
@@ -315,22 +284,6 @@ export default function Header() {
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`
-        /* CSS Animations (replacing framer-motion) */
-
-        /* Header slide-in animation - first visit only, 0.8s duration */
-        @keyframes headerSlideDown {
-          from {
-            transform: translateY(-100%);
-          }
-          to {
-            transform: translateY(0);
-          }
-        }
-
-        .header-slide-in {
-          animation: headerSlideDown 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-
         /* Mobile menu slide animations */
         @keyframes slideDown {
           from {

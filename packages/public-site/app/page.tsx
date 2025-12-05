@@ -20,10 +20,7 @@ const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
 );
 
-// Wolf pack background animation - loads after initial paint
-const WolfPackAnimation = dynamic(
-  () => import('./components/WolfPackAnimation').then(mod => ({ default: mod.WolfPackAnimation }))
-);
+// WolfPackAnimation removed - no longer needed, all elements visible immediately
 
 // Defer loading of desktop-only positioning components (loaded separately from main bundle)
 const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
@@ -45,7 +42,7 @@ export default function Home() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
-              className="absolute inset-0 hero-animate-bg animate-in wolf-pack-bg"
+              className="absolute inset-0 wolf-pack-bg"
               style={{
                 // Responsive background images using CSS image-set() - browser picks the best size
                 // Mobile (<=375px): 28KB, Tablet (<=768px): 52KB, Desktop: 87KB (67% bandwidth savings on mobile!)
@@ -136,8 +133,7 @@ export default function Home() {
         {/* Counter Animation - Hydrates after counter is visible */}
         <CounterAnimation />
 
-        {/* Trigger hero animations (wolf pack background and profile image fade-in) */}
-        <WolfPackAnimation />
+        {/* Hero animations removed - all elements visible immediately */}
 
         {/* Desktop: JavaScript positioning (accurate) - Hidden on mobile */}
         <div className="hidden md:block">
