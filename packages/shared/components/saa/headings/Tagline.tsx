@@ -73,13 +73,17 @@ export default function Tagline({
         flexWrap: 'wrap',
         justifyContent: 'center',
         transformStyle: 'preserve-3d',
-        transform: 'rotateX(15deg)',
         position: 'relative',
+        // Animation applied inline for fade-in and slide-up on page load
+        // Note: transform moved to CSS keyframes to avoid specificity conflict
         ...(heroAnimate ? {
           opacity: 0,
           animation: `fadeInUp2025 2.2s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
           willChange: 'opacity, transform',
-        } : {}),
+        } : {
+          // When not animating, apply the 3D tilt directly
+          transform: 'rotateX(15deg)',
+        }),
         ...style
       }}
     >
