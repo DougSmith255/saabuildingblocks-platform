@@ -1673,8 +1673,10 @@ body.is-404-page footer {
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
-  /* Negative inset extends plate beyond the word - key difference */
-  inset: -0.2em -0.3em;
+  /* Negative inset extends plate beyond the word
+     -0.35em top/bottom to fully cover text height with line-height
+     -0.3em left/right for horizontal padding */
+  inset: -0.35em -0.3em;
   /* Fully opaque dark background - no transparency */
   background: linear-gradient(135deg, #282828 0%, #191919 100%);
   border-radius: 0.1em;
