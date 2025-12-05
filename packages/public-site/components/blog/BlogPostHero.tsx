@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { H1, CyberFrame, YouTubeFacade } from '@saa/shared/components/saa';
+import { H1, CyberFrame, YouTubeFacade, Icon3D } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
@@ -117,25 +117,25 @@ export function BlogPostHero({
         <div className="flex flex-wrap items-center justify-center gap-6 text-[#dcdbd5]">
           {/* Author */}
           <div className="flex items-center gap-2">
-            <span className="hero-icon-3d">
+            <Icon3D size={16}>
               <User className="w-4 h-4" />
-            </span>
+            </Icon3D>
             <span className="text-sm font-[var(--font-amulya)]">{author}</span>
           </div>
 
           {/* Date */}
           <div className="flex items-center gap-2">
-            <span className="hero-icon-3d">
+            <Icon3D size={16}>
               <Calendar className="w-4 h-4" />
-            </span>
+            </Icon3D>
             <span className="text-sm font-[var(--font-amulya)]">{date}</span>
           </div>
 
           {/* Reading time */}
           <div className="flex items-center gap-2">
-            <span className="hero-icon-3d">
+            <Icon3D size={16}>
               <Clock className="w-4 h-4" />
-            </span>
+            </Icon3D>
             <span className="text-sm font-[var(--font-amulya)]">{readingTime}</span>
           </div>
         </div>
