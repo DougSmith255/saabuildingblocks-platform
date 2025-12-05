@@ -9,10 +9,23 @@ import Lenis from 'lenis';
  * Industry-standard smooth scrolling for mouse wheel, trackpad, and touch.
  * Handles cross-browser compatibility automatically.
  *
+ * Also handles:
+ * - Disabling browser scroll restoration (prevents scroll position being restored on navigation)
+ * - Scrolling to top on initial page load
+ *
  * @see https://github.com/darkroomengineering/lenis
  */
 export default function SmoothScroll() {
   useEffect(() => {
+    // Disable browser's automatic scroll restoration
+    // This prevents the browser from restoring scroll position when navigating between pages
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // Scroll to top on initial page load (for static export navigation)
+    window.scrollTo(0, 0);
+
     // Initialize Lenis
     const lenis = new Lenis({
       duration: 1.2, // Scroll animation duration in seconds
