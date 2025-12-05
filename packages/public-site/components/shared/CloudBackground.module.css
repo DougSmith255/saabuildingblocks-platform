@@ -14,11 +14,11 @@
   /* Blue sky gradient - fades to off-white at bottom to blend with page */
   background: linear-gradient(
     to bottom,
-    #4a90c2 0%,      /* Deep sky blue at top */
-    #6ab4e8 20%,     /* Medium sky blue */
-    #87ceeb 40%,     /* Sky blue */
-    #b0d8f0 60%,     /* Light sky blue */
-    #d4e9f7 80%,     /* Very light blue */
+    #4085b8 0%,      /* Deep sky blue at top - slightly darker */
+    #5da8dc 20%,     /* Medium sky blue - slightly darker */
+    #7cc0e5 40%,     /* Sky blue - slightly darker */
+    #a0d0eb 60%,     /* Light sky blue - slightly darker */
+    #c8e2f2 80%,     /* Very light blue - slightly darker */
     #e5e4dd 100%     /* Fade to off-white (primary heading text color) */
   ) !important;
 
