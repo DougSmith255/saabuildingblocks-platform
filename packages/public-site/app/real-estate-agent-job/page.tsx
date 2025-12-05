@@ -24,6 +24,7 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
+import HeroSection from '@/components/shared/HeroSection';
 
 /**
  * WordPress categories data (from actual WordPress API)
@@ -113,11 +114,11 @@ export default async function RealEstateAgentBlogPage() {
 
   return (
     <main id="main-content" className="min-h-screen">
-      {/* Hero Section - Renders first, immediately visible */}
-      <section
+      {/* Hero Section - Wrapped in HeroSection for smooth fade-in */}
+      <HeroSection
         className="relative px-4 sm:px-8 md:px-12 flex items-center justify-center"
         style={{ minHeight: '100vh', paddingTop: '50px' }}
-        aria-labelledby="blog-heading"
+        ariaLabel="Agent Success Hub Hero"
       >
         {/* Agent Success Hub Background Image - CSS background-image like homepage */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
@@ -152,7 +153,7 @@ export default async function RealEstateAgentBlogPage() {
             </Tagline>
           </div>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Blog content loads progressively with client component */}
       <BlogPageClient categories={WORDPRESS_CATEGORIES} />

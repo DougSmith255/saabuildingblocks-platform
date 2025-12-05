@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { H1, CyberFrame, YouTubeFacade, Icon3D } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
@@ -79,8 +79,26 @@ export function BlogPostHero({
   const readingTime = calculateReadingTime(content);
   const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
+  // Smooth fade-in animation state
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // Double RAF to ensure we're past initial paint
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setIsVisible(true);
+      });
+    });
+  }, []);
+
   return (
-    <section className="relative min-h-[calc(100dvh-var(--header-height)-3rem)] flex flex-col justify-center py-8 md:py-16 px-4 sm:px-8 md:px-12">
+    <section
+      className="relative min-h-[calc(100dvh-var(--header-height)-3rem)] flex flex-col justify-center py-8 md:py-16 px-4 sm:px-8 md:px-12"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transition: 'opacity 0.5s ease-out',
+      }}
+    >
       {/* Hero background - uses star background by default */}
       {heroImage && (
         <div

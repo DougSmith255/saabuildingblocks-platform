@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
+import HeroSection from '@/components/shared/HeroSection';
 
 // Homepage sections
 import { ValueStack } from './components/sections/ValueStack';
@@ -33,10 +34,10 @@ const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container
 export default function Home() {
   return (
     <main id="main-content">
-      {/* Hero Section */}
-      <section
+      {/* Hero Section - Wrapped in HeroSection for smooth fade-in */}
+      <HeroSection
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
-        aria-labelledby="hero-heading"
+        ariaLabel="Hero"
       >
         {/* Wolf Pack Background Image - furthest back layer */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
@@ -208,7 +209,7 @@ export default function Home() {
             </CTAButton>
           </div>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Homepage Sections */}
       <ValueStack />
