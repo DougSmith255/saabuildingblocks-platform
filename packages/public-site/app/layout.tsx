@@ -15,6 +15,7 @@ import { join } from 'path';
 import SmoothScroll from '@/components/SmoothScroll';
 import H1GlowWrapper from '@/components/shared/H1GlowWrapper';
 import SettlingMask from '@/components/shared/SettlingMask';
+import PageTransition from '@/components/shared/PageTransition';
 
 // Read critical CSS at build time for consolidation
 const criticalCSS = readFileSync(
@@ -307,6 +308,9 @@ export default async function RootLayout({
       >
         {/* Settling Mask - Hides font swap & layout settling during first ~500ms */}
         <SettlingMask />
+
+        {/* Page Transition - Fades main content on navigation */}
+        <PageTransition />
 
         {/* Public-site package: Always static export with baked-in CSS */}
         <SmoothScroll />
