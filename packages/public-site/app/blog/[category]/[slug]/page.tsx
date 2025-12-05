@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { CategoryBlogPostTemplate } from '@/components/blog';
 import type { BlogPost } from '@/lib/wordpress/types';
+import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 import type { Metadata } from 'next';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -86,8 +87,8 @@ export async function generateMetadata({
     };
   }
 
-  // Strip HTML tags from excerpt for description
-  const description = post.excerpt.replace(/<[^>]*>/g, '').trim();
+  // Prefer Rank Math meta description, fallback to cleaned excerpt
+  const description = post.metaDescription || cleanExcerpt(post.excerpt, 160);
 
   return {
     title: `${post.title} | Smart Agent Alliance`,

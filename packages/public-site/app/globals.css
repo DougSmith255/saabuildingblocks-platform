@@ -1669,19 +1669,19 @@ body.is-404-page footer {
     0 3px 3px #000;
 }
 
-/* Metal backing plate - DARKENED for text contrast (95% opaque) */
+/* Metal backing plate - FULLY OPAQUE for solid appearance in both themes */
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
   /* Negative inset extends plate beyond the word - key difference */
   inset: -0.2em -0.3em;
-  /* Dark solid background - 95% opaque for text to pop */
-  background: linear-gradient(135deg, rgba(40,40,40,0.95) 0%, rgba(25,25,25,0.95) 100%);
+  /* Fully opaque dark background - no transparency */
+  background: linear-gradient(135deg, #282828 0%, #191919 100%);
   border-radius: 0.1em;
   z-index: -1;
   /* 3D depth positioning */
   transform: translateZ(-10px);
-  border: 1px solid rgba(60,60,60,0.5);
+  border: 1px solid #3c3c3c;
   box-shadow: inset 0 1px 1px rgba(80,80,80,0.2), 0 2px 8px rgba(0,0,0,0.7);
 }
 
@@ -2635,14 +2635,14 @@ body.light-mode .blog-post .border-t {
 /* ========================================
    LIGHT MODE - H2 Metal Plate (DARKENED)
    Much darker background to match dark mode appearance
+   FULLY OPAQUE - No transparency to prevent light background showing through
    ======================================== */
 body.light-mode .blog-content h2 .h2-word::before {
-  /* Darker background - no white, solid dark appearance */
-  background: linear-gradient(135deg, rgba(40,40,40,0.9) 0%, rgba(25,25,25,0.95) 100%) !important;
+  /* Fully opaque dark background - no rgba transparency */
+  background: linear-gradient(135deg, #282828 0%, #191919 100%) !important;
   border-radius: 0.1em !important;
-  border: 1px solid rgba(60,60,60,0.5) !important;
+  border: 1px solid #3c3c3c !important;
   box-shadow: inset 0 1px 1px rgba(80,80,80,0.2), 0 2px 8px rgba(0,0,0,0.7) !important;
-  /* Fully opaque */
   opacity: 1 !important;
 }
 

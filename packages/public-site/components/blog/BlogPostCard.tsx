@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { CTAButton } from '@saa/shared/components/saa';
+import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 
 /**
  * Convert category name to URL slug
@@ -115,17 +116,16 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
           </h3>
         </Link>
 
-        {/* Excerpt */}
-        {post.excerpt && (
-          <div
+        {/* Description - prefer Rank Math meta description, fallback to cleaned excerpt */}
+        {(post.metaDescription || post.excerpt) && (
+          <p
             className={`
               text-[#dcdbd5] mb-4
               ${featured ? 'text-base md:text-lg' : 'text-sm md:text-base'}
             `}
-            dangerouslySetInnerHTML={{
-              __html: featured ? post.excerpt : post.excerpt.substring(0, 200) + '...'
-            }}
-          />
+          >
+            {post.metaDescription || cleanExcerpt(post.excerpt, featured ? 300 : 160)}
+          </p>
         )}
 
         {/* Meta Information */}

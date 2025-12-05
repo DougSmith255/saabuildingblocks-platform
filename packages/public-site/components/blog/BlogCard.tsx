@@ -23,6 +23,7 @@ import { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
+import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 
 export interface BlogCardProps {
   post: BlogPost;
@@ -151,9 +152,9 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
             {post.title}
           </h3>
 
-          {/* Excerpt with line clamp */}
-          {post.excerpt && (
-            <div
+          {/* Description - prefer Rank Math meta description, fallback to cleaned excerpt */}
+          {(post.metaDescription || post.excerpt) && (
+            <p
               className="
                 font-[var(--font-amulya)]
                 text-body
@@ -163,8 +164,9 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
                 leading-relaxed
                 flex-grow
               "
-              dangerouslySetInnerHTML={{ __html: post.excerpt }}
-            />
+            >
+              {post.metaDescription || cleanExcerpt(post.excerpt, 200)}
+            </p>
           )}
 
           {/* Author and Date Metadata - Professional Typography */}

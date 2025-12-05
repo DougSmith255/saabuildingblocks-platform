@@ -85,14 +85,25 @@ function transformPost(apiPost: any): BlogPost {
     author = apiPost.author;
   }
 
+  // Convert comparison_images (snake_case) to comparisonImages (camelCase)
+  const comparisonImages = Array.isArray(apiPost.comparison_images)
+    ? apiPost.comparison_images
+    : [];
+
   return {
     ...apiPost,
     // Convert featured_image (snake_case) to featuredImage (camelCase)
     featuredImage,
     // Normalize author to object format
     author,
-    // Remove the snake_case version
+    // Convert meta_description (snake_case) to metaDescription (camelCase)
+    metaDescription: apiPost.meta_description || '',
+    // Convert comparison_images (snake_case) to comparisonImages (camelCase)
+    comparisonImages,
+    // Remove the snake_case versions
     featured_image: undefined,
+    meta_description: undefined,
+    comparison_images: undefined,
   };
 }
 

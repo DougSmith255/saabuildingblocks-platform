@@ -31,10 +31,11 @@ export interface RelatedPostsProps {
  *
  * Algorithm:
  * 1. Filter out current post by ID
- * 2. If category provided, prioritize posts from same category
- * 3. Take up to limit posts (default 3)
- * 4. Render using BlogPostCard in responsive grid
- * 5. Return null if no related posts
+ * 2. Filter out posts with Divi shortcode remnants (broken content)
+ * 3. If category provided, prioritize posts from same category
+ * 4. Take up to limit posts (default 3)
+ * 5. Render using BlogPostCard in responsive grid
+ * 6. Return null if no related posts
  *
  * @example
  * ```tsx
@@ -75,8 +76,15 @@ export function RelatedPosts({
     return () => window.removeEventListener('resize', updatePostCount);
   }, []);
 
-  // Filter out current post
-  let relatedPosts = posts.filter(p => p.id !== currentPostId);
+  // Filter out current post and posts with Divi shortcode remnants
+  let relatedPosts = posts.filter(p => {
+    // Skip current post
+    if (p.id === currentPostId) return false;
+    // Skip posts that have Divi shortcode remnants (broken content)
+    const content = p.content || '';
+    if (content.includes('[et_pb_') || content.includes('et_pb_')) return false;
+    return true;
+  });
 
   // If category provided, prioritize posts from same category
   if (currentCategory) {

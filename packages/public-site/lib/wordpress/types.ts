@@ -11,6 +11,8 @@ export interface BlogPost {
   title: string;
   content: string;
   excerpt: string;
+  /** Rank Math SEO meta description (preferred over excerpt for display) */
+  metaDescription?: string;
   date: string;
   modified: string;
   featuredImage?: {
@@ -19,6 +21,12 @@ export interface BlogPost {
     width: number;
     height: number;
   };
+  /** Comparison images extracted from Divi shortcodes (for brokerage vs brokerage posts) */
+  comparisonImages?: Array<{
+    url: string;
+    alt: string;
+    title: string;
+  }>;
   author: {
     name: string;
     avatar?: string;

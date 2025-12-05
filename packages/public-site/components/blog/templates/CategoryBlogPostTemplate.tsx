@@ -168,6 +168,34 @@ export function CategoryBlogPostTemplate({
         />
       </div>
 
+      {/* Comparison Images - Displayed for brokerage vs brokerage posts */}
+      {post.comparisonImages && post.comparisonImages.length > 0 && (
+        <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1900px] mx-auto">
+            <div className="max-w-[1200px] mx-auto">
+              <div className={`grid gap-6 ${post.comparisonImages.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+                {post.comparisonImages.map((img, idx) => (
+                  <div key={idx} className="flex justify-center">
+                    <CyberFrame>
+                      <Image
+                        src={img.url}
+                        alt={img.alt || img.title || `Comparison chart ${idx + 1}`}
+                        width={500}
+                        height={400}
+                        sizes="(max-width: 768px) 100vw, 500px"
+                        className="object-contain"
+                        style={{ maxHeight: '400px', width: 'auto', height: 'auto' }}
+                        priority={idx < 2}
+                      />
+                    </CyberFrame>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* YouTube Video Embed */}
       {showVideoSection && hasVideo && (
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">

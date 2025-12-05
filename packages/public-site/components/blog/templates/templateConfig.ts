@@ -64,7 +64,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#00A3E0', // eXp blue
     accentColorSecondary: '#0077B5',
     heroSubtitle: 'Learn about the revolutionary cloud-based brokerage',
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-about-exp',
   },
 
@@ -85,7 +85,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColorSecondary: '#00CC6A',
     heroSubtitle: 'Your journey to becoming a successful real estate agent',
     emphasizeVideo: true,
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-become-agent',
   },
 
@@ -95,7 +95,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#9B59B6', // Purple
     accentColorSecondary: '#8E44AD',
     heroSubtitle: 'Compare brokerages to find your perfect fit',
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-brokerage-comparison',
   },
 
@@ -105,7 +105,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#FF6B6B', // Coral
     accentColorSecondary: '#EE5A5A',
     heroSubtitle: 'Light-hearted content for hardworking agents',
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-fun',
   },
 
@@ -115,7 +115,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#3498DB', // Blue
     accentColorSecondary: '#2980B9',
     heroSubtitle: 'Stay ahead with the latest real estate industry insights',
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-industry-trends',
   },
 
@@ -126,7 +126,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColorSecondary: '#C0392B',
     heroSubtitle: 'Master the art of real estate marketing',
     emphasizeVideo: true,
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-marketing',
   },
 
@@ -138,7 +138,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     heroSubtitle: 'Find the right education path for your real estate career',
     ctaText: 'Find Schools',
     ctaLink: '/schools',
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-schools',
   },
 
@@ -151,7 +151,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     ctaText: 'Win More Clients',
     ctaLink: '/client-strategies',
     emphasizeVideo: true,
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-winning-clients',
   },
 
@@ -163,7 +163,7 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     heroSubtitle: 'Partner with the Smart Agent Alliance at eXp Realty',
     ctaText: 'Join Our Team',
     ctaLink: '/sponsor',
-    relatedPostsLimit: 4,
+    relatedPostsLimit: 3,
     customClassName: 'category-sponsor',
   },
 };

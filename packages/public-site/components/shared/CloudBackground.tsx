@@ -98,9 +98,6 @@ export default function CloudBackground() {
 
   return (
     <div className={styles.skyContainer} aria-hidden="true">
-      {/* Sun glow effect in top-right area */}
-      <div className={styles.sunGlow} />
-
       {/* Clouds */}
       {clouds.map((cloud) => (
         <div

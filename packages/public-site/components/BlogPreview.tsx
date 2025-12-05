@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@saa/shared/components/ui/card';
+import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 
 /**
  * Blog Post Data Interface
@@ -46,12 +47,7 @@ const formatDate = (dateString: string): string => {
   });
 };
 
-/**
- * Strip HTML tags from excerpt
- */
-const stripHtml = (html: string): string => {
-  return html.replace(/<[^>]*>/g, '');
-};
+// stripHtml replaced by cleanExcerpt from fallbacks (strips shortcodes, HTML, entities)
 
 /**
  * Individual Blog Post Card Component
@@ -109,7 +105,7 @@ function BlogCard({ post, index }: BlogCardProps) {
         <CardContent>
           {/* Excerpt - Truncate to 3 lines */}
           <p className="line-clamp-3 font-amulya text-neutral-600">
-            {stripHtml(post.excerpt)}
+            {cleanExcerpt(post.excerpt, 200)}
           </p>
         </CardContent>
 
