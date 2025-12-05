@@ -3446,3 +3446,22 @@ img:not(.profile-image) {
   border-color: rgba(255, 215, 0, 0.4);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
+
+/* Keep school card button dark in light mode */
+.light-mode .blog-content .school-cta-button {
+  background: rgb(45, 45, 45) !important;
+  color: var(--text-color-button, #dcdbd5) !important;
+  box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Keep light bars gold in light mode */
+.light-mode .blog-content .school-cta-wrapper::before,
+.light-mode .blog-content .school-cta-wrapper::after {
+  background: #ffd700 !important;
+  box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700 !important;
+}
+
+/* Keep school logo background white in light mode */
+.light-mode .blog-content .school-logo {
+  background: white !important;
+}
