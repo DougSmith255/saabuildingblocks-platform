@@ -23,17 +23,37 @@ export default function Header() {
   const [is404Page, setIs404Page] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(true); // Track first page load for slide-in animation
+  const [hasSlideIn, setHasSlideIn] = useState(false); // Track when slide-in animation completes
 
   // Track pathname for route change detection
   const pathname = usePathname();
 
-  // Animation disabled - using page-level settling mask instead
-
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state
+  // Track mount state and first load slide-in animation
   useEffect(() => {
     setHasMounted(true);
+
+    // Check if this is the first load in this session
+    const hasVisited = sessionStorage.getItem('headerSlideInDone');
+    if (hasVisited) {
+      // Not first load - skip slide-in animation
+      setIsFirstLoad(false);
+      setHasSlideIn(true);
+    } else {
+      // First load - trigger slide-in after a brief delay
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setHasSlideIn(true);
+          sessionStorage.setItem('headerSlideInDone', 'true');
+          // After slide-in animation completes (500ms), switch to normal scroll behavior
+          setTimeout(() => {
+            setIsFirstLoad(false);
+          }, 500);
+        });
+      });
+    }
   }, []);
 
   // Reset header visibility on route change - ensures header is visible on new pages
@@ -149,10 +169,10 @@ export default function Header() {
         }}
       >
         {/* Sliding container for background and content */}
+        {/* First load: starts off-screen (-translate-y-full), slides down when hasSlideIn becomes true */}
+        {/* Subsequent loads: no slide animation, just normal scroll hide/show behavior */}
         <div
-          className={`${hasMounted ? 'transition-transform duration-500' : ''} ease-in-out ${
-            isHidden ? '-translate-y-full' : 'translate-y-0'
-          }`}
+          className={`${hasMounted ? 'transition-transform duration-500' : ''} ease-in-out`}
           style={{
             width: '100%',
             maxWidth: '100%',
@@ -161,9 +181,11 @@ export default function Header() {
             borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
             willChange: 'transform',
-            transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)',
             contain: 'layout style',
+            // First load: start hidden, slide down; After: normal scroll behavior
+            transform: isFirstLoad
+              ? (hasSlideIn ? 'translateY(0) translateZ(0)' : 'translateY(-100%) translateZ(0)')
+              : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
           }}
         >
           {/* Enhanced Glassmorphism Background with Prismatic Shimmer Effect */}
