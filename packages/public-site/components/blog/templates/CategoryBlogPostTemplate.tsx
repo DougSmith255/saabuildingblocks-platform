@@ -166,12 +166,14 @@ export function CategoryBlogPostTemplate({
           date={formattedDate}
           content={post.content}
           youtubeVideoUrl={post.youtubeVideoUrl}
+          featuredImage={categorySlug === 'real-estate-schools' ? post.featuredImage?.url : undefined}
+          featuredImageMaxHeight={templateConfig.heroImageMaxHeight}
           onThemeChange={handleThemeChange}
         />
       </div>
 
-      {/* Comparison Images - Collapsible accordion for brokerage vs brokerage posts */}
-      {post.comparisonImages && post.comparisonImages.length > 0 && (
+      {/* Comparison Images - Collapsible accordion for brokerage comparison posts ONLY */}
+      {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
         <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="max-w-[1200px] mx-auto">
@@ -253,8 +255,8 @@ export function CategoryBlogPostTemplate({
         <div className="max-w-[1900px] mx-auto">
           <div className="max-w-[1200px] mx-auto">
             <div className="blog-content prose prose-invert max-w-none">
-              {/* Featured Image - max-height 270px */}
-              {post.featuredImage?.url && (
+              {/* Featured Image - max-height 270px (hidden for real-estate-schools since it's in hero) */}
+              {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
                 <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
                   <CyberFrame>
                     <div className="relative" style={{ maxHeight: '270px' }}>

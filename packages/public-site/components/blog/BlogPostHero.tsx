@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { H1, CyberFrame, YouTubeFacade, Icon3D } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
@@ -39,6 +40,10 @@ export interface BlogPostHeroProps {
   heroImage?: string;
   /** Optional YouTube video URL */
   youtubeVideoUrl?: string;
+  /** Featured image URL to display in hero section */
+  featuredImage?: string;
+  /** Max height for featured image (e.g., '140px') */
+  featuredImageMaxHeight?: string;
   /** Callback when theme changes */
   onThemeChange?: (isDark: boolean) => void;
 }
@@ -74,6 +79,7 @@ export function BlogPostHero({
   content,
   heroImage,
   youtubeVideoUrl,
+  featuredImage,
   onThemeChange,
 }: BlogPostHeroProps) {
   const readingTime = calculateReadingTime(content);
@@ -162,6 +168,26 @@ export function BlogPostHero({
             <span className="text-sm font-[var(--font-amulya)]">{readingTime}</span>
           </div>
         </div>
+
+        {/* Featured Image - displayed centered below icons */}
+        {featuredImage && !youtubeId && (
+          <div className="mt-10 max-w-3xl mx-auto">
+            <CyberFrame>
+              <div style={featuredImageMaxHeight ? { maxHeight: featuredImageMaxHeight, overflow: 'hidden' } : undefined}>
+                <Image
+                  src={featuredImage}
+                  alt={title}
+                  width={900}
+                  height={506}
+                  className="object-cover w-full h-auto"
+                  style={featuredImageMaxHeight ? { maxHeight: featuredImageMaxHeight, objectFit: 'contain' } : undefined}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px"
+                  priority
+                />
+              </div>
+            </CyberFrame>
+          </div>
+        )}
 
         {/* YouTube Video - displayed if present */}
         {/* Uses YouTubeFacade for performance - iframe only loads on user click */}

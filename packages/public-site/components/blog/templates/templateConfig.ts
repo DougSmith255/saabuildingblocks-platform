@@ -44,6 +44,8 @@ export interface CategoryTemplateConfig {
   relatedPostsLimit?: number;
   /** Custom CSS class to add to article */
   customClassName?: string;
+  /** Max height for hero featured image (e.g., '140px') */
+  heroImageMaxHeight?: string;
 }
 
 /**
@@ -136,10 +138,10 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#1ABC9C', // Teal
     accentColorSecondary: '#16A085',
     heroSubtitle: 'Find the right education path for your real estate career',
-    ctaText: 'Find Schools',
-    ctaLink: '/schools',
+    // CTA removed - redundant on pages that list schools
     relatedPostsLimit: 3,
     customClassName: 'category-schools',
+    heroImageMaxHeight: '140px',
   },
 
   'winning-clients': {

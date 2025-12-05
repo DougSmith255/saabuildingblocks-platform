@@ -169,9 +169,11 @@ export function ShareButtons({
       `}</style>
 
       <div className={`
-        ${showDivider ? 'mt-12 pt-8 border-t border-[#333333]/50' : ''}
+        ${showDivider ? 'mt-12 pt-8 border-t' : ''}
         ${className}
-      `}>
+      `}
+      style={showDivider ? { borderColor: 'rgba(100, 100, 100, 0.4)' } : undefined}
+      >
         {showHeading && (
           <h3
             className="mb-4"

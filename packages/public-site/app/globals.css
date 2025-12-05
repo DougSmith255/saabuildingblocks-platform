@@ -1627,19 +1627,22 @@ body.is-404-page footer {
 
 /* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
 /* Matches H2.tsx from @saa/shared/components/saa/headings */
-.blog-content h2 {
-  font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
-  font-size: clamp(25px, calc(20.73px + 1.71vw), 72px);
-  line-height: var(--line-height-h2, 1.1);
-  letter-spacing: var(--letter-spacing-h2, -0.01em);
-  font-weight: var(--font-weight-h2, 700);
-  color: var(--text-color-h2, #bfbdb0);
+/* !important to override prose/prose-invert defaults */
+.blog-content h2,
+.blog-content.prose h2,
+.blog-content.prose-invert h2 {
+  font-family: var(--font-family-h2, var(--font-taskor), sans-serif) !important;
+  font-size: clamp(25px, calc(20.73px + 1.71vw), 72px) !important;
+  line-height: var(--line-height-h2, 1.1) !important;
+  letter-spacing: var(--letter-spacing-h2, -0.01em) !important;
+  font-weight: var(--font-weight-h2, 700) !important;
+  color: var(--text-color-h2, #bfbdb0) !important;
   margin-top: 3rem;
   margin-bottom: 1.5rem;
   /* Flex layout for word spacing - matches H2.tsx */
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5em;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.5em !important;
   /* 3D transforms for depth effect - exact match to H2.tsx */
   transform-style: preserve-3d;
   transform: rotateX(15deg);
@@ -1685,70 +1688,82 @@ body.is-404-page footer {
   box-shadow: inset 0 1px 1px rgba(80,80,80,0.2), 0 2px 8px rgba(0,0,0,0.7);
 }
 
-/* H3 - Master Controller Typography */
-.blog-content h3 {
-  font-family: var(--font-family-h3, var(--font-amulya), sans-serif);
-  font-size: var(--font-size-h3, clamp(32px, calc(28.36px + 1.45vw), 72px));
-  line-height: var(--line-height-h3, 1.3);
-  letter-spacing: var(--letter-spacing-h3, 0em);
-  font-weight: var(--font-weight-h3, 700);
-  color: var(--text-color-h3, #e5e4dd);
+/* H3 - Master Controller Typography - !important to override prose-invert */
+.blog-content h3,
+.blog-content.prose h3,
+.blog-content.prose-invert h3 {
+  font-family: var(--font-family-h3, var(--font-amulya), sans-serif) !important;
+  font-size: var(--font-size-h3, clamp(32px, calc(28.36px + 1.45vw), 72px)) !important;
+  line-height: var(--line-height-h3, 1.3) !important;
+  letter-spacing: var(--letter-spacing-h3, 0em) !important;
+  font-weight: var(--font-weight-h3, 700) !important;
+  color: var(--text-color-h3, #e5e4dd) !important;
   margin-top: 2.5rem;
   margin-bottom: 1.25rem;
 }
 
-/* H4 - Master Controller Typography */
-.blog-content h4 {
-  font-family: var(--font-family-h4, var(--font-amulya), sans-serif);
-  font-size: var(--font-size-h4, clamp(26px, calc(23.27px + 1.09vw), 56px));
-  line-height: var(--line-height-h4, 1.3);
-  letter-spacing: var(--letter-spacing-h4, 0em);
-  font-weight: var(--font-weight-h4, 700);
-  color: var(--text-color-h4, #e5e4dd);
+/* H4 - Master Controller Typography - !important to override prose */
+.blog-content h4,
+.blog-content.prose h4,
+.blog-content.prose-invert h4 {
+  font-family: var(--font-family-h4, var(--font-amulya), sans-serif) !important;
+  font-size: var(--font-size-h4, clamp(26px, calc(23.27px + 1.09vw), 56px)) !important;
+  line-height: var(--line-height-h4, 1.3) !important;
+  letter-spacing: var(--letter-spacing-h4, 0em) !important;
+  font-weight: var(--font-weight-h4, 700) !important;
+  color: var(--text-color-h4, #e5e4dd) !important;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-/* H5 - Master Controller Typography */
-.blog-content h5 {
-  font-family: var(--font-family-h5, var(--font-amulya), sans-serif);
-  font-size: var(--font-size-h5, clamp(22px, calc(20.00px + 0.80vw), 44px));
-  line-height: var(--line-height-h5, 1.3);
-  letter-spacing: var(--letter-spacing-h5, 0em);
-  font-weight: var(--font-weight-h5, 700);
-  color: var(--text-color-h5, #e5e4dd);
+/* H5 - Master Controller Typography - !important to override prose */
+.blog-content h5,
+.blog-content.prose h5,
+.blog-content.prose-invert h5 {
+  font-family: var(--font-family-h5, var(--font-amulya), sans-serif) !important;
+  font-size: var(--font-size-h5, clamp(22px, calc(20.00px + 0.80vw), 44px)) !important;
+  line-height: var(--line-height-h5, 1.3) !important;
+  letter-spacing: var(--letter-spacing-h5, 0em) !important;
+  font-weight: var(--font-weight-h5, 700) !important;
+  color: var(--text-color-h5, #e5e4dd) !important;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
 
-/* H6 - Master Controller Typography */
-.blog-content h6 {
-  font-family: var(--font-family-h6, var(--font-amulya), sans-serif);
-  font-size: var(--font-size-h6, clamp(18px, calc(16.73px + 0.51vw), 32px));
-  line-height: var(--line-height-h6, 1.3);
-  letter-spacing: var(--letter-spacing-h6, 0em);
-  font-weight: var(--font-weight-h6, 700);
-  color: var(--text-color-h6, #e5e4dd);
+/* H6 - Master Controller Typography - !important to override prose */
+.blog-content h6,
+.blog-content.prose h6,
+.blog-content.prose-invert h6 {
+  font-family: var(--font-family-h6, var(--font-amulya), sans-serif) !important;
+  font-size: var(--font-size-h6, clamp(18px, calc(16.73px + 0.51vw), 32px)) !important;
+  line-height: var(--line-height-h6, 1.3) !important;
+  letter-spacing: var(--letter-spacing-h6, 0em) !important;
+  font-weight: var(--font-weight-h6, 700) !important;
+  color: var(--text-color-h6, #e5e4dd) !important;
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
 
-/* Paragraphs - Master Controller Body Typography */
-.blog-content p {
-  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
-  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px));
-  line-height: var(--line-height-body, 1.4);
-  letter-spacing: var(--letter-spacing-body, 0em);
-  color: var(--text-color-body, #bfbdb0);
+/* Paragraphs - Master Controller Body Typography - !important to override prose */
+.blog-content p,
+.blog-content.prose p,
+.blog-content.prose-invert p {
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif) !important;
+  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px)) !important;
+  line-height: var(--line-height-body, 1.4) !important;
+  letter-spacing: var(--letter-spacing-body, 0em) !important;
+  color: var(--text-color-body, #bfbdb0) !important;
   margin-bottom: 1.25rem;
 }
 
-/* Links - Master Controller Link Typography with background box on hover (like header menu) */
-.blog-content a {
-  color: var(--text-color-link, #ffd700);
-  font-family: var(--font-family-link, var(--font-synonym), sans-serif);
-  font-weight: var(--font-weight-link, 400);
-  text-decoration: none;
+/* Links - Master Controller Link Typography - !important to override prose */
+.blog-content a,
+.blog-content.prose a,
+.blog-content.prose-invert a {
+  color: var(--text-color-link, #ffd700) !important;
+  font-family: var(--font-family-link, var(--font-synonym), sans-serif) !important;
+  font-weight: var(--font-weight-link, 400) !important;
+  text-decoration: none !important;
   /* Padding and border-radius for the background box effect */
   /* Reduced top padding (0.05em) to match bottom padding visually */
   padding: 0.05em 0.35em 0.125em 0.35em;
@@ -3087,4 +3102,346 @@ img:not(.profile-image) {
   -webkit-backdrop-filter: blur(12px);
   background-color: rgba(200, 210, 230, 0.35);
   opacity: 1;
+}
+
+/* ========================================
+   REAL ESTATE SCHOOLS CONTENT STYLES
+   Special styling for Divi-converted real estate school content
+   Handles checkmarks, X marks, school cards, pricing, etc.
+   ======================================== */
+
+/* Checkmarks (green) and X marks (red) for pros/cons lists */
+.blog-content .school-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  color: #00ff88;
+  font-weight: bold;
+  font-size: 1.2em;
+  border: 2px solid #00ff88;
+  border-radius: 50%;
+  margin-right: 0.5em;
+  flex-shrink: 0;
+}
+
+.blog-content .school-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5em;
+  height: 1.5em;
+  color: #ff4444;
+  font-weight: bold;
+  font-size: 1.2em;
+  border: 2px solid #ff4444;
+  border-radius: 50%;
+  margin-right: 0.5em;
+  flex-shrink: 0;
+}
+
+/* School name headings - h2 with school names */
+.blog-content h2.school-name {
+  color: #ffd700;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+/* SmartAgentAlliance Score styling */
+.blog-content p.school-score {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 255, 136, 0.05));
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #ffd700;
+  margin: 1.5rem 0;
+}
+
+/* Pros and Cons list styling for real estate schools */
+.blog-content ul[style*="list-style: none"] {
+  list-style: none !important;
+  padding-left: 0 !important;
+  margin: 1rem 0;
+}
+
+.blog-content ul[style*="list-style: none"] li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(30, 30, 30, 0.5);
+  border-radius: 6px;
+}
+
+/* Pricing section headers (h4) */
+.blog-content h4[style*="font-weight: bold"],
+.blog-content h4 {
+  color: #00d9ff;
+  font-size: clamp(20px, calc(18px + 0.5vw), 28px) !important;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Pros & Cons section headers (h3) */
+.blog-content h3[style*="font-size: 18px"],
+.blog-content div h3 {
+  font-size: clamp(20px, calc(18px + 0.5vw), 26px) !important;
+  color: #bfbdb0;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Override any remaining font-family styles from Divi */
+.blog-content [style*="font-family: 'Open Sans'"],
+.blog-content [style*="font-family: Open Sans"] {
+  font-family: var(--font-synonym), sans-serif !important;
+}
+
+/* Table styling for pricing tables */
+.blog-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  background: rgba(20, 20, 20, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.blog-content th {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  font-weight: 600;
+  text-align: left;
+  padding: 1rem;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+}
+
+.blog-content td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.3);
+  vertical-align: top;
+}
+
+.blog-content tr:last-child td {
+  border-bottom: none;
+}
+
+.blog-content tr:hover td {
+  background: rgba(255, 215, 0, 0.05);
+}
+
+/* Remove font-size from strong tags that had inline styling */
+.blog-content strong[style*="font-size"] {
+  font-size: inherit !important;
+}
+
+/* Light mode adjustments for real estate school content */
+.light-mode .blog-content .school-check {
+  color: #00aa55;
+  border-color: #00aa55;
+}
+
+.light-mode .blog-content .school-x {
+  color: #cc3333;
+  border-color: #cc3333;
+}
+
+.light-mode .blog-content h2.school-name {
+  color: #b38f00;
+  border-top-color: rgba(179, 143, 0, 0.3);
+}
+
+.light-mode .blog-content p.school-score {
+  background: linear-gradient(135deg, rgba(179, 143, 0, 0.1), rgba(0, 170, 85, 0.05));
+  border-left-color: #b38f00;
+}
+
+.light-mode .blog-content ul[style*="list-style: none"] li {
+  background: rgba(200, 200, 200, 0.3);
+}
+
+.light-mode .blog-content table {
+  background: rgba(240, 240, 240, 0.6);
+}
+
+.light-mode .blog-content th {
+  background: rgba(179, 143, 0, 0.15);
+  color: #8b6914;
+  border-bottom-color: rgba(179, 143, 0, 0.3);
+}
+
+.light-mode .blog-content tr:hover td {
+  background: rgba(179, 143, 0, 0.05);
+}
+
+/* School Cards Grid - displays school logos, names, and CTA buttons */
+.blog-content .school-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding: 1.5rem;
+  background: rgba(20, 20, 20, 0.6);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.blog-content .school-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  background: rgba(30, 30, 30, 0.8);
+  border-radius: 10px;
+  border: 1px solid rgba(100, 100, 100, 0.3);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blog-content .school-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.blog-content .school-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.blog-content .school-logo {
+  width: 120px;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: white;
+  padding: 8px;
+}
+
+.blog-content .school-card-name {
+  font-size: 1.1rem !important;
+  font-weight: 600 !important;
+  color: #ffd700 !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* School CTA wrapper - contains button and light bars */
+.blog-content .school-cta {
+  margin-top: auto;
+  padding-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Inner wrapper - inline-block to size to button, relative for light bar positioning */
+.blog-content .school-cta-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* School CTA Button - Secondary Button from Master Controller */
+.blog-content .school-cta-button {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  background: rgb(45, 45, 45);
+  box-shadow: 0 15px 15px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  height: 56px;
+  padding: 0.5rem 1.25rem;
+  letter-spacing: 0.05em;
+  text-decoration: none !important;
+  color: var(--text-color-button, #dcdbd5) !important;
+  font-family: var(--font-family-button, var(--font-taskor), 'Taskor', sans-serif) !important;
+  font-weight: var(--font-weight-button, 600);
+  font-size: var(--font-size-button, 20px);
+  white-space: nowrap;
+  z-index: 10;
+  transition: 0.5s;
+  backdrop-filter: blur(15px);
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+.blog-content .school-cta-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(255, 255, 255, 0.15), transparent);
+  transform: skewX(45deg) translate(0);
+  pointer-events: none;
+}
+
+.blog-content .school-cta-button:hover {
+  text-decoration: none !important;
+  color: var(--text-color-button, #dcdbd5) !important;
+}
+
+/* Gold glow bars on sides of button - positioned relative to wrapper */
+.blog-content .school-cta-wrapper::before,
+.blog-content .school-cta-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0.4);
+  width: 10px;
+  height: 44.8px; /* 80% of 56px button height */
+  background: #ffd700;
+  box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
+  border-radius: 6px;
+  transition: transform 0.3s ease-in-out;
+  animation: lightPulse 1s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* Left light bar - half behind left edge of button */
+.blog-content .school-cta-wrapper::before {
+  left: -5px;
+}
+
+/* Right light bar - half behind right edge of button */
+.blog-content .school-cta-wrapper::after {
+  right: -5px;
+}
+
+.blog-content .school-cta-wrapper:hover::before,
+.blog-content .school-cta-wrapper:hover::after {
+  transform: translateY(-50%) scaleY(1);
+}
+
+/* School cards section stays dark mode even in light mode */
+/* Override light mode h3 styling to keep school card names yellow */
+.light-mode .blog-content .school-card-name {
+  color: #ffd700 !important;
+}
+
+/* Keep school cards dark even in light mode - preserve all dark mode styling */
+.light-mode .blog-content .school-cards-grid {
+  background: rgba(20, 20, 20, 0.6);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.light-mode .blog-content .school-card {
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(100, 100, 100, 0.3);
+  color: #dcdbd5;
+}
+
+.light-mode .blog-content .school-card:hover {
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }

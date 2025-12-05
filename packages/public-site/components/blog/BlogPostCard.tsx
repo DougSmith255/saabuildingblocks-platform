@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
-import { CTAButton } from '@saa/shared/components/saa';
+import { SecondaryButton } from '@saa/shared/components/saa';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
 
 /**
@@ -144,10 +144,10 @@ export function BlogPostCard({ post, featured = false }: BlogPostCardProps) {
         {/* Spacer to push button to bottom */}
         <div className="flex-grow" />
 
-        {/* CTA Button - always aligned to bottom */}
-        <CTAButton href={postUrl} className="mt-4">
+        {/* Secondary Button - always aligned to bottom */}
+        <SecondaryButton href={postUrl} className="mt-4">
           READ MORE
-        </CTAButton>
+        </SecondaryButton>
       </article>
     </div>
   );

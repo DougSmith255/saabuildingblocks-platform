@@ -38,13 +38,8 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
 
-  // Extract width classes from className to apply to button element
-  const widthMatch = className?.match(/(min-w-\[[\d]+px\]|w-full|w-\[[\d]+px\])/);
-  const widthClass = widthMatch ? widthMatch[0] : '';
-
   const buttonClasses = `
     relative flex justify-center items-center
-    ${widthClass}
     h-[56px] px-5 py-2
     bg-[rgb(45,45,45)] backdrop-blur-[15px]
     rounded-xl border-t border-b border-white/10
@@ -79,72 +74,72 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   const ButtonElement = as === 'button' ? 'button' : 'a';
 
   return (
-    <div className="py-2">
+    <div
+      className={`
+        group relative py-2
+        ${className}
+      `}
+    >
+      {/* Button wrapper - inline container with relative positioning for light bars */}
+      {/* This ensures light bars are positioned relative to button, not parent container */}
       <div
-        className={`
-          ${className}
-          group
-          relative flex justify-center items-center
-          !my-[10px]
-        `}
+        className="relative inline-block"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-      <ButtonElement
-        {...(as === 'a' ? { href } : { type: 'button' as const })}
-        onClick={onClick}
-        className={buttonClasses}
-        style={buttonStyles}
-      >
-        {children}
-      </ButtonElement>
+        <ButtonElement
+          {...(as === 'a' ? { href } : { type: 'button' as const })}
+          onClick={onClick}
+          className={buttonClasses}
+          style={buttonStyles}
+        >
+          {children}
+        </ButtonElement>
 
-      {/* Left side glow bar - GPU COMPOSITED */}
-      <div
-        className="light-bar"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '-5px',
-          width: '10px',
-          height: '44.8px', // 80% of 56px - base size
-          borderRadius: '6px',
-          transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`, // Firefox-compatible: removed translateZ(0) and using scale() instead of scaleY()
-          background: brandGold,
-          boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          transition: 'transform 0.3s ease-in-out',
-          willChange: 'transform',
-          '--pulse-delay': leftGlowDelay,
-        } as any}
-        data-pulse-active="true"
-      />
+        {/* Left side glow bar - positioned half behind left edge of button */}
+        <div
+          className="light-bar"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '-5px',
+            width: '10px',
+            height: '44.8px', // 80% of 56px - base size
+            borderRadius: '6px',
+            transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`,
+            background: brandGold,
+            boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
+            transition: 'transform 0.3s ease-in-out',
+            willChange: 'transform',
+            zIndex: 5,
+            '--pulse-delay': leftGlowDelay,
+          } as any}
+          data-pulse-active="true"
+        />
 
-      {/* Right side glow bar - GPU COMPOSITED */}
-      <div
-        className="light-bar"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          right: '-5px',
-          width: '10px',
-          height: '44.8px', // 80% of 56px - base size
-          borderRadius: '6px',
-          transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`, // Firefox-compatible: removed translateZ(0) and using scale() instead of scaleY()
-          background: brandGold,
-          boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          transition: 'transform 0.3s ease-in-out',
-          willChange: 'transform',
-          '--pulse-delay': rightGlowDelay,
-        } as any}
-        data-pulse-active="true"
-      />
+        {/* Right side glow bar - positioned half behind right edge of button */}
+        <div
+          className="light-bar"
+          style={{
+            position: 'absolute',
+            top: '50%',
+            right: '-5px',
+            width: '10px',
+            height: '44.8px', // 80% of 56px - base size
+            borderRadius: '6px',
+            transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`,
+            background: brandGold,
+            boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
+            transition: 'transform 0.3s ease-in-out',
+            willChange: 'transform',
+            zIndex: 5,
+            '--pulse-delay': rightGlowDelay,
+          } as any}
+          data-pulse-active="true"
+        />
+      </div>
 
       <style jsx>{`
-        /* Light bar positioning */
-        .light-bar {
-          z-index: 1;
-        }
-
         /* Pseudo-element for glow effect - GPU COMPOSITED - this is what pulses */
         .light-bar::before {
           content: '';
@@ -155,12 +150,10 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           filter: blur(15px);
           opacity: 0.8;
           z-index: -1;
-          /* Removed translateZ(0) - Firefox doesn't like mixing 3D/2D transforms */
-          will-change: transform, opacity; /* Hint for compositor */
+          will-change: transform, opacity;
         }
 
         /* Pulsing animation for glow only - DRAMATIC - uses compositor-friendly properties */
-        /* Firefox-compatible: using scale() only, no translateZ() */
         @keyframes lightPulse {
           0%, 100% {
             opacity: 1;
@@ -178,7 +171,6 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           animation-delay: var(--pulse-delay, 0s);
         }
       `}</style>
-      </div>
     </div>
   );
 }
