@@ -6,9 +6,9 @@ import { useEffect } from 'react';
  * H1 Glow Controller - Random Pulse Animation
  *
  * Creates organic, living neon effect by:
- * - Random pulse duration: 0.5-2 seconds
- * - Random delay between pulses: 1-5 seconds
- * - Brightness peaks at 1.35
+ * - Random pulse duration: 1.5-3 seconds
+ * - Random delay between pulses: 2-6 seconds
+ * - Brightness peaks at 1.5 for visible effect
  *
  * PERFORMANCE: Deferred loading - runs only after page is fully loaded
  * and browser is idle. Zero impact on LCP/FCP/page load.
@@ -29,10 +29,10 @@ export default function H1GlowController() {
     const pulseElement = (element: HTMLElement) => {
       if (isCleanedUp) return;
 
-      // Random duration for this pulse (0.5-2 seconds for full cycle)
-      const pulseDuration = random(0.5, 2);
+      // Random duration for this pulse (1.5-3 seconds for visible effect)
+      const pulseDuration = random(1.5, 3);
 
-      // Set the animation
+      // Set the animation on the H1 element
       element.style.animation = `h1GlowPulse ${pulseDuration}s ease-in-out 1`;
 
       // After pulse completes, wait random time before next pulse
@@ -43,8 +43,8 @@ export default function H1GlowController() {
         // Remove animation
         element.style.animation = 'none';
 
-        // Random delay before next pulse (1-5 seconds)
-        const delayMs = random(1000, 5000);
+        // Random delay before next pulse (2-6 seconds)
+        const delayMs = random(2000, 6000);
 
         const delayTimeout = window.setTimeout(() => {
           timeouts.delete(delayTimeout);
@@ -65,13 +65,19 @@ export default function H1GlowController() {
       const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReducedMotion) return;
 
-      // Get all H1 elements with glow pulse class (whole H1, not per-character)
+      // Get all H1 elements with glow pulse class
       const glowElements = document.querySelectorAll('h1.h1-glow-pulse');
+
+      // Debug: Log if we found elements
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[H1GlowController] Found elements:', glowElements.length);
+      }
+
       if (glowElements.length === 0) return;
 
-      // Start each element with a random initial delay for variety
+      // Start each element with a short initial delay (0-2 seconds)
       glowElements.forEach((element) => {
-        const initialDelay = random(0, 3000);
+        const initialDelay = random(500, 2000); // Start sooner so user sees it
         const timeout = window.setTimeout(() => {
           timeouts.delete(timeout);
           pulseElement(element as HTMLElement);
@@ -80,15 +86,12 @@ export default function H1GlowController() {
       });
     };
 
-    // Defer until page is fully loaded AND browser is idle
+    // Start after a short delay (don't wait for idle - we want this visible)
     const initGlowEffect = () => {
-      // Use requestIdleCallback if available, otherwise setTimeout
-      const scheduleWhenIdle = window.requestIdleCallback
-        || ((cb: IdleRequestCallback) => window.setTimeout(cb, 1));
-
-      scheduleWhenIdle(() => {
+      // Small delay to ensure DOM is ready, but not too long
+      window.setTimeout(() => {
         startGlowAnimations();
-      }, { timeout: 5000 }); // Max wait 5 seconds
+      }, 500);
     };
 
     // Wait for full page load first

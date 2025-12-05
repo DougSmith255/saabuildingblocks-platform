@@ -176,14 +176,14 @@ p a {
     filter: brightness(1) drop-shadow(0 0 0px transparent);
   }
   50% {
-    /* Increased brightness to lighten yellow face, drop-shadow adds surrounding glow */
-    filter: brightness(1.35) drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.3));
+    /* Strong brightness boost + glow expansion for visible "breathing" effect */
+    filter: brightness(1.5) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 40px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 60px rgba(255, 215, 0, 0.3));
   }
 }
 
 .h1-glow-pulse {
   /* Animation applied dynamically by H1GlowController with random timing */
-  /* Pulse duration: 0.5-2s, Delay between pulses: 1-5s */
+  /* Pulse duration: 1.5-3s, Delay between pulses: 2-6s */
   will-change: filter;
   /* Ensure filter doesn't clip the glow */
   overflow: visible;
