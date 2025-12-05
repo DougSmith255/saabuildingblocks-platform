@@ -2294,6 +2294,12 @@ article p a:focus-visible,
   font-style: italic;
 }
 
+/* Emphasis/Italic inside links should inherit link color */
+.blog-content a em,
+.blog-content a i {
+  color: inherit;
+}
+
 /* Strikethrough */
 .blog-content del,
 .blog-content s {
