@@ -1235,14 +1235,9 @@ main {
       0 0 20px rgba(255, 215, 0, 0.2);
   }
 
-  /* Category Badge Text Color - supports light/dark mode */
+  /* Category Badge Text Color - gold in both dark and light mode */
   .category-badge-text {
-    color: #ffd700; /* Gold text in dark mode (default) */
-  }
-
-  /* Light mode: black text, keeps yellow glow and frame */
-  body.light-mode .category-badge-text {
-    color: #000000 !important;
+    color: #ffd700;
   }
 
   /* Read Time Badge */
