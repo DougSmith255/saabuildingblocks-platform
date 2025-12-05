@@ -294,7 +294,7 @@ export function CategoryBlogPostTemplate({
 
             {/* Share Buttons */}
             <ShareButtons
-              url={`https://saabuildingblocks.com/blog/${post.slug}`}
+              url={`https://saabuildingblocks.com/blog/${categorySlug}/${post.slug}`}
               title={post.title}
               excerpt={post.excerpt}
             />
