@@ -23,25 +23,28 @@ export default function Header() {
   const [is404Page, setIs404Page] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(true); // Track first page load for slide-in animation
-  const [hasSlideIn, setHasSlideIn] = useState(false); // Track when slide-in animation completes
+  // Track first page load for slide-in animation
+  // Check sessionStorage synchronously to prevent flash on page refresh
+  const [isFirstLoad, setIsFirstLoad] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    return !sessionStorage.getItem('headerSlideInDone');
+  });
+  const [hasSlideIn, setHasSlideIn] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return !!sessionStorage.getItem('headerSlideInDone');
+  });
 
   // Track pathname for route change detection
   const pathname = usePathname();
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state and first load slide-in animation
+  // Track mount state and trigger first load slide-in animation
   useEffect(() => {
     setHasMounted(true);
 
-    // Check if this is the first load in this session
-    const hasVisited = sessionStorage.getItem('headerSlideInDone');
-    if (hasVisited) {
-      // Not first load - skip slide-in animation
-      setIsFirstLoad(false);
-      setHasSlideIn(true);
-    } else {
+    // Only trigger animation if this is actually the first load
+    if (isFirstLoad && !hasSlideIn) {
       // First load - trigger slide-in after a brief delay
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -54,7 +57,7 @@ export default function Header() {
         });
       });
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Reset header visibility on route change - ensures header is visible on new pages
   useEffect(() => {
