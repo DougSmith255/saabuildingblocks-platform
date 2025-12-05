@@ -2653,18 +2653,16 @@ body.light-mode .blog-content h2 .h2-word::before {
   opacity: 1 !important;
 }
 
-/* Light grey fill behind each metal plate word in light mode to cover gaps */
+/* Dark fill behind each metal plate in light mode - same color as plate face to eliminate bottom strip */
 body.light-mode .blog-content h2 .h2-word::after {
   content: "";
   position: absolute;
-  /* Extend more on bottom (-0.5em) than top (-0.35em) due to 3D tilt */
-  top: -0.35em;
-  bottom: -0.5em;
-  left: -0.3em;
-  right: -0.3em;
-  background: #c8c8c8;
+  /* Same size as metal plate */
+  inset: -0.2em -0.3em;
+  /* Same dark color as the metal plate face */
+  background: linear-gradient(135deg, rgba(40,40,40,0.95) 0%, rgba(25,25,25,0.95) 100%);
   border-radius: 0.1em;
-  /* Behind the metal plate (z-index: -1), so this needs to be further back */
+  /* Behind the metal plate */
   z-index: -2;
 }
 
