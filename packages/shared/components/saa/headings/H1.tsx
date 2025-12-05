@@ -41,18 +41,21 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
       className={`text-h1 text-display h1-glow-pulse ${heroAnimate ? 'hero-entrance-animate' : ''} ${className}`}
       style={{
         transformStyle: 'preserve-3d',
-        transform: 'rotateX(15deg)',
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'center',
         rowGap: 0,
         columnGap: '0.5em',
         // Animation applied inline for fade-in and slide-up on page load
+        // Note: transform moved to CSS keyframes to avoid specificity conflict
         ...(heroAnimate ? {
           opacity: 0,
           animation: `fadeInUp2025 1.5s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
           willChange: 'opacity, transform, filter',
-        } : {}),
+        } : {
+          // When not animating, apply the 3D tilt directly
+          transform: 'rotateX(15deg)',
+        }),
         ...style,
       }}
     >
