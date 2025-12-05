@@ -169,7 +169,7 @@ export function ShareButtons({
       `}</style>
 
       <div className={`
-        ${showDivider ? 'mt-12 pt-8 border-t border-[var(--color-headingText,#e5e4dd)]/20' : ''}
+        ${showDivider ? 'mt-12 pt-8 border-t border-[#666666]' : ''}
         ${className}
       `}>
         {showHeading && (
