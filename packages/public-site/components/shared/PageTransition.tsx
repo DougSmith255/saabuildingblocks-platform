@@ -1,22 +1,26 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 /**
  * PageTransition - Custom page transition effect
  *
  * Intercepts internal link clicks and applies a fade transition to main content.
- * Header, footer, and background remain static during transition.
+ * Header, footer, star background remain static during transition.
  *
  * How it works:
  * 1. Listens for clicks on internal links (same-origin, not hash-only)
  * 2. On click: prevents default, fades out #main-content
- * 3. After fade-out completes, navigates to new page
- * 4. On new page load, content fades in via CSS animation
+ * 3. After fade-out completes, uses Next.js router for client-side navigation
+ * 4. On new page render, content fades in via CSS animation
  *
- * Works in ALL browsers - uses simple CSS opacity transitions.
+ * Uses Next.js router.push() instead of window.location.href to maintain
+ * client-side navigation. This keeps the star background and other layout
+ * elements mounted between page transitions.
  */
 export function PageTransition() {
+  const router = useRouter();
   const isTransitioning = useRef(false);
 
   useEffect(() => {
@@ -58,9 +62,13 @@ export function PageTransition() {
       mainContent.style.transition = 'opacity 150ms ease-out';
       mainContent.style.opacity = '0';
 
-      // Navigate after fade completes
+      // Navigate after fade completes using Next.js router (keeps layout mounted)
       setTimeout(() => {
-        window.location.href = href;
+        router.push(href);
+        // Reset transition state after navigation starts
+        setTimeout(() => {
+          isTransitioning.current = false;
+        }, 100);
       }, 150);
     };
 
@@ -70,7 +78,7 @@ export function PageTransition() {
     return () => {
       document.removeEventListener('click', handleClick);
     };
-  }, []);
+  }, [router]);
 
   return null;
 }
