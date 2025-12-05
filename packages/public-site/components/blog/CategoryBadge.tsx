@@ -7,6 +7,8 @@ export interface CategoryBadgeProps {
   category: string;
   /** Visual style variant */
   variant?: 'default' | 'featured' | 'minimal';
+  /** Enable 3D perspective effect (for hero sections) */
+  effect3d?: boolean;
   /** Additional CSS classes */
   className?: string;
 }
@@ -30,6 +32,7 @@ export interface CategoryBadgeProps {
 export function CategoryBadge({
   category,
   variant = 'default',
+  effect3d = false,
   className = ''
 }: CategoryBadgeProps) {
   // Base styles without text color - text color handled separately for light/dark mode
@@ -81,7 +84,7 @@ export function CategoryBadge({
   };
 
   return (
-    <span className={`${variantStyles[variant]} ${className} inline-block`}>
+    <span className={`${variantStyles[variant]} ${effect3d ? 'category-badge-3d' : ''} ${className} inline-block`}>
       {category}
     </span>
   );

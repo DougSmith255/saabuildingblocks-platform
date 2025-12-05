@@ -144,15 +144,17 @@ p a {
 }
 
 /* H1 Glow Pulse Animation - Random organic brightness pulse for neon effect */
-/* GPU-accelerated using filter: brightness() - no layout thrashing */
+/* GPU-accelerated using filter: brightness() + drop-shadow - no layout thrashing */
 /* Animation timing controlled by H1GlowController.tsx for random organic feel */
 /* Applied to WHOLE H1 element (not per-character) for performance */
+/* Pulse lightens the yellow face color and expands the surrounding glow */
 @keyframes h1GlowPulse {
   0%, 100% {
-    filter: brightness(1);
+    filter: brightness(1) drop-shadow(0 0 0px transparent);
   }
   50% {
-    filter: brightness(2.0);
+    /* Increased brightness to lighten yellow face, drop-shadow adds surrounding glow */
+    filter: brightness(1.35) drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.3));
   }
 }
 
@@ -160,6 +162,8 @@ p a {
   /* Animation applied dynamically by H1GlowController with random timing */
   /* Pulse duration: 0.5-2s, Delay between pulses: 1-5s */
   will-change: filter;
+  /* Ensure filter doesn't clip the glow */
+  overflow: visible;
 }
 
 /* Respect reduced motion preference */

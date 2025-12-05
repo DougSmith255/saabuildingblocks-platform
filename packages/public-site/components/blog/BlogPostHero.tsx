@@ -96,9 +96,9 @@ export function BlogPostHero({
 
       {/* Content container - centered */}
       <div className="relative z-10 max-w-[1900px] mx-auto text-center">
-        {/* Category badge - centered */}
+        {/* Category badge - centered with 3D effect */}
         <div className="mb-6 flex justify-center">
-          <CategoryBadge category={category} variant="featured" />
+          <CategoryBadge category={category} variant="featured" effect3d />
         </div>
 
         {/* Title - H1 with Master Controller effects, blog-specific sizing */}
@@ -117,19 +117,25 @@ export function BlogPostHero({
         <div className="flex flex-wrap items-center justify-center gap-6 text-[#dcdbd5]">
           {/* Author */}
           <div className="flex items-center gap-2">
-            <User className="w-4 h-4 text-[#ffd700]" />
+            <span className="hero-icon-3d">
+              <User className="w-4 h-4" />
+            </span>
             <span className="text-sm font-[var(--font-amulya)]">{author}</span>
           </div>
 
           {/* Date */}
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-[#ffd700]" />
+            <span className="hero-icon-3d">
+              <Calendar className="w-4 h-4" />
+            </span>
             <span className="text-sm font-[var(--font-amulya)]">{date}</span>
           </div>
 
           {/* Reading time */}
           <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#ffd700]" />
+            <span className="hero-icon-3d">
+              <Clock className="w-4 h-4" />
+            </span>
             <span className="text-sm font-[var(--font-amulya)]">{readingTime}</span>
           </div>
         </div>

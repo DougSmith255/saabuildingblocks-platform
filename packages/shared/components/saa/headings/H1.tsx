@@ -47,8 +47,12 @@ export default function H1({ children, className = '', style = {}, id, heroAnima
         justifyContent: 'center',
         rowGap: 0,
         columnGap: '0.5em',
-        // Animation is applied via CSS class 'hero-entrance-animate' in globals.css
-        // Do NOT use inline animation - keyframes can't be referenced from inline styles
+        // Animation applied inline for fade-in and slide-up on page load
+        ...(heroAnimate ? {
+          opacity: 0,
+          animation: `fadeInUp2025 1.5s cubic-bezier(0.16, 1, 0.3, 1) ${animationDelay} both`,
+          willChange: 'opacity, transform, filter',
+        } : {}),
         ...style,
       }}
     >

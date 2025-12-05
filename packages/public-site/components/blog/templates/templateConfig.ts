@@ -64,8 +64,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#00A3E0', // eXp blue
     accentColorSecondary: '#0077B5',
     heroSubtitle: 'Learn about the revolutionary cloud-based brokerage',
-    ctaText: 'Join eXp Realty',
-    ctaLink: '/contact',
     relatedPostsLimit: 4,
     customClassName: 'category-about-exp',
   },
@@ -76,8 +74,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#FFD700', // Gold
     accentColorSecondary: '#FFA500',
     heroSubtitle: 'Essential career guidance for real estate professionals',
-    ctaText: 'Explore Career Paths',
-    ctaLink: '/careers',
     relatedPostsLimit: 3,
     customClassName: 'category-career-info',
   },
@@ -88,8 +84,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#00FF88', // Green
     accentColorSecondary: '#00CC6A',
     heroSubtitle: 'Your journey to becoming a successful real estate agent',
-    ctaText: 'Start Your Journey',
-    ctaLink: '/get-started',
     emphasizeVideo: true,
     relatedPostsLimit: 4,
     customClassName: 'category-become-agent',
@@ -101,8 +95,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#9B59B6', // Purple
     accentColorSecondary: '#8E44AD',
     heroSubtitle: 'Compare brokerages to find your perfect fit',
-    ctaText: 'Compare Brokerages',
-    ctaLink: '/compare',
     relatedPostsLimit: 4,
     customClassName: 'category-brokerage-comparison',
   },
@@ -123,8 +115,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#3498DB', // Blue
     accentColorSecondary: '#2980B9',
     heroSubtitle: 'Stay ahead with the latest real estate industry insights',
-    ctaText: 'Stay Informed',
-    ctaLink: '/newsletter',
     relatedPostsLimit: 4,
     customClassName: 'category-industry-trends',
   },
@@ -135,8 +125,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#E74C3C', // Red
     accentColorSecondary: '#C0392B',
     heroSubtitle: 'Master the art of real estate marketing',
-    ctaText: 'Level Up Marketing',
-    ctaLink: '/marketing-resources',
     emphasizeVideo: true,
     relatedPostsLimit: 4,
     customClassName: 'category-marketing',
