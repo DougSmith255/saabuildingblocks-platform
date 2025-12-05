@@ -52,43 +52,43 @@ ${masterControllerCSS}
 /**
  * Custom Font Configurations
  * Using variable fonts for optimal performance and flexibility
+ *
+ * font-display: 'block' - Text invisible until font loads (max 3s block period)
+ * This prevents ugly fallback fonts from showing, at cost of brief FOIT
+ * Combined with preload: true, fonts load very fast so block is minimal
  */
 const taskor = localFont({
   src: '../public/fonts/taskor-regular-webfont.woff2',
   variable: '--font-taskor',
-  display: 'optional', // Never block render - show fallback immediately if font not cached
+  display: 'block', // Block render until font loads - prevents fallback flash
   preload: true,
   weight: '400',
-  fallback: ['system-ui', '-apple-system', 'sans-serif'],
 });
 
 // Split Amulya into normal and italic to control preloading independently
 const amulya = localFont({
   src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
-  display: 'optional', // Never block render - prevents render-blocking delays
+  display: 'block', // Block render until font loads
   preload: true,
   weight: '100 900',
-  fallback: ['Georgia', 'serif'],
 });
 
 const amulyaItalic = localFont({
   src: '../public/fonts/Amulya-VariableItalic.woff2',
   variable: '--font-amulya-italic',
-  display: 'optional', // Never block render
+  display: 'swap', // Italic can swap - not used above fold
   preload: false, // Don't preload italic (not used above-fold)
   weight: '100 900',
-  fallback: ['Georgia', 'serif'],
   style: 'italic',
 });
 
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'optional', // Never block render - eliminates font-loading delays
+  display: 'block', // Block render until font loads
   preload: true,
   weight: '100 900',
-  fallback: ['monospace'],
 });
 
 /**
