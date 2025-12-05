@@ -97,6 +97,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
         </ButtonElement>
 
         {/* Left side glow bar - positioned half behind left edge of button */}
+        {/* zIndex: 1 so button (z-10) covers half of it */}
         <div
           className="light-bar"
           style={{
@@ -106,18 +107,19 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             width: '10px',
             height: '44.8px', // 80% of 56px - base size
             borderRadius: '6px',
-            transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`,
+            transform: `translateY(-50%) scaleY(${isHovered ? 1 : 0.4018})`,
             background: brandGold,
             boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
             transition: 'transform 0.3s ease-in-out',
             willChange: 'transform',
-            zIndex: 5,
+            zIndex: 1,
             '--pulse-delay': leftGlowDelay,
           } as any}
           data-pulse-active="true"
         />
 
         {/* Right side glow bar - positioned half behind right edge of button */}
+        {/* zIndex: 1 so button (z-10) covers half of it */}
         <div
           className="light-bar"
           style={{
@@ -127,12 +129,12 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             width: '10px',
             height: '44.8px', // 80% of 56px - base size
             borderRadius: '6px',
-            transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`,
+            transform: `translateY(-50%) scaleY(${isHovered ? 1 : 0.4018})`,
             background: brandGold,
             boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
             transition: 'transform 0.3s ease-in-out',
             willChange: 'transform',
-            zIndex: 5,
+            zIndex: 1,
             '--pulse-delay': rightGlowDelay,
           } as any}
           data-pulse-active="true"

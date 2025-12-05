@@ -172,7 +172,7 @@ export function ShareButtons({
         ${showDivider ? 'mt-12 pt-8 border-t' : ''}
         ${className}
       `}
-      style={showDivider ? { borderColor: 'rgba(100, 100, 100, 0.4)' } : undefined}
+      style={showDivider ? { borderColor: '#333331' } : undefined}
       >
         {showHeading && (
           <h3

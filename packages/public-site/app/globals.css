@@ -3391,6 +3391,7 @@ img:not(.profile-image) {
 }
 
 /* Gold glow bars on sides of button - positioned relative to wrapper */
+/* z-index: 1 so button (z-index: 10) covers half of the light bar */
 .blog-content .school-cta-wrapper::before,
 .blog-content .school-cta-wrapper::after {
   content: "";
@@ -3405,7 +3406,7 @@ img:not(.profile-image) {
   transition: transform 0.3s ease-in-out;
   animation: lightPulse 1s ease-in-out infinite;
   pointer-events: none;
-  z-index: 5;
+  z-index: 1;
 }
 
 /* Left light bar - half behind left edge of button */
