@@ -62,6 +62,9 @@ const nextConfig: NextConfig = {
     // WARNING: May break Tailwind arbitrary values like bg-[rgb(45,45,45)]
     // Testing to see if it improves LCP performance
     inlineCss: true,
+    // View Transitions API for smooth page-to-page navigation
+    // Supported: Chrome, Edge, Safari 18+. Graceful fallback for others.
+    viewTransition: true,
   },
 
   // Turbopack configuration (Next.js 16+)
