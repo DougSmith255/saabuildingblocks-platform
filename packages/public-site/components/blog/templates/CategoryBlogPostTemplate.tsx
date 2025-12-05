@@ -172,19 +172,18 @@ export function CategoryBlogPostTemplate({
       {post.comparisonImages && post.comparisonImages.length > 0 && (
         <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
-            <div className="max-w-[1200px] mx-auto">
-              <div className={`grid gap-6 ${post.comparisonImages.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+            <div className="max-w-[1400px] mx-auto">
+              <div className={`grid gap-8 ${post.comparisonImages.length === 2 ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
                 {post.comparisonImages.map((img, idx) => (
                   <div key={idx} className="flex justify-center">
                     <CyberFrame>
                       <Image
                         src={img.url}
                         alt={img.alt || img.title || `Comparison chart ${idx + 1}`}
-                        width={500}
-                        height={400}
-                        sizes="(max-width: 768px) 100vw, 500px"
-                        className="object-contain"
-                        style={{ maxHeight: '400px', width: 'auto', height: 'auto' }}
+                        width={680}
+                        height={550}
+                        sizes="(max-width: 1024px) 90vw, 680px"
+                        className="object-contain w-full h-auto"
                         priority={idx < 2}
                       />
                     </CyberFrame>
