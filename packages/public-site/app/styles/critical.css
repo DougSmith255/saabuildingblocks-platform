@@ -338,39 +338,6 @@ body::-webkit-scrollbar-thumb:hover {
   background: #4a4a4a;
 }
 
-/* ========================================
-   SETTLING MASK - Page Load Overlay
-   ======================================== */
-/* Hides visual settling (font swap, layout shifts) during first ~500ms */
-/* Uses CSS-only animation - no JS hydration dependency */
-/* COMPOSITED: Uses only opacity (GPU-accelerated) */
-
-@keyframes settlingMaskFade {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
-.settling-mask {
-  /* Start visible */
-  opacity: 1;
-  /* Animate: 300ms delay (fonts settle) + 200ms fade out */
-  animation: settlingMaskFade 200ms ease-out 300ms forwards;
-  /* GPU compositing hint */
-  will-change: opacity;
-}
-
-/* Respect reduced motion preference - instant fade */
-@media (prefers-reduced-motion: reduce) {
-  .settling-mask {
-    animation: settlingMaskFade 0ms linear 0ms forwards;
-  }
-}
-
 /* Dark mode scrollbar for mobile menu overlay - matches body scrollbar exactly */
 #mobile-menu {
   scroll-behavior: smooth !important;
