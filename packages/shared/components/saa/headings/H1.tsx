@@ -87,7 +87,7 @@ export default function H1({ children, className = '', style = {}, id }: Heading
                 }}
               >
                 {displayChar}
-                {/* Neon glow layer */}
+                {/* Neon glow layer - visual only, not selectable */}
                 <span
                   aria-hidden="true"
                   style={{
@@ -110,11 +110,13 @@ export default function H1({ children, className = '', style = {}, id }: Heading
                     `,
                     transform: 'translateZ(1px)',
                     pointerEvents: 'none',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
                   }}
                 >
                   {displayChar}
                 </span>
-                {/* Metal backing plate */}
+                {/* Metal backing plate - visual only, not selectable */}
                 <span
                   aria-hidden="true"
                   style={{
@@ -145,6 +147,8 @@ export default function H1({ children, className = '', style = {}, id }: Heading
                     `,
                     filter: 'contrast(1.2) brightness(1.3)',
                     pointerEvents: 'none',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
                   }}
                 >
                   {displayChar}

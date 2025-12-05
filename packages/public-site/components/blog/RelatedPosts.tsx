@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BlogPostCard } from './BlogPostCard';
 import type { BlogPost } from '@/lib/wordpress/types';
 
@@ -24,19 +24,17 @@ export interface RelatedPostsProps {
  * Features:
  * - Prioritizes posts from same category
  * - Filters out current post from display
- * - Shows 4 posts in 2x2 grid on desktop
- * - Link to category page ("View All in [Category]")
+ * - Responsive grid: 3 cols on wide (1200px+), 2 cols on medium (750-1200px), 1 col on mobile
+ * - Always shows up to limit posts (default 3), grid layout changes responsively
  * - Uses existing BlogPostCard component (protocol-compliant)
- * - Responsive grid layout (1 col mobile, 2x2 on desktop)
  * - Gracefully handles empty state
  *
  * Algorithm:
  * 1. Filter out current post by ID
  * 2. If category provided, prioritize posts from same category
- * 3. Take first 4 posts (limit)
- * 4. Render using BlogPostCard
- * 5. Add link to category page if category exists
- * 6. Return null if no related posts
+ * 3. Take up to limit posts (default 3)
+ * 4. Render using BlogPostCard in responsive grid
+ * 5. Return null if no related posts
  *
  * @example
  * ```tsx
@@ -44,7 +42,7 @@ export interface RelatedPostsProps {
  *   posts={allPosts}
  *   currentPostId={post.id}
  *   currentCategory="marketing-mastery"
- *   limit={4}
+ *   limit={3}
  * />
  * ```
  */
@@ -52,8 +50,31 @@ export function RelatedPosts({
   posts,
   currentPostId,
   currentCategory,
-  limit = 4,
+  limit = 3,
 }: RelatedPostsProps) {
+  // Track number of posts to show based on screen width
+  // Wide screens: 3 posts, Medium/Small: 2 posts
+  const [postCount, setPostCount] = useState(2); // Default to 2 for SSR
+
+  useEffect(() => {
+    const updatePostCount = () => {
+      const width = window.innerWidth;
+      // 1200px+ can fit 3 cards at 380px each
+      if (width >= 1200) {
+        setPostCount(3);
+      } else {
+        setPostCount(2);
+      }
+    };
+
+    // Initial check
+    updatePostCount();
+
+    // Listen for resize
+    window.addEventListener('resize', updatePostCount);
+    return () => window.removeEventListener('resize', updatePostCount);
+  }, []);
+
   // Filter out current post
   let relatedPosts = posts.filter(p => p.id !== currentPostId);
 
@@ -68,8 +89,8 @@ export function RelatedPosts({
     relatedPosts = [...sameCategoryPosts, ...otherPosts];
   }
 
-  // Limit results
-  relatedPosts = relatedPosts.slice(0, limit);
+  // Apply limit and responsive post count
+  relatedPosts = relatedPosts.slice(0, Math.min(limit, postCount));
 
   // Return null if no related posts (graceful handling)
   if (relatedPosts.length === 0) {
@@ -84,8 +105,9 @@ export function RelatedPosts({
         Related Posts
       </h2>
 
-      {/* Grid layout - responsive (1 col mobile, 2x2 desktop) */}
-      <div className="grid gap-6 md:grid-cols-2">
+      {/* Grid layout - responsive columns via CSS media queries */}
+      {/* 1 col on mobile (<750px), 2 cols on medium (750-1200px), 3 cols on wide (1200px+) */}
+      <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-3">
         {relatedPosts.map((post) => (
           <BlogPostCard key={post.id} post={post} />
         ))}

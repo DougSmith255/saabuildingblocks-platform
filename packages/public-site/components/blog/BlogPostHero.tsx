@@ -93,12 +93,17 @@ export function BlogPostHero({
 
   return (
     <section
-      className="relative min-h-[100dvh] flex flex-col justify-center px-4 sm:px-8 md:px-12"
+      className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12"
       style={{
+        // Full viewport height
+        minHeight: '100dvh',
+        // Use padding to create centering space: top padding = header height, bottom = 0
+        // This centers content in the visible area below header
+        paddingTop: 'calc(var(--header-height, 85px) * 2)',
+        paddingBottom: 'var(--header-height, 85px)',
+        boxSizing: 'border-box',
         opacity: isVisible ? 1 : 0,
         transition: 'opacity 0.5s ease-out',
-        // Offset content upward to visually center in viewport (accounting for header)
-        paddingBottom: '85px', // Header height - pushes content up
       }}
     >
       {/* Hero background - uses star background by default */}

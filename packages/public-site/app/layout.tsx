@@ -238,6 +238,13 @@ export default async function RootLayout({
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#ffd700" />
 
+        {/* Disable browser scroll restoration - always load pages at top */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if('scrollRestoration' in history){history.scrollRestoration='manual'}`,
+          }}
+        />
+
         {/* Organization Schema - JSON-LD for search engines and AI */}
         <script
           type="application/ld+json"

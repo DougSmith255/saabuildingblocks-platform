@@ -16,7 +16,6 @@ export interface CTAButtonProps {
 }
 
 export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
-  const [isClicked, setIsClicked] = useState(false);
   const isFullWidth = className.includes('w-full');
   // Initialize with a function to generate random delay immediately during render
   // This ensures both SSR and CSR get a random value, avoiding hydration mismatch
@@ -28,13 +27,6 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
-  const brandGreen = '#00ff88';
-
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 2000); // Stay green for 2 seconds
-    onClick?.(e);
-  };
 
   // Button styles - using CSS variables from Master Controller
   const buttonStyles = {
@@ -58,7 +50,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
       <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
         <a
           href={href}
-          onClick={handleClick}
+          onClick={onClick}
           className={`
             relative flex justify-center items-center
             ${isFullWidth ? 'w-full' : ''}
@@ -73,8 +65,6 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             before:content-[''] before:absolute before:inset-0
             before:bg-gradient-to-l before:from-white/15 before:to-transparent
             before:w-1/2 before:skew-x-[45deg]
-
-            ${isClicked ? 'clicked' : ''}
           `}
           style={{
             ...buttonStyles,
@@ -87,18 +77,13 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
       {/* Top light bar - positioned half behind top edge of button */}
       <div
-        className={`
-          cta-light-bar
-          w-[30px] h-[10px] rounded-md
-          transition-all duration-500 group-hover:w-4/5
-          ${!isClicked ? 'cta-light-bar-pulse' : ''}
-        `}
+        className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md transition-all duration-500 group-hover:w-4/5"
           style={{
             position: 'absolute',
             top: '-5px',
             left: '50%',
             transform: 'translateX(-50%)',
-            background: isClicked ? brandGreen : '#ffd700',
+            background: brandGold,
             animationDelay: lightPulseDelay,
             zIndex: 5,
           }}
@@ -106,18 +91,13 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
 
       {/* Bottom light bar - positioned half behind bottom edge of button */}
       <div
-        className={`
-          cta-light-bar
-          w-[30px] h-[10px] rounded-md
-          transition-all duration-500 group-hover:w-4/5
-          ${!isClicked ? 'cta-light-bar-pulse' : ''}
-        `}
+        className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md transition-all duration-500 group-hover:w-4/5"
           style={{
             position: 'absolute',
             bottom: '-5px',
             left: '50%',
             transform: 'translateX(-50%)',
-            background: isClicked ? brandGreen : '#ffd700',
+            background: brandGold,
             animationDelay: lightPulseDelay,
             zIndex: 5,
           }}

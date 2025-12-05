@@ -24,7 +24,6 @@ export interface SecondaryButtonProps {
  * <SecondaryButton as="button" onClick={handler}>Click Me</SecondaryButton>
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
-  const [isClicked, setIsClicked] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [leftGlowDelay, setLeftGlowDelay] = useState('0s');
   const [rightGlowDelay, setRightGlowDelay] = useState('0s');
@@ -38,13 +37,6 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
-  const brandGreen = '#00ff88';
-
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => {
-    setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 2000); // Stay green for 2 seconds
-    onClick?.(e);
-  };
 
   // Extract width classes from className to apply to button element
   const widthMatch = className?.match(/(min-w-\[[\d]+px\]|w-full|w-\[[\d]+px\])/);
@@ -65,8 +57,6 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     before:content-[''] before:absolute before:inset-0
     before:bg-gradient-to-l before:from-white/15 before:to-transparent
     before:w-1/2 before:skew-x-[45deg]
-
-    ${isClicked ? 'clicked' : ''}
   `;
 
   // Button styles - using CSS variables from Master Controller
@@ -102,7 +92,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
       >
       <ButtonElement
         {...(as === 'a' ? { href } : { type: 'button' as const })}
-        onClick={handleClick}
+        onClick={onClick}
         className={buttonClasses}
         style={buttonStyles}
       >
@@ -120,15 +110,13 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           height: '44.8px', // 80% of 56px - base size
           borderRadius: '6px',
           transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`, // Firefox-compatible: removed translateZ(0) and using scale() instead of scaleY()
-          background: isClicked ? brandGreen : '#ffd700',
-          boxShadow: isClicked
-            ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
-            : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          transition: 'transform 0.3s ease-in-out, background 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+          background: brandGold,
+          boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
+          transition: 'transform 0.3s ease-in-out',
           willChange: 'transform',
-          ...(isClicked ? {} : { '--pulse-delay': leftGlowDelay } as any),
-        }}
-        data-pulse-active={!isClicked}
+          '--pulse-delay': leftGlowDelay,
+        } as any}
+        data-pulse-active="true"
       />
 
       {/* Right side glow bar - GPU COMPOSITED */}
@@ -142,15 +130,13 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           height: '44.8px', // 80% of 56px - base size
           borderRadius: '6px',
           transform: `translateY(-50%) scale(${isHovered ? 1 : 0.4018})`, // Firefox-compatible: removed translateZ(0) and using scale() instead of scaleY()
-          background: isClicked ? brandGreen : '#ffd700',
-          boxShadow: isClicked
-            ? `0 0 5px ${brandGreen}, 0 0 15px ${brandGreen}, 0 0 30px ${brandGreen}, 0 0 60px ${brandGreen}`
-            : '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-          transition: 'transform 0.3s ease-in-out, background 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+          background: brandGold,
+          boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
+          transition: 'transform 0.3s ease-in-out',
           willChange: 'transform',
-          ...(isClicked ? {} : { '--pulse-delay': rightGlowDelay } as any),
-        }}
-        data-pulse-active={!isClicked}
+          '--pulse-delay': rightGlowDelay,
+        } as any}
+        data-pulse-active="true"
       />
 
       <style jsx>{`
