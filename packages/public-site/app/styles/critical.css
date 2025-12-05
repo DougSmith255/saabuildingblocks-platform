@@ -199,23 +199,22 @@ p a {
   }
 }
 
-/* Hero Content Container Animation - Simple fade-in-up for H1, Tagline, Buttons */
+/* Hero Content Container Animation - Simple fade-in for H1, Tagline, Buttons */
 /* Applied to the container wrapping all hero text content */
 /* Single animation for entire group - minimal performance impact */
+/* NOTE: Uses opacity only (no transform) to avoid conflicting with Tailwind's -translate-x-1/2 */
 @keyframes heroContentFadeIn {
   from {
     opacity: 0;
-    transform: translateY(30px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
 .hero-content-animate {
   opacity: 0;
-  animation: heroContentFadeIn 0.6s ease-out 0.3s forwards;
+  animation: heroContentFadeIn 0.5s ease-out 0.2s forwards;
 }
 
 /* Respect reduced motion preference */
@@ -223,7 +222,6 @@ p a {
   .hero-content-animate {
     opacity: 1;
     animation: none;
-    transform: none;
   }
 }
 
