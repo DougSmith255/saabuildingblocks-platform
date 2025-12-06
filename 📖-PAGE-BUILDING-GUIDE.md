@@ -225,6 +225,28 @@ All Master Controller components are responsive by default. Test:
 - Form inputs remain selectable for usability
 - This protects visual design without affecting SEO (bots don't copy/paste)
 
+### Never Hardcode Domains
+
+**CRITICAL:** Never hardcode domain names in page content or links. The site will transition from staging to production domains.
+
+```tsx
+// ❌ NEVER DO THIS - hardcoded domains will break when domain changes
+<a href="https://smartagentalliance.com/contact">Contact Us</a>
+<a href="https://saabuildingblocks.pages.dev/about">About</a>
+
+// ✅ ALWAYS use relative URLs for internal links
+<a href="/contact">Contact Us</a>
+<a href="/about">About</a>
+
+// ✅ For displaying the site URL in text, use a constant or env variable
+<p>Visit us at smartagentalliance.com</p> // OK for display text only
+```
+
+**Exceptions:**
+- External links to third-party sites (YouTube, LinkedIn, etc.) - these are fine to hardcode
+- WordPress API URLs (`wp.saabuildingblocks.com`) - these are backend only
+- Display text mentioning the brand domain (not clickable links)
+
 ### Use Tailwind Classes
 ```tsx
 <div className="flex flex-col gap-4 items-center justify-center min-h-screen">

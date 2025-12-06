@@ -1,0 +1,13 @@
+{
+  "routes": [
+    {
+      "routePath": "/wp-content/uploads/:path*",
+      "mountPath": "/wp-content/uploads",
+      "method": "",
+      "module": [
+        "wp-content/uploads/[[path]].js:onRequest"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}

@@ -32,97 +32,193 @@ export default function PrivacyPolicyPage() {
 
       {/* Content Section */}
       <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
+        <div className="max-w-[1200px] mx-auto">
           <div className="legal-content blog-content">
-            <p><strong>Effective Date:</strong> July 8, 2025<br /><strong>Last Updated:</strong> July 8, 2025</p>
+            <p className="legal-meta">
+              <strong>Effective Date:</strong> December 6, 2025
+            </p>
 
-            <h2>1. Who We Are</h2>
-            <p>This website, Smart Agent Alliance ("we," "us," "our"), operates at <a href="https://smartagentalliance.com" target="_blank" rel="noopener noreferrer">https://smartagentalliance.com</a>. This Privacy Policy explains how we collect, use, and protect your personal information when you interact with our site.</p>
+            <h2>1. Introduction</h2>
+            <p>
+              Smart Agent Alliance (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) operates the website
+              smartagentalliance.com. This Privacy Policy explains how we collect, use, disclose, and protect
+              your personal information when you visit our website and use our services.
+            </p>
+            <p>
+              By accessing or using our website, you agree to the terms of this Privacy Policy. If you do not
+              agree with these terms, please do not use our website.
+            </p>
 
-            <h2>2. What We Collect</h2>
+            <h2>2. Information We Collect</h2>
 
-            <h3>a) Information You Provide</h3>
-            <p>We collect personal data you share directly, including:</p>
+            <h3>Information You Provide Directly</h3>
+            <p>We may collect information you voluntarily provide, including:</p>
             <ul>
-              <li><strong>Comments:</strong> Name, email, and optionally a website URL</li>
-              <li><strong>User Accounts:</strong> If you register, we collect your name, email, and profile information</li>
-              <li><strong>Orders:</strong> For purchases, we collect billing and payment details</li>
+              <li>Name and email address when you subscribe to our newsletter</li>
+              <li>Contact information when you submit a form or inquiry</li>
+              <li>Phone number if you opt in to receive SMS communications</li>
+              <li>Any other information you choose to share with us</li>
             </ul>
 
-            <h3>b) Automatically Collected Data</h3>
-            <p>We automatically collect some technical data, including:</p>
+            <h3>Information Collected Automatically</h3>
+            <p>When you visit our website, we may automatically collect:</p>
             <ul>
-              <li><strong>IP address, browser type, and device info</strong> for analytics and spam prevention</li>
-              <li><strong>Cookies</strong> for sessions, form autofill, cart activity, and tracking</li>
-              <li><strong>Google Analytics data</strong> to understand visitor behavior and improve site performance</li>
+              <li>IP address and approximate geographic location</li>
+              <li>Browser type, version, and operating system</li>
+              <li>Device information (desktop, mobile, tablet)</li>
+              <li>Pages visited, time spent on pages, and navigation patterns</li>
+              <li>Referring website or source that led you to our site</li>
             </ul>
 
-            <h3>c) Embedded Third-Party Content</h3>
-            <p>Embedded content (e.g., YouTube videos, social media posts) may collect data about you just as if you visited the third-party site directly. These services may use cookies, tracking pixels, or other technologies.</p>
+            <h3>Information from Third-Party Content</h3>
+            <p>
+              Our website may contain embedded content from third parties (such as YouTube videos).
+              When you interact with this content, those third parties may collect information about
+              you according to their own privacy policies.
+            </p>
 
-            <h2>3. How We Use Your Data</h2>
-            <p>We use your information for the following purposes:</p>
+            <h2>3. How We Use Your Information</h2>
+            <p>We use the information we collect to:</p>
             <ul>
-              <li>Processing payments and fulfilling orders</li>
-              <li>Managing your account and preferences</li>
-              <li>Sending email newsletters, offers, and educational content (if subscribed)</li>
-              <li>Sending marketing or informational text messages (if you've provided your phone number)</li>
-              <li>Preventing spam and improving website security</li>
-              <li>Analyzing website performance and user behavior</li>
-              <li>Meeting any legal, tax, or regulatory obligations</li>
+              <li>Provide and improve our website and services</li>
+              <li>Send newsletters, educational content, and updates you have requested</li>
+              <li>Respond to your inquiries and provide customer support</li>
+              <li>Analyze website usage to improve user experience</li>
+              <li>Protect against fraud, abuse, and security threats</li>
+              <li>Comply with legal obligations</li>
             </ul>
 
-            <h2>4. Email and SMS Communication</h2>
-            <p>If you submit a form on our site, you may receive occasional emails or text messages from Smart Agent Alliance. These messages may include real estate tips, promotional offers, free training, and updates on our services.</p>
-            <p>You can unsubscribe from emails at any time using the link in our messages.<br />You may also opt out of text messages by replying <strong>STOP</strong> to any SMS you receive.</p>
-            <p>We never sell your contact information or use it for unrelated marketing.</p>
-
-            <h2>5. Cookies &amp; Tracking</h2>
-            <p>We use cookies to improve your experience on the site. These may include:</p>
+            <h2>4. Email and SMS Communications</h2>
+            <p>
+              If you subscribe to our newsletter or submit a form, you may receive emails containing
+              real estate tips, educational content, promotional offers, and service updates.
+            </p>
+            <p>
+              If you provide your phone number and consent to SMS communications, you may receive
+              text messages with similar content.
+            </p>
+            <p><strong>Opting Out:</strong></p>
             <ul>
-              <li><strong>Comment cookies:</strong> Save your info for future comment submissions (1 year)</li>
-              <li><strong>Login cookies:</strong> Store your session details (2 days or 2 weeks with "Remember Me")</li>
-              <li><strong>Shopping cart cookies:</strong> Track cart contents during your visit</li>
-              <li><strong>Analytics cookies:</strong> Gather anonymous usage data</li>
+              <li>You can unsubscribe from emails at any time by clicking the &ldquo;unsubscribe&rdquo; link in any email</li>
+              <li>You can opt out of SMS messages by replying STOP to any text message</li>
             </ul>
-            <p>You can disable cookies in your browser at any time.</p>
+            <p>We do not sell, rent, or share your contact information with third parties for their marketing purposes.</p>
 
-            <h2>6. Who We Share Your Data With</h2>
-            <p>We do <strong>not sell or rent</strong> your personal data. However, we may share it with third-party services that help us operate efficiently, including:</p>
+            <h2>5. Cookies and Tracking Technologies</h2>
+            <p>We use cookies and similar technologies to:</p>
             <ul>
-              <li><strong>Google Analytics</strong> (for website traffic insights)</li>
-              <li><strong>Akismet</strong> (for spam detection)</li>
-              <li><strong>WooCommerce and payment processors</strong> like PayPal (to process orders)</li>
-              <li><strong>Shipping carriers</strong> (if applicable for product delivery)</li>
+              <li>Remember your preferences and settings</li>
+              <li>Analyze traffic and usage patterns through Google Analytics</li>
+              <li>Improve website functionality and performance</li>
             </ul>
-            <p>These third parties have their own privacy policies which govern how they handle your data.</p>
+            <p>
+              You can control cookies through your browser settings. Note that disabling cookies may
+              affect some website functionality.
+            </p>
+            <p>
+              Google Analytics collects anonymous data about website visitors. You can learn more about
+              how Google uses this data at{' '}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
+                Google&apos;s Privacy Policy
+              </a>.
+            </p>
+
+            <h2>6. How We Share Your Information</h2>
+            <p>
+              We do <strong>not sell or rent</strong> your personal information. We may share your
+              information with:
+            </p>
+            <ul>
+              <li>
+                <strong>Service Providers:</strong> Third parties that help us operate our website
+                (such as hosting providers, email services, and analytics tools)
+              </li>
+              <li>
+                <strong>Legal Requirements:</strong> When required by law, court order, or to protect
+                our rights and safety
+              </li>
+              <li>
+                <strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale
+                of assets
+              </li>
+            </ul>
 
             <h2>7. Data Retention</h2>
-            <p>We retain information for as long as necessary:</p>
+            <p>
+              We retain your personal information for as long as necessary to fulfill the purposes
+              described in this policy, unless a longer retention period is required by law.
+            </p>
             <ul>
-              <li><strong>Comments and user accounts:</strong> Stored indefinitely unless deleted by you</li>
-              <li><strong>Order data:</strong> Kept for accounting and compliance (typically 7 years)</li>
-              <li><strong>Cookies:</strong> Duration varies (see Section 5)</li>
+              <li>Email subscriber data is retained until you unsubscribe</li>
+              <li>Analytics data is retained according to our analytics provider&apos;s policies</li>
+              <li>Contact form submissions are retained for a reasonable period to respond to inquiries</li>
             </ul>
-            <p>If you would like your personal information deleted, you may contact us at any time.</p>
 
-            <h2>8. Your Rights</h2>
+            <h2>8. Your Privacy Rights</h2>
             <p>Depending on your location, you may have the right to:</p>
             <ul>
-              <li>Request access to the personal data we store</li>
-              <li>Ask us to update, correct, or delete your information</li>
+              <li>Access the personal information we hold about you</li>
+              <li>Request correction of inaccurate information</li>
+              <li>Request deletion of your personal information</li>
               <li>Withdraw consent to marketing communications</li>
+              <li>Object to certain processing of your information</li>
             </ul>
-            <p>To make a request, contact us at: <strong><a href="mailto:doug@smartagentalliance.com">doug@smartagentalliance.com</a></strong></p>
+            <p>
+              To exercise any of these rights, please contact us at{' '}
+              <a href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>.
+            </p>
 
-            <h2>9. Data Protection &amp; Security</h2>
-            <p>We take reasonable steps to safeguard your personal data. However, no website or online service can guarantee 100% security. You are responsible for keeping your login information confidential.</p>
+            <h2>9. California Privacy Rights</h2>
+            <p>
+              If you are a California resident, you have additional rights under the California
+              Consumer Privacy Act (CCPA), including the right to know what personal information
+              we collect and how it is used, and the right to request deletion of your information.
+            </p>
+            <p>
+              To make a CCPA request, contact us at{' '}
+              <a href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>.
+            </p>
 
-            <h2>10. Policy Updates</h2>
-            <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with the updated effective date.</p>
+            <h2>10. Children&apos;s Privacy</h2>
+            <p>
+              Our website is not intended for children under the age of 13. We do not knowingly
+              collect personal information from children under 13. If you believe we have collected
+              information from a child under 13, please contact us immediately.
+            </p>
 
-            <h2>11. Contact Us</h2>
-            <p>For any questions or concerns about this policy, please contact:<br /><strong><a href="mailto:karrie.hill@exprealty.com">karrie.hill@exprealty.com</a></strong></p>
+            <h2>11. Data Security</h2>
+            <p>
+              We implement reasonable security measures to protect your personal information from
+              unauthorized access, alteration, disclosure, or destruction. However, no method of
+              transmission over the internet or electronic storage is 100% secure.
+            </p>
+
+            <h2>12. Third-Party Links</h2>
+            <p>
+              Our website may contain links to third-party websites. We are not responsible for
+              the privacy practices of these external sites. We encourage you to review the privacy
+              policies of any third-party sites you visit.
+            </p>
+
+            <h2>13. Changes to This Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. When we make changes, we will
+              update the &ldquo;Effective Date&rdquo; at the top of this page. We encourage you to
+              review this policy periodically.
+            </p>
+
+            <h2>14. Contact Us</h2>
+            <p>
+              If you have any questions or concerns about this Privacy Policy or our data practices,
+              please contact us at:
+            </p>
+            <p>
+              <strong>Email:</strong>{' '}
+              <a href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>
+            </p>
+            <p>
+              <strong>Website:</strong> smartagentalliance.com
+            </p>
           </div>
         </div>
       </section>
