@@ -2445,78 +2445,77 @@ article p a:focus-visible,
    ======================================== */
 
 body.light-mode .blog-content {
-  /* Body text - Tailwind prose default (gray-700) */
-  color: #374151;
+  /* Body text - medium gray (lighter than headings) */
+  color: #4a4a4a;
 }
 
-body.light-mode .blog-content h2,
 body.light-mode .blog-content h3,
 body.light-mode .blog-content h4,
 body.light-mode .blog-content h5,
 body.light-mode .blog-content h6 {
-  /* Headings - Tailwind prose default (gray-900) */
-  color: #111827;
+  /* Headings H3-H6 - slightly lighter than black (dark gray) */
+  color: #3a3a3a;
 }
 
 body.light-mode .blog-content p {
-  /* Paragraphs - Tailwind prose default (gray-700) */
-  color: #374151;
+  /* Paragraphs - medium gray (lighter than headings) */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content ul li,
 body.light-mode .blog-content ol li {
-  /* List items - Tailwind prose default (gray-700) */
-  color: #374151;
+  /* List items - medium gray (lighter than headings) */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content ul li::marker,
 body.light-mode .blog-content ol li::marker {
-  /* Bullet/number markers - Tailwind prose default (gray-500) */
-  color: #6b7280;
+  /* Bullet/number markers - dark gray */
+  color: #3a3a3a;
 }
 
 body.light-mode .blog-content blockquote {
-  /* Blockquotes - Tailwind prose default (gray-900) */
-  color: #111827;
+  /* Blockquotes - medium gray with gold accent border */
+  color: #4a4a4a;
   border-left-color: #ffd700;
   background-color: rgba(0, 0, 0, 0.05);
 }
 
 body.light-mode .blog-content blockquote p {
-  color: #111827;
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content code {
-  /* Inline code - Tailwind prose default (gray-900) */
-  color: #111827;
+  /* Inline code - dark gray on light background */
+  color: #3a3a3a;
   background-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .blog-content pre {
-  /* Code blocks - Tailwind prose default (gray-800) */
-  color: #1f2937;
+  /* Code blocks - dark text on slightly darker off-white */
+  color: #3a3a3a;
   background-color: rgba(0, 0, 0, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 body.light-mode .blog-content pre code {
-  color: #1f2937;
+  color: #3a3a3a;
   background-color: transparent;
 }
 
 body.light-mode .blog-content table {
-  /* Tables - Tailwind prose default (gray-700) */
-  color: #374151;
+  /* Tables - medium gray text */
+  color: #4a4a4a;
 }
 
 body.light-mode .blog-content th {
-  /* Table headers - Tailwind prose default (gray-900) */
-  color: #111827;
+  /* Table headers - dark gray on light background */
+  color: #3a3a3a;
   background-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .blog-content td {
-  color: #374151;
+  color: #4a4a4a;
   border-color: rgba(0, 0, 0, 0.1);
   background-color: rgba(0, 0, 0, 0.02);
 }
@@ -2528,13 +2527,13 @@ body.light-mode .blog-content hr {
 
 body.light-mode .blog-content strong,
 body.light-mode .blog-content b {
-  /* Bold text - Tailwind prose default (gray-900) */
-  color: #111827;
+  /* Bold text - dark gray */
+  color: #3a3a3a;
 }
 
 body.light-mode .blog-content figcaption {
-  /* Image captions - Tailwind prose default (gray-600) */
-  color: #4b5563;
+  /* Image captions - medium gray */
+  color: #4a4a4a;
 }
 
 /* Hide default StarBackground COMPLETELY in light mode - CloudBackground takes over */
@@ -2559,7 +2558,7 @@ body.light-mode {
 
 /* Light mode link colors - brand green with background box on hover */
 body.light-mode .blog-content a:not(.share-button) {
-  color: #00ff88; /* Brand green for better visibility */
+  color: #00b366; /* Darker than brand green #00ff88 for better readability */
   text-shadow: none;
   /* Padding and border-radius for the background box effect */
   /* Reduced top padding (0.05em) to match bottom padding visually */
