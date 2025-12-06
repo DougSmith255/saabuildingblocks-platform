@@ -105,7 +105,8 @@ export function BlogPostHero({
         // Height of the area below the header
         minHeight: 'calc(100dvh - var(--header-height, 85px))',
         // Shift content up by ~8% to position it slightly above true center
-        paddingBottom: '8vh',
+        // Use dvh (dynamic viewport height) to prevent iOS Safari scroll jitter
+        paddingBottom: '8dvh',
         boxSizing: 'border-box',
         opacity: isVisible ? 1 : 0,
         transition: 'opacity 0.5s ease-out',
