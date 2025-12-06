@@ -61,7 +61,8 @@ interface CtaButtonInfo {
 
 function extractCtaButtons(html: string): CtaButtonInfo[] {
   const buttons: CtaButtonInfo[] = [];
-  const regex = /<a[^>]*class="[^"]*school-cta-button[^"]*"[^>]*href="([^"]*)"[^>]*>([^<]*)<\/a>/gi;
+  // Match school-cta-button links - href can come before or after class
+  const regex = /<a[^>]*href="([^"]*)"[^>]*class="[^"]*school-cta-button[^"]*"[^>]*>([^<]*)<\/a>/gi;
   let match;
   while ((match = regex.exec(html)) !== null) {
     buttons.push({ href: match[1], text: match[2] });
@@ -73,7 +74,7 @@ function extractCtaButtons(html: string): CtaButtonInfo[] {
  * Remove school-cta-button links from HTML content (they'll be rendered as React components)
  */
 function removeCtaButtonsFromHtml(html: string): string {
-  return html.replace(/<a[^>]*class="[^"]*school-cta-button[^"]*"[^>]*>[^<]*<\/a>/gi, '<span class="cta-button-placeholder"></span>');
+  return html.replace(/<a[^>]*href="[^"]*"[^>]*class="[^"]*school-cta-button[^"]*"[^>]*>[^<]*<\/a>/gi, '<span class="cta-button-placeholder"></span>');
 }
 
 /**
