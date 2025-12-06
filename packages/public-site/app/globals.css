@@ -2565,7 +2565,7 @@ body.light-mode {
 
 /* Light mode link colors - brand green with background box on hover */
 body.light-mode .blog-content a:not(.share-button) {
-  color: #00b366; /* Darker than brand green #00ff88 for better readability */
+  color: #009955; /* Darker green for better readability in light mode */
   text-shadow: none;
   /* Padding and border-radius for the background box effect */
   /* Reduced top padding (0.05em) to match bottom padding visually */
@@ -3266,13 +3266,27 @@ img:not(.profile-image) {
 /* School Cards Grid - displays school logos, names, and CTA buttons */
 .blog-content .school-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* 3 columns on desktop, responsive down to 1 column on mobile */
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
   padding: 1.5rem;
   background: rgba(20, 20, 20, 0.6);
   border-radius: 12px;
   border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+/* Responsive grid - 2 columns on tablet, 1 on mobile */
+@media (max-width: 900px) {
+  .blog-content .school-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .blog-content .school-cards-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .blog-content .school-card {
