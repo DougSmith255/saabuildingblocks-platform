@@ -79,7 +79,7 @@ async function fixLogoWithTagline() {
       let inserted = false;
       for (const pattern of insertPatterns) {
         if (pattern.test(updatedHtml)) {
-          updatedHtml = updatedHtml.replace(pattern, (match, p1, p2) => {
+          updatedHtml = updatedHtml.replace(pattern, (_match: string, p1: string, p2: string) => {
             if (p2) {
               return `${p1}${CORRECT_LOGO_HTML}\n      ${p2}`;
             } else {
