@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 // TODO: Store imports removed for monorepo - needs Context provider pattern
 // import { useTypographyStore } from '@/app/master-controller/stores/typographyStore';
 // import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
@@ -17,23 +17,19 @@ export interface SecondaryButtonProps {
  * Secondary Button Component (Converted from WordPress origin)
  *
  * Secondary action button with side glow animations.
- * Preserves exact WordPress styling and animations.
+ * Uses same pulsing animation as CTAButton via cta-light-bar-pulse class.
  *
  * @example
  * <SecondaryButton href="/learn-more">Learn More</SecondaryButton>
  * <SecondaryButton as="button" onClick={handler}>Click Me</SecondaryButton>
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [leftGlowDelay, setLeftGlowDelay] = useState('0s');
-  const [rightGlowDelay, setRightGlowDelay] = useState('0s');
-
-  useEffect(() => {
-    const leftDelay = Math.random() * 3; // 0 to 3 seconds for left glow
-    const rightDelay = Math.random() * 3; // 0 to 3 seconds for right glow (independent)
-    setLeftGlowDelay(`${leftDelay.toFixed(2)}s`);
-    setRightGlowDelay(`${rightDelay.toFixed(2)}s`);
-  }, []);
+  // Initialize with a function to generate random delay immediately during render
+  // This ensures both SSR and CSR get a random value, avoiding hydration mismatch
+  const [lightPulseDelay] = useState(() => {
+    const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds for light pulse
+    return `${randomDelay.toFixed(2)}s`;
+  });
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
@@ -82,11 +78,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     >
       {/* Button wrapper - inline container with relative positioning for light bars */}
       {/* This ensures light bars are positioned relative to button, not parent container */}
-      <div
-        className="relative inline-block"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
+      <div className="relative inline-block">
         <ButtonElement
           {...(as === 'a' ? { href } : { type: 'button' as const })}
           onClick={onClick}
@@ -96,83 +88,34 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
           {children}
         </ButtonElement>
 
-        {/* Left side glow bar - positioned half behind left edge of button */}
-        {/* zIndex: 1 so button (z-10) covers half of it */}
+        {/* Left side glow bar - uses same pulsing animation as CTAButton */}
         <div
-          className="light-bar"
+          className="cta-light-bar cta-light-bar-pulse w-[10px] h-[18px] rounded-md transition-all duration-500 group-hover:h-4/5"
           style={{
             position: 'absolute',
             top: '50%',
             left: '-5px',
-            width: '10px',
-            height: '44.8px', // 80% of 56px - base size
-            borderRadius: '6px',
-            transform: `translateY(-50%) scaleY(${isHovered ? 1 : 0.4018})`,
+            transform: 'translateY(-50%)',
             background: brandGold,
-            boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-            transition: 'transform 0.3s ease-in-out',
-            willChange: 'transform',
-            zIndex: 1,
-            '--pulse-delay': leftGlowDelay,
-          } as any}
-          data-pulse-active="true"
+            animationDelay: lightPulseDelay,
+            zIndex: 5,
+          }}
         />
 
-        {/* Right side glow bar - positioned half behind right edge of button */}
-        {/* zIndex: 1 so button (z-10) covers half of it */}
+        {/* Right side glow bar - uses same pulsing animation as CTAButton */}
         <div
-          className="light-bar"
+          className="cta-light-bar cta-light-bar-pulse w-[10px] h-[18px] rounded-md transition-all duration-500 group-hover:h-4/5"
           style={{
             position: 'absolute',
             top: '50%',
             right: '-5px',
-            width: '10px',
-            height: '44.8px', // 80% of 56px - base size
-            borderRadius: '6px',
-            transform: `translateY(-50%) scaleY(${isHovered ? 1 : 0.4018})`,
+            transform: 'translateY(-50%)',
             background: brandGold,
-            boxShadow: '0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700',
-            transition: 'transform 0.3s ease-in-out',
-            willChange: 'transform',
-            zIndex: 1,
-            '--pulse-delay': rightGlowDelay,
-          } as any}
-          data-pulse-active="true"
+            animationDelay: lightPulseDelay,
+            zIndex: 5,
+          }}
         />
       </div>
-
-      <style jsx>{`
-        /* Pseudo-element for glow effect - GPU COMPOSITED - this is what pulses */
-        .light-bar::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          background: inherit;
-          filter: blur(15px);
-          opacity: 0.8;
-          z-index: -1;
-          will-change: transform, opacity;
-        }
-
-        /* Pulsing animation for glow only - DRAMATIC - uses compositor-friendly properties */
-        @keyframes lightPulse {
-          0%, 100% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          50% {
-            opacity: 0.3;
-            transform: scale(1.8);
-          }
-        }
-
-        /* Apply animation ONLY to pseudo-element when pulse is active */
-        .light-bar[data-pulse-active="true"]::before {
-          animation: lightPulse 1s ease-in-out infinite;
-          animation-delay: var(--pulse-delay, 0s);
-        }
-      `}</style>
     </div>
   );
 }

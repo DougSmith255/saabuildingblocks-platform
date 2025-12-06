@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { H2, GenericButton, CTAButton } from '@saa/shared/components/saa';
+import { H2, GenericButton } from '@saa/shared/components/saa';
 import { UserPlus, Briefcase, Users, Crown } from 'lucide-react';
 import { BuiltForFuture } from './BuiltForFuture';
 import { FAQ } from './FAQ';
@@ -126,18 +126,11 @@ export function PathSelectorWithContent() {
                 </div>
 
                 {/* Proof */}
-                <div className="mb-8">
+                <div>
                   <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">The Proof</h3>
                   <p className="text-[#dcdbd5]">
                     {pathContent[displayedPath].proof}
                   </p>
-                </div>
-
-                {/* CTA */}
-                <div className="text-center">
-                  <CTAButton href="/join">
-                    Get Started as a {paths.find(p => p.id === displayedPath)?.label}
-                  </CTAButton>
                 </div>
               </div>
             )}

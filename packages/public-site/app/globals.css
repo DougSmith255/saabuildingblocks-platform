@@ -1684,15 +1684,27 @@ body.is-404-page footer {
   padding-left: 1rem;
 }
 
-/* TOC links styling */
+/* TOC links styling - yellow to match brand */
 .blog-content .wp-block-rank-math-toc-block a {
-  color: #00ff88;
+  color: #ffd700;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 .blog-content .wp-block-rank-math-toc-block a:hover {
-  color: #ffd700;
+  color: #00ff88;
+}
+
+/* Add "Table of Contents" heading before TOC via CSS */
+.blog-content .wp-block-rank-math-toc-block::before {
+  content: "Table of Contents";
+  display: block;
+  font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
+  font-size: clamp(20px, calc(16px + 1vw), 32px);
+  font-weight: 700;
+  color: #bfbdb0;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
 }
 
 /* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
