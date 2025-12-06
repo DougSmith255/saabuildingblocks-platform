@@ -1627,22 +1627,22 @@ body.is-404-page footer {
 
 /* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
 /* Matches H2.tsx from @saa/shared/components/saa/headings */
-/* !important to override prose/prose-invert defaults */
+/* H2 - Master Controller Typography */
 .blog-content h2,
 .blog-content.prose h2,
 .blog-content.prose-invert h2 {
-  font-family: var(--font-family-h2, var(--font-taskor), sans-serif) !important;
-  font-size: clamp(25px, calc(20.73px + 1.71vw), 72px) !important;
-  line-height: var(--line-height-h2, 1.1) !important;
-  letter-spacing: var(--letter-spacing-h2, -0.01em) !important;
-  font-weight: var(--font-weight-h2, 700) !important;
-  color: var(--text-color-h2, #bfbdb0) !important;
+  font-family: var(--font-family-h2, var(--font-taskor), sans-serif);
+  font-size: clamp(25px, calc(20.73px + 1.71vw), 72px);
+  line-height: var(--line-height-h2, 1.1);
+  letter-spacing: var(--letter-spacing-h2, -0.01em);
+  font-weight: var(--font-weight-h2, 700);
+  color: var(--text-color-h2, #bfbdb0);
   margin-top: 3rem;
   margin-bottom: 1.5rem;
   /* Flex layout for word spacing - matches H2.tsx */
-  display: flex !important;
-  flex-wrap: wrap !important;
-  gap: 0.5em !important;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
   /* 3D transforms for depth effect - exact match to H2.tsx */
   transform-style: preserve-3d;
   transform: rotateX(15deg);
@@ -1688,85 +1688,85 @@ body.is-404-page footer {
   box-shadow: inset 0 1px 1px rgba(80,80,80,0.2), 0 2px 8px rgba(0,0,0,0.7);
 }
 
-/* H3 - Master Controller Typography - !important to override prose-invert */
+/* H3 - Master Controller Typography */
 .blog-content h3,
 .blog-content.prose h3,
 .blog-content.prose-invert h3,
 .prose .blog-content h3,
 .prose-invert .blog-content h3,
 div.blog-content.prose.prose-invert h3 {
-  font-family: var(--font-family-h3, var(--font-amulya), sans-serif) !important;
-  font-size: var(--font-size-h3, clamp(32px, calc(28.36px + 1.45vw), 72px)) !important;
-  line-height: var(--line-height-h3, 1.3) !important;
-  letter-spacing: var(--letter-spacing-h3, 0em) !important;
-  font-weight: var(--font-weight-h3, 700) !important;
-  color: var(--text-color-h3, #e5e4dd) !important;
+  font-family: var(--font-family-h3, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h3, clamp(32px, calc(28.36px + 1.45vw), 72px));
+  line-height: var(--line-height-h3, 1.3);
+  letter-spacing: var(--letter-spacing-h3, 0em);
+  font-weight: var(--font-weight-h3, 700);
+  color: var(--text-color-h3, #e5e4dd);
   margin-top: 2.5rem;
   margin-bottom: 1.25rem;
 }
 
-/* H4 - Master Controller Typography - !important to override prose */
+/* H4 - Master Controller Typography */
 .blog-content h4,
 .blog-content.prose h4,
 .blog-content.prose-invert h4 {
-  font-family: var(--font-family-h4, var(--font-amulya), sans-serif) !important;
-  font-size: var(--font-size-h4, clamp(26px, calc(23.27px + 1.09vw), 56px)) !important;
-  line-height: var(--line-height-h4, 1.3) !important;
-  letter-spacing: var(--letter-spacing-h4, 0em) !important;
-  font-weight: var(--font-weight-h4, 700) !important;
-  color: var(--text-color-h4, #e5e4dd) !important;
+  font-family: var(--font-family-h4, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h4, clamp(26px, calc(23.27px + 1.09vw), 56px));
+  line-height: var(--line-height-h4, 1.3);
+  letter-spacing: var(--letter-spacing-h4, 0em);
+  font-weight: var(--font-weight-h4, 700);
+  color: var(--text-color-h4, #e5e4dd);
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
 
-/* H5 - Master Controller Typography - !important to override prose */
+/* H5 - Master Controller Typography */
 .blog-content h5,
 .blog-content.prose h5,
 .blog-content.prose-invert h5 {
-  font-family: var(--font-family-h5, var(--font-amulya), sans-serif) !important;
-  font-size: var(--font-size-h5, clamp(22px, calc(20.00px + 0.80vw), 44px)) !important;
-  line-height: var(--line-height-h5, 1.3) !important;
-  letter-spacing: var(--letter-spacing-h5, 0em) !important;
-  font-weight: var(--font-weight-h5, 700) !important;
-  color: var(--text-color-h5, #e5e4dd) !important;
+  font-family: var(--font-family-h5, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h5, clamp(22px, calc(20.00px + 0.80vw), 44px));
+  line-height: var(--line-height-h5, 1.3);
+  letter-spacing: var(--letter-spacing-h5, 0em);
+  font-weight: var(--font-weight-h5, 700);
+  color: var(--text-color-h5, #e5e4dd);
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
 
-/* H6 - Master Controller Typography - !important to override prose */
+/* H6 - Master Controller Typography */
 .blog-content h6,
 .blog-content.prose h6,
 .blog-content.prose-invert h6 {
-  font-family: var(--font-family-h6, var(--font-amulya), sans-serif) !important;
-  font-size: var(--font-size-h6, clamp(18px, calc(16.73px + 0.51vw), 32px)) !important;
-  line-height: var(--line-height-h6, 1.3) !important;
-  letter-spacing: var(--letter-spacing-h6, 0em) !important;
-  font-weight: var(--font-weight-h6, 700) !important;
-  color: var(--text-color-h6, #e5e4dd) !important;
+  font-family: var(--font-family-h6, var(--font-amulya), sans-serif);
+  font-size: var(--font-size-h6, clamp(18px, calc(16.73px + 0.51vw), 32px));
+  line-height: var(--line-height-h6, 1.3);
+  letter-spacing: var(--letter-spacing-h6, 0em);
+  font-weight: var(--font-weight-h6, 700);
+  color: var(--text-color-h6, #e5e4dd);
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
 }
 
-/* Paragraphs - Master Controller Body Typography - !important to override prose */
+/* Paragraphs - Master Controller Body Typography */
 .blog-content p,
 .blog-content.prose p,
 .blog-content.prose-invert p {
-  font-family: var(--font-family-body, var(--font-synonym), sans-serif) !important;
-  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px)) !important;
-  line-height: var(--line-height-body, 1.4) !important;
-  letter-spacing: var(--letter-spacing-body, 0em) !important;
-  color: var(--text-color-body, #bfbdb0) !important;
+  font-family: var(--font-family-body, var(--font-synonym), sans-serif);
+  font-size: var(--font-size-body, clamp(16px, calc(14.91px + 0.44vw), 28px));
+  line-height: var(--line-height-body, 1.4);
+  letter-spacing: var(--letter-spacing-body, 0em);
+  color: var(--text-color-body, #bfbdb0);
   margin-bottom: 1.25rem;
 }
 
-/* Links - Master Controller Link Typography - !important to override prose */
+/* Links - Master Controller Link Typography */
 .blog-content a,
 .blog-content.prose a,
 .blog-content.prose-invert a {
-  color: var(--text-color-link, #ffd700) !important;
-  font-family: var(--font-family-link, var(--font-synonym), sans-serif) !important;
-  font-weight: var(--font-weight-link, 400) !important;
-  text-decoration: none !important;
+  color: var(--text-color-link, #ffd700);
+  font-family: var(--font-family-link, var(--font-synonym), sans-serif);
+  font-weight: var(--font-weight-link, 400);
+  text-decoration: none;
   /* Padding and border-radius for the background box effect */
   /* Reduced top padding (0.05em) to match bottom padding visually */
   padding: 0.05em 0.35em 0.125em 0.35em;
@@ -2453,7 +2453,7 @@ body.light-mode .blog-content h3,
 body.light-mode .blog-content h4,
 body.light-mode .blog-content h5,
 body.light-mode .blog-content h6 {
-  /* Headings H3-H6 - slightly lighter than black (dark gray) */
+  /* Headings H3-H6 - dark gray (same as Share This Post) */
   color: #3a3a3a;
 }
 
