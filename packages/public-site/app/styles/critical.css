@@ -66,6 +66,12 @@ body {
     background-attachment: scroll;
   }
 
+  /* Use locked viewport height on mobile to prevent layout shifts */
+  /* --vh-locked is set by ViewportHeightLock.tsx and only changes on true resize, not address bar */
+  body {
+    min-height: calc(var(--vh-locked, 1dvh) * 100);
+  }
+
   /* Wolf pack hero background - disable fixed attachment on mobile */
   .wolf-pack-bg {
     background-attachment: scroll !important;
@@ -137,6 +143,20 @@ main {
   text-align: center;
   position: relative;
   z-index: 1;
+}
+
+/* Mobile: Use locked viewport height for hero sections */
+/* This prevents layout shifts when address bar hides/shows */
+@media (max-width: 1024px), (hover: none) and (pointer: coarse) {
+  .hero-section,
+  .min-h-\[100dvh\] {
+    min-height: calc(var(--vh-locked, 1dvh) * 100) !important;
+  }
+
+  /* For elements using percentage of viewport (e.g., 80dvh) */
+  .h-\[80dvh\] {
+    height: calc(var(--vh-locked, 1dvh) * 80) !important;
+  }
 }
 
 /* Critical Button Styles - Prevents flash */

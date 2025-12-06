@@ -7,6 +7,7 @@ import Footer from '@/components/shared/Footer';
 import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
+import { ViewportHeightLock } from './ViewportHeightLock';
 
 /**
  * LayoutWrapper - Global layout with automatic performance optimization
@@ -56,6 +57,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     <>
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
+      <ViewportHeightLock />
       {!shouldHideHeaderFooter && <Header />}
       <main
         style={{ minHeight: '100vh', position: 'relative' }}

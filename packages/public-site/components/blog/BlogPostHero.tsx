@@ -100,13 +100,13 @@ export function BlogPostHero({
 
   return (
     <section
-      className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12"
+      className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 blog-hero-section"
       style={{
         // Height of the area below the header
-        minHeight: 'calc(100dvh - var(--header-height, 85px))',
+        // Uses --vh-locked on mobile (set by ViewportHeightLock) to prevent layout shifts
+        minHeight: 'calc(var(--vh-locked, 1dvh) * 100 - var(--header-height, 85px))',
         // Shift content up by ~8% to position it slightly above true center
-        // Use dvh (dynamic viewport height) to prevent iOS Safari scroll jitter
-        paddingBottom: '8dvh',
+        paddingBottom: 'calc(var(--vh-locked, 1dvh) * 8)',
         boxSizing: 'border-box',
         opacity: isVisible ? 1 : 0,
         transition: 'opacity 0.5s ease-out',
