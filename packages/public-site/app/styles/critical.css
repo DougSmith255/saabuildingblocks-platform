@@ -51,7 +51,7 @@ body {
   background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
   background-color: rgb(12, 12, 12);
   background-attachment: fixed;
-  min-height: 100vh;
+  min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
   color: var(--color-text-secondary);
   font-family: var(--font-amulya), Georgia, serif;
   -webkit-font-smoothing: antialiased;
@@ -129,7 +129,7 @@ main {
 
 /* Hero Section - Above the fold */
 .hero-section {
-  min-height: 100vh;
+  min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
   display: flex;
   flex-direction: column;
   justify-content: center;

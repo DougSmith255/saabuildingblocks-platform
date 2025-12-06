@@ -113,7 +113,8 @@ export default function Home() {
 
         {/* Spaceman Background Image */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-0">
-          <div className="relative w-full max-w-[1200px] h-[80vh]">
+          {/* Use dvh to prevent iOS Safari scroll jitter when address bar hides */}
+          <div className="relative w-full max-w-[1200px] h-[80dvh]">
             <div
               className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full"
               style={{

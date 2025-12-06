@@ -1461,7 +1461,7 @@ main {
 }
 
 .hero-section {
-    min-height: 100vh;
+    min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1560,7 +1560,7 @@ body.is-404-page main,
 main[data-no-footer="true"],
 main.flex-1 {
   padding-bottom: 0 !important;
-  min-height: 100vh;
+  min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
 }
 
 /* Footer positioned with proper spacing */
