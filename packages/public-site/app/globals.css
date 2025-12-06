@@ -1667,9 +1667,15 @@ body.is-404-page footer {
   padding: 0;
 }
 
-/* Hide empty divs that create blank lines */
-.blog-content .wp-block-rank-math-toc-block div:empty {
+/* Hide empty divs and empty p tags that create blank lines */
+.blog-content .wp-block-rank-math-toc-block div:empty,
+.blog-content .wp-block-rank-math-toc-block p:empty,
+.blog-content .wp-block-rank-math-toc-block nav p {
   display: none;
+  margin: 0;
+  padding: 0;
+  height: 0;
+  line-height: 0;
 }
 
 /* Consistent spacing for TOC link items */
@@ -2301,6 +2307,94 @@ article p a:focus-visible,
   font-style: italic;
   position: relative;
   z-index: 12;
+}
+
+/* WordPress aligned images (aligncenter, alignright, alignleft) - CyberFrame styling */
+/* These are raw <img> tags with WordPress alignment classes inside <p> tags */
+.blog-content p > img.aligncenter,
+.blog-content p > img.alignright,
+.blog-content p > img.alignleft,
+.blog-content img.aligncenter,
+.blog-content img.alignright,
+.blog-content img.alignleft {
+  position: relative;
+  padding: 6px;
+  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+  border-radius: 12px;
+  border: 1px solid rgba(150,150,150,0.4);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.15),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 15px rgba(0,255,136,0.1);
+  transition: all 0.3s ease;
+}
+
+.blog-content p > img.aligncenter:hover,
+.blog-content p > img.alignright:hover,
+.blog-content p > img.alignleft:hover,
+.blog-content img.aligncenter:hover,
+.blog-content img.alignright:hover,
+.blog-content img.alignleft:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(0,255,136,0.2);
+  border-color: rgba(0,255,136,0.3);
+}
+
+/* Center aligned images */
+.blog-content img.aligncenter,
+.blog-content p > img.aligncenter {
+  display: block;
+  margin: 1rem auto;
+}
+
+/* Right aligned images - float right with text wrap */
+.blog-content img.alignright,
+.blog-content p > img.alignright {
+  float: right;
+  margin: 0.5rem 0 1rem 1.5rem;
+  max-width: 50%;
+}
+
+/* Left aligned images - float left with text wrap */
+.blog-content img.alignleft,
+.blog-content p > img.alignleft {
+  float: left;
+  margin: 0.5rem 1.5rem 1rem 0;
+  max-width: 50%;
+}
+
+/* Light mode adjustments for aligned images */
+.light-mode .blog-content p > img.aligncenter,
+.light-mode .blog-content p > img.alignright,
+.light-mode .blog-content p > img.alignleft,
+.light-mode .blog-content img.aligncenter,
+.light-mode .blog-content img.alignright,
+.light-mode .blog-content img.alignleft {
+  background: linear-gradient(145deg, rgba(220,220,220,0.8) 0%, rgba(180,180,180,0.9) 50%, rgba(200,200,200,0.8) 100%);
+  border-color: rgba(100,100,100,0.3);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.5),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 15px rgba(0,170,102,0.1);
+}
+
+.light-mode .blog-content p > img.aligncenter:hover,
+.light-mode .blog-content p > img.alignright:hover,
+.light-mode .blog-content p > img.alignleft:hover,
+.light-mode .blog-content img.aligncenter:hover,
+.light-mode .blog-content img.alignright:hover,
+.light-mode .blog-content img.alignleft:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 25px rgba(0,170,102,0.2);
+  border-color: rgba(0,170,102,0.4);
 }
 
 /* CyberFrame component in blog content - must fill container width */
