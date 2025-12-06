@@ -80,6 +80,7 @@ export function BlogPostHero({
   heroImage,
   youtubeVideoUrl,
   featuredImage,
+  featuredImageMaxHeight,
   onThemeChange,
 }: BlogPostHeroProps) {
   const readingTime = calculateReadingTime(content);
