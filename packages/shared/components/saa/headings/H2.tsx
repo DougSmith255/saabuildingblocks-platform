@@ -51,6 +51,14 @@ export default function H2({
       <style jsx global>{`
         :global(.h2-char) {
           display: inline-block;
+          position: relative;
+        }
+
+        /* Per-word metal backing plate with neon text */
+        :global(.h2-word) {
+          display: inline-flex;
+          position: relative;
+          /* Neon glow text-shadow */
           color: #bfbdb0;
           text-shadow:
             -1px -1px 0 rgba(255,255,255, 0.4),
@@ -63,31 +71,62 @@ export default function H2({
             0 0 15px #9a9888,
             0 0 3px #bfbdb0,
             0 3px 3px #000;
-          transform: translateZ(20px);
-          position: relative;
         }
 
-        /* Metal backing plate - Dark mode (default) */
+        /* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
         :global(.h2-word::before) {
           content: "";
           position: absolute;
-          inset: -0.2em -0.3em;
-          background: linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%);
-          border-radius: 0.1em;
+          /* Negative inset extends plate beyond the word - equal top/bottom */
+          top: -0.25em;
+          left: -0.3em;
+          right: -0.3em;
+          bottom: -0.25em;
+          /* Brushed gunmetal gradient - lighter for metallic look */
+          background: linear-gradient(
+            180deg,
+            #3d3d3d 0%,
+            #2f2f2f 40%,
+            #252525 100%
+          );
+          /* Rounded corners on all sides */
+          border-radius: 0.15em;
           z-index: -1;
-          transform: translateZ(-10px);
-          border: 1px solid rgba(150,150,150,0.2);
-          box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.5);
+          /* Beveled edge effect - lighter top/left for raised look */
+          border-top: 2px solid rgba(180,180,180,0.45);
+          border-left: 1px solid rgba(130,130,130,0.35);
+          border-right: 1px solid rgba(60,60,60,0.6);
+          border-bottom: 2px solid rgba(0,0,0,0.7);
+          /* Multi-layer shadow for depth and floating effect */
+          box-shadow:
+            /* Inner highlight at top for glossy reflection */
+            inset 0 1px 0 rgba(255,255,255,0.12),
+            /* Inner shadow at bottom for depth */
+            inset 0 -1px 2px rgba(0,0,0,0.25),
+            /* Main drop shadow */
+            0 4px 8px rgba(0,0,0,0.5),
+            /* Soft ambient shadow */
+            0 2px 4px rgba(0,0,0,0.3);
         }
 
-        /* Metal backing plate - Light mode (darker, no white highlights) */
-        /* Borders are darker than face for 3D depth effect */
-        /* Rounded corners for softer 3D look */
-        :global(body.light-mode .h2-word::before) {
-          background: linear-gradient(135deg, rgba(50,50,50,0.95) 0%, rgba(25,25,25,0.98) 100%);
-          border: 1px solid rgba(20,20,20,0.8);
-          border-radius: 0.1em;
-          box-shadow: inset 0 1px 2px rgba(0,0,0,0.4), 0 3px 12px rgba(0,0,0,0.7);
+        /* Glossy highlight overlay on metal plate */
+        :global(.h2-word::after) {
+          content: "";
+          position: absolute;
+          top: -0.25em;
+          left: -0.3em;
+          right: -0.3em;
+          height: 50%;
+          /* Glossy reflection gradient */
+          background: linear-gradient(
+            180deg,
+            rgba(255,255,255,0.06) 0%,
+            rgba(255,255,255,0.02) 50%,
+            transparent 100%
+          );
+          border-radius: 0.15em 0.15em 0 0;
+          z-index: -1;
+          pointer-events: none;
         }
       `}</style>
 
@@ -101,6 +140,10 @@ export default function H2({
           transformStyle: 'preserve-3d',
           transform: 'rotateX(15deg)',
           position: 'relative',
+          // Padding to compensate for metal plate negative inset (-0.3em horizontal)
+          // Ensures plates don't extend beyond container edges
+          paddingLeft: '0.35em',
+          paddingRight: '0.35em',
           ...style
         }}
       >

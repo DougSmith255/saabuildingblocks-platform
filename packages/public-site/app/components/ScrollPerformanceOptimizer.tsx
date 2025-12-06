@@ -5,22 +5,18 @@ import { useEffect } from 'react';
 /**
  * ScrollPerformanceOptimizer
  *
- * Pauses CSS animations during scroll on mobile devices for smooth 60fps scrolling.
+ * Pauses CSS animations during scroll for smooth 60fps scrolling on all devices.
  * When user stops scrolling, animations resume after a short delay.
  *
  * How it works:
  * - Adds 'is-scrolling' class to document.body during scroll
- * - CSS rules pause animations when this class is present
+ * - CSS rules pause star background animations when this class is present
  * - Animations resume 150ms after scroll stops
- * - Only active on mobile/touch devices (hover: none)
+ * - Works on both mobile and desktop for buttery smooth scrolling
  */
 export function ScrollPerformanceOptimizer() {
   useEffect(() => {
-    // Only apply on mobile/touch devices
-    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
-    const isMobile = window.innerWidth < 1024;
-
-    if (!isTouchDevice && !isMobile) return;
+    // Apply on all devices for smooth scrolling
 
     let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
     let ticking = false;

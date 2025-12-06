@@ -1699,7 +1699,7 @@ body.is-404-page footer {
     0 3px 3px #000;
 }
 
-/* Metal backing plate - 3D brushed metal effect with glossy highlights */
+/* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
@@ -1708,27 +1708,27 @@ body.is-404-page footer {
   left: -0.3em;
   right: -0.3em;
   bottom: -0.25em;
-  /* Brushed metal gradient - dark to slightly lighter for 3D depth */
+  /* Brushed gunmetal gradient - lighter for metallic look */
   background: linear-gradient(
     180deg,
-    #2a2a2a 0%,
-    #1d1d1d 40%,
-    #151515 100%
+    #3d3d3d 0%,
+    #2f2f2f 40%,
+    #252525 100%
   );
   /* Rounded corners on all sides */
   border-radius: 0.15em;
   z-index: -1;
   /* Beveled edge effect - lighter top/left for raised look */
-  border-top: 2px solid rgba(160,160,160,0.4);
-  border-left: 1px solid rgba(100,100,100,0.3);
-  border-right: 1px solid rgba(40,40,40,0.6);
-  border-bottom: 2px solid rgba(0,0,0,0.8);
+  border-top: 2px solid rgba(180,180,180,0.45);
+  border-left: 1px solid rgba(130,130,130,0.35);
+  border-right: 1px solid rgba(60,60,60,0.6);
+  border-bottom: 2px solid rgba(0,0,0,0.7);
   /* Multi-layer shadow for depth and floating effect */
   box-shadow:
     /* Inner highlight at top for glossy reflection */
-    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.12),
     /* Inner shadow at bottom for depth */
-    inset 0 -1px 2px rgba(0,0,0,0.3),
+    inset 0 -1px 2px rgba(0,0,0,0.25),
     /* Main drop shadow */
     0 4px 8px rgba(0,0,0,0.5),
     /* Soft ambient shadow */
@@ -3401,7 +3401,7 @@ img:not(.profile-image) {
   line-height: 1.3 !important;
 }
 
-/* School CTA wrapper - contains button and light bars */
+/* School CTA wrapper - contains button */
 .blog-content .school-cta {
   margin-top: auto;
   padding-top: 1rem;
@@ -3409,122 +3409,72 @@ img:not(.profile-image) {
   justify-content: center;
 }
 
-/* Light bar wrapper - needed for positioning light bars relative to button */
+/* Wrapper div - simple inline-block */
 .blog-content .school-cta-wrapper {
-  position: relative;
   display: inline-block;
-  padding: 0.5rem 0;
 }
 
-/* Left light bar */
-.blog-content .school-cta-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -5px;
-  width: 10px;
-  height: 36px;
-  border-radius: 6px;
-  transform: translateY(-50%);
-  background: #ffd700;
-  box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
-  z-index: 1;
-  animation: schoolLightPulse 2s ease-in-out infinite;
-}
-
-/* Right light bar */
-.blog-content .school-cta-wrapper::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: -5px;
-  width: 10px;
-  height: 36px;
-  border-radius: 6px;
-  transform: translateY(-50%);
-  background: #ffd700;
-  box-shadow: 0 0 5px #ffd700, 0 0 15px #ffd700, 0 0 30px #ffd700, 0 0 60px #ffd700;
-  z-index: 1;
-  animation: schoolLightPulse 2s ease-in-out infinite;
-  animation-delay: 0.5s;
-}
-
-/* Light bar pulse animation */
-@keyframes schoolLightPulse {
-  0%, 100% {
-    opacity: 1;
-    transform: translateY(-50%) scaleY(0.4);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translateY(-50%) scaleY(1);
-  }
-}
-
-/* Hover state - expand light bars */
-.blog-content .school-cta-wrapper:hover::before,
-.blog-content .school-cta-wrapper:hover::after {
-  transform: translateY(-50%) scaleY(1);
-}
-
-/* School CTA Button - styled to match SecondaryButton React component */
-/* This styles the WordPress-generated anchor tag to look identical to SecondaryButton */
+/* ============================================
+   School CTA Button - Exact GenericButton Match
+   Matches the Master Controller GenericButton component
+   ============================================ */
 .blog-content .school-cta-button {
-  /* Core button styling from SecondaryButton */
+  /* Outer container - gradient border effect */
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 56px;
-  padding: 0.5rem 1.25rem;
-  background: rgb(45, 45, 45);
-  backdrop-filter: blur(15px);
-  border-radius: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: none;
-  border-right: none;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  z-index: 10;
-  box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5);
-  transition: all 0.5s ease;
-  overflow: hidden;
-  position: relative;
-
-  /* Typography */
-  color: var(--text-color-button, var(--color-headingText, #ffd700));
-  font-size: var(--font-size-button, 18px);
-  font-family: var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif);
-  font-weight: var(--font-weight-button, 600);
+  justify-content: center;
+  min-width: 131px;
+  height: 51px;
+  border-radius: 15px;
+  padding: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   text-decoration: none !important;
+
+  /* Gold gradient border (inactive state) */
+  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%);
+  background-color: rgba(255, 215, 0, 0.5);
 }
 
-/* Gradient shine overlay */
+/* Inner button content area */
 .blog-content .school-cta-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
-  width: 50%;
-  transform: skewX(45deg);
+  content: 'View Courses';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 47px;
+  border-radius: 13px;
+  background-color: #1a1a1a;
+  padding: 0 20px;
+  color: #fff;
+  font-family: var(--font-amulya), Georgia, serif;
+  font-size: 16px;
+  font-weight: 400;
 }
 
-/* Hover state */
+/* Hide the original text since ::before shows it */
+.blog-content .school-cta-button {
+  font-size: 0;
+  color: transparent;
+}
+
+/* Hover state - gold glow */
 .blog-content .school-cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 18px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.5);
-  color: var(--text-color-button, var(--color-headingText, #ffd700));
+  background-color: rgba(255, 215, 0, 0.7);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
   text-decoration: none !important;
 }
 
-/* Light mode - keep school button dark themed */
+/* Light mode - keep same styling */
 .light-mode .blog-content .school-cta-button {
-  background: rgb(45, 45, 45);
-  color: var(--text-color-button, var(--color-headingText, #ffd700));
+  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%);
+  background-color: rgba(255, 215, 0, 0.5);
 }
 
 .light-mode .blog-content .school-cta-button:hover {
-  color: var(--text-color-button, var(--color-headingText, #ffd700));
+  background-color: rgba(255, 215, 0, 0.7);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
 }
 
 /* School cards section stays dark mode even in light mode */
