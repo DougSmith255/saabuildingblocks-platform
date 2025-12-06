@@ -196,7 +196,7 @@ export function BlogPostTemplate({
           <div className="max-w-[1200px] mx-auto">
             {/* Blog Content - Uses blog-content class from globals.css */}
             {/* H2s are processed to wrap words in spans for per-word metal plates */}
-            <div className="blog-content prose prose-invert max-w-none">
+            <div className="blog-content max-w-none">
               {/* Featured Image - floated inside content, max-height 270px */}
               {post.featuredImage?.url && (
                 <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
