@@ -2313,7 +2313,8 @@ article p a:focus-visible,
 /* Emphasis/Italic */
 .blog-content em,
 .blog-content i {
-  color: #dcdbd5;
+  /* Match body text color #bfbdb0 in dark mode */
+  color: #bfbdb0;
   font-style: italic;
 }
 
