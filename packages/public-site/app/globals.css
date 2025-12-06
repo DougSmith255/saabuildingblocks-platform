@@ -3759,3 +3759,55 @@ img:not(.profile-image) {
 }
 
 /* All school cards light-mode overrides now combined with main selectors above */
+
+/* ===========================================
+   LEGAL PAGES STYLING
+   Privacy Policy, Terms of Use, Disclaimer, Cookie Policy
+   =========================================== */
+
+.legal-content {
+  /* Ensure proper spacing for legal documents */
+}
+
+.legal-content h2 {
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.legal-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.legal-content p {
+  margin-bottom: 1rem;
+}
+
+.legal-content ul {
+  margin-bottom: 1.5rem;
+}
+
+.legal-content li {
+  margin-bottom: 0.5rem;
+}
+
+.legal-content a {
+  color: #ffd700;
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.legal-content a:hover {
+  color: #00ff88;
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
+}
+
+/* Light mode adjustments for legal pages */
+.light-mode .legal-content a {
+  color: #0066cc;
+}
+
+.light-mode .legal-content a:hover {
+  color: #00aa66;
+  text-shadow: 0 0 8px rgba(0, 170, 102, 0.4);
+}
