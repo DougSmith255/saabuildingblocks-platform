@@ -6,7 +6,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { getContactByEmail, getGHLAccessToken } from './lib/gohighlevel-email';
+import { getContactByEmail } from './lib/gohighlevel-email';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
