@@ -2481,6 +2481,12 @@ body.light-mode .blog-content ol li::marker {
   color: #3a3a3a;
 }
 
+body.light-mode .blog-content em,
+body.light-mode .blog-content i {
+  /* Italic text - same as body text in light mode */
+  color: #4a4a4a;
+}
+
 body.light-mode .blog-content blockquote {
   /* Blockquotes - medium gray with gold accent border */
   color: #4a4a4a;
