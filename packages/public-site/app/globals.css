@@ -1679,9 +1679,9 @@ body.is-404-page footer {
   line-height: 1.4;
 }
 
-/* Nested TOC items (sub-headings) - slight indent */
-.blog-content .wp-block-rank-math-toc-block div > div:has(> a) {
-  padding-left: 1rem;
+/* Hide H3+ entries in TOC - only show H2s for cleaner navigation */
+.blog-content .wp-block-rank-math-toc-block li li {
+  display: none;
 }
 
 /* TOC links styling - DARK MODE: yellow, glow only on hover */
