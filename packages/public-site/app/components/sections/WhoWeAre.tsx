@@ -37,15 +37,49 @@ export function WhoWeAre() {
               key={index}
               className="p-6 md:p-8 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
             >
-              {/* Photo */}
-              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto mb-6 overflow-hidden border-2 border-[#ffd700]/30">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={160}
-                  height={160}
-                  className="w-full h-full object-cover"
+              {/* Photo with Metal Backing Plate */}
+              <div className="relative w-36 h-36 md:w-44 md:h-44 mx-auto mb-6">
+                {/* Metal backing plate - brushed gunmetal effect */}
+                <div
+                  className="absolute inset-[-6px] rounded-full"
+                  style={{
+                    background: 'linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%)',
+                    borderTop: '2px solid rgba(180,180,180,0.45)',
+                    borderLeft: '1px solid rgba(130,130,130,0.35)',
+                    borderRight: '1px solid rgba(60,60,60,0.6)',
+                    borderBottom: '2px solid rgba(0,0,0,0.7)',
+                    boxShadow: `
+                      inset 0 1px 0 rgba(255,255,255,0.12),
+                      inset 0 -1px 2px rgba(0,0,0,0.25),
+                      0 4px 12px rgba(0,0,0,0.5),
+                      0 2px 6px rgba(0,0,0,0.3)
+                    `,
+                  }}
                 />
+                {/* Glossy highlight overlay */}
+                <div
+                  className="absolute inset-[-6px] rounded-full pointer-events-none"
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 40%, transparent 60%)',
+                  }}
+                />
+                {/* Image container with gold border */}
+                <div className="absolute inset-0 rounded-full overflow-hidden border-2 border-[#ffd700]/40">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    width={176}
+                    height={176}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Image overlay - subtle vignette for depth */}
+                  <div
+                    className="absolute inset-0 rounded-full pointer-events-none"
+                    style={{
+                      background: 'radial-gradient(circle at center, transparent 60%, rgba(0,0,0,0.3) 100%)',
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Name */}
