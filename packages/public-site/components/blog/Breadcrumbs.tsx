@@ -140,7 +140,7 @@ export function Breadcrumbs({
             <li key={item.position} className="flex items-center gap-2">
               <Link
                 href={item.href}
-                className="text-[#00cc66] hover:text-[#00ff88] transition-colors whitespace-nowrap breadcrumb-link"
+                className="text-[#ffd700] hover:text-[#ffed80] transition-colors whitespace-nowrap breadcrumb-link"
               >
                 {item.label}
               </Link>
