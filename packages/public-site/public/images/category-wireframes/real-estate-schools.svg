@@ -1,79 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
-  <!-- Lightbulb with Brain Pattern - Real Estate Schools -->
-  <!-- Creative knowledge symbol combining education and ideas -->
+  <!-- Lightbulb - Real Estate Schools -->
+  <!-- Simple lightbulb shape -->
   <defs>
-    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
-    </linearGradient>
-    <linearGradient id="glowGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.25"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.05"/>
-    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Outer glow -->
-  <ellipse cx="400" cy="280" rx="180" ry="200" fill="url(#glowGrad)" opacity="0.3"/>
+  <!-- Lightbulb glass - backing plate -->
+  <path d="M310 320 Q260 270 260 200 Q260 100 400 80 Q540 100 540 200 Q540 270 490 320 L490 380 L310 380 Z"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
 
-  <!-- Lightbulb glass outline -->
-  <path d="M320 320 Q280 280 280 220 Q280 140 400 120 Q520 140 520 220 Q520 280 480 320 L480 380 Q480 400 460 400 L340 400 Q320 400 320 380 Z"
-        stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.6"/>
+  <!-- Lightbulb glass - glowing -->
+  <path d="M310 320 Q260 270 260 200 Q260 100 400 80 Q540 100 540 200 Q540 270 490 320 L490 380 L310 380 Z"
+        stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
 
-  <!-- Inner lightbulb shape -->
-  <path d="M340 310 Q305 275 305 225 Q305 160 400 145 Q495 160 495 225 Q495 275 460 310"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Filament inside bulb - backing -->
+  <path d="M350 280 L350 200 Q350 170 380 170 L380 200 Q380 230 400 230 Q420 230 420 200 L420 170 Q450 170 450 200 L450 280"
+        stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
 
-  <!-- Brain pattern inside the bulb - left hemisphere -->
-  <path d="M340 240 Q340 200 370 200 Q370 180 390 195 Q380 220 360 230 Q340 250 355 270 Q330 260 340 240"
-        stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <path d="M350 210 Q365 195 380 210 Q390 195 400 210"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <path d="M345 250 Q360 240 365 260"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Filament inside bulb - glowing -->
+  <path d="M350 280 L350 200 Q350 170 380 170 L380 200 Q380 230 400 230 Q420 230 420 200 L420 170 Q450 170 450 200 L450 280"
+        stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Brain pattern inside the bulb - right hemisphere -->
-  <path d="M460 240 Q460 200 430 200 Q430 180 410 195 Q420 220 440 230 Q460 250 445 270 Q470 260 460 240"
-        stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <path d="M450 210 Q435 195 420 210 Q410 195 400 210"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <path d="M455 250 Q440 240 435 260"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Filament support wires -->
+  <line x1="350" y1="280" x2="350" y2="320" stroke="#5a5248" stroke-width="3" opacity="0.4"/>
+  <line x1="450" y1="280" x2="450" y2="320" stroke="#5a5248" stroke-width="3" opacity="0.4"/>
+  <line x1="350" y1="280" x2="350" y2="320" stroke="#ffd700" stroke-width="1.5" filter="url(#glow)"/>
+  <line x1="450" y1="280" x2="450" y2="320" stroke="#ffd700" stroke-width="1.5" filter="url(#glow)"/>
 
-  <!-- Central brain stem/connection -->
-  <path d="M400 200 L400 280 Q395 300 385 310 M400 280 Q405 300 415 310"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Screw base - backing -->
+  <rect x="310" y="380" width="180" height="30" rx="3" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <line x1="310" y1="395" x2="490" y2="395" stroke="#5a5248" stroke-width="3" opacity="0.4"/>
 
-  <!-- Additional neural connections -->
-  <circle cx="375" cy="220" r="4" stroke="url(#wireGrad)" stroke-width="0.75" fill="none" opacity="0.4"/>
-  <circle cx="425" cy="220" r="4" stroke="url(#wireGrad)" stroke-width="0.75" fill="none" opacity="0.4"/>
-  <circle cx="400" cy="250" r="5" stroke="url(#wireGrad)" stroke-width="0.75" fill="#ffd700" fill-opacity="0.2" opacity="0.5"/>
+  <!-- Screw base - glowing -->
+  <rect x="310" y="380" width="180" height="30" rx="3" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <line x1="310" y1="395" x2="490" y2="395" stroke="#ffd700" stroke-width="1.5" filter="url(#glow)"/>
 
-  <!-- Bulb base/screw -->
-  <path d="M340 400 L340 420 Q340 430 350 430 L450 430 Q460 430 460 420 L460 400"
-        stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <line x1="340" y1="410" x2="460" y2="410" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
-  <line x1="340" y1="420" x2="460" y2="420" stroke="url(#wireGrad)" stroke-width="1" opacity="0.4"/>
+  <!-- Screw threads - backing -->
+  <path d="M320 415 Q400 430 480 415" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M330 435 Q400 450 470 435" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M340 455 Q400 470 460 455" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M350 475 Q400 490 450 475" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
 
-  <!-- Screw threads -->
-  <path d="M350 435 Q400 445 450 435" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
-  <path d="M355 445 Q400 455 445 445" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
-  <path d="M360 455 Q400 465 440 455" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+  <!-- Screw threads - glowing -->
+  <path d="M320 415 Q400 430 480 415" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <path d="M330 435 Q400 450 470 435" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <path d="M340 455 Q400 470 460 455" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <path d="M350 475 Q400 490 450 475" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Base contact -->
-  <ellipse cx="400" cy="470" rx="30" ry="8" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <circle cx="400" cy="478" r="8" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
+  <!-- Bottom contact - backing -->
+  <ellipse cx="400" cy="500" rx="40" ry="12" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <!-- Bottom contact - glowing -->
+  <ellipse cx="400" cy="500" rx="40" ry="12" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
 
-  <!-- Light rays emanating from bulb -->
-  <g stroke="url(#wireGrad)" stroke-width="1" opacity="0.3">
-    <line x1="400" y1="90" x2="400" y2="60"/>
-    <line x1="480" y1="120" x2="510" y2="95"/>
-    <line x1="540" y1="180" x2="575" y2="165"/>
-    <line x1="320" y1="120" x2="290" y2="95"/>
-    <line x1="260" y1="180" x2="225" y2="165"/>
-  </g>
+  <!-- Light rays - backing -->
+  <line x1="400" y1="50" x2="400" y2="20" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="480" y1="70" x2="510" y2="45" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="540" y1="120" x2="580" y2="100" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="320" y1="70" x2="290" y2="45" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="260" y1="120" x2="220" y2="100" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
 
-  <!-- Sparkle points -->
-  <circle cx="400" cy="60" r="3" fill="#ffd700" opacity="0.5"/>
-  <circle cx="515" cy="95" r="2" fill="#ffd700" opacity="0.4"/>
-  <circle cx="285" cy="95" r="2" fill="#ffd700" opacity="0.4"/>
+  <!-- Light rays - glowing -->
+  <line x1="400" y1="50" x2="400" y2="20" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="480" y1="70" x2="510" y2="45" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="540" y1="120" x2="580" y2="100" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="320" y1="70" x2="290" y2="45" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="260" y1="120" x2="220" y2="100" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 </svg>

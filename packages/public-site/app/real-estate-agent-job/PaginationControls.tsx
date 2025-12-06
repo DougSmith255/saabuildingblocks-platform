@@ -18,22 +18,23 @@ function getHashParams(): URLSearchParams {
 }
 
 /**
- * Update hash in URL and trigger hashchange event
- * Note: We handle scroll position manually after this function
+ * Update hash in URL using replaceState to avoid polluting browser history
+ * This allows "Back" button to go directly to previous page instead of
+ * stepping through each pagination/filter change
  */
 function setHashParams(params: URLSearchParams) {
   const hashString = params.toString();
 
-  // Update hash directly to trigger hashchange event
-  // This ensures BlogPageClient's useEffect listens and loads the new page
+  // Use replaceState to update hash without adding to history stack
+  // This means clicking "Back" takes you to the previous actual page, not previous hash state
   if (hashString) {
-    window.location.hash = `#${hashString}`;
+    history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${hashString}`);
   } else {
-    // Use replaceState only when clearing hash
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
 
-  // Do NOT restore scroll here - let goToPage handle it
+  // Manually dispatch hashchange event since replaceState doesn't trigger it
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
 }
 
 /**

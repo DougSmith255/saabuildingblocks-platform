@@ -1,65 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
-  <!-- Target with Arrows - Marketing Mastery -->
-  <!-- Bullseye target with arrows hitting the center -->
+  <!-- Target - Marketing Mastery -->
+  <!-- Simple bullseye target, no arrows -->
   <defs>
-    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
-    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Target rings -->
-  <circle cx="400" cy="300" r="200" stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.4"/>
-  <circle cx="400" cy="300" r="160" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <circle cx="400" cy="300" r="120" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <circle cx="400" cy="300" r="80" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.6"/>
-  <circle cx="400" cy="300" r="40" stroke="url(#wireGrad)" stroke-width="2" fill="#ffd700" fill-opacity="0.15" opacity="0.7"/>
-  <circle cx="400" cy="300" r="15" fill="#ffd700" opacity="0.5"/>
+  <!-- Target rings - backing plates -->
+  <circle cx="400" cy="300" r="220" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="175" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="130" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="85" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="300" r="40" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
 
-  <!-- Ring fills (alternating opacity) -->
-  <circle cx="400" cy="300" r="200" fill="#ffd700" fill-opacity="0.02"/>
-  <circle cx="400" cy="300" r="160" fill="#0a0a0a" fill-opacity="0.3"/>
-  <circle cx="400" cy="300" r="120" fill="#ffd700" fill-opacity="0.03"/>
-  <circle cx="400" cy="300" r="80" fill="#0a0a0a" fill-opacity="0.3"/>
+  <!-- Target rings - glowing -->
+  <circle cx="400" cy="300" r="220" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="175" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="130" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="85" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <circle cx="400" cy="300" r="40" stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
 
-  <!-- Arrow 1 - hitting bullseye -->
-  <g transform="rotate(-25, 400, 300)">
-    <line x1="400" y1="300" x2="280" y2="300" stroke="url(#wireGrad)" stroke-width="2" opacity="0.7"/>
-    <!-- Arrow shaft -->
-    <line x1="280" y1="300" x2="180" y2="300" stroke="url(#wireGrad)" stroke-width="1.5" opacity="0.5"/>
-    <!-- Arrow head -->
-    <path d="M400 300 L380 290 L380 310 Z" fill="#ffd700" opacity="0.6"/>
-    <!-- Arrow fletching -->
-    <path d="M180 300 L200 285 L200 300 L200 315 L180 300" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  </g>
+  <!-- Bullseye center - backing -->
+  <circle cx="400" cy="300" r="12" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Bullseye center - glowing -->
+  <circle cx="400" cy="300" r="12" stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
 
-  <!-- Arrow 2 - hitting inner ring -->
-  <g transform="rotate(15, 400, 300)">
-    <line x1="420" y1="260" x2="300" y2="260" stroke="url(#wireGrad)" stroke-width="2" opacity="0.6"/>
-    <line x1="300" y1="260" x2="200" y2="260" stroke="url(#wireGrad)" stroke-width="1.5" opacity="0.4"/>
-    <path d="M420 260 L400 250 L400 270 Z" fill="#ffd700" opacity="0.5"/>
-    <path d="M200 260 L220 245 L220 260 L220 275 L200 260" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
-  </g>
+  <!-- Cross hairs - backing -->
+  <line x1="400" y1="70" x2="400" y2="180" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="400" y1="420" x2="400" y2="530" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="170" y1="300" x2="280" y2="300" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
+  <line x1="520" y1="300" x2="630" y2="300" stroke="#5a5248" stroke-width="4" opacity="0.4"/>
 
-  <!-- Arrow 3 - hitting second ring -->
-  <g transform="rotate(50, 400, 300)">
-    <line x1="440" y1="340" x2="320" y2="340" stroke="url(#wireGrad)" stroke-width="2" opacity="0.55"/>
-    <line x1="320" y1="340" x2="220" y2="340" stroke="url(#wireGrad)" stroke-width="1.5" opacity="0.35"/>
-    <path d="M440 340 L420 330 L420 350 Z" fill="#ffd700" opacity="0.45"/>
-    <path d="M220 340 L240 325 L240 340 L240 355 L220 340" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
-  </g>
-
-  <!-- Cross hairs -->
-  <line x1="400" y1="90" x2="400" y2="170" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
-  <line x1="400" y1="430" x2="400" y2="510" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
-  <line x1="190" y1="300" x2="270" y2="300" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
-  <line x1="530" y1="300" x2="610" y2="300" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="4 4" opacity="0.3"/>
-
-  <!-- Impact marks at arrow points -->
-  <circle cx="400" cy="300" r="4" fill="#ffd700" opacity="0.8"/>
-  <circle cx="400" cy="300" r="8" stroke="#ffd700" stroke-width="0.5" fill="none" opacity="0.4"/>
-
-  <!-- Small decorative elements -->
-  <circle cx="350" cy="250" r="2" fill="#ffd700" opacity="0.4"/>
-  <circle cx="450" cy="340" r="2" fill="#ffd700" opacity="0.4"/>
+  <!-- Cross hairs - glowing -->
+  <line x1="400" y1="70" x2="400" y2="180" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="400" y1="420" x2="400" y2="530" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="170" y1="300" x2="280" y2="300" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="520" y1="300" x2="630" y2="300" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 </svg>

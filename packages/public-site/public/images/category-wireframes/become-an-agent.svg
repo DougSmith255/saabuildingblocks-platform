@@ -1,65 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
-  <!-- Doorway/Portal - Become an Agent -->
-  <!-- An open doorway with light streaming through, representing opportunity -->
+  <!-- Open Door - Become an Agent -->
+  <!-- Simple open doorway representing opportunity -->
   <defs>
-    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
-    </linearGradient>
-    <linearGradient id="lightGrad" x1="50%" y1="0%" x2="50%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.3"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.05"/>
-    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Door frame - outer -->
-  <path d="M260 520 L260 100 Q260 80 280 80 L520 80 Q540 80 540 100 L540 520"
-        stroke="url(#wireGrad)" stroke-width="2" fill="none" opacity="0.6"/>
+  <!-- Metal backing plate for door frame -->
+  <path d="M250 520 L250 95 Q250 75 275 75 L525 75 Q550 75 550 95 L550 520"
+        stroke="#5a5248" stroke-width="8" fill="none" opacity="0.5"/>
 
-  <!-- Door frame - inner edge -->
-  <path d="M280 510 L280 110 Q280 95 295 95 L505 95 Q520 95 520 110 L520 510"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Door frame - glowing -->
+  <path d="M260 510 L260 100 Q260 85 280 85 L520 85 Q540 85 540 100 L540 510"
+        stroke="#ffd700" stroke-width="3" fill="none" filter="url(#glow)"/>
 
-  <!-- Decorative arch at top -->
-  <path d="M280 110 Q400 50 520 110"
-        stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="4 4" fill="none" opacity="0.3"/>
+  <!-- Floor line -->
+  <line x1="220" y1="520" x2="580" y2="520" stroke="#5a5248" stroke-width="6" opacity="0.5"/>
+  <line x1="220" y1="520" x2="580" y2="520" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
 
-  <!-- Light rays emanating from doorway -->
-  <g stroke="url(#lightGrad)" stroke-width="1" opacity="0.4">
-    <line x1="400" y1="300" x2="200" y2="150"/>
-    <line x1="400" y1="300" x2="180" y2="280"/>
-    <line x1="400" y1="300" x2="200" y2="420"/>
-    <line x1="400" y1="300" x2="600" y2="150"/>
-    <line x1="400" y1="300" x2="620" y2="280"/>
-    <line x1="400" y1="300" x2="600" y2="420"/>
-    <line x1="400" y1="300" x2="400" y2="80"/>
-    <line x1="400" y1="300" x2="300" y2="100"/>
-    <line x1="400" y1="300" x2="500" y2="100"/>
-  </g>
+  <!-- Open door (swung inward, showing depth) -->
+  <!-- Door backing plate -->
+  <path d="M540 510 L540 100 L480 130 L480 490 Z"
+        stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Door glowing lines -->
+  <line x1="540" y1="100" x2="540" y2="510" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="540" y1="100" x2="480" y2="130" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="480" y1="130" x2="480" y2="490" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="480" y1="490" x2="540" y2="510" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
 
-  <!-- Floor/threshold -->
-  <line x1="220" y1="520" x2="580" y2="520" stroke="url(#wireGrad)" stroke-width="1.5" opacity="0.5"/>
-  <line x1="240" y1="530" x2="560" y2="530" stroke="url(#wireGrad)" stroke-width="1" opacity="0.3"/>
+  <!-- Door handle on open door -->
+  <circle cx="490" cy="320" r="8" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="490" cy="320" r="8" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Door panels (slightly ajar, showing depth) -->
-  <path d="M280 510 L280 120 L300 125 L300 505 Z"
-        stroke="url(#wireGrad)" stroke-width="0.75" fill="#ffd700" fill-opacity="0.05"/>
-  <path d="M520 510 L520 120 L500 125 L500 505 Z"
-        stroke="url(#wireGrad)" stroke-width="0.75" fill="#ffd700" fill-opacity="0.05"/>
+  <!-- Door panels on open door -->
+  <rect x="485" y="160" width="35" height="80" rx="3" stroke="#5a5248" stroke-width="3" fill="none" opacity="0.4" transform="skewY(-5)"/>
+  <rect x="485" y="160" width="35" height="80" rx="3" stroke="#ffd700" stroke-width="1.5" fill="none" filter="url(#glow)" transform="skewY(-5)"/>
 
-  <!-- Door handles -->
-  <circle cx="310" cy="320" r="6" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.5"/>
-  <circle cx="490" cy="320" r="6" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.5"/>
+  <rect x="485" y="380" width="35" height="80" rx="3" stroke="#5a5248" stroke-width="3" fill="none" opacity="0.4" transform="skewY(-5)"/>
+  <rect x="485" y="380" width="35" height="80" rx="3" stroke="#ffd700" stroke-width="1.5" fill="none" filter="url(#glow)" transform="skewY(-5)"/>
 
-  <!-- Keystone at top -->
-  <path d="M385 85 L400 70 L415 85 L415 95 L385 95 Z"
-        stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-
-  <!-- Stepping stones leading to door -->
-  <ellipse cx="400" cy="560" rx="50" ry="10" stroke="url(#wireGrad)" stroke-width="0.75" fill="none" opacity="0.3"/>
-  <ellipse cx="380" cy="580" rx="35" ry="8" stroke="url(#wireGrad)" stroke-width="0.5" fill="none" opacity="0.2"/>
-
-  <!-- Central light glow -->
-  <circle cx="400" cy="300" r="80" fill="url(#lightGrad)" opacity="0.2"/>
-  <circle cx="400" cy="300" r="40" fill="#ffd700" opacity="0.1"/>
+  <!-- Threshold -->
+  <line x1="260" y1="510" x2="540" y2="510" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="260" y1="510" x2="540" y2="510" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 </svg>

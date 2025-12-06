@@ -1,62 +1,64 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
-  <!-- Fork in the Road - Brokerage Comparison -->
-  <!-- A diverging path representing choice between different options -->
+  <!-- Weight Scale - Brokerage Comparison -->
+  <!-- Balance scale tilted slightly, empty pans -->
   <defs>
-    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
-    </linearGradient>
-    <linearGradient id="pathGrad" x1="50%" y1="100%" x2="50%" y2="0%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.1"/>
-    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Main path starting from bottom center -->
-  <path d="M380 580 L380 380 Q380 340 340 300 L180 140"
-        stroke="url(#pathGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <path d="M420 580 L420 380 Q420 340 460 300 L620 140"
-        stroke="url(#pathGrad)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Base/stand backing plate -->
+  <line x1="400" y1="520" x2="400" y2="200" stroke="#5a5248" stroke-width="8" opacity="0.5"/>
+  <!-- Base/stand glowing -->
+  <line x1="400" y1="520" x2="400" y2="200" stroke="#ffd700" stroke-width="3" filter="url(#glow)"/>
 
-  <!-- Path edges (creating road effect) -->
-  <path d="M360 580 L360 385 Q360 345 320 305 L160 145"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <path d="M440 580 L440 385 Q440 345 480 305 L640 145"
-        stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <!-- Base platform backing -->
+  <path d="M300 520 L500 520 L480 540 L320 540 Z" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <!-- Base platform glowing -->
+  <line x1="300" y1="520" x2="500" y2="520" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="300" y1="520" x2="320" y2="540" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="500" y1="520" x2="480" y2="540" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
+  <line x1="320" y1="540" x2="480" y2="540" stroke="#ffd700" stroke-width="2.5" filter="url(#glow)"/>
 
-  <!-- Fork point emphasis -->
-  <circle cx="400" cy="380" r="30" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.4"/>
-  <circle cx="400" cy="380" r="8" fill="#ffd700" opacity="0.4"/>
+  <!-- Center fulcrum/pivot point -->
+  <circle cx="400" cy="200" r="15" stroke="#5a5248" stroke-width="5" fill="none" opacity="0.5"/>
+  <circle cx="400" cy="200" r="15" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
 
-  <!-- Left destination marker -->
-  <circle cx="160" cy="120" r="35" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <circle cx="160" cy="120" r="20" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
-  <circle cx="160" cy="120" r="6" fill="#ffd700" opacity="0.5"/>
+  <!-- Balance beam - tilted slightly (left side down) -->
+  <!-- Backing plate -->
+  <line x1="180" y1="220" x2="620" y2="180" stroke="#5a5248" stroke-width="8" opacity="0.5"/>
+  <!-- Glowing beam -->
+  <line x1="180" y1="220" x2="620" y2="180" stroke="#ffd700" stroke-width="3" filter="url(#glow)"/>
 
-  <!-- Right destination marker -->
-  <circle cx="640" cy="120" r="35" stroke="url(#wireGrad)" stroke-width="1.5" fill="none" opacity="0.5"/>
-  <circle cx="640" cy="120" r="20" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.3"/>
-  <circle cx="640" cy="120" r="6" fill="#ffd700" opacity="0.5"/>
+  <!-- Left chain/strings -->
+  <line x1="180" y1="220" x2="140" y2="320" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="180" y1="220" x2="220" y2="320" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="180" y1="220" x2="140" y2="320" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="180" y1="220" x2="220" y2="320" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 
-  <!-- Road markings (dashed center lines) -->
-  <path d="M400 580 L400 420" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="10 10" fill="none" opacity="0.3"/>
-  <path d="M350 350 Q320 310 280 280 L200 200" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="8 8" fill="none" opacity="0.25"/>
-  <path d="M450 350 Q480 310 520 280 L600 200" stroke="url(#wireGrad)" stroke-width="1" stroke-dasharray="8 8" fill="none" opacity="0.25"/>
+  <!-- Left pan (lower) -->
+  <path d="M100 320 Q100 360 180 360 Q260 360 260 320" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <path d="M100 320 Q100 360 180 360 Q260 360 260 320" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <line x1="100" y1="320" x2="260" y2="320" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="100" y1="320" x2="260" y2="320" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 
-  <!-- Signpost at fork -->
-  <line x1="400" y1="420" x2="400" y2="340" stroke="url(#wireGrad)" stroke-width="2" opacity="0.5"/>
-  <!-- Left sign -->
-  <path d="M400 355 L350 355 L340 370 L350 385 L400 385" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
-  <!-- Right sign -->
-  <path d="M400 340 L450 340 L460 355 L450 370 L400 370" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
+  <!-- Right chain/strings -->
+  <line x1="620" y1="180" x2="580" y2="280" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="620" y1="180" x2="660" y2="280" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="620" y1="180" x2="580" y2="280" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
+  <line x1="620" y1="180" x2="660" y2="280" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 
-  <!-- Decorative elements along paths -->
-  <circle cx="280" cy="250" r="4" fill="#ffd700" opacity="0.3"/>
-  <circle cx="240" cy="200" r="3" fill="#ffd700" opacity="0.25"/>
-  <circle cx="520" cy="250" r="4" fill="#ffd700" opacity="0.3"/>
-  <circle cx="560" cy="200" r="3" fill="#ffd700" opacity="0.25"/>
+  <!-- Right pan (higher) -->
+  <path d="M540 280 Q540 320 620 320 Q700 320 700 280" stroke="#5a5248" stroke-width="6" fill="none" opacity="0.5"/>
+  <path d="M540 280 Q540 320 620 320 Q700 320 700 280" stroke="#ffd700" stroke-width="2.5" fill="none" filter="url(#glow)"/>
+  <line x1="540" y1="280" x2="700" y2="280" stroke="#5a5248" stroke-width="4" opacity="0.5"/>
+  <line x1="540" y1="280" x2="700" y2="280" stroke="#ffd700" stroke-width="2" filter="url(#glow)"/>
 
-  <!-- Perspective lines for depth -->
-  <line x1="340" y1="580" x2="140" y2="140" stroke="url(#wireGrad)" stroke-width="0.5" opacity="0.2"/>
-  <line x1="460" y1="580" x2="660" y2="140" stroke="url(#wireGrad)" stroke-width="0.5" opacity="0.2"/>
+  <!-- Decorative top piece -->
+  <path d="M380 200 L400 170 L420 200" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M380 200 L400 170 L420 200" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 </svg>

@@ -1,68 +1,83 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
-  <!-- Party Confetti Burst - Fun for Agents -->
-  <!-- Celebratory confetti explosion radiating from center -->
+  <!-- Party Confetti - Fun for Agents -->
+  <!-- Just confetti shapes scattered, no central burst -->
   <defs>
-    <linearGradient id="wireGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ffd700" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#ffd700" stop-opacity="0.15"/>
-    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
 
-  <!-- Central burst point -->
-  <circle cx="400" cy="300" r="25" stroke="url(#wireGrad)" stroke-width="2" fill="#ffd700" fill-opacity="0.15"/>
-  <circle cx="400" cy="300" r="10" fill="#ffd700" opacity="0.4"/>
+  <!-- Confetti rectangles - backing plates then glowing -->
+  <rect x="150" y="120" width="18" height="40" rx="2" transform="rotate(25, 159, 140)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="150" y="120" width="18" height="40" rx="2" transform="rotate(25, 159, 140)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Burst lines radiating outward -->
-  <g stroke="url(#wireGrad)" stroke-width="1.5" opacity="0.5">
-    <line x1="400" y1="275" x2="400" y2="120"/>
-    <line x1="425" y1="280" x2="520" y2="150"/>
-    <line x1="420" y1="300" x2="580" y2="280"/>
-    <line x1="420" y1="320" x2="540" y2="420"/>
-    <line x1="400" y1="325" x2="400" y2="480"/>
-    <line x1="380" y1="320" x2="260" y2="420"/>
-    <line x1="380" y1="300" x2="220" y2="280"/>
-    <line x1="375" y1="280" x2="280" y2="150"/>
-  </g>
+  <rect x="280" y="80" width="22" height="12" rx="2" transform="rotate(-15, 291, 86)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="280" y="80" width="22" height="12" rx="2" transform="rotate(-15, 291, 86)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Confetti pieces - rectangles -->
-  <rect x="350" y="140" width="12" height="25" transform="rotate(25, 356, 152)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <rect x="500" y="180" width="15" height="8" transform="rotate(-15, 507, 184)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <rect x="560" y="320" width="10" height="20" transform="rotate(45, 565, 330)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <rect x="480" y="440" width="14" height="7" transform="rotate(-30, 487, 443)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <rect x="320" y="460" width="10" height="18" transform="rotate(10, 325, 469)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <rect x="220" y="360" width="12" height="6" transform="rotate(-50, 226, 363)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <rect x="240" y="200" width="8" height="16" transform="rotate(35, 244, 208)" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
+  <rect x="480" y="100" width="15" height="35" rx="2" transform="rotate(40, 487, 117)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="480" y="100" width="15" height="35" rx="2" transform="rotate(40, 487, 117)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Confetti pieces - circles/dots -->
-  <circle cx="430" cy="160" r="8" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.5"/>
-  <circle cx="550" cy="240" r="6" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <circle cx="600" cy="350" r="7" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <circle cx="520" cy="480" r="9" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <circle cx="350" cy="500" r="6" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.5"/>
-  <circle cx="200" cy="420" r="8" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.1"/>
-  <circle cx="180" cy="250" r="5" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <circle cx="300" cy="130" r="7" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.5"/>
+  <rect x="620" y="150" width="20" height="10" rx="2" transform="rotate(-30, 630, 155)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="620" y="150" width="20" height="10" rx="2" transform="rotate(-30, 630, 155)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Confetti pieces - triangles -->
-  <polygon points="460,120 480,150 440,150" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
-  <polygon points="620,290 640,320 600,315" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <polygon points="560,450 580,475 545,470" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
-  <polygon points="280,480 300,510 260,505" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <polygon points="160,320 180,355 140,345" stroke="url(#wireGrad)" stroke-width="1" fill="#ffd700" fill-opacity="0.08"/>
-  <polygon points="220,160 240,190 200,185" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <rect x="680" y="320" width="14" height="30" rx="2" transform="rotate(55, 687, 335)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="680" y="320" width="14" height="30" rx="2" transform="rotate(55, 687, 335)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <rect x="600" y="450" width="18" height="8" rx="2" transform="rotate(-20, 609, 454)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="600" y="450" width="18" height="8" rx="2" transform="rotate(-20, 609, 454)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <rect x="420" y="480" width="16" height="35" rx="2" transform="rotate(15, 428, 497)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="420" y="480" width="16" height="35" rx="2" transform="rotate(15, 428, 497)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <rect x="200" y="420" width="20" height="10" rx="2" transform="rotate(-45, 210, 425)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="200" y="420" width="20" height="10" rx="2" transform="rotate(-45, 210, 425)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <rect x="100" y="280" width="12" height="28" rx="2" transform="rotate(35, 106, 294)" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <rect x="100" y="280" width="12" height="28" rx="2" transform="rotate(35, 106, 294)" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Confetti circles -->
+  <circle cx="350" cy="150" r="12" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="350" cy="150" r="12" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <circle cx="550" cy="250" r="10" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="550" cy="250" r="10" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <circle cx="650" cy="420" r="14" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="650" cy="420" r="14" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <circle cx="300" cy="500" r="11" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="300" cy="500" r="11" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <circle cx="120" cy="180" r="9" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <circle cx="120" cy="180" r="9" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Confetti triangles -->
+  <polygon points="400,100 420,140 380,140" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <polygon points="400,100 420,140 380,140" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <polygon points="580,380 605,420 555,420" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <polygon points="580,380 605,420 555,420" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <polygon points="250,320 280,360 220,360" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <polygon points="250,320 280,360 220,360" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <polygon points="500,520 525,560 475,560" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <polygon points="500,520 525,560 475,560" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <polygon points="150,480 175,520 125,520" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <polygon points="150,480 175,520 125,520" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
   <!-- Squiggly streamers -->
-  <path d="M380 140 Q360 160 380 180 Q400 200 380 220" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <path d="M550 200 Q570 220 550 240 Q530 260 550 280" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <path d="M250 300 Q230 320 250 340 Q270 360 250 380" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
-  <path d="M450 420 Q470 440 450 460 Q430 480 450 500" stroke="url(#wireGrad)" stroke-width="1" fill="none" opacity="0.4"/>
+  <path d="M320 200 Q300 220 320 240 Q340 260 320 280" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M320 200 Q300 220 320 240 Q340 260 320 280" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 
-  <!-- Small sparkle dots -->
-  <circle cx="380" cy="180" r="2" fill="#ffd700" opacity="0.6"/>
-  <circle cx="520" cy="200" r="2" fill="#ffd700" opacity="0.5"/>
-  <circle cx="580" cy="380" r="2" fill="#ffd700" opacity="0.5"/>
-  <circle cx="440" cy="500" r="2" fill="#ffd700" opacity="0.6"/>
-  <circle cx="280" cy="450" r="2" fill="#ffd700" opacity="0.5"/>
-  <circle cx="200" cy="300" r="2" fill="#ffd700" opacity="0.6"/>
-  <circle cx="320" cy="160" r="2" fill="#ffd700" opacity="0.5"/>
+  <path d="M450 300 Q430 320 450 340 Q470 360 450 380" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M450 300 Q430 320 450 340 Q470 360 450 380" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <path d="M200 250 Q180 270 200 290 Q220 310 200 330" stroke="#5a5248" stroke-width="4" fill="none" opacity="0.5"/>
+  <path d="M200 250 Q180 270 200 290 Q220 310 200 330" stroke="#ffd700" stroke-width="2" fill="none" filter="url(#glow)"/>
 </svg>

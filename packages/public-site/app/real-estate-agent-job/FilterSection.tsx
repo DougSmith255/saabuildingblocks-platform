@@ -25,7 +25,9 @@ function getHashParams(): URLSearchParams {
 }
 
 /**
- * Update hash in URL without triggering page reload or scroll
+ * Update hash in URL using replaceState to avoid polluting browser history
+ * This allows "Back" button to go directly to previous page instead of
+ * stepping through each filter change
  */
 function setHashParams(params: URLSearchParams) {
   const hashString = params.toString();
@@ -33,13 +35,16 @@ function setHashParams(params: URLSearchParams) {
   // Save current scroll position
   const scrollY = window.scrollY;
 
-  // Update hash (this may cause scroll)
+  // Use replaceState to update hash without adding to history stack
+  // This means clicking "Back" takes you to the previous actual page, not previous hash state
   if (hashString) {
-    window.location.hash = `#${hashString}`;
+    history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${hashString}`);
   } else {
-    // Use replaceState to clear hash without scrolling
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
+
+  // Manually dispatch hashchange event since replaceState doesn't trigger it
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
 
   // Restore scroll position
   window.scrollTo(0, scrollY);
