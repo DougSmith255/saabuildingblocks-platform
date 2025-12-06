@@ -6,6 +6,7 @@ import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
 import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
 import { ExternalLinkHandler } from './ExternalLinkHandler';
+import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 
 /**
  * LayoutWrapper - Global layout with automatic performance optimization
@@ -13,6 +14,7 @@ import { ExternalLinkHandler } from './ExternalLinkHandler';
  * AUTOMATIC OPTIMIZATIONS (applied to ALL pages):
  * - Footer is automatically deferred (loads when user scrolls near bottom)
  * - Improves LCP (Largest Contentful Paint) by 25-35%
+ * - Animations pause during scroll on mobile for smooth 60fps
  * - Works with static site export
  *
  * OVERRIDE BEHAVIOR (when building pages):
@@ -53,6 +55,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   return (
     <>
       <ExternalLinkHandler />
+      <ScrollPerformanceOptimizer />
       {!shouldHideHeaderFooter && <Header />}
       <main
         style={{ minHeight: '100vh', position: 'relative' }}

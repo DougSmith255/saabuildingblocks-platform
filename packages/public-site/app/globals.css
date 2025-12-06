@@ -1275,6 +1275,33 @@ main {
 }
 
 /* ===========================================
+   SCROLL PERFORMANCE OPTIMIZATION
+   Pause non-essential animations during scroll on mobile
+   for smooth 60fps scrolling experience
+   =========================================== */
+
+/* Mobile: Pause animations while scrolling for smooth scroll performance */
+@media (hover: none) and (pointer: coarse), (max-width: 1024px) {
+  /* When scrolling, pause all infinite animations to free up compositor */
+  body.is-scrolling * {
+    animation-play-state: paused !important;
+  }
+
+  /* Keep essential UI animations running (short, one-time animations) */
+  body.is-scrolling .page-transition-enter,
+  body.is-scrolling [data-animation="essential"] {
+    animation-play-state: running !important;
+  }
+
+  /* Simplify expensive effects during scroll */
+  body.is-scrolling [class*="GlassShimmer"],
+  body.is-scrolling [class*="backdrop-blur"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* ===========================================
    H1 HERO ENTRANCE ANIMATION
    Fade-in and slide-up animation for hero elements
    Animation starts after page load via inline styles in components

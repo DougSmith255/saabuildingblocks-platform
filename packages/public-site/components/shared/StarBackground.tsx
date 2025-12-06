@@ -45,11 +45,15 @@ export default function StarBackground() {
     hasInitialized.current = true;
 
     // Generate stars on mount - scale with screen size
+    // Mobile gets fewer stars for better scroll performance
+    const isMobile = window.innerWidth < 768;
     const screenArea = window.innerWidth * window.innerHeight;
     const baseArea = 1920 * 1080; // Full HD reference
     const scalingFactor = Math.max(screenArea / baseArea, 0.5); // At least 50% of base count
 
-    const starCount = Math.floor(255 * scalingFactor); // Scale star count based on screen area
+    // Mobile: max 150 stars for smooth scrolling, Desktop: up to 255
+    const baseStarCount = isMobile ? 150 : 255;
+    const starCount = Math.floor(baseStarCount * scalingFactor); // Scale star count based on screen area
     const layers = 3; // 3 parallax layers
     const generatedStars: Star[] = [];
 
