@@ -1695,8 +1695,8 @@ body.is-404-page footer {
 
 .blog-content .wp-block-rank-math-toc-block a:hover {
   color: #ffd700;
-  background: rgba(128, 128, 128, 0.3);
-  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+  background: rgba(42, 42, 42, 0.8);
+  text-shadow: 0 0 8px rgba(204, 163, 0, 0.8), 0 0 16px rgba(204, 163, 0, 0.5);
 }
 
 /* TOC links styling - LIGHT MODE: green, glow only on hover */
@@ -1706,8 +1706,8 @@ body.is-404-page footer {
 
 .light-mode .blog-content .wp-block-rank-math-toc-block a:hover {
   color: #00aa66;
-  background: rgba(128, 128, 128, 0.2);
-  text-shadow: 0 0 12px rgba(0, 170, 102, 0.6);
+  background: rgba(200, 200, 200, 0.5);
+  text-shadow: 0 0 8px rgba(0, 136, 82, 0.8), 0 0 16px rgba(0, 136, 82, 0.5);
 }
 
 /* Add "Table of Contents" heading before TOC via CSS - H2 size with Amulya font */
