@@ -2803,7 +2803,8 @@ body.light-mode {
 }
 
 /* Light mode link colors - brand green with background box on hover */
-body.light-mode .blog-content a:not(.share-button) {
+/* Exclude school-cta-button to prevent border distortion */
+body.light-mode .blog-content a:not(.share-button):not(.school-cta-button) {
   color: #009955; /* Darker green for better readability in light mode */
   text-shadow: none;
   /* Padding and border-radius for the background box effect */
@@ -2814,7 +2815,7 @@ body.light-mode .blog-content a:not(.share-button) {
   transition: background-color 0.2s ease, color 0.2s ease, text-shadow 0.2s ease;
 }
 
-body.light-mode .blog-content a:not(.share-button):hover {
+body.light-mode .blog-content a:not(.share-button):not(.school-cta-button):hover {
   /* Rounded corner secondary background box on hover - lighter for light mode */
   background-color: rgba(200, 200, 200, 0.5); /* Light gray background for light mode */
   /* Brighter green glow for light mode links on hover */
@@ -3520,7 +3521,7 @@ img:not(.profile-image) {
   padding: 1.5rem;
   background: rgba(20, 20, 20, 0.9) !important;
   border-radius: 12px;
-  border: 1px solid rgba(255, 215, 0, 0.5) !important; /* Visible yellow border */
+  border: 1px solid rgba(150, 150, 150, 0.5) !important; /* Light grey border */
 }
 
 /* Responsive grid - 2 columns on tablet, 1 on mobile */
