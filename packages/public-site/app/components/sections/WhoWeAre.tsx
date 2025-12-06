@@ -193,5 +193,6 @@ export function WhoWeAre() {
         </div>
       </div>
     </section>
+    </>
   );
 }
