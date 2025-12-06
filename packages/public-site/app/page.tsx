@@ -78,13 +78,16 @@ export default function Home() {
             // Below 1900px: scales down linearly
             // Above 1900px: clamped at 900px max
             width: 'clamp(400px, 47.37vw, 900px)',
-            height: '84dvh', // Use dvh (dynamic viewport height) to prevent mobile chrome jitter
+            // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
+            // Falls back to dvh for initial render before JS sets the variable
+            height: 'calc(var(--vh-locked, 1dvh) * 84)',
           }}>
             {/* Space cloud/mist backdrop */}
             <div
               className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
-                top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
+                // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
+                top: 'calc(var(--vh-locked, 1dvh) * 8 + 15px)',
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
@@ -101,7 +104,8 @@ export default function Home() {
               sizes="(max-width: 768px) 90vw, 900px"
               className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
-                top: 'calc(8dvh + 15px)', // Pushed down 15px on mobile to avoid agent counter overlap
+                // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
+                top: 'calc(var(--vh-locked, 1dvh) * 8 + 15px)',
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
@@ -113,8 +117,8 @@ export default function Home() {
 
         {/* Spaceman Background Image */}
         <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-0">
-          {/* Use dvh to prevent iOS Safari scroll jitter when address bar hides */}
-          <div className="relative w-full max-w-[1200px] h-[80dvh]">
+          {/* Use --vh-locked to prevent iOS Safari scroll jitter when address bar hides */}
+          <div className="relative w-full max-w-[1200px]" style={{ height: 'calc(var(--vh-locked, 1dvh) * 80)' }}>
             <div
               className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full"
               style={{
