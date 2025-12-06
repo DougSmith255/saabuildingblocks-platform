@@ -1676,11 +1676,11 @@ body.is-404-page footer {
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
-  /* Negative inset extends plate beyond the word - increased bottom */
-  top: -0.2em;
+  /* Negative inset extends plate beyond the word - equal top/bottom */
+  top: -0.25em;
   left: -0.3em;
   right: -0.3em;
-  bottom: -0.3em;
+  bottom: -0.25em;
   /* Solid dark gray face */
   background: #1a1a1a;
   /* Rounded corners on all sides */
