@@ -3509,16 +3509,18 @@ img:not(.profile-image) {
 }
 
 /* School Cards Grid - displays school logos, names, and CTA buttons */
-.blog-content .school-cards-grid {
+/* ALWAYS dark mode styling - no light/dark mode difference */
+.blog-content .school-cards-grid,
+.light-mode .blog-content .school-cards-grid {
   display: grid;
   /* 3 columns on desktop, responsive down to 1 column on mobile */
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
   padding: 1.5rem;
-  background: rgba(20, 20, 20, 0.6);
+  background: rgba(20, 20, 20, 0.9) !important;
   border-radius: 12px;
-  border: 1px solid rgba(255, 215, 0, 0.15);
+  border: 1px solid rgba(255, 215, 0, 0.5) !important; /* Visible yellow border */
 }
 
 /* Responsive grid - 2 columns on tablet, 1 on mobile */
@@ -3534,24 +3536,28 @@ img:not(.profile-image) {
   }
 }
 
-.blog-content .school-card {
+/* Individual school cards - ALWAYS same styling in light/dark mode */
+.blog-content .school-card,
+.light-mode .blog-content .school-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 1.5rem;
-  background: rgba(30, 30, 30, 0.8);
+  background: rgba(45, 45, 45, 0.95) !important; /* Lighter grey than parent container */
   border-radius: 10px;
-  border: 1px solid rgba(100, 100, 100, 0.3);
+  border: 1px solid rgba(100, 100, 100, 0.3) !important;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   /* Equal height cards for alignment */
   height: 100%;
+  color: #dcdbd5 !important;
 }
 
-.blog-content .school-card:hover {
+.blog-content .school-card:hover,
+.light-mode .blog-content .school-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(255, 215, 0, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 215, 0, 0.4) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
 .blog-content .school-card-header {
@@ -3562,16 +3568,21 @@ img:not(.profile-image) {
   margin-bottom: 1rem;
 }
 
-.blog-content .school-logo {
+/* School logo - ALWAYS same styling */
+.blog-content .school-logo,
+.light-mode .blog-content .school-logo {
   width: 120px;
   height: 80px; /* Fixed height for vertical alignment */
   object-fit: contain;
   border-radius: 8px;
-  background: white;
+  background: white !important;
   padding: 8px;
+  border: 2px solid rgba(255, 215, 0, 0.5) !important;
 }
 
-.blog-content .school-card-name {
+/* School card name - ALWAYS yellow */
+.blog-content .school-card-name,
+.light-mode .blog-content .school-card-name {
   font-size: 1.1rem !important;
   font-weight: 600 !important;
   color: #ffd700 !important;
@@ -3594,9 +3605,10 @@ img:not(.profile-image) {
 
 /* ============================================
    School CTA Button - Exact GenericButton Match
-   Matches the Master Controller GenericButton component
+   ALWAYS same styling in light/dark mode
    ============================================ */
-.blog-content .school-cta-button {
+.blog-content .school-cta-button,
+.light-mode .blog-content .school-cta-button {
   /* Outer container - gradient border effect */
   display: flex;
   align-items: center;
@@ -3608,14 +3620,17 @@ img:not(.profile-image) {
   cursor: pointer;
   transition: all 0.3s ease;
   text-decoration: none !important;
+  font-size: 0 !important;
+  color: transparent !important;
 
   /* Gold gradient border (inactive state) */
-  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%);
-  background-color: rgba(255, 215, 0, 0.5);
+  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%) !important;
+  background-color: rgba(255, 215, 0, 0.5) !important;
 }
 
-/* Inner button content area */
-.blog-content .school-cta-button::before {
+/* Inner button content area - ALWAYS dark with white text */
+.blog-content .school-cta-button::before,
+.light-mode .blog-content .school-cta-button::before {
   content: 'View Courses';
   display: flex;
   align-items: center;
@@ -3623,74 +3638,20 @@ img:not(.profile-image) {
   width: 100%;
   height: 47px;
   border-radius: 13px;
-  background-color: #1a1a1a;
+  background-color: #1a1a1a !important;
   padding: 0 20px;
-  color: #fff;
+  color: #fff !important;
   font-family: var(--font-amulya), Georgia, serif;
   font-size: 16px;
   font-weight: 400;
 }
 
-/* Hide the original text since ::before shows it */
-.blog-content .school-cta-button {
-  font-size: 0;
-  color: transparent;
-}
-
-/* Hover state - gold glow */
-.blog-content .school-cta-button:hover {
-  background-color: rgba(255, 215, 0, 0.7);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-  text-decoration: none !important;
-}
-
-/* ============================================
-   LIGHT MODE - School Cards Section
-   Keep IDENTICAL to dark mode - no visual difference
-   ============================================ */
-
-/* Light mode - keep same button styling */
-.light-mode .blog-content .school-cta-button {
-  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%) !important;
-  background-color: rgba(255, 215, 0, 0.5) !important;
-}
-
+/* Hover state - gold glow - ALWAYS same */
+.blog-content .school-cta-button:hover,
 .light-mode .blog-content .school-cta-button:hover {
   background-color: rgba(255, 215, 0, 0.7) !important;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
+  text-decoration: none !important;
 }
 
-/* CRITICAL: Button inner content must stay dark with white text */
-.light-mode .blog-content .school-cta-button::before {
-  background-color: #1a1a1a !important;
-  color: #fff !important;
-}
-
-/* School card names stay yellow */
-.light-mode .blog-content .school-card-name {
-  color: #ffd700 !important;
-}
-
-/* Outer grid container - dark with visible yellow border */
-.light-mode .blog-content .school-cards-grid {
-  background: rgba(20, 20, 20, 0.95) !important;
-  border: 1px solid rgba(255, 215, 0, 0.4) !important;
-}
-
-/* Individual school cards - dark background */
-.light-mode .blog-content .school-card {
-  background: rgba(30, 30, 30, 0.95) !important;
-  border: 1px solid rgba(100, 100, 100, 0.3) !important;
-  color: #dcdbd5 !important;
-}
-
-.light-mode .blog-content .school-card:hover {
-  border-color: rgba(255, 215, 0, 0.4) !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
-}
-
-/* Keep school logo background white */
-.light-mode .blog-content .school-logo {
-  background: white !important;
-  border: 2px solid rgba(255, 215, 0, 0.5) !important;
-}
+/* All school cards light-mode overrides now combined with main selectors above */
