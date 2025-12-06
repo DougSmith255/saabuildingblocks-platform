@@ -1727,6 +1727,103 @@ body.is-404-page footer {
   color: #2a2a2a;
 }
 
+/* ===========================================
+   FAQ COMPONENT STYLING
+   CSS Variables for unified FAQ appearance
+   Used by: RankMath FAQ blocks, SAA FAQ component
+   =========================================== */
+
+/* FAQ CSS Variables - Master Controller compatible */
+:root {
+  --faq-bg: rgba(255, 255, 255, 0.05);
+  --faq-border: rgba(255, 255, 255, 0.1);
+  --faq-border-hover: rgba(255, 215, 0, 0.3);
+  --faq-question-color: #e5e4dd;
+  --faq-answer-color: #dcdbd5;
+  --faq-icon-color: #ffd700;
+  --faq-radius: 0.75rem;
+}
+
+/* Light mode FAQ variables */
+.light-mode {
+  --faq-bg: rgba(0, 0, 0, 0.03);
+  --faq-border: rgba(0, 0, 0, 0.1);
+  --faq-border-hover: rgba(0, 170, 102, 0.4);
+  --faq-question-color: #2a2a2a;
+  --faq-answer-color: #4a4a4a;
+  --faq-icon-color: #00aa66;
+}
+
+/* RankMath FAQ Block Styling - Accordion style matching homepage */
+.blog-content .wp-block-rank-math-faq-block {
+  margin: 2rem 0;
+}
+
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item {
+  background-color: var(--faq-bg);
+  border: 1px solid var(--faq-border);
+  border-radius: var(--faq-radius);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item:hover {
+  border-color: var(--faq-border-hover);
+}
+
+/* FAQ Question styling */
+.blog-content .wp-block-rank-math-faq-block .rank-math-question {
+  color: var(--faq-question-color);
+  font-family: var(--font-synonym), sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Reset H3 styling from blog content */
+  transform: none;
+  text-shadow: none;
+  background: none;
+  gap: 0;
+  flex-wrap: nowrap;
+}
+
+/* Add chevron indicator via CSS */
+.blog-content .wp-block-rank-math-faq-block .rank-math-question::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid var(--faq-icon-color);
+  border-bottom: 2px solid var(--faq-icon-color);
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+/* Rotate chevron when item is expanded (via JS class) */
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item.is-open .rank-math-question::after {
+  transform: rotate(-135deg);
+}
+
+/* FAQ Answer styling */
+.blog-content .wp-block-rank-math-faq-block .rank-math-answer {
+  color: var(--faq-answer-color);
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  /* Remove default margins from p tags inside */
+  margin: 0;
+}
+
+.blog-content .wp-block-rank-math-faq-block .rank-math-answer p {
+  margin: 0;
+}
+
 /* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
 /* Matches H2.tsx from @saa/shared/components/saa/headings */
 /* H2 - Master Controller Typography */

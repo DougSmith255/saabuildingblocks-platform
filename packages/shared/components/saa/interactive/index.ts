@@ -9,3 +9,6 @@
 
 export { ShareButtons } from './ShareButtons';
 export type { ShareButtonsProps } from './ShareButtons';
+
+export { FAQ } from './FAQ';
+export type { FAQProps, FAQItem } from './FAQ';

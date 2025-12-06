@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { H2 } from '@saa/shared/components/saa';
-import { ChevronDown } from 'lucide-react';
+import { H2, FAQ as FAQComponent } from '@saa/shared/components/saa';
 
 const faqs = [
   {
@@ -28,8 +26,6 @@ const faqs = [
 ];
 
 export function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1900px] mx-auto">
@@ -41,42 +37,8 @@ export function FAQ() {
           </p>
         </div>
 
-        {/* FAQ Items */}
-        <div className="space-y-4">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="rounded-xl bg-white/5 border border-white/10 overflow-hidden transition-all duration-300 hover:border-[#ffd700]/30"
-            >
-              {/* Question Button */}
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between p-5 text-left"
-                aria-expanded={openIndex === index}
-              >
-                <span className="text-[#e5e4dd] font-semibold text-lg pr-4">
-                  {faq.question}
-                </span>
-                <ChevronDown
-                  className={`w-5 h-5 text-[#ffd700] flex-shrink-0 transition-transform duration-300 ${
-                    openIndex === index ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-
-              {/* Answer */}
-              <div
-                className={`overflow-hidden transition-all duration-300 ${
-                  openIndex === index ? 'max-h-96' : 'max-h-0'
-                }`}
-              >
-                <p className="px-5 pb-5 text-[#dcdbd5]">
-                  {faq.answer}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* FAQ Component from shared library */}
+        <FAQComponent items={faqs} />
       </div>
     </section>
   );
