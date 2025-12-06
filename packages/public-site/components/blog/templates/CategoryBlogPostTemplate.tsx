@@ -7,7 +7,6 @@ import { ChevronDown } from 'lucide-react';
 import { BlogPostHero } from '../BlogPostHero';
 import { RelatedPosts } from '../RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
-import { SecondaryButton } from '@saa/shared/components/saa/buttons';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from '../Breadcrumbs';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
@@ -51,65 +50,14 @@ function processH2WordWrapping(html: string): string {
   });
 }
 
-/**
- * Extract school-cta-button links from HTML content
- */
-interface CtaButtonInfo {
-  href: string;
-  text: string;
-}
-
-function extractCtaButtons(html: string): CtaButtonInfo[] {
-  const buttons: CtaButtonInfo[] = [];
-  // Match school-cta-button links - href can come before or after class
-  const regex = /<a[^>]*href="([^"]*)"[^>]*class="[^"]*school-cta-button[^"]*"[^>]*>([^<]*)<\/a>/gi;
-  let match;
-  while ((match = regex.exec(html)) !== null) {
-    buttons.push({ href: match[1], text: match[2] });
-  }
-  return buttons;
-}
 
 /**
- * Remove school-cta-button links from HTML content (they'll be rendered as React components)
- */
-function removeCtaButtonsFromHtml(html: string): string {
-  return html.replace(/<a[^>]*href="[^"]*"[^>]*class="[^"]*school-cta-button[^"]*"[^>]*>[^<]*<\/a>/gi, '<span class="cta-button-placeholder"></span>');
-}
-
-/**
- * BlogContentRenderer - Renders blog content with SecondaryButton components
- * replacing school-cta-button links from WordPress
+ * BlogContentRenderer - Renders blog content with H2 word wrapping
+ * School CTA buttons are styled via CSS to look like SecondaryButton
  */
 function BlogContentRenderer({ html }: { html: string }) {
   const processedHtml = processH2WordWrapping(html);
-  const ctaButtons = extractCtaButtons(processedHtml);
-  const cleanedHtml = removeCtaButtonsFromHtml(processedHtml);
-
-  // Split HTML by placeholder to interleave buttons
-  const parts = cleanedHtml.split('<span class="cta-button-placeholder"></span>');
-
-  if (ctaButtons.length === 0) {
-    // No CTA buttons, render as-is
-    return <div dangerouslySetInnerHTML={{ __html: processedHtml }} />;
-  }
-
-  return (
-    <>
-      {parts.map((part, index) => (
-        <React.Fragment key={index}>
-          <div dangerouslySetInnerHTML={{ __html: part }} />
-          {index < ctaButtons.length && (
-            <div className="my-4">
-              <SecondaryButton href={ctaButtons[index].href}>
-                {ctaButtons[index].text}
-              </SecondaryButton>
-            </div>
-          )}
-        </React.Fragment>
-      ))}
-    </>
-  );
+  return <div dangerouslySetInnerHTML={{ __html: processedHtml }} />;
 }
 
 export interface CategoryBlogPostTemplateProps {

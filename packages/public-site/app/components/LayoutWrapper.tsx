@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
 import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
+import { ExternalLinkHandler } from './ExternalLinkHandler';
 
 /**
  * LayoutWrapper - Global layout with automatic performance optimization
@@ -51,6 +52,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   return (
     <>
+      <ExternalLinkHandler />
       {!shouldHideHeaderFooter && <Header />}
       <main
         style={{ minHeight: '100vh', position: 'relative' }}

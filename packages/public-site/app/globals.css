@@ -3348,6 +3348,66 @@ img:not(.profile-image) {
   justify-content: center;
 }
 
+/* School CTA Button - styled to match SecondaryButton React component */
+/* This styles the WordPress-generated anchor tag to look identical to SecondaryButton */
+.blog-content .school-cta-button {
+  /* Core button styling from SecondaryButton */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 56px;
+  padding: 0.5rem 1.25rem;
+  background: rgb(45, 45, 45);
+  backdrop-filter: blur(15px);
+  border-radius: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-left: none;
+  border-right: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 10;
+  box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5);
+  transition: all 0.5s ease;
+  overflow: hidden;
+  position: relative;
+
+  /* Typography */
+  color: var(--text-color-button, var(--color-headingText, #ffd700));
+  font-size: var(--font-size-button, 18px);
+  font-family: var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif);
+  font-weight: var(--font-weight-button, 600);
+  text-decoration: none !important;
+}
+
+/* Gradient shine overlay */
+.blog-content .school-cta-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+  width: 50%;
+  transform: skewX(45deg);
+}
+
+/* Hover state */
+.blog-content .school-cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.5);
+  color: var(--text-color-button, var(--color-headingText, #ffd700));
+  text-decoration: none !important;
+}
+
+/* Light mode - keep school button dark themed */
+.light-mode .blog-content .school-cta-button {
+  background: rgb(45, 45, 45);
+  color: var(--text-color-button, var(--color-headingText, #ffd700));
+}
+
+.light-mode .blog-content .school-cta-button:hover {
+  color: var(--text-color-button, var(--color-headingText, #ffd700));
+}
+
 /* School cards section stays dark mode even in light mode */
 /* Override light mode h3 styling to keep school card names yellow */
 .light-mode .blog-content .school-card-name {
