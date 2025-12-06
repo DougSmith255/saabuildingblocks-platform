@@ -90,13 +90,16 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
         {/* Left side glow bar - uses same pulsing animation as CTAButton */}
         <div
-          className="cta-light-bar cta-light-bar-pulse w-[10px] h-[18px] rounded-md transition-all duration-500 group-hover:h-4/5"
+          className="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
           style={{
             position: 'absolute',
             top: '50%',
             left: '-5px',
             transform: 'translateY(-50%)',
+            width: '10px',
+            height: '18px',
             background: brandGold,
+            borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
           }}
@@ -104,13 +107,16 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
         {/* Right side glow bar - uses same pulsing animation as CTAButton */}
         <div
-          className="cta-light-bar cta-light-bar-pulse w-[10px] h-[18px] rounded-md transition-all duration-500 group-hover:h-4/5"
+          className="cta-light-bar cta-light-bar-pulse cta-light-bar-side rounded-md transition-all duration-500"
           style={{
             position: 'absolute',
             top: '50%',
             right: '-5px',
             transform: 'translateY(-50%)',
+            width: '10px',
+            height: '18px',
             background: brandGold,
+            borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
           }}

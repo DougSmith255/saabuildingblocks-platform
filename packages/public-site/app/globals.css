@@ -3122,6 +3122,12 @@ img:not(.profile-image) {
   animation-delay: inherit;
 }
 
+/* Secondary button side light bars - hover expansion */
+/* Light bars extend vertically ~8px on hover */
+.group:hover .cta-light-bar.cta-light-bar-side {
+  height: 34px !important; /* 18px base + 16px expansion (8px each direction) */
+}
+
 /* ========================================
    THEME SWITCH - SUN/MOON TOGGLE
    Based on: https://uiverse.io/Galahhad/strong-squid-82
@@ -3638,42 +3644,53 @@ img:not(.profile-image) {
   text-decoration: none !important;
 }
 
-/* Light mode - keep same styling */
+/* ============================================
+   LIGHT MODE - School Cards Section
+   Keep IDENTICAL to dark mode - no visual difference
+   ============================================ */
+
+/* Light mode - keep same button styling */
 .light-mode .blog-content .school-cta-button {
-  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%);
-  background-color: rgba(255, 215, 0, 0.5);
+  background: linear-gradient(to bottom right, #ffd700 0%, rgba(255, 215, 0, 0) 30%) !important;
+  background-color: rgba(255, 215, 0, 0.5) !important;
 }
 
 .light-mode .blog-content .school-cta-button:hover {
-  background-color: rgba(255, 215, 0, 0.7);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+  background-color: rgba(255, 215, 0, 0.7) !important;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.6) !important;
 }
 
-/* School cards section stays dark mode even in light mode */
-/* Override light mode h3 styling to keep school card names yellow */
+/* CRITICAL: Button inner content must stay dark with white text */
+.light-mode .blog-content .school-cta-button::before {
+  background-color: #1a1a1a !important;
+  color: #fff !important;
+}
+
+/* School card names stay yellow */
 .light-mode .blog-content .school-card-name {
   color: #ffd700 !important;
 }
 
-/* Keep school cards dark even in light mode - preserve all dark mode styling */
+/* Outer grid container - dark with visible yellow border */
 .light-mode .blog-content .school-cards-grid {
-  background: rgba(20, 20, 20, 0.6);
-  border: 1px solid rgba(255, 215, 0, 0.15);
+  background: rgba(20, 20, 20, 0.95) !important;
+  border: 1px solid rgba(255, 215, 0, 0.4) !important;
 }
 
+/* Individual school cards - dark background */
 .light-mode .blog-content .school-card {
-  background: rgba(30, 30, 30, 0.8);
-  border: 1px solid rgba(100, 100, 100, 0.3);
-  color: #dcdbd5;
+  background: rgba(30, 30, 30, 0.95) !important;
+  border: 1px solid rgba(100, 100, 100, 0.3) !important;
+  color: #dcdbd5 !important;
 }
 
 .light-mode .blog-content .school-card:hover {
-  border-color: rgba(255, 215, 0, 0.4);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 215, 0, 0.4) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
-
-/* Keep school logo background white in light mode */
+/* Keep school logo background white */
 .light-mode .blog-content .school-logo {
   background: white !important;
+  border: 2px solid rgba(255, 215, 0, 0.5) !important;
 }
