@@ -221,7 +221,7 @@ export function BlogPostTemplate({
 
             {/* Share Buttons - from shared components */}
             <ShareButtons
-              url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${post.slug}` : `/blog/${post.slug}`}
+              url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${categorySlug}/${post.slug}` : `/blog/${categorySlug}/${post.slug}`}
               title={post.title}
               excerpt={post.excerpt}
             />
