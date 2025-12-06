@@ -270,13 +270,20 @@ export default function Header() {
         </div>
 
         {/* Hamburger Menu Button - Only on mobile/tablet (<1450px) - Hidden on 404 */}
+        {/* Slides down with header on first load, then becomes fixed */}
         {!is404Page && (
           <button
-            className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
+            className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''} ${hasMounted ? 'transition-transform duration-500' : ''}`}
             onClick={handleHamburgerClick}
             aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
             aria-expanded={isMobileMenuOpen}
             aria-controls="mobile-menu"
+            style={{
+              // First load: slide down with header; After: fixed position (no transform)
+              transform: isFirstLoad
+                ? (hasSlideIn ? 'translateY(0)' : 'translateY(-100px)')
+                : (isHidden ? 'translateY(-100px)' : 'translateY(0)'),
+            }}
           >
             <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
               <path
