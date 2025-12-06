@@ -359,7 +359,7 @@ export function CategoryBlogPostTemplate({
 
             {/* Share Buttons */}
             <ShareButtons
-              url={`https://saabuildingblocks.com/blog/${categorySlug}/${post.slug}`}
+              url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${categorySlug}/${post.slug}` : `/blog/${categorySlug}/${post.slug}`}
               title={post.title}
               excerpt={post.excerpt}
             />
