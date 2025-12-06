@@ -1816,14 +1816,23 @@ body.is-404-page footer {
   transform: rotate(-135deg);
 }
 
-/* FAQ Answer styling */
+/* FAQ Answer styling - hidden by default (collapsed accordion) */
 .blog-content .wp-block-rank-math-faq-block .rank-math-answer {
   color: var(--faq-answer-color);
-  padding: 0 1.25rem 1.25rem 1.25rem;
   font-size: 1rem;
   line-height: 1.6;
-  /* Remove default margins from p tags inside */
   margin: 0;
+  /* Collapsed state - hidden */
+  max-height: 0;
+  padding: 0 1.25rem;
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+/* Expanded state - show answer */
+.blog-content .wp-block-rank-math-faq-block .rank-math-faq-item.is-open .rank-math-answer {
+  max-height: 1000px;
+  padding: 0 1.25rem 1.25rem 1.25rem;
 }
 
 .blog-content .wp-block-rank-math-faq-block .rank-math-answer p {

@@ -54,10 +54,40 @@ function processH2WordWrapping(html: string): string {
 /**
  * BlogContentRenderer - Renders blog content with H2 word wrapping
  * School CTA buttons are styled via CSS to look like SecondaryButton
+ * Also handles RankMath FAQ accordion toggle functionality
  */
 function BlogContentRenderer({ html }: { html: string }) {
   const processedHtml = processH2WordWrapping(html);
-  return <div dangerouslySetInnerHTML={{ __html: processedHtml }} />;
+  const containerRef = React.useRef<HTMLDivElement>(null);
+
+  // Add FAQ accordion toggle functionality
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const faqQuestions = container.querySelectorAll('.rank-math-question');
+
+    const handleClick = (e: Event) => {
+      const question = e.currentTarget as HTMLElement;
+      const faqItem = question.closest('.rank-math-faq-item');
+      if (faqItem) {
+        faqItem.classList.toggle('is-open');
+      }
+    };
+
+    faqQuestions.forEach((question) => {
+      question.addEventListener('click', handleClick);
+    });
+
+    // Cleanup
+    return () => {
+      faqQuestions.forEach((question) => {
+        question.removeEventListener('click', handleClick);
+      });
+    };
+  }, [html]);
+
+  return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: processedHtml }} />;
 }
 
 export interface CategoryBlogPostTemplateProps {
