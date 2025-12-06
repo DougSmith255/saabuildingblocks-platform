@@ -1684,15 +1684,32 @@ body.is-404-page footer {
   padding-left: 1rem;
 }
 
-/* TOC links styling - yellow to match brand */
+/* TOC links styling - DARK MODE: yellow with yellow glow, grey box on hover */
 .blog-content .wp-block-rank-math-toc-block a {
   color: #ffd700;
   text-decoration: none;
-  transition: color 0.2s ease;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+  transition: all 0.2s ease;
+  padding: 0.15rem 0.3rem;
+  border-radius: 4px;
 }
 
 .blog-content .wp-block-rank-math-toc-block a:hover {
-  color: #00ff88;
+  color: #ffd700;
+  background: rgba(128, 128, 128, 0.3);
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+}
+
+/* TOC links styling - LIGHT MODE: green with green glow, grey box on hover */
+.light-mode .blog-content .wp-block-rank-math-toc-block a {
+  color: #00aa66;
+  text-shadow: 0 0 8px rgba(0, 170, 102, 0.4);
+}
+
+.light-mode .blog-content .wp-block-rank-math-toc-block a:hover {
+  color: #00aa66;
+  background: rgba(128, 128, 128, 0.2);
+  text-shadow: 0 0 12px rgba(0, 170, 102, 0.6);
 }
 
 /* Add "Table of Contents" heading before TOC via CSS */
@@ -1705,6 +1722,11 @@ body.is-404-page footer {
   color: #bfbdb0;
   margin-bottom: 1rem;
   letter-spacing: -0.01em;
+}
+
+/* Light mode heading color */
+.light-mode .blog-content .wp-block-rank-math-toc-block::before {
+  color: #3a3a3a;
 }
 
 /* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
