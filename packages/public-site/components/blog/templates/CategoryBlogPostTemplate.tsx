@@ -256,7 +256,25 @@ export function CategoryBlogPostTemplate({
           <div className="max-w-[1200px] mx-auto">
             <div className="blog-content max-w-none">
               {/* Featured Image - only shown in hero for real-estate-schools category */}
-              {/* Removed from content section - featured image display is controlled by hero */}
+              {/* For other categories, show featured image floated right in content */}
+              {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
+                <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
+                  <CyberFrame>
+                    <div className="relative" style={{ maxHeight: '270px' }}>
+                      <Image
+                        src={post.featuredImage.url}
+                        alt={post.featuredImage.alt || post.title}
+                        width={480}
+                        height={270}
+                        sizes="(max-width: 768px) 100vw, 480px"
+                        className="object-contain"
+                        style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
+                        priority
+                      />
+                    </div>
+                  </CyberFrame>
+                </div>
+              )}
               <div dangerouslySetInnerHTML={{ __html: processH2WordWrapping(post.content) }} />
             </div>
 
