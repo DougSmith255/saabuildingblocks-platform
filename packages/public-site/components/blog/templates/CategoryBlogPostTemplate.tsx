@@ -71,7 +71,15 @@ function BlogContentRenderer({ html }: { html: string }) {
       const question = e.currentTarget as HTMLElement;
       const faqItem = question.closest('.rank-math-faq-item');
       if (faqItem) {
-        faqItem.classList.toggle('is-open');
+        const isCurrentlyOpen = faqItem.classList.contains('is-open');
+        // Close all other FAQ items first
+        container.querySelectorAll('.rank-math-faq-item.is-open').forEach((item) => {
+          item.classList.remove('is-open');
+        });
+        // Toggle current item (open if it was closed)
+        if (!isCurrentlyOpen) {
+          faqItem.classList.add('is-open');
+        }
       }
     };
 
