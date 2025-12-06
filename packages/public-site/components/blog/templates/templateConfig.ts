@@ -135,8 +135,8 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
   'real-estate-schools': {
     displayName: 'Real Estate Schools',
     slug: 'real-estate-schools',
-    accentColor: '#1ABC9C', // Teal
-    accentColorSecondary: '#16A085',
+    accentColor: '#FFD700', // Brand gold (was teal)
+    accentColorSecondary: '#FFA500',
     heroSubtitle: 'Find the right education path for your real estate career',
     // CTA removed - redundant on pages that list schools
     relatedPostsLimit: 3,

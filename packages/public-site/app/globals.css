@@ -1672,7 +1672,7 @@ body.is-404-page footer {
     0 3px 3px #000;
 }
 
-/* Metal backing plate - tilted forward 3D effect */
+/* Metal backing plate - 3D brushed metal effect with glossy highlights */
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
@@ -1681,18 +1681,51 @@ body.is-404-page footer {
   left: -0.3em;
   right: -0.3em;
   bottom: -0.25em;
-  /* Solid dark gray face */
-  background: #1a1a1a;
+  /* Brushed metal gradient - dark to slightly lighter for 3D depth */
+  background: linear-gradient(
+    180deg,
+    #2a2a2a 0%,
+    #1d1d1d 40%,
+    #151515 100%
+  );
   /* Rounded corners on all sides */
   border-radius: 0.15em;
   z-index: -1;
-  /* Top border lighter for 3D top edge effect */
-  border-top: 2px solid rgba(120,120,120,0.6);
-  border-left: 1px solid rgba(60,60,60,0.5);
-  border-right: 1px solid rgba(60,60,60,0.5);
-  border-bottom: 1px solid #1a1a1a;
-  /* Shadow only on bottom to enhance forward tilt */
-  box-shadow: 0 3px 6px rgba(0,0,0,0.6);
+  /* Beveled edge effect - lighter top/left for raised look */
+  border-top: 2px solid rgba(160,160,160,0.4);
+  border-left: 1px solid rgba(100,100,100,0.3);
+  border-right: 1px solid rgba(40,40,40,0.6);
+  border-bottom: 2px solid rgba(0,0,0,0.8);
+  /* Multi-layer shadow for depth and floating effect */
+  box-shadow:
+    /* Inner highlight at top for glossy reflection */
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    /* Inner shadow at bottom for depth */
+    inset 0 -1px 2px rgba(0,0,0,0.3),
+    /* Main drop shadow */
+    0 4px 8px rgba(0,0,0,0.5),
+    /* Soft ambient shadow */
+    0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Glossy highlight overlay on metal plate */
+.blog-content h2 .h2-word::after {
+  content: "";
+  position: absolute;
+  top: -0.25em;
+  left: -0.3em;
+  right: -0.3em;
+  height: 50%;
+  /* Glossy reflection gradient */
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.06) 0%,
+    rgba(255,255,255,0.02) 50%,
+    transparent 100%
+  );
+  border-radius: 0.15em 0.15em 0 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* H3 - Master Controller Typography */
