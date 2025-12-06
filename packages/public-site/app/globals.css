@@ -1676,20 +1676,21 @@ body.is-404-page footer {
 .blog-content h2 .h2-word::before {
   content: "";
   position: absolute;
-  /* Negative inset extends plate beyond the word */
-  inset: -0.2em -0.3em;
-  /* Dark solid face with lighter top edge for 3D tilt effect */
-  background: linear-gradient(to bottom, rgba(80,80,80,0.95) 0%, rgba(60,60,60,0.95) 8%, rgba(30,30,30,0.95) 15%, rgba(25,25,25,0.95) 100%);
-  /* Rounded corners on all sides - top and bottom */
+  /* Negative inset extends plate beyond the word - increased bottom */
+  top: -0.2em;
+  left: -0.3em;
+  right: -0.3em;
+  bottom: -0.3em;
+  /* Solid dark gray face */
+  background: #1a1a1a;
+  /* Rounded corners on all sides */
   border-radius: 0.15em;
   z-index: -1;
-  /* 3D depth positioning */
-  transform: translateZ(-10px);
-  /* Top border lighter for 3D top edge effect, no bottom border */
+  /* Top border lighter for 3D top edge effect */
   border-top: 2px solid rgba(120,120,120,0.6);
-  border-left: 1px solid rgba(80,80,80,0.4);
-  border-right: 1px solid rgba(80,80,80,0.4);
-  border-bottom: none;
+  border-left: 1px solid rgba(60,60,60,0.5);
+  border-right: 1px solid rgba(60,60,60,0.5);
+  border-bottom: 1px solid #1a1a1a;
   /* Shadow only on bottom to enhance forward tilt */
   box-shadow: 0 3px 6px rgba(0,0,0,0.6);
 }
