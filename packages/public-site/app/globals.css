@@ -1652,6 +1652,49 @@ body.is-404-page footer {
   letter-spacing: var(--letter-spacing-body, 0em);
 }
 
+/* RankMath Table of Contents - Fix spacing issues from malformed HTML */
+/* WordPress/RankMath sometimes generates empty divs and stray </p> tags */
+.blog-content .wp-block-rank-math-toc-block,
+.blog-content #rank-math-toc {
+  margin: 1.5rem 0;
+}
+
+/* Remove all default margins/padding from TOC container divs */
+.blog-content .wp-block-rank-math-toc-block nav,
+.blog-content .wp-block-rank-math-toc-block nav > div,
+.blog-content .wp-block-rank-math-toc-block nav div {
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide empty divs that create blank lines */
+.blog-content .wp-block-rank-math-toc-block div:empty {
+  display: none;
+}
+
+/* Consistent spacing for TOC link items */
+.blog-content .wp-block-rank-math-toc-block div:has(> a) {
+  margin: 0;
+  padding: 0.25rem 0;
+  line-height: 1.4;
+}
+
+/* Nested TOC items (sub-headings) - slight indent */
+.blog-content .wp-block-rank-math-toc-block div > div:has(> a) {
+  padding-left: 1rem;
+}
+
+/* TOC links styling */
+.blog-content .wp-block-rank-math-toc-block a {
+  color: #00ff88;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.blog-content .wp-block-rank-math-toc-block a:hover {
+  color: #ffd700;
+}
+
 /* H2 - Blog-specific typography (smaller than global H2 for long section titles) */
 /* Matches H2.tsx from @saa/shared/components/saa/headings */
 /* H2 - Master Controller Typography */
