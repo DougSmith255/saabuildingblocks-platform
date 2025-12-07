@@ -110,13 +110,13 @@ export default function Freebies() {
 
                   {/* Content */}
                   <div className="p-6">
-                    <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-amber-400 transition-colors">
+                    <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-[#ffd700] transition-colors">
                       {freebie.title}
                     </h3>
                     <p className="text-[#dcdbd5]/80 text-sm mb-4">
                       {freebie.description}
                     </p>
-                    <span className="inline-flex items-center gap-2 text-amber-400 text-sm font-medium group-hover:gap-3 transition-all">
+                    <span className="inline-flex items-center gap-2 text-[#ffd700] text-sm font-medium group-hover:gap-3 transition-all">
                       Download Free
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
