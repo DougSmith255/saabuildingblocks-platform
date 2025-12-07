@@ -352,10 +352,24 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
           )
         })));
       case 'icon-library':
+        // Note: IconLibrary relies on external CSS with sprite.svg for actual icons
+        // Preview shows the component structure with placeholder icons
         return lazy(() => import('@saa/shared/components/saa/icons/IconLibrary').then(m => ({
           default: () => (
             <div className="w-full h-full p-4">
-              <m.IconLibrary size="large" showLabels />
+              <div className="text-[#ffd700] text-sm mb-4 p-2 bg-yellow-900/20 rounded border border-yellow-600/30">
+                ⚠️ Icons require icon-library.css + sprite.svg to display
+              </div>
+              <div className="grid grid-cols-4 gap-4">
+                {['Email', 'Webinar', 'LinkedIn', 'YouTube', 'Calendar', 'Rocket', 'Bolt', 'Trophy'].map((name) => (
+                  <div key={name} className="flex flex-col items-center gap-2 p-3 bg-white/5 rounded-lg">
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#ffd700]/20 to-[#ffd700]/5 rounded-lg flex items-center justify-center border border-[#ffd700]/30">
+                      <span className="text-[#ffd700] text-lg">⬡</span>
+                    </div>
+                    <span className="text-white/80 text-xs">{name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           )
         })));

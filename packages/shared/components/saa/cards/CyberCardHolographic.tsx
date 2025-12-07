@@ -37,12 +37,12 @@ export function CyberCardHolographic({
     <div
       className={`
         relative w-full min-h-fit
+        rounded-[1.25rem]
         [filter:contrast(1.1)_saturate(1.2)]
         ${className}
       `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ overflow: 'visible' }}
     >
       {/* Hover tracking grid - DISABLED to prevent blocking form interactions */}
       {/*
