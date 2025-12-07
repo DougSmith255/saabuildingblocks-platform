@@ -245,6 +245,13 @@ export default async function RootLayout({
           }}
         />
 
+        {/* Plausible Analytics - Privacy-focused, cookie-free analytics */}
+        <script
+          defer
+          data-domain="saabuildingblocks.pages.dev"
+          src="https://plausible.io/js/script.js"
+        />
+
         {/* Organization Schema - JSON-LD for search engines and AI */}
         <script
           type="application/ld+json"
