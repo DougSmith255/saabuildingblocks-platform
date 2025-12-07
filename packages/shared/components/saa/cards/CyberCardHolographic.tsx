@@ -61,7 +61,7 @@ export function CyberCardHolographic({
         className={`
           relative w-full min-h-fit z-0
           flex justify-center items-center
-          rounded-[var(--radius-lg,1rem)]
+          rounded-[1.25rem]
           border border-white/10
         `}
         style={{
@@ -85,7 +85,7 @@ export function CyberCardHolographic({
         <div
           className={`
             absolute inset-0
-            rounded-[var(--radius-lg,1rem)]
+            rounded-[1.25rem]
             transition-opacity duration-600
             mix-blend-overlay
             pointer-events-none
@@ -109,7 +109,7 @@ export function CyberCardHolographic({
 
         {/* Chromatic aberration effect - tightened glow */}
         <div
-          className="absolute inset-[2px] rounded-[var(--radius-lg,1rem)] z-[1] pointer-events-none"
+          className="absolute inset-[2px] rounded-[1.25rem] z-[1] pointer-events-none"
           style={{
             background: 'linear-gradient(45deg, #0a0a0a, #1a1a1a)',
             filter: isHovered
@@ -127,11 +127,16 @@ export function CyberCardHolographic({
           }}
         />
 
-        {/* Content area */}
-        <div className="relative w-full min-h-fit p-[var(--space-6,2rem)] box-border z-10">
+        {/* Content area - responsive padding: min 10px, max 25px using clamp */}
+        <div
+          className="relative w-full min-h-fit box-border z-10"
+          style={{
+            padding: 'clamp(10px, calc(7.43px + 0.86vw), 25px)'
+          }}
+        >
           {/* Glitch overlay - diagonal lines */}
           <div
-            className="absolute inset-[10px] pointer-events-none rounded-[var(--radius-lg,1rem)] overflow-hidden z-[5]"
+            className="absolute inset-[10px] pointer-events-none rounded-[1.25rem] overflow-hidden z-[5]"
             style={{
               background: `repeating-linear-gradient(
                 0deg,

@@ -13,37 +13,37 @@ export default function Freebies() {
     {
       title: '"This or That" Posts',
       description: 'Boost engagement with your audience with "This or That" social media posts!',
-      image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2024/11/This-or-that-WebP.webp',
+      image: 'https://wp.saabuildingblocks.com/staging/wp-content/uploads/2024/10/This-or-that-WebP.webp',
       downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/YxtfQekzqmQfkp7G0XX3',
     },
     {
       title: 'Before Joining a Brokerage',
       description: '50+ essential questions to ask before choosing a brokerage!',
-      image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2024/11/Brokerage-Interview-Questions-WebP-2.webp',
+      image: 'https://wp.saabuildingblocks.com/staging/wp-content/uploads/2024/10/Brokerage-Interview-Questions-WebP-2.webp',
       downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/V8owfiQpXTATkg8T8rxL',
     },
     {
       title: 'Open House Sign-in Sheets',
       description: 'Impress clients with these professional open house sign-in sheets! (Canva Templates)',
-      image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2024/11/Open-House-Sign-In-Sheets-WebP-2.webp',
+      image: 'https://wp.saabuildingblocks.com/staging/wp-content/uploads/2024/10/Open-House-Sign-In-Sheets-WebP-2.webp',
       downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/as4ILKy1ddg2fiQnHnHU',
     },
     {
       title: 'Essential Buyer Checklist',
       description: 'Navigate each step with confidence: covers Pre-Offer, Offer, and Post-Offer essentials.',
-      image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2024/11/Seller-WebP.webp',
+      image: 'https://wp.saabuildingblocks.com/staging/wp-content/uploads/2024/10/Seller-WebP.webp',
       downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/LiQ8PzwEGDeXmfFIr29l',
     },
     {
       title: 'Complete Listing Checklist',
       description: 'Prepare for a smooth sale with guidelines for Pre-Listing, Activation, and Closing.',
-      image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2024/11/Buyer-WebP.webp',
+      image: 'https://wp.saabuildingblocks.com/staging/wp-content/uploads/2024/10/Buyer-WebP.webp',
       downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/rFZeAYhV3bTJxlN7wGEt',
     },
     {
       title: 'Home Tour Note Sheet',
       description: 'Have your clients easily track their favorite features and deal-breakers at each home visit.',
-      image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2024/11/Tour-notes-WebP.webp',
+      image: 'https://wp.saabuildingblocks.com/staging/wp-content/uploads/2024/10/Tour-notes-WebP.webp',
       downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/gbjJZg8kNe6g3GFuCDGW',
     },
   ];
