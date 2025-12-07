@@ -188,6 +188,7 @@ export default function Footer() {
             <a href="/privacy-policy/" className="footer-nav-link">Privacy Policy</a>
             <a href="/disclaimer/" className="footer-nav-link">Disclaimer</a>
             <a href="/terms-of-use/" className="footer-nav-link">Terms of Use</a>
+            <a href="/cookie-policy/" className="footer-nav-link">Cookie Policy</a>
           </div>
           <div className="footer-copyright">
             Copyright © {new Date().getFullYear()} – SmartAgentAlliance.com
