@@ -36,3 +36,6 @@ export * from './headings';
 
 // Media (frames, players, galleries)
 export * from './media';
+
+// Visual Effects (lightning, animations)
+export * from './effects';
