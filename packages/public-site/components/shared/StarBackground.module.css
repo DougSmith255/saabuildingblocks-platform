@@ -87,3 +87,12 @@
     height: -webkit-fill-available;
   }
 }
+
+/* PAUSE ANIMATIONS DURING SCROLL for smooth 60fps scrolling */
+:global(body.is-scrolling) .star {
+  animation-play-state: paused !important;
+}
+
+:global(body.is-scrolling) .star::before {
+  animation-play-state: paused !important;
+}
