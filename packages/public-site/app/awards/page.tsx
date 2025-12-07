@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 
 /**
  * eXp Realty Awards Page
@@ -61,30 +62,30 @@ export default function Awards() {
   ];
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            AWARDS & RECOGNITION
-          </H1>
-          <p className="text-gray-300 text-lg mt-4 max-w-3xl mx-auto" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
-            eXp Realty's excellence recognized by <strong className="text-white">Forbes, Glassdoor, RealTrends</strong>, and industry leaders.
-          </p>
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>AWARDS & RECOGNITION</H1>
+          <Tagline className="mt-4">
+            eXp Realty's excellence recognized by Forbes, Glassdoor, RealTrends, and industry leaders
+          </Tagline>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Major Awards Grid */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-12">Major Awards</H2>
+          <div className="text-center mb-12">
+            <H2>Major Awards</H2>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {majorAwards.map((award, index) => (
               <CyberCardHolographic key={index} className="p-6">
                 <div className="text-amber-400 text-sm font-medium mb-2">{award.year}</div>
-                <h3 className="text-xl font-bold text-white mb-3">{award.title}</h3>
-                <p className="text-gray-400">{award.detail}</p>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{award.title}</h3>
+                <p className="text-[#dcdbd5]/80">{award.detail}</p>
               </CyberCardHolographic>
             ))}
           </div>
@@ -92,14 +93,16 @@ export default function Awards() {
       </section>
 
       {/* RealTrends Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <H2 className="text-center mb-8">RealTrends Recognition</H2>
+          <div className="text-center mb-12">
+            <H2>RealTrends Recognition</H2>
+          </div>
 
           <div className="bg-white/5 rounded-xl p-8 border border-white/10">
             <ul className="space-y-4">
               {realTrendsAchievements.map((achievement, index) => (
-                <li key={index} className="flex items-start gap-4 text-gray-300">
+                <li key={index} className="flex items-start gap-4 text-[#dcdbd5]">
                   <span className="text-amber-400 text-xl">✓</span>
                   {achievement}
                 </li>
@@ -110,14 +113,16 @@ export default function Awards() {
       </section>
 
       {/* Executive Recognition */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <H2 className="text-center mb-8">Executive Recognition</H2>
+          <div className="text-center mb-12">
+            <H2>Executive Recognition</H2>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {executiveRecognition.map((exec, index) => (
               <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10 text-center">
-                <h3 className="text-lg font-bold text-white mb-2">{exec.name}</h3>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{exec.name}</h3>
                 <p className="text-amber-400 text-sm">{exec.award}</p>
               </div>
             ))}
@@ -126,18 +131,20 @@ export default function Awards() {
       </section>
 
       {/* Wolf Pack Awards */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-gray-900 to-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-4">Wolf Pack Recognition</H2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            Our sponsorship group's achievements within eXp Realty.
-          </p>
+          <div className="text-center mb-12">
+            <H2>Wolf Pack Recognition</H2>
+            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              Our sponsorship group's achievements within eXp Realty.
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {wolfPackAwards.map((award, index) => (
               <CyberCardHolographic key={index} className="p-6 text-center">
                 <h3 className="text-xl font-bold text-amber-400 mb-3">{award.title}</h3>
-                <p className="text-gray-300">{award.description}</p>
+                <p className="text-[#dcdbd5]">{award.description}</p>
               </CyberCardHolographic>
             ))}
           </div>
@@ -145,10 +152,10 @@ export default function Awards() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Join an Award-Winning Brokerage</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Join an Award-Winning Brokerage</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Be part of the industry's most recognized and fastest-growing real estate company.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -161,19 +168,6 @@ export default function Awards() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-      `}</style>
     </main>
   );
 }

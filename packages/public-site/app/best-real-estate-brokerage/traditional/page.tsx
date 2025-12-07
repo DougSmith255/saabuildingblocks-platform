@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 
 /**
  * Traditional Brokerage Comparison Page
@@ -98,70 +99,69 @@ export default function TraditionalBrokerageComparison() {
   ];
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            EXP VS TRADITIONAL BROKERAGES
-          </H1>
-          <p className="text-gray-300 text-lg mt-4 max-w-3xl mx-auto" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
-            How does eXp Realty compare to traditional brick-and-mortar brokerages like
-            <strong className="text-white"> Keller Williams, RE/MAX, Coldwell Banker</strong>, and others?
-          </p>
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>EXP VS TRADITIONAL BROKERAGES</H1>
+          <Tagline className="mt-4">
+            How does eXp Realty compare to traditional brick-and-mortar brokerages like Keller Williams, RE/MAX, and Coldwell Banker?
+          </Tagline>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Quick Stats */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid md:grid-cols-4 gap-6 text-center">
             <CyberCardHolographic className="p-6">
               <div className="text-3xl font-bold text-amber-400 mb-2">$85</div>
-              <p className="text-gray-300 text-sm">eXp Monthly Fee</p>
-              <p className="text-gray-500 text-xs mt-1">vs $500-$2,000+ traditional</p>
+              <p className="text-[#dcdbd5] text-sm">eXp Monthly Fee</p>
+              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs $500-$2,000+ traditional</p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-6">
               <div className="text-3xl font-bold text-amber-400 mb-2">100%</div>
-              <p className="text-gray-300 text-sm">Commission After Cap</p>
-              <p className="text-gray-500 text-xs mt-1">vs 50-70% traditional</p>
+              <p className="text-[#dcdbd5] text-sm">Commission After Cap</p>
+              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 50-70% traditional</p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-6">
               <div className="text-3xl font-bold text-amber-400 mb-2">$0</div>
-              <p className="text-gray-300 text-sm">Franchise Fees</p>
-              <p className="text-gray-500 text-xs mt-1">vs 6-8% traditional</p>
+              <p className="text-[#dcdbd5] text-sm">Franchise Fees</p>
+              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 6-8% traditional</p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-6">
               <div className="text-3xl font-bold text-amber-400 mb-2">7</div>
-              <p className="text-gray-300 text-sm">Revenue Share Tiers</p>
-              <p className="text-gray-500 text-xs mt-1">vs 0 traditional</p>
+              <p className="text-[#dcdbd5] text-sm">Revenue Share Tiers</p>
+              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 0 traditional</p>
             </CyberCardHolographic>
           </div>
         </div>
       </section>
 
       {/* Comparison Table */}
-      <section className="py-16 px-4 sm:px-8 bg-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1000px] mx-auto">
-          <H2 className="text-center mb-8">Side-by-Side Comparison</H2>
+          <div className="text-center mb-12">
+            <H2>Side-by-Side Comparison</H2>
+          </div>
 
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-white/20">
-                  <th className="text-left py-4 px-4 text-gray-400 font-medium">Category</th>
-                  <th className="text-left py-4 px-4 text-gray-400 font-medium">Traditional</th>
+                  <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Category</th>
+                  <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Traditional</th>
                   <th className="text-left py-4 px-4 text-amber-400 font-medium">eXp Realty</th>
                 </tr>
               </thead>
               <tbody>
                 {comparisonData.map((row, index) => (
                   <tr key={index} className="border-b border-white/10 hover:bg-white/5">
-                    <td className="py-4 px-4 text-white font-medium">{row.category}</td>
-                    <td className="py-4 px-4 text-gray-400">{row.traditional}</td>
+                    <td className="py-4 px-4 text-[#e5e4dd] font-medium">{row.category}</td>
+                    <td className="py-4 px-4 text-[#dcdbd5]/80">{row.traditional}</td>
                     <td className="py-4 px-4 text-green-400">{row.exp}</td>
                   </tr>
                 ))}
@@ -172,20 +172,22 @@ export default function TraditionalBrokerageComparison() {
       </section>
 
       {/* Pros and Cons */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-12">Pros & Cons</H2>
+          <div className="text-center mb-12">
+            <H2>Pros & Cons</H2>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Traditional */}
             <div>
-              <h3 className="text-xl font-bold text-white mb-6 text-center">Traditional Brokerages</h3>
+              <h3 className="text-xl font-bold text-[#e5e4dd] mb-6 text-center">Traditional Brokerages</h3>
 
               <div className="mb-6">
                 <h4 className="text-green-400 font-medium mb-3">Pros</h4>
                 <ul className="space-y-2">
                   {traditionalPros.map((pro, index) => (
-                    <li key={index} className="flex items-start gap-2 text-gray-300">
+                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
                       <span className="text-green-400">+</span>
                       {pro}
                     </li>
@@ -197,7 +199,7 @@ export default function TraditionalBrokerageComparison() {
                 <h4 className="text-red-400 font-medium mb-3">Cons</h4>
                 <ul className="space-y-2">
                   {traditionalCons.map((con, index) => (
-                    <li key={index} className="flex items-start gap-2 text-gray-300">
+                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
                       <span className="text-red-400">-</span>
                       {con}
                     </li>
@@ -214,7 +216,7 @@ export default function TraditionalBrokerageComparison() {
                 <h4 className="text-green-400 font-medium mb-3">Pros</h4>
                 <ul className="space-y-2">
                   {expPros.map((pro, index) => (
-                    <li key={index} className="flex items-start gap-2 text-gray-300">
+                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
                       <span className="text-green-400">+</span>
                       {pro}
                     </li>
@@ -226,7 +228,7 @@ export default function TraditionalBrokerageComparison() {
                 <h4 className="text-red-400 font-medium mb-3">Cons</h4>
                 <ul className="space-y-2">
                   {expCons.map((con, index) => (
-                    <li key={index} className="flex items-start gap-2 text-gray-300">
+                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
                       <span className="text-red-400">-</span>
                       {con}
                     </li>
@@ -239,15 +241,15 @@ export default function TraditionalBrokerageComparison() {
       </section>
 
       {/* Bottom Line */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-gray-900 to-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto text-center">
-          <H2 className="mb-6">The Bottom Line</H2>
-          <p className="text-gray-300 mb-4">
+          <H2>The Bottom Line</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-4">
             Traditional brokerages made sense when agents needed physical offices, fax machines, and local MLS access.
             Today, with cloud-based tools and remote work capabilities, eXp Realty offers a more cost-effective model
             with better earning potential.
           </p>
-          <p className="text-gray-300 mb-8">
+          <p className="text-[#dcdbd5] mb-8">
             The question isn't just about commission splits - it's about building long-term wealth through
             <strong className="text-amber-400"> stock ownership</strong> and <strong className="text-amber-400">revenue share</strong>,
             opportunities that traditional brokerages simply don't offer.
@@ -256,10 +258,10 @@ export default function TraditionalBrokerageComparison() {
       </section>
 
       {/* Other Comparisons */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto text-center">
-          <H2 className="mb-8">More Comparisons</H2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <H2>More Comparisons</H2>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
             <CTAButton href="/best-real-estate-brokerage/online/">
               vs Online Brokerages
             </CTAButton>
@@ -271,10 +273,10 @@ export default function TraditionalBrokerageComparison() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Ready to Make the Switch?</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Ready to Make the Switch?</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Join thousands of agents who have moved from traditional brokerages to eXp Realty.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -287,19 +289,6 @@ export default function TraditionalBrokerageComparison() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-      `}</style>
     </main>
   );
 }

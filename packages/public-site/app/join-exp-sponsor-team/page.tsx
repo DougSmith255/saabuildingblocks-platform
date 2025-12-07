@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, CTAButton, CyberCardHolographic, FAQ } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic, FAQ } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
 /**
@@ -59,23 +60,23 @@ export default function JoinExpSponsorTeam() {
   ];
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            JOIN OUR EXP REALTY SPONSOR TEAM
-          </H1>
-          <p className="text-gray-300 text-lg mt-4 max-w-3xl mx-auto" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>JOIN OUR EXP REALTY SPONSOR TEAM</H1>
+          <Tagline className="mt-4">
             Reach out, we'd love to answer all your questions and talk to you about joining our value-packed, record-breaking group.
-          </p>
+          </Tagline>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Contact Cards Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-12">Meet Your Future Sponsors</H2>
+          <div className="text-center mb-12">
+            <H2>Meet Your Future Sponsors</H2>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-[900px] mx-auto">
             {/* Karrie Hill Card */}
@@ -88,9 +89,9 @@ export default function JoinExpSponsorTeam() {
                   className="object-cover object-top"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Karrie Hill</h3>
+              <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Karrie Hill</h3>
               <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
-              <div className="space-y-2 text-gray-300">
+              <div className="space-y-2 text-[#dcdbd5]">
                 <p>
                   <a href="mailto:karrie.hill@exprealty.com" className="hover:text-amber-400 transition-colors">
                     karrie.hill@exprealty.com
@@ -110,9 +111,9 @@ export default function JoinExpSponsorTeam() {
                   className="object-cover object-top"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Doug Smart</h3>
+              <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Doug Smart</h3>
               <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
-              <div className="space-y-2 text-gray-300">
+              <div className="space-y-2 text-[#dcdbd5]">
                 <p>
                   <a href="mailto:doug.smart@exprealty.com" className="hover:text-amber-400 transition-colors">
                     doug.smart@exprealty.com
@@ -132,45 +133,49 @@ export default function JoinExpSponsorTeam() {
       </section>
 
       {/* Why Join Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-12">Why Join The Wolf Pack?</H2>
+          <div className="text-center mb-12">
+            <H2>Why Join The Wolf Pack?</H2>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-              <div className="text-4xl mb-4">2,900+</div>
-              <h3 className="text-xl font-bold text-white mb-2">Realtors Strong</h3>
-              <p className="text-gray-400">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
+              <div className="text-4xl mb-4 text-amber-400">2,900+</div>
+              <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
+              <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
             </div>
 
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-              <div className="text-4xl mb-4">100%</div>
-              <h3 className="text-xl font-bold text-white mb-2">Free Resources</h3>
-              <p className="text-gray-400">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
+              <div className="text-4xl mb-4 text-amber-400">100%</div>
+              <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
+              <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
             </div>
 
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-              <div className="text-4xl mb-4">#1</div>
-              <h3 className="text-xl font-bold text-white mb-2">Retention Rate</h3>
-              <p className="text-gray-400">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
+              <div className="text-4xl mb-4 text-amber-400">#1</div>
+              <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
+              <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-gray-900 to-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <H2 className="text-center mb-8">Frequently Asked Questions</H2>
+          <div className="text-center mb-12">
+            <H2>Frequently Asked Questions</H2>
+          </div>
           <FAQ items={faqs} allowMultiple={false} />
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Ready to Take the Next Step?</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Ready to Take the Next Step?</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Join the Smart Agent Alliance team at eXp Realty and start your journey towards a more successful real estate career.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -183,19 +188,6 @@ export default function JoinExpSponsorTeam() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-      `}</style>
     </main>
   );
 }

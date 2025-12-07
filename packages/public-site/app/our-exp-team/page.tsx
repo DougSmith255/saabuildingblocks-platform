@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
 /**
@@ -59,23 +60,23 @@ export default function OurExpTeam() {
   ];
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            ABOUT US
-          </H1>
-          <p className="text-gray-300 text-lg mt-4 max-w-3xl mx-auto" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
-            We help agents, teams, and brokerages anywhere in the United States and all countries where eXp operates by providing agents extraordinary value <strong className="text-white">FOR FREE</strong> so agents achieve <strong className="text-amber-400">great success, time freedom, and a path to retirement with pay!</strong>
-          </p>
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>ABOUT US</H1>
+          <Tagline className="mt-4">
+            We help agents achieve great success, time freedom, and a path to retirement with pay!
+          </Tagline>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Co-Founders Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-12">Our Co-Founders</H2>
+          <div className="text-center mb-12">
+            <H2>Our Co-Founders</H2>
+          </div>
 
           <div className="space-y-16">
             {coFounders.map((founder, index) => (
@@ -94,9 +95,9 @@ export default function OurExpTeam() {
                   </div>
                 </div>
                 <div className="lg:w-2/3">
-                  <h3 className="text-2xl font-bold text-white mb-1">{founder.name}</h3>
+                  <h3 className="text-2xl font-bold text-[#e5e4dd] mb-1">{founder.name}</h3>
                   <p className="text-amber-400 mb-4">{founder.title}</p>
-                  <div className="space-y-4 text-gray-400">
+                  <div className="space-y-4 text-[#dcdbd5]">
                     {founder.bio.map((paragraph, pIndex) => (
                       <p key={pIndex}>{paragraph}</p>
                     ))}
@@ -109,12 +110,14 @@ export default function OurExpTeam() {
       </section>
 
       {/* Upline Partners Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-4">Your Upline Partners When You Join Us</H2>
-          <p className="text-gray-400 text-center mb-12">
-            Quick Wins, Massive Momentum, Tangible Results FASTER than Any Other Program.
-          </p>
+          <div className="text-center mb-12">
+            <H2>Your Upline Partners When You Join Us</H2>
+            <p className="text-[#dcdbd5] mt-4">
+              Quick Wins, Massive Momentum, Tangible Results FASTER than Any Other Program.
+            </p>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {uplinePartners.map((partner, index) => (
@@ -127,8 +130,8 @@ export default function OurExpTeam() {
                     className="object-cover"
                   />
                 </div>
-                <h4 className="text-xl font-bold text-white text-center mb-2">{partner.name}</h4>
-                <p className="text-gray-400 text-sm text-center">{partner.bio}</p>
+                <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
+                <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
               </CyberCardHolographic>
             ))}
           </div>
@@ -136,10 +139,10 @@ export default function OurExpTeam() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Ready to Join Our Team?</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Ready to Join Our Team?</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Partner with us and get access to all the resources, training, and support you need to succeed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -152,19 +155,6 @@ export default function OurExpTeam() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-      `}</style>
     </main>
   );
 }

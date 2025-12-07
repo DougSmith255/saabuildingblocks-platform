@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { H1, H2, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 
 /**
  * eXp Realty Revenue Share Calculator
@@ -58,25 +59,23 @@ export default function RevenueShareCalculator() {
   };
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            REVENUE SHARE CALCULATOR
-          </H1>
-          <p className="text-gray-300 text-lg mt-4 max-w-3xl mx-auto" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
-            Project your potential earnings from eXp Realty's <strong className="text-amber-400">7-tier revenue share program</strong>.
-          </p>
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>REVENUE SHARE CALCULATOR</H1>
+          <Tagline className="mt-4">
+            Project your potential earnings from eXp Realty's 7-tier revenue share program
+          </Tagline>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Calculator Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1000px] mx-auto">
           {/* Average Earnings Input */}
           <div className="mb-12">
-            <label className="block text-white font-medium mb-4">
+            <label className="block text-[#e5e4dd] font-medium mb-4">
               Average Agent Earnings Per Year
             </label>
             <div className="flex items-center gap-4">
@@ -97,14 +96,16 @@ export default function RevenueShareCalculator() {
 
           {/* Tier Inputs */}
           <div className="space-y-6 mb-12">
-            <H2 className="text-center mb-8">Agents by Tier</H2>
+            <div className="text-center mb-12">
+              <H2>Agents by Tier</H2>
+            </div>
 
             {tierConfig.map((config, index) => (
               <div key={index} className="bg-white/5 rounded-xl p-4 border border-white/10">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="sm:w-1/3">
-                    <p className="text-white font-medium">{config.label}</p>
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-[#e5e4dd] font-medium">{config.label}</p>
+                    <p className="text-[#dcdbd5]/60 text-sm">
                       {(config.rate * 100).toFixed(1)}% rate, ${config.cap} cap
                       {config.bonusEligible && <span className="text-amber-400"> +bonus</span>}
                     </p>
@@ -124,7 +125,7 @@ export default function RevenueShareCalculator() {
                       max="100"
                       value={tiers[index]}
                       onChange={(e) => updateTier(index, Number(e.target.value))}
-                      className="w-20 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-center"
+                      className="w-20 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-[#e5e4dd] text-center"
                     />
                   </div>
                 </div>
@@ -135,39 +136,41 @@ export default function RevenueShareCalculator() {
           {/* Results */}
           <div className="grid md:grid-cols-3 gap-6">
             <CyberCardHolographic className="p-6 text-center">
-              <p className="text-gray-400 mb-2">Monthly Minimum</p>
-              <p className="text-3xl font-bold text-white">
+              <p className="text-[#dcdbd5]/80 mb-2">Monthly Minimum</p>
+              <p className="text-3xl font-bold text-[#e5e4dd]">
                 ${results.monthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-6 text-center">
-              <p className="text-gray-400 mb-2">Yearly Minimum</p>
-              <p className="text-3xl font-bold text-white">
+              <p className="text-[#dcdbd5]/80 mb-2">Yearly Minimum</p>
+              <p className="text-3xl font-bold text-[#e5e4dd]">
                 ${results.yearly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-6 text-center">
-              <p className="text-gray-400 mb-2">With ~30% Bonus*</p>
+              <p className="text-[#dcdbd5]/80 mb-2">With ~30% Bonus*</p>
               <p className="text-3xl font-bold text-amber-400">
                 ${results.withBonus.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
             </CyberCardHolographic>
           </div>
 
-          <p className="text-gray-500 text-sm text-center mt-6">
+          <p className="text-[#dcdbd5]/60 text-sm text-center mt-6">
             *~30% adjustment bonus applies to Tiers 1-3 (varies, not guaranteed)
           </p>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-16 px-4 sm:px-8 bg-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <H2 className="text-center mb-8">How Revenue Share Works</H2>
+          <div className="text-center mb-12">
+            <H2>How Revenue Share Works</H2>
+          </div>
 
-          <div className="space-y-6 text-gray-300">
+          <div className="space-y-6 text-[#dcdbd5]">
             <p>
               eXp Realty's revenue share program allows agents to earn passive income by growing the company.
               When you sponsor other agents, you earn a percentage of their gross commission income (GCI)
@@ -175,7 +178,7 @@ export default function RevenueShareCalculator() {
             </p>
 
             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-              <h3 className="text-white font-bold mb-4">Tier Structure:</h3>
+              <h3 className="text-[#e5e4dd] font-bold mb-4">Tier Structure:</h3>
               <ul className="space-y-2">
                 <li><strong className="text-amber-400">Tier 1:</strong> Direct recruits - 3.5% rate, $1,400 cap per agent</li>
                 <li><strong className="text-amber-400">Tier 2:</strong> Their recruits - 4% rate, $1,600 cap</li>
@@ -193,7 +196,7 @@ export default function RevenueShareCalculator() {
       </section>
 
       {/* Disclaimer */}
-      <section className="py-8 px-4 sm:px-8 bg-black">
+      <section className="relative py-8 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
           <div className="bg-amber-400/10 border border-amber-400/30 rounded-xl p-6">
             <p className="text-amber-400 text-sm text-center">
@@ -205,10 +208,10 @@ export default function RevenueShareCalculator() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Ready to Start Building?</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Ready to Start Building?</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Join the Wolf Pack and start building your revenue share income today.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -223,16 +226,6 @@ export default function RevenueShareCalculator() {
       </section>
 
       <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
         input[type="range"]::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;

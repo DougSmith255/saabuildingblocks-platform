@@ -65,7 +65,7 @@ export default function DougLinktree() {
   ];
 
   return (
-    <main className="min-h-screen bg-black flex flex-col items-center py-12 px-4">
+    <main className="flex flex-col items-center py-12 px-4 min-h-screen">
       {/* Profile Section */}
       <div className="text-center mb-8">
         <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-amber-400/30">
@@ -76,9 +76,9 @@ export default function DougLinktree() {
             className="object-cover"
           />
         </div>
-        <h1 className="text-2xl font-bold text-white mb-1">Doug Smart</h1>
+        <h1 className="text-2xl font-bold text-[#e5e4dd] mb-1">Doug Smart</h1>
         <p className="text-amber-400 text-sm mb-2">@dougthemediamaker</p>
-        <p className="text-gray-400 text-sm max-w-xs mx-auto">
+        <p className="text-[#dcdbd5]/80 text-sm max-w-xs mx-auto">
           Co-Founder, Smart Agent Alliance @ eXp Realty
         </p>
       </div>
@@ -111,16 +111,16 @@ export default function DougLinktree() {
           >
             {link.highlight ? (
               <CyberCardHolographic className="p-4 text-center hover:scale-[1.02] transition-transform">
-                <p className="text-white font-medium">{link.title}</p>
+                <p className="text-[#e5e4dd] font-medium">{link.title}</p>
                 {link.description && (
-                  <p className="text-gray-400 text-sm mt-1">{link.description}</p>
+                  <p className="text-[#dcdbd5]/80 text-sm mt-1">{link.description}</p>
                 )}
               </CyberCardHolographic>
             ) : (
               <div className="bg-white/10 rounded-xl p-4 text-center hover:bg-white/15 transition-colors border border-white/10">
-                <p className="text-white font-medium">{link.title}</p>
+                <p className="text-[#e5e4dd] font-medium">{link.title}</p>
                 {link.description && (
-                  <p className="text-gray-400 text-sm mt-1">{link.description}</p>
+                  <p className="text-[#dcdbd5]/80 text-sm mt-1">{link.description}</p>
                 )}
               </div>
             )}
@@ -136,12 +136,12 @@ export default function DougLinktree() {
         >
           doug.smart@exprealty.com
         </a>
-        <p className="text-gray-500 text-sm mt-2">314-320-5606</p>
+        <p className="text-[#dcdbd5]/60 text-sm mt-2">314-320-5606</p>
       </div>
 
       {/* Footer */}
       <div className="mt-12 text-center">
-        <p className="text-gray-600 text-xs">
+        <p className="text-[#dcdbd5]/40 text-xs">
           Smart Agent Alliance • eXp Realty
         </p>
       </div>

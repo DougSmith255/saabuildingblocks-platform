@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
 /**
@@ -25,24 +26,19 @@ export default function AboutDougSmart() {
   ];
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            DOUG SMART
-          </H1>
-          <p className="text-amber-400 text-lg mt-2" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both' }}>
-            Co-Founder, Smart Agent Alliance
-          </p>
-          <p className="text-gray-300 text-lg mt-4 max-w-3xl mx-auto" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>DOUG SMART</H1>
+          <Tagline className="mt-4">
             Full-Stack Developer building the digital infrastructure that powers the Wolf Pack
-          </p>
+          </Tagline>
         </div>
-      </section>
+      </HeroSection>
 
       {/* Profile Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1000px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             {/* Photo */}
@@ -62,8 +58,8 @@ export default function AboutDougSmart() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {highlights.map((item, index) => (
                   <div key={index} className="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <p className="text-gray-500 text-sm">{item.label}</p>
-                    <p className="text-white font-medium">{item.value}</p>
+                    <p className="text-[#dcdbd5]/60 text-sm">{item.label}</p>
+                    <p className="text-[#e5e4dd] font-medium">{item.value}</p>
                   </div>
                 ))}
               </div>
@@ -73,14 +69,16 @@ export default function AboutDougSmart() {
       </section>
 
       {/* Bio Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <H2 className="text-center mb-8">About Doug</H2>
+          <div className="text-center mb-12">
+            <H2>About Doug</H2>
+          </div>
 
-          <div className="space-y-6 text-gray-300">
+          <div className="space-y-6 text-[#dcdbd5]">
             <p>
               Doug Smart is co-founder of Smart Agent Alliance, part of the rapidly expanding Wolf Pack sponsor team at eXp Realty.
-              He ranks in the <strong className="text-white">top 0.1% of eXp Realty team builders in 2025</strong>.
+              He ranks in the <strong className="text-[#e5e4dd]">top 0.1% of eXp Realty team builders in 2025</strong>.
             </p>
 
             <p>
@@ -104,14 +102,16 @@ export default function AboutDougSmart() {
       </section>
 
       {/* Skills Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <H2 className="text-center mb-8">What Doug Builds</H2>
+          <div className="text-center mb-12">
+            <H2>What Doug Builds</H2>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {skills.map((skill, index) => (
               <CyberCardHolographic key={index} className="p-4 text-center">
-                <p className="text-white font-medium">{skill}</p>
+                <p className="text-[#e5e4dd] font-medium">{skill}</p>
               </CyberCardHolographic>
             ))}
           </div>
@@ -119,10 +119,12 @@ export default function AboutDougSmart() {
       </section>
 
       {/* Personal Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-gray-900 to-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto text-center">
-          <H2 className="mb-8">Outside of Work</H2>
-          <p className="text-gray-300 max-w-2xl mx-auto">
+          <div className="text-center mb-12">
+            <H2>Outside of Work</H2>
+          </div>
+          <p className="text-[#dcdbd5] max-w-2xl mx-auto">
             Based in San Jose, California, Doug maintains a disciplined lifestyle. He's a huge fan of basketball
             and regularly hits the gym - essentially the modern-day equivalent to Arnold Schwarzenegger
             (if he never took steroids).
@@ -131,10 +133,10 @@ export default function AboutDougSmart() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Connect With Doug</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Connect With Doug</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Ready to join the Wolf Pack and leverage Doug's digital systems for your real estate business?
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -147,19 +149,6 @@ export default function AboutDougSmart() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-      `}</style>
     </main>
   );
 }

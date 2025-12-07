@@ -1,6 +1,7 @@
 'use client';
 
-import { H1, H2, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
 /**
@@ -37,23 +38,23 @@ export default function ExpRealtySponsor() {
   ];
 
   const features = [
-    { icon: "Video Marketing", title: "Video Marketing Training" },
-    { icon: "Attraction Funnel", title: "Lead Attraction Funnels" },
-    { icon: "Personal Branding", title: "Personal Branding" },
-    { icon: "Streamlined Onboarding", title: "Streamlined Onboarding" },
-    { icon: "Goal Setting", title: "Goal Setting Systems" },
-    { icon: "Mindset", title: "Mindset Training" },
-    { icon: "Prospecting", title: "Prospecting Strategies" },
-    { icon: "Agent Attraction", title: "Agent Attraction" },
-    { icon: "Production", title: "Production Systems" },
-    { icon: "Support System", title: "24/7 Support System" }
+    { title: "Video Marketing Training" },
+    { title: "Lead Attraction Funnels" },
+    { title: "Personal Branding" },
+    { title: "Streamlined Onboarding" },
+    { title: "Goal Setting Systems" },
+    { title: "Mindset Training" },
+    { title: "Prospecting Strategies" },
+    { title: "Agent Attraction" },
+    { title: "Production Systems" },
+    { title: "24/7 Support System" }
   ];
 
   return (
-    <main className="min-h-screen bg-black">
+    <main>
       {/* Hero Section */}
-      <section className="relative px-4 sm:px-8 md:px-12 py-32 flex items-center justify-center">
-        <div className="max-w-[2500px] mx-auto w-full text-center">
+      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
           <div className="mb-8">
             <Image
               src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/WP-Lettering-BRIGHTER3.png"
@@ -63,25 +64,21 @@ export default function ExpRealtySponsor() {
               className="mx-auto"
             />
           </div>
-          <H1 heroAnimate animationDelay="0.6s">
-            THE WOLF PACK
-          </H1>
-          <div className="text-gray-300 text-lg mt-6 max-w-3xl mx-auto space-y-4" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both' }}>
-            <p>
-              Join our sponsorship group the <strong className="text-white">Wolf Pack!</strong>
-            </p>
-            <p>
-              Free Resources, Tools, Training, Support, & Community
-              <br />
-              <strong className="text-amber-400">-- No Extra Cost or Split Ever!</strong>
-            </p>
-            <p className="text-gray-400">
-              We partner with broker-owners, teams, top agents, growing agents, & brand-new agents.
-              <br />
-              We have <strong className="text-white">over 2,900</strong> agents located all over the US, Canada, Mexico, Australia, & more.
-            </p>
-          </div>
-          <div className="mt-8" style={{ opacity: 0, animation: 'fadeInUp2025 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.1s both' }}>
+          <H1>THE WOLF PACK</H1>
+          <Tagline className="mt-4">
+            Free Resources, Tools, Training, Support, & Community — No Extra Cost or Split Ever!
+          </Tagline>
+        </div>
+      </HeroSection>
+
+      {/* Intro Section */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[900px] mx-auto text-center">
+          <p className="text-[#dcdbd5] text-lg">
+            We partner with broker-owners, teams, top agents, growing agents, & brand-new agents.
+            We have <strong className="text-[#e5e4dd]">over 2,900</strong> agents located all over the US, Canada, Mexico, Australia, & more.
+          </p>
+          <div className="mt-8">
             <CTAButton href="/join-exp-sponsor-team/">
               Book a Call With Us Today
             </CTAButton>
@@ -90,7 +87,7 @@ export default function ExpRealtySponsor() {
       </section>
 
       {/* Video Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-black to-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
           <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
             <iframe
@@ -108,12 +105,14 @@ export default function ExpRealtySponsor() {
       </section>
 
       {/* Value Stack Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gray-900">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1400px] mx-auto">
-          <H2 className="text-center mb-4">What You Get With The Wolf Pack</H2>
-          <p className="text-gray-400 text-center mb-12 max-w-2xl mx-auto">
-            Check out the immediate value that the Wolf Pack will provide you! We can help change your life.
-          </p>
+          <div className="text-center mb-12">
+            <H2>What You Get With The Wolf Pack</H2>
+            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              Check out the immediate value that the Wolf Pack will provide you! We can help change your life.
+            </p>
+          </div>
 
           <div className="space-y-16">
             {valueItems.map((item, index) => (
@@ -133,8 +132,8 @@ export default function ExpRealtySponsor() {
                   </div>
                 </div>
                 <div className="lg:w-1/2 text-center lg:text-left">
-                  <h3 className="text-2xl font-bold text-white mb-4">{item.title}</h3>
-                  <p className="text-gray-400 text-lg">{item.description}</p>
+                  <h3 className="text-2xl font-bold text-[#e5e4dd] mb-4">{item.title}</h3>
+                  <p className="text-[#dcdbd5] text-lg">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -143,9 +142,11 @@ export default function ExpRealtySponsor() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
-          <H2 className="text-center mb-12">Everything You Need to Succeed</H2>
+          <div className="text-center mb-12">
+            <H2>Everything You Need to Succeed</H2>
+          </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {features.map((feature, index) => (
@@ -165,7 +166,7 @@ export default function ExpRealtySponsor() {
                   {index === 8 && "📈"}
                   {index === 9 && "💬"}
                 </div>
-                <h4 className="text-white font-medium text-sm">{feature.title}</h4>
+                <h4 className="text-[#e5e4dd] font-medium text-sm">{feature.title}</h4>
               </div>
             ))}
           </div>
@@ -173,32 +174,32 @@ export default function ExpRealtySponsor() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4 sm:px-8 bg-gradient-to-b from-gray-900 to-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <CyberCardHolographic className="p-8">
               <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
-              <p className="text-gray-300">Agents Strong</p>
+              <p className="text-[#dcdbd5]">Agents Strong</p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-8">
               <div className="text-5xl font-bold text-amber-400 mb-2">24+</div>
-              <p className="text-gray-300">Countries</p>
+              <p className="text-[#dcdbd5]">Countries</p>
             </CyberCardHolographic>
 
             <CyberCardHolographic className="p-8">
               <div className="text-5xl font-bold text-amber-400 mb-2">5</div>
-              <p className="text-gray-300">Weekly Calls</p>
+              <p className="text-[#dcdbd5]">Weekly Calls</p>
             </CyberCardHolographic>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 sm:px-8 bg-black">
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <H2 className="mb-4">Ready to Join The Pack?</H2>
-          <p className="text-gray-400 mb-8">
+          <H2>Ready to Join The Pack?</H2>
+          <p className="text-[#dcdbd5] mt-4 mb-8">
             Join our value-packed, record-breaking group and start your journey towards a more successful real estate career.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -211,19 +212,6 @@ export default function ExpRealtySponsor() {
           </div>
         </div>
       </section>
-
-      <style jsx>{`
-        @keyframes fadeInUp2025 {
-          from {
-            opacity: 0;
-            transform: translate3d(0, 30px, 0);
-          }
-          to {
-            opacity: 1;
-            transform: translate3d(0, 0, 0);
-          }
-        }
-      `}</style>
     </main>
   );
 }

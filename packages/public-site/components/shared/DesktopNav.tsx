@@ -33,13 +33,6 @@ const navItems: NavItem[] = [
       { label: 'eXp Awards', href: '/awards/' },
     ],
   },
-  {
-    label: 'Join',
-    dropdown: [
-      { label: 'Join The Wolf Pack', href: '/join-exp-sponsor-team/' },
-      { label: 'Should You Join eXp?', href: '/should-you-join-exp/' },
-    ],
-  },
   { label: 'Agent Portal', href: '/agent-portal/' },
 ];
 
