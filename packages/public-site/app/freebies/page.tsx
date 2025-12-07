@@ -55,7 +55,7 @@ export default function Freebies() {
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>FREEBIE DOWNLOADS</H1>
           <Tagline className="mt-4">
-            Get essential tools for real estate success with these free downloads! Boost your social media, streamline client interactions, and simplify your workflow.
+            Free tools to help you grow your real estate business
           </Tagline>
         </div>
       </HeroSection>
