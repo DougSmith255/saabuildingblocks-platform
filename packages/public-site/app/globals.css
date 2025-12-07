@@ -1276,11 +1276,25 @@ main {
 
 /* ===========================================
    SCROLL PERFORMANCE OPTIMIZATION
-   Pause non-essential animations during scroll on mobile
+   Pause non-essential animations during scroll
    for smooth 60fps scrolling experience
    =========================================== */
 
-/* Mobile: Pause animations while scrolling for smooth scroll performance */
+/* DESKTOP & ALL DEVICES: Pause star background during scroll */
+/* Stars use CSS module classes - target with attribute selectors */
+body.is-scrolling [class*="StarBackground_star"],
+body.is-scrolling [class*="StarBackground_starfieldContainer"] [class*="star"],
+body.is-scrolling [class*="starfieldContainer"] [class*="star"] {
+  animation-play-state: paused !important;
+}
+
+/* Pause star pseudo-elements (twinkle effect) */
+body.is-scrolling [class*="StarBackground_star"]::before,
+body.is-scrolling [class*="starfieldContainer"] [class*="star"]::before {
+  animation-play-state: paused !important;
+}
+
+/* Mobile: Pause ALL animations while scrolling for smooth scroll performance */
 @media (hover: none) and (pointer: coarse), (max-width: 1024px) {
   /* When scrolling, pause all infinite animations to free up compositor */
   body.is-scrolling * {
