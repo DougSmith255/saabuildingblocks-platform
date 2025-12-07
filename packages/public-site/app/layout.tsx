@@ -245,11 +245,16 @@ export default async function RootLayout({
           }}
         />
 
-        {/* Plausible Analytics - Privacy-focused, cookie-free analytics */}
+        {/* Plausible Analytics - Self-hosted, privacy-focused analytics */}
         <script
           defer
           data-domain="saabuildingblocks.pages.dev"
-          src="https://plausible.io/js/script.js"
+          src="https://plausible.saabuildingblocks.com/js/script.file-downloads.pageview-props.tagged-events.js"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`,
+          }}
         />
 
         {/* Organization Schema - JSON-LD for search engines and AI */}
