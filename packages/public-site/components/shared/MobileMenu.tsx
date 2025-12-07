@@ -19,20 +19,29 @@ const navItems: NavItem[] = [
     dropdown: [
       { label: 'Team Value', href: '/exp-realty-sponsor/' },
       { label: 'About Us', href: '/our-exp-team/' },
+      { label: 'About Karrie Hill', href: '/about-karrie-hill/' },
+      { label: 'About Doug Smart', href: '/about-doug-smart/' },
     ],
   },
   {
     label: 'Resources',
     dropdown: [
-      { label: 'Commission & Fees Calc', href: '/agent-tools/exp-commission-and-fees-calculator/' },
-      { label: 'RevShare Calc', href: '/agent-tools/exp-realty-revenue-share-calculator/' },
+      { label: 'Commission & Fees Calc', href: '/exp-commission-calculator/' },
+      { label: 'RevShare Calc', href: '/exp-realty-revenue-share-calculator/' },
       { label: 'Compare Brokerages', href: '/best-real-estate-brokerage/' },
       { label: 'Agent Success Hub', href: '/real-estate-agent-job/' },
-      { label: 'Agent Freebies', href: '/freebies/' },
-      { label: 'Become an Agent', href: '/become-real-estate-agent/' },
+      { label: 'eXp Locations', href: '/locations/' },
+      { label: 'eXp Awards', href: '/awards/' },
     ],
   },
-  { label: 'Agent Portal', href: '/agent-portal' },
+  {
+    label: 'Join',
+    dropdown: [
+      { label: 'Join The Wolf Pack', href: '/join-exp-sponsor-team/' },
+      { label: 'Should You Join eXp?', href: '/should-you-join-exp/' },
+    ],
+  },
+  { label: 'Agent Portal', href: '/agent-portal/' },
 ];
 
 interface MobileMenuProps {
