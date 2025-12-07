@@ -171,7 +171,9 @@ export default function TermsOfUsePage() {
             <h2>11. Governing Law</h2>
             <p>
               These Terms are governed by and construed in accordance with the laws of the State of
-              California, United States, without regard to its conflict of law principles.
+              California, United States, without regard to its conflict of law principles. While our
+              website serves a global audience and eXp Realty operates in multiple countries, any legal
+              matters will be governed by California law.
             </p>
 
             <h2>12. Dispute Resolution</h2>
@@ -179,6 +181,10 @@ export default function TermsOfUsePage() {
               Any disputes arising from these Terms or your use of the website shall be resolved through
               binding arbitration in the State of California. By agreeing to these Terms, you waive any
               right to participate in a class action lawsuit or class-wide arbitration.
+            </p>
+            <p>
+              For users outside the United States, you agree that any disputes will still be subject
+              to California jurisdiction and arbitration procedures.
             </p>
 
             <h2>13. Severability</h2>

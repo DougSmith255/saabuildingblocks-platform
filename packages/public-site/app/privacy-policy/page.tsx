@@ -108,7 +108,6 @@ export default function PrivacyPolicyPage() {
             <p>We use cookies and similar technologies to:</p>
             <ul>
               <li>Remember your preferences and settings</li>
-              <li>Analyze traffic and usage patterns through Google Analytics</li>
               <li>Improve website functionality and performance</li>
             </ul>
             <p>
@@ -116,10 +115,11 @@ export default function PrivacyPolicyPage() {
               affect some website functionality.
             </p>
             <p>
-              Google Analytics collects anonymous data about website visitors. You can learn more about
-              how Google uses this data at{' '}
-              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">
-                Google&apos;s Privacy Policy
+              For analytics, we use Plausible Analytics, a privacy-focused tool that does not use
+              cookies and does not collect personal data. Plausible is fully compliant with GDPR,
+              CCPA, and PECR. Learn more at{' '}
+              <a href="https://plausible.io/privacy-focused-web-analytics" target="_blank" rel="noopener noreferrer">
+                Plausible&apos;s Privacy Policy
               </a>.
             </p>
 

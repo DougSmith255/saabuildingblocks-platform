@@ -77,18 +77,18 @@ export default function CookiePolicyPage() {
 
             <h3>Analytics Cookies</h3>
             <p>
-              We use analytics cookies (including Google Analytics) to understand how visitors interact
-              with our website. These cookies collect information anonymously, including:
+              We use Plausible Analytics, a privacy-focused analytics tool, to understand how visitors
+              interact with our website. Unlike traditional analytics, Plausible:
             </p>
             <ul>
-              <li>Number of visitors to the website</li>
-              <li>Pages visited and time spent on each page</li>
-              <li>How visitors arrived at our website (referral sources)</li>
-              <li>General geographic location (country/city level)</li>
-              <li>Device and browser information</li>
+              <li>Does not use cookies for tracking</li>
+              <li>Does not collect personal data</li>
+              <li>Does not track users across websites</li>
+              <li>Is fully compliant with GDPR, CCPA, and PECR</li>
             </ul>
             <p>
-              This data helps us improve our website and provide a better user experience.
+              Plausible collects anonymous, aggregate data including page views, referral sources,
+              and general device/browser information. No individual user tracking occurs.
             </p>
 
             <h3>Functional Cookies</h3>
@@ -103,16 +103,19 @@ export default function CookiePolicyPage() {
 
             <h3>Third-Party Cookies</h3>
             <p>
-              Some cookies are placed by third-party services that appear on our pages. These may include:
+              Some cookies may be placed by third-party services that appear on our pages. These may include:
             </p>
             <ul>
-              <li><strong>Google Analytics:</strong> Website traffic analysis</li>
-              <li><strong>YouTube:</strong> Embedded video content</li>
+              <li><strong>YouTube:</strong> Embedded video content (we use privacy-enhanced embedding when possible)</li>
               <li><strong>Social media platforms:</strong> Share buttons and embedded content</li>
             </ul>
             <p>
               These third parties have their own privacy policies governing how they use cookies.
               We encourage you to review their policies for more information.
+            </p>
+            <p>
+              Note: We use Plausible Analytics which does not set any cookies, making our analytics
+              fully privacy-respecting.
             </p>
 
             <h2>4. How Long Do Cookies Last?</h2>
@@ -175,12 +178,11 @@ export default function CookiePolicyPage() {
               </li>
             </ul>
 
-            <h3>Google Analytics Opt-Out</h3>
+            <h3>Our Analytics Approach</h3>
             <p>
-              You can opt out of Google Analytics tracking by installing the{' '}
-              <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">
-                Google Analytics Opt-out Browser Add-on
-              </a>.
+              We use Plausible Analytics, which is privacy-focused and does not require cookies.
+              This means there is no need to opt out of analytics tracking on our site - your
+              privacy is protected by default.
             </p>
 
             <h2>6. Do Not Track Signals</h2>

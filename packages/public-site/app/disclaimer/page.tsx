@@ -111,40 +111,29 @@ export default function DisclaimerPage() {
               with third-party content is at your own risk.
             </p>
 
-            <h2>6. Affiliate Disclosure</h2>
+            <h2>6. eXp Realty Affiliation</h2>
             <p>
-              Some links on our website are affiliate links, meaning we may earn a commission if you
-              make a purchase or take an action through them. This does not affect the price you pay.
+              Smart Agent Alliance is operated by Karrie Hill and Doug Smart, independent real estate
+              agents (Realtors) affiliated with eXp Realty. As independent contractors, we are not
+              employees of eXp Realty.
             </p>
-            <p>Our recommendations are based on our belief in the value and quality of the products
-              or services. However:
-            </p>
-            <ul>
-              <li>We do not guarantee that they will meet your expectations</li>
-              <li>Affiliate relationships do not influence our editorial content</li>
-              <li>You should assume any link to a third-party product or service may be an affiliate link</li>
-            </ul>
             <p>
-              For more details, please review the Federal Trade Commission&apos;s guidelines on
-              endorsements and testimonials.
-            </p>
-
-            <h2>7. eXp Realty Affiliation</h2>
-            <p>
-              Smart Agent Alliance is operated by real estate agents affiliated with eXp Realty.
               Content about eXp Realty reflects our personal experiences and opinions as eXp agents.
-            </p>
-            <p>
               We may receive compensation through eXp Realty&apos;s sponsorship and revenue share
               programs when agents join eXp Realty through our team. This relationship is disclosed
               in accordance with applicable regulations.
+            </p>
+            <p>
+              eXp Realty operates globally, including in the United States, Canada, Mexico, the United
+              Kingdom, and many other countries. Our content may reference eXp&apos;s global presence,
+              but specific programs, commission structures, and regulations vary by location.
             </p>
             <p>
               Our content about other brokerages is based on publicly available information and our
               research. We encourage you to conduct your own due diligence when evaluating any brokerage.
             </p>
 
-            <h2>8. Testimonials and User Experiences</h2>
+            <h2>7. Testimonials and User Experiences</h2>
             <p>
               Testimonials on our website are from real users of our products and services. While these
               testimonials reflect individual experiences, they do not guarantee that you will achieve
@@ -158,14 +147,14 @@ export default function DisclaimerPage() {
               <li>Other factors unique to your situation</li>
             </ul>
 
-            <h2>9. Changes to This Disclaimer</h2>
+            <h2>8. Changes to This Disclaimer</h2>
             <p>
               We may update this Disclaimer from time to time. Changes will be posted on this page
               with an updated effective date. Your continued use of the website after changes are
               posted constitutes acceptance of the revised Disclaimer.
             </p>
 
-            <h2>10. Contact Us</h2>
+            <h2>9. Contact Us</h2>
             <p>
               If you have any questions about this Disclaimer, please contact us at:
             </p>
