@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -64,12 +64,12 @@ export default function BestRealEstateBrokerage() {
           <div className="grid md:grid-cols-2 gap-6">
             {comparisons.map((comparison, index) => (
               <a key={index} href={comparison.href} className="block group">
-                <CyberCardHolographic className="p-8 h-full transition-transform group-hover:scale-[1.02]">
+                <GenericCard hover padding="lg" className="h-full">
                   <div className="text-amber-400 text-sm font-medium mb-2">{comparison.highlight}</div>
                   <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{comparison.title}</h3>
                   <p className="text-[#dcdbd5]/80 mb-4">{comparison.description}</p>
                   <span className="text-amber-400 group-hover:underline">View Comparison →</span>
-                </CyberCardHolographic>
+                </GenericCard>
               </a>
             ))}
           </div>
@@ -89,10 +89,10 @@ export default function BestRealEstateBrokerage() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyCompare.map((item, index) => (
-              <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <GenericCard key={index} padding="md">
                 <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{item.title}</h3>
                 <p className="text-[#dcdbd5]/80 text-sm">{item.description}</p>
-              </div>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -106,23 +106,23 @@ export default function BestRealEstateBrokerage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 text-center">
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
               <p className="text-[#dcdbd5]">Commission After Cap</p>
               <p className="text-[#dcdbd5]/60 text-sm mt-1">Cap at just $16,000</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
               <p className="text-[#dcdbd5]">Monthly Fee</p>
               <p className="text-[#dcdbd5]/60 text-sm mt-1">No desk or franchise fees</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">4</div>
               <p className="text-[#dcdbd5]">Income Streams</p>
               <p className="text-[#dcdbd5]/60 text-sm mt-1">Commission, stock, rev share, referrals</p>
-            </CyberCardHolographic>
+            </GenericCard>
           </div>
         </div>
       </section>

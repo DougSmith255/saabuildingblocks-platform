@@ -1,6 +1,6 @@
 'use client';
 
-import { CyberCardHolographic } from '@saa/shared/components/saa';
+import { GenericCard } from '@saa/shared/components/saa';
 import Image from 'next/image';
 
 /**
@@ -109,21 +109,12 @@ export default function DougLinktree() {
             rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
             className="block"
           >
-            {link.highlight ? (
-              <CyberCardHolographic className="p-4 text-center hover:scale-[1.02] transition-transform">
-                <p className="text-[#e5e4dd] font-medium">{link.title}</p>
-                {link.description && (
-                  <p className="text-[#dcdbd5]/80 text-sm mt-1">{link.description}</p>
-                )}
-              </CyberCardHolographic>
-            ) : (
-              <div className="bg-white/10 rounded-xl p-4 text-center hover:bg-white/15 transition-colors border border-white/10">
-                <p className="text-[#e5e4dd] font-medium">{link.title}</p>
-                {link.description && (
-                  <p className="text-[#dcdbd5]/80 text-sm mt-1">{link.description}</p>
-                )}
-              </div>
-            )}
+            <GenericCard hover padding="sm" centered>
+              <p className="text-[#e5e4dd] font-medium">{link.title}</p>
+              {link.description && (
+                <p className="text-[#dcdbd5]/80 text-sm mt-1">{link.description}</p>
+              )}
+            </GenericCard>
           </a>
         ))}
       </div>

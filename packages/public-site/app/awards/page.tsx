@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -82,11 +82,11 @@ export default function Awards() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {majorAwards.map((award, index) => (
-              <CyberCardHolographic key={index} className="p-6">
+              <GenericCard key={index} padding="md">
                 <div className="text-amber-400 text-sm font-medium mb-2">{award.year}</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{award.title}</h3>
                 <p className="text-[#dcdbd5]/80">{award.detail}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function Awards() {
             <H2>RealTrends Recognition</H2>
           </div>
 
-          <div className="bg-white/5 rounded-xl p-8 border border-white/10">
+          <GenericCard padding="lg">
             <ul className="space-y-4">
               {realTrendsAchievements.map((achievement, index) => (
                 <li key={index} className="flex items-start gap-4 text-[#dcdbd5]">
@@ -108,7 +108,7 @@ export default function Awards() {
                 </li>
               ))}
             </ul>
-          </div>
+          </GenericCard>
         </div>
       </section>
 
@@ -121,10 +121,10 @@ export default function Awards() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {executiveRecognition.map((exec, index) => (
-              <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10 text-center">
+              <GenericCard key={index} padding="md" centered>
                 <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{exec.name}</h3>
                 <p className="text-amber-400 text-sm">{exec.award}</p>
-              </div>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -142,10 +142,10 @@ export default function Awards() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {wolfPackAwards.map((award, index) => (
-              <CyberCardHolographic key={index} className="p-6 text-center">
+              <GenericCard key={index} padding="md" centered>
                 <h3 className="text-xl font-bold text-amber-400 mb-3">{award.title}</h3>
                 <p className="text-[#dcdbd5]">{award.description}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>

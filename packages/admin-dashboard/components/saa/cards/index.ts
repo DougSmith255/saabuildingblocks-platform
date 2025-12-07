@@ -1,12 +1,8 @@
 /**
  * SAA Card Components Index
  *
- * Exports all cyberpunk card component variants for easy importing.
- * All components maintain pixel-perfect preservation of original HTML/CSS designs.
+ * Simple, clean card components for the SAA design system.
+ * All complex card variants have been removed in favor of the Generic Card.
  */
 
-export { CyberCardHolographic, type CyberCardHolographicProps } from './CyberCardHolographic';
-
-export { CyberCardHolographic as HolographicCard, type CyberCardHolographicProps as HolographicCardProps } from './HolographicCard';
-
-export { CyberCardPrismaticGlass, type CyberCardPrismaticGlassProps } from './CyberCardPrismaticGlass';
+export { GenericCard, type GenericCardProps } from './GenericCard';

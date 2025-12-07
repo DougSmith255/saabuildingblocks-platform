@@ -236,37 +236,22 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
       // ============================================
       // CARDS
       // ============================================
-      case 'cyber-card-holographic':
-        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardHolographic').then(m => ({
+      case 'generic-card':
+        return lazy(() => import('@saa/shared/components/saa/cards/GenericCard').then(m => ({
           default: () => (
-            <m.CyberCardHolographic className="w-full max-w-md">
-              <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Holographic Card</h3>
-              <p className="text-[#dcdbd5]">Futuristic holographic border and glow effects</p>
-            </m.CyberCardHolographic>
-          )
-        })));
-      case 'cyber-card-prismatic-glass':
-        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
-          default: () => (
-            <div className="w-full max-w-md h-64">
-              <m.CyberCardPrismaticGlass>
-                <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Prismatic Glass</h3>
-                <p className="text-[#dcdbd5]">Glass morphism with prismatic light effects</p>
-              </m.CyberCardPrismaticGlass>
-            </div>
-          )
-        })));
-      case 'glossy-category-card':
-        return lazy(() => import('@saa/shared/components/saa/cards/GlossyCategoryCard').then(m => ({
-          default: () => (
-            <div className="w-full max-w-sm">
-              <m.GlossyCategoryCard
-                icon={<m.PlaceholderIcon />}
-                title="Category Title"
-                description="Category description with shimmer animation"
-                count={42}
-                onClick={() => console.log('clicked')}
-              />
+            <div className="space-y-4 w-full max-w-md">
+              <m.GenericCard>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Default Card</h3>
+                <p className="text-[#dcdbd5]">Simple card with medium padding</p>
+              </m.GenericCard>
+              <m.GenericCard hover>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Hover Card</h3>
+                <p className="text-[#dcdbd5]">Interactive card with hover effects</p>
+              </m.GenericCard>
+              <m.GenericCard padding="lg" centered>
+                <h3 className="text-xl font-bold text-[#ffd700] mb-2">Centered Card</h3>
+                <p className="text-[#dcdbd5]">Large padding, centered content</p>
+              </m.GenericCard>
             </div>
           )
         })));
@@ -303,10 +288,6 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
       // ============================================
       // EFFECTS
       // ============================================
-      case 'lightning-text':
-        return lazy(() => import('@saa/shared/components/saa/effects/LightningText').then(m => ({
-          default: () => <m.LightningText text="POWER" lightningIntensity="high" />
-        })));
       case 'icon-3d':
         return lazy(() => import('@saa/shared/components/saa/icons/Icon3D').then(m => ({
           default: () => (

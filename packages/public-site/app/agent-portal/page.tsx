@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { H1, H2, CTAButton, CyberCardHolographic, FAQ } from '@saa/shared/components/saa';
+import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
 
 // Section types
 type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents';
@@ -166,7 +166,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
             onClick={() => onNavigate(card.id)}
             className="text-left group"
           >
-            <CyberCardHolographic className="h-full">
+            <GenericCard className="h-full" hover padding="md">
               <div className="space-y-3">
                 <span className="text-4xl">{card.icon}</span>
                 <h3 className="text-xl font-bold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors">
@@ -176,7 +176,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                   {card.description}
                 </p>
               </div>
-            </CyberCardHolographic>
+            </GenericCard>
           </button>
         ))}
       </div>
@@ -256,7 +256,7 @@ function TeamCallsSection() {
         <h3 className="text-2xl font-semibold text-[#e5e4dd] text-center mb-6">Mastermind Calls</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CyberCardHolographic>
+          <GenericCard padding="md">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">📹</span>
@@ -274,9 +274,9 @@ function TeamCallsSection() {
               </a>
               <p className="text-sm text-[#a0a0a0]">Password: 487789</p>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
 
-          <CyberCardHolographic>
+          <GenericCard padding="md">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">📹</span>
@@ -293,7 +293,7 @@ function TeamCallsSection() {
                 Join Zoom Call
               </a>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
         </div>
       </div>
     </SectionWrapper>
@@ -307,7 +307,7 @@ function TemplatesSection() {
   return (
     <SectionWrapper title="Customizable Canva Assets">
       <div className="space-y-8">
-        <CyberCardHolographic>
+        <GenericCard padding="lg">
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold text-[#ffd700]">Using SAA Canva Templates</h3>
             <p className="text-[#e5e4dd]">Use your eXp account credentials to login to Canva</p>
@@ -334,7 +334,7 @@ function TemplatesSection() {
               </div>
             </div>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
       </div>
     </SectionWrapper>
   );
@@ -349,29 +349,29 @@ function CoursesSection() {
       <p className="text-center text-[#a0a0a0] mb-8">Refer to Wolf Pack emails to find login details</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <CyberCardHolographic>
+        <GenericCard padding="md" centered>
           <div className="text-center space-y-4">
             <span className="text-5xl">🐺</span>
             <h3 className="text-xl font-bold text-[#ffd700]">Wolf Pack Skool Portal & HUB</h3>
             <p className="text-[#a0a0a0]">Access the Wolfpack HUB in courses</p>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
 
-        <CyberCardHolographic>
+        <GenericCard padding="md" centered>
           <div className="text-center space-y-4">
             <span className="text-5xl">📱</span>
             <h3 className="text-xl font-bold text-[#ffd700]">Social Agent Academy</h3>
             <p className="text-[#a0a0a0]">Learn how to dominate online</p>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
 
-        <CyberCardHolographic>
+        <GenericCard padding="md" centered>
           <div className="text-center space-y-4">
             <span className="text-5xl">🏠</span>
             <h3 className="text-xl font-bold text-[#ffd700]">Investor Army</h3>
             <p className="text-[#a0a0a0]">Learn to flip houses</p>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
       </div>
     </SectionWrapper>
   );
@@ -417,24 +417,24 @@ Referral Networks to consider:
     <SectionWrapper title="Quickstart Production">
       <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <CyberCardHolographic>
+          <GenericCard padding="md">
             <div className="space-y-4">
               <span className="text-4xl">🏗️</span>
               <h3 className="text-xl font-bold text-[#ffd700]">Build Landing Pages (Bold Trail)</h3>
               <p className="text-[#a0a0a0]">How to build them</p>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
 
-          <CyberCardHolographic>
+          <GenericCard padding="md">
             <div className="space-y-4">
               <span className="text-4xl">#️⃣</span>
               <h3 className="text-xl font-bold text-[#ffd700]">Landing Page Hashtags & Links</h3>
               <p className="text-[#a0a0a0]">Be sure to watch the how-to video first</p>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
         </div>
 
-        <CyberCardHolographic>
+        <GenericCard padding="md">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <span className="text-3xl">✉️</span>
@@ -442,7 +442,7 @@ Referral Networks to consider:
             </div>
             <p className="text-[#a0a0a0]">Automate your nurturing of leads</p>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
 
         <FAQ items={certificationFaq} allowMultiple />
       </div>
@@ -476,14 +476,14 @@ Tips for getting started:
   return (
     <SectionWrapper title="Quickstart RevShare">
       <div className="space-y-6">
-        <CyberCardHolographic>
+        <GenericCard padding="lg" centered>
           <div className="text-center space-y-4 py-4">
             <span className="text-6xl">💰</span>
             <h3 className="text-2xl font-bold text-[#ffd700]">Grow Your Downline</h3>
             <p className="text-[#e5e4dd] text-lg">No experience needed</p>
             <p className="text-[#a0a0a0]">Learn how to build passive income through eXp's revenue share program</p>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
 
         <FAQ items={revShareFaq} allowMultiple />
       </div>
@@ -499,7 +499,7 @@ function ExpLinksSection() {
     <SectionWrapper title="eXp Links & Questions">
       <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <CyberCardHolographic>
+          <GenericCard padding="md">
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-[#ffd700]">For Production Questions:</h3>
               <p className="text-[#a0a0a0]">Go to eXp World and visit your State Broker's room</p>
@@ -512,9 +512,9 @@ function ExpLinksSection() {
                 Go to eXp World
               </a>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
 
-          <CyberCardHolographic>
+          <GenericCard padding="md">
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-[#ffd700]">For Other Questions:</h3>
               <p className="text-[#a0a0a0]">Visit Expert Care in eXp World</p>
@@ -527,10 +527,10 @@ function ExpLinksSection() {
                 Go to Expert Care
               </a>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
         </div>
 
-        <CyberCardHolographic>
+        <GenericCard padding="md">
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-[#ffd700]">Still can't find the answer?</h3>
             <p className="text-[#a0a0a0]">Contact us directly:</p>
@@ -549,7 +549,7 @@ function ExpLinksSection() {
               </a>
             </div>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
 
         <div>
           <h3 className="text-xl font-semibold text-[#e5e4dd] mb-4">Quick Links</h3>
@@ -586,7 +586,7 @@ function NewAgentsSection() {
   return (
     <SectionWrapper title="New Agents">
       <div className="space-y-6">
-        <CyberCardHolographic>
+        <GenericCard padding="lg">
           <div className="space-y-6">
             <div className="text-center">
               <span className="text-6xl mb-4 block">🎯</span>
@@ -620,7 +620,7 @@ function NewAgentsSection() {
               </ol>
             </div>
           </div>
-        </CyberCardHolographic>
+        </GenericCard>
 
         <div className="text-center">
           <p className="text-[#a0a0a0] mb-4">Questions? Reach out to your sponsor or contact us:</p>

@@ -1,7 +1,9 @@
 /**
  * SAA Effects Components
  *
- * Special visual effects like lightning text, animations, etc.
+ * Special visual effects like animations, etc.
+ * Note: LightningText has been removed from the design system.
  */
 
-export * from './LightningText';
+// No effects currently exported - directory preserved for future effects
+export {};

@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -150,10 +150,7 @@ export default function ExpRealtySponsor() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white/5 rounded-xl p-6 text-center border border-white/10 hover:border-amber-400/30 transition-colors"
-              >
+              <GenericCard key={index} padding="md" centered hover>
                 <div className="text-3xl mb-3">
                   {index === 0 && "📹"}
                   {index === 1 && "🎯"}
@@ -167,7 +164,7 @@ export default function ExpRealtySponsor() {
                   {index === 9 && "💬"}
                 </div>
                 <h4 className="text-[#e5e4dd] font-medium text-sm">{feature.title}</h4>
-              </div>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -177,20 +174,20 @@ export default function ExpRealtySponsor() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid md:grid-cols-3 gap-8 text-center">
-            <CyberCardHolographic className="p-8">
+            <GenericCard padding="lg" centered>
               <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
               <p className="text-[#dcdbd5]">Agents Strong</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-8">
+            <GenericCard padding="lg" centered>
               <div className="text-5xl font-bold text-amber-400 mb-2">24+</div>
               <p className="text-[#dcdbd5]">Countries</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-8">
+            <GenericCard padding="lg" centered>
               <div className="text-5xl font-bold text-amber-400 mb-2">5</div>
               <p className="text-[#dcdbd5]">Weekly Calls</p>
-            </CyberCardHolographic>
+            </GenericCard>
           </div>
         </div>
       </section>

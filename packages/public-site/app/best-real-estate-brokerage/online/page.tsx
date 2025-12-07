@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, FAQ } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, FAQ, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -269,25 +269,25 @@ export default function OnlineBrokerageComparison() {
           </div>
 
           <div className="space-y-8 text-[#dcdbd5]">
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Financial Strength and Profitability</h3>
               <p>eXp Realty demonstrates robust financial health with 15 profitable quarters out of 20. Real Broker and Fathom Realty each have only one profitable quarter out of 19, and LPT Realty's financial details are not publicly available. This profitability is reflected in their stock performance: eXp Realty (EXPI) trades around $14, Real Broker (REAL) around $6, and Fathom Realty (FATH) around $2.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Agent Count and Geographic Reach</h3>
               <p>eXp Realty leads with over 80,000 agents, operating in all 50 states and 24 countries. Real Broker follows with 20,000+ agents in 50 states and 2 countries. LPT Realty and Fathom Realty each have 11,000+ agents, but LPT Realty is active in 24 states and 1 country, while Fathom Realty covers 41 states and 5 countries.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Revenue Share and Stock Awards</h3>
               <p>eXp Realty leads with a potential revenue share pool of $204 million if 30% of its agents cap, significantly higher than Real Broker's $43 million and LPT Realty's $16.5 million. eXp Realty agents earn revenue share across seven tiers, compared to five tiers for both Real Broker and Fathom, and seven for LPT Realty. Only eXp offers stock awards for attracting agents and completing transactions.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Training and Support</h3>
               <p>Unique to eXp Realty is its extensive support system, including 50+ live training hours per week and a virtual world (eXp World 2.0). Real Broker offers 30+ live training hours but lacks a virtual world. LPT Realty and Fathom Realty do not provide such extensive training options. eXp Realty also offers healthcare options and a 60/40 mentorship program for the first three sales.</p>
-            </div>
+            </GenericCard>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">

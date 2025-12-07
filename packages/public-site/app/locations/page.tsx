@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -66,10 +66,10 @@ export default function Locations() {
         <div className="max-w-[900px] mx-auto">
           <div className="grid md:grid-cols-3 gap-6 text-center">
             {stats.map((stat, index) => (
-              <CyberCardHolographic key={index} className="p-8">
+              <GenericCard key={index} padding="lg" centered>
                 <div className="text-5xl font-bold text-amber-400 mb-2">{stat.value}</div>
                 <p className="text-[#dcdbd5]">{stat.label}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -84,7 +84,7 @@ export default function Locations() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {regions.map((region, index) => (
-              <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10">
+              <GenericCard key={index} padding="md">
                 <h3 className="text-xl font-bold text-amber-400 mb-4">{region.name}</h3>
                 <ul className="space-y-2">
                   {region.countries.map((country, cIndex) => (
@@ -94,7 +94,7 @@ export default function Locations() {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -112,10 +112,10 @@ export default function Locations() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {agentBenefits.map((benefit, index) => (
-              <div key={index} className="bg-white/5 rounded-xl p-6 border border-white/10 hover:border-amber-400/30 transition-colors">
+              <GenericCard key={index} padding="md" hover>
                 <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
                 <p className="text-[#dcdbd5]/80">{benefit.description}</p>
-              </div>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -133,10 +133,10 @@ export default function Locations() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {teamBenefits.map((benefit, index) => (
-              <CyberCardHolographic key={index} className="p-6">
+              <GenericCard key={index} padding="md">
                 <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
                 <p className="text-[#dcdbd5]/80">{benefit.description}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>

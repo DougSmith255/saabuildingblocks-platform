@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -60,10 +60,10 @@ export default function Freebies() {
         </div>
       </HeroSection>
 
-      {/* Download All CTA */}
+      {/* Download All CTA - Using generic card style */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <CyberCardHolographic className="p-10 md:p-12 rounded-2xl">
+          <div className="bg-white/5 rounded-xl p-10 md:p-12 border border-white/10">
             <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Want Everything?</h3>
             <p className="text-[#dcdbd5] mb-8 max-w-md mx-auto">
               Download all 6 resources in one click and start building your real estate toolkit today.
@@ -71,7 +71,7 @@ export default function Freebies() {
             <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
               DOWNLOAD ALL ASSETS
             </CTAButton>
-          </CyberCardHolographic>
+          </div>
         </div>
       </section>
 
@@ -94,36 +94,38 @@ export default function Freebies() {
                 rel="noopener noreferrer"
                 className="group block"
               >
-                <CyberCardHolographic className="h-full overflow-hidden rounded-2xl transition-transform group-hover:scale-[1.02]">
-                  {/* Image */}
-                  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-t-2xl">
-                    <Image
-                      src={freebie.image}
-                      alt={freebie.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      unoptimized
-                    />
-                    {/* Overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  </div>
+                <GenericCard hover padding="md" className="h-full overflow-hidden">
+                  <div className="flex flex-col h-full">
+                    {/* Image */}
+                    <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg -mt-6 -mx-6 mb-4" style={{ width: 'calc(100% + 48px)' }}>
+                      <Image
+                        src={freebie.image}
+                        alt={freebie.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        unoptimized
+                      />
+                      {/* Overlay gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    </div>
 
-                  {/* Content */}
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-[#ffd700] transition-colors">
-                      {freebie.title}
-                    </h3>
-                    <p className="text-[#dcdbd5]/80 text-sm mb-4">
-                      {freebie.description}
-                    </p>
-                    <span className="inline-flex items-center gap-2 text-[#ffd700] text-sm font-medium group-hover:gap-3 transition-all">
-                      Download Free
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                    </span>
+                    {/* Content */}
+                    <div className="flex-1 flex flex-col">
+                      <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-[#ffd700] transition-colors">
+                        {freebie.title}
+                      </h3>
+                      <p className="text-[#dcdbd5]/80 text-sm mb-4 flex-1">
+                        {freebie.description}
+                      </p>
+                      <span className="inline-flex items-center gap-2 text-[#ffd700] text-sm font-medium group-hover:gap-3 transition-all">
+                        Download Free
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                </CyberCardHolographic>
+                </GenericCard>
               </a>
             ))}
           </div>

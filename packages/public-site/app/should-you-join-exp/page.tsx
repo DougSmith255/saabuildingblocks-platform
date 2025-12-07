@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -74,41 +74,41 @@ export default function ShouldYouJoinExp() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4">💰</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Better Commission</h3>
               <p className="text-[#dcdbd5]/80">Up to 100% commission after capping at $16K to eXp. No franchise or royalty fees.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4">📈</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Revenue Share</h3>
               <p className="text-[#dcdbd5]/80">7-tier revenue share program for passive income. Can be willed to your loved ones.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4">🌍</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Global Reach</h3>
               <p className="text-[#dcdbd5]/80">89,000+ agents in 27+ countries. Build a truly international business.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4">📚</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Training</h3>
               <p className="text-[#dcdbd5]/80">50+ weekly training sessions, courses, and mentorship programs included.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4">📊</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Stock Awards</h3>
               <p className="text-[#dcdbd5]/80">Earn equity in a publicly traded company through production milestones.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4">🤝</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Community</h3>
               <p className="text-[#dcdbd5]/80">Join a collaborative culture with strong support and accountability.</p>
-            </div>
+            </GenericCard>
           </div>
         </div>
       </section>

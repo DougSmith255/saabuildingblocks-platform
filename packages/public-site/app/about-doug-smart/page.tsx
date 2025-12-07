@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -57,10 +57,10 @@ export default function AboutDougSmart() {
             <div className="lg:w-2/3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {highlights.map((item, index) => (
-                  <div key={index} className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <GenericCard key={index} padding="sm">
                     <p className="text-[#dcdbd5]/60 text-sm">{item.label}</p>
                     <p className="text-[#e5e4dd] font-medium">{item.value}</p>
-                  </div>
+                  </GenericCard>
                 ))}
               </div>
             </div>
@@ -110,9 +110,9 @@ export default function AboutDougSmart() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {skills.map((skill, index) => (
-              <CyberCardHolographic key={index} className="p-4 text-center">
+              <GenericCard key={index} padding="sm" centered>
                 <p className="text-[#e5e4dd] font-medium">{skill}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>

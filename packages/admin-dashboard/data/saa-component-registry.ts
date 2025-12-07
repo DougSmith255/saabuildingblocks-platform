@@ -80,37 +80,17 @@ export const saaComponentRegistry: SAAComponent[] = [
   },
 
   // ============================================
-  // CARDS (3)
+  // CARDS (1) - Generic Card is the standard card for all use cases
   // ============================================
   {
-    id: 'cyber-card-holographic',
-    name: 'Holographic Card',
+    id: 'generic-card',
+    name: 'Generic Card',
     category: 'cards',
-    description: 'Futuristic card with holographic effects, digital glitches, chromatic aberration, and greyscale shimmer. Features 3 CSS keyframe animations with randomized shimmer timings and hover states.',
-    reactPath: '../shared/components/saa/cards/CyberCardHolographic.tsx',
-    converted: true,
-    source: 'wordpress',
-    tags: ['card', 'holographic', 'futuristic', 'border', 'glow', 'shimmer', 'chromatic-aberration', 'glitch', 'animation', 'cyberpunk', '3d-effect'],
-  },
-  {
-    id: 'cyber-card-prismatic-glass',
-    name: 'Prismatic Glass Card',
-    category: 'cards',
-    description: 'Advanced glass morphism card with iridescent prismatic effects. Features hover-reactive 5x5 grid tracking and animated scanning lines.',
-    reactPath: '../shared/components/saa/cards/CyberCardPrismaticGlass.tsx',
-    converted: true,
-    source: 'wordpress',
-    tags: ['card', 'glass', 'prismatic', 'morphism', 'iridescent', 'hover-tracking', 'animation'],
-  },
-  {
-    id: 'glossy-category-card',
-    name: 'Glossy Category Card',
-    category: 'cards',
-    description: 'Animated glossy category filter card with space futuristic aesthetic. Features shimmer animation, glass morphism, and hover interactions.',
-    reactPath: '../shared/components/saa/cards/GlossyCategoryCard.tsx',
+    description: 'Clean, simple card with subtle glass-like styling. Features semi-transparent background, rounded corners, soft border, optional hover effects, and configurable padding sizes.',
+    reactPath: '../shared/components/saa/cards/GenericCard.tsx',
     converted: true,
     source: 'custom',
-    tags: ['card', 'glossy', 'category', 'filter', 'shimmer', 'glass', 'neon', 'accessible'],
+    tags: ['card', 'container', 'glass', 'simple', 'clean', 'hover', 'padding'],
   },
 
   // ============================================
@@ -158,18 +138,8 @@ export const saaComponentRegistry: SAAComponent[] = [
   },
 
   // ============================================
-  // EFFECTS (1)
+  // EFFECTS (0) - LightningText removed from design system
   // ============================================
-  {
-    id: 'lightning-text',
-    name: 'Lightning Text',
-    category: 'effects',
-    description: 'Animated yellow lightning bolts inside glass letters. Features 4 distinct lightning bolt SVG patterns, randomized strike timing, and multi-layer glow effects.',
-    reactPath: '../shared/components/saa/effects/LightningText.tsx',
-    converted: true,
-    source: 'custom',
-    tags: ['text', 'lightning', 'animation', 'glass', 'svg', 'glow', 'electric'],
-  },
 
   // ============================================
   // INTERACTIVE (3)

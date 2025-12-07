@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -74,25 +74,25 @@ export default function AboutExpRealty() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">89,000+</div>
               <p className="text-[#dcdbd5]">Agents Worldwide</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">24+</div>
               <p className="text-[#dcdbd5]">Countries</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
               <p className="text-[#dcdbd5]">Commission After Cap</p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6">
+            <GenericCard padding="md" centered>
               <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
               <p className="text-[#dcdbd5]">Per Month</p>
-            </CyberCardHolographic>
+            </GenericCard>
           </div>
         </div>
       </section>
@@ -109,14 +109,11 @@ export default function AboutExpRealty() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {keyFeatures.map((feature, index) => (
-              <div
-                key={index}
-                className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
-              >
+              <GenericCard key={index} padding="md" hover>
                 <div className="text-3xl mb-3">{feature.icon}</div>
                 <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">{feature.title}</h3>
                 <p className="text-[#dcdbd5]/80 text-sm">{feature.description}</p>
-              </div>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -134,11 +131,11 @@ export default function AboutExpRealty() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {incomeStreams.map((stream, index) => (
-              <CyberCardHolographic key={index} className="p-6 text-center">
+              <GenericCard key={index} padding="md" centered>
                 <div className="text-5xl font-bold text-amber-400/20 mb-2">{index + 1}</div>
                 <h3 className="text-[#e5e4dd] font-semibold text-xl mb-2">{stream.title}</h3>
                 <p className="text-[#dcdbd5]/80">{stream.description}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>
@@ -167,20 +164,20 @@ export default function AboutExpRealty() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Commercial</h3>
               <p className="text-[#dcdbd5]/80">Access to commercial real estate division for expanded opportunities.</p>
-            </div>
+            </GenericCard>
 
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Luxury</h3>
               <p className="text-[#dcdbd5]/80">Specialized luxury division for high-end properties and clients.</p>
-            </div>
+            </GenericCard>
 
-            <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">Healthcare Options</h3>
               <p className="text-[#dcdbd5]/80">Access to Clearwater Healthcare benefits for you and your family.</p>
-            </div>
+            </GenericCard>
           </div>
         </div>
       </section>

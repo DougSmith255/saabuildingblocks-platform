@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -121,7 +121,7 @@ export default function OurExpTeam() {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {uplinePartners.map((partner, index) => (
-              <CyberCardHolographic key={index} className="p-6">
+              <GenericCard key={index} padding="md" centered>
                 <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-2 border-amber-400/30">
                   <Image
                     src={partner.image}
@@ -132,7 +132,7 @@ export default function OurExpTeam() {
                 </div>
                 <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
                 <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
-              </CyberCardHolographic>
+              </GenericCard>
             ))}
           </div>
         </div>

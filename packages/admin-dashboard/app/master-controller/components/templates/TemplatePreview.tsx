@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CyberCardHolographic } from '@saa/shared/components/saa';
+import { GenericCard } from '@saa/shared/components/saa';
 import type { BlogTemplate, TemplateSamplePost } from '../../types/templates';
 import { SPACING_MULTIPLIERS, SAMPLE_BLOG_POST } from '../../types/templates';
 
@@ -25,8 +25,8 @@ export function TemplatePreview({
           padding: `calc(var(--spacing-container, 2rem) * ${multiplier})`,
         }}
       >
-        {template.cardComponentId === 'cyber-card-holographic' ? (
-          <CyberCardHolographic>
+        {template.cardComponentId === 'generic-card' ? (
+          <GenericCard>
             <article className="space-y-4">
               {/* Featured Image */}
               {samplePost.featuredImage && (
@@ -61,7 +61,7 @@ export function TemplatePreview({
                 Read More →
               </button>
             </article>
-          </CyberCardHolographic>
+          </GenericCard>
         ) : (
           <article
             className="p-6 rounded-lg border border-[#404040] space-y-4"

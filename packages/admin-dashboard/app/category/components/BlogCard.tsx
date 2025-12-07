@@ -15,7 +15,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { CyberCardHolographic } from '@/components/saa';
+import { GenericCard } from '@/components/saa';
 import { generateClamp } from '@/app/master-controller/lib/clampCalculator';
 import type { BlogCardProps } from '../types';
 
@@ -123,7 +123,7 @@ export function BlogCard({
           whileHover="hover"
           className="h-full"
         >
-          <CyberCardHolographic
+          <GenericCard
             className="h-full overflow-hidden"
           >
             {/* Featured Image */}
@@ -216,7 +216,7 @@ export function BlogCard({
                 </svg>
               </div>
             </div>
-          </CyberCardHolographic>
+          </GenericCard>
         </motion.div>
       </Link>
     </motion.div>

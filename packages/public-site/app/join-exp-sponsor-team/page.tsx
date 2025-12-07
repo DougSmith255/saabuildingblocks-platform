@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic, FAQ } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -80,7 +80,7 @@ export default function JoinExpSponsorTeam() {
 
           <div className="grid md:grid-cols-2 gap-8 max-w-[900px] mx-auto">
             {/* Karrie Hill Card */}
-            <CyberCardHolographic className="p-8 text-center">
+            <GenericCard padding="lg" centered>
               <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-2 border-amber-400/50">
                 <Image
                   src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Contact-Us-Profile-Photos-1.png"
@@ -99,10 +99,10 @@ export default function JoinExpSponsorTeam() {
                 </p>
                 <p>415-435-7777 (no text)</p>
               </div>
-            </CyberCardHolographic>
+            </GenericCard>
 
             {/* Doug Smart Card */}
-            <CyberCardHolographic className="p-8 text-center">
+            <GenericCard padding="lg" centered>
               <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-2 border-amber-400/50">
                 <Image
                   src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Contact-Us-Profile-Photos.png"
@@ -121,7 +121,7 @@ export default function JoinExpSponsorTeam() {
                 </p>
                 <p>314-320-5606</p>
               </div>
-            </CyberCardHolographic>
+            </GenericCard>
           </div>
 
           <div className="text-center mt-12">
@@ -140,23 +140,23 @@ export default function JoinExpSponsorTeam() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4 text-amber-400">2,900+</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
               <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4 text-amber-400">100%</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
               <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <div className="text-4xl mb-4 text-amber-400">#1</div>
               <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
               <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
-            </div>
+            </GenericCard>
           </div>
         </div>
       </section>

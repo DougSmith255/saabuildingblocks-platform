@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { H1, H2, Tagline, CTAButton, CyberCardHolographic } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 
 /**
@@ -101,7 +101,7 @@ export default function RevenueShareCalculator() {
             </div>
 
             {tierConfig.map((config, index) => (
-              <div key={index} className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <GenericCard key={index} padding="sm">
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="sm:w-1/3">
                     <p className="text-[#e5e4dd] font-medium">{config.label}</p>
@@ -129,32 +129,32 @@ export default function RevenueShareCalculator() {
                     />
                   </div>
                 </div>
-              </div>
+              </GenericCard>
             ))}
           </div>
 
           {/* Results */}
           <div className="grid md:grid-cols-3 gap-6">
-            <CyberCardHolographic className="p-6 text-center">
+            <GenericCard padding="md" centered>
               <p className="text-[#dcdbd5]/80 mb-2">Monthly Minimum</p>
               <p className="text-3xl font-bold text-[#e5e4dd]">
                 ${results.monthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6 text-center">
+            <GenericCard padding="md" centered>
               <p className="text-[#dcdbd5]/80 mb-2">Yearly Minimum</p>
               <p className="text-3xl font-bold text-[#e5e4dd]">
                 ${results.yearly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
-            </CyberCardHolographic>
+            </GenericCard>
 
-            <CyberCardHolographic className="p-6 text-center">
+            <GenericCard padding="md" centered>
               <p className="text-[#dcdbd5]/80 mb-2">With ~30% Bonus*</p>
               <p className="text-3xl font-bold text-amber-400">
                 ${results.withBonus.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
-            </CyberCardHolographic>
+            </GenericCard>
           </div>
 
           <p className="text-[#dcdbd5]/60 text-sm text-center mt-6">
@@ -177,7 +177,7 @@ export default function RevenueShareCalculator() {
               through a 7-tier system.
             </p>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
+            <GenericCard padding="md">
               <h3 className="text-[#e5e4dd] font-bold mb-4">Tier Structure:</h3>
               <ul className="space-y-2">
                 <li><strong className="text-amber-400">Tier 1:</strong> Direct recruits - 3.5% rate, $1,400 cap per agent</li>
@@ -185,7 +185,7 @@ export default function RevenueShareCalculator() {
                 <li><strong className="text-amber-400">Tier 3:</strong> 2.5% rate, $1,000 cap</li>
                 <li><strong className="text-amber-400">Tiers 4-7:</strong> Decreasing rates (0.1%-1%) with caps</li>
               </ul>
-            </div>
+            </GenericCard>
 
             <p>
               Higher tiers unlock as you recruit qualifying agents at lower tiers.
