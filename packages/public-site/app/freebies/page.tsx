@@ -63,9 +63,9 @@ export default function Freebies() {
       {/* Download All CTA */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <CyberCardHolographic className="p-8">
-            <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Want Everything?</h3>
-            <p className="text-[#dcdbd5] mb-6">
+          <CyberCardHolographic className="p-10 md:p-12 rounded-2xl">
+            <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Want Everything?</h3>
+            <p className="text-[#dcdbd5] mb-8 max-w-md mx-auto">
               Download all 6 resources in one click and start building your real estate toolkit today.
             </p>
             <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
@@ -94,14 +94,15 @@ export default function Freebies() {
                 rel="noopener noreferrer"
                 className="group block"
               >
-                <CyberCardHolographic className="h-full overflow-hidden transition-transform group-hover:scale-[1.02]">
+                <CyberCardHolographic className="h-full overflow-hidden rounded-2xl transition-transform group-hover:scale-[1.02]">
                   {/* Image */}
-                  <div className="relative w-full aspect-[4/3] overflow-hidden">
+                  <div className="relative w-full aspect-[4/3] overflow-hidden rounded-t-2xl">
                     <Image
                       src={freebie.image}
                       alt={freebie.title}
                       fill
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      unoptimized
                     />
                     {/* Overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
