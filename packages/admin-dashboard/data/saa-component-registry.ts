@@ -41,11 +41,13 @@ export interface SAAComponent {
 }
 
 /**
- * Complete SAA Component Registry (7 components)
- * Note: Prismatic Glass and Stacked Animation Cards have been deprecated
+ * Complete SAA Component Registry (17 components)
+ * All components from @saa/shared/components/saa
  */
 export const saaComponentRegistry: SAAComponent[] = [
-  // Buttons (3)
+  // ============================================
+  // BUTTONS (3)
+  // ============================================
   {
     id: 'cta-button',
     name: 'CTA Button',
@@ -77,20 +79,43 @@ export const saaComponentRegistry: SAAComponent[] = [
     tags: ['button', 'filter', 'toggle', 'generic', 'category', 'multi-select'],
   },
 
-  // Cards (1)
+  // ============================================
+  // CARDS (3)
+  // ============================================
   {
     id: 'cyber-card-holographic',
     name: 'Holographic Card',
     category: 'cards',
-    description: 'Futuristic card with holographic effects, digital glitches, chromatic aberration, and greyscale shimmer. Features 3 CSS keyframe animations (holographic, chromatic, glitch-effect) with randomized shimmer timings, hover states, and complete style definitions inline via styled-jsx.',
-    previewPath: '/saa-components/cards/cyber-card-holographic.html',
+    description: 'Futuristic card with holographic effects, digital glitches, chromatic aberration, and greyscale shimmer. Features 3 CSS keyframe animations with randomized shimmer timings and hover states.',
     reactPath: '../shared/components/saa/cards/CyberCardHolographic.tsx',
     converted: true,
     source: 'wordpress',
     tags: ['card', 'holographic', 'futuristic', 'border', 'glow', 'shimmer', 'chromatic-aberration', 'glitch', 'animation', 'cyberpunk', '3d-effect'],
   },
+  {
+    id: 'cyber-card-prismatic-glass',
+    name: 'Prismatic Glass Card',
+    category: 'cards',
+    description: 'Advanced glass morphism card with iridescent prismatic effects. Features hover-reactive 5x5 grid tracking and animated scanning lines.',
+    reactPath: '../shared/components/saa/cards/CyberCardPrismaticGlass.tsx',
+    converted: true,
+    source: 'wordpress',
+    tags: ['card', 'glass', 'prismatic', 'morphism', 'iridescent', 'hover-tracking', 'animation'],
+  },
+  {
+    id: 'glossy-category-card',
+    name: 'Glossy Category Card',
+    category: 'cards',
+    description: 'Animated glossy category filter card with space futuristic aesthetic. Features shimmer animation, glass morphism, and hover interactions.',
+    reactPath: '../shared/components/saa/cards/GlossyCategoryCard.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['card', 'glossy', 'category', 'filter', 'shimmer', 'glass', 'neon', 'accessible'],
+  },
 
-  // Typography (2)
+  // ============================================
+  // TYPOGRAPHY (4)
+  // ============================================
   {
     id: 'h1-heading',
     name: 'H1 Heading',
@@ -110,6 +135,112 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'custom',
     tags: ['heading', 'h2', 'neon', 'typography', '3d', 'static'],
+  },
+  {
+    id: 'tagline',
+    name: 'Tagline',
+    category: 'typography',
+    description: 'Server-rendered tagline with static neon glow, 3D transform, and per-character alt glyphs. Pure CSS (no JavaScript hydration).',
+    reactPath: '../shared/components/saa/headings/Tagline.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['tagline', 'neon', 'typography', '3d', 'server-component', 'performance'],
+  },
+  {
+    id: 'cyber-text-3d',
+    name: 'CyberText 3D',
+    category: 'typography',
+    description: 'Cyberpunk 3D neon glow text effect with gold/white variants, configurable glow intensity, optional flickering animation, and metal backing plate.',
+    reactPath: '../shared/components/saa/text/CyberText3D.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['text', '3d', 'neon', 'glow', 'flicker', 'cyberpunk', 'gold', 'metal-plate'],
+  },
+
+  // ============================================
+  // EFFECTS (1)
+  // ============================================
+  {
+    id: 'lightning-text',
+    name: 'Lightning Text',
+    category: 'effects',
+    description: 'Animated yellow lightning bolts inside glass letters. Features 4 distinct lightning bolt SVG patterns, randomized strike timing, and multi-layer glow effects.',
+    reactPath: '../shared/components/saa/effects/LightningText.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['text', 'lightning', 'animation', 'glass', 'svg', 'glow', 'electric'],
+  },
+
+  // ============================================
+  // INTERACTIVE (3)
+  // ============================================
+  {
+    id: 'faq-accordion',
+    name: 'FAQ Accordion',
+    category: 'interactive',
+    description: 'Reusable FAQ accordion component with expandable items. Supports single or multiple open items, CSS variables for theming, and accessible keyboard navigation.',
+    reactPath: '../shared/components/saa/interactive/FAQ.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['faq', 'accordion', 'expandable', 'accessible', 'css-variables'],
+  },
+  {
+    id: 'share-buttons',
+    name: 'Share Buttons',
+    category: 'interactive',
+    description: 'Social media share buttons with 3D metal plate styling. Includes Twitter, Facebook, LinkedIn, Email, and Copy Link with visual feedback.',
+    reactPath: '../shared/components/saa/interactive/ShareButtons.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['share', 'social', 'twitter', 'facebook', 'linkedin', 'email', 'clipboard', '3d-metal'],
+  },
+  {
+    id: 'icon-library',
+    name: 'Icon Library',
+    category: 'interactive',
+    description: 'Grid display of SAA design system icons with optional labels, category grouping, and click handlers. Includes default icon set with social, UI, navigation, and status icons.',
+    reactPath: '../shared/components/saa/icons/IconLibrary.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['icons', 'library', 'grid', 'social', 'navigation', 'customizable'],
+  },
+
+  // ============================================
+  // MEDIA (2)
+  // ============================================
+  {
+    id: 'cyber-frame',
+    name: 'CyberFrame',
+    category: 'gallery',
+    description: 'Futuristic holographic glass frame for images and videos. Features 3D metal frame, holographic glass overlay, randomized sheen position, and L-shaped corner tech accents.',
+    reactPath: '../shared/components/saa/media/CyberFrame.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['frame', 'image', 'video', 'holographic', 'glass', '3d', 'metal', 'corners'],
+  },
+  {
+    id: 'youtube-facade',
+    name: 'YouTube Facade',
+    category: 'gallery',
+    description: 'Lazy-loading YouTube embed with thumbnail facade. Dramatically improves page load performance (~1MB+ saved per video). Shows thumbnail with play button, loads iframe only on click.',
+    reactPath: '../shared/components/saa/media/YouTubeFacade.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['youtube', 'video', 'lazy-load', 'facade', 'performance', 'thumbnail', 'embed'],
+  },
+
+  // ============================================
+  // ICONS (1)
+  // ============================================
+  {
+    id: 'icon-3d',
+    name: 'Icon 3D',
+    category: 'effects',
+    description: 'Wraps any icon with a 3D metal backing plate effect. Creates depth with perspective, rotateX tilt, layered shadows, and metal plate pushed back in Z-space.',
+    reactPath: '../shared/components/saa/icons/Icon3D.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['icon', '3d', 'metal', 'depth', 'shadow', 'perspective'],
   },
 
 ];

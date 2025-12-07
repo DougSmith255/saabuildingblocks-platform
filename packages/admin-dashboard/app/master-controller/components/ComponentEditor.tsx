@@ -223,7 +223,9 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
     const id = component.id;
 
     switch (id) {
-      // Buttons
+      // ============================================
+      // BUTTONS
+      // ============================================
       case 'cta-button':
         return lazy(() => import('@saa/shared/components/saa/buttons/CTAButton').then(m => ({ default: () => <m.CTAButton>Get Started</m.CTAButton> })));
       case 'secondary-button':
@@ -231,16 +233,9 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
       case 'generic-button':
         return lazy(() => import('@saa/shared/components/saa/buttons/GenericButton').then(m => ({ default: () => <m.GenericButton>Filter Option</m.GenericButton> })));
 
-      // Cards
-      case 'cyber-card-prismatic-glass':
-        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
-          default: () => (
-            <m.CyberCardPrismaticGlass className="w-full max-w-md">
-              <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Prismatic Glass</h3>
-              <p className="text-[#dcdbd5]">Glass morphism with prismatic light effects</p>
-            </m.CyberCardPrismaticGlass>
-          )
-        })));
+      // ============================================
+      // CARDS
+      // ============================================
       case 'cyber-card-holographic':
         return lazy(() => import('@saa/shared/components/saa/cards/CyberCardHolographic').then(m => ({
           default: () => (
@@ -250,17 +245,35 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
             </m.CyberCardHolographic>
           )
         })));
-      // Interactive
-      case 'icon-library':
-        return lazy(() => import('@saa/shared/components/saa/icons/IconLibrary').then(m => ({
+      case 'cyber-card-prismatic-glass':
+        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardPrismaticGlass').then(m => ({
           default: () => (
-            <div className="w-full h-full p-8">
-              <m.IconLibrary size="large" showLabels />
+            <div className="w-full max-w-md h-64">
+              <m.CyberCardPrismaticGlass>
+                <h3 className="text-2xl font-bold text-[#ffd700] mb-4">Prismatic Glass</h3>
+                <p className="text-[#dcdbd5]">Glass morphism with prismatic light effects</p>
+              </m.CyberCardPrismaticGlass>
+            </div>
+          )
+        })));
+      case 'glossy-category-card':
+        return lazy(() => import('@saa/shared/components/saa/cards/GlossyCategoryCard').then(m => ({
+          default: () => (
+            <div className="w-full max-w-sm">
+              <m.GlossyCategoryCard
+                icon={<m.PlaceholderIcon />}
+                title="Category Title"
+                description="Category description with shimmer animation"
+                count={42}
+                onClick={() => console.log('clicked')}
+              />
             </div>
           )
         })));
 
-      // Typography
+      // ============================================
+      // TYPOGRAPHY
+      // ============================================
       case 'h1-heading':
         return lazy(() => import('@saa/shared/components/saa/headings/H1').then(m => ({
           default: () => <m.default>Heading 1</m.default>
@@ -268,6 +281,110 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
       case 'h2-heading':
         return lazy(() => import('@saa/shared/components/saa/headings/H2').then(m => ({
           default: () => <m.default>Heading 2</m.default>
+        })));
+      case 'tagline':
+        return lazy(() => import('@saa/shared/components/saa/headings/Tagline').then(m => ({
+          default: () => <m.default>For Agents Who Want More</m.default>
+        })));
+      case 'cyber-text-3d':
+        return lazy(() => import('@saa/shared/components/saa/text/CyberText3D').then(m => ({
+          default: () => (
+            <div className="space-y-6 text-center">
+              <m.CyberText3D variant="gold" glowIntensity="intense" className="text-4xl font-bold">
+                3700+
+              </m.CyberText3D>
+              <m.CyberText3D variant="white" flicker flickerSpeed="slow" className="text-2xl">
+                AGENTS
+              </m.CyberText3D>
+            </div>
+          )
+        })));
+
+      // ============================================
+      // EFFECTS
+      // ============================================
+      case 'lightning-text':
+        return lazy(() => import('@saa/shared/components/saa/effects/LightningText').then(m => ({
+          default: () => <m.LightningText text="POWER" lightningIntensity="high" />
+        })));
+      case 'icon-3d':
+        return lazy(() => import('@saa/shared/components/saa/icons/Icon3D').then(m => ({
+          default: () => (
+            <div className="flex gap-8 items-center">
+              <m.Icon3D size={32}>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              </m.Icon3D>
+              <m.Icon3D color="#00ff88" size={32}>
+                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </m.Icon3D>
+            </div>
+          )
+        })));
+
+      // ============================================
+      // INTERACTIVE
+      // ============================================
+      case 'faq-accordion':
+        return lazy(() => import('@saa/shared/components/saa/interactive/FAQ').then(m => ({
+          default: () => (
+            <div className="w-full max-w-xl">
+              <m.FAQ items={[
+                { question: 'What is the Smart Agent Alliance?', answer: 'The Smart Agent Alliance is a team of top-performing real estate agents at eXp Realty.' },
+                { question: 'How do I join?', answer: 'Simply click the Get Started button and fill out the application form.' },
+                { question: 'What are the benefits?', answer: 'Access to training, mentorship, marketing tools, and revenue share opportunities.' }
+              ]} />
+            </div>
+          )
+        })));
+      case 'share-buttons':
+        return lazy(() => import('@saa/shared/components/saa/interactive/ShareButtons').then(m => ({
+          default: () => (
+            <m.ShareButtons
+              title="Amazing Article"
+              url="https://example.com/article"
+              excerpt="This is an amazing article about real estate."
+              showDivider={false}
+            />
+          )
+        })));
+      case 'icon-library':
+        return lazy(() => import('@saa/shared/components/saa/icons/IconLibrary').then(m => ({
+          default: () => (
+            <div className="w-full h-full p-4">
+              <m.IconLibrary size="large" showLabels />
+            </div>
+          )
+        })));
+
+      // ============================================
+      // MEDIA / GALLERY
+      // ============================================
+      case 'cyber-frame':
+        return lazy(() => import('@saa/shared/components/saa/media/CyberFrame').then(m => ({
+          default: () => (
+            <m.CyberFrame>
+              <img
+                src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=300&fit=crop"
+                alt="Sample real estate"
+                className="w-full h-auto"
+              />
+            </m.CyberFrame>
+          )
+        })));
+      case 'youtube-facade':
+        return lazy(() => import('@saa/shared/components/saa/media/YouTubeFacade').then(m => ({
+          default: () => (
+            <div className="w-full max-w-lg aspect-video relative">
+              <m.YouTubeFacade
+                videoId="dQw4w9WgXcQ"
+                title="Sample YouTube Video"
+              />
+            </div>
+          )
         })));
 
       default:
