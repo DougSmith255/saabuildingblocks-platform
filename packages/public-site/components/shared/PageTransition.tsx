@@ -60,6 +60,13 @@ export function PageTransition() {
       // Skip if modifier keys are pressed (user wants new tab/window)
       if (e.metaKey || e.ctrlKey || e.shiftKey) return;
 
+      // Skip if clicking on the same page we're already on
+      const currentPath = window.location.pathname;
+      const targetPath = href.split('?')[0].split('#')[0]; // Remove query/hash
+      if (currentPath === targetPath || currentPath === targetPath + '/' || currentPath + '/' === targetPath) {
+        return; // Don't transition, just let normal behavior happen (or do nothing)
+      }
+
       // Get main content element
       const mainContent = document.getElementById('main-content');
       if (!mainContent) return;
