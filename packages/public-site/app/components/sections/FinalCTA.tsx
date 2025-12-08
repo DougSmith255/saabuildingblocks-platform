@@ -9,7 +9,7 @@ export function FinalCTA() {
         {/* CTA Card - Premium Gold Treatment */}
         <CyberCardGold padding="xl">
           {/* Header */}
-          <div className="text-center mb-8 pt-2">
+          <div className="text-center mb-8 pt-4">
             <NeonGoldText as="h2" className="text-h2">
               Ready to Transform Your Real Estate Career?
             </NeonGoldText>
