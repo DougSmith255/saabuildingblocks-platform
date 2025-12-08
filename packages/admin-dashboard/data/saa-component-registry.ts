@@ -41,7 +41,7 @@ export interface SAAComponent {
 }
 
 /**
- * Complete SAA Component Registry (17 components)
+ * Complete SAA Component Registry (18 components)
  * All components from @saa/shared/components/saa
  */
 export const saaComponentRegistry: SAAComponent[] = [
@@ -80,7 +80,7 @@ export const saaComponentRegistry: SAAComponent[] = [
   },
 
   // ============================================
-  // CARDS (2)
+  // CARDS (3)
   // ============================================
   {
     id: 'generic-card',
@@ -101,6 +101,16 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'custom',
     tags: ['card', 'featured', 'stats', 'metal', '3d', 'premium', 'gunmetal', 'perspective'],
+  },
+  {
+    id: 'cyber-card-gold',
+    name: 'Cyber Card Gold',
+    category: 'cards',
+    description: 'Premium gold bar card with shimmer hover effect. Features bright gold gradient background, 3D perspective tilt, beveled metallic gold edges, and shimmer/glare animation on hover.',
+    reactPath: '../shared/components/saa/cards/CyberCardGold.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['card', 'gold', 'premium', 'shimmer', '3d', 'featured', 'metallic', 'hover'],
   },
 
   // ============================================
