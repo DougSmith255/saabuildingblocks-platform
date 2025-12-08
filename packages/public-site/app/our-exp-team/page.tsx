@@ -1,8 +1,12 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
+
+// Cloudflare-ready image URLs (using same as WhoWeAre section)
+const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png';
+const DOUG_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png';
 
 /**
  * About Us / Our eXp Team Page
@@ -12,7 +16,7 @@ export default function OurExpTeam() {
     {
       name: "Karrie Hill, JD",
       title: "Global Team Leader",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Copy-of-Profiles-Momma.png",
+      image: KARRIE_PROFILE_IMAGE,
       bio: [
         "Karrie loves providing clients and agents with unmatched value. She has the number 1 agent YouTube channel in Marin County, California. She is certified in Real Estate Negotiation, Home Marketing, Relocations and Express Offers (cash offers). She is a frequent guest on KDOW \"The Real Estate Report\".",
         "Karrie is a California attorney (inactive) having graduated top of her class at UC Berkeley law. Before becoming a realtor, Karrie bought and sold homes, practiced law, and spent over a decade as a professional stock trader.",
@@ -22,7 +26,7 @@ export default function OurExpTeam() {
     {
       name: "Doug Smart",
       title: "Global Team Leader",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Copy-of-Profiles-Me-2.png",
+      image: DOUG_PROFILE_IMAGE,
       bio: [
         "A master at all things creative. He is the creative director here at SmartAgentAlliance.com and loves to help agents with anything that has to do with design. In fact, he built this entire website, impressive huh?",
         "Doug worked in construction for 4 years on multi-million-dollar homes while in college. It means that he is a hard worker and will trudge through the mud for you, whatever it takes.",
@@ -85,13 +89,16 @@ export default function OurExpTeam() {
                 className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
               >
                 <div className="lg:w-1/3">
-                  <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden border-4 border-amber-400/30">
-                    <Image
-                      src={founder.image}
-                      alt={founder.name}
-                      fill
-                      className="object-cover"
-                    />
+                  <div className="mx-auto w-fit">
+                    <CyberFrame>
+                      <Image
+                        src={founder.image}
+                        alt={founder.name}
+                        width={256}
+                        height={256}
+                        className="w-64 h-64 object-cover rounded-lg"
+                      />
+                    </CyberFrame>
                   </div>
                 </div>
                 <div className="lg:w-2/3">
@@ -122,13 +129,16 @@ export default function OurExpTeam() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {uplinePartners.map((partner, index) => (
               <GenericCard key={index} padding="md" centered>
-                <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-2 border-amber-400/30">
-                  <Image
-                    src={partner.image}
-                    alt={partner.name}
-                    fill
-                    className="object-cover"
-                  />
+                <div className="mx-auto mb-4 w-fit">
+                  <CyberFrame>
+                    <Image
+                      src={partner.image}
+                      alt={partner.name}
+                      width={128}
+                      height={128}
+                      className="w-32 h-32 object-cover rounded-lg"
+                    />
+                  </CyberFrame>
                 </div>
                 <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
                 <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>

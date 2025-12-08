@@ -1,7 +1,10 @@
 'use client';
 
-import { GenericCard } from '@saa/shared/components/saa';
+import { GenericCard, CyberFrame } from '@saa/shared/components/saa';
 import Image from 'next/image';
+
+// Cloudflare-ready image URL (using same as WhoWeAre section)
+const DOUG_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png';
 
 /**
  * Doug Smart Linktree Page
@@ -68,13 +71,16 @@ export default function DougLinktree() {
     <main className="flex flex-col items-center py-12 px-4 min-h-screen">
       {/* Profile Section */}
       <div className="text-center mb-8">
-        <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-4 border-amber-400/30">
-          <Image
-            src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Copy-of-Profiles-Me-2.png"
-            alt="Doug Smart"
-            fill
-            className="object-cover"
-          />
+        <div className="mx-auto mb-4 w-fit">
+          <CyberFrame>
+            <Image
+              src={DOUG_PROFILE_IMAGE}
+              alt="Doug Smart"
+              width={128}
+              height={128}
+              className="w-32 h-32 object-cover rounded-lg"
+            />
+          </CyberFrame>
         </div>
         <h1 className="text-2xl font-bold text-[#e5e4dd] mb-1">Doug Smart</h1>
         <p className="text-amber-400 text-sm mb-2">@dougthemediamaker</p>

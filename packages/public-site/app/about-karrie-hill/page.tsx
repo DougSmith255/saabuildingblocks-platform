@@ -1,8 +1,11 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
+
+// Cloudflare-ready image URL (using same as WhoWeAre section)
+const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png';
 
 /**
  * About Karrie Hill Page
@@ -49,16 +52,17 @@ export default function AboutKarrieHill() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1000px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
-            {/* Photo */}
+            {/* Photo with CyberFrame */}
             <div className="lg:w-1/3">
-              <div className="relative w-72 h-72 mx-auto rounded-full overflow-hidden border-4 border-amber-400/30">
+              <CyberFrame>
                 <Image
-                  src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Copy-of-Profiles-Momma.png"
+                  src={KARRIE_PROFILE_IMAGE}
                   alt="Karrie Hill"
-                  fill
-                  className="object-cover"
+                  width={288}
+                  height={288}
+                  className="w-72 h-72 object-cover rounded-lg"
                 />
-              </div>
+              </CyberFrame>
             </div>
 
             {/* Quick Stats */}
