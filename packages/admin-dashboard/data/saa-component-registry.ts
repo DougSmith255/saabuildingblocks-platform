@@ -96,11 +96,11 @@ export const saaComponentRegistry: SAAComponent[] = [
     id: 'cyber-card',
     name: 'Cyber Card',
     category: 'cards',
-    description: 'Premium metal-frame card for featured content and stats. Features 3D metal frame, holographic glass overlay, brand yellow corner accents, and lift+glow hover effect.',
+    description: 'Premium 3D metal-plate card for featured content and stats. Features brushed gunmetal background, beveled edges, glossy overlay, 3D perspective tilt, and lift+glow hover effect.',
     reactPath: '../shared/components/saa/cards/CyberCard.tsx',
     converted: true,
     source: 'custom',
-    tags: ['card', 'featured', 'stats', 'metal', 'holographic', 'premium', 'yellow', 'glow'],
+    tags: ['card', 'featured', 'stats', 'metal', '3d', 'premium', 'gunmetal', 'perspective'],
   },
 
   // ============================================

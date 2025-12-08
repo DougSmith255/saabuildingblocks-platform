@@ -11,6 +11,8 @@ export interface CyberFrameProps {
   aspectRatio?: string;
   /** Whether this is a video container */
   isVideo?: boolean;
+  /** Color variant: 'gold' (default) or 'green' */
+  variant?: 'gold' | 'green';
 }
 
 /**
@@ -25,11 +27,17 @@ export interface CyberFrameProps {
  * - Randomized sheen position per instance
  * - Subtle hover effect (sheen shifts like tilting glass)
  * - Works with images, videos, iframes
+ * - Two color variants: gold (default) and green
  *
  * @example
  * ```tsx
- * // Image
+ * // Image with gold accents (default)
  * <CyberFrame>
+ *   <img src="/photo.jpg" alt="Example" />
+ * </CyberFrame>
+ *
+ * // Image with green accents
+ * <CyberFrame variant="green">
  *   <img src="/photo.jpg" alt="Example" />
  * </CyberFrame>
  *
@@ -44,6 +52,7 @@ export function CyberFrame({
   className = '',
   aspectRatio,
   isVideo = false,
+  variant = 'gold',
 }: CyberFrameProps) {
   // Generate random values for this instance (consistent per mount)
   const randomValues = useMemo(() => ({
@@ -56,6 +65,33 @@ export function CyberFrame({
     // Slight variation in holographic intensity
     holoOpacity: (Math.random() * 0.03 + 0.02).toFixed(3), // 0.02-0.05
   }), []);
+
+  // Color values based on variant
+  const colors = variant === 'green'
+    ? {
+        glow: 'rgba(0,255,136,0.1)',
+        glowHover: 'rgba(0,255,136,0.2)',
+        border: 'rgba(0,255,136,0.3)',
+        cornerTop: 'rgba(0,255,136,0.5)',
+        cornerBottom: 'rgba(0,255,136,0.3)',
+        cornerHoverTop: 'rgba(0,255,136,0.8)',
+        cornerHoverBottom: 'rgba(0,255,136,0.5)',
+        cornerGlowTop: 'rgba(0,255,136,0.4)',
+        cornerGlowBottom: 'rgba(0,255,136,0.3)',
+      }
+    : {
+        glow: 'rgba(255,215,0,0.1)',
+        glowHover: 'rgba(255,215,0,0.2)',
+        border: 'rgba(255,215,0,0.3)',
+        cornerTop: 'rgba(255,215,0,0.5)',
+        cornerBottom: 'rgba(255,215,0,0.3)',
+        cornerHoverTop: 'rgba(255,215,0,0.8)',
+        cornerHoverBottom: 'rgba(255,215,0,0.5)',
+        cornerGlowTop: 'rgba(255,215,0,0.4)',
+        cornerGlowBottom: 'rgba(255,215,0,0.3)',
+      };
+
+  const frameClass = `cyber-frame cyber-frame-${variant}`;
 
   return (
     <>
@@ -74,8 +110,8 @@ export function CyberFrame({
             /* Inner highlight for 3D bevel */
             inset 0 1px 0 rgba(255,255,255,0.15),
             inset 0 -1px 0 rgba(0,0,0,0.3),
-            /* Subtle green accent glow */
-            0 0 15px rgba(0,255,136,0.1);
+            /* Accent glow - uses CSS variable */
+            0 0 15px var(--cf-glow);
         }
 
         .cyber-frame-inner {
@@ -148,8 +184,8 @@ export function CyberFrame({
             0 4px 25px rgba(0,0,0,0.7),
             inset 0 1px 0 rgba(255,255,255,0.2),
             inset 0 -1px 0 rgba(0,0,0,0.3),
-            0 0 25px rgba(0,255,136,0.2);
-          border-color: rgba(0,255,136,0.3);
+            0 0 25px var(--cf-glow-hover);
+          border-color: var(--cf-border);
         }
 
         /* Ensure child content fills properly */
@@ -190,72 +226,65 @@ export function CyberFrame({
         .cyber-frame-corner-tl {
           top: 0;
           left: 0;
-          border-top: 2px solid rgba(0,255,136,0.5);
-          border-left: 2px solid rgba(0,255,136,0.5);
-          /* Only round the outer corner (top-left of the L) */
+          border-top: 2px solid var(--cf-corner-top);
+          border-left: 2px solid var(--cf-corner-top);
           border-top-left-radius: 6px;
-          border-top-right-radius: 0;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
         }
 
         .cyber-frame-corner-tr {
           top: 0;
           right: 0;
-          border-top: 2px solid rgba(0,255,136,0.5);
-          border-right: 2px solid rgba(0,255,136,0.5);
-          /* Only round the outer corner (top-right of the L) */
-          border-top-left-radius: 0;
+          border-top: 2px solid var(--cf-corner-top);
+          border-right: 2px solid var(--cf-corner-top);
           border-top-right-radius: 6px;
-          border-bottom-left-radius: 0;
-          border-bottom-right-radius: 0;
         }
 
         .cyber-frame-corner-bl {
           bottom: 0;
           left: 0;
-          border-bottom: 2px solid rgba(0,255,136,0.3);
-          border-left: 2px solid rgba(0,255,136,0.3);
-          /* Only round the outer corner (bottom-left of the L) */
-          border-top-left-radius: 0;
-          border-top-right-radius: 0;
+          border-bottom: 2px solid var(--cf-corner-bottom);
+          border-left: 2px solid var(--cf-corner-bottom);
           border-bottom-left-radius: 6px;
-          border-bottom-right-radius: 0;
         }
 
         .cyber-frame-corner-br {
           bottom: 0;
           right: 0;
-          border-bottom: 2px solid rgba(0,255,136,0.3);
-          border-right: 2px solid rgba(0,255,136,0.3);
-          /* Only round the outer corner (bottom-right of the L) */
-          border-top-left-radius: 0;
-          border-top-right-radius: 0;
-          border-bottom-left-radius: 0;
+          border-bottom: 2px solid var(--cf-corner-bottom);
+          border-right: 2px solid var(--cf-corner-bottom);
           border-bottom-right-radius: 6px;
         }
 
         /* Hover - corners glow brighter */
         .cyber-frame:hover .cyber-frame-corner-tl,
         .cyber-frame:hover .cyber-frame-corner-tr {
-          border-color: rgba(0,255,136,0.8);
-          box-shadow: 0 0 8px rgba(0,255,136,0.4);
+          border-color: var(--cf-corner-hover-top);
+          box-shadow: 0 0 8px var(--cf-corner-glow-top);
         }
 
         .cyber-frame:hover .cyber-frame-corner-bl,
         .cyber-frame:hover .cyber-frame-corner-br {
-          border-color: rgba(0,255,136,0.5);
-          box-shadow: 0 0 6px rgba(0,255,136,0.3);
+          border-color: var(--cf-corner-hover-bottom);
+          box-shadow: 0 0 6px var(--cf-corner-glow-bottom);
         }
       `}</style>
 
       <div
-        className={`cyber-frame ${className}`}
+        className={`${frameClass} ${className}`}
         style={{
           '--sheen-angle': `${randomValues.sheenAngle}deg`,
           '--sheen-pos': `${randomValues.sheenPosition}%`,
           '--hue-rotate': `${randomValues.hueRotate}deg`,
           '--holo-opacity': randomValues.holoOpacity,
+          '--cf-glow': colors.glow,
+          '--cf-glow-hover': colors.glowHover,
+          '--cf-border': colors.border,
+          '--cf-corner-top': colors.cornerTop,
+          '--cf-corner-bottom': colors.cornerBottom,
+          '--cf-corner-hover-top': colors.cornerHoverTop,
+          '--cf-corner-hover-bottom': colors.cornerHoverBottom,
+          '--cf-corner-glow-top': colors.cornerGlowTop,
+          '--cf-corner-glow-bottom': colors.cornerGlowBottom,
         } as React.CSSProperties}
       >
         <div

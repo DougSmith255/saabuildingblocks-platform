@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React from 'react';
 
 export interface CyberCardProps {
   /** Card content */
@@ -23,17 +23,17 @@ const paddingClasses = {
 };
 
 /**
- * CyberCard - Premium futuristic card for featured content and stats
+ * CyberCard - Premium 3D metal-plate card for featured content and stats
  *
  * MASTER CONTROLLER COMPONENT
  * Location: @saa/shared/components/saa/cards/CyberCard
  *
  * Features:
- * - 3D metal frame (gradient, inset shadows, border glow)
- * - Holographic glass overlay (glossy sheen + iridescent rainbow)
- * - Brand yellow corner accents (L-shaped)
- * - Randomized sheen position per instance
- * - Hover effect: slight lift + enhanced yellow glow
+ * - 3D perspective with rotateX tilt (matches H2 heading style)
+ * - Brushed gunmetal metal plate background
+ * - Beveled edges (light top/left, dark bottom/right)
+ * - Glossy highlight overlay
+ * - Subtle lift + glow on hover
  *
  * Use for:
  * - Important stats and metrics
@@ -55,198 +55,97 @@ export function CyberCard({
   centered = true,
   href,
 }: CyberCardProps) {
-  // Generate random values for this instance (consistent per mount)
-  const randomValues = useMemo(() => ({
-    // Sheen angle: 15-45 degrees
-    sheenAngle: Math.floor(Math.random() * 30) + 15,
-    // Sheen position: 20-80% across
-    sheenPosition: Math.floor(Math.random() * 60) + 20,
-    // Holographic hue rotation: 0-360 degrees
-    hueRotate: Math.floor(Math.random() * 360),
-    // Slight variation in holographic intensity
-    holoOpacity: (Math.random() * 0.03 + 0.02).toFixed(3), // 0.02-0.05
-  }), []);
-
   const paddingClass = paddingClasses[padding];
   const centerClass = centered ? 'text-center' : '';
 
   const cardContent = (
     <>
       <style jsx global>{`
-        .cyber-card {
-          position: relative;
+        .cyber-card-3d {
+          /* 3D perspective container */
+          perspective: 1000px;
           display: block;
-          /* 3D Metal Frame */
-          background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
-          border-radius: 12px;
-          border: 1px solid rgba(150,150,150,0.4);
-          box-shadow:
-            /* Outer shadow for depth */
-            0 4px 20px rgba(0,0,0,0.6),
-            /* Inner highlight for 3D bevel */
-            inset 0 1px 0 rgba(255,255,255,0.15),
-            inset 0 -1px 0 rgba(0,0,0,0.3),
-            /* Subtle yellow accent glow */
-            0 0 15px rgba(255,215,0,0.1);
-          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
-        .cyber-card-inner {
+        .cyber-card-plate {
           position: relative;
-          overflow: hidden;
-          border-radius: 10px;
-          background: rgba(10,10,10,0.8);
-        }
+          /* 3D transform - subtle tilt like H2 */
+          transform-style: preserve-3d;
+          transform: rotateX(8deg);
 
-        /* Holographic glass overlay - uses translate for smooth animation */
-        .cyber-card-inner::before {
-          content: "";
-          position: absolute;
-          inset: -100% -50%;
-          z-index: 10;
-          pointer-events: none;
-          /* Glossy sheen gradient - wider to allow smooth sliding */
+          /* Brushed gunmetal gradient - matches H2 metal plate */
           background: linear-gradient(
-            var(--sheen-angle, 25deg),
-            transparent 0%,
-            transparent 35%,
-            rgba(255,255,255,0.06) 42%,
-            rgba(255,255,255,0.12) 50%,
-            rgba(255,255,255,0.06) 58%,
-            transparent 65%,
-            transparent 100%
+            180deg,
+            #3d3d3d 0%,
+            #2f2f2f 40%,
+            #252525 100%
           );
-          /* Start position based on random value */
-          transform: translateX(calc(var(--sheen-pos, 40%) - 50%));
-          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+          /* Rounded corners */
+          border-radius: 12px;
+
+          /* Beveled edge effect - lighter top/left for raised look */
+          border-top: 2px solid rgba(180,180,180,0.45);
+          border-left: 1px solid rgba(130,130,130,0.35);
+          border-right: 1px solid rgba(60,60,60,0.6);
+          border-bottom: 2px solid rgba(0,0,0,0.7);
+
+          /* Multi-layer shadow for depth */
+          box-shadow:
+            /* Inner highlight at top for glossy reflection */
+            inset 0 1px 0 rgba(255,255,255,0.12),
+            /* Inner shadow at bottom for depth */
+            inset 0 -1px 2px rgba(0,0,0,0.25),
+            /* Main drop shadow */
+            0 6px 16px rgba(0,0,0,0.5),
+            /* Soft ambient shadow */
+            0 2px 6px rgba(0,0,0,0.3);
+
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Holographic iridescent overlay */
-        .cyber-card-inner::after {
+        /* Glossy highlight overlay on metal plate */
+        .cyber-card-plate::before {
           content: "";
           position: absolute;
           inset: 0;
-          z-index: 11;
-          pointer-events: none;
-          /* Rainbow gradient for holographic effect */
+          height: 50%;
+          /* Glossy reflection gradient */
           background: linear-gradient(
-            calc(var(--sheen-angle, 25deg) + 90deg),
-            rgba(255, 0, 128, 0.02) 0%,
-            rgba(128, 0, 255, 0.02) 20%,
-            rgba(0, 128, 255, 0.02) 40%,
-            rgba(0, 255, 128, 0.02) 60%,
-            rgba(255, 255, 0, 0.02) 80%,
-            rgba(255, 128, 0, 0.02) 100%
+            180deg,
+            rgba(255,255,255,0.08) 0%,
+            rgba(255,255,255,0.03) 50%,
+            transparent 100%
           );
-          mix-blend-mode: overlay;
-          filter: hue-rotate(var(--hue-rotate, 0deg));
-          opacity: var(--holo-opacity, 0.8);
-          transition: filter 0.6s ease, opacity 0.4s ease;
-        }
-
-        /* Hover effect - lift + enhanced glow */
-        .cyber-card:hover {
-          transform: translateY(-3px);
-          box-shadow:
-            0 8px 30px rgba(0,0,0,0.7),
-            inset 0 1px 0 rgba(255,255,255,0.2),
-            inset 0 -1px 0 rgba(0,0,0,0.3),
-            0 0 30px rgba(255,215,0,0.25);
-          border-color: rgba(255,215,0,0.4);
-        }
-
-        /* Hover - sheen smoothly slides across */
-        .cyber-card:hover .cyber-card-inner::before {
-          transform: translateX(calc(var(--sheen-pos, 40%) + 30%));
-        }
-
-        /* Hover - holographic becomes slightly more visible and shifts hue */
-        .cyber-card:hover .cyber-card-inner::after {
-          filter: hue-rotate(calc(var(--hue-rotate, 0deg) + 30deg));
-          opacity: 1;
-        }
-
-        /* Corner tech accents - L-shaped with brand yellow */
-        .cyber-card-corner {
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          z-index: 12;
+          border-radius: 12px 12px 0 0;
+          z-index: 1;
           pointer-events: none;
-          transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .cyber-card-corner-tl {
-          top: 0;
-          left: 0;
-          border-top: 2px solid rgba(255,215,0,0.5);
-          border-left: 2px solid rgba(255,215,0,0.5);
-          border-top-left-radius: 6px;
-        }
-
-        .cyber-card-corner-tr {
-          top: 0;
-          right: 0;
-          border-top: 2px solid rgba(255,215,0,0.5);
-          border-right: 2px solid rgba(255,215,0,0.5);
-          border-top-right-radius: 6px;
-        }
-
-        .cyber-card-corner-bl {
-          bottom: 0;
-          left: 0;
-          border-bottom: 2px solid rgba(255,215,0,0.3);
-          border-left: 2px solid rgba(255,215,0,0.3);
-          border-bottom-left-radius: 6px;
-        }
-
-        .cyber-card-corner-br {
-          bottom: 0;
-          right: 0;
-          border-bottom: 2px solid rgba(255,215,0,0.3);
-          border-right: 2px solid rgba(255,215,0,0.3);
-          border-bottom-right-radius: 6px;
-        }
-
-        /* Hover - corners glow brighter */
-        .cyber-card:hover .cyber-card-corner-tl,
-        .cyber-card:hover .cyber-card-corner-tr {
-          border-color: rgba(255,215,0,0.9);
-          box-shadow: 0 0 10px rgba(255,215,0,0.5);
-        }
-
-        .cyber-card:hover .cyber-card-corner-bl,
-        .cyber-card:hover .cyber-card-corner-br {
-          border-color: rgba(255,215,0,0.6);
-          box-shadow: 0 0 8px rgba(255,215,0,0.4);
+        /* Hover effect - lift + enhanced shadow */
+        .cyber-card-3d:hover .cyber-card-plate {
+          transform: rotateX(8deg) translateY(-4px);
+          box-shadow:
+            inset 0 1px 0 rgba(255,255,255,0.15),
+            inset 0 -1px 2px rgba(0,0,0,0.25),
+            0 10px 25px rgba(0,0,0,0.6),
+            0 4px 10px rgba(0,0,0,0.4),
+            /* Subtle gold accent glow on hover */
+            0 0 20px rgba(255,215,0,0.15);
         }
 
         /* Content container */
         .cyber-card-content {
           position: relative;
-          z-index: 5;
+          z-index: 2;
         }
       `}</style>
 
-      <div
-        className={`cyber-card ${className}`}
-        style={{
-          '--sheen-angle': `${randomValues.sheenAngle}deg`,
-          '--sheen-pos': `${randomValues.sheenPosition}%`,
-          '--hue-rotate': `${randomValues.hueRotate}deg`,
-          '--holo-opacity': randomValues.holoOpacity,
-        } as React.CSSProperties}
-      >
-        <div className="cyber-card-inner">
+      <div className={`cyber-card-3d ${className}`}>
+        <div className="cyber-card-plate">
           <div className={`cyber-card-content ${paddingClass} ${centerClass}`}>
             {children}
           </div>
-
-          {/* Corner tech accents */}
-          <div className="cyber-card-corner cyber-card-corner-tl" />
-          <div className="cyber-card-corner cyber-card-corner-tr" />
-          <div className="cyber-card-corner cyber-card-corner-bl" />
-          <div className="cyber-card-corner cyber-card-corner-br" />
         </div>
       </div>
     </>
