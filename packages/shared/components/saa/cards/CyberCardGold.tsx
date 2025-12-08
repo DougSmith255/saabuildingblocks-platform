@@ -27,7 +27,7 @@ const paddingClasses = {
  * Location: @saa/shared/components/saa/cards/CyberCardGold
  *
  * Features:
- * - Thick neon gold glowing border (10px)
+ * - Thick neon gold glowing border (10px) with pulsing animation
  * - White outline lines on inner AND outer edges (like H1 text)
  * - GenericCard-style semi-transparent interior
  * - 3D depth effect (no angle)
@@ -73,17 +73,34 @@ export function CyberCardGold({
           /* GenericCard-style interior */
           background: rgba(255, 255, 255, 0.05);
 
-          /* Neon glow effect - gold glow layers */
-          box-shadow:
-            /* Gold neon glow layers */
-            0 0 8px #ffd700,
-            0 0 16px #ffd700,
-            0 0 32px rgba(255,215,0,0.6),
-            0 0 48px rgba(255,179,71,0.4),
-            /* Drop shadow for depth */
-            0 6px 16px rgba(0,0,0,0.4);
+          /* Pulsing glow animation - same as CTA button */
+          animation: cyberCardGoldPulse 2s ease-in-out infinite;
 
           overflow: visible;
+        }
+
+        /* Pulsing glow animation - tighter glow, matches CTA button style */
+        @keyframes cyberCardGoldPulse {
+          0%, 100% {
+            box-shadow:
+              /* Gold neon glow layers - tighter */
+              0 0 4px 1px rgba(255, 215, 0, 0.5),
+              0 0 8px 2px rgba(255, 215, 0, 0.35),
+              0 0 16px 4px rgba(255, 215, 0, 0.2),
+              0 0 24px 6px rgba(255, 215, 0, 0.1),
+              /* Drop shadow for depth */
+              0 4px 12px rgba(0,0,0,0.3);
+          }
+          50% {
+            box-shadow:
+              /* Intensified glow at peak - still tighter */
+              0 0 6px 2px rgba(255, 215, 0, 0.6),
+              0 0 12px 4px rgba(255, 215, 0, 0.4),
+              0 0 20px 6px rgba(255, 215, 0, 0.25),
+              0 0 32px 10px rgba(255, 215, 0, 0.12),
+              /* Drop shadow for depth */
+              0 6px 16px rgba(0,0,0,0.35);
+          }
         }
 
         /* Inner white outline - inside the gold border */
