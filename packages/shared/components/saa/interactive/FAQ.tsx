@@ -108,7 +108,7 @@ export function FAQ({
           {/* Answer */}
           <div
             className={`saa-faq-answer overflow-hidden transition-all duration-300 ${
-              isOpen(index) ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+              isOpen(index) ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
             <div className="px-5 pt-0 pb-7 text-body">
