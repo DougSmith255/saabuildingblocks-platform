@@ -46,12 +46,12 @@ export function SocialProof() {
               </div>
 
               {/* Stat */}
-              <div className="text-3xl md:text-4xl font-bold text-[#ffd700] mb-2">
+              <div className="text-h3 text-[#ffd700] mb-2">
                 {item.stat}
               </div>
 
               {/* Label */}
-              <p className="text-[#dcdbd5] text-lg">
+              <p className="text-body">
                 {item.label}
               </p>
             </GenericCard>

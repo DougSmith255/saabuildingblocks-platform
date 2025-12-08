@@ -11,7 +11,7 @@ export function FinalCTA() {
           {/* Header */}
           <div className="text-center mb-8">
             <H2>Ready to Transform Your Real Estate Career?</H2>
-            <p className="text-[#dcdbd5] mt-4 text-lg max-w-2xl mx-auto">
+            <p className="text-body mt-4 max-w-2xl mx-auto">
               Join the fastest-growing team at eXp Realty and start building the career - and life - you deserve.
             </p>
           </div>
@@ -27,7 +27,7 @@ export function FinalCTA() {
           </div>
 
           {/* Trust Statement */}
-          <p className="text-center text-[#dcdbd5]/60 text-sm mt-8">
+          <p className="text-caption text-center opacity-60 mt-8">
             No commitment required. See if we're the right fit for you.
           </p>
         </GenericCard>

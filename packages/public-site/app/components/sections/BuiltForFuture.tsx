@@ -33,7 +33,7 @@ export function BuiltForFuture() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <H2>Built for the Future</H2>
-          <p className="text-[#dcdbd5] mt-4 text-lg max-w-3xl mx-auto">
+          <p className="text-body mt-4 max-w-3xl mx-auto">
             Real estate is evolving. We're already there.
           </p>
         </div>
@@ -54,10 +54,10 @@ export function BuiltForFuture() {
 
               {/* Content */}
               <div>
-                <h3 className="text-[#e5e4dd] font-semibold text-lg mb-1">
+                <h3 className="text-h4 mb-1">
                   {point.title}
                 </h3>
-                <p className="text-[#dcdbd5]/80">
+                <p className="text-body opacity-80">
                   {point.description}
                 </p>
               </div>

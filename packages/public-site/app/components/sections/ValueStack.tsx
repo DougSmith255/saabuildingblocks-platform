@@ -61,11 +61,11 @@ export function ValueStack() {
 
               {/* Content */}
               <div className="flex-grow">
-                <h3 className="text-[#e5e4dd] font-semibold text-lg md:text-xl">
+                <h3 className="text-h4">
                   {item.title}
                 </h3>
                 {item.subtitle && (
-                  <p className="text-[#dcdbd5]/70 text-sm md:text-base">
+                  <p className="text-body opacity-70">
                     {item.subtitle}
                   </p>
                 )}
@@ -84,11 +84,11 @@ export function ValueStack() {
         {/* Bottom Statement */}
         <div className="mt-12 text-center">
           <div className="inline-block px-6 py-4 rounded-xl bg-gradient-to-r from-[#ffd700]/10 to-[#00ff88]/10 border border-[#ffd700]/20">
-            <p className="text-xl md:text-2xl font-bold text-[#e5e4dd]">
+            <p className="text-h4">
               No Team Fees. No Cost. Everything is{' '}
               <span className="text-[#ffd700]">100% FREE</span>.
             </p>
-            <p className="text-[#dcdbd5] mt-2">
+            <p className="text-body mt-2">
               We Invest in Your Success!
             </p>
           </div>

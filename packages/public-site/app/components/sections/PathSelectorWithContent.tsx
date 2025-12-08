@@ -77,7 +77,7 @@ export function PathSelectorWithContent() {
           {/* Section Header */}
           <div className="text-center mb-12">
             <H2>Which Best Describes You?</H2>
-            <p className="text-[#dcdbd5] mt-4 text-lg max-w-3xl mx-auto">
+            <p className="text-body mt-4 max-w-3xl mx-auto">
               Select your path to unlock your personalized roadmap.
             </p>
           </div>
@@ -111,24 +111,24 @@ export function PathSelectorWithContent() {
               <GenericCard padding="lg" className="mt-8">
                 {/* Problem */}
                 <div className="mb-6">
-                  <h3 className="text-[#ffd700] font-semibold text-lg mb-2">The Problem</h3>
-                  <p className="text-[#dcdbd5]">
+                  <h3 className="text-h4 text-[#ffd700] mb-2">The Problem</h3>
+                  <p className="text-body">
                     {pathContent[displayedPath].problem}
                   </p>
                 </div>
 
                 {/* Answer */}
                 <div className="mb-6">
-                  <h3 className="text-[#00ff88] font-semibold text-lg mb-2">The Answer</h3>
-                  <p className="text-[#dcdbd5]">
+                  <h3 className="text-h4 text-[#00ff88] mb-2">The Answer</h3>
+                  <p className="text-body">
                     {pathContent[displayedPath].answer}
                   </p>
                 </div>
 
                 {/* Proof */}
                 <div>
-                  <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">The Proof</h3>
-                  <p className="text-[#dcdbd5]">
+                  <h3 className="text-h4 mb-2">The Proof</h3>
+                  <p className="text-body">
                     {pathContent[displayedPath].proof}
                   </p>
                 </div>

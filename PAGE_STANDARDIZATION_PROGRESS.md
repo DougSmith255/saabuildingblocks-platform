@@ -37,6 +37,43 @@ Replaced all inline card styling (`bg-white/5 border border-white/10 hover:borde
 - `centered` - Centers text content
 - `className` - Additional classes like `flex items-center gap-4`
 
+#### Typography Standardization (Dec 8, 2025)
+Replaced all hardcoded text classes (e.g., `text-lg`, `text-xl`, `text-[#e5e4dd]`) with Master Controller typography classes (`text-h3`, `text-h4`, `text-body`, `text-caption`).
+
+**Why this matters:**
+- The Master Controller generates CSS variables with `clamp()` for fluid typography
+- CSS classes like `.text-h3`, `.text-body` use these variables
+- Previously, sections used hardcoded Tailwind classes (`text-lg`, `text-xl`) which bypass the Master Controller
+- Now all text scales properly across viewport sizes (250px - 3000px)
+
+**Files Updated:**
+
+| File | Before | After |
+|------|--------|-------|
+| `ValueStack.tsx` | `text-lg md:text-xl`, `text-sm md:text-base` | `text-h4`, `text-body` |
+| `SocialProof.tsx` | `text-3xl md:text-4xl`, `text-lg` | `text-h3`, `text-body` |
+| `WhyExpRealty.tsx` | `text-lg`, `text-sm` | `text-h4`, `text-body` |
+| `WhoWeAre.tsx` | `text-xl md:text-2xl`, `text-lg` | `text-h3`, `text-body` |
+| `PathSelectorWithContent.tsx` | `text-lg`, hardcoded colors | `text-h4`, `text-body` |
+| `BuiltForFuture.tsx` | `text-lg` | `text-h4`, `text-body` |
+| `FinalCTA.tsx` | `text-lg`, `text-sm` | `text-body`, `text-caption` |
+
+**Typography Classes Available:**
+- `text-h1` through `text-h6` - Headings (use appropriate level for semantic meaning)
+- `text-body` - Body/paragraph text
+- `text-caption` - Small text (disclaimers, fine print)
+- `text-tagline` - Taglines/subtitles
+- `text-quote` - Blockquotes
+- `text-link` - Link text
+- `text-button` - Button text (usually handled by button components)
+
+**Color Overrides:**
+When you need a different color than the default, add the color after the text class:
+```tsx
+<h3 className="text-h4 text-[#ffd700]">Golden heading</h3>
+<p className="text-body opacity-80">Slightly faded text</p>
+```
+
 ### Remaining Work
 - [ ] Review hero section for any standardization needs
 - [ ] Check StaticCounter component styling

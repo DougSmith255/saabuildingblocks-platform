@@ -43,7 +43,7 @@ export function WhyExpRealty() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <H2>Why eXp Realty?</H2>
-          <p className="text-[#dcdbd5] mt-4 text-lg max-w-3xl mx-auto">
+          <p className="text-body mt-4 max-w-3xl mx-auto">
             The future of real estate is here. Join the brokerage that puts agents first.
           </p>
         </div>
@@ -62,12 +62,12 @@ export function WhyExpRealty() {
               </div>
 
               {/* Title */}
-              <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">
+              <h3 className="text-h4 mb-2">
                 {reason.title}
               </h3>
 
               {/* Description */}
-              <p className="text-[#dcdbd5]/80 text-sm">
+              <p className="text-body opacity-80">
                 {reason.description}
               </p>
             </GenericCard>

@@ -26,7 +26,7 @@ export function WhoWeAre() {
           {/* Section Header */}
           <div className="text-center mb-12">
             <H2>Who We Are</H2>
-            <p className="text-[#dcdbd5] mt-4 text-lg max-w-3xl mx-auto">
+            <p className="text-body mt-4 max-w-3xl mx-auto">
               The architects of your unfair advantage.
             </p>
           </div>
@@ -51,17 +51,17 @@ export function WhoWeAre() {
                 </ProfileCyberFrame>
 
               {/* Name */}
-              <h3 className="text-[#e5e4dd] font-semibold text-xl md:text-2xl text-center mb-1">
+              <h3 className="text-h3 text-center mb-1">
                 {member.name}
               </h3>
 
               {/* Role */}
-              <p className="text-[#ffd700] text-center mb-4">
+              <p className="text-body text-[#ffd700] text-center mb-4">
                 {member.role}
               </p>
 
               {/* Bio */}
-              <p className="text-[#dcdbd5]/80 text-center leading-relaxed">
+              <p className="text-body opacity-80 text-center leading-relaxed">
                 {member.bio}
               </p>
             </GenericCard>
