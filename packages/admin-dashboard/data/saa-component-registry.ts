@@ -80,7 +80,7 @@ export const saaComponentRegistry: SAAComponent[] = [
   },
 
   // ============================================
-  // CARDS (1) - Generic Card is the standard card for all use cases
+  // CARDS (2)
   // ============================================
   {
     id: 'generic-card',
@@ -91,6 +91,16 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'custom',
     tags: ['card', 'container', 'glass', 'simple', 'clean', 'hover', 'padding'],
+  },
+  {
+    id: 'cyber-card',
+    name: 'Cyber Card',
+    category: 'cards',
+    description: 'Premium metal-frame card for featured content and stats. Features 3D metal frame, holographic glass overlay, brand yellow corner accents, and lift+glow hover effect.',
+    reactPath: '../shared/components/saa/cards/CyberCard.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['card', 'featured', 'stats', 'metal', 'holographic', 'premium', 'yellow', 'glow'],
   },
 
   // ============================================

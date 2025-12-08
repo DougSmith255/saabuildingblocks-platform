@@ -1,8 +1,10 @@
 /**
  * SAA Card Components Index
  *
- * Simple, clean card components for the SAA design system.
- * All complex card variants have been removed in favor of the Generic Card.
+ * Card components for the SAA design system.
+ * - GenericCard: Simple, clean card for general content
+ * - CyberCard: Premium metal-frame card for featured content/stats
  */
 
 export { GenericCard, type GenericCardProps } from './GenericCard';
+export { CyberCard, type CyberCardProps } from './CyberCard';

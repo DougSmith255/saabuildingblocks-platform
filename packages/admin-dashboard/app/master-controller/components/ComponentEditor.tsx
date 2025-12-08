@@ -251,6 +251,21 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
             </div>
           )
         })));
+      case 'cyber-card':
+        return lazy(() => import('@saa/shared/components/saa/cards/CyberCard').then(m => ({
+          default: () => (
+            <div className="space-y-6 w-full max-w-sm">
+              <m.CyberCard>
+                <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
+                <p className="text-[#dcdbd5]">Agents Strong</p>
+              </m.CyberCard>
+              <m.CyberCard padding="lg">
+                <div className="text-4xl font-bold text-[#e5e4dd] mb-2">$16K</div>
+                <p className="text-[#dcdbd5]/80">Cap Amount</p>
+              </m.CyberCard>
+            </div>
+          )
+        })));
 
       // ============================================
       // TYPOGRAPHY
