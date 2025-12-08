@@ -15,7 +15,7 @@ export interface CyberCardGoldProps {
   href?: string;
   /** Enable interactive hover effects (auto-enabled when href is set) */
   interactive?: boolean;
-  /** Gold frame thickness: 'sm' (8px), 'md' (12px), 'lg' (16px) */
+  /** Gold frame thickness: 'sm' (3px), 'md' (4px), 'lg' (5px) */
   frameSize?: 'sm' | 'md' | 'lg';
 }
 
@@ -27,37 +27,29 @@ const paddingClasses = {
 };
 
 const frameSizes = {
-  sm: '8px',
-  md: '12px',
-  lg: '16px',
+  sm: '3px',
+  md: '4px',
+  lg: '5px',
 };
 
 /**
- * CyberCardGold - Premium gold frame card with dark inset center
+ * CyberCardGold - Premium cyberpunk neon gold card
  *
  * MASTER CONTROLLER COMPONENT
  * Location: @saa/shared/components/saa/cards/CyberCardGold
  *
  * Features:
- * - Gold gradient frame/border (like an engraved nameplate)
- * - Dark inset center (GenericCard-style background) for readable text
+ * - Neon gold glowing border (matches H1 glow style)
+ * - White outline on the border (like H1 text)
+ * - Semi-transparent dark inset (GenericCard-style)
  * - 3D perspective with rotateX tilt
- * - Shimmer effect on gold frame only (not the content area)
- * - Beveled metallic edges
+ * - Shimmer effect on border
  *
- * Use with GoldEmbossedText for premium headings:
+ * Use with neon-styled headings for premium content:
  * ```tsx
  * <CyberCardGold>
- *   <GoldEmbossedText className="text-3xl font-bold">Premium</GoldEmbossedText>
- *   <p className="text-[#dcdbd5]">Description in white</p>
- * </CyberCardGold>
- * ```
- *
- * @example
- * ```tsx
- * <CyberCardGold>
- *   <div className="text-3xl font-bold text-[#ffd700]">Featured</div>
- *   <p className="text-[#dcdbd5]">Premium content</p>
+ *   <h3 className="text-h3 text-[#ffd700]">Premium</h3>
+ *   <p className="text-body">Description</p>
  * </CyberCardGold>
  * ```
  */
@@ -97,105 +89,81 @@ export function CyberCardGold({
           transform-style: preserve-3d;
           transform: rotateX(8deg);
 
-          /* Bright gold bar gradient for the frame */
-          background: linear-gradient(
-            180deg,
-            #ffd700 0%,
-            #e6c200 25%,
-            #ccaa00 50%,
-            #b89700 75%,
-            #a68600 100%
-          );
+          /* Neon gold border - white outline + gold glow (like H1 text effect) */
+          border: var(--ccg-frame-width, 4px) solid;
+          border-color: #ffd700;
 
           /* Rounded corners */
           border-radius: 12px;
 
-          /* Beveled edge effect - gold metallic */
-          border-top: 2px solid rgba(255,245,200,0.8);
-          border-left: 1px solid rgba(255,235,150,0.6);
-          border-right: 1px solid rgba(180,140,0,0.6);
-          border-bottom: 2px solid rgba(120,90,0,0.8);
-
-          /* Multi-layer shadow for depth */
+          /* Neon glow effect matching H1 style:
+             - White outline (inner)
+             - Gold glow layers (outer)
+          */
           box-shadow:
-            /* Inner highlight at top for glossy reflection */
-            inset 0 1px 0 rgba(255,255,255,0.4),
-            /* Main drop shadow */
-            0 6px 16px rgba(0,0,0,0.4),
-            /* Gold ambient glow */
-            0 2px 12px rgba(255,215,0,0.3);
-
-          /* Frame padding - creates the visible gold border */
-          padding: var(--ccg-frame-width, 12px);
+            /* White outline effect - like H1 text */
+            inset 0 0 0 1px rgba(255,255,255,0.5),
+            /* Inner gold glow */
+            inset 0 0 8px rgba(255,215,0,0.3),
+            /* Outer white edge highlight */
+            0 0 1px rgba(255,255,255,0.6),
+            0 0 2px rgba(255,255,255,0.4),
+            /* Gold neon glow layers - matching H1 */
+            0 0 4px #ffd700,
+            0 0 8px #ffd700,
+            0 0 16px rgba(255,215,0,0.6),
+            0 0 32px rgba(255,179,71,0.4),
+            /* Drop shadow for depth */
+            0 4px 12px rgba(0,0,0,0.4);
 
           overflow: hidden;
         }
 
-        /* Shimmer overlay - only on the frame, not content */
+        /* Shimmer overlay on the border */
         .cyber-card-gold-frame::before {
           content: "";
           position: absolute;
-          top: -100%;
-          left: -100%;
-          right: -100%;
-          bottom: -100%;
-          z-index: 1;
+          top: -2px;
+          left: -2px;
+          right: -2px;
+          bottom: -2px;
+          z-index: 0;
           pointer-events: none;
+          border-radius: 14px;
           /* Glossy sheen gradient */
           background: linear-gradient(
             var(--ccg-sheen-angle, 25deg),
             transparent 0%,
-            transparent 35%,
-            rgba(255,255,255,0.35) 42%,
-            rgba(255,255,255,0.55) 50%,
-            rgba(255,255,255,0.35) 58%,
-            transparent 65%,
+            transparent 40%,
+            rgba(255,255,255,0.2) 45%,
+            rgba(255,255,255,0.4) 50%,
+            rgba(255,255,255,0.2) 55%,
+            transparent 60%,
             transparent 100%
           );
-          transform: translateX(calc(var(--ccg-sheen-pos, 30%) - 50%));
-          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-          border-radius: 12px;
+          background-size: 200% 200%;
+          background-position: calc(var(--ccg-sheen-pos, 30%) - 50%) 0;
+          transition: background-position 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          opacity: 0.6;
         }
 
-        /* Glossy top highlight on frame */
-        .cyber-card-gold-frame::after {
-          content: "";
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 50%;
-          background: linear-gradient(
-            180deg,
-            rgba(255,255,255,0.25) 0%,
-            rgba(255,255,255,0.1) 50%,
-            transparent 100%
-          );
-          border-radius: 12px 12px 0 0;
-          z-index: 1;
-          pointer-events: none;
-        }
-
-        /* Dark inset center - where content lives */
+        /* Dark inset center - GenericCard style (no yellow tint) */
         .cyber-card-gold-inset {
           position: relative;
-          z-index: 2;
+          z-index: 1;
 
-          /* GenericCard-style dark background */
-          background: rgba(25, 24, 24, 0.95);
+          /* Semi-transparent dark background - matching GenericCard */
+          background: rgba(255, 255, 255, 0.05);
 
           /* Rounded corners for the inset */
           border-radius: 8px;
 
-          /* Inset shadow to make it look recessed */
+          /* Subtle inner shadow */
           box-shadow:
-            inset 0 2px 4px rgba(0,0,0,0.5),
-            inset 0 1px 2px rgba(0,0,0,0.3),
-            /* Subtle border glow from gold frame */
-            0 0 1px rgba(255,215,0,0.3);
+            inset 0 1px 2px rgba(0,0,0,0.2);
 
-          /* Subtle border */
-          border: 1px solid rgba(255,255,255,0.08);
+          /* Subtle border - no yellow */
+          border: 1px solid rgba(255,255,255,0.1);
 
           /* Inherit 3D transform so content tilts with card */
           transform-style: preserve-3d;
@@ -217,27 +185,37 @@ export function CyberCardGold({
         }
 
         .cyber-card-gold-3d.cyber-card-gold-interactive .cyber-card-gold-frame {
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
-        /* Hover - shimmer slides across frame */
+        /* Hover - shimmer slides across, glow intensifies */
         .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-frame::before {
-          transform: translateX(calc(var(--ccg-sheen-pos, 30%) + 50%));
+          background-position: calc(var(--ccg-sheen-pos, 30%) + 60%) 0;
         }
 
         .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-frame {
           transform: rotateX(8deg) translateY(-4px) scale(1.02);
+          border-color: #ffe44d;
           box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.5),
-            0 12px 30px rgba(0,0,0,0.5),
-            0 6px 12px rgba(0,0,0,0.3),
-            /* Enhanced gold glow on hover */
-            0 4px 20px rgba(255,215,0,0.5);
+            /* Enhanced white outline */
+            inset 0 0 0 1px rgba(255,255,255,0.7),
+            inset 0 0 12px rgba(255,215,0,0.4),
+            /* Brighter outer white edge */
+            0 0 2px rgba(255,255,255,0.8),
+            0 0 4px rgba(255,255,255,0.5),
+            /* Intensified gold neon glow */
+            0 0 8px #ffd700,
+            0 0 16px #ffd700,
+            0 0 32px rgba(255,215,0,0.8),
+            0 0 48px rgba(255,179,71,0.5),
+            /* Enhanced drop shadow */
+            0 8px 24px rgba(0,0,0,0.5);
         }
 
         /* Subtle inset highlight on hover */
         .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-inset {
-          border-color: rgba(255,215,0,0.2);
+          border-color: rgba(255,215,0,0.15);
+          background: rgba(255, 255, 255, 0.07);
         }
       `}</style>
 

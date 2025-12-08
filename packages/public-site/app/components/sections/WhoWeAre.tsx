@@ -34,13 +34,14 @@ export function WhoWeAre() {
           </div>
 
           {/* Team Members */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
             {teamMembers.map((member, index) => (
               <GenericCard
                 key={index}
                 hover
                 padding="lg"
                 href={member.href}
+                className="h-full flex flex-col"
               >
                 {/* Photo with CyberFrame effects (circular) */}
                 <ProfileCyberFrame index={index} size="md">
@@ -64,7 +65,7 @@ export function WhoWeAre() {
               </p>
 
               {/* Bio */}
-              <p className="text-body opacity-80 text-center leading-relaxed">
+              <p className="text-body opacity-80 text-center leading-relaxed flex-grow">
                 {member.bio}
               </p>
             </GenericCard>

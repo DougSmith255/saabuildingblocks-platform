@@ -79,8 +79,10 @@ export function GenericCard({
 
   // Wrap in link if href is provided
   if (href) {
+    // Extract height classes from className to apply to anchor wrapper
+    const hasHeightFull = className.includes('h-full');
     return (
-      <a href={href} className="block no-underline">
+      <a href={href} className={`block no-underline ${hasHeightFull ? 'h-full' : ''}`}>
         {cardContent}
       </a>
     );
