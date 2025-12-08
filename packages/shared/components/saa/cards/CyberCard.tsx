@@ -11,8 +11,10 @@ export interface CyberCardProps {
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   /** Center the content */
   centered?: boolean;
-  /** Link URL - wraps card in anchor tag */
+  /** Link URL - wraps card in anchor tag and enables interactive styling */
   href?: string;
+  /** Enable interactive hover effects (auto-enabled when href is set) */
+  interactive?: boolean;
 }
 
 const paddingClasses = {
@@ -54,7 +56,10 @@ export function CyberCard({
   padding = 'md',
   centered = true,
   href,
+  interactive,
 }: CyberCardProps) {
+  // Auto-enable interactive mode when href is set
+  const isInteractive = interactive ?? !!href;
   const paddingClass = paddingClasses[padding];
   const centerClass = centered ? 'text-center' : '';
 
@@ -101,7 +106,6 @@ export function CyberCard({
             /* Soft ambient shadow */
             0 2px 6px rgba(0,0,0,0.3);
 
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         /* Glossy highlight overlay on metal plate */
@@ -122,16 +126,25 @@ export function CyberCard({
           pointer-events: none;
         }
 
-        /* Hover effect - lift + enhanced shadow */
-        .cyber-card-3d:hover .cyber-card-plate {
-          transform: rotateX(8deg) translateY(-4px);
+        /* Interactive hover effect - lift + bright yellow glow */
+        .cyber-card-3d.cyber-card-interactive {
+          cursor: pointer;
+        }
+
+        .cyber-card-3d.cyber-card-interactive .cyber-card-plate {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cyber-card-3d.cyber-card-interactive:hover .cyber-card-plate {
+          transform: rotateX(8deg) translateY(-6px);
           box-shadow:
-            inset 0 1px 0 rgba(255,255,255,0.15),
+            inset 0 1px 0 rgba(255,255,255,0.2),
             inset 0 -1px 2px rgba(0,0,0,0.25),
-            0 10px 25px rgba(0,0,0,0.6),
-            0 4px 10px rgba(0,0,0,0.4),
-            /* Subtle gold accent glow on hover */
-            0 0 20px rgba(255,215,0,0.15);
+            0 12px 30px rgba(0,0,0,0.6),
+            0 6px 12px rgba(0,0,0,0.4),
+            /* Bright yellow glow on hover */
+            0 0 35px rgba(255,215,0,0.4),
+            0 0 15px rgba(255,215,0,0.3);
         }
 
         /* Content container */
@@ -141,7 +154,7 @@ export function CyberCard({
         }
       `}</style>
 
-      <div className={`cyber-card-3d ${className}`}>
+      <div className={`cyber-card-3d ${isInteractive ? 'cyber-card-interactive' : ''} ${className}`}>
         <div className="cyber-card-plate">
           <div className={`cyber-card-content ${paddingClass} ${centerClass}`}>
             {children}
