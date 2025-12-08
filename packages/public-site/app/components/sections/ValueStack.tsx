@@ -1,6 +1,6 @@
 'use client';
 
-import { H2, GenericCard } from '@saa/shared/components/saa';
+import { H2, GenericCard, CyberCardGold, GoldEmbossedText } from '@saa/shared/components/saa';
 import { DollarSign, Users, Brain, Zap, Globe } from 'lucide-react';
 
 const valueItems = [
@@ -81,17 +81,16 @@ export function ValueStack() {
           ))}
         </div>
 
-        {/* Bottom Statement */}
-        <div className="mt-12 text-center">
-          <div className="inline-block px-6 py-4 rounded-xl bg-gradient-to-r from-[#ffd700]/10 to-[#00ff88]/10 border border-[#ffd700]/20">
-            <p className="text-h4">
-              No Team Fees. No Cost. Everything is{' '}
-              <span className="text-[#ffd700]">100% FREE</span>.
-            </p>
+        {/* Bottom Statement - Premium Gold Card */}
+        <div className="mt-12 flex justify-center">
+          <CyberCardGold padding="lg" frameSize="md">
+            <GoldEmbossedText as="p" className="text-h4">
+              No Team Fees. No Cost. Everything is 100% FREE.
+            </GoldEmbossedText>
             <p className="text-body mt-2">
               We Invest in Your Success!
             </p>
-          </div>
+          </CyberCardGold>
         </div>
       </div>
     </section>
