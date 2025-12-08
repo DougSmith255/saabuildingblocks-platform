@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { H2, ProfileCyberFrame, GenericCard } from '@saa/shared/components/saa';
+import { H2, ProfileCyberFrame, GenericCard, SecondaryButton } from '@saa/shared/components/saa';
 
 const teamMembers = [
   {
@@ -10,12 +10,14 @@ const teamMembers = [
     role: 'Co-Founder & Full-Stack Architect',
     image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png',
     bio: "Top 0.1% eXp team builder. Architect of the infrastructure powering Smart Agent Alliance—this website, the automation systems, the entire value stack for our agents. He transforms complex technology into unfair advantages for agents ready to dominate their market.",
+    href: '/about-doug-smart',
   },
   {
     name: 'Karrie Smart',
     role: 'Co-Founder & Strategic Advisor',
     image: 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png',
     bio: "UC Berkeley Law (top 5%), eXp Certified Mentor, and the strategic mind behind agent success. Built a six-figure business in year one—no cold calls, no door knocking. Now she's engineering the same results for agents who refuse to settle.",
+    href: '/about-karrie-hill',
   },
 ];
 
@@ -38,6 +40,7 @@ export function WhoWeAre() {
                 key={index}
                 hover
                 padding="lg"
+                href={member.href}
               >
                 {/* Photo with CyberFrame effects (circular) */}
                 <ProfileCyberFrame index={index} size="md">
@@ -67,6 +70,13 @@ export function WhoWeAre() {
             </GenericCard>
           ))}
         </div>
+
+          {/* View Full Team Button */}
+          <div className="flex justify-center mt-12">
+            <SecondaryButton href="/our-exp-team">
+              View The Full Team
+            </SecondaryButton>
+          </div>
       </div>
     </section>
   );
