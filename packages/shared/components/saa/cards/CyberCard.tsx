@@ -132,20 +132,27 @@ export function CyberCard({
         }
 
         .cyber-card-3d.cyber-card-interactive .cyber-card-plate {
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
         }
 
         .cyber-card-3d.cyber-card-interactive:hover .cyber-card-plate {
-          transform: rotateX(8deg) translateY(-6px);
+          transform: rotateX(8deg) translateY(-4px) scale(1.02);
+          /* Lighten the card background */
+          background: linear-gradient(
+            180deg,
+            #4a4a4a 0%,
+            #3c3c3c 40%,
+            #323232 100%
+          );
+          /* Yellow border like GenericCard */
+          border-color: rgba(255,215,0,0.6);
           box-shadow:
             inset 0 1px 0 rgba(255,255,255,0.2),
             inset 0 -1px 2px rgba(0,0,0,0.25),
-            0 12px 30px rgba(0,0,0,0.6),
-            0 6px 12px rgba(0,0,0,0.4),
-            /* Tight neon yellow glow - brand yellow #ffd700 */
-            0 0 4px rgba(255,215,0,0.9),
-            0 0 8px rgba(255,215,0,0.7),
-            0 0 16px rgba(255,215,0,0.5);
+            0 12px 30px rgba(0,0,0,0.5),
+            0 6px 12px rgba(0,0,0,0.3),
+            /* Subtle yellow shadow instead of glow */
+            0 4px 16px rgba(255,215,0,0.1);
         }
 
         /* Content container */
