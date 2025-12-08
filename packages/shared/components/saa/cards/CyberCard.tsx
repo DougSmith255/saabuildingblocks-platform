@@ -142,9 +142,10 @@ export function CyberCard({
             inset 0 -1px 2px rgba(0,0,0,0.25),
             0 12px 30px rgba(0,0,0,0.6),
             0 6px 12px rgba(0,0,0,0.4),
-            /* Bright yellow glow on hover */
-            0 0 35px rgba(255,215,0,0.4),
-            0 0 15px rgba(255,215,0,0.3);
+            /* Tight neon yellow glow - brand yellow #ffd700 */
+            0 0 4px rgba(255,215,0,0.9),
+            0 0 8px rgba(255,215,0,0.7),
+            0 0 16px rgba(255,215,0,0.5);
         }
 
         /* Content container */
