@@ -23,21 +23,7 @@ export interface ProfileCyberFrameProps {
  * - Circular 3D metal frame with gold accent glow
  * - Holographic glass overlay with sheen effect
  * - Randomized sheen position per instance
- * - Hover effects (sheen slides, glow intensifies)
  * - Multiple size variants
- *
- * @example
- * ```tsx
- * // Basic usage
- * <ProfileCyberFrame>
- *   <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover" />
- * </ProfileCyberFrame>
- *
- * // With size and index for unique effects
- * <ProfileCyberFrame size="lg" index={1}>
- *   <Image src="/profile.jpg" alt="Profile" fill className="object-cover" />
- * </ProfileCyberFrame>
- * ```
  */
 export function ProfileCyberFrame({
   children,
@@ -45,157 +31,102 @@ export function ProfileCyberFrame({
   index = 0,
   size = 'md',
 }: ProfileCyberFrameProps) {
-  // Generate random values for this instance (consistent per mount)
-  // Use index as seed for consistent but different values per profile
-  const randomValues = useMemo(() => ({
-    sheenAngle: 25 + (index * 10),
-    sheenPosition: 30 + (index * 20),
-    hueRotate: index * 120,
-    holoOpacity: 0.03,
-  }), [index]);
-
-  // Size configurations with explicit pixel values for reliability
+  // Size configurations with explicit pixel values
   const sizeConfig = {
-    sm: { base: 96, md: 96 },      // 96px = w-24
-    md: { base: 144, md: 176 },    // 144px = w-36, 176px = w-44
-    lg: { base: 192, md: 224 },    // 192px = w-48, 224px = w-56
-    xl: { base: 224, md: 256 },    // 224px = w-56, 256px = w-64
+    sm: 96,
+    md: 144,
+    lg: 192,
+    xl: 224,
   };
 
   const currentSize = sizeConfig[size];
 
-  // Brand yellow colors (matching CyberFrame gold variant)
+  // Generate random values for this instance
+  const randomValues = useMemo(() => ({
+    sheenAngle: 25 + (index * 10),
+    sheenPosition: 30 + (index * 20),
+  }), [index]);
+
+  // Brand gold colors
   const colors = {
-    glow: 'rgba(255,215,0,0.1)',
-    glowHover: 'rgba(255,215,0,0.2)',
-    ring: 'rgba(255,215,0,0.3)',
-    ringHover: 'rgba(255,215,0,0.6)',
-    ringGlow: 'rgba(255,215,0,0.4)',
+    glow: 'rgba(255,215,0,0.15)',
+    ring: 'rgba(255,215,0,0.4)',
   };
 
   return (
-    <>
-      <style jsx global>{`
-        .profile-cyber-frame:hover > .profile-metal-frame {
-          box-shadow:
-            0 4px 25px rgba(0,0,0,0.7),
-            inset 0 1px 0 rgba(255,255,255,0.2),
-            inset 0 -1px 0 rgba(0,0,0,0.3),
-            0 0 25px ${colors.glowHover} !important;
-          border-color: ${colors.ring} !important;
-        }
-
-        .profile-cyber-frame:hover .profile-sheen {
-          transform: translateX(calc(var(--sheen-pos, 40%) + 30%)) !important;
-        }
-
-        .profile-cyber-frame:hover .profile-holo {
-          filter: hue-rotate(calc(var(--hue-rotate, 0deg) + 30deg)) !important;
-          opacity: 1 !important;
-        }
-
-        .profile-cyber-frame:hover .profile-glow-ring {
-          border-color: ${colors.ringHover} !important;
-          box-shadow: 0 0 12px ${colors.ringGlow} !important;
-        }
-
-        @media (min-width: 768px) {
-          .profile-cyber-frame.size-sm { width: ${sizeConfig.sm.md}px !important; height: ${sizeConfig.sm.md}px !important; }
-          .profile-cyber-frame.size-md { width: ${sizeConfig.md.md}px !important; height: ${sizeConfig.md.md}px !important; }
-          .profile-cyber-frame.size-lg { width: ${sizeConfig.lg.md}px !important; height: ${sizeConfig.lg.md}px !important; }
-          .profile-cyber-frame.size-xl { width: ${sizeConfig.xl.md}px !important; height: ${sizeConfig.xl.md}px !important; }
-        }
-      `}</style>
-
+    <div
+      className={className}
+      style={{
+        position: 'relative',
+        width: `${currentSize}px`,
+        height: `${currentSize}px`,
+        margin: '0 auto 24px auto',
+      }}
+    >
+      {/* 3D Metal Frame - circular version */}
       <div
-        className={`profile-cyber-frame size-${size} relative mx-auto mb-6 ${className}`}
         style={{
-          width: `${currentSize.base}px`,
-          height: `${currentSize.base}px`,
-          '--sheen-angle': `${randomValues.sheenAngle}deg`,
-          '--sheen-pos': `${randomValues.sheenPosition}%`,
-          '--hue-rotate': `${randomValues.hueRotate}deg`,
-          '--holo-opacity': randomValues.holoOpacity,
-        } as React.CSSProperties}
+          position: 'absolute',
+          top: '-6px',
+          left: '-6px',
+          right: '-6px',
+          bottom: '-6px',
+          borderRadius: '9999px',
+          background: 'linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%)',
+          border: '1px solid rgba(150,150,150,0.4)',
+          boxShadow: `0 4px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.3), 0 0 15px ${colors.glow}`,
+        }}
+      />
+
+      {/* Inner container with image */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          borderRadius: '9999px',
+          overflow: 'hidden',
+          backgroundColor: '#0a0a0a',
+        }}
       >
-        {/* 3D Metal Frame - circular version */}
-        <div
-          className="profile-metal-frame absolute inset-[-6px] rounded-full"
-          style={{
-            background: 'linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%)',
-            border: '1px solid rgba(150,150,150,0.4)',
-            boxShadow: `
-              0 4px 20px rgba(0,0,0,0.6),
-              inset 0 1px 0 rgba(255,255,255,0.15),
-              inset 0 -1px 0 rgba(0,0,0,0.3),
-              0 0 15px ${colors.glow}
-            `,
-            transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
-          }}
-        />
-
-        {/* Inner container with holographic effects */}
-        <div
-          className="profile-cyber-inner absolute inset-0 rounded-full overflow-hidden bg-[#0a0a0a]"
-          style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
-        >
-          {/* Image wrapper - needs position relative and full dimensions for Next.js Image fill */}
-          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-            {children}
-          </div>
-
-          {/* Holographic glass overlay - glossy sheen */}
-          <div
-            className="profile-sheen absolute inset-[-100%] rounded-full pointer-events-none"
-            style={{
-              background: `linear-gradient(
-                var(--sheen-angle, 25deg),
-                transparent 0%,
-                transparent 35%,
-                rgba(255,255,255,0.08) 42%,
-                rgba(255,255,255,0.15) 50%,
-                rgba(255,255,255,0.08) 58%,
-                transparent 65%,
-                transparent 100%
-              )`,
-              transform: 'translateX(calc(var(--sheen-pos, 40%) - 50%))',
-              transition: 'transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-              zIndex: 10,
-            }}
-          />
-
-          {/* Holographic iridescent overlay */}
-          <div
-            className="profile-holo absolute inset-0 rounded-full pointer-events-none"
-            style={{
-              background: `linear-gradient(
-                calc(var(--sheen-angle, 25deg) + 90deg),
-                rgba(255, 0, 128, 0.03) 0%,
-                rgba(128, 0, 255, 0.03) 20%,
-                rgba(0, 128, 255, 0.03) 40%,
-                rgba(0, 255, 128, 0.03) 60%,
-                rgba(255, 255, 0, 0.03) 80%,
-                rgba(255, 128, 0, 0.03) 100%
-              )`,
-              mixBlendMode: 'overlay',
-              filter: 'hue-rotate(var(--hue-rotate, 0deg))',
-              opacity: 'var(--holo-opacity, 0.8)',
-              transition: 'filter 0.6s ease, opacity 0.4s ease',
-              zIndex: 11,
-            }}
-          />
+        {/* Image wrapper - needs position relative and full dimensions for Next.js Image fill */}
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          {children}
         </div>
 
-        {/* Gold accent glow ring */}
+        {/* Holographic glass overlay - glossy sheen */}
         <div
-          className="profile-glow-ring absolute inset-[-2px] rounded-full pointer-events-none"
           style={{
-            border: `2px solid ${colors.ring}`,
-            transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+            position: 'absolute',
+            top: '-100%',
+            left: '-100%',
+            right: '-100%',
+            bottom: '-100%',
+            borderRadius: '9999px',
+            pointerEvents: 'none',
+            background: `linear-gradient(${randomValues.sheenAngle}deg, transparent 0%, transparent 35%, rgba(255,255,255,0.08) 42%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.08) 58%, transparent 65%, transparent 100%)`,
+            transform: `translateX(${randomValues.sheenPosition - 50}%)`,
+            zIndex: 10,
           }}
         />
       </div>
-    </>
+
+      {/* Gold accent glow ring */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-2px',
+          left: '-2px',
+          right: '-2px',
+          bottom: '-2px',
+          borderRadius: '9999px',
+          pointerEvents: 'none',
+          border: `2px solid ${colors.ring}`,
+        }}
+      />
+    </div>
   );
 }
 
