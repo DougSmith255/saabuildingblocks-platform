@@ -7,7 +7,7 @@ export interface CyberCardGoldProps {
   children: React.ReactNode;
   /** Optional className for the container */
   className?: string;
-  /** Padding size: 'sm' (p-4), 'md' (p-6), 'lg' (p-8), 'xl' (p-10) */
+  /** Padding size for inner content: 'sm' (p-4), 'md' (p-6), 'lg' (p-8), 'xl' (p-10) */
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   /** Center the content */
   centered?: boolean;
@@ -15,6 +15,8 @@ export interface CyberCardGoldProps {
   href?: string;
   /** Enable interactive hover effects (auto-enabled when href is set) */
   interactive?: boolean;
+  /** Gold frame thickness: 'sm' (8px), 'md' (12px), 'lg' (16px) */
+  frameSize?: 'sm' | 'md' | 'lg';
 }
 
 const paddingClasses = {
@@ -24,28 +26,38 @@ const paddingClasses = {
   xl: 'p-10',
 };
 
+const frameSizes = {
+  sm: '8px',
+  md: '12px',
+  lg: '16px',
+};
+
 /**
- * CyberCardGold - Premium gold bar card with shimmer hover effect
+ * CyberCardGold - Premium gold frame card with dark inset center
  *
  * MASTER CONTROLLER COMPONENT
  * Location: @saa/shared/components/saa/cards/CyberCardGold
  *
  * Features:
- * - Bright gold bar gradient background
+ * - Gold gradient frame/border (like an engraved nameplate)
+ * - Dark inset center (GenericCard-style background) for readable text
  * - 3D perspective with rotateX tilt
- * - Shimmer/glare animation on hover (like CyberFrame)
+ * - Shimmer effect on gold frame only (not the content area)
  * - Beveled metallic edges
  *
- * Use for:
- * - Premium/featured content
- * - Gold-tier highlights
- * - Important CTAs
+ * Use with GoldEmbossedText for premium headings:
+ * ```tsx
+ * <CyberCardGold>
+ *   <GoldEmbossedText className="text-3xl font-bold">Premium</GoldEmbossedText>
+ *   <p className="text-[#dcdbd5]">Description in white</p>
+ * </CyberCardGold>
+ * ```
  *
  * @example
  * ```tsx
  * <CyberCardGold>
- *   <div className="text-3xl font-bold text-black">Premium Feature</div>
- *   <p className="text-black/80">Exclusive content</p>
+ *   <div className="text-3xl font-bold text-[#ffd700]">Featured</div>
+ *   <p className="text-[#dcdbd5]">Premium content</p>
  * </CyberCardGold>
  * ```
  */
@@ -56,11 +68,13 @@ export function CyberCardGold({
   centered = true,
   href,
   interactive,
+  frameSize = 'md',
 }: CyberCardGoldProps) {
   // Auto-enable interactive mode when href is set
   const isInteractive = interactive ?? !!href;
   const paddingClass = paddingClasses[padding];
   const centerClass = centered ? 'text-center' : '';
+  const frameWidth = frameSizes[frameSize];
 
   // Generate random sheen position for variety
   const randomValues = useMemo(() => ({
@@ -77,13 +91,13 @@ export function CyberCardGold({
           display: block;
         }
 
-        .cyber-card-gold-plate {
+        .cyber-card-gold-frame {
           position: relative;
           /* 3D transform - subtle tilt */
           transform-style: preserve-3d;
           transform: rotateX(8deg);
 
-          /* Bright gold bar gradient */
+          /* Bright gold bar gradient for the frame */
           background: linear-gradient(
             180deg,
             #ffd700 0%,
@@ -106,34 +120,35 @@ export function CyberCardGold({
           box-shadow:
             /* Inner highlight at top for glossy reflection */
             inset 0 1px 0 rgba(255,255,255,0.4),
-            /* Inner shadow at bottom for depth */
-            inset 0 -1px 2px rgba(0,0,0,0.15),
             /* Main drop shadow */
             0 6px 16px rgba(0,0,0,0.4),
             /* Gold ambient glow */
             0 2px 12px rgba(255,215,0,0.3);
 
+          /* Frame padding - creates the visible gold border */
+          padding: var(--ccg-frame-width, 12px);
+
           overflow: hidden;
         }
 
-        /* Shimmer overlay - hidden by default */
-        .cyber-card-gold-plate::before {
+        /* Shimmer overlay - only on the frame, not content */
+        .cyber-card-gold-frame::before {
           content: "";
           position: absolute;
           top: -100%;
           left: -100%;
           right: -100%;
           bottom: -100%;
-          z-index: 3;
+          z-index: 1;
           pointer-events: none;
           /* Glossy sheen gradient */
           background: linear-gradient(
             var(--ccg-sheen-angle, 25deg),
             transparent 0%,
             transparent 35%,
-            rgba(255,255,255,0.3) 42%,
-            rgba(255,255,255,0.5) 50%,
-            rgba(255,255,255,0.3) 58%,
+            rgba(255,255,255,0.35) 42%,
+            rgba(255,255,255,0.55) 50%,
+            rgba(255,255,255,0.35) 58%,
             transparent 65%,
             transparent 100%
           );
@@ -142,11 +157,13 @@ export function CyberCardGold({
           border-radius: 12px;
         }
 
-        /* Glossy top highlight */
-        .cyber-card-gold-plate::after {
+        /* Glossy top highlight on frame */
+        .cyber-card-gold-frame::after {
           content: "";
           position: absolute;
-          inset: 0;
+          top: 0;
+          left: 0;
+          right: 0;
           height: 50%;
           background: linear-gradient(
             180deg,
@@ -159,35 +176,61 @@ export function CyberCardGold({
           pointer-events: none;
         }
 
+        /* Dark inset center - where content lives */
+        .cyber-card-gold-inset {
+          position: relative;
+          z-index: 2;
+
+          /* GenericCard-style dark background */
+          background: rgba(25, 24, 24, 0.95);
+
+          /* Rounded corners for the inset */
+          border-radius: 8px;
+
+          /* Inset shadow to make it look recessed */
+          box-shadow:
+            inset 0 2px 4px rgba(0,0,0,0.5),
+            inset 0 1px 2px rgba(0,0,0,0.3),
+            /* Subtle border glow from gold frame */
+            0 0 1px rgba(255,215,0,0.3);
+
+          /* Subtle border */
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Content container inside inset */
+        .cyber-card-gold-content {
+          position: relative;
+          z-index: 2;
+        }
+
         /* Interactive hover effect */
         .cyber-card-gold-3d.cyber-card-gold-interactive {
           cursor: pointer;
         }
 
-        .cyber-card-gold-3d.cyber-card-gold-interactive .cyber-card-gold-plate {
+        .cyber-card-gold-3d.cyber-card-gold-interactive .cyber-card-gold-frame {
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        /* Hover - shimmer slides across */
-        .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-plate::before {
-          transform: translateX(calc(var(--ccg-sheen-pos, 30%) + 40%));
+        /* Hover - shimmer slides across frame */
+        .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-frame::before {
+          transform: translateX(calc(var(--ccg-sheen-pos, 30%) + 50%));
         }
 
-        .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-plate {
+        .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-frame {
           transform: rotateX(8deg) translateY(-4px) scale(1.02);
           box-shadow:
             inset 0 1px 0 rgba(255,255,255,0.5),
-            inset 0 -1px 2px rgba(0,0,0,0.15),
             0 12px 30px rgba(0,0,0,0.5),
             0 6px 12px rgba(0,0,0,0.3),
             /* Enhanced gold glow on hover */
             0 4px 20px rgba(255,215,0,0.5);
         }
 
-        /* Content container */
-        .cyber-card-gold-content {
-          position: relative;
-          z-index: 2;
+        /* Subtle inset highlight on hover */
+        .cyber-card-gold-3d.cyber-card-gold-interactive:hover .cyber-card-gold-inset {
+          border-color: rgba(255,215,0,0.2);
         }
       `}</style>
 
@@ -196,11 +239,14 @@ export function CyberCardGold({
         style={{
           '--ccg-sheen-angle': `${randomValues.sheenAngle}deg`,
           '--ccg-sheen-pos': `${randomValues.sheenPosition}%`,
+          '--ccg-frame-width': frameWidth,
         } as React.CSSProperties}
       >
-        <div className="cyber-card-gold-plate">
-          <div className={`cyber-card-gold-content ${paddingClass} ${centerClass}`}>
-            {children}
+        <div className="cyber-card-gold-frame">
+          <div className="cyber-card-gold-inset">
+            <div className={`cyber-card-gold-content ${paddingClass} ${centerClass}`}>
+              {children}
+            </div>
           </div>
         </div>
       </div>

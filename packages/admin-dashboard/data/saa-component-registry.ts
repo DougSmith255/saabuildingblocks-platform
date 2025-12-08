@@ -114,7 +114,7 @@ export const saaComponentRegistry: SAAComponent[] = [
   },
 
   // ============================================
-  // TYPOGRAPHY (4)
+  // TYPOGRAPHY (5)
   // ============================================
   {
     id: 'h1-heading',
@@ -155,6 +155,16 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'custom',
     tags: ['text', '3d', 'neon', 'glow', 'flicker', 'cyberpunk', 'gold', 'metal-plate'],
+  },
+  {
+    id: 'gold-embossed-text',
+    name: 'Gold Embossed Text',
+    category: 'typography',
+    description: 'Raised/embossed gold text effect with metallic gradient and 3D depth. Features highlight on top edge, shadow on bottom for stamped metal appearance. Perfect for premium headings.',
+    reactPath: '../shared/components/saa/text/GoldEmbossedText.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['text', 'gold', 'embossed', 'raised', '3d', 'metallic', 'premium', 'trophy'],
   },
 
   // ============================================

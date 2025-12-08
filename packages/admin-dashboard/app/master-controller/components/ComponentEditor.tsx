@@ -275,24 +275,31 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
           )
         })));
       case 'cyber-card-gold':
-        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardGold').then(m => ({
+        return lazy(() => Promise.all([
+          import('@saa/shared/components/saa/cards/CyberCardGold'),
+          import('@saa/shared/components/saa/text/GoldEmbossedText')
+        ]).then(([cardMod, textMod]) => ({
           default: () => (
             <div className="space-y-8 w-full max-w-md">
-              {/* Non-interactive version */}
+              {/* Gold frame with dark inset and embossed text */}
               <div>
-                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Non-Interactive (static)</p>
-                <m.CyberCardGold>
-                  <div className="text-3xl font-bold text-black mb-2">Premium Feature</div>
-                  <p className="text-black/70">Gold bar styling</p>
-                </m.CyberCardGold>
+                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Gold Frame + Embossed Text</p>
+                <cardMod.CyberCardGold>
+                  <textMod.GoldEmbossedText className="text-3xl font-bold mb-2" as="div">
+                    Premium Feature
+                  </textMod.GoldEmbossedText>
+                  <p className="text-[#dcdbd5]">White text on dark inset</p>
+                </cardMod.CyberCardGold>
               </div>
-              {/* Interactive version - shimmer on hover */}
+              {/* Interactive version - shimmer on gold frame */}
               <div>
                 <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Interactive (hover for shimmer)</p>
-                <m.CyberCardGold interactive>
-                  <div className="text-3xl font-bold text-black mb-2">VIP Access</div>
-                  <p className="text-black/70">Hover to see shimmer →</p>
-                </m.CyberCardGold>
+                <cardMod.CyberCardGold interactive frameSize="lg">
+                  <textMod.GoldEmbossedText className="text-3xl font-bold mb-2" as="div">
+                    VIP Access
+                  </textMod.GoldEmbossedText>
+                  <p className="text-[#dcdbd5]">Hover to see frame shimmer →</p>
+                </cardMod.CyberCardGold>
               </div>
             </div>
           )
@@ -323,6 +330,22 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
               <m.CyberText3D variant="white" flicker flickerSpeed="slow" className="text-2xl">
                 AGENTS
               </m.CyberText3D>
+            </div>
+          )
+        })));
+      case 'gold-embossed-text':
+        return lazy(() => import('@saa/shared/components/saa/text/GoldEmbossedText').then(m => ({
+          default: () => (
+            <div className="space-y-6 text-center">
+              <m.GoldEmbossedText className="text-5xl font-bold" as="div">
+                PREMIUM
+              </m.GoldEmbossedText>
+              <m.GoldEmbossedText className="text-3xl" as="div">
+                Gold Embossed
+              </m.GoldEmbossedText>
+              <m.GoldEmbossedText className="text-xl" as="div">
+                Raised metallic text effect
+              </m.GoldEmbossedText>
             </div>
           )
         })));
