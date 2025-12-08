@@ -50,6 +50,7 @@ export function NeonGoldText({
         justifyContent: 'center',
         rowGap: 0,
         columnGap: '0.35em',
+        fontFamily: 'var(--font-taskor), sans-serif',
       }}
     >
       {/* SEO-friendly hidden text */}
