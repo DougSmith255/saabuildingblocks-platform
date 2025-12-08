@@ -196,12 +196,19 @@ export function CyberCardGold({
 
           /* Subtle border */
           border: 1px solid rgba(255,255,255,0.08);
+
+          /* Inherit 3D transform so content tilts with card */
+          transform-style: preserve-3d;
+          transform: translateZ(0);
         }
 
         /* Content container inside inset */
         .cyber-card-gold-content {
           position: relative;
           z-index: 2;
+          /* Ensure content tilts with the card */
+          transform-style: preserve-3d;
+          transform: translateZ(0);
         }
 
         /* Interactive hover effect */

@@ -155,10 +155,13 @@ export function CyberCard({
             0 4px 16px rgba(255,215,0,0.1);
         }
 
-        /* Content container */
+        /* Content container - inherits 3D transform */
         .cyber-card-content {
           position: relative;
           z-index: 2;
+          /* Ensure content tilts with the card */
+          transform-style: preserve-3d;
+          transform: translateZ(0);
         }
       `}</style>
 
