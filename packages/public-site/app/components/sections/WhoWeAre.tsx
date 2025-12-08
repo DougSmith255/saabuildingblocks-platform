@@ -39,13 +39,13 @@ export function WhoWeAre() {
                 className="p-6 md:p-8 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
               >
                 {/* Photo with CyberFrame effects (circular) */}
-                <ProfileCyberFrame index={index}>
+                <ProfileCyberFrame index={index} size="md">
                   <Image
                     src={member.image}
                     alt={member.name}
-                    width={176}
-                    height={176}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 144px, 176px"
+                    className="object-cover"
                   />
                 </ProfileCyberFrame>
 

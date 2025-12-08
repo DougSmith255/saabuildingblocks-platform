@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -81,14 +81,15 @@ export default function JoinExpSponsorTeam() {
           <div className="grid md:grid-cols-2 gap-8 max-w-[900px] mx-auto">
             {/* Karrie Hill Card */}
             <GenericCard padding="lg" centered>
-              <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-2 border-amber-400/50">
+              <ProfileCyberFrame size="lg" index={1}>
                 <Image
                   src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Contact-Us-Profile-Photos-1.png"
                   alt="Karrie Hill - eXp Realty Sponsor"
                   fill
+                  sizes="(max-width: 768px) 192px, 224px"
                   className="object-cover object-top"
                 />
-              </div>
+              </ProfileCyberFrame>
               <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Karrie Hill</h3>
               <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-[#dcdbd5]">
@@ -103,14 +104,15 @@ export default function JoinExpSponsorTeam() {
 
             {/* Doug Smart Card */}
             <GenericCard padding="lg" centered>
-              <div className="relative w-48 h-48 mx-auto mb-6 rounded-full overflow-hidden border-2 border-amber-400/50">
+              <ProfileCyberFrame size="lg" index={0}>
                 <Image
                   src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Contact-Us-Profile-Photos.png"
                   alt="Doug Smart - eXp Realty Sponsor"
                   fill
+                  sizes="(max-width: 768px) 192px, 224px"
                   className="object-cover object-top"
                 />
-              </div>
+              </ProfileCyberFrame>
               <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Doug Smart</h3>
               <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-[#dcdbd5]">

@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -44,17 +44,17 @@ export default function AboutDougSmart() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1000px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
-            {/* Photo with CyberFrame */}
-            <div className="lg:w-1/3">
-              <CyberFrame>
+            {/* Photo with ProfileCyberFrame (circular) */}
+            <div className="lg:w-1/3 flex justify-center">
+              <ProfileCyberFrame size="xl">
                 <Image
                   src={DOUG_PROFILE_IMAGE}
                   alt="Doug Smart"
-                  width={288}
-                  height={288}
-                  className="w-72 h-72 object-cover rounded-lg"
+                  fill
+                  sizes="(max-width: 768px) 224px, 256px"
+                  className="object-cover"
                 />
-              </CyberFrame>
+              </ProfileCyberFrame>
             </div>
 
             {/* Quick Stats */}

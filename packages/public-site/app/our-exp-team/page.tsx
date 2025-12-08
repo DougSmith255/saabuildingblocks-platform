@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -88,15 +88,16 @@ export default function OurExpTeam() {
                 key={index}
                 className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
               >
-                <div className="lg:w-1/3">
-                  <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden border-4 border-amber-400/30">
+                <div className="lg:w-1/3 flex justify-center">
+                  <ProfileCyberFrame size="xl" index={index}>
                     <Image
                       src={founder.image}
                       alt={founder.name}
                       fill
+                      sizes="(max-width: 768px) 224px, 256px"
                       className="object-cover"
                     />
-                  </div>
+                  </ProfileCyberFrame>
                 </div>
                 <div className="lg:w-2/3">
                   <h3 className="text-2xl font-bold text-[#e5e4dd] mb-1">{founder.name}</h3>
@@ -126,14 +127,15 @@ export default function OurExpTeam() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {uplinePartners.map((partner, index) => (
               <GenericCard key={index} padding="md" centered>
-                <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-2 border-amber-400/30">
+                <ProfileCyberFrame size="md" index={index}>
                   <Image
                     src={partner.image}
                     alt={partner.name}
                     fill
+                    sizes="(max-width: 768px) 144px, 176px"
                     className="object-cover"
                   />
-                </div>
+                </ProfileCyberFrame>
                 <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
                 <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
               </GenericCard>

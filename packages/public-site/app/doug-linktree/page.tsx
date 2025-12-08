@@ -1,6 +1,6 @@
 'use client';
 
-import { GenericCard, CyberFrame } from '@saa/shared/components/saa';
+import { GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import Image from 'next/image';
 
 // Cloudflare-ready image URL (using same as WhoWeAre section)
@@ -71,17 +71,15 @@ export default function DougLinktree() {
     <main className="flex flex-col items-center py-12 px-4 min-h-screen">
       {/* Profile Section */}
       <div className="text-center mb-8">
-        <div className="mx-auto mb-4 w-fit">
-          <CyberFrame>
-            <Image
-              src={DOUG_PROFILE_IMAGE}
-              alt="Doug Smart"
-              width={128}
-              height={128}
-              className="w-32 h-32 object-cover rounded-lg"
-            />
-          </CyberFrame>
-        </div>
+        <ProfileCyberFrame size="md">
+          <Image
+            src={DOUG_PROFILE_IMAGE}
+            alt="Doug Smart"
+            fill
+            sizes="144px"
+            className="object-cover"
+          />
+        </ProfileCyberFrame>
         <h1 className="text-2xl font-bold text-[#e5e4dd] mb-1">Doug Smart</h1>
         <p className="text-amber-400 text-sm mb-2">@dougthemediamaker</p>
         <p className="text-[#dcdbd5]/80 text-sm max-w-xs mx-auto">

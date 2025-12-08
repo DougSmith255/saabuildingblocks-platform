@@ -125,7 +125,10 @@ export function ProfileCyberFrame({
 
         {/* Inner container with holographic effects */}
         <div className="profile-cyber-inner absolute inset-0 rounded-full overflow-hidden bg-[#0a0a0a]">
-          {children}
+          {/* Image wrapper - ensures proper sizing */}
+          <div className="relative w-full h-full">
+            {children}
+          </div>
 
           {/* Holographic glass overlay - glossy sheen */}
           <div
