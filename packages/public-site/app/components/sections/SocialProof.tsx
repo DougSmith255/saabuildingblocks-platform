@@ -39,9 +39,11 @@ export function SocialProof() {
               centered
             >
               {/* Icon + Content aligned together */}
-              <div className="flex flex-col items-center gap-2">
-                {/* Icon - smaller, no bg circle */}
-                <item.icon className="w-8 h-8 text-[#ffd700]" />
+              <div className="flex flex-col items-center gap-3">
+                {/* Icon with yellow gradient circle */}
+                <div className="w-14 h-14 rounded-full bg-[#ffd700]/10 flex items-center justify-center">
+                  <item.icon className="w-7 h-7 text-[#ffd700]" />
+                </div>
 
                 {/* Stat */}
                 <div className="text-h3 text-[#ffd700]">
