@@ -38,20 +38,21 @@ export function SocialProof() {
               padding="md"
               centered
             >
-              {/* Icon */}
-              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                <item.icon className="w-8 h-8 md:w-10 md:h-10 text-[#ffd700]" />
-              </div>
+              {/* Icon + Content aligned together */}
+              <div className="flex flex-col items-center gap-2">
+                {/* Icon - smaller, no bg circle */}
+                <item.icon className="w-8 h-8 text-[#ffd700]" />
 
-              {/* Stat */}
-              <div className="text-h3 text-[#ffd700] mb-2">
-                {item.stat}
-              </div>
+                {/* Stat */}
+                <div className="text-h3 text-[#ffd700]">
+                  {item.stat}
+                </div>
 
-              {/* Label */}
-              <p className="text-body">
-                {item.label}
-              </p>
+                {/* Label */}
+                <p className="text-body">
+                  {item.label}
+                </p>
+              </div>
             </CyberCard>
           ))}
         </div>

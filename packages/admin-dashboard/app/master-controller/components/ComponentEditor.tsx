@@ -277,28 +277,28 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
       case 'cyber-card-gold':
         return lazy(() => Promise.all([
           import('@saa/shared/components/saa/cards/CyberCardGold'),
-          import('@saa/shared/components/saa/text/GoldEmbossedText')
+          import('@saa/shared/components/saa/text/NeonGoldText')
         ]).then(([cardMod, textMod]) => ({
           default: () => (
             <div className="space-y-8 w-full max-w-md">
-              {/* Gold frame with dark inset and embossed text */}
+              {/* Neon gold border with NeonGoldText heading */}
               <div>
-                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Gold Frame + Embossed Text</p>
+                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Neon Gold Border + Glow Text</p>
                 <cardMod.CyberCardGold>
-                  <textMod.GoldEmbossedText className="text-3xl font-bold mb-2" as="div">
+                  <textMod.NeonGoldText as="h3" className="text-2xl font-bold mb-2">
                     Premium Feature
-                  </textMod.GoldEmbossedText>
-                  <p className="text-[#dcdbd5]">White text on dark inset</p>
+                  </textMod.NeonGoldText>
+                  <p className="text-[#dcdbd5]">White text inside</p>
                 </cardMod.CyberCardGold>
               </div>
-              {/* Interactive version - shimmer on gold frame */}
+              {/* Large padding version */}
               <div>
-                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Interactive (hover for shimmer)</p>
-                <cardMod.CyberCardGold interactive frameSize="lg">
-                  <textMod.GoldEmbossedText className="text-3xl font-bold mb-2" as="div">
+                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Large Padding</p>
+                <cardMod.CyberCardGold padding="xl">
+                  <textMod.NeonGoldText as="h3" className="text-3xl font-bold mb-2">
                     VIP Access
-                  </textMod.GoldEmbossedText>
-                  <p className="text-[#dcdbd5]">Hover to see frame shimmer →</p>
+                  </textMod.NeonGoldText>
+                  <p className="text-[#dcdbd5]">Extra padding for emphasis</p>
                 </cardMod.CyberCardGold>
               </div>
             </div>

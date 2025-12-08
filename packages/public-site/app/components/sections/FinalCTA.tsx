@@ -1,18 +1,18 @@
 'use client';
 
-import { CTAButton, SecondaryButton, CyberCardGold, GoldEmbossedText } from '@saa/shared/components/saa';
+import { CTAButton, SecondaryButton, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 
 export function FinalCTA() {
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1900px] mx-auto">
         {/* CTA Card - Premium Gold Treatment */}
-        <CyberCardGold padding="xl" frameSize="lg">
+        <CyberCardGold padding="xl">
           {/* Header */}
           <div className="text-center mb-8">
-            <GoldEmbossedText as="h2" className="text-h2 mb-4">
+            <NeonGoldText as="h2" className="text-h2">
               Ready to Transform Your Real Estate Career?
-            </GoldEmbossedText>
+            </NeonGoldText>
             <p className="text-body mt-4 max-w-2xl mx-auto">
               Join the fastest-growing team at eXp Realty and start building the career - and life - you deserve.
             </p>

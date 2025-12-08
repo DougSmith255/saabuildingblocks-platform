@@ -74,9 +74,9 @@ export function CyberCard({
 
         .cyber-card-plate {
           position: relative;
-          /* 3D transform - subtle tilt like H2 */
+          /* 3D effect without angle */
           transform-style: preserve-3d;
-          transform: rotateX(8deg);
+          transform: translateZ(0);
 
           /* Brushed gunmetal gradient - matches H2 metal plate */
           background: linear-gradient(
@@ -136,7 +136,7 @@ export function CyberCard({
         }
 
         .cyber-card-3d.cyber-card-interactive:hover .cyber-card-plate {
-          transform: rotateX(8deg) translateY(-4px) scale(1.02);
+          transform: translateY(-4px) scale(1.02);
           /* Lighten the card background */
           background: linear-gradient(
             180deg,
