@@ -34,12 +34,14 @@ export interface GenericCardProps {
   children: React.ReactNode;
   /** Additional CSS classes */
   className?: string;
-  /** Enable hover effects for interactive cards */
+  /** Enable hover effects for interactive cards (auto-enabled when href is provided) */
   hover?: boolean;
   /** Padding size: 'sm' (p-4), 'md' (p-6), 'lg' (p-8 md:p-10), 'xl' (p-10 md:p-12) */
   padding?: 'sm' | 'md' | 'lg' | 'xl';
   /** Center the content */
   centered?: boolean;
+  /** Link URL - automatically enables interactive styling */
+  href?: string;
 }
 
 const paddingClasses = {
@@ -55,21 +57,36 @@ export function GenericCard({
   hover = false,
   padding = 'md',
   centered = false,
+  href,
 }: GenericCardProps) {
+  // If href is provided, automatically make it interactive
+  const isInteractive = hover || !!href;
+
   const baseClasses = 'bg-white/5 rounded-xl border border-white/10';
-  const hoverClasses = hover
-    ? 'transition-all duration-300 hover:scale-[1.02] hover:bg-white/10 hover:border-[#ffd700]/60 hover:shadow-lg hover:shadow-[#ffd700]/10'
+  const hoverClasses = isInteractive
+    ? 'transition-all duration-300 hover:scale-[1.02] hover:bg-white/10 hover:border-[#ffd700]/60 hover:shadow-lg hover:shadow-[#ffd700]/10 cursor-pointer'
     : '';
   const centerClasses = centered ? 'text-center' : '';
   const paddingClass = paddingClasses[padding];
 
-  return (
+  const cardContent = (
     <div
       className={`${baseClasses} ${paddingClass} ${hoverClasses} ${centerClasses} ${className}`.trim()}
     >
       {children}
     </div>
   );
+
+  // Wrap in link if href is provided
+  if (href) {
+    return (
+      <a href={href} className="block no-underline">
+        {cardContent}
+      </a>
+    );
+  }
+
+  return cardContent;
 }
 
 export default GenericCard;

@@ -241,16 +241,12 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
           default: () => (
             <div className="space-y-4 w-full max-w-md">
               <m.GenericCard>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Default Card</h3>
-                <p className="text-[#dcdbd5]">Simple card with medium padding</p>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Non-Interactive Card</h3>
+                <p className="text-[#dcdbd5]">Static card for displaying content</p>
               </m.GenericCard>
-              <m.GenericCard hover>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Hover Card</h3>
-                <p className="text-[#dcdbd5]">Interactive card with hover effects</p>
-              </m.GenericCard>
-              <m.GenericCard padding="lg" centered>
-                <h3 className="text-xl font-bold text-[#ffd700] mb-2">Centered Card</h3>
-                <p className="text-[#dcdbd5]">Large padding, centered content</p>
+              <m.GenericCard href="#">
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Interactive Card</h3>
+                <p className="text-[#dcdbd5]">Linked card with hover effects (scale + yellow border)</p>
               </m.GenericCard>
             </div>
           )
