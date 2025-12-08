@@ -263,13 +263,36 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
                   <p className="text-[#dcdbd5]">Agents Strong</p>
                 </m.CyberCard>
               </div>
-              {/* Interactive version - lift + bright yellow glow on hover */}
+              {/* Interactive version - yellow border + lighten on hover */}
               <div>
                 <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Interactive (hover for effect)</p>
                 <m.CyberCard interactive>
                   <div className="text-4xl font-bold text-[#e5e4dd] mb-2">$16K</div>
                   <p className="text-[#dcdbd5]/80">Click for details →</p>
                 </m.CyberCard>
+              </div>
+            </div>
+          )
+        })));
+      case 'cyber-card-gold':
+        return lazy(() => import('@saa/shared/components/saa/cards/CyberCardGold').then(m => ({
+          default: () => (
+            <div className="space-y-8 w-full max-w-md">
+              {/* Non-interactive version */}
+              <div>
+                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Non-Interactive (static)</p>
+                <m.CyberCardGold>
+                  <div className="text-3xl font-bold text-black mb-2">Premium Feature</div>
+                  <p className="text-black/70">Gold bar styling</p>
+                </m.CyberCardGold>
+              </div>
+              {/* Interactive version - shimmer on hover */}
+              <div>
+                <p className="text-sm text-[#dcdbd5]/60 mb-3 text-center">Interactive (hover for shimmer)</p>
+                <m.CyberCardGold interactive>
+                  <div className="text-3xl font-bold text-black mb-2">VIP Access</div>
+                  <p className="text-black/70">Hover to see shimmer →</p>
+                </m.CyberCardGold>
               </div>
             </div>
           )
