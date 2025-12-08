@@ -111,7 +111,7 @@ export function FAQ({
               isOpen(index) ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="px-5 pt-0 pb-8 text-body">
+            <div className="px-5 pt-0 pb-7 text-body">
               {item.answer}
             </div>
           </div>
