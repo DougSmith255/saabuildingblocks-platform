@@ -54,13 +54,15 @@ export function ProfileCyberFrame({
     holoOpacity: 0.03,
   }), [index]);
 
-  // Size classes
-  const sizeClasses = {
-    sm: 'w-24 h-24',
-    md: 'w-36 h-36 md:w-44 md:h-44',
-    lg: 'w-48 h-48 md:w-56 md:h-56',
-    xl: 'w-56 h-56 md:w-64 md:h-64',
+  // Size configurations with explicit pixel values for reliability
+  const sizeConfig = {
+    sm: { base: 96, md: 96 },      // 96px = w-24
+    md: { base: 144, md: 176 },    // 144px = w-36, 176px = w-44
+    lg: { base: 192, md: 224 },    // 192px = w-48, 224px = w-56
+    xl: { base: 224, md: 256 },    // 224px = w-56, 256px = w-64
   };
+
+  const currentSize = sizeConfig[size];
 
   // Brand yellow colors (matching CyberFrame gold variant)
   const colors = {
@@ -96,11 +98,20 @@ export function ProfileCyberFrame({
           border-color: ${colors.ringHover} !important;
           box-shadow: 0 0 12px ${colors.ringGlow} !important;
         }
+
+        @media (min-width: 768px) {
+          .profile-cyber-frame.size-sm { width: ${sizeConfig.sm.md}px !important; height: ${sizeConfig.sm.md}px !important; }
+          .profile-cyber-frame.size-md { width: ${sizeConfig.md.md}px !important; height: ${sizeConfig.md.md}px !important; }
+          .profile-cyber-frame.size-lg { width: ${sizeConfig.lg.md}px !important; height: ${sizeConfig.lg.md}px !important; }
+          .profile-cyber-frame.size-xl { width: ${sizeConfig.xl.md}px !important; height: ${sizeConfig.xl.md}px !important; }
+        }
       `}</style>
 
       <div
-        className={`profile-cyber-frame relative ${sizeClasses[size]} mx-auto mb-6 ${className}`}
+        className={`profile-cyber-frame size-${size} relative mx-auto mb-6 ${className}`}
         style={{
+          width: `${currentSize.base}px`,
+          height: `${currentSize.base}px`,
           '--sheen-angle': `${randomValues.sheenAngle}deg`,
           '--sheen-pos': `${randomValues.sheenPosition}%`,
           '--hue-rotate': `${randomValues.hueRotate}deg`,
