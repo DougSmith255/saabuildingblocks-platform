@@ -28,7 +28,7 @@ const paddingClasses = {
  *
  * Features:
  * - Thick neon gold glowing border (10px)
- * - White outline on the border (like H1 text)
+ * - White outline lines on inner AND outer edges (like H1 text)
  * - GenericCard-style semi-transparent interior
  * - 3D depth effect (no angle)
  *
@@ -73,14 +73,9 @@ export function CyberCardGold({
           /* GenericCard-style interior */
           background: rgba(255, 255, 255, 0.05);
 
-          /* Neon glow effect matching H1 style */
+          /* Neon glow effect - gold glow layers */
           box-shadow:
-            /* White outline effect - like H1 text */
-            inset 0 0 0 2px rgba(255,255,255,0.4),
-            /* Outer white edge highlight */
-            0 0 2px rgba(255,255,255,0.6),
-            0 0 4px rgba(255,255,255,0.4),
-            /* Gold neon glow layers - matching H1 */
+            /* Gold neon glow layers */
             0 0 8px #ffd700,
             0 0 16px #ffd700,
             0 0 32px rgba(255,215,0,0.6),
@@ -88,13 +83,41 @@ export function CyberCardGold({
             /* Drop shadow for depth */
             0 6px 16px rgba(0,0,0,0.4);
 
-          overflow: hidden;
+          overflow: visible;
+        }
+
+        /* Inner white outline - inside the gold border */
+        .cyber-card-gold-frame::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 6px;
+          border: 2px solid rgba(255,255,255,0.5);
+          pointer-events: none;
+          z-index: 1;
+        }
+
+        /* Outer white outline - outside the gold border */
+        .cyber-card-gold-frame::after {
+          content: "";
+          position: absolute;
+          top: -12px;
+          left: -12px;
+          right: -12px;
+          bottom: -12px;
+          border-radius: 18px;
+          border: 2px solid rgba(255,255,255,0.4);
+          pointer-events: none;
+          z-index: -1;
         }
 
         /* Content container */
         .cyber-card-gold-content {
           position: relative;
-          z-index: 1;
+          z-index: 2;
           /* Ensure content has 3D context */
           transform-style: preserve-3d;
           transform: translateZ(0);
