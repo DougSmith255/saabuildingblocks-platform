@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { H2, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { H2, ProfileCyberFrame, GenericCard } from '@saa/shared/components/saa';
 
 const teamMembers = [
   {
@@ -34,9 +34,10 @@ export function WhoWeAre() {
           {/* Team Members */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {teamMembers.map((member, index) => (
-              <div
+              <GenericCard
                 key={index}
-                className="p-6 md:p-8 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
+                hover
+                padding="lg"
               >
                 {/* Photo with CyberFrame effects (circular) */}
                 <ProfileCyberFrame index={index} size="md">
@@ -63,7 +64,7 @@ export function WhoWeAre() {
               <p className="text-[#dcdbd5]/80 text-center leading-relaxed">
                 {member.bio}
               </p>
-            </div>
+            </GenericCard>
           ))}
         </div>
       </div>

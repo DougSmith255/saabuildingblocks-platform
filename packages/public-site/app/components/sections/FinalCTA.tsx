@@ -1,13 +1,13 @@
 'use client';
 
-import { H2, CTAButton, SecondaryButton } from '@saa/shared/components/saa';
+import { H2, CTAButton, SecondaryButton, GenericCard } from '@saa/shared/components/saa';
 
 export function FinalCTA() {
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1900px] mx-auto">
         {/* CTA Card */}
-        <div className="p-8 md:p-12 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-[#ffd700]/20">
+        <GenericCard padding="xl">
           {/* Header */}
           <div className="text-center mb-8">
             <H2>Ready to Transform Your Real Estate Career?</H2>
@@ -30,7 +30,7 @@ export function FinalCTA() {
           <p className="text-center text-[#dcdbd5]/60 text-sm mt-8">
             No commitment required. See if we're the right fit for you.
           </p>
-        </div>
+        </GenericCard>
       </div>
     </section>
   );

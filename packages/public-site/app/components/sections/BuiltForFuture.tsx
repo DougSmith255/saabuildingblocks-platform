@@ -1,6 +1,6 @@
 'use client';
 
-import { H2 } from '@saa/shared/components/saa';
+import { H2, GenericCard } from '@saa/shared/components/saa';
 import { Cpu, Cloud, Smartphone, Shield } from 'lucide-react';
 
 const futurePoints = [
@@ -41,9 +41,11 @@ export function BuiltForFuture() {
         {/* Future Points Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {futurePoints.map((point, index) => (
-            <div
+            <GenericCard
               key={index}
-              className="flex items-start gap-4 p-6 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
+              hover
+              padding="md"
+              className="flex items-start gap-4"
             >
               {/* Icon */}
               <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[#ffd700]/10 flex items-center justify-center">
@@ -59,7 +61,7 @@ export function BuiltForFuture() {
                   {point.description}
                 </p>
               </div>
-            </div>
+            </GenericCard>
           ))}
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { H2 } from '@saa/shared/components/saa';
+import { H2, GenericCard } from '@saa/shared/components/saa';
 import { DollarSign, Users, Brain, Zap, Globe } from 'lucide-react';
 
 const valueItems = [
@@ -48,9 +48,11 @@ export function ValueStack() {
         {/* Value Items */}
         <div className="space-y-6">
           {valueItems.map((item, index) => (
-            <div
+            <GenericCard
               key={index}
-              className="flex items-center gap-4 md:gap-6 p-4 md:p-6 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
+              hover
+              padding="md"
+              className="flex items-center gap-4 md:gap-6"
             >
               {/* Icon */}
               <div className="flex-shrink-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#ffd700]/10 flex items-center justify-center">
@@ -75,7 +77,7 @@ export function ValueStack() {
                   {item.savings}
                 </span>
               </div>
-            </div>
+            </GenericCard>
           ))}
         </div>
 

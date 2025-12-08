@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { H2, GenericButton } from '@saa/shared/components/saa';
+import { H2, GenericButton, GenericCard } from '@saa/shared/components/saa';
 import { UserPlus, Briefcase, Users, Crown } from 'lucide-react';
 import { BuiltForFuture } from './BuiltForFuture';
 import { FAQ } from './FAQ';
@@ -108,7 +108,7 @@ export function PathSelectorWithContent() {
             }}
           >
             {displayedPath && (
-              <div className="mt-8 p-6 md:p-8 rounded-xl bg-white/5 border border-white/10">
+              <GenericCard padding="lg" className="mt-8">
                 {/* Problem */}
                 <div className="mb-6">
                   <h3 className="text-[#ffd700] font-semibold text-lg mb-2">The Problem</h3>
@@ -132,7 +132,7 @@ export function PathSelectorWithContent() {
                     {pathContent[displayedPath].proof}
                   </p>
                 </div>
-              </div>
+              </GenericCard>
             )}
           </div>
         </div>

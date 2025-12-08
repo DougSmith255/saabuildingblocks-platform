@@ -1,6 +1,6 @@
 'use client';
 
-import { H2 } from '@saa/shared/components/saa';
+import { H2, GenericCard } from '@saa/shared/components/saa';
 import { DollarSign, Building, GraduationCap, Globe, TrendingUp, Wallet } from 'lucide-react';
 
 const reasons = [
@@ -51,9 +51,10 @@ export function WhyExpRealty() {
         {/* Reasons Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {reasons.map((reason, index) => (
-            <div
+            <GenericCard
               key={index}
-              className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-[#ffd700]/30 transition-all duration-300"
+              hover
+              padding="md"
             >
               {/* Icon */}
               <div className="w-12 h-12 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
@@ -69,7 +70,7 @@ export function WhyExpRealty() {
               <p className="text-[#dcdbd5]/80 text-sm">
                 {reason.description}
               </p>
-            </div>
+            </GenericCard>
           ))}
         </div>
       </div>
