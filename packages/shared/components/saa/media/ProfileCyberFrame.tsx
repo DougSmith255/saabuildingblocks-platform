@@ -125,8 +125,8 @@ export function ProfileCyberFrame({
 
         {/* Inner container with holographic effects */}
         <div className="profile-cyber-inner absolute inset-0 rounded-full overflow-hidden bg-[#0a0a0a]">
-          {/* Image wrapper - ensures proper sizing */}
-          <div className="relative w-full h-full">
+          {/* Image wrapper - ensures proper sizing for Next.js Image with fill */}
+          <div className="absolute inset-0">
             {children}
           </div>
 
