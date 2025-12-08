@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
 import Image from 'next/image';
 
@@ -38,27 +38,27 @@ export default function OurExpTeam() {
   const uplinePartners = [
     {
       name: "Mike Sherrard",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Upline-1.png",
+      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-1.webp",
       bio: "#1 Personal Attractor at eXp. Most personally sponsored actively producing agents worldwide. Trained 1000s of agents every year how to scale their business with social media. Top 3 Realtor on YouTube Globally with 85,000+ subscribers. Co-Founder of the Wolf Pack."
     },
     {
       name: "Connor Steinbrook",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Upline-2.png",
+      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-2.webp",
       bio: "Top Social Media Influencer with a 35,000+ subscriber YouTube channel Investor Army. Top 43 Influencer at eXp Realty Who Built a Team of Over 2900 Agents in 4 Years. Co-Founder of the WolfPack."
     },
     {
       name: "Chris Soignier",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Upline-3.png",
+      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-3.webp",
       bio: "Broker Associate experienced in multi-family and commercial Real Estate investments. Chris is a Top 50 eXp Influencer amassing a Team of Agents Spanning Over 40 US States and 7 Countries."
     },
     {
       name: "Ian Flannigan",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Upline-4.png",
+      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-4.webp",
       bio: "Top 50 eXp Influencer. Built an international team of real estate agents in 7 years. Accomplished Entrepreneur, National Speaker, and Industry Leader with a strong passion for helping people achieve their personal and business goals."
     },
     {
       name: "Pat Hays",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Upline-5.png",
+      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-5.webp",
       bio: "Top Producing Real Estate Agent, Team Leader, Mentor. Who did $3.2 Million in Production His First Year in Real Estate. Pat has Built a Team of Over 2000 Agents Across North America in 42 States and 3 Canadian Provinces."
     }
   ];
@@ -89,16 +89,13 @@ export default function OurExpTeam() {
                 className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
               >
                 <div className="lg:w-1/3">
-                  <div className="mx-auto w-fit">
-                    <CyberFrame>
-                      <Image
-                        src={founder.image}
-                        alt={founder.name}
-                        width={256}
-                        height={256}
-                        className="w-64 h-64 object-cover rounded-lg"
-                      />
-                    </CyberFrame>
+                  <div className="relative w-64 h-64 mx-auto rounded-full overflow-hidden border-4 border-amber-400/30">
+                    <Image
+                      src={founder.image}
+                      alt={founder.name}
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                 </div>
                 <div className="lg:w-2/3">
@@ -129,16 +126,13 @@ export default function OurExpTeam() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {uplinePartners.map((partner, index) => (
               <GenericCard key={index} padding="md" centered>
-                <div className="mx-auto mb-4 w-fit">
-                  <CyberFrame>
-                    <Image
-                      src={partner.image}
-                      alt={partner.name}
-                      width={128}
-                      height={128}
-                      className="w-32 h-32 object-cover rounded-lg"
-                    />
-                  </CyberFrame>
+                <div className="relative w-32 h-32 mx-auto mb-4 rounded-full overflow-hidden border-2 border-amber-400/30">
+                  <Image
+                    src={partner.image}
+                    alt={partner.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
                 <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
                 <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
