@@ -434,10 +434,11 @@ export default function Header() {
           font-family: var(--font-synonym) !important;
         }
 
-        /* Mobile menu main item hover states (exclude CTAButton) */
+        /* Mobile menu main item hover states (exclude CTAButton and Agent Portal) */
+        /* No yellow hover for regular nav items - keep white */
         .mobile-menu-overlay nav > div > a:not(.agent-portal-mobile):not([class*="text-button"]):hover,
         .mobile-menu-overlay nav > div > button:not([class*="text-button"]):hover {
-          color: #ffe000 !important;
+          color: #ffffff !important;
         }
 
         /* Mobile menu dropdown/sub-items should use body text color */
