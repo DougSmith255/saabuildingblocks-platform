@@ -92,7 +92,7 @@ export function FAQ({
             aria-expanded={isOpen(index)}
           >
             <span
-              className="font-semibold text-lg pr-4"
+              className="text-h5 pr-4"
               style={{ color: 'var(--faq-question-color, #e5e4dd)' }}
             >
               {item.question}
@@ -108,15 +108,15 @@ export function FAQ({
           {/* Answer */}
           <div
             className={`saa-faq-answer overflow-hidden transition-all duration-300 ${
-              isOpen(index) ? 'max-h-[500px]' : 'max-h-0'
+              isOpen(index) ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <p
-              className="px-5 pb-5"
+            <div
+              className="px-5 pt-0 pb-8 text-body"
               style={{ color: 'var(--faq-answer-color, #dcdbd5)' }}
             >
               {item.answer}
-            </p>
+            </div>
           </div>
         </div>
       ))}
