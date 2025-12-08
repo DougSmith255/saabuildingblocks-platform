@@ -23,7 +23,7 @@ export default function ShouldYouJoinExp() {
       {/* Quiz Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[900px] mx-auto">
-          <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
+          <div className="rounded-xl border border-white/10 overflow-hidden">
             <div className="aspect-[4/3] min-h-[500px]">
               <iframe
                 src="https://www.proprofs.com/quiz-school/ugc/story.php?title=should-you-join-exp-realty"

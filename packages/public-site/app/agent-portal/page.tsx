@@ -41,13 +41,10 @@ export default function AgentPortal() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <main className="min-h-screen bg-[#0a0a0f]">
+    <main className="min-h-screen">
       {/* Hero Header */}
       <section
         className="relative px-4 sm:px-8 md:px-12 pt-32 pb-12 flex items-center justify-center"
-        style={{
-          background: 'linear-gradient(180deg, rgba(10,10,15,1) 0%, rgba(15,15,25,1) 50%, rgba(10,10,15,1) 100%)',
-        }}
       >
         <div className="max-w-[2500px] mx-auto w-full text-center">
           <H1 heroAnimate animationDelay="0.3s">AGENT PORTAL</H1>
@@ -73,7 +70,7 @@ export default function AgentPortal() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-lg border border-[#ffd700]/30 bg-[#0f0f1a] text-[#e5e4dd] mb-4"
+            className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-lg border border-[#ffd700]/30 bg-black/30 backdrop-blur-sm text-[#e5e4dd] mb-4"
           >
             <span className="text-[#ffd700]">☰</span>
             <span>Menu</span>
@@ -87,12 +84,7 @@ export default function AgentPortal() {
             `}
           >
             <nav
-              className="sticky top-24 rounded-xl p-4 space-y-2"
-              style={{
-                background: 'linear-gradient(135deg, rgba(15,15,25,0.95) 0%, rgba(20,20,35,0.95) 100%)',
-                border: '1px solid rgba(255,215,0,0.15)',
-                boxShadow: '0 0 30px rgba(255,215,0,0.05), inset 0 1px 0 rgba(255,255,255,0.05)',
-              }}
+              className="sticky top-24 rounded-xl p-4 space-y-2 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15"
             >
               {navItems.map((item) => (
                 <button
@@ -327,7 +319,7 @@ function TemplatesSection() {
                 </ul>
               </div>
               <div className="flex items-center justify-center">
-                <div className="text-center p-6 rounded-xl bg-[#ffd700]/5 border border-[#ffd700]/20">
+                <div className="text-center p-6 rounded-xl border border-[#ffd700]/20">
                   <span className="text-5xl mb-4 block">🎨</span>
                   <p className="text-[#e5e4dd]">Access templates through your eXp Canva account</p>
                 </div>
@@ -641,13 +633,7 @@ function NewAgentsSection() {
 // ============================================================================
 function SectionWrapper({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div
-      className="rounded-xl p-6 sm:p-8"
-      style={{
-        background: 'linear-gradient(135deg, rgba(15,15,25,0.8) 0%, rgba(20,20,35,0.8) 100%)',
-        border: '1px solid rgba(255,215,0,0.1)',
-      }}
-    >
+    <div className="rounded-xl p-6 sm:p-8 bg-black/30 backdrop-blur-sm border border-[#ffd700]/10">
       <H2 className="mb-8">{title}</H2>
       {children}
     </div>

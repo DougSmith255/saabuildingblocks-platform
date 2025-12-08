@@ -23,11 +23,6 @@ export default function ExpCommissionCalculator() {
       {/* Hero Section */}
       <section
         className="relative px-4 sm:px-8 md:px-12 py-24 flex items-center justify-center"
-        style={{
-          background: 'linear-gradient(180deg, #000000 0%, rgba(255,255,255,0) 100%), url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/02/exp-realty-revenue-share-calculator-desktop.webp)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
       >
         <div className="max-w-[2500px] mx-auto w-full text-center">
           <H1 heroAnimate animationDelay="0.6s">
@@ -39,11 +34,6 @@ export default function ExpCommissionCalculator() {
       {/* Calculator Section */}
       <section
         className="py-8 px-4"
-        style={{
-          backgroundColor: '#ededed',
-          backgroundImage: 'repeating-conic-gradient(rgba(0,0,0,0.06) 0% 25%, transparent 0% 50%)',
-          backgroundSize: '20px 20px',
-        }}
       >
         <div className="max-w-[1000px] mx-auto">
           {/* Calculator Module - Code copied from WordPress */}

@@ -63,7 +63,7 @@ export default function Freebies() {
       {/* Download All CTA - Using generic card style */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[800px] mx-auto text-center">
-          <div className="bg-white/5 rounded-xl p-10 md:p-12 border border-white/10">
+          <GenericCard padding="lg">
             <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Want Everything?</h3>
             <p className="text-[#dcdbd5] mb-8 max-w-md mx-auto">
               Download all 6 resources in one click and start building your real estate toolkit today.
@@ -71,7 +71,7 @@ export default function Freebies() {
             <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
               DOWNLOAD ALL ASSETS
             </CTAButton>
-          </div>
+          </GenericCard>
         </div>
       </section>
 
@@ -140,29 +140,29 @@ export default function Freebies() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10 text-center">
+            <GenericCard padding="md" className="text-center">
               <div className="text-3xl mb-4">🎯</div>
               <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Help Agents Succeed</h3>
               <p className="text-[#dcdbd5]/80 text-sm">
                 We believe in lifting up the entire industry with practical tools that work.
               </p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10 text-center">
+            <GenericCard padding="md" className="text-center">
               <div className="text-3xl mb-4">🤝</div>
               <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Build Relationships</h3>
               <p className="text-[#dcdbd5]/80 text-sm">
                 Great partnerships start with giving value first, no strings attached.
               </p>
-            </div>
+            </GenericCard>
 
-            <div className="bg-white/5 rounded-xl p-6 border border-white/10 text-center">
+            <GenericCard padding="md" className="text-center">
               <div className="text-3xl mb-4">🚀</div>
               <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Show Our Value</h3>
               <p className="text-[#dcdbd5]/80 text-sm">
                 If our free stuff is this good, imagine what you get when you join the team.
               </p>
-            </div>
+            </GenericCard>
           </div>
         </div>
       </section>
