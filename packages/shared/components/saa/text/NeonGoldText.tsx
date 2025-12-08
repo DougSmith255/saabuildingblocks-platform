@@ -73,15 +73,17 @@ export function NeonGoldText({
                   display: 'inline-block',
                   position: 'relative',
                   color: '#ffd700',
+                  // Using em units so glow scales with font size
+                  // Small text = small glow, large text = large glow
                   textShadow: `
-                    -1px -1px 0 rgba(255,255,255, 0.5),
-                    1px -1px 0 rgba(255,255,255, 0.5),
-                    -1px 1px 0 rgba(255,255,255, 0.5),
-                    1px 1px 0 rgba(255,255,255, 0.5),
-                    0 0 4px #ffd700,
-                    0 0 8px #ffd700,
-                    0 0 16px rgba(255,215,0,0.6),
-                    0 0 24px rgba(255,179,71,0.4)
+                    -0.02em -0.02em 0 rgba(255,255,255, 0.5),
+                    0.02em -0.02em 0 rgba(255,255,255, 0.5),
+                    -0.02em 0.02em 0 rgba(255,255,255, 0.5),
+                    0.02em 0.02em 0 rgba(255,255,255, 0.5),
+                    0 0 0.05em #ffd700,
+                    0 0 0.1em #ffd700,
+                    0 0 0.2em rgba(255,215,0,0.6),
+                    0 0 0.3em rgba(255,179,71,0.4)
                   `,
                 }}
               >
