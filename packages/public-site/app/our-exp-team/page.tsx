@@ -133,7 +133,7 @@ export default function OurExpTeam() {
                     alt={partner.name}
                     fill
                     sizes="(max-width: 768px) 144px, 176px"
-                    className="object-cover"
+                    className="object-cover grayscale scale-110"
                   />
                 </ProfileCyberFrame>
                 <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
