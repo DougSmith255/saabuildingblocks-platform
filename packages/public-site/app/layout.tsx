@@ -85,7 +85,7 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'block', // Block render until font loads
+  display: 'swap', // Swap immediately - allows image to be LCP instead of waiting for font
   preload: true,
   weight: '100 900',
 });
@@ -200,10 +200,18 @@ export default async function RootLayout({
         {/* Performance Hints - Establish early connections */}
         <PerformanceHints />
 
-        {/* Image preloads removed - they were causing warnings because:
-            - Wolf-pack uses image-set with variants (mobile/tablet/desktop), can't preload correctly
-            - Doug-and-Karrie may have similar issues with Next.js Image optimization
-            Images still load fast via fetchPriority="high" on the Image components */}
+        {/* Preload hero image for LCP optimization - uses desktop variant as default */}
+        <link
+          rel="preload"
+          as="image"
+          href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
+          imageSrcSet="
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/mobile 375w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/tablet 768w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop 1280w
+          "
+          imageSizes="(max-width: 480px) 375px, (max-width: 768px) 768px, 1280px"
+        />
 
         {/*
           Font Preloading Note:
