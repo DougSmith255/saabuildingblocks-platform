@@ -33,6 +33,10 @@ const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container
 export default function Home() {
   return (
     <main id="main-content">
+      {/* Static Counter - OUTSIDE HeroSection to avoid render delay from fade-in animation */}
+      {/* This is the LCP element - must render immediately without waiting for JS hydration */}
+      <StaticCounter />
+
       {/* Hero Section - Wrapped in HeroSection for smooth fade-in */}
       <HeroSection
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
@@ -137,10 +141,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Static Counter - Server Component (No Hydration Delay) */}
-        <StaticCounter />
-
         {/* Counter Animation - Hydrates after counter is visible */}
+        {/* Note: StaticCounter is rendered outside HeroSection to avoid render delay */}
         <CounterAnimation />
 
         {/* Hero animations removed - all elements visible immediately */}
