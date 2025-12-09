@@ -20,9 +20,9 @@ export default function OurExpTeam() {
       title: "Co-Founder, Smart Agent Alliance",
       image: DOUG_PROFILE_IMAGE,
       bio: [
-        "A master at all things creative. He is the creative director here at SmartAgentAlliance.com and loves to help agents with anything that has to do with design. In fact, he built this entire website, impressive huh?",
-        "Doug worked in construction for 4 years on multi-million-dollar homes while in college. It means that he is a hard worker and will trudge through the mud for you, whatever it takes.",
-        "He's also a huge fan of basketball and the modern-day equivalent to Arnold Schwarzenegger if he never took steroids, that means he likes the gym."
+        "Top 0.1% eXp team builder and the architect behind Smart Agent Alliance's entire digital infrastructure. Doug built this website, the automation systems, agent webpages, and the technology stack that gives our agents an unfair advantage in their markets.",
+        "With a Bachelor's degree in Industrial Design and a business minor, Doug spent four years building multi-million dollar homes during college—developing the work ethic and attention to detail he now applies to building systems for agents. He transforms complex technology into competitive advantages.",
+        "Doug specializes in passive revenue systems, branding, and marketing automation. If it's digital and it helps agents win, he probably built it."
       ]
     },
     {
@@ -31,9 +31,9 @@ export default function OurExpTeam() {
       title: "Co-Founder, Smart Agent Alliance",
       image: KARRIE_PROFILE_IMAGE,
       bio: [
-        "Karrie loves providing clients and agents with unmatched value. She has the number 1 agent YouTube channel in Marin County, California. She is certified in Real Estate Negotiation, Home Marketing, Relocations and Express Offers (cash offers). She is a frequent guest on KDOW \"The Real Estate Report\".",
-        "Karrie is a California attorney (inactive) having graduated top of her class at UC Berkeley law. Before becoming a realtor, Karrie bought and sold homes, practiced law, and spent over a decade as a professional stock trader.",
-        "Karrie has raised three children and currently spends time with her husband and two little dogs – Baxter and Lily. She loves helping agents achieve their wildest hopes and dreams in the real estate business."
+        "UC Berkeley Law graduate (top 5% of her class), eXp Certified Mentor, and the strategic mind behind agent success at Smart Agent Alliance. Karrie built a six-figure real estate business in her first full year—no cold calls, no door knocking—using YouTube marketing strategies she now teaches to agents.",
+        "Before real estate, Karrie practiced law, bought and sold homes, and spent over a decade as a professional stock trader. She holds the #1 agent YouTube channel in Marin County, California, and is certified in Real Estate Negotiation, Home Marketing, Relocations, and Express Offers.",
+        "A 30+ year Marin County resident, Karrie is passionate about helping agents achieve their wildest goals in real estate. She engineers results for agents who refuse to settle for average."
       ]
     }
   ];

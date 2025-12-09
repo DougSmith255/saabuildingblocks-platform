@@ -15,8 +15,8 @@ const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/upload
 export default function AboutKarrieHill() {
   const highlights = [
     { label: "Role", value: "Co-Founder, Smart Agent Alliance" },
-    { label: "Title", value: "Team Leader & eXp Certified Mentor" },
-    { label: "Education", value: "JD, UC Berkeley Law (Top 4%)" },
+    { label: "Title", value: "Strategic Advisor & eXp Certified Mentor" },
+    { label: "Education", value: "JD, UC Berkeley Law (Top 5%)" },
     { label: "Location", value: "Tiburon, Marin County, CA" }
   ];
 
@@ -44,7 +44,7 @@ export default function AboutKarrieHill() {
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>KARRIE HILL, JD</H1>
           <Tagline className="mt-4">
-            Team Leader, eXp Certified Mentor, and UC Berkeley Law Graduate
+            Strategic Advisor, eXp Certified Mentor, and UC Berkeley Law Graduate
           </Tagline>
         </div>
       </HeroSection>
@@ -91,28 +91,22 @@ export default function AboutKarrieHill() {
 
             <div className="space-y-6 text-[#dcdbd5]">
               <p>
-                Karrie Hill is co-founder of Smart Agent Alliance and serves as a Team Leader, eXp Certified Mentor,
-                and part of the Wolf Pack at eXp Realty. She transitioned from practicing law and professional stock
-                trading to become a real estate agent, achieving <strong className="text-[#e5e4dd]">six-figure income in her
-                first full year</strong> through YouTube-based marketing.
+                UC Berkeley Law graduate (<strong className="text-[#e5e4dd]">top 5% of her class</strong>), eXp Certified Mentor,
+                and the strategic mind behind agent success at Smart Agent Alliance. Karrie built a
+                <strong className="text-[#e5e4dd]"> six-figure real estate business in her first full year</strong>—no
+                cold calls, no door knocking—using YouTube marketing strategies she now teaches to agents.
               </p>
 
               <p>
-                She graduated in the <strong className="text-[#e5e4dd]">top 4% of her class at UC Berkeley Law</strong> and
-                holds degrees in Economics and Jurisprudence. Before becoming a realtor, Karrie practiced law, bought
-                and sold homes, and spent over a decade as a professional stock trader.
+                Before real estate, Karrie practiced law, bought and sold homes, and spent over a decade as a
+                professional stock trader. She holds the <strong className="text-[#e5e4dd]">#1 agent YouTube channel
+                in Marin County, California</strong>, and is certified in Real Estate Negotiation, Home Marketing,
+                Relocations, and Express Offers.
               </p>
 
               <p>
-                Karrie loves providing clients and agents with unmatched value. She has the <strong className="text-[#e5e4dd]">
-                #1 agent YouTube channel in Marin County, California</strong>. She is certified in Real Estate Negotiation,
-                Home Marketing, Relocations and Express Offers (cash offers).
-              </p>
-
-              <p>
-                As Smart Agent Alliance's agent information expert, she authors blog content covering sponsorship insights,
-                mentorship guidance, and success strategies for real estate professionals seeking to build sustainable
-                careers at eXp.
+                A 30+ year Marin County resident, Karrie is passionate about helping agents achieve their wildest
+                goals in real estate. She engineers results for agents who refuse to settle for average.
               </p>
             </div>
           </div>
@@ -183,7 +177,7 @@ export default function AboutKarrieHill() {
           <div className="max-w-[800px] mx-auto text-center">
             <H2>Connect With Karrie</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Ready to get mentorship from Karrie and join the Wolf Pack?
+              Ready to get mentorship from Karrie and join Smart Agent Alliance?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

@@ -15,7 +15,7 @@ const DOUG_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/
 export default function AboutDougSmart() {
   const highlights = [
     { label: "Role", value: "Co-Founder, Smart Agent Alliance" },
-    { label: "Title", value: "Full-Stack Developer & Management Systems Director" },
+    { label: "Title", value: "Full-Stack Architect" },
     { label: "Ranking", value: "Top 0.1% eXp Team Builders (2025)" },
     { label: "Location", value: "San Jose, California" }
   ];
@@ -36,7 +36,7 @@ export default function AboutDougSmart() {
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>DOUG SMART</H1>
           <Tagline className="mt-4">
-            Full-Stack Developer building the digital infrastructure that powers the Wolf Pack
+            Full-Stack Architect building the digital infrastructure that powers Smart Agent Alliance
           </Tagline>
         </div>
       </HeroSection>
@@ -83,25 +83,20 @@ export default function AboutDougSmart() {
 
             <div className="space-y-6 text-[#dcdbd5]">
               <p>
-                Doug Smart is co-founder of Smart Agent Alliance, part of the rapidly expanding Wolf Pack sponsor team at eXp Realty.
-                He ranks in the <strong className="text-[#e5e4dd]">top 0.1% of eXp Realty team builders in 2025</strong>.
+                Top 0.1% eXp team builder and the architect behind Smart Agent Alliance's entire digital infrastructure.
+                Doug built this website, the automation systems, agent webpages, and the technology stack that gives
+                our agents an <strong className="text-[#e5e4dd]">unfair advantage</strong> in their markets.
               </p>
 
               <p>
-                Doug holds a Bachelor's degree in Industrial Design with a Business minor. During college, he gained hands-on
-                construction experience building multi-million dollar homes, developing a strong work ethic and attention to detail
-                that carries through to his current work.
+                With a Bachelor's degree in Industrial Design and a business minor, Doug spent four years building
+                multi-million dollar homes during college—developing the work ethic and attention to detail he now
+                applies to building systems for agents. He transforms complex technology into competitive advantages.
               </p>
 
               <p>
-                As Full-Stack Developer and Management Systems Director for Smart Agent Alliance, Doug designs and develops the
-                organization's entire digital infrastructure - including the website, agent webpages, automations, and more.
-                In fact, he built this entire website.
-              </p>
-
-              <p>
-                His work centers on creating passive revenue systems for agents while helping them elevate their branding, marketing,
-                and creative presence to compete effectively in real estate.
+                Doug specializes in passive revenue systems, branding, and marketing automation. If it's digital
+                and it helps agents win, he probably built it.
               </p>
             </div>
           </div>
@@ -149,7 +144,7 @@ export default function AboutDougSmart() {
           <div className="max-w-[800px] mx-auto text-center">
             <H2>Connect With Doug</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Ready to join the Wolf Pack and leverage Doug's digital systems for your real estate business?
+              Ready to join Smart Agent Alliance and leverage Doug's digital systems for your real estate business?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
