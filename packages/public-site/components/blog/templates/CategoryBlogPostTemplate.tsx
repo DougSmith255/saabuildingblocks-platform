@@ -11,7 +11,6 @@ import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from '../Breadcrumbs';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import { LazySection } from '@/components/shared/LazySection';
-import HeroSection from '@/components/shared/HeroSection';
 import type { BlogPost } from '@/lib/wordpress/types';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
@@ -194,8 +193,8 @@ export function CategoryBlogPostTemplate({
         aria-hidden="true"
       />
 
-      {/* Hero Section with Cloud Background - wrapped in HeroSection for fade-in to improve LCP */}
-      <HeroSection className="relative">
+      {/* Hero Section with Cloud Background - no wrapper, renders immediately */}
+      <div className="relative">
         {!isDarkMode && <CloudBackground />}
 
         {/* Breadcrumbs */}
@@ -220,7 +219,7 @@ export function CategoryBlogPostTemplate({
           featuredImageMaxHeight={templateConfig.heroImageMaxHeight}
           onThemeChange={handleThemeChange}
         />
-      </HeroSection>
+      </div>
 
       {/* Comparison Images - Collapsible accordion for brokerage comparison posts ONLY */}
       {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (

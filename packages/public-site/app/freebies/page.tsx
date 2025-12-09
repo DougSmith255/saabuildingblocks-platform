@@ -1,7 +1,6 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
-import HeroSection from '@/components/shared/HeroSection';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -52,14 +51,14 @@ export default function Freebies() {
   return (
     <main>
       {/* Hero Section */}
-      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>FREEBIE DOWNLOADS</H1>
           <Tagline className="mt-4">
             Free tools to help you grow your real estate business
           </Tagline>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Download All CTA - Using generic card style */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">

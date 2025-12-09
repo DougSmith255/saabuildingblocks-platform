@@ -1,7 +1,6 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
-import HeroSection from '@/components/shared/HeroSection';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -102,14 +101,14 @@ export default function TraditionalBrokerageComparison() {
   return (
     <main>
       {/* Hero Section */}
-      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>EXP VS TRADITIONAL BROKERAGES</H1>
           <Tagline className="mt-4">
             How does eXp Realty compare to traditional brick-and-mortar brokerages like Keller Williams, RE/MAX, and Coldwell Banker?
           </Tagline>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Quick Stats */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

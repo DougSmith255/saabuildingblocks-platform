@@ -1,7 +1,6 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
-import HeroSection from '@/components/shared/HeroSection';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -46,14 +45,14 @@ export default function BestRealEstateBrokerage() {
   return (
     <main>
       {/* Hero Section */}
-      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>BROKERAGE COMPARISONS</H1>
           <Tagline className="mt-4">
             Find the best real estate brokerage for your career. Compare commission structures, fees, technology, and wealth-building opportunities.
           </Tagline>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Comparison Cards */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

@@ -24,7 +24,6 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
-import HeroSection from '@/components/shared/HeroSection';
 
 /**
  * WordPress categories data (from actual WordPress API)
@@ -114,36 +113,31 @@ export default async function RealEstateAgentBlogPage() {
 
   return (
     <main id="main-content" className="min-h-screen">
-      {/* Hero Section - Wrapped in HeroSection for smooth fade-in */}
-      <HeroSection
-        className="relative px-4 sm:px-8 md:px-12 flex items-center justify-center"
-        style={{ minHeight: '100vh', paddingTop: '50px' }}
-        ariaLabel="Agent Success Hub Hero"
+      {/* Hero Section - No wrapper, renders immediately with <img> tag */}
+      <section
+        className="relative min-h-screen px-4 sm:px-8 md:px-12 flex items-center justify-center"
+        style={{ paddingTop: '50px' }}
+        aria-label="Agent Success Hub Hero"
       >
-        {/* Agent Success Hub Background Image - Cloudflare Images with responsive variants */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
-          <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
-            <div
-              className="absolute inset-0 agent-hero-bg"
-              style={{
-                // Cloudflare Images with responsive variants (mobile/tablet/desktop)
-                backgroundImage: `image-set(
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/mobile) 1x,
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/tablet) 2x,
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop) 3x
-                )`,
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center 55%',
-                backgroundAttachment: 'fixed',
-                maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-              }}
-            />
-          </div>
-        </div>
+        {/* Hero Background Image - uses <img> tag for LCP detection */}
+        <img
+          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop"
+          srcSet="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop 2000w"
+          sizes="100vw"
+          alt="Agent Success Hub - Real Estate Career Resources"
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover -z-10 hero-bg"
+          style={{
+            objectPosition: 'center 55%',
+            maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+          }}
+        />
 
-        <div className="relative z-10 max-w-[2500px] mx-auto w-full text-center">
+        {/* Content */}
+        <div className="relative z-10 max-w-[2500px] mx-auto w-full text-center pt-[15vh]">
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6">
             <H1 id="blog-heading">
@@ -158,7 +152,7 @@ export default async function RealEstateAgentBlogPage() {
             </Tagline>
           </div>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Blog content loads progressively with client component */}
       <BlogPageClient categories={WORDPRESS_CATEGORIES} />

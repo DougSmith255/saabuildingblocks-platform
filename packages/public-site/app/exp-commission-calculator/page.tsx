@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { H1 } from '@saa/shared/components/saa';
-import HeroSection from '@/components/shared/HeroSection';
 
 /**
  * eXp Commission & Fees Calculator Page
@@ -22,7 +21,7 @@ export default function ExpCommissionCalculator() {
   return (
     <main className="min-h-screen">
       {/* Hero Section - wrapped for LCP optimization */}
-      <HeroSection
+      <section
         className="relative px-4 sm:px-8 md:px-12 py-24 flex items-center justify-center"
       >
         <div className="max-w-[2500px] mx-auto w-full text-center">
@@ -30,7 +29,7 @@ export default function ExpCommissionCalculator() {
             EXP COMMISSION & FEES CALCULATOR
           </H1>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Calculator Section */}
       <section

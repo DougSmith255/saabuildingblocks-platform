@@ -124,3 +124,72 @@ Always write mobile styles first, then add responsive modifiers:
 - Use CSS animations over JavaScript where possible
 - Minimize client components - prefer Server Components
 - Use `'use client'` only when interactivity is required
+
+---
+
+## Hero Sections
+
+### Structure (No Wrapper Component)
+Hero sections are plain `<section>` elements - **no wrapper component needed**.
+
+```tsx
+<section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+  <div className="max-w-[1400px] mx-auto w-full text-center">
+    <H1>Page Title</H1>
+    <Tagline className="mt-4">Supporting tagline text</Tagline>
+  </div>
+</section>
+```
+
+### Hero with Background Image
+When adding a background image to a hero section, use an actual `<img>` tag - **NEVER use CSS `backgroundImage`**.
+
+```tsx
+<section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+  {/* Background Image - MUST use <img> tag */}
+  <img
+    src="https://imagedelivery.net/..."
+    srcSet="...mobile 640w, ...tablet 1024w, ...desktop 2000w"
+    sizes="100vw"
+    alt=""
+    aria-hidden="true"
+    fetchPriority="high"
+    loading="eager"
+    decoding="async"
+    className="absolute inset-0 w-full h-full object-cover -z-10 hero-bg"
+    style={{
+      objectPosition: 'center 55%',
+      // Optional gradient mask
+      maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, transparent 85%)',
+      WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, transparent 85%)',
+    }}
+  />
+
+  {/* Content */}
+  <div className="relative z-10 max-w-[1400px] mx-auto w-full text-center">
+    <H1>Page Title</H1>
+    <Tagline className="mt-4">Supporting tagline text</Tagline>
+  </div>
+</section>
+```
+
+### Critical Rules
+
+1. **NO fade-in animations on hero** - Content must be visible immediately
+2. **NO `opacity: 0` start state** - Chrome ignores these for performance metrics
+3. **Use `<img>` for background images** - Not CSS `backgroundImage`
+4. **Required image attributes:**
+   - `fetchPriority="high"`
+   - `loading="eager"`
+   - `decoding="async"`
+5. **Add `hero-bg` class** - Exempts hero images from global fade-in animation
+6. **Decorative animations are fine** - Button glows, counters load after content is visible
+7. **Scroll-triggered animations are fine** - Below-fold content can use opacity animations
+
+### Image Classes for LCP
+
+| Class | Purpose |
+|-------|---------|
+| `hero-bg` | Hero background images - no fade animation |
+| `profile-image` | Profile photos in hero - no fade animation |
+| `no-fade` | Any image that should not fade in |

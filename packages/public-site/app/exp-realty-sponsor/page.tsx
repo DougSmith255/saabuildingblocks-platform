@@ -1,7 +1,6 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
-import HeroSection from '@/components/shared/HeroSection';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -54,7 +53,7 @@ export default function ExpRealtySponsor() {
   return (
     <main>
       {/* Hero Section */}
-      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <div className="mb-8">
             <Image
@@ -70,7 +69,7 @@ export default function ExpRealtySponsor() {
             Free Resources, Tools, Training, Support, & Community — No Extra Cost or Split Ever!
           </Tagline>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Intro Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

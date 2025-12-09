@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { H1, CyberFrame, YouTubeFacade, Icon3D } from '@saa/shared/components/saa';
 import { Clock, Calendar, User } from 'lucide-react';
@@ -86,18 +86,6 @@ export function BlogPostHero({
   const readingTime = calculateReadingTime(content);
   const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
-  // Smooth fade-in animation state
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    // Double RAF to ensure we're past initial paint
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setIsVisible(true);
-      });
-    });
-  }, []);
-
   return (
     <section
       className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 blog-hero-section"
@@ -108,15 +96,18 @@ export function BlogPostHero({
         // Shift content up by ~8% to position it slightly above true center
         paddingBottom: 'calc(var(--vh-locked, 1dvh) * 8)',
         boxSizing: 'border-box',
-        opacity: isVisible ? 1 : 0,
-        transition: 'opacity 0.5s ease-out',
       }}
     >
-      {/* Hero background - uses star background by default */}
+      {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
       {heroImage && (
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
-          style={{ backgroundImage: `url(${heroImage})` }}
+        <img
+          src={heroImage}
+          alt=""
+          aria-hidden="true"
+          fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          className="absolute inset-0 w-full h-full object-cover opacity-30 -z-10 hero-bg"
         />
       )}
 

@@ -3212,7 +3212,8 @@ body.light-mode .blog-post .border-t {
  */
 
 /* Apply to all images by default - slower and more noticeable */
-img:not(.profile-image) {
+/* EXCLUDES: .profile-image (homepage portrait), .hero-bg (hero backgrounds), .no-fade (explicit opt-out) */
+img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   opacity: 0;
   animation: imgFadeIn 1.0s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
 }

@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
-import HeroSection from '@/components/shared/HeroSection';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
@@ -54,40 +53,33 @@ const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container
 export default function Home() {
   return (
     <main id="main-content">
-      {/* Hero Section - Wrapped in HeroSection for smooth fade-in */}
-      <HeroSection
+      {/* Hero Section - No wrapper, renders immediately */}
+      <section
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
-        ariaLabel="Hero"
+        aria-label="Hero"
       >
-        {/* Static Counter - INSIDE HeroSection so it fades in with hero content */}
-        {/* This allows the hero image to become LCP instead of counter text */}
+        {/* Static Counter */}
         <StaticCounter />
 
-        {/* Wolf Pack Background Image - furthest back layer */}
+        {/* Wolf Pack Background Image - uses <img> tag for LCP detection */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
-            <div
-              className="absolute inset-0 wolf-pack-bg"
+            <img
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
+              srcSet="
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+              "
+              sizes="100vw"
+              alt=""
+              aria-hidden="true"
+              fetchPriority="high"
+              loading="eager"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover wolf-pack-bg hero-bg"
               style={{
-                // Responsive background images using CSS image-set() - browser picks the best size
-                // Mobile (<=375px): 28KB, Tablet (<=768px): 52KB, Desktop: 87KB (67% bandwidth savings on mobile!)
-                backgroundImage: `image-set(
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile) 1x,
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet) 2x,
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop) 3x
-                )`,
-                // Fallback for browsers without image-set support
-                // @ts-ignore
-                WebkitBackgroundImage: `-webkit-image-set(
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile) 1x,
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet) 2x,
-                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop) 3x
-                )`,
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center 55%',
-                // Note: backgroundAttachment 'scroll' on mobile to prevent scroll jitter
-                // Fixed backgrounds cause iOS Safari viewport resize issues
+                objectPosition: 'center 55%',
                 maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
                 WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
               }}
@@ -144,26 +136,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Spaceman Background Image */}
-        <div className="absolute inset-0 flex items-end justify-center pointer-events-none z-0">
-          {/* Use --vh-locked to prevent iOS Safari scroll jitter when address bar hides */}
-          <div className="relative w-full max-w-[1200px]" style={{ height: 'calc(var(--vh-locked, 1dvh) * 80)' }}>
-            <div
-              className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-full"
-              style={{
-                backgroundImage: 'url(/animations/spaceman.svg)',
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'bottom center',
-                maskImage: 'linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 10%, rgba(0,0,0,0.6) 20%, black 40%)',
-                WebkitMaskImage: 'linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 10%, rgba(0,0,0,0.6) 20%, black 40%)',
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Counter Animation - Hydrates after counter is visible */}
-        {/* Note: StaticCounter is rendered outside HeroSection to avoid render delay */}
+        {/* Counter Animation - Hydrates after initial render */}
         <CounterAnimation />
 
         {/* Hero animations removed - all elements visible immediately */}
@@ -203,7 +176,7 @@ export default function Home() {
 
         {/* Mobile: CSS-only positioning (optimized for performance) - Visible only on mobile */}
         <div
-          className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8 hero-content-animate"
+          className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
           style={{
             // Mobile-optimized CSS positioning
             // Current position covering 55% - need to move down to 75%
@@ -241,7 +214,7 @@ export default function Home() {
             </CTAButton>
           </div>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Homepage Sections */}
       <ValueStack />

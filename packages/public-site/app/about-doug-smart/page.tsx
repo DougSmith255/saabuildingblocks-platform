@@ -1,7 +1,6 @@
 'use client';
 
 import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
-import HeroSection from '@/components/shared/HeroSection';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -32,14 +31,14 @@ export default function AboutDougSmart() {
   return (
     <main>
       {/* Hero Section */}
-      <HeroSection className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>DOUG SMART</H1>
           <Tagline className="mt-4">
             Full-Stack Architect building the digital infrastructure that powers Smart Agent Alliance
           </Tagline>
         </div>
-      </HeroSection>
+      </section>
 
       {/* Profile Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
