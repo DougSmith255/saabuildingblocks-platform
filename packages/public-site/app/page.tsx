@@ -91,16 +91,15 @@ export default function Home() {
                 filter: 'blur(40px)',
               }}
             />
-            {/* Main image - Using native img with srcset for optimal responsive loading */}
-            {/* WordPress serves resized images via ?w= parameter */}
+            {/* Main image - Cloudflare Images with responsive variants */}
             <img
-              src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=900"
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
               srcSet="
-                https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=400 400w,
-                https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=640 640w,
-                https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=900 900w
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/mobile 375w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/tablet 768w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop 1280w
               "
-              sizes="(max-width: 480px) 400px, (max-width: 768px) 640px, 900px"
+              sizes="(max-width: 480px) 375px, (max-width: 768px) 768px, 1280px"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
               width={900}
               height={500}
