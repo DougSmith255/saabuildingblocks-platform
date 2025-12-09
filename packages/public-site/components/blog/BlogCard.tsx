@@ -19,7 +19,7 @@
  * - Wrapped with React.memo to prevent re-renders when props haven't changed
  */
 
-import { memo } from 'react';
+import { memo, useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
@@ -42,8 +42,34 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
   const primaryCategory = post.categories[0] || 'uncategorized';
   const categorySlug = categoryToSlug(primaryCategory);
 
+  // Defer image loading until card is near viewport
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect(); // Stop observing once visible
+        }
+      },
+      {
+        rootMargin: '200px', // Start loading 200px before entering viewport
+        threshold: 0
+      }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <article
+      ref={cardRef}
       className={`
         border border-[#e5e4dd]/20
         rounded-lg
@@ -61,9 +87,9 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
         className="flex flex-col h-full group"
         aria-label={`Read full article: ${post.title}`}
       >
-        {/* Featured Image - Always display, with fallback background */}
+        {/* Featured Image - Only loads when card is near viewport */}
         <div className="relative w-full h-64 flex-shrink-0 overflow-hidden bg-gradient-to-br from-[#2a2a2a] to-[#191818]">
-          {post.featuredImage ? (
+          {isVisible && post.featuredImage ? (
             <>
               <Image
                 src={post.featuredImage.url}
@@ -74,8 +100,9 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
                   w-full h-full
                   object-cover
                   group-hover:scale-105
-                  transition-transform duration-500
+                  transition-all duration-500
                   group-hover:brightness-110
+                  animate-fade-in
                 "
                 loading="lazy"
               />
@@ -88,7 +115,7 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
               " />
             </>
           ) : (
-            /* Fallback placeholder when no featured image */
+            /* Placeholder shown until image is ready to load */
             <div className="w-full h-full flex items-center justify-center">
               <svg
                 className="w-16 h-16 text-[#808080]"
@@ -185,7 +212,7 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
             {post.author.name && (
               <>
                 <div className="flex items-center gap-2.5">
-                  {post.author.avatar && (
+                  {isVisible && post.author.avatar && (
                     <Image
                       src={post.author.avatar}
                       alt={post.author.name}
@@ -198,6 +225,7 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
                         flex-shrink-0
                         bg-[#dcdbd5]/10
                       "
+                      loading="lazy"
                     />
                   )}
                   <span className="
