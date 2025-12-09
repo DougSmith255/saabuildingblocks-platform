@@ -63,10 +63,18 @@ const REDIRECTS_FILE = path.join(OUT_DIR, '_redirects');
 // STEP 1: FIND ALL IMAGES USED IN BUILT PAGES
 // ============================================
 
+// Helper to extract base image URL (removes WordPress size suffixes like -300x65)
+function getBaseImageUrl(url: string): string {
+  // WordPress generates: image-300x65.jpg from image.jpg
+  // Remove the -WIDTHxHEIGHT suffix before the extension
+  return url.replace(/-\d+x\d+(\.[^.]+)$/, '$1');
+}
+
 async function findUsedImages(): Promise<Set<string>> {
   console.log('🔍 Scanning built pages for WordPress images...\n');
 
-  const imageUrls = new Set<string>();
+  const allImageUrls = new Set<string>(); // All URLs found (including variants)
+  const baseImageUrls = new Set<string>(); // Base images only (for upload)
   const htmlFiles: string[] = [];
   const jsonFiles: string[] = [];
 
@@ -106,14 +114,23 @@ async function findUsedImages(): Promise<Set<string>> {
     let match;
 
     while ((match = imgRegex.exec(content)) !== null) {
-      const url = match[2];
+      const attrValue = match[2];
 
-      // Check if it's a WordPress image
-      if (wpDomains.some(domain => url.includes(domain)) &&
-          /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)) {
-        // Normalize URL (remove query params, ensure https)
-        const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
-        imageUrls.add(cleanUrl);
+      // srcset can contain multiple URLs separated by commas
+      // Format: "url1 375w, url2 768w, url3 1280w"
+      const urls = attrValue.split(',').map(part => part.trim().split(/\s+/)[0]);
+
+      for (const url of urls) {
+        // Check if it's a WordPress image
+        // Use regex that matches extension anywhere (not just at end) to handle ?w= params
+        if (wpDomains.some(domain => url.includes(domain)) &&
+            /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url)) {
+          // Normalize URL (remove query params, ensure https)
+          const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
+          allImageUrls.add(cleanUrl);
+          // Track base image (without size suffix) for upload
+          baseImageUrls.add(getBaseImageUrl(cleanUrl));
+        }
       }
     }
 
@@ -127,10 +144,12 @@ async function findUsedImages(): Promise<Set<string>> {
 
       // Check if it's a WordPress image
       if (wpDomains.some(domain => url.includes(domain)) &&
-          /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)) {
+          /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url)) {
         // Normalize URL (remove query params, ensure https)
         const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
-        imageUrls.add(cleanUrl);
+        allImageUrls.add(cleanUrl);
+        // Track base image (without size suffix) for upload
+        baseImageUrls.add(getBaseImageUrl(cleanUrl));
       }
     }
   }
@@ -147,24 +166,30 @@ async function findUsedImages(): Promise<Set<string>> {
 
         // Check if it's a WordPress image
         if (wpDomains.some(domain => url.includes(domain)) &&
-            /\.(jpg|jpeg|png|webp|gif|svg)$/i.test(url)) {
+            /\.(jpg|jpeg|png|webp|gif|svg)(\?|$)/i.test(url)) {
           // Normalize URL (remove query params, ensure https)
           const cleanUrl = url.split('?')[0].replace(/^http:/, 'https:');
-          imageUrls.add(cleanUrl);
+          allImageUrls.add(cleanUrl);
+          // Track base image (without size suffix) for upload
+          baseImageUrls.add(getBaseImageUrl(cleanUrl));
         }
       }
     }
   }
 
-  console.log(`  ✅ Found ${imageUrls.size} unique WordPress images in use\n`);
+  console.log(`  ✅ Found ${allImageUrls.size} WordPress image URLs (including size variants)`);
+  console.log(`  ✅ Found ${baseImageUrls.size} unique base images to upload\n`);
 
-  // Log images found
-  Array.from(imageUrls).forEach((url, i) => {
+  // Log base images found (what we'll actually upload)
+  Array.from(baseImageUrls).slice(0, 20).forEach((url, i) => {
     console.log(`    ${i + 1}. ${url.split('/').pop()}`);
   });
+  if (baseImageUrls.size > 20) {
+    console.log(`    ... and ${baseImageUrls.size - 20} more`);
+  }
   console.log();
 
-  return imageUrls;
+  return baseImageUrls;
 }
 
 // ============================================

@@ -73,34 +73,47 @@ export function CyberCardGold({
           /* GenericCard-style interior */
           background: rgba(255, 255, 255, 0.05);
 
-          /* Pulsing glow animation - same as CTA button */
-          animation: cyberCardGoldPulse 2s ease-in-out infinite;
+  /* Base glow - always visible */
+          box-shadow:
+            0 0 4px 1px rgba(255, 215, 0, 0.5),
+            0 0 8px 2px rgba(255, 215, 0, 0.35),
+            0 0 16px 4px rgba(255, 215, 0, 0.2),
+            0 0 24px 6px rgba(255, 215, 0, 0.1),
+            0 4px 12px rgba(0,0,0,0.3);
 
           overflow: visible;
         }
 
-        /* Pulsing glow animation - tighter glow, matches CTA button style */
-        @keyframes cyberCardGoldPulse {
+        /* GPU-accelerated pulsing glow - animates opacity instead of box-shadow */
+        @keyframes cyberCardGoldPulseOpacity {
           0%, 100% {
-            box-shadow:
-              /* Gold neon glow layers - tighter */
-              0 0 4px 1px rgba(255, 215, 0, 0.5),
-              0 0 8px 2px rgba(255, 215, 0, 0.35),
-              0 0 16px 4px rgba(255, 215, 0, 0.2),
-              0 0 24px 6px rgba(255, 215, 0, 0.1),
-              /* Drop shadow for depth */
-              0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
           }
           50% {
-            box-shadow:
-              /* Intensified glow at peak - still tighter */
-              0 0 6px 2px rgba(255, 215, 0, 0.6),
-              0 0 12px 4px rgba(255, 215, 0, 0.4),
-              0 0 20px 6px rgba(255, 215, 0, 0.25),
-              0 0 32px 10px rgba(255, 215, 0, 0.12),
-              /* Drop shadow for depth */
-              0 6px 16px rgba(0,0,0,0.35);
+            opacity: 1;
           }
+        }
+
+        /* Intensified glow layer - fades in/out via opacity (GPU-accelerated) */
+        .cyber-card-gold-frame::after {
+          content: "";
+          position: absolute;
+          top: -12px;
+          left: -12px;
+          right: -12px;
+          bottom: -12px;
+          border-radius: 18px;
+          border: 2px solid rgba(255,255,255,0.4);
+          box-shadow:
+            0 0 6px 2px rgba(255, 215, 0, 0.6),
+            0 0 12px 4px rgba(255, 215, 0, 0.4),
+            0 0 20px 6px rgba(255, 215, 0, 0.25),
+            0 0 32px 10px rgba(255, 215, 0, 0.12),
+            0 6px 16px rgba(0,0,0,0.35);
+          pointer-events: none;
+          z-index: -1;
+          animation: cyberCardGoldPulseOpacity 2s ease-in-out infinite;
+          will-change: opacity;
         }
 
         /* Inner white outline - inside the gold border */
@@ -117,19 +130,7 @@ export function CyberCardGold({
           z-index: 1;
         }
 
-        /* Outer white outline - outside the gold border */
-        .cyber-card-gold-frame::after {
-          content: "";
-          position: absolute;
-          top: -12px;
-          left: -12px;
-          right: -12px;
-          bottom: -12px;
-          border-radius: 18px;
-          border: 2px solid rgba(255,255,255,0.4);
-          pointer-events: none;
-          z-index: -1;
-        }
+        /* Note: Outer white outline is now included in ::after above (with pulsing glow) */
 
         /* Content container */
         .cyber-card-gold-content {

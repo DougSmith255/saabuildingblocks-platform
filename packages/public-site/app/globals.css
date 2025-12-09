@@ -1309,9 +1309,9 @@ body.is-scrolling [class*="starfieldContainer"] [class*="star"]::before {
 }
 
 /* DESKTOP & ALL DEVICES: Pause pulsing glow effects during scroll */
-/* CTA button light bars, Secondary button light bars, CyberCardGold border */
-body.is-scrolling .cta-light-bar-pulse,
-body.is-scrolling .cyber-card-gold-frame {
+/* CTA button light bars (::after pseudo), Secondary button light bars, CyberCardGold border (::after pseudo) */
+body.is-scrolling .cta-light-bar-pulse::after,
+body.is-scrolling .cyber-card-gold-frame::after {
   animation-play-state: paused !important;
 }
 
@@ -3236,29 +3236,52 @@ img:not(.profile-image) {
   /* Position set via inline styles from component */
 }
 
-/* Pulsing glow animation - box-shadow expands/contracts FROM the light bar */
-/* Glow is dimmer than the light bar itself so the source stands out */
-@keyframes ctaLightPulse {
+/* Pulsing glow animation - GPU-accelerated opacity animation */
+/* Uses a pseudo-element with static box-shadow, animates opacity instead */
+/* This avoids expensive box-shadow recalculation every frame */
+@keyframes ctaLightPulseOpacity {
   0%, 100% {
-    box-shadow:
-      0 0 3px 1px rgba(255, 215, 0, 0.5),
-      0 0 8px 3px rgba(255, 215, 0, 0.35),
-      0 0 16px 6px rgba(255, 215, 0, 0.2),
-      0 0 30px 10px rgba(255, 215, 0, 0.1);
+    opacity: 0.7;
   }
   50% {
-    box-shadow:
-      0 0 5px 2px rgba(255, 215, 0, 0.6),
-      0 0 14px 6px rgba(255, 215, 0, 0.4),
-      0 0 28px 12px rgba(255, 215, 0, 0.25),
-      0 0 50px 20px rgba(255, 215, 0, 0.12);
+    opacity: 1;
   }
 }
 
-/* Apply pulse animation directly to the light bar */
+/* Apply pulse animation via pseudo-element for GPU acceleration */
 .cta-light-bar-pulse {
-  animation: ctaLightPulse 2s ease-in-out infinite;
+  position: relative;
+}
+
+/* Base glow layer (dimmer state) - always visible */
+.cta-light-bar-pulse::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    0 0 3px 1px rgba(255, 215, 0, 0.5),
+    0 0 8px 3px rgba(255, 215, 0, 0.35),
+    0 0 16px 6px rgba(255, 215, 0, 0.2),
+    0 0 30px 10px rgba(255, 215, 0, 0.1);
+  pointer-events: none;
+}
+
+/* Intensified glow layer - fades in/out via opacity */
+.cta-light-bar-pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    0 0 5px 2px rgba(255, 215, 0, 0.6),
+    0 0 14px 6px rgba(255, 215, 0, 0.4),
+    0 0 28px 12px rgba(255, 215, 0, 0.25),
+    0 0 50px 20px rgba(255, 215, 0, 0.12);
+  pointer-events: none;
+  animation: ctaLightPulseOpacity 2s ease-in-out infinite;
   animation-delay: inherit;
+  will-change: opacity;
 }
 
 /* Secondary button side light bars - hover expansion */

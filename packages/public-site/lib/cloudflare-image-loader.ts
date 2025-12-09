@@ -1,7 +1,7 @@
 /**
  * Cloudflare Images Loader for Next.js (GLOBAL DOMINANCE MODE)
  *
- * RESPONSIVE VARIANT SELECTION
+ * RESPONSIVE VARIANT SELECTION - LIGHTWEIGHT VERSION
  *
  * This loader automatically selects the optimal Cloudflare Images variant
  * based on the requested width:
@@ -10,47 +10,25 @@
  * - desktop (1280px) for widths ≤ 1280
  * - public (original) for larger sizes
  *
- * Next.js Image component automatically generates srcset with multiple widths,
- * and this loader returns the appropriate variant URL for each width.
- *
- * The heavy lifting is done by:
- * 1. sync-cloudflare-images.ts (uploads images to Cloudflare)
- * 2. cloudflare-images-mapping.json (WordPress URL → Cloudflare Images mapping)
- * 3. Cloudflare Images variants (automatically resize images)
+ * NOTE: The URL mapping (WordPress → Cloudflare) is done at BUILD TIME
+ * by sync-cloudflare-images.ts. This loader only handles variant selection
+ * at runtime, keeping the client bundle small.
  *
  * Requires Cloudflare Images ($5/month):
  * https://developers.cloudflare.com/images/cloudflare-images/
  */
-
-// Import the mapping file at build time
-import imageMapping from '../cloudflare-images-mapping.json';
 
 export default function cloudflareLoader({ src, width, quality }: {
   src: string;
   width: number;
   quality?: number;
 }) {
-  // For WordPress images, transform to Cloudflare Images URL
-  if (src.includes('wp.saabuildingblocks.com/wp-content/uploads/')) {
-    // Look up the Cloudflare Images URL from the mapping
-    const mapping = imageMapping.find(m => m.wordpressUrl === src);
-
-    if (mapping) {
-      // Use the Cloudflare Images URL with variant selection
-      src = mapping.cloudflareUrl;
-    } else {
-      // Fallback: if not in mapping, return WordPress URL
-      // This handles images that haven't been synced yet
-      return `${src}?w=${width}`;
-    }
-  }
-
   // Check if this is a Cloudflare Images URL
   const isCloudflareImage = src.includes('imagedelivery.net');
 
   if (!isCloudflareImage) {
-    // For non-Cloudflare images (local images, external URLs)
-    // just return as-is
+    // For non-Cloudflare images, return as-is
+    // WordPress URLs should already be transformed to Cloudflare URLs at build time
     return src;
   }
 

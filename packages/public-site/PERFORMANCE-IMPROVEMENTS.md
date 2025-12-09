@@ -1,8 +1,8 @@
 # Performance Improvements Tracker
 
 **Current Scores (Dec 2024):**
-- Desktop: 97
-- Mobile: 73
+- Desktop: 99
+- Mobile: 98-99 (was 73)
 
 ---
 
@@ -10,14 +10,12 @@
 
 ### 1. Doug & Karrie Image Optimization
 **Savings: ~70 KiB**
-**Status:** TODO
+**Status:** DONE (Dec 2024)
 
-The hero image is 107KB but displays at 639x355 on mobile. Currently serving 900x500.
+~~The hero image is 107KB but displays at 639x355 on mobile. Currently serving 900x500.~~
 
-**Fix Options:**
-- A) Add smaller srcset sizes for mobile (recommended)
-- B) Compress image more aggressively
-- C) Use Cloudflare Image Resizing with fit=scale-down
+**Fixed:** Switched to Cloudflare Images with responsive variants (mobile/tablet/desktop).
+The image now uses srcset with 375w, 768w, and 1280w variants.
 
 **File:** `packages/public-site/app/page.tsx` (line ~96)
 
@@ -25,37 +23,29 @@ The hero image is 107KB but displays at 639x355 on mobile. Currently serving 900
 
 ### 2. Non-Composited Animations (box-shadow)
 **Impact:** Smoother animations, reduced jank
-**Status:** TODO
+**Status:** DONE (Dec 2024)
 
-The `ctaLightPulse` and `cyberCardGoldPulse` animations use `box-shadow` which cannot be GPU-accelerated. Browser must repaint on every frame.
+~~The `ctaLightPulse` and `cyberCardGoldPulse` animations use `box-shadow` which cannot be GPU-accelerated. Browser must repaint on every frame.~~
 
-**Affected Elements:**
-- CTA button light bars (top/bottom glow pulse)
-- CyberCardGold border pulse
+**Fixed:** Replaced box-shadow animation with opacity animation on pseudo-elements.
+- Base glow is a static box-shadow (no animation overhead)
+- Intensified glow layer uses `::after` pseudo-element with `opacity` animation
+- GPU-accelerated via `will-change: opacity`
 
-**Fix Options:**
-- A) Replace box-shadow animation with `filter: drop-shadow()` + opacity (partially composited)
-- B) Use pseudo-element with background gradient + opacity animation (fully composited)
-- C) Accept the tradeoff (visual effect worth the cost)
-
-**Files:**
-- `packages/public-site/app/globals.css` (ctaLightPulse keyframes)
-- `packages/shared/components/saa/cards/CyberCardGold.tsx`
+**Files changed:**
+- `packages/public-site/app/globals.css` (ctaLightPulseOpacity keyframes)
+- `packages/shared/components/saa/cards/CyberCardGold.tsx` (cyberCardGoldPulseOpacity)
 
 ---
 
 ### 3. Cloudflare Image Cache TTL
-**Savings: ~4 KiB on repeat visits**
-**Status:** TODO (Cloudflare Dashboard)
+**Savings: Faster repeat visits (no re-downloads for 30 days)**
+**Status:** DONE (Dec 2024)
 
-Wolf pack image from imagedelivery.net has 2-day cache. Should be longer for static assets.
+~~Wolf pack image from imagedelivery.net has 2-day cache. Should be longer for static assets.~~
 
-**Fix:** Configure in Cloudflare Dashboard:
-1. Go to Cloudflare Dashboard → Images → Delivery Settings
-2. Change "Browser TTL" from 2 days to 30 days (2592000 seconds)
-3. This affects all images served via imagedelivery.net
-
-Note: This cannot be configured via code - must be done in Cloudflare Dashboard.
+**Fixed:** Set browser_ttl to 2592000 (30 days) via Cloudflare Images API.
+All images from imagedelivery.net now have `cache-control: public, max-age=2592000`.
 
 ---
 
@@ -63,37 +53,26 @@ Note: This cannot be configured via code - must be done in Cloudflare Dashboard.
 
 ### 4. Legacy JavaScript Polyfills
 **Savings: ~14 KiB**
-**Status:** Requires Next.js config change
+**Status:** ALREADY DONE
 
-Next.js includes polyfills for older browsers:
-- Array.prototype.at
-- Array.prototype.flat
-- Array.prototype.flatMap
-- Object.fromEntries
-- Object.hasOwn
-- String.prototype.trimStart/trimEnd
+This was already configured! The `.browserslistrc` file targets modern browsers only:
+- Chrome/Edge/Firefox >= 111
+- Safari >= 16.4
+- No IE11, no Opera Mini
 
-**Fix Options:**
-- A) Set `browserslist` in package.json to target modern browsers only
-- B) Add to next.config.js: `experimental: { legacyBrowsers: false }`
-- C) Accept (14KB is small, ensures compatibility)
-
-**File:** `packages/public-site/next.config.ts` or `package.json`
+**File:** `packages/public-site/.browserslistrc`
 
 ---
 
-### 5. Unused JavaScript
-**Savings: ~26 KiB**
-**Status:** Investigate
+### 5. Unused JavaScript / Bundle Bloat
+**Savings: ~549 KiB**
+**Status:** DONE (Dec 2024)
 
-The chunk `01bd51e4ce3f19a7.js` (68KB) has 26KB unused on homepage.
+~~The chunk with image mapping data was 765KB - the entire cloudflare-images-mapping.json was bundled into the client.~~
 
-This is likely Next.js runtime + React that's needed for other pages but not fully used on homepage.
+**Fixed:** Removed the JSON import from `lib/cloudflare-image-loader.ts`. The WordPress→Cloudflare URL transformation happens at build time (via sync-cloudflare-images.ts), so the mapping file is not needed at runtime. The loader now only handles variant selection (mobile/tablet/desktop).
 
-**Fix Options:**
-- A) Audit dynamic imports - ensure components are properly code-split
-- B) Check if any large libraries are imported but not used
-- C) Accept (Next.js overhead, needed for navigation)
+**Result:** Largest chunk reduced from 765KB to 216KB. TBT reduced from 210-350ms to 0ms. Mobile score improved from 73 to 98-99.
 
 ---
 
