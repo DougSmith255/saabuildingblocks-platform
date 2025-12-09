@@ -3,73 +3,117 @@
 /**
  * Web Performance Tab Component
  *
- * Displays real-time Core Web Vitals and performance metrics using web-vitals library.
- * Shows LCP, FID, CLS, FCP, TTFB and provides bundle analysis links.
+ * Runs Lighthouse audits on any URL and displays results.
+ * Similar to PageSpeed Insights but integrated into Master Controller.
  */
 
-import { useEffect, useState } from 'react';
-import { Activity, TrendingUp, Clock, Gauge, ExternalLink, BarChart3 } from 'lucide-react';
-import type { Metric } from 'web-vitals';
+import { useState } from 'react';
+import { Activity, Globe, Clock, Gauge, AlertTriangle, CheckCircle, XCircle, Loader2, TrendingUp, Zap, Eye, Search } from 'lucide-react';
 
-interface WebVital {
-  name: string;
+interface LighthouseMetric {
   value: number;
-  rating: 'good' | 'needs-improvement' | 'poor';
-  unit: string;
+  displayValue: string;
+  score: number;
+}
+
+interface LighthouseOpportunity {
+  title: string;
+  description: string;
+  savings: string;
+}
+
+interface LighthouseDiagnostic {
+  title: string;
+  description: string;
+  displayValue?: string;
+}
+
+interface LighthouseResult {
+  url: string;
+  fetchTime: string;
+  scores: {
+    performance: number;
+    accessibility: number;
+    bestPractices: number;
+    seo: number;
+  };
+  metrics: {
+    fcp: LighthouseMetric;
+    lcp: LighthouseMetric;
+    tbt: LighthouseMetric;
+    cls: LighthouseMetric;
+    si: LighthouseMetric;
+    tti: LighthouseMetric;
+  };
+  opportunities: LighthouseOpportunity[];
+  diagnostics: LighthouseDiagnostic[];
 }
 
 export function WebPerformanceTab() {
-  const [vitals, setVitals] = useState<WebVital[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [url, setUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<LighthouseResult | null>(null);
 
-  useEffect(() => {
-    // Dynamically import web-vitals to avoid SSR issues
-    import('web-vitals').then(({ onCLS, onLCP, onFCP, onTTFB, onINP }) => {
-      const handleMetric = (metric: Metric) => {
-        const rating = getRating(metric.name, metric.value);
-        const unit = getUnit(metric.name);
+  const runLighthouse = async () => {
+    if (!url) {
+      setError('Please enter a URL');
+      return;
+    }
 
-        setVitals(prev => {
-          const existing = prev.find(v => v.name === metric.name);
-          if (existing) {
-            return prev.map(v =>
-              v.name === metric.name
-                ? { ...v, value: metric.value, rating, unit }
-                : v
-            );
-          }
-          return [...prev, { name: metric.name, value: metric.value, rating, unit }];
-        });
-      };
+    // Add https:// if no protocol specified
+    let testUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      testUrl = `https://${url}`;
+    }
 
-      // Register all Web Vitals listeners (FID deprecated, using INP)
-      onCLS(handleMetric);
-      onLCP(handleMetric);
-      onFCP(handleMetric);
-      onTTFB(handleMetric);
-      onINP(handleMetric); // Replaced FID in March 2024
+    setIsLoading(true);
+    setError(null);
+    setResult(null);
 
+    try {
+      const response = await fetch('/api/lighthouse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: testUrl }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to run Lighthouse');
+      }
+
+      setResult(data);
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
+    } finally {
       setIsLoading(false);
-    });
-  }, []);
-
-  const getRating = (name: string, value: number): 'good' | 'needs-improvement' | 'poor' => {
-    const thresholds: Record<string, [number, number]> = {
-      'CLS': [0.1, 0.25],
-      'INP': [200, 500],
-      'LCP': [2500, 4000],
-      'FCP': [1800, 3000],
-      'TTFB': [800, 1800],
-    };
-
-    const [good, poor] = thresholds[name] || [0, 0];
-    if (value <= good) return 'good';
-    if (value <= poor) return 'needs-improvement';
-    return 'poor';
+    }
   };
 
-  const getUnit = (name: string): string => {
-    return name === 'CLS' ? '' : 'ms';
+  const getScoreColor = (score: number) => {
+    if (score >= 90) return '#00ff88';
+    if (score >= 50) return '#ffd700';
+    return '#ff6b6b';
+  };
+
+  const getScoreBg = (score: number) => {
+    if (score >= 90) return 'rgba(0, 255, 136, 0.15)';
+    if (score >= 50) return 'rgba(255, 215, 0, 0.15)';
+    return 'rgba(255, 107, 107, 0.15)';
+  };
+
+  const getScoreIcon = (score: number) => {
+    if (score >= 90) return CheckCircle;
+    if (score >= 50) return AlertTriangle;
+    return XCircle;
+  };
+
+  const getMetricRating = (score: number): 'good' | 'needs-improvement' | 'poor' => {
+    if (score >= 0.9) return 'good';
+    if (score >= 0.5) return 'needs-improvement';
+    return 'poor';
   };
 
   const getRatingColor = (rating: string) => {
@@ -81,44 +125,6 @@ export function WebPerformanceTab() {
     }
   };
 
-  const getRatingBg = (rating: string) => {
-    switch (rating) {
-      case 'good': return 'rgba(0, 255, 136, 0.1)';
-      case 'needs-improvement': return 'rgba(255, 215, 0, 0.1)';
-      case 'poor': return 'rgba(255, 107, 107, 0.1)';
-      default: return 'rgba(220, 219, 213, 0.1)';
-    }
-  };
-
-  const formatValue = (value: number, unit: string): string => {
-    if (unit === '') {
-      return value.toFixed(3);
-    }
-    return `${Math.round(value)}${unit}`;
-  };
-
-  const getVitalIcon = (name: string) => {
-    switch (name) {
-      case 'LCP': return Clock;
-      case 'INP': return Activity;
-      case 'CLS': return TrendingUp;
-      case 'FCP': return Gauge;
-      case 'TTFB': return BarChart3;
-      default: return Activity;
-    }
-  };
-
-  const getVitalDescription = (name: string): string => {
-    const descriptions: Record<string, string> = {
-      'LCP': 'Largest Contentful Paint - measures loading performance. Target: ≤ 2.5s',
-      'INP': 'Interaction to Next Paint - measures responsiveness. Target: ≤ 200ms (replaced FID in 2024)',
-      'CLS': 'Cumulative Layout Shift - measures visual stability. Target: ≤ 0.1',
-      'FCP': 'First Contentful Paint - measures perceived load speed. Target: ≤ 1.8s',
-      'TTFB': 'Time to First Byte - measures server response time. Target: ≤ 800ms',
-    };
-    return descriptions[name] || 'Performance metric';
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -127,147 +133,259 @@ export function WebPerformanceTab() {
         borderColor: 'rgba(255, 215, 0, 0.2)',
       }}>
         <h2 className="text-2xl font-bold text-[#ffd700] mb-2 flex items-center gap-2">
-          <Activity className="w-6 h-6" />
-          Web Performance Monitoring (2025)
+          <Gauge className="w-6 h-6" />
+          Lighthouse Performance Audit
         </h2>
         <p className="text-[#dcdbd5]">
-          Real-time Core Web Vitals monitoring using the latest web-vitals library.
-          These metrics are collected from actual user interactions on this page.
+          Run a full Lighthouse audit on any URL. Similar to PageSpeed Insights, powered by Google Lighthouse.
         </p>
       </div>
 
-      {/* Core Web Vitals Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {isLoading && vitals.length === 0 ? (
-          <div className="col-span-3 text-center py-12 text-[#dcdbd5]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ffd700] mx-auto mb-4"></div>
-            <p>Collecting Web Vitals metrics...</p>
-            <p className="text-sm mt-2">Interact with the page to trigger measurements</p>
-          </div>
-        ) : (
-          vitals.map((vital) => {
-            const Icon = getVitalIcon(vital.name);
-            return (
-              <div
-                key={vital.name}
-                className="p-6 rounded-lg border"
-                style={{
-                  background: getRatingBg(vital.rating),
-                  borderColor: getRatingColor(vital.rating),
-                  backdropFilter: 'blur(8px)',
-                }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Icon className="w-5 h-5" style={{ color: getRatingColor(vital.rating) }} />
-                    <h3 className="text-lg font-bold text-[#e5e4dd]">{vital.name}</h3>
-                  </div>
-                  <span
-                    className="px-2 py-1 rounded text-xs font-semibold"
-                    style={{
-                      background: getRatingColor(vital.rating),
-                      color: '#000',
-                    }}
-                  >
-                    {vital.rating.replace('-', ' ').toUpperCase()}
-                  </span>
-                </div>
-                <div className="text-3xl font-bold mb-2" style={{ color: getRatingColor(vital.rating) }}>
-                  {formatValue(vital.value, vital.unit)}
-                </div>
-                <p className="text-sm text-[#dcdbd5]">
-                  {getVitalDescription(vital.name)}
-                </p>
-              </div>
-            );
-          })
-        )}
-      </div>
-
-      {/* Bundle Analysis Links */}
+      {/* URL Input */}
       <div className="p-6 rounded-lg border" style={{
         background: 'rgba(64, 64, 64, 0.3)',
         borderColor: 'rgba(0, 255, 136, 0.2)',
       }}>
-        <h3 className="text-xl font-bold text-[#00ff88] mb-4 flex items-center gap-2">
-          <BarChart3 className="w-5 h-5" />
-          Bundle Analysis Reports
-        </h3>
-        <p className="text-[#dcdbd5] mb-4">
-          View interactive bundle size visualizations to identify optimization opportunities.
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <a
-            href="https://wp.saabuildingblocks.com/client.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-4 rounded-lg border hover:border-[#00ff88] transition-colors"
+        <div className="flex gap-4">
+          <div className="flex-1 relative">
+            <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#dcdbd5]" />
+            <input
+              type="text"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && !isLoading && runLighthouse()}
+              placeholder="Enter URL to analyze (e.g., saabuildingblocks.pages.dev)"
+              className="w-full pl-10 pr-4 py-3 rounded-lg border bg-[#2a2a2a] text-[#e5e4dd] placeholder-[#888] focus:outline-none focus:border-[#00ff88] transition-colors"
+              style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}
+              disabled={isLoading}
+            />
+          </div>
+          <button
+            onClick={runLighthouse}
+            disabled={isLoading}
+            className="px-6 py-3 rounded-lg font-semibold flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
-              background: 'rgba(0, 255, 136, 0.05)',
-              borderColor: 'rgba(0, 255, 136, 0.2)',
+              background: isLoading ? 'rgba(255, 215, 0, 0.3)' : 'linear-gradient(135deg, #ffd700, #ffb347)',
+              color: '#000',
             }}
           >
-            <span className="text-[#e5e4dd] font-medium">Client Bundle</span>
-            <ExternalLink className="w-4 h-4 text-[#00ff88]" />
-          </a>
-          <a
-            href="https://wp.saabuildingblocks.com/nodejs.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-4 rounded-lg border hover:border-[#00ff88] transition-colors"
-            style={{
-              background: 'rgba(0, 255, 136, 0.05)',
-              borderColor: 'rgba(0, 255, 136, 0.2)',
-            }}
-          >
-            <span className="text-[#e5e4dd] font-medium">Node.js Bundle</span>
-            <ExternalLink className="w-4 h-4 text-[#00ff88]" />
-          </a>
-          <a
-            href="https://wp.saabuildingblocks.com/edge.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between p-4 rounded-lg border hover:border-[#00ff88] transition-colors"
-            style={{
-              background: 'rgba(0, 255, 136, 0.05)',
-              borderColor: 'rgba(0, 255, 136, 0.2)',
-            }}
-          >
-            <span className="text-[#e5e4dd] font-medium">Edge Bundle</span>
-            <ExternalLink className="w-4 h-4 text-[#00ff88]" />
-          </a>
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Analyzing...
+              </>
+            ) : (
+              <>
+                <Search className="w-5 h-5" />
+                Analyze
+              </>
+            )}
+          </button>
         </div>
+
+        {isLoading && (
+          <div className="mt-4 p-4 rounded-lg" style={{ background: 'rgba(255, 215, 0, 0.1)' }}>
+            <p className="text-[#ffd700] text-sm flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Running Lighthouse audit... This may take 15-30 seconds.
+            </p>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 p-4 rounded-lg" style={{ background: 'rgba(255, 107, 107, 0.1)' }}>
+            <p className="text-[#ff6b6b] text-sm flex items-center gap-2">
+              <XCircle className="w-4 h-4" />
+              {error}
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Performance Tips */}
-      <div className="p-6 rounded-lg border" style={{
-        background: 'rgba(64, 64, 64, 0.3)',
-        borderColor: 'rgba(255, 215, 0, 0.2)',
-      }}>
-        <h3 className="text-xl font-bold text-[#ffd700] mb-4">2025 Performance Optimizations Enabled</h3>
-        <ul className="space-y-2 text-[#dcdbd5]">
-          <li className="flex items-start gap-2">
-            <span className="text-[#00ff88] mt-1">✓</span>
-            <span><strong className="text-[#e5e4dd]">React Compiler:</strong> Automatic component memoization (stable in Next.js 16)</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[#00ff88] mt-1">✓</span>
-            <span><strong className="text-[#e5e4dd]">Inline CSS:</strong> Eliminates render-blocking CSS requests</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[#00ff88] mt-1">✓</span>
-            <span><strong className="text-[#e5e4dd]">Bundle Analyzer:</strong> Visualize and optimize bundle sizes</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[#00ff88] mt-1">✓</span>
-            <span><strong className="text-[#e5e4dd]">Web Vitals Monitoring:</strong> Real-time performance tracking</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[#ffd700] mt-1">→</span>
-            <span><strong className="text-[#e5e4dd]">Turbopack:</strong> Next.js 16's default bundler for faster builds</span>
-          </li>
-        </ul>
-      </div>
+      {/* Results */}
+      {result && (
+        <>
+          {/* Scores Overview */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Performance', score: result.scores.performance, icon: Zap },
+              { label: 'Accessibility', score: result.scores.accessibility, icon: Eye },
+              { label: 'Best Practices', score: result.scores.bestPractices, icon: CheckCircle },
+              { label: 'SEO', score: result.scores.seo, icon: Search },
+            ].map((item) => {
+              const ScoreIcon = getScoreIcon(item.score);
+              return (
+                <div
+                  key={item.label}
+                  className="p-6 rounded-lg border text-center"
+                  style={{
+                    background: getScoreBg(item.score),
+                    borderColor: getScoreColor(item.score),
+                  }}
+                >
+                  <div className="flex justify-center mb-2">
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold"
+                      style={{
+                        background: `conic-gradient(${getScoreColor(item.score)} ${item.score * 3.6}deg, rgba(255,255,255,0.1) 0deg)`,
+                        color: getScoreColor(item.score),
+                      }}
+                    >
+                      {item.score}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-center gap-2">
+                    <item.icon className="w-4 h-4" style={{ color: getScoreColor(item.score) }} />
+                    <span className="text-[#e5e4dd] font-medium">{item.label}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Core Web Vitals */}
+          <div className="p-6 rounded-lg border" style={{
+            background: 'rgba(64, 64, 64, 0.3)',
+            borderColor: 'rgba(255, 215, 0, 0.2)',
+          }}>
+            <h3 className="text-xl font-bold text-[#ffd700] mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5" />
+              Core Web Vitals
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[
+                { key: 'fcp', label: 'First Contentful Paint', desc: 'Time to first content' },
+                { key: 'lcp', label: 'Largest Contentful Paint', desc: 'Main content loaded' },
+                { key: 'tbt', label: 'Total Blocking Time', desc: 'Main thread blocking' },
+                { key: 'cls', label: 'Cumulative Layout Shift', desc: 'Visual stability' },
+                { key: 'si', label: 'Speed Index', desc: 'Visual progression' },
+                { key: 'tti', label: 'Time to Interactive', desc: 'Fully interactive' },
+              ].map((metric) => {
+                const data = result.metrics[metric.key as keyof typeof result.metrics];
+                const rating = getMetricRating(data.score);
+                return (
+                  <div
+                    key={metric.key}
+                    className="p-4 rounded-lg border"
+                    style={{
+                      background: 'rgba(0, 0, 0, 0.2)',
+                      borderColor: getRatingColor(rating),
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm text-[#dcdbd5]">{metric.label}</span>
+                      <span
+                        className="text-xs px-2 py-0.5 rounded"
+                        style={{
+                          background: getRatingColor(rating),
+                          color: '#000',
+                        }}
+                      >
+                        {rating.replace('-', ' ').toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="text-2xl font-bold" style={{ color: getRatingColor(rating) }}>
+                      {data.displayValue}
+                    </div>
+                    <div className="text-xs text-[#888] mt-1">{metric.desc}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Opportunities */}
+          {result.opportunities.length > 0 && (
+            <div className="p-6 rounded-lg border" style={{
+              background: 'rgba(64, 64, 64, 0.3)',
+              borderColor: 'rgba(255, 107, 107, 0.2)',
+            }}>
+              <h3 className="text-xl font-bold text-[#ff6b6b] mb-4 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5" />
+                Opportunities
+              </h3>
+              <div className="space-y-3">
+                {result.opportunities.map((opp, index) => (
+                  <div
+                    key={index}
+                    className="p-4 rounded-lg border"
+                    style={{
+                      background: 'rgba(255, 107, 107, 0.05)',
+                      borderColor: 'rgba(255, 107, 107, 0.2)',
+                    }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="font-medium text-[#e5e4dd]">{opp.title}</div>
+                        <div className="text-sm text-[#888] mt-1">{opp.description.split('.')[0]}.</div>
+                      </div>
+                      <div className="text-[#ff6b6b] font-semibold ml-4">
+                        {opp.savings}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Diagnostics */}
+          {result.diagnostics.length > 0 && (
+            <div className="p-6 rounded-lg border" style={{
+              background: 'rgba(64, 64, 64, 0.3)',
+              borderColor: 'rgba(255, 215, 0, 0.2)',
+            }}>
+              <h3 className="text-xl font-bold text-[#ffd700] mb-4 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" />
+                Diagnostics
+              </h3>
+              <div className="space-y-3">
+                {result.diagnostics.map((diag, index) => (
+                  <div
+                    key={index}
+                    className="p-4 rounded-lg border"
+                    style={{
+                      background: 'rgba(255, 215, 0, 0.05)',
+                      borderColor: 'rgba(255, 215, 0, 0.2)',
+                    }}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="font-medium text-[#e5e4dd]">{diag.title}</div>
+                        <div className="text-sm text-[#888] mt-1">{diag.description.split('.')[0]}.</div>
+                      </div>
+                      {diag.displayValue && (
+                        <div className="text-[#ffd700] font-semibold ml-4">
+                          {diag.displayValue}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Metadata */}
+          <div className="text-sm text-[#888] text-center">
+            Analyzed: {result.url} • {new Date(result.fetchTime).toLocaleString()}
+          </div>
+        </>
+      )}
+
+      {/* Empty State */}
+      {!result && !isLoading && !error && (
+        <div className="p-12 rounded-lg border text-center" style={{
+          background: 'rgba(64, 64, 64, 0.2)',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+        }}>
+          <Gauge className="w-16 h-16 mx-auto mb-4 text-[#404040]" />
+          <p className="text-[#888] text-lg">Enter a URL above to run a Lighthouse performance audit</p>
+          <p className="text-[#666] text-sm mt-2">
+            Get detailed performance scores, Core Web Vitals, and optimization recommendations
+          </p>
+        </div>
+      )}
     </div>
   );
 }

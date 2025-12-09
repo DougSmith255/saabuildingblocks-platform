@@ -33,7 +33,7 @@ export default function SmoothScroll() {
       orientation: 'vertical', // Scroll direction
       gestureOrientation: 'vertical', // Gesture direction
       smoothWheel: true, // Enable smooth scrolling for mouse wheel
-      wheelMultiplier: 1, // Mouse wheel sensitivity
+      wheelMultiplier: 0.8, // Mouse wheel sensitivity
       touchMultiplier: 2, // Touch sensitivity
       infinite: false, // Disable infinite scroll
     });
