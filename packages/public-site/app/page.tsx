@@ -1,5 +1,4 @@
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
@@ -92,16 +91,22 @@ export default function Home() {
                 filter: 'blur(40px)',
               }}
             />
-            {/* Main image - Next.js Image component with preload for LCP */}
-            <Image
-              src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
+            {/* Main image - Using native img with srcset for optimal responsive loading */}
+            {/* WordPress serves resized images via ?w= parameter */}
+            <img
+              src="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=900"
+              srcSet="
+                https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=400 400w,
+                https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=640 640w,
+                https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp?w=900 900w
+              "
+              sizes="(max-width: 480px) 400px, (max-width: 768px) 640px, 900px"
               alt="Doug and Karrie - Co-founders of Smart Agent Alliance"
               width={900}
               height={500}
               loading="eager"
               fetchPriority="high"
-              quality={90}
-              sizes="(max-width: 768px) 90vw, 900px"
+              decoding="async"
               className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
               style={{
                 // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
