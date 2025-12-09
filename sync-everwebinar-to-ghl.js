@@ -66,7 +66,7 @@ async function fetchEverWebinarRegistrants() {
       page: currentPage
     });
 
-    const registrants = await new Promise((resolve, reject) => {
+    const response = await new Promise((resolve, reject) => {
       const options = {
         hostname: 'api.webinarjam.com',
         path: '/everwebinar/registrants',
@@ -98,13 +98,17 @@ async function fetchEverWebinarRegistrants() {
       req.end();
     });
 
-    if (registrants.registrants && registrants.registrants.length > 0) {
-      allRegistrants.push(...registrants.registrants);
-      log(`Fetched page ${currentPage}: ${registrants.registrants.length} registrants`);
+    // Handle new API response structure: response.registrants is a paginated object
+    // with .data containing the actual array of registrants
+    const registrantsData = response.registrants;
+
+    if (registrantsData && registrantsData.data && registrantsData.data.length > 0) {
+      allRegistrants.push(...registrantsData.data);
+      log(`Fetched page ${currentPage}/${registrantsData.last_page}: ${registrantsData.data.length} registrants`);
       currentPage++;
 
-      // Check if there are more pages
-      if (registrants.registrants.length < 25) {
+      // Check if there are more pages using pagination info
+      if (currentPage > registrantsData.last_page) {
         hasMore = false;
       }
     } else {

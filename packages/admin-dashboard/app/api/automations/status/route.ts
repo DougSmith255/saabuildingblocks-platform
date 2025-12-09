@@ -59,14 +59,15 @@ async function parseLogFile(logPath: string): Promise<{
           line.includes('Sync Complete') && line > lastStartLine
         );
 
-        // Also check for fatal errors
-        const errorEntries = lines.filter(line =>
-          (line.includes('[ERROR]') || line.includes('Fatal error')) && line > lastStartLine
+        // Only check for FATAL errors - not duplicate contact errors which are expected
+        // Duplicate contact errors happen when someone registers multiple times
+        const fatalErrorEntries = lines.filter(line =>
+          line.includes('Fatal error') && line > lastStartLine
         );
 
-        if (syncCompleteEntries.length > 0 && errorEntries.length === 0) {
+        if (syncCompleteEntries.length > 0 && fatalErrorEntries.length === 0) {
           lastStatus = 'active';
-        } else if (errorEntries.length > 0) {
+        } else if (fatalErrorEntries.length > 0) {
           lastStatus = 'broken';
         } else {
           // If we have a start but no completion or error, check how recent it is
