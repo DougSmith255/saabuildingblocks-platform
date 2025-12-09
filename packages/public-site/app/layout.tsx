@@ -201,24 +201,21 @@ export default async function RootLayout({
         <PerformanceHints />
 
         {/* LCP Image Preloading - Critical for Core Web Vitals */}
+        {/* Only preload images actually used above-fold on homepage */}
         <link
           rel="preload"
           as="image"
           href="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
           fetchPriority="high"
         />
+        {/* Wolf-pack hero background uses Cloudflare Images with image-set, preload desktop variant */}
         <link
           rel="preload"
           as="image"
-          href="/images/hero/Smart-agent-alliance-and-the-wolf-pack.webp"
+          href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
           fetchPriority="high"
         />
-        <link
-          rel="preload"
-          as="image"
-          href="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp"
-          fetchPriority="high"
-        />
+        {/* Agent-Success-Hub removed - only used on /real-estate-agent-job page, not homepage */}
 
         {/*
           Font Preloading Note:
