@@ -365,12 +365,48 @@ async function sync() {
   } catch (err) {
     log(`Fatal error: ${err.message}`, 'ERROR');
     log(err.stack, 'ERROR');
+    await sendAlertEmail('EverWebinar to GoHighLevel Sync', err.message);
     process.exit(1);
   }
 }
 
+/**
+ * Send alert email on fatal errors
+ */
+async function sendAlertEmail(automation, errorMessage) {
+  return new Promise((resolve) => {
+    const { spawn } = require('child_process');
+    const alertScript = spawn('node', [
+      '/home/claude-flow/send-alert-email.js',
+      '--automation', automation,
+      '--error', errorMessage
+    ]);
+
+    alertScript.on('close', (code) => {
+      if (code === 0) {
+        log('Alert email sent successfully');
+      } else {
+        log('Failed to send alert email', 'ERROR');
+      }
+      resolve();
+    });
+
+    alertScript.on('error', (err) => {
+      log(`Alert email error: ${err.message}`, 'ERROR');
+      resolve();
+    });
+
+    // Timeout after 15 seconds
+    setTimeout(() => {
+      alertScript.kill();
+      resolve();
+    }, 15000);
+  });
+}
+
 // Run sync
-sync().catch(err => {
+sync().catch(async (err) => {
   log(`Unhandled error: ${err.message}`, 'ERROR');
+  await sendAlertEmail('EverWebinar to GoHighLevel Sync', err.message);
   process.exit(1);
 });

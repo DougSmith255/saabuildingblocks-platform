@@ -365,12 +365,48 @@ async function main() {
 
   } catch (error) {
     console.error('❌ Email automation failed:', error);
+    await sendAlertEmail('Email Automation', error instanceof Error ? error.message : String(error));
     process.exit(1);
   }
 }
 
+/**
+ * Send alert email on fatal errors
+ */
+async function sendAlertEmail(automation: string, errorMessage: string): Promise<void> {
+  return new Promise((resolve) => {
+    const { spawn } = require('child_process');
+    const alertScript = spawn('node', [
+      '/home/claude-flow/send-alert-email.js',
+      '--automation', automation,
+      '--error', errorMessage
+    ]);
+
+    alertScript.on('close', (code: number) => {
+      if (code === 0) {
+        console.log('Alert email sent successfully');
+      } else {
+        console.error('Failed to send alert email');
+      }
+      resolve();
+    });
+
+    alertScript.on('error', (err: Error) => {
+      console.error(`Alert email error: ${err.message}`);
+      resolve();
+    });
+
+    // Timeout after 15 seconds
+    setTimeout(() => {
+      alertScript.kill();
+      resolve();
+    }, 15000);
+  });
+}
+
 // Run the automation
-main().catch((error) => {
+main().catch(async (error) => {
   console.error('Fatal error:', error);
+  await sendAlertEmail('Email Automation', error instanceof Error ? error.message : String(error));
   process.exit(1);
 });
