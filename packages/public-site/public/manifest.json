@@ -1,0 +1,21 @@
+{
+  "name": "Smart Agent Alliance",
+  "short_name": "SAA",
+  "description": "Join Smart Agent Alliance - For Agents Who Want More",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#ffd700",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

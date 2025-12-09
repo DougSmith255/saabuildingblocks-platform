@@ -50,18 +50,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Read the JSON report
-    const reportPath = `${outputPath}.report.json`;
+    // Read the JSON report - try both possible paths
+    // Lighthouse outputs to different paths depending on version
+    let reportPath = outputPath; // Direct path (newer versions)
     let reportJson;
 
     try {
       const reportContent = await readFile(reportPath, 'utf8');
       reportJson = JSON.parse(reportContent);
     } catch (readError) {
-      console.error('Failed to read Lighthouse report:', readError);
-      return NextResponse.json({
-        error: 'Failed to read Lighthouse report'
-      }, { status: 500 });
+      // Try with .report.json extension (older behavior)
+      try {
+        reportPath = `${outputPath}.report.json`;
+        const reportContent = await readFile(reportPath, 'utf8');
+        reportJson = JSON.parse(reportContent);
+      } catch (readError2) {
+        console.error('Failed to read Lighthouse report from both paths:', readError, readError2);
+        return NextResponse.json({
+          error: 'Failed to read Lighthouse report'
+        }, { status: 500 });
+      }
     }
 
     // Clean up temp file
