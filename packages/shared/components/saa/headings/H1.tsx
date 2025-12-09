@@ -88,6 +88,7 @@ export default function H1({ children, className = '', style = {}, id }: Heading
               >
                 {displayChar}
                 {/* Neon glow layer - visual only, not selectable */}
+                {/* Firefox fix: Use filter instead of translateZ to avoid subpixel rendering gaps */}
                 <span
                   aria-hidden="true"
                   style={{
@@ -98,6 +99,7 @@ export default function H1({ children, className = '', style = {}, id }: Heading
                     height: '100%',
                     color: '#ffd700',
                     // Using em units so glow scales with font size
+                    // Consolidated text-shadow for Firefox compatibility
                     textShadow: `
                       -0.02em -0.02em 0 rgba(255,255,255, 0.4),
                       0.02em -0.02em 0 rgba(255,255,255, 0.4),
@@ -109,10 +111,15 @@ export default function H1({ children, className = '', style = {}, id }: Heading
                       0 0 0.12em #ffb347,
                       0 0.03em 0.05em #000
                     `,
-                    transform: 'translateZ(1px)',
+                    // Firefox fix: avoid translateZ which causes subpixel gaps
+                    // Use a tiny scale instead to create layering without z-translation
+                    transform: 'scale(1.001)',
                     pointerEvents: 'none',
                     userSelect: 'none',
                     WebkitUserSelect: 'none',
+                    // Ensure crisp edges on Firefox
+                    imageRendering: 'auto',
+                    backfaceVisibility: 'hidden',
                   }}
                 >
                   {displayChar}
