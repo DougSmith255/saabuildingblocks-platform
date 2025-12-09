@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
 // Cloudflare-ready image URLs (using same as WhoWeAre section)
@@ -115,52 +116,56 @@ export default function OurExpTeam() {
       </section>
 
       {/* Upline Partners Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Your Upline Partners When You Join Us</H2>
-            <p className="text-[#dcdbd5] mt-4">
-              Quick Wins, Massive Momentum, Tangible Results FASTER than Any Other Program.
-            </p>
-          </div>
+      <LazySection height={800}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Your Upline Partners When You Join Us</H2>
+              <p className="text-[#dcdbd5] mt-4">
+                Quick Wins, Massive Momentum, Tangible Results FASTER than Any Other Program.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {uplinePartners.map((partner, index) => (
-              <GenericCard key={index} padding="md" centered>
-                <ProfileCyberFrame size="md" index={index}>
-                  <Image
-                    src={partner.image}
-                    alt={partner.name}
-                    fill
-                    sizes="(max-width: 768px) 144px, 176px"
-                    className="object-cover grayscale scale-110"
-                  />
-                </ProfileCyberFrame>
-                <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
-                <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {uplinePartners.map((partner, index) => (
+                <GenericCard key={index} padding="md" centered>
+                  <ProfileCyberFrame size="md" index={index}>
+                    <Image
+                      src={partner.image}
+                      alt={partner.name}
+                      fill
+                      sizes="(max-width: 768px) 144px, 176px"
+                      className="object-cover grayscale scale-110"
+                    />
+                  </ProfileCyberFrame>
+                  <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
+                  <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Join Our Team?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Partner with us and get access to all the resources, training, and support you need to succeed.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
-              See Our Value
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Join Our Team?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Partner with us and get access to all the resources, training, and support you need to succeed.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                See Our Value
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

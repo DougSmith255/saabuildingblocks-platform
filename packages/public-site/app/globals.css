@@ -3287,6 +3287,7 @@ img:not(.profile-image) {
   animation: ctaLightPulseOpacity 2s ease-in-out infinite;
   animation-delay: inherit;
   will-change: opacity;
+  transform: translateZ(0); /* Force GPU compositor layer */
 }
 
 /* Secondary button side light bars - hover expansion */

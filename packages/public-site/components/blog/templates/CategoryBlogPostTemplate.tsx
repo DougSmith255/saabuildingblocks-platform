@@ -10,6 +10,7 @@ import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from '../Breadcrumbs';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
+import { LazySection } from '@/components/shared/LazySection';
 import type { BlogPost } from '@/lib/wordpress/types';
 
 // Lazy load CloudBackground - only loaded when user switches to light mode
@@ -222,148 +223,156 @@ export function CategoryBlogPostTemplate({
 
       {/* Comparison Images - Collapsible accordion for brokerage comparison posts ONLY */}
       {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
-        <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="max-w-[1200px] mx-auto">
-              {/* Accordion Button */}
-              <button
-                onClick={() => setShowComparisonCharts(!showComparisonCharts)}
-                className="w-full flex items-center justify-between gap-4 px-6 py-4 rounded-lg transition-all duration-300 group"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%)',
-                  border: '1px solid rgba(150,150,150,0.3)',
-                  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.4)',
-                }}
-                aria-expanded={showComparisonCharts}
-              >
-                <span
-                  className="text-lg font-semibold tracking-wide"
+        <LazySection height={100}>
+          <section className="relative py-6 md:py-8 px-4 sm:px-8 md:px-12">
+            <div className="max-w-[1900px] mx-auto">
+              <div className="max-w-[1200px] mx-auto">
+                {/* Accordion Button */}
+                <button
+                  onClick={() => setShowComparisonCharts(!showComparisonCharts)}
+                  className="w-full flex items-center justify-between gap-4 px-6 py-4 rounded-lg transition-all duration-300 group"
                   style={{
-                    fontFamily: 'var(--font-taskor, sans-serif)',
-                    color: '#ffd700',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
+                    background: 'linear-gradient(135deg, rgba(100,100,100,0.3) 0%, rgba(50,50,50,0.5) 100%)',
+                    border: '1px solid rgba(150,150,150,0.3)',
+                    boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.1), 0 2px 8px rgba(0,0,0,0.4)',
                   }}
+                  aria-expanded={showComparisonCharts}
                 >
-                  View Comparison Charts
-                </span>
-                <ChevronDown
-                  className={`w-6 h-6 transition-transform duration-300 ${showComparisonCharts ? 'rotate-180' : ''}`}
-                  style={{ color: '#ffd700' }}
-                />
-              </button>
+                  <span
+                    className="text-lg font-semibold tracking-wide"
+                    style={{
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                      color: '#ffd700',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                    }}
+                  >
+                    View Comparison Charts
+                  </span>
+                  <ChevronDown
+                    className={`w-6 h-6 transition-transform duration-300 ${showComparisonCharts ? 'rotate-180' : ''}`}
+                    style={{ color: '#ffd700' }}
+                  />
+                </button>
 
-              {/* Collapsible Content */}
-              <div
-                className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                  showComparisonCharts ? 'max-h-[2000px] opacity-100 mt-6' : 'max-h-0 opacity-0'
-                }`}
-              >
-                <div className={`grid gap-6 ${post.comparisonImages.length === 2 ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-                  {post.comparisonImages.map((img, idx) => (
-                    <div key={idx} className="flex justify-center">
-                      <CyberFrame>
-                        <Image
-                          src={img.url}
-                          alt={img.alt || img.title || `Comparison chart ${idx + 1}`}
-                          width={580}
-                          height={470}
-                          sizes="(max-width: 1024px) 90vw, 580px"
-                          className="object-contain w-full h-auto"
-                          priority={false}
-                        />
-                      </CyberFrame>
-                    </div>
-                  ))}
+                {/* Collapsible Content */}
+                <div
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                    showComparisonCharts ? 'max-h-[2000px] opacity-100 mt-6' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  <div className={`grid gap-6 ${post.comparisonImages.length === 2 ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
+                    {post.comparisonImages.map((img, idx) => (
+                      <div key={idx} className="flex justify-center">
+                        <CyberFrame>
+                          <Image
+                            src={img.url}
+                            alt={img.alt || img.title || `Comparison chart ${idx + 1}`}
+                            width={580}
+                            height={470}
+                            sizes="(max-width: 1024px) 90vw, 580px"
+                            className="object-contain w-full h-auto"
+                            priority={false}
+                          />
+                        </CyberFrame>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </LazySection>
       )}
 
       {/* YouTube Video Embed */}
       {showVideoSection && hasVideo && (
-        <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="max-w-[1200px] mx-auto">
-              <CyberFrame isVideo aspectRatio="16/9" className="w-full">
-                <YouTubeFacade
-                  videoId={hasVideo}
-                  title={`Video: ${post.title}`}
-                />
-              </CyberFrame>
+        <LazySection height={400}>
+          <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
+            <div className="max-w-[1900px] mx-auto">
+              <div className="max-w-[1200px] mx-auto">
+                <CyberFrame isVideo aspectRatio="16/9" className="w-full">
+                  <YouTubeFacade
+                    videoId={hasVideo}
+                    title={`Video: ${post.title}`}
+                  />
+                </CyberFrame>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </LazySection>
       )}
 
       {/* Main Content */}
-      <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1900px] mx-auto">
-          <div className="max-w-[1200px] mx-auto">
-            <div className="blog-content max-w-none">
-              {/* Featured Image - only shown in hero for real-estate-schools category */}
-              {/* For other categories, show featured image floated right in content */}
-              {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
-                <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
-                  <CyberFrame>
-                    <div className="relative" style={{ maxHeight: '270px' }}>
-                      <Image
-                        src={post.featuredImage.url}
-                        alt={post.featuredImage.alt || post.title}
-                        width={480}
-                        height={270}
-                        sizes="(max-width: 768px) 100vw, 480px"
-                        className="object-contain"
-                        style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
-                        priority
-                      />
-                    </div>
-                  </CyberFrame>
+      <LazySection height={600}>
+        <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1900px] mx-auto">
+            <div className="max-w-[1200px] mx-auto">
+              <div className="blog-content max-w-none">
+                {/* Featured Image - only shown in hero for real-estate-schools category */}
+                {/* For other categories, show featured image floated right in content */}
+                {post.featuredImage?.url && categorySlug !== 'real-estate-schools' && (
+                  <div className="float-right ml-6 mb-4" style={{ maxHeight: '270px' }}>
+                    <CyberFrame>
+                      <div className="relative" style={{ maxHeight: '270px' }}>
+                        <Image
+                          src={post.featuredImage.url}
+                          alt={post.featuredImage.alt || post.title}
+                          width={480}
+                          height={270}
+                          sizes="(max-width: 768px) 100vw, 480px"
+                          className="object-contain"
+                          style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
+                          priority
+                        />
+                      </div>
+                    </CyberFrame>
+                  </div>
+                )}
+                <BlogContentRenderer html={post.content} />
+              </div>
+
+              {/* Category-specific CTA (if configured) */}
+              {templateConfig.ctaText && templateConfig.ctaLink && (
+                <div className="mt-12 mb-8 text-center">
+                  <a
+                    href={templateConfig.ctaLink}
+                    className="inline-block px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+                    style={{
+                      background: `linear-gradient(135deg, ${templateConfig.accentColor}, ${templateConfig.accentColorSecondary})`,
+                      color: '#000',
+                      boxShadow: `0 4px 15px ${templateConfig.accentColor}40`,
+                    }}
+                  >
+                    {templateConfig.ctaText}
+                  </a>
                 </div>
               )}
-              <BlogContentRenderer html={post.content} />
+
+              {/* Share Buttons */}
+              <ShareButtons
+                url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${categorySlug}/${post.slug}` : `/blog/${categorySlug}/${post.slug}`}
+                title={post.title}
+                excerpt={post.excerpt}
+              />
             </div>
-
-            {/* Category-specific CTA (if configured) */}
-            {templateConfig.ctaText && templateConfig.ctaLink && (
-              <div className="mt-12 mb-8 text-center">
-                <a
-                  href={templateConfig.ctaLink}
-                  className="inline-block px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: `linear-gradient(135deg, ${templateConfig.accentColor}, ${templateConfig.accentColorSecondary})`,
-                    color: '#000',
-                    boxShadow: `0 4px 15px ${templateConfig.accentColor}40`,
-                  }}
-                >
-                  {templateConfig.ctaText}
-                </a>
-              </div>
-            )}
-
-            {/* Share Buttons */}
-            <ShareButtons
-              url={typeof window !== 'undefined' ? `${window.location.origin}/blog/${categorySlug}/${post.slug}` : `/blog/${categorySlug}/${post.slug}`}
-              title={post.title}
-              excerpt={post.excerpt}
-            />
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Related Posts */}
       {limitedRelatedPosts.length > 0 && (
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <RelatedPosts
-              posts={limitedRelatedPosts}
-              currentPostId={post.id}
-              currentCategory={primaryCategory}
-            />
-          </div>
-        </section>
+        <LazySection height={400}>
+          <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+            <div className="max-w-[1900px] mx-auto">
+              <RelatedPosts
+                posts={limitedRelatedPosts}
+                currentPostId={post.id}
+                currentCategory={primaryCategory}
+              />
+            </div>
+          </section>
+        </LazySection>
       )}
     </article>
   );

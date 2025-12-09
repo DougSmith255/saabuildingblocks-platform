@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
 /**
@@ -76,114 +77,120 @@ export default function Freebies() {
       </section>
 
       {/* Freebies Grid */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Free Resources</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Each download is designed to help you succeed in your real estate business. Click any card to get your free copy.
-            </p>
-          </div>
+      <LazySection height={800}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Free Resources</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Each download is designed to help you succeed in your real estate business. Click any card to get your free copy.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {freebies.map((freebie, index) => (
-              <a
-                key={index}
-                href={freebie.downloadLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block"
-              >
-                <GenericCard hover padding="md" className="h-full overflow-hidden">
-                  <div className="flex flex-col h-full">
-                    {/* Image */}
-                    <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg -mt-6 -mx-6 mb-4" style={{ width: 'calc(100% + 48px)' }}>
-                      <Image
-                        src={freebie.image}
-                        alt={freebie.title}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                        unoptimized
-                      />
-                      {/* Overlay gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                    </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {freebies.map((freebie, index) => (
+                <a
+                  key={index}
+                  href={freebie.downloadLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block"
+                >
+                  <GenericCard hover padding="md" className="h-full overflow-hidden">
+                    <div className="flex flex-col h-full">
+                      {/* Image */}
+                      <div className="relative w-full aspect-[4/3] overflow-hidden rounded-lg -mt-6 -mx-6 mb-4" style={{ width: 'calc(100% + 48px)' }}>
+                        <Image
+                          src={freebie.image}
+                          alt={freebie.title}
+                          fill
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                          unoptimized
+                        />
+                        {/* Overlay gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                      </div>
 
-                    {/* Content */}
-                    <div className="flex-1 flex flex-col">
-                      <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-[#ffd700] transition-colors">
-                        {freebie.title}
-                      </h3>
-                      <p className="text-[#dcdbd5]/80 text-sm mb-4 flex-1">
-                        {freebie.description}
-                      </p>
-                      <span className="inline-flex items-center gap-2 text-[#ffd700] text-sm font-medium group-hover:gap-3 transition-all">
-                        Download Free
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </span>
+                      {/* Content */}
+                      <div className="flex-1 flex flex-col">
+                        <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-[#ffd700] transition-colors">
+                          {freebie.title}
+                        </h3>
+                        <p className="text-[#dcdbd5]/80 text-sm mb-4 flex-1">
+                          {freebie.description}
+                        </p>
+                        <span className="inline-flex items-center gap-2 text-[#ffd700] text-sm font-medium group-hover:gap-3 transition-all">
+                          Download Free
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </GenericCard>
-              </a>
-            ))}
+                  </GenericCard>
+                </a>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Why Free Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Why We Give These Away</H2>
+      <LazySection height={350}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Why We Give These Away</H2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <GenericCard padding="md" className="text-center">
+                <div className="text-3xl mb-4">🎯</div>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Help Agents Succeed</h3>
+                <p className="text-[#dcdbd5]/80 text-sm">
+                  We believe in lifting up the entire industry with practical tools that work.
+                </p>
+              </GenericCard>
+
+              <GenericCard padding="md" className="text-center">
+                <div className="text-3xl mb-4">🤝</div>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Build Relationships</h3>
+                <p className="text-[#dcdbd5]/80 text-sm">
+                  Great partnerships start with giving value first, no strings attached.
+                </p>
+              </GenericCard>
+
+              <GenericCard padding="md" className="text-center">
+                <div className="text-3xl mb-4">🚀</div>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Show Our Value</h3>
+                <p className="text-[#dcdbd5]/80 text-sm">
+                  If our free stuff is this good, imagine what you get when you join the team.
+                </p>
+              </GenericCard>
+            </div>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <GenericCard padding="md" className="text-center">
-              <div className="text-3xl mb-4">🎯</div>
-              <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Help Agents Succeed</h3>
-              <p className="text-[#dcdbd5]/80 text-sm">
-                We believe in lifting up the entire industry with practical tools that work.
-              </p>
-            </GenericCard>
-
-            <GenericCard padding="md" className="text-center">
-              <div className="text-3xl mb-4">🤝</div>
-              <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Build Relationships</h3>
-              <p className="text-[#dcdbd5]/80 text-sm">
-                Great partnerships start with giving value first, no strings attached.
-              </p>
-            </GenericCard>
-
-            <GenericCard padding="md" className="text-center">
-              <div className="text-3xl mb-4">🚀</div>
-              <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Show Our Value</h3>
-              <p className="text-[#dcdbd5]/80 text-sm">
-                If our free stuff is this good, imagine what you get when you join the team.
-              </p>
-            </GenericCard>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready for More?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            These freebies are just a taste. Join the Wolf Pack and get access to our full library of resources, training, and support.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
-              See Team Benefits
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready for More?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              These freebies are just a taste. Join the Wolf Pack and get access to our full library of resources, training, and support.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                See Team Benefits
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

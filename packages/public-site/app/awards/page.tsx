@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * eXp Realty Awards Page
@@ -93,81 +94,89 @@ export default function Awards() {
       </section>
 
       {/* RealTrends Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>RealTrends Recognition</H2>
-          </div>
+      <LazySection height={350}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>RealTrends Recognition</H2>
+            </div>
 
-          <GenericCard padding="lg">
-            <ul className="space-y-4">
-              {realTrendsAchievements.map((achievement, index) => (
-                <li key={index} className="flex items-start gap-4 text-[#dcdbd5]">
-                  <span className="text-amber-400 text-xl">✓</span>
-                  {achievement}
-                </li>
-              ))}
-            </ul>
-          </GenericCard>
-        </div>
-      </section>
+            <GenericCard padding="lg">
+              <ul className="space-y-4">
+                {realTrendsAchievements.map((achievement, index) => (
+                  <li key={index} className="flex items-start gap-4 text-[#dcdbd5]">
+                    <span className="text-amber-400 text-xl">✓</span>
+                    {achievement}
+                  </li>
+                ))}
+              </ul>
+            </GenericCard>
+          </div>
+        </section>
+      </LazySection>
 
       {/* Executive Recognition */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Executive Recognition</H2>
-          </div>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Executive Recognition</H2>
+            </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {executiveRecognition.map((exec, index) => (
-              <GenericCard key={index} padding="md" centered>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{exec.name}</h3>
-                <p className="text-amber-400 text-sm">{exec.award}</p>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-3 gap-6">
+              {executiveRecognition.map((exec, index) => (
+                <GenericCard key={index} padding="md" centered>
+                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{exec.name}</h3>
+                  <p className="text-amber-400 text-sm">{exec.award}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Wolf Pack Awards */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Wolf Pack Recognition</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Our sponsorship group's achievements within eXp Realty.
-            </p>
-          </div>
+      <LazySection height={350}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Wolf Pack Recognition</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Our sponsorship group's achievements within eXp Realty.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {wolfPackAwards.map((award, index) => (
-              <GenericCard key={index} padding="md" centered>
-                <h3 className="text-xl font-bold text-amber-400 mb-3">{award.title}</h3>
-                <p className="text-[#dcdbd5]">{award.description}</p>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-3 gap-6">
+              {wolfPackAwards.map((award, index) => (
+                <GenericCard key={index} padding="md" centered>
+                  <h3 className="text-xl font-bold text-amber-400 mb-3">{award.title}</h3>
+                  <p className="text-[#dcdbd5]">{award.description}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Join an Award-Winning Brokerage</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Be part of the industry's most recognized and fastest-growing real estate company.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/about-exp-realty/">
-              Learn About eXp
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Join an Award-Winning Brokerage</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Be part of the industry's most recognized and fastest-growing real estate company.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/about-exp-realty/">
+                Learn About eXp
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

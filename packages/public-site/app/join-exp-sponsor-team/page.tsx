@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
 /**
@@ -134,62 +135,68 @@ export default function JoinExpSponsorTeam() {
         </div>
       </section>
 
-      {/* Why Join Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Why Join The Wolf Pack?</H2>
+      {/* Why Join Section - Lazy loaded */}
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Why Join The Wolf Pack?</H2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <GenericCard padding="md">
+                <div className="text-4xl mb-4 text-amber-400">2,900+</div>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
+                <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <div className="text-4xl mb-4 text-amber-400">100%</div>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
+                <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <div className="text-4xl mb-4 text-amber-400">#1</div>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
+                <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
+              </GenericCard>
+            </div>
           </div>
+        </section>
+      </LazySection>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <GenericCard padding="md">
-              <div className="text-4xl mb-4 text-amber-400">2,900+</div>
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
-              <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <div className="text-4xl mb-4 text-amber-400">100%</div>
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
-              <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <div className="text-4xl mb-4 text-amber-400">#1</div>
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
-              <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
-            </GenericCard>
+      {/* FAQ Section - Lazy loaded */}
+      <LazySection height={800}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Frequently Asked Questions</H2>
+            </div>
+            <FAQ items={faqs} allowMultiple={false} />
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
-      {/* FAQ Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Frequently Asked Questions</H2>
+      {/* CTA Section - Lazy loaded */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Take the Next Step?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join the Smart Agent Alliance team at eXp Realty and start your journey towards a more successful real estate career.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="https://join.exprealty.com/">
+                Apply Now
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                Learn About Our Value
+              </CTAButton>
+            </div>
           </div>
-          <FAQ items={faqs} allowMultiple={false} />
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Take the Next Step?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join the Smart Agent Alliance team at eXp Realty and start your journey towards a more successful real estate career.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="https://join.exprealty.com/">
-              Apply Now
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
-              Learn About Our Value
-            </CTAButton>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * eXp Realty Revenue Share Calculator
@@ -164,36 +165,38 @@ export default function RevenueShareCalculator() {
       </section>
 
       {/* How It Works */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>How Revenue Share Works</H2>
+      <LazySection height={500}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>How Revenue Share Works</H2>
+            </div>
+
+            <div className="space-y-6 text-[#dcdbd5]">
+              <p>
+                eXp Realty's revenue share program allows agents to earn passive income by growing the company.
+                When you sponsor other agents, you earn a percentage of their gross commission income (GCI)
+                through a 7-tier system.
+              </p>
+
+              <GenericCard padding="md">
+                <h3 className="text-[#e5e4dd] font-bold mb-4">Tier Structure:</h3>
+                <ul className="space-y-2">
+                  <li><strong className="text-amber-400">Tier 1:</strong> Direct recruits - 3.5% rate, $1,400 cap per agent</li>
+                  <li><strong className="text-amber-400">Tier 2:</strong> Their recruits - 4% rate, $1,600 cap</li>
+                  <li><strong className="text-amber-400">Tier 3:</strong> 2.5% rate, $1,000 cap</li>
+                  <li><strong className="text-amber-400">Tiers 4-7:</strong> Decreasing rates (0.1%-1%) with caps</li>
+                </ul>
+              </GenericCard>
+
+              <p>
+                Higher tiers unlock as you recruit qualifying agents at lower tiers.
+                Revenue share income is paid monthly, typically on the 20th of each month.
+              </p>
+            </div>
           </div>
-
-          <div className="space-y-6 text-[#dcdbd5]">
-            <p>
-              eXp Realty's revenue share program allows agents to earn passive income by growing the company.
-              When you sponsor other agents, you earn a percentage of their gross commission income (GCI)
-              through a 7-tier system.
-            </p>
-
-            <GenericCard padding="md">
-              <h3 className="text-[#e5e4dd] font-bold mb-4">Tier Structure:</h3>
-              <ul className="space-y-2">
-                <li><strong className="text-amber-400">Tier 1:</strong> Direct recruits - 3.5% rate, $1,400 cap per agent</li>
-                <li><strong className="text-amber-400">Tier 2:</strong> Their recruits - 4% rate, $1,600 cap</li>
-                <li><strong className="text-amber-400">Tier 3:</strong> 2.5% rate, $1,000 cap</li>
-                <li><strong className="text-amber-400">Tiers 4-7:</strong> Decreasing rates (0.1%-1%) with caps</li>
-              </ul>
-            </GenericCard>
-
-            <p>
-              Higher tiers unlock as you recruit qualifying agents at lower tiers.
-              Revenue share income is paid monthly, typically on the 20th of each month.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Disclaimer */}
       <section className="relative py-8 px-4 sm:px-8 md:px-12">
@@ -208,22 +211,24 @@ export default function RevenueShareCalculator() {
       </section>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Start Building?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join the Wolf Pack and start building your revenue share income today.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/about-exp-realty/">
-              Learn About eXp
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Start Building?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join the Wolf Pack and start building your revenue share income today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/about-exp-realty/">
+                Learn About eXp
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       <style jsx>{`
         input[type="range"]::-webkit-slider-thumb {

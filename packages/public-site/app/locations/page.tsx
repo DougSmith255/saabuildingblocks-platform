@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * eXp Realty Global Locations Page
@@ -76,103 +77,113 @@ export default function Locations() {
       </section>
 
       {/* Regions Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Where We Operate</H2>
-          </div>
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Where We Operate</H2>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {regions.map((region, index) => (
-              <GenericCard key={index} padding="md">
-                <h3 className="text-xl font-bold text-amber-400 mb-4">{region.name}</h3>
-                <ul className="space-y-2">
-                  {region.countries.map((country, cIndex) => (
-                    <li key={cIndex} className="text-[#dcdbd5] flex items-center gap-2">
-                      <span className="text-amber-400">•</span>
-                      {country}
-                    </li>
-                  ))}
-                </ul>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {regions.map((region, index) => (
+                <GenericCard key={index} padding="md">
+                  <h3 className="text-xl font-bold text-amber-400 mb-4">{region.name}</h3>
+                  <ul className="space-y-2">
+                    {region.countries.map((country, cIndex) => (
+                      <li key={cIndex} className="text-[#dcdbd5] flex items-center gap-2">
+                        <span className="text-amber-400">•</span>
+                        {country}
+                      </li>
+                    ))}
+                  </ul>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Agent Benefits */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Benefits for Individual Agents</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Everything you need to build a successful real estate business, anywhere in the world.
-            </p>
-          </div>
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Benefits for Individual Agents</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Everything you need to build a successful real estate business, anywhere in the world.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {agentBenefits.map((benefit, index) => (
-              <GenericCard key={index} padding="md" hover>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
-                <p className="text-[#dcdbd5]/80">{benefit.description}</p>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {agentBenefits.map((benefit, index) => (
+                <GenericCard key={index} padding="md" hover>
+                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
+                  <p className="text-[#dcdbd5]/80">{benefit.description}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Team Benefits */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Benefits for Teams & Brokerages</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Scale your business internationally without the traditional overhead.
-            </p>
-          </div>
+      <LazySection height={350}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Benefits for Teams & Brokerages</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Scale your business internationally without the traditional overhead.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {teamBenefits.map((benefit, index) => (
-              <GenericCard key={index} padding="md">
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
-                <p className="text-[#dcdbd5]/80">{benefit.description}</p>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {teamBenefits.map((benefit, index) => (
+                <GenericCard key={index} padding="md">
+                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
+                  <p className="text-[#dcdbd5]/80">{benefit.description}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Revenue Share Note */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto text-center">
-          <H2>Global Revenue Share</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            eXp Realty's revenue share program is available internationally - you can earn income from agents
-            recruited not only all over the United States but also in <strong className="text-amber-400">24+ other countries</strong>.
-          </p>
-          <CTAButton href="/exp-realty-revenue-share-calculator/">
-            Calculate Your Potential
-          </CTAButton>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Go Global?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join the fastest-growing global brokerage and expand your business across borders.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/about-exp-realty/">
-              Learn About eXp
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto text-center">
+            <H2>Global Revenue Share</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              eXp Realty's revenue share program is available internationally - you can earn income from agents
+              recruited not only all over the United States but also in <strong className="text-amber-400">24+ other countries</strong>.
+            </p>
+            <CTAButton href="/exp-realty-revenue-share-calculator/">
+              Calculate Your Potential
             </CTAButton>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
+
+      {/* CTA Section */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Go Global?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join the fastest-growing global brokerage and expand your business across borders.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/about-exp-realty/">
+                Learn About eXp
+              </CTAButton>
+            </div>
+          </div>
+        </section>
+      </LazySection>
     </main>
   );
 }

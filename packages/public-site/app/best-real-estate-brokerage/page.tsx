@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * Best Real Estate Brokerage - Parent Comparison Page
@@ -77,73 +78,79 @@ export default function BestRealEstateBrokerage() {
       </section>
 
       {/* Why Compare Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>What to Consider</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Choosing a brokerage is one of the most important decisions in your real estate career.
-              Here's what matters most.
-            </p>
-          </div>
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>What to Consider</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Choosing a brokerage is one of the most important decisions in your real estate career.
+                Here's what matters most.
+              </p>
+            </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {whyCompare.map((item, index) => (
-              <GenericCard key={index} padding="md">
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{item.title}</h3>
-                <p className="text-[#dcdbd5]/80 text-sm">{item.description}</p>
-              </GenericCard>
-            ))}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {whyCompare.map((item, index) => (
+                <GenericCard key={index} padding="md">
+                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{item.title}</h3>
+                  <p className="text-[#dcdbd5]/80 text-sm">{item.description}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* eXp Highlights */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Why Agents Choose eXp</H2>
+      <LazySection height={350}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Why Agents Choose eXp</H2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 text-center">
+              <GenericCard padding="md" centered>
+                <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
+                <p className="text-[#dcdbd5]">Commission After Cap</p>
+                <p className="text-[#dcdbd5]/60 text-sm mt-1">Cap at just $16,000</p>
+              </GenericCard>
+
+              <GenericCard padding="md" centered>
+                <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
+                <p className="text-[#dcdbd5]">Monthly Fee</p>
+                <p className="text-[#dcdbd5]/60 text-sm mt-1">No desk or franchise fees</p>
+              </GenericCard>
+
+              <GenericCard padding="md" centered>
+                <div className="text-4xl font-bold text-amber-400 mb-2">4</div>
+                <p className="text-[#dcdbd5]">Income Streams</p>
+                <p className="text-[#dcdbd5]/60 text-sm mt-1">Commission, stock, rev share, referrals</p>
+              </GenericCard>
+            </div>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-6 text-center">
-            <GenericCard padding="md" centered>
-              <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
-              <p className="text-[#dcdbd5]">Commission After Cap</p>
-              <p className="text-[#dcdbd5]/60 text-sm mt-1">Cap at just $16,000</p>
-            </GenericCard>
-
-            <GenericCard padding="md" centered>
-              <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
-              <p className="text-[#dcdbd5]">Monthly Fee</p>
-              <p className="text-[#dcdbd5]/60 text-sm mt-1">No desk or franchise fees</p>
-            </GenericCard>
-
-            <GenericCard padding="md" centered>
-              <div className="text-4xl font-bold text-amber-400 mb-2">4</div>
-              <p className="text-[#dcdbd5]">Income Streams</p>
-              <p className="text-[#dcdbd5]/60 text-sm mt-1">Commission, stock, rev share, referrals</p>
-            </GenericCard>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Make a Change?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join the Wolf Pack and get access to all the resources, training, and support you need to succeed at eXp.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/about-exp-realty/">
-              Learn About eXp
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Make a Change?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join the Wolf Pack and get access to all the resources, training, and support you need to succeed at eXp.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/about-exp-realty/">
+                Learn About eXp
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

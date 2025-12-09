@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * Traditional Brokerage Comparison Page
@@ -142,153 +143,163 @@ export default function TraditionalBrokerageComparison() {
       </section>
 
       {/* Comparison Table */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1000px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Side-by-Side Comparison</H2>
-          </div>
+      <LazySection height={600}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1000px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Side-by-Side Comparison</H2>
+            </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-white/20">
-                  <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Category</th>
-                  <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Traditional</th>
-                  <th className="text-left py-4 px-4 text-amber-400 font-medium">eXp Realty</th>
-                </tr>
-              </thead>
-              <tbody>
-                {comparisonData.map((row, index) => (
-                  <tr key={index} className="border-b border-white/10 hover:bg-white/5">
-                    <td className="py-4 px-4 text-[#e5e4dd] font-medium">{row.category}</td>
-                    <td className="py-4 px-4 text-[#dcdbd5]/80">{row.traditional}</td>
-                    <td className="py-4 px-4 text-green-400">{row.exp}</td>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-white/20">
+                    <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Category</th>
+                    <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Traditional</th>
+                    <th className="text-left py-4 px-4 text-amber-400 font-medium">eXp Realty</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {comparisonData.map((row, index) => (
+                    <tr key={index} className="border-b border-white/10 hover:bg-white/5">
+                      <td className="py-4 px-4 text-[#e5e4dd] font-medium">{row.category}</td>
+                      <td className="py-4 px-4 text-[#dcdbd5]/80">{row.traditional}</td>
+                      <td className="py-4 px-4 text-green-400">{row.exp}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Pros and Cons */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Pros & Cons</H2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Traditional */}
-            <div>
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-6 text-center">Traditional Brokerages</h3>
-
-              <div className="mb-6">
-                <h4 className="text-green-400 font-medium mb-3">Pros</h4>
-                <ul className="space-y-2">
-                  {traditionalPros.map((pro, index) => (
-                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
-                      <span className="text-green-400">+</span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h4 className="text-red-400 font-medium mb-3">Cons</h4>
-                <ul className="space-y-2">
-                  {traditionalCons.map((con, index) => (
-                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
-                      <span className="text-red-400">-</span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+      <LazySection height={700}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Pros & Cons</H2>
             </div>
 
-            {/* eXp */}
-            <div>
-              <h3 className="text-xl font-bold text-amber-400 mb-6 text-center">eXp Realty</h3>
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Traditional */}
+              <div>
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-6 text-center">Traditional Brokerages</h3>
 
-              <div className="mb-6">
-                <h4 className="text-green-400 font-medium mb-3">Pros</h4>
-                <ul className="space-y-2">
-                  {expPros.map((pro, index) => (
-                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
-                      <span className="text-green-400">+</span>
-                      {pro}
-                    </li>
-                  ))}
-                </ul>
+                <div className="mb-6">
+                  <h4 className="text-green-400 font-medium mb-3">Pros</h4>
+                  <ul className="space-y-2">
+                    {traditionalPros.map((pro, index) => (
+                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                        <span className="text-green-400">+</span>
+                        {pro}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="text-red-400 font-medium mb-3">Cons</h4>
+                  <ul className="space-y-2">
+                    {traditionalCons.map((con, index) => (
+                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                        <span className="text-red-400">-</span>
+                        {con}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
+              {/* eXp */}
               <div>
-                <h4 className="text-red-400 font-medium mb-3">Cons</h4>
-                <ul className="space-y-2">
-                  {expCons.map((con, index) => (
-                    <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
-                      <span className="text-red-400">-</span>
-                      {con}
-                    </li>
-                  ))}
-                </ul>
+                <h3 className="text-xl font-bold text-amber-400 mb-6 text-center">eXp Realty</h3>
+
+                <div className="mb-6">
+                  <h4 className="text-green-400 font-medium mb-3">Pros</h4>
+                  <ul className="space-y-2">
+                    {expPros.map((pro, index) => (
+                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                        <span className="text-green-400">+</span>
+                        {pro}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="text-red-400 font-medium mb-3">Cons</h4>
+                  <ul className="space-y-2">
+                    {expCons.map((con, index) => (
+                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                        <span className="text-red-400">-</span>
+                        {con}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Bottom Line */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto text-center">
-          <H2>The Bottom Line</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-4">
-            Traditional brokerages made sense when agents needed physical offices, fax machines, and local MLS access.
-            Today, with cloud-based tools and remote work capabilities, eXp Realty offers a more cost-effective model
-            with better earning potential.
-          </p>
-          <p className="text-[#dcdbd5] mb-8">
-            The question isn't just about commission splits - it's about building long-term wealth through
-            <strong className="text-amber-400"> stock ownership</strong> and <strong className="text-amber-400">revenue share</strong>,
-            opportunities that traditional brokerages simply don't offer.
-          </p>
-        </div>
-      </section>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto text-center">
+            <H2>The Bottom Line</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-4">
+              Traditional brokerages made sense when agents needed physical offices, fax machines, and local MLS access.
+              Today, with cloud-based tools and remote work capabilities, eXp Realty offers a more cost-effective model
+              with better earning potential.
+            </p>
+            <p className="text-[#dcdbd5] mb-8">
+              The question isn't just about commission splits - it's about building long-term wealth through
+              <strong className="text-amber-400"> stock ownership</strong> and <strong className="text-amber-400">revenue share</strong>,
+              opportunities that traditional brokerages simply don't offer.
+            </p>
+          </div>
+        </section>
+      </LazySection>
 
       {/* Other Comparisons */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto text-center">
-          <H2>More Comparisons</H2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-            <CTAButton href="/best-real-estate-brokerage/online/">
-              vs Online Brokerages
-            </CTAButton>
-            <CTAButton href="/best-real-estate-brokerage/">
-              All Comparisons
-            </CTAButton>
+      <LazySection height={250}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto text-center">
+            <H2>More Comparisons</H2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+              <CTAButton href="/best-real-estate-brokerage/online/">
+                vs Online Brokerages
+              </CTAButton>
+              <CTAButton href="/best-real-estate-brokerage/">
+                All Comparisons
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Make the Switch?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join thousands of agents who have moved from traditional brokerages to eXp Realty.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
-              See Our Team Value
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Make the Switch?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join thousands of agents who have moved from traditional brokerages to eXp Realty.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                See Our Team Value
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

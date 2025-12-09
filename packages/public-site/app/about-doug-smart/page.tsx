@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
 // Cloudflare-ready image URL (using same as WhoWeAre section)
@@ -73,86 +74,94 @@ export default function AboutDougSmart() {
       </section>
 
       {/* Bio Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>About Doug</H2>
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>About Doug</H2>
+            </div>
+
+            <div className="space-y-6 text-[#dcdbd5]">
+              <p>
+                Doug Smart is co-founder of Smart Agent Alliance, part of the rapidly expanding Wolf Pack sponsor team at eXp Realty.
+                He ranks in the <strong className="text-[#e5e4dd]">top 0.1% of eXp Realty team builders in 2025</strong>.
+              </p>
+
+              <p>
+                Doug holds a Bachelor's degree in Industrial Design with a Business minor. During college, he gained hands-on
+                construction experience building multi-million dollar homes, developing a strong work ethic and attention to detail
+                that carries through to his current work.
+              </p>
+
+              <p>
+                As Full-Stack Developer and Management Systems Director for Smart Agent Alliance, Doug designs and develops the
+                organization's entire digital infrastructure - including the website, agent webpages, automations, and more.
+                In fact, he built this entire website.
+              </p>
+
+              <p>
+                His work centers on creating passive revenue systems for agents while helping them elevate their branding, marketing,
+                and creative presence to compete effectively in real estate.
+              </p>
+            </div>
           </div>
-
-          <div className="space-y-6 text-[#dcdbd5]">
-            <p>
-              Doug Smart is co-founder of Smart Agent Alliance, part of the rapidly expanding Wolf Pack sponsor team at eXp Realty.
-              He ranks in the <strong className="text-[#e5e4dd]">top 0.1% of eXp Realty team builders in 2025</strong>.
-            </p>
-
-            <p>
-              Doug holds a Bachelor's degree in Industrial Design with a Business minor. During college, he gained hands-on
-              construction experience building multi-million dollar homes, developing a strong work ethic and attention to detail
-              that carries through to his current work.
-            </p>
-
-            <p>
-              As Full-Stack Developer and Management Systems Director for Smart Agent Alliance, Doug designs and develops the
-              organization's entire digital infrastructure - including the website, agent webpages, automations, and more.
-              In fact, he built this entire website.
-            </p>
-
-            <p>
-              His work centers on creating passive revenue systems for agents while helping them elevate their branding, marketing,
-              and creative presence to compete effectively in real estate.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Skills Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>What Doug Builds</H2>
-          </div>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>What Doug Builds</H2>
+            </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {skills.map((skill, index) => (
-              <GenericCard key={index} padding="sm" centered>
-                <p className="text-[#e5e4dd] font-medium">{skill}</p>
-              </GenericCard>
-            ))}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {skills.map((skill, index) => (
+                <GenericCard key={index} padding="sm" centered>
+                  <p className="text-[#e5e4dd] font-medium">{skill}</p>
+                </GenericCard>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Personal Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto text-center">
-          <div className="text-center mb-12">
-            <H2>Outside of Work</H2>
+      <LazySection height={250}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto text-center">
+            <div className="text-center mb-12">
+              <H2>Outside of Work</H2>
+            </div>
+            <p className="text-[#dcdbd5] max-w-2xl mx-auto">
+              Based in San Jose, California, Doug maintains a disciplined lifestyle. He's a huge fan of basketball
+              and regularly hits the gym - essentially the modern-day equivalent to Arnold Schwarzenegger
+              (if he never took steroids).
+            </p>
           </div>
-          <p className="text-[#dcdbd5] max-w-2xl mx-auto">
-            Based in San Jose, California, Doug maintains a disciplined lifestyle. He's a huge fan of basketball
-            and regularly hits the gym - essentially the modern-day equivalent to Arnold Schwarzenegger
-            (if he never took steroids).
-          </p>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Connect With Doug</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Ready to join the Wolf Pack and leverage Doug's digital systems for your real estate business?
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join Our Team
-            </CTAButton>
-            <CTAButton href="/our-exp-team/">
-              Meet The Team
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Connect With Doug</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Ready to join the Wolf Pack and leverage Doug's digital systems for your real estate business?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join Our Team
+              </CTAButton>
+              <CTAButton href="/our-exp-team/">
+                Meet The Team
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }

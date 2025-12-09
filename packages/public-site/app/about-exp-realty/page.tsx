@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * About eXp Realty Page
@@ -97,108 +98,118 @@ export default function AboutExpRealty() {
         </div>
       </section>
 
-      {/* Key Features Grid */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>What eXp Provides</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Everything you need to build a successful real estate business, all included.
+      {/* Key Features Grid - Lazy loaded */}
+      <LazySection height={500}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>What eXp Provides</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Everything you need to build a successful real estate business, all included.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {keyFeatures.map((feature, index) => (
+                <GenericCard key={index} padding="md" hover>
+                  <div className="text-3xl mb-3">{feature.icon}</div>
+                  <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">{feature.title}</h3>
+                  <p className="text-[#dcdbd5]/80 text-sm">{feature.description}</p>
+                </GenericCard>
+              ))}
+            </div>
+          </div>
+        </section>
+      </LazySection>
+
+      {/* Income Streams - Lazy loaded */}
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>4 Income Streams</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Multiple ways to build wealth as an eXp agent.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {incomeStreams.map((stream, index) => (
+                <GenericCard key={index} padding="md" centered>
+                  <div className="text-5xl font-bold text-amber-400/20 mb-2">{index + 1}</div>
+                  <h3 className="text-[#e5e4dd] font-semibold text-xl mb-2">{stream.title}</h3>
+                  <p className="text-[#dcdbd5]/80">{stream.description}</p>
+                </GenericCard>
+              ))}
+            </div>
+          </div>
+        </section>
+      </LazySection>
+
+      {/* Revenue Share Section - Lazy loaded */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto text-center">
+            <H2>Revenue Share Program</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              eXp's 7-tier revenue share program can generate significant passive income -
+              potentially <strong className="text-amber-400">$94,000+ per year</strong> in additional earnings.
+              This income can continue even after you leave the company and can be willed to your loved ones.
             </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {keyFeatures.map((feature, index) => (
-              <GenericCard key={index} padding="md" hover>
-                <div className="text-3xl mb-3">{feature.icon}</div>
-                <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-[#dcdbd5]/80 text-sm">{feature.description}</p>
-              </GenericCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Income Streams */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>4 Income Streams</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Multiple ways to build wealth as an eXp agent.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {incomeStreams.map((stream, index) => (
-              <GenericCard key={index} padding="md" centered>
-                <div className="text-5xl font-bold text-amber-400/20 mb-2">{index + 1}</div>
-                <h3 className="text-[#e5e4dd] font-semibold text-xl mb-2">{stream.title}</h3>
-                <p className="text-[#dcdbd5]/80">{stream.description}</p>
-              </GenericCard>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Revenue Share Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto text-center">
-          <H2>Revenue Share Program</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            eXp's 7-tier revenue share program can generate significant passive income -
-            potentially <strong className="text-amber-400">$94,000+ per year</strong> in additional earnings.
-            This income can continue even after you leave the company and can be willed to your loved ones.
-          </p>
-          <CTAButton href="/exp-realty-revenue-share-calculator/">
-            Calculate Your Potential
-          </CTAButton>
-        </div>
-      </section>
-
-      {/* Additional Benefits */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Additional Benefits</H2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            <GenericCard padding="md">
-              <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Commercial</h3>
-              <p className="text-[#dcdbd5]/80">Access to commercial real estate division for expanded opportunities.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Luxury</h3>
-              <p className="text-[#dcdbd5]/80">Specialized luxury division for high-end properties and clients.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">Healthcare Options</h3>
-              <p className="text-[#dcdbd5]/80">Access to Clearwater Healthcare benefits for you and your family.</p>
-            </GenericCard>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Learn More?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Discover why thousands of agents are joining eXp Realty every month.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
-              See Our Team Value
+            <CTAButton href="/exp-realty-revenue-share-calculator/">
+              Calculate Your Potential
             </CTAButton>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
+
+      {/* Additional Benefits - Lazy loaded */}
+      <LazySection height={350}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Additional Benefits</H2>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6">
+              <GenericCard padding="md">
+                <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Commercial</h3>
+                <p className="text-[#dcdbd5]/80">Access to commercial real estate division for expanded opportunities.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Luxury</h3>
+                <p className="text-[#dcdbd5]/80">Specialized luxury division for high-end properties and clients.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">Healthcare Options</h3>
+                <p className="text-[#dcdbd5]/80">Access to Clearwater Healthcare benefits for you and your family.</p>
+              </GenericCard>
+            </div>
+          </div>
+        </section>
+      </LazySection>
+
+      {/* CTA Section - Lazy loaded */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Learn More?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Discover why thousands of agents are joining eXp Realty every month.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                See Our Team Value
+              </CTAButton>
+            </div>
+          </div>
+        </section>
+      </LazySection>
     </main>
   );
 }

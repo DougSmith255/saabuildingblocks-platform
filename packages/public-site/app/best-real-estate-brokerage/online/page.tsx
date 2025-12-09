@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, FAQ, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * Online Real Estate Brokerage Comparison Page
@@ -192,167 +193,175 @@ export default function OnlineBrokerageComparison() {
       </section>
 
       {/* Revenue Share Comparison */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Who Has Better Long Term Benefits?</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Revenue share is a big player when it comes to long term benefits for online real estate brokerages
-            </p>
-          </div>
+      <LazySection height={500}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Who Has Better Long Term Benefits?</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Revenue share is a big player when it comes to long term benefits for online real estate brokerages
+              </p>
+            </div>
 
-          <div className="overflow-x-auto rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-black/50">
-                  <th className="p-4 text-left text-amber-400 font-bold">Rev Share MLM Brokerages</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">eXp Realty</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">Real Broker</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">LPT Realty</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">Fathom</th>
-                </tr>
-              </thead>
-              <tbody className="text-[#dcdbd5]">
-                <tr className="border-t border-white/10 hover:bg-white/5">
-                  <td className="p-4 font-medium">Max $ for Rev Share Pool</td>
-                  <td className="p-4">$8,000/agent</td>
-                  <td className="p-4">$7,200/agent</td>
-                  <td className="p-4">$2,500-7,500/agent</td>
-                  <td className="p-4">$4,500-6,000/agent</td>
-                </tr>
-                <tr className="border-t border-white/10 hover:bg-white/5">
-                  <td className="p-4 font-medium">Pool Size (30% cap)</td>
-                  <td className="p-4 text-green-400 font-bold">$204,000,000</td>
-                  <td className="p-4">$43,000,000</td>
-                  <td className="p-4">$16,500,000</td>
-                  <td className="p-4">$16,000,000</td>
-                </tr>
-                <tr className="border-t border-white/10 hover:bg-white/5">
-                  <td className="p-4 font-medium">MLM Tiers</td>
-                  <td className="p-4">7</td>
-                  <td className="p-4">5</td>
-                  <td className="p-4">7</td>
-                  <td className="p-4">5</td>
-                </tr>
-                <tr className="border-t border-white/10 hover:bg-white/5">
-                  <td className="p-4 font-medium">Earn from EVERY Downline</td>
-                  <td className="p-4 text-green-400">Yes</td>
-                  <td className="p-4 text-red-400">No</td>
-                  <td className="p-4 text-red-400">No</td>
-                  <td className="p-4 text-red-400">No</td>
-                </tr>
-                <tr className="border-t border-white/10 hover:bg-white/5">
-                  <td className="p-4 font-medium">Fees to Earn Rev Share</td>
-                  <td className="p-4 text-green-400">$0</td>
-                  <td className="p-4">$175/yr + 1.2%</td>
-                  <td className="p-4">$0 (90 day wait)</td>
-                  <td className="p-4">$0</td>
-                </tr>
-                <tr className="border-t border-white/10 hover:bg-white/5">
-                  <td className="p-4 font-medium">Willable Income</td>
-                  <td className="p-4 text-green-400">Yes</td>
-                  <td className="p-4">Yes (with qualifications)</td>
-                  <td className="p-4">Yes</td>
-                  <td className="p-4">Yes</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="overflow-x-auto rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-black/50">
+                    <th className="p-4 text-left text-amber-400 font-bold">Rev Share MLM Brokerages</th>
+                    <th className="p-4 text-left text-amber-400 font-bold">eXp Realty</th>
+                    <th className="p-4 text-left text-amber-400 font-bold">Real Broker</th>
+                    <th className="p-4 text-left text-amber-400 font-bold">LPT Realty</th>
+                    <th className="p-4 text-left text-amber-400 font-bold">Fathom</th>
+                  </tr>
+                </thead>
+                <tbody className="text-[#dcdbd5]">
+                  <tr className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-4 font-medium">Max $ for Rev Share Pool</td>
+                    <td className="p-4">$8,000/agent</td>
+                    <td className="p-4">$7,200/agent</td>
+                    <td className="p-4">$2,500-7,500/agent</td>
+                    <td className="p-4">$4,500-6,000/agent</td>
+                  </tr>
+                  <tr className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-4 font-medium">Pool Size (30% cap)</td>
+                    <td className="p-4 text-green-400 font-bold">$204,000,000</td>
+                    <td className="p-4">$43,000,000</td>
+                    <td className="p-4">$16,500,000</td>
+                    <td className="p-4">$16,000,000</td>
+                  </tr>
+                  <tr className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-4 font-medium">MLM Tiers</td>
+                    <td className="p-4">7</td>
+                    <td className="p-4">5</td>
+                    <td className="p-4">7</td>
+                    <td className="p-4">5</td>
+                  </tr>
+                  <tr className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-4 font-medium">Earn from EVERY Downline</td>
+                    <td className="p-4 text-green-400">Yes</td>
+                    <td className="p-4 text-red-400">No</td>
+                    <td className="p-4 text-red-400">No</td>
+                    <td className="p-4 text-red-400">No</td>
+                  </tr>
+                  <tr className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-4 font-medium">Fees to Earn Rev Share</td>
+                    <td className="p-4 text-green-400">$0</td>
+                    <td className="p-4">$175/yr + 1.2%</td>
+                    <td className="p-4">$0 (90 day wait)</td>
+                    <td className="p-4">$0</td>
+                  </tr>
+                  <tr className="border-t border-white/10 hover:bg-white/5">
+                    <td className="p-4 font-medium">Willable Income</td>
+                    <td className="p-4 text-green-400">Yes</td>
+                    <td className="p-4">Yes (with qualifications)</td>
+                    <td className="p-4">Yes</td>
+                    <td className="p-4">Yes</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* Detailed Analysis Section */}
-      <section id="detailed-analysis" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1000px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Detailed Analysis</H2>
+      <LazySection height={800}>
+        <section id="detailed-analysis" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1000px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Detailed Analysis</H2>
+            </div>
+
+            <div className="space-y-8 text-[#dcdbd5]">
+              <GenericCard padding="md">
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Financial Strength and Profitability</h3>
+                <p>eXp Realty demonstrates robust financial health with 15 profitable quarters out of 20. Real Broker and Fathom Realty each have only one profitable quarter out of 19, and LPT Realty's financial details are not publicly available. This profitability is reflected in their stock performance: eXp Realty (EXPI) trades around $14, Real Broker (REAL) around $6, and Fathom Realty (FATH) around $2.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Agent Count and Geographic Reach</h3>
+                <p>eXp Realty leads with over 80,000 agents, operating in all 50 states and 24 countries. Real Broker follows with 20,000+ agents in 50 states and 2 countries. LPT Realty and Fathom Realty each have 11,000+ agents, but LPT Realty is active in 24 states and 1 country, while Fathom Realty covers 41 states and 5 countries.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Revenue Share and Stock Awards</h3>
+                <p>eXp Realty leads with a potential revenue share pool of $204 million if 30% of its agents cap, significantly higher than Real Broker's $43 million and LPT Realty's $16.5 million. eXp Realty agents earn revenue share across seven tiers, compared to five tiers for both Real Broker and Fathom, and seven for LPT Realty. Only eXp offers stock awards for attracting agents and completing transactions.</p>
+              </GenericCard>
+
+              <GenericCard padding="md">
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Training and Support</h3>
+                <p>Unique to eXp Realty is its extensive support system, including 50+ live training hours per week and a virtual world (eXp World 2.0). Real Broker offers 30+ live training hours but lacks a virtual world. LPT Realty and Fathom Realty do not provide such extensive training options. eXp Realty also offers healthcare options and a 60/40 mentorship program for the first three sales.</p>
+              </GenericCard>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
+              <CTAButton href="/about-exp-realty/">
+                More About eXp
+              </CTAButton>
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join Our Team
+              </CTAButton>
+            </div>
           </div>
-
-          <div className="space-y-8 text-[#dcdbd5]">
-            <GenericCard padding="md">
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Financial Strength and Profitability</h3>
-              <p>eXp Realty demonstrates robust financial health with 15 profitable quarters out of 20. Real Broker and Fathom Realty each have only one profitable quarter out of 19, and LPT Realty's financial details are not publicly available. This profitability is reflected in their stock performance: eXp Realty (EXPI) trades around $14, Real Broker (REAL) around $6, and Fathom Realty (FATH) around $2.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Agent Count and Geographic Reach</h3>
-              <p>eXp Realty leads with over 80,000 agents, operating in all 50 states and 24 countries. Real Broker follows with 20,000+ agents in 50 states and 2 countries. LPT Realty and Fathom Realty each have 11,000+ agents, but LPT Realty is active in 24 states and 1 country, while Fathom Realty covers 41 states and 5 countries.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Revenue Share and Stock Awards</h3>
-              <p>eXp Realty leads with a potential revenue share pool of $204 million if 30% of its agents cap, significantly higher than Real Broker's $43 million and LPT Realty's $16.5 million. eXp Realty agents earn revenue share across seven tiers, compared to five tiers for both Real Broker and Fathom, and seven for LPT Realty. Only eXp offers stock awards for attracting agents and completing transactions.</p>
-            </GenericCard>
-
-            <GenericCard padding="md">
-              <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Training and Support</h3>
-              <p>Unique to eXp Realty is its extensive support system, including 50+ live training hours per week and a virtual world (eXp World 2.0). Real Broker offers 30+ live training hours but lacks a virtual world. LPT Realty and Fathom Realty do not provide such extensive training options. eXp Realty also offers healthcare options and a 60/40 mentorship program for the first three sales.</p>
-            </GenericCard>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
-            <CTAButton href="/about-exp-realty/">
-              More About eXp
-            </CTAButton>
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join Our Team
-            </CTAButton>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
       {/* FAQ Section */}
-      <section id="faq" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Frequently Asked Questions</H2>
-          </div>
+      <LazySection height={600}>
+        <section id="faq" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Frequently Asked Questions</H2>
+            </div>
 
-          <FAQ
-            items={[
-              {
-                question: "Which online brokerage has the best commission split?",
-                answer: "All four brokerages offer paths to 100% commission. eXp Realty starts at 80/20 with a $16K cap, Real Broker at 85/15 with a $12K cap, LPT Realty varies by plan ($5K-15K cap), and Fathom offers 88/12 with a $9K-12K cap depending on the plan."
-              },
-              {
-                question: "Which brokerage is the most financially stable?",
-                answer: "eXp Realty demonstrates the strongest financial health with 15 profitable quarters out of 20, compared to just 1 profitable quarter for both Real Broker and Fathom. eXp is also listed on the S&P 600 with stock trading around $14."
-              },
-              {
-                question: "What makes eXp Realty's revenue share different?",
-                answer: "eXp Realty has the largest revenue share pool ($204M if 30% of agents cap), offers 7 tiers of earnings, allows you to earn from EVERY downline agent (not just qualifying ones), has no fees to participate, and provides a clear retirement and willable income path."
-              },
-              {
-                question: "Which brokerage offers the best training?",
-                answer: "eXp Realty offers 50+ live training hours per week, the most of any online brokerage. Real Broker offers 30+ hours. LPT Realty and Fathom do not offer live training beyond online courses."
-              },
-              {
-                question: "Can I build a retirement income with these brokerages?",
-                answer: "Yes, all four offer some form of passive income through revenue share. eXp Realty has the clearest path with no production requirements to earn, while Real Broker and Fathom require minimum production to maintain eligibility."
-              }
-            ]}
-            allowMultiple={false}
-          />
-        </div>
-      </section>
+            <FAQ
+              items={[
+                {
+                  question: "Which online brokerage has the best commission split?",
+                  answer: "All four brokerages offer paths to 100% commission. eXp Realty starts at 80/20 with a $16K cap, Real Broker at 85/15 with a $12K cap, LPT Realty varies by plan ($5K-15K cap), and Fathom offers 88/12 with a $9K-12K cap depending on the plan."
+                },
+                {
+                  question: "Which brokerage is the most financially stable?",
+                  answer: "eXp Realty demonstrates the strongest financial health with 15 profitable quarters out of 20, compared to just 1 profitable quarter for both Real Broker and Fathom. eXp is also listed on the S&P 600 with stock trading around $14."
+                },
+                {
+                  question: "What makes eXp Realty's revenue share different?",
+                  answer: "eXp Realty has the largest revenue share pool ($204M if 30% of agents cap), offers 7 tiers of earnings, allows you to earn from EVERY downline agent (not just qualifying ones), has no fees to participate, and provides a clear retirement and willable income path."
+                },
+                {
+                  question: "Which brokerage offers the best training?",
+                  answer: "eXp Realty offers 50+ live training hours per week, the most of any online brokerage. Real Broker offers 30+ hours. LPT Realty and Fathom do not offer live training beyond online courses."
+                },
+                {
+                  question: "Can I build a retirement income with these brokerages?",
+                  answer: "Yes, all four offer some form of passive income through revenue share. eXp Realty has the clearest path with no production requirements to earn, while Real Broker and Fathom require minimum production to maintain eligibility."
+                }
+              ]}
+              allowMultiple={false}
+            />
+          </div>
+        </section>
+      </LazySection>
 
       {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Make the Move?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join the Smart Agent Alliance team at eXp Realty and get access to exclusive training, tools, and support.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join Our Team
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/">
-              Learn About Our Value
-            </CTAButton>
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Make the Move?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join the Smart Agent Alliance team at eXp Realty and get access to exclusive training, tools, and support.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join Our Team
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                Learn About Our Value
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }
