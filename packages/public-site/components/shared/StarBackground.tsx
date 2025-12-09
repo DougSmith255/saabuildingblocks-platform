@@ -45,46 +45,57 @@ export default function StarBackground() {
     if (stars.length > 0 || hasInitialized.current) return;
     hasInitialized.current = true;
 
-    // Generate stars on mount - scale with screen size
-    // Mobile gets fewer stars for better scroll performance
-    const isMobile = window.innerWidth < 768;
-    const screenArea = window.innerWidth * window.innerHeight;
-    const baseArea = 1920 * 1080; // Full HD reference
-    const scalingFactor = Math.max(screenArea / baseArea, 0.5); // At least 50% of base count
+    // Defer star generation to avoid blocking LCP
+    // Use requestIdleCallback if available, otherwise setTimeout
+    const generateStars = () => {
+      // Generate stars on mount - scale with screen size
+      // Mobile gets fewer stars for better scroll performance
+      const isMobile = window.innerWidth < 768;
+      const screenArea = window.innerWidth * window.innerHeight;
+      const baseArea = 1920 * 1080; // Full HD reference
+      const scalingFactor = Math.max(screenArea / baseArea, 0.5); // At least 50% of base count
 
-    // Reduced star counts for better scroll performance
-    // Mobile: 100 stars, Desktop: 150 stars (was 150/255)
-    const baseStarCount = isMobile ? 100 : 150;
-    const starCount = Math.floor(baseStarCount * scalingFactor); // Scale star count based on screen area
-    const layers = 3; // 3 parallax layers
-    const generatedStars: Star[] = [];
+      // Reduced star counts for better scroll performance
+      // Mobile: 100 stars, Desktop: 150 stars (was 150/255)
+      const baseStarCount = isMobile ? 100 : 150;
+      const starCount = Math.floor(baseStarCount * scalingFactor); // Scale star count based on screen area
+      const layers = 3; // 3 parallax layers
+      const generatedStars: Star[] = [];
 
-    for (let i = 0; i < starCount; i++) {
-      const layer = i % layers;
+      for (let i = 0; i < starCount; i++) {
+        const layer = i % layers;
 
-      // Fixed durations for each layer (faster layers = closer stars)
-      const durations = [138, 92, 58]; // seconds - consistent speed regardless of screen size
+        // Fixed durations for each layer (faster layers = closer stars)
+        const durations = [138, 92, 58]; // seconds - consistent speed regardless of screen size
 
-      generatedStars.push({
-        id: i,
-        x: Math.random() * 100, // Percentage
-        y: 100, // Start from bottom (animation will move them up)
-        size: Math.random() * (layer * 0.8 + 1) + 0.3,
-        duration: durations[layer],
-        delay: -Math.random() * durations[layer], // Negative delay = start mid-animation (fills entire screen)
-        layer,
-        opacity: Math.random() * 0.4 + 0.4, // Random opacity between 0.4 and 0.8
-      });
-    }
+        generatedStars.push({
+          id: i,
+          x: Math.random() * 100, // Percentage
+          y: 100, // Start from bottom (animation will move them up)
+          size: Math.random() * (layer * 0.8 + 1) + 0.3,
+          duration: durations[layer],
+          delay: -Math.random() * durations[layer], // Negative delay = start mid-animation (fills entire screen)
+          layer,
+          opacity: Math.random() * 0.4 + 0.4, // Random opacity between 0.4 and 0.8
+        });
+      }
 
-    setStars(generatedStars);
+      setStars(generatedStars);
 
-    // Cache stars in sessionStorage so they persist across page navigations
-    // This prevents the flash when navigating between pages
-    try {
-      sessionStorage.setItem('starBackground', JSON.stringify(generatedStars));
-    } catch {
-      // Ignore storage errors (e.g., quota exceeded)
+      // Cache stars in sessionStorage so they persist across page navigations
+      // This prevents the flash when navigating between pages
+      try {
+        sessionStorage.setItem('starBackground', JSON.stringify(generatedStars));
+      } catch {
+        // Ignore storage errors (e.g., quota exceeded)
+      }
+    };
+
+    // Defer to allow main content to paint first (improves LCP)
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(generateStars, { timeout: 1000 });
+    } else {
+      setTimeout(generateStars, 100);
     }
   }, [stars.length]);
 
