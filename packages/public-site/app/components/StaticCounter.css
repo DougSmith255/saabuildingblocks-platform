@@ -3,9 +3,9 @@
 .agent-counter-wrapper {
   /* No animation - visible immediately */
   opacity: 1;
-  /* Exclude counter from LCP measurement - not the main content */
-  content-visibility: auto;
-  contain-intrinsic-size: 280px 60px; /* Approximate counter size */
+  /* NOTE: Removed content-visibility:auto - it was causing LCP render delay
+     because browser initially skips rendering, then has to re-render when
+     it realizes the counter is in viewport */
 }
 
 .counter-animate {
