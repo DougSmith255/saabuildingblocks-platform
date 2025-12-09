@@ -55,22 +55,22 @@ export default function H2({
         }
 
         /* Per-word metal backing plate with neon text */
+        /* Using em units so glow scales with font size */
         :global(.h2-word) {
           display: inline-flex;
           position: relative;
-          /* Neon glow text-shadow */
+          /* Neon glow text-shadow - em units for responsive scaling */
           color: #bfbdb0;
           text-shadow:
-            -1px -1px 0 rgba(255,255,255, 0.4),
-            1px -1px 0 rgba(255,255,255, 0.4),
-            -1px 1px 0 rgba(255,255,255, 0.4),
-            1px 1px 0 rgba(255,255,255, 0.4),
-            0 -3px 8px #bfbdb0,
-            0 0 2px #bfbdb0,
-            0 0 5px #bfbdb0,
-            0 0 15px #9a9888,
-            0 0 3px #bfbdb0,
-            0 3px 3px #000;
+            -0.02em -0.02em 0 rgba(255,255,255, 0.4),
+            0.02em -0.02em 0 rgba(255,255,255, 0.4),
+            -0.02em 0.02em 0 rgba(255,255,255, 0.4),
+            0.02em 0.02em 0 rgba(255,255,255, 0.4),
+            0 -0.03em 0.1em #bfbdb0,
+            0 0 0.03em #bfbdb0,
+            0 0 0.07em #bfbdb0,
+            0 0 0.12em #9a9888,
+            0 0.03em 0.05em #000;
         }
 
         /* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
