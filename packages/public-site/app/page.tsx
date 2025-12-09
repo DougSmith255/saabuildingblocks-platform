@@ -54,15 +54,15 @@ const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container
 export default function Home() {
   return (
     <main id="main-content">
-      {/* Static Counter - OUTSIDE HeroSection to avoid render delay from fade-in animation */}
-      {/* This is the LCP element - must render immediately without waiting for JS hydration */}
-      <StaticCounter />
-
       {/* Hero Section - Wrapped in HeroSection for smooth fade-in */}
       <HeroSection
         className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
         ariaLabel="Hero"
       >
+        {/* Static Counter - INSIDE HeroSection so it fades in with hero content */}
+        {/* This allows the hero image to become LCP instead of counter text */}
+        <StaticCounter />
+
         {/* Wolf Pack Background Image - furthest back layer */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">

@@ -85,7 +85,7 @@ const amulyaItalic = localFont({
 const synonym = localFont({
   src: '../public/fonts/Synonym-Variable.woff2',
   variable: '--font-synonym',
-  display: 'swap', // Swap immediately - allows image to be LCP instead of waiting for font
+  display: 'block', // Block until font loads for consistent appearance
   preload: true,
   weight: '100 900',
 });
@@ -200,18 +200,7 @@ export default async function RootLayout({
         {/* Performance Hints - Establish early connections */}
         <PerformanceHints />
 
-        {/* Preload hero image for LCP optimization - uses desktop variant as default */}
-        <link
-          rel="preload"
-          as="image"
-          href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
-          imageSrcSet="
-            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/mobile 375w,
-            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/tablet 768w,
-            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop 1280w
-          "
-          imageSizes="(max-width: 480px) 375px, (max-width: 768px) 768px, 1280px"
-        />
+        {/* Image preloads removed - causing render delays without improving LCP */}
 
         {/*
           Font Preloading Note:
