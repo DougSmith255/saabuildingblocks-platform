@@ -120,13 +120,18 @@ export default async function RealEstateAgentBlogPage() {
         style={{ minHeight: '100vh', paddingTop: '50px' }}
         ariaLabel="Agent Success Hub Hero"
       >
-        {/* Agent Success Hub Background Image - CSS background-image like homepage */}
+        {/* Agent Success Hub Background Image - Cloudflare Images with responsive variants */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <div
               className="absolute inset-0 agent-hero-bg"
               style={{
-                backgroundImage: 'url(https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Agent-Success-Hub.webp)',
+                // Cloudflare Images with responsive variants (mobile/tablet/desktop)
+                backgroundImage: `image-set(
+                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/mobile) 1x,
+                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/tablet) 2x,
+                  url(https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop) 3x
+                )`,
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center 55%',
