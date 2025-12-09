@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 /**
  * PageTransition - Custom page transition effect
@@ -21,7 +21,26 @@ import { useRouter } from 'next/navigation';
  */
 export function PageTransition() {
   const router = useRouter();
+  const pathname = usePathname();
   const isTransitioning = useRef(false);
+
+  // Check if we arrived here via client-side navigation (should animate in)
+  // Re-runs whenever pathname changes (i.e., navigation occurred)
+  useEffect(() => {
+    const shouldAnimate = sessionStorage.getItem('page-transitioning') === 'true';
+    if (shouldAnimate) {
+      sessionStorage.removeItem('page-transitioning');
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) {
+        // Add class to trigger CSS animation
+        mainContent.classList.add('page-transitioning');
+        // Remove class after animation completes
+        setTimeout(() => {
+          mainContent.classList.remove('page-transitioning');
+        }, 250);
+      }
+    }
+  }, [pathname]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -81,8 +100,12 @@ export function PageTransition() {
 
       // Navigate after fade completes using Next.js router (keeps layout mounted)
       setTimeout(() => {
+        // Set a flag so we know next page should animate in
+        sessionStorage.setItem('page-transitioning', 'true');
+
         router.push(href);
-        // Reset transition state after navigation starts
+
+        // Reset transition state
         setTimeout(() => {
           isTransitioning.current = false;
         }, 100);
