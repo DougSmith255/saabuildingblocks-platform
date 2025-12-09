@@ -3243,7 +3243,7 @@ img:not(.profile-image) {
 /* Secondary button side light bars - hover expansion */
 /* Light bars extend vertically ~8px on hover */
 .group:hover .cta-light-bar.cta-light-bar-side {
-  height: 34px !important; /* 18px base + 16px expansion (8px each direction) */
+  height: 38px !important; /* 22px base + 16px expansion (8px each direction) */
 }
 
 /* ========================================

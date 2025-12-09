@@ -97,16 +97,17 @@ export default function H1({ children, className = '', style = {}, id }: Heading
                     width: '100%',
                     height: '100%',
                     color: '#ffd700',
+                    // Using em units so glow scales with font size
                     textShadow: `
-                      -1px -1px 0 rgba(255,255,255, 0.4),
-                      1px -1px 0 rgba(255,255,255, 0.4),
-                      -1px 1px 0 rgba(255,255,255, 0.4),
-                      1px 1px 0 rgba(255,255,255, 0.4),
-                      0 -2px 8px #ffd700,
-                      0 0 2px #ffd700,
-                      0 0 5px #ffd700,
-                      0 0 8px #ffb347,
-                      0 2px 3px #000
+                      -0.02em -0.02em 0 rgba(255,255,255, 0.4),
+                      0.02em -0.02em 0 rgba(255,255,255, 0.4),
+                      -0.02em 0.02em 0 rgba(255,255,255, 0.4),
+                      0.02em 0.02em 0 rgba(255,255,255, 0.4),
+                      0 -0.03em 0.1em #ffd700,
+                      0 0 0.03em #ffd700,
+                      0 0 0.07em #ffd700,
+                      0 0 0.12em #ffb347,
+                      0 0.03em 0.05em #000
                     `,
                     transform: 'translateZ(1px)',
                     pointerEvents: 'none',
