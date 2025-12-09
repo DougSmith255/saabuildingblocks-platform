@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document tracks the migration to section-level lazy loading with `LazySection` and `LazyImage` components.
+This document tracks the migration to section-level lazy loading with `SectionSkeleton` and `LazyImage` components.
 
 ## New Components
 
@@ -12,42 +12,34 @@ This document tracks the migration to section-level lazy loading with `LazySecti
 | `LazyImage` | `components/shared/LazyImage.tsx` | Deferred image loading with IntersectionObserver |
 | `LazyImg` | `components/shared/LazyImage.tsx` | Same as LazyImage but for native `<img>` elements |
 
-## Redundant Optimizations to Remove
+## Strategy: Section-Level vs Image-Level
 
-After implementing lazy loading, these optimizations become redundant or conflicting:
+### Section-Level Lazy Loading (Primary)
+When a section is lazy-loaded with `dynamic()`, everything inside it (JS, HTML, images) loads together when the section enters the viewport. This handles most optimization needs.
 
-### 1. BlogCard IntersectionObserver ❌ REMOVE
-- **File**: `components/blog/BlogCard.tsx`
-- **What**: Custom IntersectionObserver for image loading
-- **Why remove**: `LazyImage` handles this globally
-- **Action**: Replace with `LazyImage` component or keep if BlogCard needs specific behavior
+### Image-Level Lazy Loading (Supplementary)
+`LazyImage` is still useful for:
+- **Blog post body content** - Images scattered throughout article (no section wrapper)
+- **Very long sections** - Where you want images to load progressively within the section
+- **Blog card grids** - Many image cards that shouldn't all load at once
 
-### 2. `loading="lazy"` on below-fold images ❌ REMOVE
-- **Files**: Various components using `next/image` or `<img>`
-- **What**: Native lazy loading hint
-- **Why remove**: `LazyImage` uses IntersectionObserver which is stricter - the image element isn't even rendered until near viewport
-- **Action**: Use `LazyImage` instead, which sets `loading="eager"` internally
+## What to Keep vs Remove
 
-### 3. `content-visibility: auto` ❌ ALREADY REMOVED
-- **File**: `app/components/StaticCounter.css` (was removed)
-- **What**: CSS containment for off-screen content
-- **Why removed**: Caused LCP render delay - browser skipped rendering, then had to re-render
-- **Status**: Already removed in previous commit
+### ✅ KEEP
 
-### 4. Individual `dynamic()` imports for animations ✅ KEEP
-- **File**: `app/page.tsx`
-- **What**: `CounterAnimation`, `HomepageClient`, `DynamicH1Container`
-- **Why keep**: These are JavaScript enhancements, not sections. They hydrate after initial paint.
+| Optimization | File | Reason |
+|--------------|------|--------|
+| `BlogCard` IntersectionObserver | `components/blog/BlogCard.tsx` | Blog listing pages have many cards - need per-card deferral |
+| `dynamic()` for animations | `app/page.tsx` | JS enhancements, not sections |
+| `HeroSection` opacity wrapper | `components/shared/HeroSection.tsx` | Above-fold smoothness |
+| `YouTubeFacade` | `@saa/shared/.../YouTubeFacade.tsx` | Click-to-load, different purpose |
 
-### 5. `HeroSection` opacity wrapper ✅ KEEP
-- **File**: `components/shared/HeroSection.tsx`
-- **What**: Fade-in animation for hero content
-- **Why keep**: This is for above-fold content smoothness, not lazy loading
+### ❌ REMOVE (after global implementation)
 
-### 6. `YouTubeFacade` ✅ KEEP
-- **File**: `@saa/shared/components/saa/media/YouTubeFacade.tsx`
-- **What**: Click-to-load YouTube embeds
-- **Why keep**: Different purpose - loads iframe on user interaction, not viewport
+| Optimization | Files | Reason |
+|--------------|-------|--------|
+| `loading="lazy"` on section images | Various | Redundant - section lazy loading handles this |
+| `content-visibility: auto` | CSS files | Caused LCP issues, already removed |
 
 ## Migration Checklist
 

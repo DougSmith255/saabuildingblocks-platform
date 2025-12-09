@@ -6,4 +6,5 @@
 
 export { OptimizedImage } from './OptimizedImage';
 export { SectionSkeleton } from './shared/SectionSkeleton';
+export { LazySection } from './shared/LazySection';
 export { LazyImage, LazyImg } from './shared/LazyImage';

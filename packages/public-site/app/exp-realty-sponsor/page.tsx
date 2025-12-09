@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import HeroSection from '@/components/shared/HeroSection';
+import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
 /**
@@ -86,129 +87,139 @@ export default function ExpRealtySponsor() {
         </div>
       </section>
 
-      {/* Video Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
-          <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/Fvfx9unYI1M"
-              title="Wolf Pack Introduction"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
+      {/* Video Section - Lazy loaded */}
+      <LazySection height={500}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[900px] mx-auto">
+            <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/Fvfx9unYI1M"
+                title="Wolf Pack Introduction"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
-      {/* Value Stack Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>What You Get With The Wolf Pack</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Check out the immediate value that the Wolf Pack will provide you! We can help change your life.
-            </p>
-          </div>
+      {/* Value Stack Section - Lazy loaded */}
+      <LazySection height={1200}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>What You Get With The Wolf Pack</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Check out the immediate value that the Wolf Pack will provide you! We can help change your life.
+              </p>
+            </div>
 
-          <div className="space-y-16">
-            {valueItems.map((item, index) => (
-              <div
-                key={index}
-                className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
-              >
-                <div className="lg:w-1/2">
-                  <div className="relative rounded-xl overflow-hidden border border-white/10">
-                    <Image
-                      src={item.image}
-                      alt={item.title}
-                      width={800}
-                      height={500}
-                      className="w-full h-auto"
-                    />
+            <div className="space-y-16">
+              {valueItems.map((item, index) => (
+                <div
+                  key={index}
+                  className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 items-center`}
+                >
+                  <div className="lg:w-1/2">
+                    <div className="relative rounded-xl overflow-hidden border border-white/10">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        width={800}
+                        height={500}
+                        className="w-full h-auto"
+                      />
+                    </div>
+                  </div>
+                  <div className="lg:w-1/2 text-center lg:text-left">
+                    <h3 className="text-2xl font-bold text-[#e5e4dd] mb-4">{item.title}</h3>
+                    <p className="text-[#dcdbd5] text-lg">{item.description}</p>
                   </div>
                 </div>
-                <div className="lg:w-1/2 text-center lg:text-left">
-                  <h3 className="text-2xl font-bold text-[#e5e4dd] mb-4">{item.title}</h3>
-                  <p className="text-[#dcdbd5] text-lg">{item.description}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
-      {/* Features Grid */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="text-center mb-12">
-            <H2>Everything You Need to Succeed</H2>
+      {/* Features Grid - Lazy loaded */}
+      <LazySection height={400}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="text-center mb-12">
+              <H2>Everything You Need to Succeed</H2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+              {features.map((feature, index) => (
+                <GenericCard key={index} padding="md" centered hover>
+                  <div className="text-3xl mb-3">
+                    {index === 0 && "📹"}
+                    {index === 1 && "🎯"}
+                    {index === 2 && "✨"}
+                    {index === 3 && "🚀"}
+                    {index === 4 && "🎯"}
+                    {index === 5 && "🧠"}
+                    {index === 6 && "📞"}
+                    {index === 7 && "🤝"}
+                    {index === 8 && "📈"}
+                    {index === 9 && "💬"}
+                  </div>
+                  <h4 className="text-[#e5e4dd] font-medium text-sm">{feature.title}</h4>
+                </GenericCard>
+              ))}
+            </div>
           </div>
+        </section>
+      </LazySection>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {features.map((feature, index) => (
-              <GenericCard key={index} padding="md" centered hover>
-                <div className="text-3xl mb-3">
-                  {index === 0 && "📹"}
-                  {index === 1 && "🎯"}
-                  {index === 2 && "✨"}
-                  {index === 3 && "🚀"}
-                  {index === 4 && "🎯"}
-                  {index === 5 && "🧠"}
-                  {index === 6 && "📞"}
-                  {index === 7 && "🤝"}
-                  {index === 8 && "📈"}
-                  {index === 9 && "💬"}
-                </div>
-                <h4 className="text-[#e5e4dd] font-medium text-sm">{feature.title}</h4>
+      {/* Stats Section - Lazy loaded */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="grid md:grid-cols-3 gap-8 text-center">
+              <GenericCard padding="lg" centered>
+                <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
+                <p className="text-[#dcdbd5]">Agents Strong</p>
               </GenericCard>
-            ))}
+
+              <GenericCard padding="lg" centered>
+                <div className="text-5xl font-bold text-amber-400 mb-2">24+</div>
+                <p className="text-[#dcdbd5]">Countries</p>
+              </GenericCard>
+
+              <GenericCard padding="lg" centered>
+                <div className="text-5xl font-bold text-amber-400 mb-2">5</div>
+                <p className="text-[#dcdbd5]">Weekly Calls</p>
+              </GenericCard>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
 
-      {/* Stats Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <GenericCard padding="lg" centered>
-              <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
-              <p className="text-[#dcdbd5]">Agents Strong</p>
-            </GenericCard>
-
-            <GenericCard padding="lg" centered>
-              <div className="text-5xl font-bold text-amber-400 mb-2">24+</div>
-              <p className="text-[#dcdbd5]">Countries</p>
-            </GenericCard>
-
-            <GenericCard padding="lg" centered>
-              <div className="text-5xl font-bold text-amber-400 mb-2">5</div>
-              <p className="text-[#dcdbd5]">Weekly Calls</p>
-            </GenericCard>
+      {/* CTA Section - Lazy loaded */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[800px] mx-auto text-center">
+            <H2>Ready to Join The Pack?</H2>
+            <p className="text-[#dcdbd5] mt-4 mb-8">
+              Join our value-packed, record-breaking group and start your journey towards a more successful real estate career.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                Join The Wolf Pack
+              </CTAButton>
+              <CTAButton href="/about-exp-realty/">
+                Learn About eXp Realty
+              </CTAButton>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <H2>Ready to Join The Pack?</H2>
-          <p className="text-[#dcdbd5] mt-4 mb-8">
-            Join our value-packed, record-breaking group and start your journey towards a more successful real estate career.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <CTAButton href="/join-exp-sponsor-team/">
-              Join The Wolf Pack
-            </CTAButton>
-            <CTAButton href="/about-exp-realty/">
-              Learn About eXp Realty
-            </CTAButton>
-          </div>
-        </div>
-      </section>
+        </section>
+      </LazySection>
     </main>
   );
 }
