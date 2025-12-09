@@ -3,24 +3,45 @@ import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
 import HeroSection from '@/components/shared/HeroSection';
+import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 
-// Homepage sections
-import { ValueStack } from './components/sections/ValueStack';
-import { SocialProof } from './components/sections/SocialProof';
-import { WhyExpRealty } from './components/sections/WhyExpRealty';
-import { WhoWeAre } from './components/sections/WhoWeAre';
-import { PathSelectorWithContent } from './components/sections/PathSelectorWithContent';
+// PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
+// Sections only load when user scrolls near them (200px before viewport)
+// This reduces initial bundle size and improves LCP significantly
 
-// PERFORMANCE OPTIMIZATION: Lazy-load all JavaScript animations
-// This reduces initial bundle size and eliminates 74s mobile blocking time!
-// CSS animations (fade-in) work immediately, JavaScript enhancements load after
+// Below-fold sections - lazy loaded with skeleton placeholders
+const ValueStack = dynamic(
+  () => import('./components/sections/ValueStack').then(mod => ({ default: mod.ValueStack })),
+  { loading: () => <SectionSkeleton height={600} /> }
+);
+
+const SocialProof = dynamic(
+  () => import('./components/sections/SocialProof').then(mod => ({ default: mod.SocialProof })),
+  { loading: () => <SectionSkeleton height={400} /> }
+);
+
+const WhyExpRealty = dynamic(
+  () => import('./components/sections/WhyExpRealty').then(mod => ({ default: mod.WhyExpRealty })),
+  { loading: () => <SectionSkeleton height={700} /> }
+);
+
+const WhoWeAre = dynamic(
+  () => import('./components/sections/WhoWeAre').then(mod => ({ default: mod.WhoWeAre })),
+  { loading: () => <SectionSkeleton height={500} /> }
+);
+
+const PathSelectorWithContent = dynamic(
+  () => import('./components/sections/PathSelectorWithContent').then(mod => ({ default: mod.PathSelectorWithContent })),
+  { loading: () => <SectionSkeleton height={800} /> }
+);
+
+// PERFORMANCE OPTIMIZATION: Lazy-load JavaScript animations
+// CSS animations work immediately, JavaScript enhancements load after
 
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
 );
-
-// WolfPackAnimation removed - no longer needed, all elements visible immediately
 
 // Defer loading of desktop-only positioning components (loaded separately from main bundle)
 const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
