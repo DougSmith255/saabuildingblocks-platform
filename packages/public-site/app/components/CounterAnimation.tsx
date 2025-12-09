@@ -76,19 +76,35 @@ export function CounterAnimation() {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Start first animation after a delay
-    const startDelay = setTimeout(() => {
-      animateScramble();
-    }, 500);
+    // Defer animation start until browser is idle
+    let startDelayId: number | undefined;
+    let intervalId: ReturnType<typeof setInterval> | undefined;
 
-    // Loop animation every 5 seconds
-    const interval = setInterval(() => {
+    const startAnimations = () => {
+      // Start first animation
       animateScramble();
-    }, 5000);
+
+      // Loop animation every 5 seconds
+      intervalId = setInterval(() => {
+        animateScramble();
+      }, 5000);
+    };
+
+    // Use requestIdleCallback to defer, with setTimeout fallback
+    if ('requestIdleCallback' in window) {
+      startDelayId = window.requestIdleCallback(startAnimations, { timeout: 2000 });
+    } else {
+      // Fallback for Safari - use setTimeout
+      setTimeout(startAnimations, 500);
+    }
 
     return () => {
-      clearTimeout(startDelay);
-      clearInterval(interval);
+      if (startDelayId && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(startDelayId);
+      }
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
