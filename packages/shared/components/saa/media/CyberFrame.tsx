@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export interface CyberFrameProps {
   /** Content to wrap (image, video, iframe, etc.) */
@@ -54,17 +54,23 @@ export function CyberFrame({
   isVideo = false,
   variant = 'gold',
 }: CyberFrameProps) {
-  // Generate random values for this instance (consistent per mount)
-  const randomValues = useMemo(() => ({
-    // Sheen angle: 15-45 degrees
-    sheenAngle: Math.floor(Math.random() * 30) + 15,
-    // Sheen position: 20-80% across
-    sheenPosition: Math.floor(Math.random() * 60) + 20,
-    // Holographic hue rotation: 0-360 degrees
-    hueRotate: Math.floor(Math.random() * 360),
-    // Slight variation in holographic intensity
-    holoOpacity: (Math.random() * 0.03 + 0.02).toFixed(3), // 0.02-0.05
-  }), []);
+  // Use fixed initial values to avoid hydration mismatch, randomize after mount
+  const [randomValues, setRandomValues] = useState({
+    sheenAngle: 30,
+    sheenPosition: 50,
+    hueRotate: 180,
+    holoOpacity: '0.035',
+  });
+
+  useEffect(() => {
+    // Randomize values only on client after hydration
+    setRandomValues({
+      sheenAngle: Math.floor(Math.random() * 30) + 15,
+      sheenPosition: Math.floor(Math.random() * 60) + 20,
+      hueRotate: Math.floor(Math.random() * 360),
+      holoOpacity: (Math.random() * 0.03 + 0.02).toFixed(3),
+    });
+  }, []);
 
   // Color values based on variant
   const colors = variant === 'green'

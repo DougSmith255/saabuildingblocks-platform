@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 // TODO: Store imports removed for monorepo - needs Context provider pattern
 // import { useTypographyStore } from '@/app/master-controller/stores/typographyStore';
 // import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
@@ -24,12 +24,14 @@ export interface SecondaryButtonProps {
  * <SecondaryButton as="button" onClick={handler}>Click Me</SecondaryButton>
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
-  // Initialize with a function to generate random delay immediately during render
-  // This ensures both SSR and CSR get a random value, avoiding hydration mismatch
-  const [lightPulseDelay] = useState(() => {
-    const randomDelay = Math.random() * 1.5; // 0 to 1.5 seconds for light pulse
-    return `${randomDelay.toFixed(2)}s`;
-  });
+  // Use fixed initial value to avoid hydration mismatch, randomize after mount
+  const [lightPulseDelay, setLightPulseDelay] = useState('0s');
+
+  useEffect(() => {
+    // Randomize delay only on client after hydration
+    const randomDelay = Math.random() * 1.5;
+    setLightPulseDelay(`${randomDelay.toFixed(2)}s`);
+  }, []);
 
   // Brand colors for glow effects (keep hardcoded for animation compatibility)
   const brandGold = '#ffd700';
