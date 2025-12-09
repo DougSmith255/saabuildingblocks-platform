@@ -28,6 +28,13 @@ export function PerformanceHints() {
         crossOrigin="anonymous"
       />
 
+      {/* Preconnect to Cloudflare Images CDN - critical for LCP */}
+      <link
+        rel="preconnect"
+        href="https://imagedelivery.net"
+        crossOrigin="anonymous"
+      />
+
       {/* DNS prefetch for Cloudflare R2 CDN (images/media) */}
       <link
         rel="dns-prefetch"
