@@ -11,6 +11,7 @@ interface Star {
   duration: number;
   delay: number;
   layer: number;
+  opacity: number;
 }
 
 /**
@@ -68,6 +69,7 @@ export default function StarBackgroundAlt() {
         duration: durations[layer],
         delay: -Math.random() * durations[layer], // Negative delay = start mid-animation (fills entire screen)
         layer,
+        opacity: Math.random() * 0.4 + 0.4, // Random opacity between 0.4 and 0.8
       });
     }
 
@@ -95,7 +97,7 @@ export default function StarBackgroundAlt() {
             height: `${star.size}px`,
             animationDuration: `${star.duration}s`,
             animationDelay: `${star.delay}s`, // Negative delay starts animation mid-cycle
-            opacity: Math.random() * 0.4 + 0.4,
+            opacity: star.opacity,
             zIndex: star.layer,
           }}
         />
