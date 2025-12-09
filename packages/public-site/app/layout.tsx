@@ -200,22 +200,10 @@ export default async function RootLayout({
         {/* Performance Hints - Establish early connections */}
         <PerformanceHints />
 
-        {/* LCP Image Preloading - Critical for Core Web Vitals */}
-        {/* Only preload images actually used above-fold on homepage */}
-        <link
-          rel="preload"
-          as="image"
-          href="https://wp.saabuildingblocks.com/wp-content/uploads/2025/11/Doug-and-karrie-co-founders-of-smart-agent-alliance.webp"
-          fetchPriority="high"
-        />
-        {/* Wolf-pack hero background uses Cloudflare Images with image-set, preload desktop variant */}
-        <link
-          rel="preload"
-          as="image"
-          href="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
-          fetchPriority="high"
-        />
-        {/* Agent-Success-Hub removed - only used on /real-estate-agent-job page, not homepage */}
+        {/* Image preloads removed - they were causing warnings because:
+            - Wolf-pack uses image-set with variants (mobile/tablet/desktop), can't preload correctly
+            - Doug-and-Karrie may have similar issues with Next.js Image optimization
+            Images still load fast via fetchPriority="high" on the Image components */}
 
         {/*
           Font Preloading Note:
