@@ -52,8 +52,9 @@ export default function StarBackground() {
     const baseArea = 1920 * 1080; // Full HD reference
     const scalingFactor = Math.max(screenArea / baseArea, 0.5); // At least 50% of base count
 
-    // Mobile: max 150 stars for smooth scrolling, Desktop: up to 255
-    const baseStarCount = isMobile ? 150 : 255;
+    // Reduced star counts for better scroll performance
+    // Mobile: 100 stars, Desktop: 150 stars (was 150/255)
+    const baseStarCount = isMobile ? 100 : 150;
     const starCount = Math.floor(baseStarCount * scalingFactor); // Scale star count based on screen area
     const layers = 3; // 3 parallax layers
     const generatedStars: Star[] = [];

@@ -21,6 +21,20 @@ body {
   max-width: 100%;
 }
 
+/* ========================================
+   SCROLL PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Defer rendering of off-screen sections (not the first/hero section) */
+/* contain-intrinsic-size provides estimated height to prevent layout shift */
+main > section:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+/* Let browser optimize compositing layers automatically */
+/* Removed explicit will-change from elements to let browser decide */
+
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   html {

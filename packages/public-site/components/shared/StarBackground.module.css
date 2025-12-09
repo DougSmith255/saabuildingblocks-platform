@@ -27,7 +27,8 @@
   position: absolute;
   background: white;
   border-radius: 50%;
-  will-change: transform;
+  /* Removed will-change: transform - too many layers hurts performance */
+  /* Browser will auto-promote during animation */
 
   /* CSS animation - FIXED DURATION regardless of screen size */
   animation-name: starFloat;

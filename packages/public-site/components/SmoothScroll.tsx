@@ -27,15 +27,17 @@ export default function SmoothScroll() {
     window.scrollTo(0, 0);
 
     // Initialize Lenis
+    // NOTE: For snappier mouse wheel, use lower duration and higher wheelMultiplier
     const lenis = new Lenis({
-      duration: 0.7, // Scroll animation duration in seconds
+      duration: 0.5, // Reduced from 0.7 for snappier response
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing function (default)
       orientation: 'vertical', // Scroll direction
       gestureOrientation: 'vertical', // Gesture direction
       smoothWheel: true, // Enable smooth scrolling for mouse wheel
-      wheelMultiplier: 0.8, // Mouse wheel sensitivity
+      wheelMultiplier: 1.0, // Increased from 0.8 - more responsive to wheel input
       touchMultiplier: 2, // Touch sensitivity
       infinite: false, // Disable infinite scroll
+      lerp: 0.15, // Linear interpolation intensity (0-1, higher = snappier, default ~0.1)
     });
 
     // Animation frame loop for Lenis
