@@ -16,7 +16,7 @@ const https = require('https');
 // Configuration - Uses GoHighLevel Private Integration Token
 const GHL_API_KEY = process.env.GHL_API_KEY || 'pit-7a10b4b4-ddb7-45a4-8460-ff2d36fbd407';
 const GHL_LOCATION_ID = process.env.GHL_LOCATION_ID || 'wmYRsn57bNL8Z2tMlIZ7';
-const ALERT_CONTACT_EMAIL = 'doug.smart@exprealty.com'; // Must be a contact in GHL
+const ALERT_CONTACT_EMAIL = 'doug@smartagentalliance.com'; // Must be a contact in GHL
 
 /**
  * Parse command line arguments

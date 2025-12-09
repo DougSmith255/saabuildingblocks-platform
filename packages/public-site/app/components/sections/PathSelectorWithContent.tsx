@@ -111,7 +111,7 @@ export function PathSelectorWithContent() {
               <GenericCard padding="lg" className="mt-8">
                 {/* Problem */}
                 <div className="mb-6">
-                  <h3 className="text-h4 text-[#ff4444] mb-2">The Problem</h3>
+                  <h3 className="text-h4 mb-2" style={{ color: '#ff3131' }}>The Problem</h3>
                   <p className="text-body">
                     {pathContent[displayedPath].problem}
                   </p>
@@ -119,7 +119,7 @@ export function PathSelectorWithContent() {
 
                 {/* Answer */}
                 <div className="mb-6">
-                  <h3 className="text-h4 text-[#00ff88] mb-2">The Answer</h3>
+                  <h3 className="text-h4 mb-2" style={{ color: '#00ff88' }}>The Answer</h3>
                   <p className="text-body">
                     {pathContent[displayedPath].answer}
                   </p>

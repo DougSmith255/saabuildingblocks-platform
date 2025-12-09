@@ -118,8 +118,8 @@ export default function JoinExpSponsorTeam() {
               <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-[#dcdbd5]">
                 <p>
-                  <a href="mailto:doug.smart@exprealty.com" className="hover:text-amber-400 transition-colors">
-                    doug.smart@exprealty.com
+                  <a href="mailto:doug@smartagentalliance.com" className="hover:text-amber-400 transition-colors">
+                    doug@smartagentalliance.com
                   </a>
                 </p>
                 <p>314-320-5606</p>

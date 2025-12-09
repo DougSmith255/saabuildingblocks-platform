@@ -126,10 +126,10 @@ export default function DougLinktree() {
       {/* Email */}
       <div className="mt-8 text-center">
         <a
-          href="mailto:doug.smart@exprealty.com"
+          href="mailto:doug@smartagentalliance.com"
           className="text-amber-400 hover:underline"
         >
-          doug.smart@exprealty.com
+          doug@smartagentalliance.com
         </a>
         <p className="text-[#dcdbd5]/60 text-sm mt-2">314-320-5606</p>
       </div>

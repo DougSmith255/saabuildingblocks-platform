@@ -2217,6 +2217,7 @@ article p a:focus-visible,
 
 /* WordPress figure wrapper - receives the CyberFrame styling */
 /* Float right with text wrapping, auto width based on image size */
+/* Default (dark mode): Yellow/gold glow for internal images */
 .blog-content figure {
   position: relative;
   display: block;
@@ -2236,7 +2237,7 @@ article p a:focus-visible,
     0 4px 20px rgba(0,0,0,0.6),
     inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 15px rgba(0,255,136,0.1);
+    0 0 15px rgba(255,215,0,0.1);
   transition: all 0.3s ease;
 }
 
@@ -2245,6 +2246,24 @@ article p a:focus-visible,
     0 4px 25px rgba(0,0,0,0.7),
     inset 0 1px 0 rgba(255,255,255,0.2),
     inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(255,215,0,0.2);
+  border-color: rgba(255,215,0,0.3);
+}
+
+/* Light mode: Green glow for internal blog images (figures) */
+body.light-mode .blog-content figure {
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 15px rgba(0,255,136,0.1);
+}
+
+body.light-mode .blog-content figure:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
     0 0 25px rgba(0,255,136,0.2);
   border-color: rgba(0,255,136,0.3);
 }
@@ -2360,6 +2379,7 @@ article p a:focus-visible,
 
 /* WordPress aligned images (aligncenter, alignright, alignleft) - CyberFrame styling */
 /* These are raw <img> tags with WordPress alignment classes inside <p> tags */
+/* Default (dark mode): Yellow/gold glow for internal images */
 .blog-content p > img.aligncenter,
 .blog-content p > img.alignright,
 .blog-content p > img.alignleft,
@@ -2375,7 +2395,7 @@ article p a:focus-visible,
     0 4px 20px rgba(0,0,0,0.6),
     inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 15px rgba(0,255,136,0.1);
+    0 0 15px rgba(255,215,0,0.1);
   transition: all 0.3s ease;
 }
 
@@ -2389,8 +2409,8 @@ article p a:focus-visible,
     0 4px 25px rgba(0,0,0,0.7),
     inset 0 1px 0 rgba(255,255,255,0.2),
     inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 25px rgba(0,255,136,0.2);
-  border-color: rgba(0,255,136,0.3);
+    0 0 25px rgba(255,215,0,0.2);
+  border-color: rgba(255,215,0,0.3);
 }
 
 /* Center aligned images */
@@ -2458,12 +2478,107 @@ article p a:focus-visible,
   width: 100% !important;
 }
 
+/* ========================================
+   BLOG IMAGE COLOR OVERRIDES
+   Featured images: Green in light mode (brand green)
+   Internal images: Yellow/gold in dark mode, green in light mode
+   ======================================== */
+
+/* Featured image CyberFrame - Light Mode: Use brand green instead of gold */
+body.light-mode .blog-post > section .float-right .cyber-frame,
+body.light-mode .blog-post .blog-content > .float-right .cyber-frame {
+  --cf-glow: rgba(0, 255, 136, 0.15) !important;
+  --cf-glow-hover: rgba(0, 255, 136, 0.25) !important;
+  --cf-border: rgba(0, 255, 136, 0.4) !important;
+  --cf-corner-top: rgba(0, 255, 136, 0.6) !important;
+  --cf-corner-bottom: rgba(0, 255, 136, 0.4) !important;
+  --cf-corner-hover-top: rgba(0, 255, 136, 0.9) !important;
+  --cf-corner-hover-bottom: rgba(0, 255, 136, 0.6) !important;
+  --cf-corner-glow-top: rgba(0, 255, 136, 0.5) !important;
+  --cf-corner-glow-bottom: rgba(0, 255, 136, 0.4) !important;
+}
+
+/* Internal blog images (inside blog-content, figures, media-text) - Dark Mode: Yellow/gold */
+.blog-post.dark-mode .blog-content figure .cyber-frame,
+.blog-post.dark-mode .blog-content .wp-block-media-text .cyber-frame,
+.blog-post:not(.light-mode) .blog-content figure .cyber-frame,
+.blog-post:not(.light-mode) .blog-content .wp-block-media-text .cyber-frame {
+  --cf-glow: rgba(255, 215, 0, 0.15) !important;
+  --cf-glow-hover: rgba(255, 215, 0, 0.25) !important;
+  --cf-border: rgba(255, 215, 0, 0.4) !important;
+  --cf-corner-top: rgba(255, 215, 0, 0.6) !important;
+  --cf-corner-bottom: rgba(255, 215, 0, 0.4) !important;
+  --cf-corner-hover-top: rgba(255, 215, 0, 0.9) !important;
+  --cf-corner-hover-bottom: rgba(255, 215, 0, 0.6) !important;
+  --cf-corner-glow-top: rgba(255, 215, 0, 0.5) !important;
+  --cf-corner-glow-bottom: rgba(255, 215, 0, 0.4) !important;
+}
+
+/* WordPress native inline images - Dark Mode: Yellow glow effect */
+.blog-post.dark-mode .blog-content p > img.aligncenter,
+.blog-post.dark-mode .blog-content p > img.alignright,
+.blog-post.dark-mode .blog-content p > img.alignleft,
+.blog-post.dark-mode .blog-content img.aligncenter,
+.blog-post.dark-mode .blog-content img.alignright,
+.blog-post.dark-mode .blog-content img.alignleft,
+.blog-post:not(.light-mode) .blog-content p > img.aligncenter,
+.blog-post:not(.light-mode) .blog-content p > img.alignright,
+.blog-post:not(.light-mode) .blog-content p > img.alignleft,
+.blog-post:not(.light-mode) .blog-content img.aligncenter,
+.blog-post:not(.light-mode) .blog-content img.alignright,
+.blog-post:not(.light-mode) .blog-content img.alignleft {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(255, 215, 0, 0.15) !important;
+}
+
+.blog-post.dark-mode .blog-content p > img.aligncenter:hover,
+.blog-post.dark-mode .blog-content p > img.alignright:hover,
+.blog-post.dark-mode .blog-content p > img.alignleft:hover,
+.blog-post.dark-mode .blog-content img.aligncenter:hover,
+.blog-post.dark-mode .blog-content img.alignright:hover,
+.blog-post.dark-mode .blog-content img.alignleft:hover,
+.blog-post:not(.light-mode) .blog-content p > img.aligncenter:hover,
+.blog-post:not(.light-mode) .blog-content p > img.alignright:hover,
+.blog-post:not(.light-mode) .blog-content p > img.alignleft:hover,
+.blog-post:not(.light-mode) .blog-content img.aligncenter:hover,
+.blog-post:not(.light-mode) .blog-content img.alignright:hover,
+.blog-post:not(.light-mode) .blog-content img.alignleft:hover {
+  box-shadow:
+    0 4px 25px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 215, 0, 0.25) !important;
+}
+
+/* WordPress Media-Text Blocks - Dark Mode: Yellow glow effect */
+.blog-post.dark-mode .blog-content .wp-block-media-text__media,
+.blog-post:not(.light-mode) .blog-content .wp-block-media-text__media {
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 15px rgba(255, 215, 0, 0.15) !important;
+}
+
+.blog-post.dark-mode .blog-content .wp-block-media-text__media:hover,
+.blog-post:not(.light-mode) .blog-content .wp-block-media-text__media:hover {
+  box-shadow:
+    0 4px 25px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(255, 215, 0, 0.25) !important;
+}
+
 /* WordPress Media-Text Blocks - inline image with text wrap */
 .blog-content .wp-block-media-text {
   display: block !important;
   grid-template-columns: unset !important;
 }
 
+/* Default (dark mode): Yellow/gold glow for internal images */
 .blog-content .wp-block-media-text__media {
   position: relative;
   float: right;
@@ -2481,7 +2596,7 @@ article p a:focus-visible,
     0 4px 20px rgba(0,0,0,0.6),
     inset 0 1px 0 rgba(255,255,255,0.15),
     inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 15px rgba(0,255,136,0.1);
+    0 0 15px rgba(255,215,0,0.1);
   transition: all 0.3s ease;
 }
 
@@ -2508,11 +2623,30 @@ article p a:focus-visible,
   transform: translateX(30%);
 }
 
+/* Dark mode hover: Yellow/gold */
 .blog-content .wp-block-media-text__media:hover {
   box-shadow:
     0 4px 25px rgba(0,0,0,0.7),
     inset 0 1px 0 rgba(255,255,255,0.2),
     inset 0 -1px 0 rgba(0,0,0,0.3),
+    0 0 25px rgba(255,215,0,0.2);
+  border-color: rgba(255,215,0,0.3);
+}
+
+/* Light mode: Green glow for internal blog images (media-text) */
+body.light-mode .blog-content .wp-block-media-text__media {
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
+    0 0 15px rgba(0,255,136,0.1);
+}
+
+body.light-mode .blog-content .wp-block-media-text__media:hover {
+  box-shadow:
+    0 4px 25px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.1),
     0 0 25px rgba(0,255,136,0.2);
   border-color: rgba(0,255,136,0.3);
 }
