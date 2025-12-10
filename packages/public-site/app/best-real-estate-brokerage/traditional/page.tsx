@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -114,29 +114,29 @@ export default function TraditionalBrokerageComparison() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid md:grid-cols-4 gap-6 text-center">
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-3xl font-bold text-amber-400 mb-2">$85</div>
               <p className="text-[#dcdbd5] text-sm">eXp Monthly Fee</p>
               <p className="text-[#dcdbd5]/60 text-xs mt-1">vs $500-$2,000+ traditional</p>
-            </GenericCard>
+            </CyberCard>
 
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-3xl font-bold text-amber-400 mb-2">100%</div>
               <p className="text-[#dcdbd5] text-sm">Commission After Cap</p>
               <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 50-70% traditional</p>
-            </GenericCard>
+            </CyberCard>
 
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-3xl font-bold text-amber-400 mb-2">$0</div>
               <p className="text-[#dcdbd5] text-sm">Franchise Fees</p>
               <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 6-8% traditional</p>
-            </GenericCard>
+            </CyberCard>
 
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-3xl font-bold text-amber-400 mb-2">7</div>
               <p className="text-[#dcdbd5] text-sm">Revenue Share Tiers</p>
               <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 0 traditional</p>
-            </GenericCard>
+            </CyberCard>
           </div>
         </div>
       </section>
