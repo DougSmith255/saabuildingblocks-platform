@@ -20,10 +20,21 @@ export function CounterAnimation() {
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Find the counter element and individual digit spans
-    // Try desktop counter first, then mobile counter in tagline
-    const counterElement = document.querySelector('.counter-numbers') ||
-                           document.querySelector('.counter-numbers-mobile');
+    // Find the VISIBLE counter element and individual digit spans
+    // Check which counter is currently displayed (desktop vs mobile)
+    // Desktop: .agent-counter-wrapper is hidden on mobile (<1200px)
+    // Mobile: .tagline-counter-suffix is hidden on desktop (>=1200px)
+    const desktopWrapper = document.querySelector('.agent-counter-wrapper');
+    const mobileWrapper = document.querySelector('.tagline-counter-suffix');
+
+    // Use the one whose wrapper is visible
+    let counterElement: Element | null = null;
+    if (desktopWrapper && getComputedStyle(desktopWrapper).display !== 'none') {
+      counterElement = desktopWrapper.querySelector('.counter-numbers');
+    } else if (mobileWrapper && getComputedStyle(mobileWrapper).display !== 'none') {
+      counterElement = mobileWrapper.querySelector('.counter-numbers-mobile');
+    }
+
     if (!counterElement) return;
 
     const digitElements = counterElement.querySelectorAll('.counter-digit');

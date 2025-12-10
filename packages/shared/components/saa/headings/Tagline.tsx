@@ -138,7 +138,7 @@ export default function Tagline({
             </span>
           </span>
 
-          {/* Counter numbers - uses body font, targetable by CounterAnimation */}
+          {/* Counter numbers - uses Synonym font, targetable by CounterAnimation */}
           <span
             className="tagline-word counter-numbers-mobile"
             style={{ display: 'inline-flex', position: 'relative' }}
@@ -153,7 +153,7 @@ export default function Tagline({
                   textShadow,
                   transform: 'translateZ(20px)',
                   position: 'relative',
-                  fontFamily: 'var(--font-body)',
+                  fontFamily: 'var(--font-synonym), monospace',
                   fontWeight: 300,
                   minWidth: '0.6em',
                   textAlign: 'center',
