@@ -138,7 +138,7 @@ export default function Tagline({
             </span>
           </span>
 
-          {/* Counter numbers - uses Synonym font, targetable by CounterAnimation */}
+          {/* Counter numbers + plus sign - uses Synonym font, targetable by CounterAnimation */}
           <span
             className="tagline-word counter-numbers-mobile"
             style={{ display: 'inline-flex', position: 'relative' }}
@@ -155,6 +155,7 @@ export default function Tagline({
                   position: 'relative',
                   fontFamily: 'var(--font-synonym), monospace',
                   fontWeight: 300,
+                  fontSize: 'calc(1em + 8px)',
                   minWidth: '0.6em',
                   textAlign: 'center',
                 }}
@@ -162,35 +163,46 @@ export default function Tagline({
                 {digit}
               </span>
             ))}
+            {/* Plus sign - no space, same enlarged size */}
+            <span
+              className="tagline-char neon-glow"
+              style={{
+                display: 'inline-block',
+                color: '#bfbdb0',
+                textShadow,
+                transform: 'translateZ(20px)',
+                position: 'relative',
+                fontSize: 'calc(1em + 8px)',
+              }}
+            >
+              +
+            </span>
           </span>
 
-          {/* Plus sign and "Agents" text */}
-          {'+ Agents'.split(' ').map((word, wordIndex) => (
-            <span
-              key={`suffix-${wordIndex}`}
-              className="tagline-word"
-              style={{ display: 'inline-flex', position: 'relative' }}
-            >
-              {word.split('').map((char, charIndex) => {
-                const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
-                return (
-                  <span
-                    key={charIndex}
-                    className="tagline-char neon-glow"
-                    style={{
-                      display: 'inline-block',
-                      color: '#bfbdb0',
-                      textShadow,
-                      transform: 'translateZ(20px)',
-                      position: 'relative',
-                    }}
-                  >
-                    {displayChar}
-                  </span>
-                );
-              })}
-            </span>
-          ))}
+          {/* "Agents" text only */}
+          <span
+            className="tagline-word"
+            style={{ display: 'inline-flex', position: 'relative' }}
+          >
+            {'Agents'.split('').map((char, charIndex) => {
+              const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
+              return (
+                <span
+                  key={`agents-${charIndex}`}
+                  className="tagline-char neon-glow"
+                  style={{
+                    display: 'inline-block',
+                    color: '#bfbdb0',
+                    textShadow,
+                    transform: 'translateZ(20px)',
+                    position: 'relative',
+                  }}
+                >
+                  {displayChar}
+                </span>
+              );
+            })}
+          </span>
         </span>
       )}
     </p>
