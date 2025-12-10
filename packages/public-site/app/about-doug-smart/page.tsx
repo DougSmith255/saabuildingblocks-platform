@@ -31,7 +31,7 @@ export default function AboutDougSmart() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+      <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
           <H1>DOUG SMART</H1>
           <Tagline className="mt-4">
