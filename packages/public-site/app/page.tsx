@@ -158,7 +158,7 @@ export default function Home() {
               >
                 SMART AGENT ALLIANCE
               </H1>
-              <Tagline className="hero-tagline-mobile-spacing">
+              <Tagline className="hero-tagline-mobile-spacing" showAgentCounter>
                 For Agents Who Want More
               </Tagline>
             </div>

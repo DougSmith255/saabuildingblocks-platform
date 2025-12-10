@@ -190,6 +190,26 @@ main > section:not(:first-child) {
   display: inline-flex;
 }
 
+/* Agent Counter - Responsive visibility */
+/* Mobile: show inline in tagline, hide floating counter */
+/* Desktop (xlg/1200px+): show floating counter, hide tagline suffix */
+.tagline-counter-suffix {
+  display: inline-flex;
+  gap: 0.5em;
+}
+
+@media (min-width: 1200px) {
+  .tagline-counter-suffix {
+    display: none;
+  }
+}
+
+@media (max-width: 1199px) {
+  .agent-counter-wrapper {
+    display: none !important;
+  }
+}
+
 /* ========================================
    FONT-FACE DECLARATIONS REMOVED
    ======================================== */

@@ -9,6 +9,8 @@ export interface TaglineProps {
   heroAnimate?: boolean;
   /** @deprecated Animation removed - using page-level settling mask instead */
   animationDelay?: string;
+  /** Optional counter suffix (e.g., "– 3,700+ Agents") - renders inline with same styling */
+  showAgentCounter?: boolean;
 }
 
 // Map specific characters to alternate glyphs (same as H2)
@@ -42,6 +44,7 @@ export default function Tagline({
   children,
   className = '',
   style = {},
+  showAgentCounter = false,
 }: TaglineProps) {
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
@@ -112,6 +115,84 @@ export default function Tagline({
           })}
         </span>
       ))}
+
+      {/* Agent Counter Suffix - inline with tagline (mobile only via CSS) */}
+      {showAgentCounter && (
+        <span className="tagline-counter-suffix">
+          {/* En-dash separator */}
+          <span
+            className="tagline-word"
+            style={{ display: 'inline-flex', position: 'relative' }}
+          >
+            <span
+              className="tagline-char neon-glow"
+              style={{
+                display: 'inline-block',
+                color: '#bfbdb0',
+                textShadow,
+                transform: 'translateZ(20px)',
+                position: 'relative',
+              }}
+            >
+              –
+            </span>
+          </span>
+
+          {/* Counter numbers - uses body font, targetable by CounterAnimation */}
+          <span
+            className="tagline-word counter-numbers-mobile"
+            style={{ display: 'inline-flex', position: 'relative' }}
+          >
+            {['3', '7', '0', '0'].map((digit, i) => (
+              <span
+                key={i}
+                className="counter-digit"
+                style={{
+                  display: 'inline-block',
+                  color: '#bfbdb0',
+                  textShadow,
+                  transform: 'translateZ(20px)',
+                  position: 'relative',
+                  fontFamily: 'var(--font-body)',
+                  fontWeight: 300,
+                  minWidth: '0.6em',
+                  textAlign: 'center',
+                }}
+              >
+                {digit}
+              </span>
+            ))}
+          </span>
+
+          {/* Plus sign and "Agents" text */}
+          {'+ Agents'.split(' ').map((word, wordIndex) => (
+            <span
+              key={`suffix-${wordIndex}`}
+              className="tagline-word"
+              style={{ display: 'inline-flex', position: 'relative' }}
+            >
+              {word.split('').map((char, charIndex) => {
+                const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
+                return (
+                  <span
+                    key={charIndex}
+                    className="tagline-char neon-glow"
+                    style={{
+                      display: 'inline-block',
+                      color: '#bfbdb0',
+                      textShadow,
+                      transform: 'translateZ(20px)',
+                      position: 'relative',
+                    }}
+                  >
+                    {displayChar}
+                  </span>
+                );
+              })}
+            </span>
+          ))}
+        </span>
+      )}
     </p>
   );
 }

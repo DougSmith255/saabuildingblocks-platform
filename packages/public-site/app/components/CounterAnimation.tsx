@@ -21,7 +21,9 @@ export function CounterAnimation() {
 
   useEffect(() => {
     // Find the counter element and individual digit spans
-    const counterElement = document.querySelector('.counter-numbers');
+    // Try desktop counter first, then mobile counter in tagline
+    const counterElement = document.querySelector('.counter-numbers') ||
+                           document.querySelector('.counter-numbers-mobile');
     if (!counterElement) return;
 
     const digitElements = counterElement.querySelectorAll('.counter-digit');
