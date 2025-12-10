@@ -4,10 +4,6 @@ import { StaticCounter } from './components/StaticCounter';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
-// Sections only load when user scrolls near them (200px before viewport)
-// This reduces initial bundle size and improves LCP significantly
-
-// Below-fold sections - lazy loaded with skeleton placeholders
 const ValueStack = dynamic(
   () => import('./components/sections/ValueStack').then(mod => ({ default: mod.ValueStack })),
   { loading: () => <SectionSkeleton height={600} /> }
@@ -33,9 +29,6 @@ const PathSelectorWithContent = dynamic(
   { loading: () => <SectionSkeleton height={800} /> }
 );
 
-// PERFORMANCE OPTIMIZATION: Lazy-load JavaScript animations
-// CSS animations work immediately, JavaScript enhancements load after
-
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -45,29 +38,31 @@ const CounterAnimation = dynamic(
  * Homepage - Server Component with Static Content
  *
  * HERO LAYOUT: CSS Grid for zero-flash positioning
- * - Profile image and H1/content positioned via CSS only
- * - No JavaScript calculations needed
- * - Image aspect ratio (900:500 = 1.8:1) used for height calculation
+ * - Image container divided into 75%/25% rows
+ * - H1 starts at row 2 (75% point of image)
+ * - Both image and H1 container share same grid, ensuring alignment
  */
 export default function Home() {
   return (
     <main id="main-content">
-      {/* Hero Section - CSS Grid layout for image + text positioning */}
+      {/* Hero Section */}
       <section
-        className="relative min-h-[100dvh] px-4 sm:px-8 md:px-12"
+        className="relative min-h-[100dvh] w-full"
         aria-label="Hero"
         style={{
-          display: 'grid',
-          gridTemplateRows: '1fr',
-          gridTemplateColumns: '1fr',
+          maxWidth: '1900px',
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyItems: 'center',
+          justifyContent: 'center',
+          padding: '8dvh 1rem clamp(20px, 5dvh, 60px)',
         }}
       >
         {/* Static Counter - positioned absolutely */}
         <StaticCounter />
 
-        {/* Wolf Pack Background Image - uses <img> tag for LCP detection */}
+        {/* Wolf Pack Background Image */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
           <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
             <img
@@ -93,43 +88,46 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Hero Content Grid - Image + Text stacked in same grid cell */}
-        {/* All items in row 1, col 1 - they overlap and position themselves */}
+        {/* Image + H1 Grid Container */}
+        {/* The image container is split 75%/25%, H1 starts at the 75% mark */}
         <div
-          className="w-full max-w-[900px] pointer-events-none"
           style={{
-            gridRow: '1',
-            gridColumn: '1',
             display: 'grid',
             gridTemplateColumns: '1fr',
-            gridTemplateRows: 'auto auto',
+            // Single row - image and H1 overlap
+            gridTemplateRows: '1fr',
+            width: '100%',
+            maxWidth: '1900px',
+            alignItems: 'center',
             justifyItems: 'center',
-            width: 'clamp(400px, 47.37vw, 900px)',
-            minWidth: '300px',
           }}
         >
-          {/* Doug and Karrie Image Container */}
+          {/* Image Container with internal 75/25 split */}
           <div
-            className="relative w-full z-[1]"
+            className="relative pointer-events-none z-[1]"
             style={{
               gridRow: '1',
               gridColumn: '1',
-              // Image aspect ratio 900:500 = 1.8:1
-              // Height = width / 1.8, but we use aspect-ratio for responsiveness
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+              gridTemplateRows: '75% 25%',
+              width: 'clamp(400px, 47.37vw, 900px)',
+              maxWidth: '95vw',
               aspectRatio: '900 / 500',
               maxHeight: '70dvh',
             }}
           >
-            {/* Space cloud/mist backdrop */}
+            {/* Space cloud/mist backdrop - spans full image */}
             <div
               className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
+                gridRow: '1 / -1',
                 top: '0',
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
             />
-            {/* Main image - Cloudflare Images with responsive variants */}
+            {/* Main image - spans full container */}
             <img
               src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/doug-and-karrie-co-founders/desktop"
               srcSet="
@@ -144,51 +142,62 @@ export default function Home() {
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="hero-3d-image profile-image w-full h-full object-contain"
+              className="hero-3d-image profile-image object-contain"
               style={{
+                gridRow: '1 / -1',
+                gridColumn: '1',
+                width: '100%',
+                height: '100%',
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
               }}
             />
-          </div>
 
-          {/* H1, Tagline, and Buttons - positioned to overlap bottom 25% of image */}
-          <div
-            className="w-[95%] max-w-[1200px] space-y-6 text-center pointer-events-auto z-[2]"
-            style={{
-              gridRow: '1',
-              gridColumn: '1',
-              alignSelf: 'end',
-              // Pull up into the image area - overlap bottom ~25% of image
-              // Using negative margin to overlap with the image above
-              marginTop: '-15%',
-              paddingBottom: 'clamp(20px, 5dvh, 60px)',
-            }}
-          >
-            {/* Headline Group */}
-            <div className="space-y-4" style={{ perspective: '1000px' }}>
-              <H1
-                id="hero-heading"
+            {/* H1 anchor - positioned at row 2 (75% down the image) */}
+            {/* This element is inside the image's grid so it's relative to image height */}
+            <div
+              id="h1-anchor"
+              style={{
+                gridRow: '2',
+                gridColumn: '1',
+                width: '100%',
+                height: '0',
+                position: 'relative',
+              }}
+            >
+              {/* H1 content positioned absolutely from this anchor */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 w-[95vw] max-w-[1900px] px-4 sm:px-8 md:px-12 text-center pointer-events-auto z-[2]"
                 style={{
-                  fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
+                  top: '0',
                 }}
               >
-                SMART AGENT ALLIANCE
-              </H1>
-              <Tagline className="hero-tagline-mobile-spacing">
-                For Agents Who Want More
-              </Tagline>
-            </div>
+                {/* Headline Group */}
+                <div className="space-y-4" style={{ perspective: '1000px' }}>
+                  <H1
+                    id="hero-heading"
+                    style={{
+                      fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
+                    }}
+                  >
+                    SMART AGENT ALLIANCE
+                  </H1>
+                  <Tagline className="hero-tagline-mobile-spacing">
+                    For Agents Who Want More
+                  </Tagline>
+                </div>
 
-            {/* CTA Button Group */}
-            <div className="flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center">
-              <CTAButton href="/join-exp-sponsor-team/">
-                JOIN THE ALLIANCE
-              </CTAButton>
-              <CTAButton href="/exp-realty-sponsor/">
-                LEARN MORE
-              </CTAButton>
+                {/* CTA Button Group */}
+                <div className="flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center mt-6">
+                  <CTAButton href="/join-exp-sponsor-team/">
+                    JOIN THE ALLIANCE
+                  </CTAButton>
+                  <CTAButton href="/exp-realty-sponsor/">
+                    LEARN MORE
+                  </CTAButton>
+                </div>
+              </div>
             </div>
           </div>
         </div>
