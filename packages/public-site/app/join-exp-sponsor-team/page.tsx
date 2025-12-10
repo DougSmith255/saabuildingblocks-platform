@@ -63,22 +63,22 @@ export default function JoinExpSponsorTeam() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>JOIN OUR EXP REALTY SPONSOR TEAM</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>JOIN THE WOLF PACK</H1>
           <Tagline className="mt-4">
-            Reach out, we'd love to answer all your questions and talk to you about joining our value-packed, record-breaking group.
+            Book a call. Ask your questions. See if Smart Agent Alliance is the right fit for your goals.
           </Tagline>
         </div>
       </section>
 
       {/* Contact Cards Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
             <H2>Meet Your Future Sponsors</H2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-[900px] mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-[1900px] mx-auto">
             {/* Karrie Hill Card */}
             <GenericCard padding="lg" centered>
               <ProfileCyberFrame size="lg" index={1}>
@@ -91,10 +91,10 @@ export default function JoinExpSponsorTeam() {
                 />
               </ProfileCyberFrame>
               <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Karrie Hill</h3>
-              <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
+              <p className="text-[#ffd700] mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-[#dcdbd5]">
                 <p>
-                  <a href="mailto:karrie.hill@exprealty.com" className="hover:text-amber-400 transition-colors">
+                  <a href="mailto:karrie.hill@exprealty.com" className="hover:text-[#ffd700] transition-colors">
                     karrie.hill@exprealty.com
                   </a>
                 </p>
@@ -114,10 +114,10 @@ export default function JoinExpSponsorTeam() {
                 />
               </ProfileCyberFrame>
               <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Doug Smart</h3>
-              <p className="text-amber-400 mb-4">Co-Founder, Smart Agent Alliance</p>
+              <p className="text-[#ffd700] mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-[#dcdbd5]">
                 <p>
-                  <a href="mailto:doug@smartagentalliance.com" className="hover:text-amber-400 transition-colors">
+                  <a href="mailto:doug@smartagentalliance.com" className="hover:text-[#ffd700] transition-colors">
                     doug@smartagentalliance.com
                   </a>
                 </p>
@@ -137,26 +137,26 @@ export default function JoinExpSponsorTeam() {
       {/* Why Join Section - Lazy loaded */}
       <LazySection height={400}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Why Join The Wolf Pack?</H2>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <CyberCard padding="md">
-                <div className="text-4xl mb-4 text-amber-400">2,900+</div>
+                <div className="text-4xl mb-4 text-[#ffd700]">2,900+</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
                 <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
               </CyberCard>
 
               <CyberCard padding="md">
-                <div className="text-4xl mb-4 text-amber-400">100%</div>
+                <div className="text-4xl mb-4 text-[#ffd700]">100%</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
                 <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
               </CyberCard>
 
               <CyberCard padding="md">
-                <div className="text-4xl mb-4 text-amber-400">#1</div>
+                <div className="text-4xl mb-4 text-[#ffd700]">#1</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
                 <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
               </CyberCard>
@@ -168,7 +168,7 @@ export default function JoinExpSponsorTeam() {
       {/* FAQ Section - Lazy loaded */}
       <LazySection height={800}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Frequently Asked Questions</H2>
             </div>
@@ -180,7 +180,7 @@ export default function JoinExpSponsorTeam() {
       {/* CTA Section - Lazy loaded */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
+          <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Take the Next Step?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
               Join the Smart Agent Alliance team at eXp Realty and start your journey towards a more successful real estate career.

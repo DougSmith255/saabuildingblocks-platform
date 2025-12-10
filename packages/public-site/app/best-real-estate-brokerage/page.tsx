@@ -46,29 +46,32 @@ export default function BestRealEstateBrokerage() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>BROKERAGE COMPARISONS</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>KNOW THE NUMBERS</H1>
           <Tagline className="mt-4">
-            Find the best real estate brokerage for your career. Compare commission structures, fees, technology, and wealth-building opportunities.
+            Compare commissions, fees, technology, and wealth-building opportunities. Make the right move.
           </Tagline>
         </div>
       </section>
 
       {/* Comparison Cards */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
-            <H2>Choose a Comparison</H2>
+            <H2>Pick Your Battle</H2>
+            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              See how eXp stacks up against the competition.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
             {comparisons.map((comparison, index) => (
               <a key={index} href={comparison.href} className="block group">
                 <GenericCard hover padding="lg" className="h-full">
-                  <div className="text-amber-400 text-sm font-medium mb-2">{comparison.highlight}</div>
+                  <div className="text-[#ffd700] text-sm font-medium mb-2">{comparison.highlight}</div>
                   <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{comparison.title}</h3>
                   <p className="text-[#dcdbd5]/80 mb-4">{comparison.description}</p>
-                  <span className="text-amber-400 group-hover:underline">View Comparison →</span>
+                  <span className="text-[#ffd700] group-hover:underline">View Comparison →</span>
                 </GenericCard>
               </a>
             ))}
@@ -79,12 +82,11 @@ export default function BestRealEstateBrokerage() {
       {/* Why Compare Section */}
       <LazySection height={400}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>What to Consider</H2>
+              <H2>What Actually Matters</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Choosing a brokerage is one of the most important decisions in your real estate career.
-                Here's what matters most.
+                Your brokerage choice impacts your income for years. Focus on these.
               </p>
             </div>
 
@@ -103,26 +105,29 @@ export default function BestRealEstateBrokerage() {
       {/* eXp Highlights */}
       <LazySection height={350}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Why Agents Choose eXp</H2>
+              <H2>The eXp Edge</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                The numbers speak for themselves.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 text-center">
               <CyberCard padding="md">
-                <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
+                <div className="text-4xl font-bold text-[#ffd700] mb-2">100%</div>
                 <p className="text-[#dcdbd5]">Commission After Cap</p>
                 <p className="text-[#dcdbd5]/60 text-sm mt-1">Cap at just $16,000</p>
               </CyberCard>
 
               <CyberCard padding="md">
-                <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
+                <div className="text-4xl font-bold text-[#ffd700] mb-2">$85</div>
                 <p className="text-[#dcdbd5]">Monthly Fee</p>
                 <p className="text-[#dcdbd5]/60 text-sm mt-1">No desk or franchise fees</p>
               </CyberCard>
 
               <CyberCard padding="md">
-                <div className="text-4xl font-bold text-amber-400 mb-2">4</div>
+                <div className="text-4xl font-bold text-[#ffd700] mb-2">4</div>
                 <p className="text-[#dcdbd5]">Income Streams</p>
                 <p className="text-[#dcdbd5]/60 text-sm mt-1">Commission, stock, rev share, referrals</p>
               </CyberCard>
@@ -134,10 +139,10 @@ export default function BestRealEstateBrokerage() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Ready to Make a Change?</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Ready to Make the Move?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Join the Wolf Pack and get access to all the resources, training, and support you need to succeed at eXp.
+              Stop leaving money on the table. Join the Wolf Pack.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

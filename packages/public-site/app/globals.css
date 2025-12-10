@@ -191,20 +191,20 @@ main > section:not(:first-child) {
 }
 
 /* Agent Counter - Responsive visibility */
-/* Mobile: show inline in tagline, hide floating counter */
-/* Desktop (xlg/1200px+): show floating counter, hide tagline suffix */
+/* Small screens (<500px): show inline in tagline, hide floating counter */
+/* Larger screens (500px+): show floating counter, hide tagline suffix */
 .tagline-counter-suffix {
   display: inline-flex;
   gap: 0.5em;
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 500px) {
   .tagline-counter-suffix {
     display: none;
   }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 499px) {
   .agent-counter-wrapper {
     display: none !important;
   }

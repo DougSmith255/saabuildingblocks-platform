@@ -12,17 +12,17 @@ export default function ShouldYouJoinExp() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>SHOULD YOU JOIN EXP?</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>IS EXP RIGHT FOR YOU?</H1>
           <Tagline className="mt-4">
-            Take this 5-minute quiz to find out if eXp Realty is a good fit for you
+            5-minute quiz. Honest answers. Find out if eXp matches your goals.
           </Tagline>
         </div>
       </section>
 
       {/* Quiz Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="rounded-xl border border-white/10 overflow-hidden">
             <div className="aspect-[4/3] min-h-[500px]">
               <iframe
@@ -47,9 +47,12 @@ export default function ShouldYouJoinExp() {
       {/* Video Section */}
       <LazySection height={500}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Learn More About eXp</H2>
+              <H2>See It In Action</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Hear directly from agents who made the move.
+              </p>
             </div>
 
             <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
@@ -71,9 +74,12 @@ export default function ShouldYouJoinExp() {
       {/* Why eXp Section */}
       <LazySection height={500}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Why Agents Choose eXp</H2>
+              <H2>The eXp Advantage</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                What makes agents switch—and stay.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
@@ -120,10 +126,10 @@ export default function ShouldYouJoinExp() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Ready to Learn More?</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Ready to Explore?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Connect with our team to get all your questions answered.
+              Talk to us. No pressure. Just answers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

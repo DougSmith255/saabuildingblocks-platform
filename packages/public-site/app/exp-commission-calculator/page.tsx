@@ -24,9 +24,9 @@ export default function ExpCommissionCalculator() {
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>EXP COMMISSION & FEES CALCULATOR</H1>
+          <H1>KNOW YOUR NUMBERS</H1>
           <Tagline className="mt-4">
-            Calculate your net commission with eXp Realty's transparent fee structure
+            Calculate your net commission with eXp's transparent fee structure. No surprises.
           </Tagline>
         </div>
       </section>

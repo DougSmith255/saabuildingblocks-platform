@@ -12,10 +12,10 @@ export default function OnlineBrokerageComparison() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>ONLINE BROKERAGE COMPARISON</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>CLOUD VS CLOUD</H1>
           <Tagline className="mt-4">
-            Comparing eXp Realty, Real Broker, LPT Realty, and Fathom Realty
+            eXp Realty vs Real Broker vs LPT Realty vs Fathom. The data tells the story.
           </Tagline>
           <div className="flex flex-wrap gap-4 justify-center mt-8">
             <a href="#comparison-chart" className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors">
@@ -33,11 +33,11 @@ export default function OnlineBrokerageComparison() {
 
       {/* Comparison Chart Section */}
       <section id="comparison-chart" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1400px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
-            <H2>Who Comes Out on Top?</H2>
+            <H2>The Full Breakdown</H2>
             <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Comparing Financial Strength, Agent Earnings, Agent Fees, and Support for online real estate brokerages
+              Financial strength. Agent earnings. Fees. Support. Every metric that matters.
             </p>
           </div>
 
@@ -66,11 +66,11 @@ export default function OnlineBrokerageComparison() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-black/50 text-gold-500">
-                  <th className="p-4 text-left text-amber-400 font-bold">Cloud Based Brokerage</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">eXp Realty</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">Real Broker</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">LPT Realty</th>
-                  <th className="p-4 text-left text-amber-400 font-bold">Fathom Realty</th>
+                  <th className="p-4 text-left text-[#ffd700] font-bold">Cloud Based Brokerage</th>
+                  <th className="p-4 text-left text-[#ffd700] font-bold">eXp Realty</th>
+                  <th className="p-4 text-left text-[#ffd700] font-bold">Real Broker</th>
+                  <th className="p-4 text-left text-[#ffd700] font-bold">LPT Realty</th>
+                  <th className="p-4 text-left text-[#ffd700] font-bold">Fathom Realty</th>
                 </tr>
               </thead>
               <tbody className="text-[#dcdbd5]">
@@ -194,11 +194,11 @@ export default function OnlineBrokerageComparison() {
       {/* Revenue Share Comparison */}
       <LazySection height={500}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1400px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Who Has Better Long Term Benefits?</H2>
+              <H2>Long-Term Wealth Building</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Revenue share is a big player when it comes to long term benefits for online real estate brokerages
+                Revenue share determines your passive income potential. The differences are massive.
               </p>
             </div>
 
@@ -206,11 +206,11 @@ export default function OnlineBrokerageComparison() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-black/50">
-                    <th className="p-4 text-left text-amber-400 font-bold">Rev Share MLM Brokerages</th>
-                    <th className="p-4 text-left text-amber-400 font-bold">eXp Realty</th>
-                    <th className="p-4 text-left text-amber-400 font-bold">Real Broker</th>
-                    <th className="p-4 text-left text-amber-400 font-bold">LPT Realty</th>
-                    <th className="p-4 text-left text-amber-400 font-bold">Fathom</th>
+                    <th className="p-4 text-left text-[#ffd700] font-bold">Rev Share MLM Brokerages</th>
+                    <th className="p-4 text-left text-[#ffd700] font-bold">eXp Realty</th>
+                    <th className="p-4 text-left text-[#ffd700] font-bold">Real Broker</th>
+                    <th className="p-4 text-left text-[#ffd700] font-bold">LPT Realty</th>
+                    <th className="p-4 text-left text-[#ffd700] font-bold">Fathom</th>
                   </tr>
                 </thead>
                 <tbody className="text-[#dcdbd5]">
@@ -266,7 +266,7 @@ export default function OnlineBrokerageComparison() {
       {/* Detailed Analysis Section */}
       <LazySection height={800}>
         <section id="detailed-analysis" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1000px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Detailed Analysis</H2>
             </div>
@@ -308,7 +308,7 @@ export default function OnlineBrokerageComparison() {
       {/* FAQ Section */}
       <LazySection height={600}>
         <section id="faq" className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Frequently Asked Questions</H2>
             </div>
@@ -345,10 +345,10 @@ export default function OnlineBrokerageComparison() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
+          <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Make the Move?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Join the Smart Agent Alliance team at eXp Realty and get access to exclusive training, tools, and support.
+              Stop leaving money on the table. Join the Wolf Pack at eXp.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

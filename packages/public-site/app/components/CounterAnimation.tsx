@@ -22,8 +22,8 @@ export function CounterAnimation() {
   useEffect(() => {
     // Find the VISIBLE counter element and individual digit spans
     // Check which counter is currently displayed (desktop vs mobile)
-    // Desktop: .agent-counter-wrapper is hidden on mobile (<1200px)
-    // Mobile: .tagline-counter-suffix is hidden on desktop (>=1200px)
+    // Desktop/tablet (500px+): .agent-counter-wrapper is visible
+    // Mobile (<500px): .tagline-counter-suffix is visible, .agent-counter-wrapper is hidden
     const desktopWrapper = document.querySelector('.agent-counter-wrapper');
     const mobileWrapper = document.querySelector('.tagline-counter-suffix');
 

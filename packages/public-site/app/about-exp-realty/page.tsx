@@ -1,96 +1,89 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * About eXp Realty Page
  * Overview of eXp Realty's features, benefits, and business model
+ * Brand tone: awe-inspiring, futuristic, direct
  */
 export default function AboutExpRealty() {
   const keyFeatures = [
     {
       title: "Commission Structure",
-      description: "Start at 80/20 split, cap at $16,000 paid to eXp, then earn 100%. ICON agents can receive the $16K back in company stock.",
-      icon: "💰"
+      description: "80/20 split until you cap at $16,000. Then 100% commission. ICON agents get the $16K back in stock."
     },
     {
-      title: "$85/Month",
-      description: "Covers all services - no desk fees, franchise fees, or royalty fees.",
-      icon: "📋"
+      title: "$85/Month Flat",
+      description: "No desk fees. No franchise fees. No royalty fees. Just $85/month covers everything."
     },
     {
-      title: "CRM & Website",
-      description: "Full CRM with IDX website and automated marketing included.",
-      icon: "🌐"
+      title: "Full Tech Stack",
+      description: "kvCORE CRM, IDX website, automated marketing, transaction management—all included."
     },
     {
       title: "Lead Generation",
-      description: "Access to lead generation tools and partnerships.",
-      icon: "🎯"
+      description: "Access to Opcity, Referral Exchange, and other lead generation partnerships."
     },
     {
-      title: "4,000+ Offices",
-      description: "Access to Regus office locations worldwide.",
-      icon: "🏢"
+      title: "4,000+ Regus Offices",
+      description: "Professional office space worldwide when you need to meet clients face-to-face."
     },
     {
-      title: "2,000+ Staff",
-      description: "Salaried support staff ready to help you succeed.",
-      icon: "👥"
+      title: "2,000+ Support Staff",
+      description: "Salaried employees dedicated to agent success—not competing against you."
     },
     {
       title: "50+ Weekly Trainings",
-      description: "Live training sessions in eXp World metaverse.",
-      icon: "📚"
+      description: "Live sessions in eXp World covering production, marketing, mindset, and more."
     },
     {
-      title: "Personal Branding",
-      description: "Full flexibility to build your own brand.",
-      icon: "✨"
+      title: "Your Brand, Your Way",
+      description: "Full flexibility to build your personal brand. No mandatory brokerage branding."
     }
   ];
 
   const incomeStreams = [
-    { title: "Production Commissions", description: "Earn up to 100% on your deals" },
-    { title: "Stock Awards", description: "Receive company stock for milestones" },
-    { title: "Revenue Share", description: "7-tier system for passive income" },
-    { title: "Referral Income", description: "Earn from agent referrals" }
+    { title: "Commission", description: "Up to 100% on every deal after cap", number: "1" },
+    { title: "Stock Awards", description: "Earn EXPI stock for milestones and production", number: "2" },
+    { title: "Revenue Share", description: "7-tier passive income from agents you attract", number: "3" },
+    { title: "Referrals", description: "25% referral fee for sending business to other agents", number: "4" }
   ];
 
   return (
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
+        <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>ABOUT EXP REALTY</H1>
           <Tagline className="mt-4">
-            The fastest growing brokerage on the planet
+            The cloud-based brokerage that redefined real estate. 89,000+ agents. 24+ countries. One platform.
           </Tagline>
         </div>
       </section>
 
       {/* Stats Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <CyberCard padding="md">
-              <div className="text-4xl font-bold text-amber-400 mb-2">89,000+</div>
+              <div className="text-4xl font-bold text-[#ffd700] mb-2">89,000+</div>
               <p className="text-[#dcdbd5]">Agents Worldwide</p>
             </CyberCard>
 
             <CyberCard padding="md">
-              <div className="text-4xl font-bold text-amber-400 mb-2">24+</div>
+              <div className="text-4xl font-bold text-[#ffd700] mb-2">24+</div>
               <p className="text-[#dcdbd5]">Countries</p>
             </CyberCard>
 
             <CyberCard padding="md">
-              <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
+              <div className="text-4xl font-bold text-[#ffd700] mb-2">100%</div>
               <p className="text-[#dcdbd5]">Commission After Cap</p>
             </CyberCard>
 
             <CyberCard padding="md">
-              <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
+              <div className="text-4xl font-bold text-[#ffd700] mb-2">$85</div>
               <p className="text-[#dcdbd5]">Per Month</p>
             </CyberCard>
           </div>
@@ -100,18 +93,17 @@ export default function AboutExpRealty() {
       {/* Key Features Grid - Lazy loaded */}
       <LazySection height={500}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>What eXp Provides</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Everything you need to build a successful real estate business, all included.
+                Everything you need to dominate your market. All included in your $85/month.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {keyFeatures.map((feature, index) => (
-                <GenericCard key={index} padding="md" hover>
-                  <div className="text-3xl mb-3">{feature.icon}</div>
+                <GenericCard key={index} padding="md" hover className="h-full">
                   <h3 className="text-[#e5e4dd] font-semibold text-lg mb-2">{feature.title}</h3>
                   <p className="text-[#dcdbd5]/80 text-sm">{feature.description}</p>
                 </GenericCard>
@@ -124,20 +116,20 @@ export default function AboutExpRealty() {
       {/* Income Streams - Lazy loaded */}
       <LazySection height={400}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>4 Income Streams</H2>
+              <H2>4 Ways to Build Wealth</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Multiple ways to build wealth as an eXp agent.
+                Most brokerages offer one income stream. eXp offers four.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {incomeStreams.map((stream, index) => (
-                <GenericCard key={index} padding="md" centered>
-                  <div className="text-5xl font-bold text-amber-400/20 mb-2">{index + 1}</div>
+                <GenericCard key={index} padding="md" centered className="h-full">
+                  <div className="text-5xl font-bold text-[#ffd700]/20 mb-2">{stream.number}</div>
                   <h3 className="text-[#e5e4dd] font-semibold text-xl mb-2">{stream.title}</h3>
-                  <p className="text-[#dcdbd5]/80">{stream.description}</p>
+                  <p className="text-[#dcdbd5]/80 text-sm">{stream.description}</p>
                 </GenericCard>
               ))}
             </div>
@@ -148,42 +140,49 @@ export default function AboutExpRealty() {
       {/* Revenue Share Section - Lazy loaded */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto text-center">
-            <H2>Revenue Share Program</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
-              eXp's 7-tier revenue share program can generate significant passive income -
-              potentially <strong className="text-amber-400">$94,000+ per year</strong> in additional earnings.
-              This income can continue even after you leave the company and can be willed to your loved ones.
-            </p>
-            <CTAButton href="/exp-realty-revenue-share-calculator/">
-              Calculate Your Potential
-            </CTAButton>
+          <div className="max-w-[1900px] mx-auto">
+            <CyberCardGold padding="lg">
+              <div className="text-center">
+                <NeonGoldText as="h3" className="text-2xl mb-4">Revenue Share Program</NeonGoldText>
+                <p className="text-[#dcdbd5] mb-4">
+                  eXp's 7-tier revenue share program generates passive income that can continue
+                  even after you leave the company—and can be willed to your loved ones.
+                </p>
+                <p className="text-[#dcdbd5] mb-6">
+                  Potential: <strong className="text-[#ffd700]">$94,000+ per year</strong> in additional earnings.
+                </p>
+                <CTAButton href="/exp-realty-revenue-share-calculator/">
+                  Calculate Your Potential
+                </CTAButton>
+              </div>
+            </CyberCardGold>
           </div>
         </section>
       </LazySection>
 
-      {/* Additional Benefits - Lazy loaded */}
+      {/* Specialized Divisions - Lazy loaded */}
       <LazySection height={350}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Additional Benefits</H2>
+              <H2>Specialized Divisions</H2>
+              <p className="text-[#dcdbd5] mt-4">Expand into new markets with eXp's specialized programs</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              <GenericCard padding="md">
+              <GenericCard padding="md" hover>
                 <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Commercial</h3>
-                <p className="text-[#dcdbd5]/80">Access to commercial real estate division for expanded opportunities.</p>
+                <p className="text-[#dcdbd5]/80">Access commercial real estate training, resources, and a network of commercial agents.</p>
               </GenericCard>
 
-              <GenericCard padding="md">
+              <GenericCard padding="md" hover>
                 <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">eXp Luxury</h3>
-                <p className="text-[#dcdbd5]/80">Specialized luxury division for high-end properties and clients.</p>
+                <p className="text-[#dcdbd5]/80">Specialized marketing, training, and branding for high-end properties and clients.</p>
               </GenericCard>
 
-              <GenericCard padding="md">
-                <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">Healthcare Options</h3>
-                <p className="text-[#dcdbd5]/80">Access to Clearwater Healthcare benefits for you and your family.</p>
+              <GenericCard padding="md" hover>
+                <h3 className="text-[#e5e4dd] font-semibold text-xl mb-3">Healthcare Benefits</h3>
+                <p className="text-[#dcdbd5]/80">Access to Clearwater Healthcare for you and your family—a rarity in real estate.</p>
               </GenericCard>
             </div>
           </div>
@@ -193,17 +192,17 @@ export default function AboutExpRealty() {
       {/* CTA Section - Lazy loaded */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Ready to Learn More?</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Ready to Make the Switch?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Discover why thousands of agents are joining eXp Realty every month.
+              Join Smart Agent Alliance and get access to additional training, systems, and support on top of everything eXp provides.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
                 Join The Wolf Pack
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">
-                See Our Team Value
+                See What We Offer
               </CTAButton>
             </div>
           </div>

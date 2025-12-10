@@ -74,21 +74,21 @@ export default function OurExpTeam() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>ABOUT US</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>YOUR UPLINE</H1>
           <Tagline className="mt-4">
-            7 Layers of Support - Your eXp Realty Upline
+            7 layers of mentorship, support, and proven expertise backing every agent who joins Smart Agent Alliance
           </Tagline>
         </div>
       </section>
 
       {/* Co-Founders Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
-            <H2>Smart Agent Alliance Co-Founders</H2>
+            <H2>Your Direct Mentors</H2>
             <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-              Your first two points of contact. We focus on community, systems, training, and helping you grow as an agent.
+              Your first two points of contact. We built the systems, run the community, and are personally invested in your success.
             </p>
           </div>
 
@@ -101,7 +101,7 @@ export default function OurExpTeam() {
                 <div className="lg:w-1/3 flex justify-center">
                   <div className="relative">
                     {/* Tier Badge */}
-                    <div className="absolute -top-3 -left-3 z-10 w-10 h-10 rounded-full bg-amber-400 flex items-center justify-center shadow-lg">
+                    <div className="absolute -top-3 -left-3 z-10 w-10 h-10 rounded-full bg-[#ffd700] flex items-center justify-center shadow-lg">
                       <span className="text-black font-bold text-lg">{founder.tier}</span>
                     </div>
                     <ProfileCyberFrame size="xl" index={index}>
@@ -117,7 +117,7 @@ export default function OurExpTeam() {
                 </div>
                 <div className="lg:w-2/3">
                   <h3 className="text-2xl font-bold text-[#e5e4dd] mb-1">{founder.name}</h3>
-                  <p className="text-amber-400 mb-4">{founder.title}</p>
+                  <p className="text-[#ffd700] mb-4">{founder.title}</p>
                   <div className="space-y-4 text-[#dcdbd5]">
                     {founder.bio.map((paragraph, pIndex) => (
                       <p key={pIndex}>{paragraph}</p>
@@ -133,20 +133,20 @@ export default function OurExpTeam() {
       {/* Upline Partners Section */}
       <LazySection height={800}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Your Extended Upline - The Wolf Pack</H2>
+              <H2>The Wolf Pack Leadership</H2>
               <p className="text-[#dcdbd5] mt-4">
-                As part of Smart Agent Alliance, you also gain access to the Wolf Pack's resources, training, and community.
+                Your extended upline. Access to their resources, training, and a community of 2,900+ agents across 24+ countries.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {uplinePartners.map((partner, index) => (
-                <GenericCard key={index} padding="md" centered>
+                <GenericCard key={index} padding="md" centered className="h-full">
                   <div className="relative inline-block">
                     {/* Tier Badge */}
-                    <div className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center shadow-lg">
+                    <div className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-[#ffd700] flex items-center justify-center shadow-lg">
                       <span className="text-black font-bold text-sm">{partner.tier}</span>
                     </div>
                     <ProfileCyberFrame size="md" index={index}>
@@ -171,7 +171,7 @@ export default function OurExpTeam() {
       {/* Revenue Share Callout */}
       <LazySection height={200}>
         <section className="relative py-12 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[700px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <CyberCardGold padding="lg">
               <NeonGoldText as="p" className="text-lg text-center mb-4">
                 Passive Income Potential
@@ -192,7 +192,7 @@ export default function OurExpTeam() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
+          <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Join Smart Agent Alliance?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
               Get 7 layers of support above you, plus access to all our systems, training, and community.

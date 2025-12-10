@@ -65,25 +65,28 @@ export default function Awards() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>AWARDS & RECOGNITION</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>INDUSTRY DOMINANCE</H1>
           <Tagline className="mt-4">
-            eXp Realty's excellence recognized by Forbes, Glassdoor, RealTrends, and industry leaders
+            Forbes. Glassdoor. RealTrends. The industry's biggest names recognize eXp's unstoppable rise.
           </Tagline>
         </div>
       </section>
 
       {/* Major Awards Grid */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
-            <H2>Major Awards</H2>
+            <H2>Major Recognition</H2>
+            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              Year after year, the industry's most respected rankings prove what we already know.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {majorAwards.map((award, index) => (
               <GenericCard key={index} padding="md">
-                <div className="text-amber-400 text-sm font-medium mb-2">{award.year}</div>
+                <div className="text-[#ffd700] text-sm font-medium mb-2">{award.year}</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{award.title}</h3>
                 <p className="text-[#dcdbd5]/80">{award.detail}</p>
               </GenericCard>
@@ -95,16 +98,19 @@ export default function Awards() {
       {/* RealTrends Section */}
       <LazySection height={350}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>RealTrends Recognition</H2>
+              <H2>RealTrends Dominance</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                The numbers don't lie. eXp leads where it matters.
+              </p>
             </div>
 
             <GenericCard padding="lg">
               <ul className="space-y-4">
                 {realTrendsAchievements.map((achievement, index) => (
                   <li key={index} className="flex items-start gap-4 text-[#dcdbd5]">
-                    <span className="text-amber-400 text-xl">✓</span>
+                    <span className="text-[#ffd700] text-xl">✓</span>
                     {achievement}
                   </li>
                 ))}
@@ -117,16 +123,19 @@ export default function Awards() {
       {/* Executive Recognition */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Executive Recognition</H2>
+              <H2>Leadership Excellence</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                eXp's executives setting the standard for the industry.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               {executiveRecognition.map((exec, index) => (
                 <GenericCard key={index} padding="md" centered>
                   <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{exec.name}</h3>
-                  <p className="text-amber-400 text-sm">{exec.award}</p>
+                  <p className="text-[#ffd700] text-sm">{exec.award}</p>
                 </GenericCard>
               ))}
             </div>
@@ -137,18 +146,18 @@ export default function Awards() {
       {/* Wolf Pack Awards */}
       <LazySection height={350}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Wolf Pack Recognition</H2>
+              <H2>Wolf Pack Supremacy</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Our sponsorship group's achievements within eXp Realty.
+                Inside eXp, the Wolf Pack leads the pack. Here's why agents stay.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               {wolfPackAwards.map((award, index) => (
                 <CyberCard key={index} padding="md">
-                  <h3 className="text-xl font-bold text-amber-400 mb-3">{award.title}</h3>
+                  <h3 className="text-xl font-bold text-[#ffd700] mb-3">{award.title}</h3>
                   <p className="text-[#dcdbd5]">{award.description}</p>
                 </CyberCard>
               ))}
@@ -160,10 +169,10 @@ export default function Awards() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Join an Award-Winning Brokerage</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Join the Industry Leader</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Be part of the industry's most recognized and fastest-growing real estate company.
+              The fastest-growing brokerage. The highest retention group. Your move.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

@@ -49,24 +49,24 @@ export default function ExpRealtySponsor() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
+        <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>THE WOLF PACK</H1>
           <Tagline className="mt-4">
-            Free Resources, Tools, Training, Support, & Community — No Extra Cost or Split Ever!
+            Free training, systems, and community that costs you nothing extra. No split increases. No hidden fees.
           </Tagline>
         </div>
       </section>
 
       {/* Intro Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto text-center">
+        <div className="max-w-[1900px] mx-auto text-center">
           <p className="text-[#dcdbd5] text-lg">
-            We partner with broker-owners, teams, top agents, growing agents, & brand-new agents.
-            We have <strong className="text-[#e5e4dd]">over 2,900</strong> agents located all over the US, Canada, Mexico, Australia, & more.
+            We partner with broker-owners, teams, top producers, growing agents, and brand-new licensees.
+            <strong className="text-[#ffd700]"> 2,900+ agents</strong> across the US, Canada, Mexico, Australia, and beyond.
           </p>
           <div className="mt-8">
             <CTAButton href="/join-exp-sponsor-team/">
-              Book a Call With Us Today
+              Book a Call Today
             </CTAButton>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function ExpRealtySponsor() {
       {/* Video Section - Lazy loaded */}
       <LazySection height={500}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="aspect-video rounded-xl overflow-hidden border border-white/10">
               <iframe
                 width="100%"
@@ -95,11 +95,11 @@ export default function ExpRealtySponsor() {
       {/* Value Stack Section - Lazy loaded */}
       <LazySection height={1200}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1400px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>What You Get With The Wolf Pack</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Check out the immediate value that the Wolf Pack will provide you! We can help change your life.
+                Immediate access to systems, training, and resources that would cost thousands elsewhere. All free when you join.
               </p>
             </div>
 
@@ -134,9 +134,10 @@ export default function ExpRealtySponsor() {
       {/* Features Grid - Lazy loaded */}
       <LazySection height={400}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Everything You Need to Succeed</H2>
+              <H2>The Full Arsenal</H2>
+              <p className="text-[#dcdbd5] mt-4">Every tool, strategy, and system you need to dominate your market</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -165,20 +166,20 @@ export default function ExpRealtySponsor() {
       {/* Stats Section - Lazy loaded */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <CyberCard padding="lg">
-                <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
+                <div className="text-5xl font-bold text-[#ffd700] mb-2">2,900+</div>
                 <p className="text-[#dcdbd5]">Agents Strong</p>
               </CyberCard>
 
               <CyberCard padding="lg">
-                <div className="text-5xl font-bold text-amber-400 mb-2">24+</div>
+                <div className="text-5xl font-bold text-[#ffd700] mb-2">24+</div>
                 <p className="text-[#dcdbd5]">Countries</p>
               </CyberCard>
 
               <CyberCard padding="lg">
-                <div className="text-5xl font-bold text-amber-400 mb-2">5</div>
+                <div className="text-5xl font-bold text-[#ffd700] mb-2">5</div>
                 <p className="text-[#dcdbd5]">Weekly Calls</p>
               </CyberCard>
             </div>
@@ -189,17 +190,17 @@ export default function ExpRealtySponsor() {
       {/* CTA Section - Lazy loaded */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Ready to Join The Pack?</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Ready to Run With The Pack?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Join our value-packed, record-breaking group and start your journey towards a more successful real estate career.
+              Stop going it alone. Join 2,900+ agents who have access to the training, systems, and support that accelerates success.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
                 Join The Wolf Pack
               </CTAButton>
               <CTAButton href="/about-exp-realty/">
-                Learn About eXp Realty
+                Learn About eXp
               </CTAButton>
             </div>
           </div>

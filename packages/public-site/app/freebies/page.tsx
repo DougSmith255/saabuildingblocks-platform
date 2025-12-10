@@ -52,21 +52,21 @@ export default function Freebies() {
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>FREEBIE DOWNLOADS</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>FREE RESOURCES</H1>
           <Tagline className="mt-4">
-            Free tools to help you grow your real estate business
+            Battle-tested tools to level up your real estate game. No strings. No catch.
           </Tagline>
         </div>
       </section>
 
       {/* Download All CTA - Premium gold card */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[600px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <CyberCardGold padding="lg">
-            <NeonGoldText as="h3" className="text-xl font-bold mb-4">Want Everything?</NeonGoldText>
+            <NeonGoldText as="h3" className="text-xl font-bold mb-4">Grab Everything</NeonGoldText>
             <p className="text-[#dcdbd5] mb-8 max-w-md mx-auto">
-              Download all 6 resources in one click and start building your real estate toolkit today.
+              All 6 resources in one download. Build your arsenal today.
             </p>
             <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
               DOWNLOAD ALL ASSETS
@@ -78,11 +78,11 @@ export default function Freebies() {
       {/* Freebies Grid */}
       <LazySection height={800}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Free Resources</H2>
+              <H2>Your Free Arsenal</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Each download is designed to help you succeed in your real estate business. Click any card to get your free copy.
+                Tools that actually move the needle. Click any card to grab your copy.
               </p>
             </div>
 
@@ -137,33 +137,33 @@ export default function Freebies() {
       {/* Why Free Section */}
       <LazySection height={350}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Why We Give These Away</H2>
+              <H2>Why Free?</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Because value creates trust. And trust builds partnerships.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              <GenericCard padding="md" className="text-center">
-                <div className="text-3xl mb-4">🎯</div>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Help Agents Succeed</h3>
+              <GenericCard padding="md" centered>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Lift the Industry</h3>
                 <p className="text-[#dcdbd5]/80 text-sm">
-                  We believe in lifting up the entire industry with practical tools that work.
+                  When agents succeed, everyone wins. These tools work.
                 </p>
               </GenericCard>
 
-              <GenericCard padding="md" className="text-center">
-                <div className="text-3xl mb-4">🤝</div>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Build Relationships</h3>
+              <GenericCard padding="md" centered>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Value First</h3>
                 <p className="text-[#dcdbd5]/80 text-sm">
-                  Great partnerships start with giving value first, no strings attached.
+                  Real partnerships start with giving, not asking.
                 </p>
               </GenericCard>
 
-              <GenericCard padding="md" className="text-center">
-                <div className="text-3xl mb-4">🚀</div>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Show Our Value</h3>
+              <GenericCard padding="md" centered>
+                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">This Is Just a Sample</h3>
                 <p className="text-[#dcdbd5]/80 text-sm">
-                  If our free stuff is this good, imagine what you get when you join the team.
+                  If the free stuff is this good, imagine what members get.
                 </p>
               </GenericCard>
             </div>
@@ -174,10 +174,10 @@ export default function Freebies() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Ready for More?</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Want the Full Arsenal?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              These freebies are just a taste. Join the Wolf Pack and get access to our full library of resources, training, and support.
+              These downloads are just a preview. Join the Wolf Pack for the complete library.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

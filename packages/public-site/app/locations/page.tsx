@@ -9,9 +9,9 @@ import { LazySection } from '@/components/shared/LazySection';
  */
 export default function Locations() {
   const stats = [
-    { value: "27+", label: "Countries" },
-    { value: "88,000+", label: "Agents Worldwide" },
-    { value: "10+", label: "Languages" }
+    { value: "24+", label: "Countries" },
+    { value: "89,000+", label: "Agents Worldwide" },
+    { value: "4,000+", label: "Regus Offices" }
   ];
 
   const regions = [
@@ -34,40 +34,40 @@ export default function Locations() {
   ];
 
   const agentBenefits = [
-    { title: "75/25 Split", description: "Starting commission split with path to 100%" },
-    { title: "CRM Tools", description: "Full CRM with portal access" },
-    { title: "Custom Website", description: "IDX-integrated personal website" },
-    { title: "24-Hour Payments", description: "Fast commission processing" },
-    { title: "Stock Equity", description: "Shares in publicly traded company" },
-    { title: "Global Referrals", description: "Earn from international referrals" }
+    { title: "80/20 Split → 100%", description: "Cap at $16K, then keep everything you earn" },
+    { title: "kvCORE CRM", description: "Full CRM, IDX website, and marketing automation included" },
+    { title: "$85/Month Flat", description: "No desk fees. No franchise fees. No royalty fees." },
+    { title: "ICON Program", description: "Hit production goals, get your $16K cap back in stock" },
+    { title: "Stock Equity", description: "Earn shares in a publicly traded company" },
+    { title: "Global Referrals", description: "25% referral fee from agents in 24+ countries" }
   ];
 
   const teamBenefits = [
-    { title: "Royalty-Free", description: "Own your brand without royalty fees" },
-    { title: "Portal Coverage", description: "Administrative costs covered" },
-    { title: "Support Staff", description: "Access to corporate support team" },
-    { title: "International Expansion", description: "Grow across 27+ countries" }
+    { title: "Zero Royalty Fees", description: "Build your brand without paying royalties" },
+    { title: "2,000+ Support Staff", description: "Salaried employees dedicated to your success" },
+    { title: "Cloud Infrastructure", description: "No brick-and-mortar overhead costs" },
+    { title: "International Expansion", description: "Grow your team across 24+ countries" }
   ];
 
   return (
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
-          <H1>EXP REALTY GLOBAL</H1>
+        <div className="max-w-[1900px] mx-auto w-full text-center">
+          <H1>GLOBAL PRESENCE</H1>
           <Tagline className="mt-4">
-            A truly borderless brokerage with agents across 27+ countries speaking 10+ languages
+            A borderless brokerage. 89,000+ agents. 24+ countries. One cloud-based platform.
           </Tagline>
         </div>
       </section>
 
       {/* Stats Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[900px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="grid md:grid-cols-3 gap-6 text-center">
             {stats.map((stat, index) => (
               <CyberCard key={index} padding="lg">
-                <div className="text-5xl font-bold text-amber-400 mb-2">{stat.value}</div>
+                <div className="text-5xl font-bold text-[#ffd700] mb-2">{stat.value}</div>
                 <p className="text-[#dcdbd5]">{stat.label}</p>
               </CyberCard>
             ))}
@@ -78,19 +78,22 @@ export default function Locations() {
       {/* Regions Section */}
       <LazySection height={400}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Where We Operate</H2>
+              <H2>Where eXp Operates</H2>
+              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+                Real estate without borders. Build your business anywhere on the planet.
+              </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {regions.map((region, index) => (
                 <GenericCard key={index} padding="md">
-                  <h3 className="text-xl font-bold text-amber-400 mb-4">{region.name}</h3>
+                  <h3 className="text-xl font-bold text-[#ffd700] mb-4">{region.name}</h3>
                   <ul className="space-y-2">
                     {region.countries.map((country, cIndex) => (
                       <li key={cIndex} className="text-[#dcdbd5] flex items-center gap-2">
-                        <span className="text-amber-400">•</span>
+                        <span className="text-[#ffd700]">•</span>
                         {country}
                       </li>
                     ))}
@@ -105,11 +108,11 @@ export default function Locations() {
       {/* Agent Benefits */}
       <LazySection height={400}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Benefits for Individual Agents</H2>
+              <H2>Agent Advantages</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Everything you need to build a successful real estate business, anywhere in the world.
+                Everything you need to dominate your market—included, not extra.
               </p>
             </div>
 
@@ -128,11 +131,11 @@ export default function Locations() {
       {/* Team Benefits */}
       <LazySection height={350}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1200px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Benefits for Teams & Brokerages</H2>
+              <H2>Team & Brokerage Power</H2>
               <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
-                Scale your business internationally without the traditional overhead.
+                Scale internationally without brick-and-mortar overhead.
               </p>
             </div>
 
@@ -151,11 +154,11 @@ export default function Locations() {
       {/* Revenue Share Note */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto text-center">
-            <H2>Global Revenue Share</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Borderless Revenue Share</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              eXp Realty's revenue share program is available internationally - you can earn income from agents
-              recruited not only all over the United States but also in <strong className="text-amber-400">24+ other countries</strong>.
+              eXp's revenue share program works internationally—earn passive income from agents you attract
+              across the United States and <strong className="text-[#ffd700]">24+ other countries</strong>.
             </p>
             <CTAButton href="/exp-realty-revenue-share-calculator/">
               Calculate Your Potential
@@ -167,10 +170,10 @@ export default function Locations() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
+          <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Go Global?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Join the fastest-growing global brokerage and expand your business across borders.
+              Join the fastest-growing cloud brokerage and build without borders.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

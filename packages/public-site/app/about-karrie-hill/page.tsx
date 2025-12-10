@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -9,48 +9,48 @@ const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/upload
 
 /**
  * About Karrie Hill Page
- * Personal bio and background
+ * Personal bio and background - Brand tone: awe-inspiring, futuristic, direct
  */
 export default function AboutKarrieHill() {
   const highlights = [
     { label: "Role", value: "Co-Founder, Smart Agent Alliance" },
-    { label: "Title", value: "Strategic Advisor & eXp Certified Mentor" },
+    { label: "Credential", value: "eXp Certified Mentor" },
     { label: "Education", value: "JD, UC Berkeley Law (Top 5%)" },
-    { label: "Location", value: "Tiburon, Marin County, CA" }
+    { label: "Base", value: "Tiburon, Marin County, CA" }
   ];
 
-  const expertise = [
-    "Sponsorship Strategy",
-    "Team Building",
-    "Career Development",
-    "YouTube Marketing",
-    "Negotiation",
-    "Financial Analysis"
+  const certifications = [
+    "eXp Certified Mentor",
+    "Real Estate Negotiation Expert",
+    "Home Marketing Specialist",
+    "Relocation Specialist",
+    "Express Offers Certified"
   ];
 
   const achievements = [
-    "Six-figure income in first full year through YouTube marketing",
+    "Six-figure income in first full year—no cold calls, no door knocking",
     "#1 Agent YouTube channel in Marin County, California",
     "Featured on HGTV and in national magazines for interior design",
     "Frequent guest on KDOW \"The Real Estate Report\"",
-    "30+ year Marin County resident"
+    "Former professional stock trader (10+ years)",
+    "UC Berkeley Law graduate (top 5% of class)"
   ];
 
   return (
     <main>
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1400px] mx-auto w-full text-center">
+        <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>KARRIE HILL, JD</H1>
           <Tagline className="mt-4">
-            Strategic Advisor, eXp Certified Mentor, and UC Berkeley Law Graduate
+            The strategic mind engineering agent success at Smart Agent Alliance
           </Tagline>
         </div>
       </section>
 
       {/* Profile Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1000px] mx-auto">
+        <div className="max-w-[1900px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             {/* Photo with ProfileCyberFrame (circular) */}
             <div className="lg:w-1/3 flex justify-center">
@@ -83,16 +83,16 @@ export default function AboutKarrieHill() {
       {/* Bio Section */}
       <LazySection height={450}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>About Karrie</H2>
+              <H2>The Strategist</H2>
             </div>
 
             <div className="space-y-6 text-[#dcdbd5]">
-              <p>
-                UC Berkeley Law graduate (<strong className="text-[#e5e4dd]">top 5% of her class</strong>), eXp Certified Mentor,
+              <p className="text-lg">
+                UC Berkeley Law graduate (<strong className="text-[#ffd700]">top 5% of her class</strong>), eXp Certified Mentor,
                 and the strategic mind behind agent success at Smart Agent Alliance. Karrie built a
-                <strong className="text-[#e5e4dd]"> six-figure real estate business in her first full year</strong>—no
+                <strong className="text-[#ffd700]"> six-figure real estate business in her first full year</strong>—no
                 cold calls, no door knocking—using YouTube marketing strategies she now teaches to agents.
               </p>
 
@@ -104,8 +104,7 @@ export default function AboutKarrieHill() {
               </p>
 
               <p>
-                A 30+ year Marin County resident, Karrie is passionate about helping agents achieve their wildest
-                goals in real estate. She engineers results for agents who refuse to settle for average.
+                A 30+ year Marin County resident. Karrie engineers results for agents who refuse to settle for average.
               </p>
             </div>
           </div>
@@ -113,18 +112,18 @@ export default function AboutKarrieHill() {
       </LazySection>
 
       {/* Achievements Section */}
-      <LazySection height={400}>
+      <LazySection height={450}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Achievements</H2>
+              <H2>Track Record</H2>
             </div>
 
             <div className="space-y-4">
               {achievements.map((achievement, index) => (
-                <GenericCard key={index} padding="sm">
+                <GenericCard key={index} padding="md">
                   <div className="flex items-start gap-4">
-                    <div className="text-amber-400 text-xl">✓</div>
+                    <div className="text-[#ffd700] text-xl flex-shrink-0">✓</div>
                     <p className="text-[#dcdbd5]">{achievement}</p>
                   </div>
                 </GenericCard>
@@ -134,18 +133,18 @@ export default function AboutKarrieHill() {
         </section>
       </LazySection>
 
-      {/* Expertise Section */}
+      {/* Certifications Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
+          <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Areas of Expertise</H2>
+              <H2>Certifications</H2>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {expertise.map((skill, index) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {certifications.map((cert, index) => (
                 <GenericCard key={index} padding="sm" centered>
-                  <p className="text-[#e5e4dd] font-medium">{skill}</p>
+                  <p className="text-[#e5e4dd] font-medium">{cert}</p>
                 </GenericCard>
               ))}
             </div>
@@ -156,16 +155,32 @@ export default function AboutKarrieHill() {
       {/* Personal Section */}
       <LazySection height={250}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto text-center">
-            <div className="text-center mb-12">
-              <H2>Outside of Work</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <div className="text-center mb-8">
+              <H2>Beyond Real Estate</H2>
             </div>
             <p className="text-[#dcdbd5] max-w-2xl mx-auto">
-              A 30+ year Marin County resident living in Tiburon with her husband and two dogs - Baxter and Lily.
-              Karrie is a mother of three and grandmother. Her creative talents have been featured on HGTV and in
-              national magazines for interior design work. She loves helping agents achieve their wildest hopes
-              and dreams in the real estate business.
+              30+ year Marin County resident. Living in Tiburon with her husband and two dogs—Baxter and Lily.
+              Mother of three, grandmother. Her creative talents have been featured on HGTV and in national magazines
+              for interior design.
             </p>
+          </div>
+        </section>
+      </LazySection>
+
+      {/* Contact Section */}
+      <LazySection height={200}>
+        <section className="relative py-12 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1900px] mx-auto">
+            <CyberCard padding="lg">
+              <div className="text-center">
+                <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Get in Touch</h3>
+                <a href="mailto:karrie.hill@exprealty.com" className="text-[#ffd700] hover:underline text-lg">
+                  karrie.hill@exprealty.com
+                </a>
+                <p className="text-[#dcdbd5]/60 text-sm mt-2">415-435-7777 (no text)</p>
+              </div>
+            </CyberCard>
           </div>
         </section>
       </LazySection>
@@ -173,17 +188,17 @@ export default function AboutKarrieHill() {
       {/* CTA Section */}
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[800px] mx-auto text-center">
-            <H2>Connect With Karrie</H2>
+          <div className="max-w-[1900px] mx-auto text-center">
+            <H2>Ready to Level Up?</H2>
             <p className="text-[#dcdbd5] mt-4 mb-8">
-              Ready to get mentorship from Karrie and join Smart Agent Alliance?
+              Get mentorship from Karrie and access the strategies that built a six-figure business in year one.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
                 Join Our Team
               </CTAButton>
               <CTAButton href="/our-exp-team/">
-                Meet The Team
+                Meet The Full Team
               </CTAButton>
             </div>
           </div>

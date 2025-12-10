@@ -119,7 +119,7 @@ export default function Tagline({
       {/* Agent Counter Suffix - inline with tagline (mobile only via CSS) */}
       {showAgentCounter && (
         <span className="tagline-counter-suffix">
-          {/* En-dash separator */}
+          {/* Opening parenthesis */}
           <span
             className="tagline-word"
             style={{ display: 'inline-flex', position: 'relative' }}
@@ -134,14 +134,14 @@ export default function Tagline({
                 position: 'relative',
               }}
             >
-              –
+              (
             </span>
           </span>
 
           {/* Counter numbers + plus sign - plain Synonym font, no glow */}
           <span
             className="tagline-word counter-numbers-mobile"
-            style={{ display: 'inline-flex', position: 'relative' }}
+            style={{ display: 'inline-flex', position: 'relative', marginLeft: '-0.3em' }}
           >
             {['3', '7', '0', '0'].map((digit, i) => (
               <span
@@ -178,12 +178,12 @@ export default function Tagline({
             </span>
           </span>
 
-          {/* "Agents" text only */}
+          {/* "Agents" text + closing parenthesis */}
           <span
             className="tagline-word"
             style={{ display: 'inline-flex', position: 'relative' }}
           >
-            {'Agents'.split('').map((char, charIndex) => {
+            {'Agents)'.split('').map((char, charIndex) => {
               const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
               return (
                 <span
