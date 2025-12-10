@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { H1 } from '@saa/shared/components/saa';
+import { H1, Tagline } from '@saa/shared/components/saa';
+import { LazySection } from '@/components/shared/LazySection';
 
 /**
  * eXp Commission & Fees Calculator Page
@@ -20,14 +21,13 @@ export default function ExpCommissionCalculator() {
 
   return (
     <main className="min-h-screen">
-      {/* Hero Section - wrapped for LCP optimization */}
-      <section
-        className="relative px-4 sm:px-8 md:px-12 py-24 flex items-center justify-center"
-      >
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.6s">
-            EXP COMMISSION & FEES CALCULATOR
-          </H1>
+      {/* Hero Section */}
+      <section className="relative min-h-[60vh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div className="max-w-[1400px] mx-auto w-full text-center">
+          <H1>EXP COMMISSION & FEES CALCULATOR</H1>
+          <Tagline className="mt-4">
+            Calculate your net commission with eXp Realty's transparent fee structure
+          </Tagline>
         </div>
       </section>
 
@@ -259,44 +259,46 @@ export default function ExpCommissionCalculator() {
           </div>
 
           {/* Info Box */}
-          <div
-            className="mt-8 p-5 bg-white rounded-lg text-center"
-            style={{
-              boxShadow: '0 1px 3px rgba(0,0,0,0.16)',
-              lineHeight: '1.6'
-            }}
-          >
-            <p className="text-gray-700 mb-4">
-              This calculator shows real estate agents their net commission at eXp Realty. It factors in:
-            </p>
-            <p className="text-gray-700"><strong>20% to eXp</strong> (capped at $16k annually)</p>
-            <p className="text-gray-700"><strong>$25/deal broker review</strong></p>
-            <p className="text-gray-700"><strong>$60/deal E&O Insurance</strong> (capped at $750)</p>
-            <p className="text-gray-700"><strong>$250/deal Post-cap</strong> (After 100% commission)</p>
-            <p className="text-gray-700"><strong>$75/deal after 20 more transactions Post-cap</strong></p>
-            <p className="text-gray-700 mt-4">
-              Adjust the average commission per deal and number of transactions (1-50) to see instant results.
-            </p>
-            <p className="text-gray-700 mt-4">
-              <strong>(Calculator does not include additional stock awards, ICON rewards, or revenue share income)</strong>
-            </p>
-          </div>
+          <LazySection height={350}>
+            <div
+              className="mt-8 p-5 bg-white rounded-lg text-center"
+              style={{
+                boxShadow: '0 1px 3px rgba(0,0,0,0.16)',
+                lineHeight: '1.6'
+              }}
+            >
+              <p className="text-gray-700 mb-4">
+                This calculator shows real estate agents their net commission at eXp Realty. It factors in:
+              </p>
+              <p className="text-gray-700"><strong>20% to eXp</strong> (capped at $16k annually)</p>
+              <p className="text-gray-700"><strong>$25/deal broker review</strong></p>
+              <p className="text-gray-700"><strong>$60/deal E&O Insurance</strong> (capped at $750)</p>
+              <p className="text-gray-700"><strong>$250/deal Post-cap</strong> (After 100% commission)</p>
+              <p className="text-gray-700"><strong>$75/deal after 20 more transactions Post-cap</strong></p>
+              <p className="text-gray-700 mt-4">
+                Adjust the average commission per deal and number of transactions (1-50) to see instant results.
+              </p>
+              <p className="text-gray-700 mt-4">
+                <strong>(Calculator does not include additional stock awards, ICON rewards, or revenue share income)</strong>
+              </p>
+            </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-12">
-            <a
-              href="/about-exp-realty/fees/"
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity"
-            >
-              eXp Fees Fully Explained Blog
-            </a>
-            <a
-              href="/about-exp-realty/commission/"
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity"
-            >
-              eXp Commission Fully Explained Blog
-            </a>
-          </div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-12">
+              <a
+                href="/about-exp-realty/fees/"
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity"
+              >
+                eXp Fees Fully Explained Blog
+              </a>
+              <a
+                href="/about-exp-realty/commission/"
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity"
+              >
+                eXp Commission Fully Explained Blog
+              </a>
+            </div>
+          </LazySection>
         </div>
       </section>
     </main>
