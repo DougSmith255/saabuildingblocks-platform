@@ -218,11 +218,11 @@ export default function RevenueShareCalculator() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Build Your Income Stream?</H2>
             <p className="text-body mt-4 mb-8">
-              Join the Wolf Pack and start building passive income that can outlast your career.
+              Join the Alliance and start building passive income that can outlast your career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join The Wolf Pack
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/about-exp-realty/">
                 Learn About eXp

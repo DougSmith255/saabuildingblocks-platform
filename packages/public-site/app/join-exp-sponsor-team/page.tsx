@@ -139,7 +139,7 @@ export default function JoinExpSponsorTeam() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>Why Join The Wolf Pack?</H2>
+              <H2>Why Join The Alliance?</H2>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">

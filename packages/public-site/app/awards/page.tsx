@@ -156,7 +156,7 @@ export default function Awards() {
 
             <div className="grid md:grid-cols-3 gap-6">
               {wolfPackAwards.map((award, index) => (
-                <CyberCard key={index} padding="md">
+                <CyberCard key={index} padding="md" className="h-full">
                   <h3 className="text-h5 text-link mb-3">{award.title}</h3>
                   <p className="text-body">{award.description}</p>
                 </CyberCard>
@@ -176,7 +176,7 @@ export default function Awards() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join The Wolf Pack
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/about-exp-realty/">
                 Learn About eXp

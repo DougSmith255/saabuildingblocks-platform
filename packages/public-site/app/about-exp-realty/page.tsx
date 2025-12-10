@@ -199,7 +199,7 @@ export default function AboutExpRealty() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join The Wolf Pack
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">
                 See What We Offer

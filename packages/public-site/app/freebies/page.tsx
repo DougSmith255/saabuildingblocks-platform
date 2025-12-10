@@ -64,7 +64,7 @@ export default function Freebies() {
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <CyberCardGold padding="lg">
-            <NeonGoldText as="h3" className="text-h5 mb-4">Grab Everything</NeonGoldText>
+            <NeonGoldText as="h3" className="text-h3 mb-4">Grab Everything</NeonGoldText>
             <p className="text-body mb-8 max-w-md mx-auto">
               All 6 resources in one download. Build your arsenal today.
             </p>
@@ -115,7 +115,7 @@ export default function Freebies() {
                         <h3 className="text-h6 mb-2 group-hover:text-[#ffd700] transition-colors">
                           {freebie.title}
                         </h3>
-                        <p className="text-caption mb-4 flex-1" style={{ opacity: 0.8 }}>
+                        <p className="text-body mb-4 flex-1" style={{ opacity: 0.8 }}>
                           {freebie.description}
                         </p>
                         <span className="inline-flex items-center gap-2 text-[#ffd700] font-medium group-hover:gap-3 transition-all" style={{ fontSize: 'var(--font-size-caption)' }}>
@@ -146,23 +146,23 @@ export default function Freebies() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              <GenericCard padding="md" centered>
+              <GenericCard padding="md" centered className="h-full">
                 <h3 className="text-h6 mb-2">Lift the Industry</h3>
-                <p className="text-caption" style={{ opacity: 0.8 }}>
+                <p className="text-body" style={{ opacity: 0.8 }}>
                   When agents succeed, everyone wins. These tools work.
                 </p>
               </GenericCard>
 
-              <GenericCard padding="md" centered>
+              <GenericCard padding="md" centered className="h-full">
                 <h3 className="text-h6 mb-2">Value First</h3>
-                <p className="text-caption" style={{ opacity: 0.8 }}>
+                <p className="text-body" style={{ opacity: 0.8 }}>
                   Real partnerships start with giving, not asking.
                 </p>
               </GenericCard>
 
-              <GenericCard padding="md" centered>
+              <GenericCard padding="md" centered className="h-full">
                 <h3 className="text-h6 mb-2">This Is Just a Sample</h3>
-                <p className="text-caption" style={{ opacity: 0.8 }}>
+                <p className="text-body" style={{ opacity: 0.8 }}>
                   If the free stuff is this good, imagine what members get.
                 </p>
               </GenericCard>
@@ -177,11 +177,11 @@ export default function Freebies() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Want the Full Arsenal?</H2>
             <p className="text-body mt-4 mb-8">
-              These downloads are just a preview. Join the Wolf Pack for the complete library.
+              These downloads are just a preview. Join the Alliance for the complete library.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join The Wolf Pack
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">
                 See Team Benefits

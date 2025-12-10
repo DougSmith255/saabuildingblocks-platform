@@ -348,7 +348,7 @@ export default function OnlineBrokerageComparison() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Make the Move?</H2>
             <p className="text-body mt-4 mb-8">
-              Stop leaving money on the table. Join the Wolf Pack at eXp.
+              Stop leaving money on the table. Join the Alliance at eXp.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

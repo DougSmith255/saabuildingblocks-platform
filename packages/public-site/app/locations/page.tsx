@@ -177,7 +177,7 @@ export default function Locations() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join The Wolf Pack
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/about-exp-realty/">
                 Learn About eXp

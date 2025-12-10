@@ -92,9 +92,9 @@ export default function BestRealEstateBrokerage() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {whyCompare.map((item, index) => (
-                <GenericCard key={index} padding="md">
+                <GenericCard key={index} padding="md" className="h-full">
                   <h3 className="text-h6 mb-2">{item.title}</h3>
-                  <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>{item.description}</p>
+                  <p className="text-body">{item.description}</p>
                 </GenericCard>
               ))}
             </div>
@@ -114,20 +114,20 @@ export default function BestRealEstateBrokerage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 text-center">
-              <CyberCard padding="md">
-                <div className="text-h3 text-link mb-2">100%</div>
+              <CyberCard padding="md" className="h-full">
+                <p className="text-h3 text-link mb-2">100%</p>
                 <p className="text-body">Commission After Cap</p>
                 <p className="text-caption mt-1">Cap at just $16,000</p>
               </CyberCard>
 
-              <CyberCard padding="md">
-                <div className="text-h3 text-link mb-2">$85</div>
+              <CyberCard padding="md" className="h-full">
+                <p className="text-h3 text-link mb-2">$85</p>
                 <p className="text-body">Monthly Fee</p>
                 <p className="text-caption mt-1">No desk or franchise fees</p>
               </CyberCard>
 
-              <CyberCard padding="md">
-                <div className="text-h3 text-link mb-2">4</div>
+              <CyberCard padding="md" className="h-full">
+                <p className="text-h3 text-link mb-2">4</p>
                 <p className="text-body">Income Streams</p>
                 <p className="text-caption mt-1">Commission, stock, rev share, referrals</p>
               </CyberCard>
@@ -142,11 +142,11 @@ export default function BestRealEstateBrokerage() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Make the Move?</H2>
             <p className="text-body mt-4 mb-8">
-              Stop leaving money on the table. Join the Wolf Pack.
+              Stop leaving money on the table. Join the Alliance.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join The Wolf Pack
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/about-exp-realty/">
                 Learn About eXp
