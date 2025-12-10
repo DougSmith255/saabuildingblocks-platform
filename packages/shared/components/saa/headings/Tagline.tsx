@@ -51,17 +51,17 @@ export default function Tagline({
   const words = text.split(' ');
 
   // Static neon text-shadow (always at full brightness) - using body text color
+  // Using em units so glow scales with font size (matches H1/H2)
   const textShadow = `
-    -1px -1px 0 rgba(255,255,255, 0.4),
-    1px -1px 0 rgba(255,255,255, 0.4),
-    -1px 1px 0 rgba(255,255,255, 0.4),
-    1px 1px 0 rgba(255,255,255, 0.4),
-    0 -3px 8px #bfbdb0,
-    0 0 2px #bfbdb0,
-    0 0 5px #bfbdb0,
-    0 0 15px #9a9888,
-    0 0 3px #bfbdb0,
-    0 3px 3px #000
+    -0.02em -0.02em 0 rgba(255,255,255, 0.4),
+    0.02em -0.02em 0 rgba(255,255,255, 0.4),
+    -0.02em 0.02em 0 rgba(255,255,255, 0.4),
+    0.02em 0.02em 0 rgba(255,255,255, 0.4),
+    0 -0.03em 0.1em #bfbdb0,
+    0 0 0.03em #bfbdb0,
+    0 0 0.07em #bfbdb0,
+    0 0 0.12em #9a9888,
+    0 0.03em 0.05em #000
   `;
 
   return (
