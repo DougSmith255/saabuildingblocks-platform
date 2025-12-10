@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
-import { OptimizedImage } from '@/components';
 import { StaticCounter } from './components/StaticCounter';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 
@@ -42,23 +41,30 @@ const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
 );
 
-// Defer loading of desktop-only positioning components (loaded separately from main bundle)
-const HomepageClient = dynamic(() => import('./components/HomepageClient').then(mod => mod.HomepageClient));
-const DynamicH1Container = dynamic(() => import('./components/DynamicH1Container').then(mod => mod.DynamicH1Container));
-
 /**
  * Homepage - Server Component with Static Content
- * Client animations hydrate separately via HomepageClient
+ *
+ * HERO LAYOUT: CSS Grid for zero-flash positioning
+ * - Profile image and H1/content positioned via CSS only
+ * - No JavaScript calculations needed
+ * - Image aspect ratio (900:500 = 1.8:1) used for height calculation
  */
 export default function Home() {
   return (
     <main id="main-content">
-      {/* Hero Section - No wrapper, renders immediately */}
+      {/* Hero Section - CSS Grid layout for image + text positioning */}
       <section
-        className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-16 sm:py-20 md:py-24"
+        className="relative min-h-[100dvh] px-4 sm:px-8 md:px-12"
         aria-label="Hero"
+        style={{
+          display: 'grid',
+          gridTemplateRows: '1fr',
+          gridTemplateColumns: '1fr',
+          alignItems: 'center',
+          justifyItems: 'center',
+        }}
       >
-        {/* Static Counter */}
+        {/* Static Counter - positioned absolutely */}
         <StaticCounter />
 
         {/* Wolf Pack Background Image - uses <img> tag for LCP detection */}
@@ -87,23 +93,38 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Doug and Karrie Co-Founders Background Image - emerging from space mist */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]" style={{ perspective: '1000px' }}>
-          <div className="relative min-w-[400px] max-w-[900px]" style={{
-            // At 1900px screen width: 47.37vw = 900px (starts scaling)
-            // Below 1900px: scales down linearly
-            // Above 1900px: clamped at 900px max
+        {/* Hero Content Grid - Image + Text stacked in same grid cell */}
+        {/* All items in row 1, col 1 - they overlap and position themselves */}
+        <div
+          className="w-full max-w-[900px] pointer-events-none"
+          style={{
+            gridRow: '1',
+            gridColumn: '1',
+            display: 'grid',
+            gridTemplateColumns: '1fr',
+            gridTemplateRows: 'auto auto',
+            justifyItems: 'center',
             width: 'clamp(400px, 47.37vw, 900px)',
-            // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
-            // Falls back to dvh for initial render before JS sets the variable
-            height: 'calc(var(--vh-locked, 1dvh) * 84)',
-          }}>
+            minWidth: '300px',
+          }}
+        >
+          {/* Doug and Karrie Image Container */}
+          <div
+            className="relative w-full z-[1]"
+            style={{
+              gridRow: '1',
+              gridColumn: '1',
+              // Image aspect ratio 900:500 = 1.8:1
+              // Height = width / 1.8, but we use aspect-ratio for responsiveness
+              aspectRatio: '900 / 500',
+              maxHeight: '70dvh',
+            }}
+          >
             {/* Space cloud/mist backdrop */}
             <div
               className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
               style={{
-                // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
-                top: 'calc(var(--vh-locked, 1dvh) * 8 + 15px)',
+                top: '0',
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}
@@ -123,97 +144,57 @@ export default function Home() {
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="hero-3d-image profile-image absolute left-1/2 -translate-x-1/2 w-full h-auto max-h-full object-contain"
+              className="hero-3d-image profile-image w-full h-full object-contain"
               style={{
-                // Use --vh-locked on mobile to prevent vertical shift when address bar hides/shows
-                top: 'calc(var(--vh-locked, 1dvh) * 8 + 15px)',
                 maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%)',
                 filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.5))',
-                maxWidth: '100%',
               }}
             />
+          </div>
+
+          {/* H1, Tagline, and Buttons - positioned to overlap bottom 25% of image */}
+          <div
+            className="w-[95%] max-w-[1200px] space-y-6 text-center pointer-events-auto z-[2]"
+            style={{
+              gridRow: '1',
+              gridColumn: '1',
+              alignSelf: 'end',
+              // Pull up into the image area - overlap bottom ~25% of image
+              // Using negative margin to overlap with the image above
+              marginTop: '-15%',
+              paddingBottom: 'clamp(20px, 5dvh, 60px)',
+            }}
+          >
+            {/* Headline Group */}
+            <div className="space-y-4" style={{ perspective: '1000px' }}>
+              <H1
+                id="hero-heading"
+                style={{
+                  fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
+                }}
+              >
+                SMART AGENT ALLIANCE
+              </H1>
+              <Tagline className="hero-tagline-mobile-spacing">
+                For Agents Who Want More
+              </Tagline>
+            </div>
+
+            {/* CTA Button Group */}
+            <div className="flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center">
+              <CTAButton href="/join-exp-sponsor-team/">
+                JOIN THE ALLIANCE
+              </CTAButton>
+              <CTAButton href="/exp-realty-sponsor/">
+                LEARN MORE
+              </CTAButton>
+            </div>
           </div>
         </div>
 
         {/* Counter Animation - Hydrates after initial render */}
         <CounterAnimation />
-
-        {/* Hero animations removed - all elements visible immediately */}
-
-        {/* Desktop: JavaScript positioning (accurate) - Hidden on mobile */}
-        <div className="hidden md:block">
-          <HomepageClient />
-          <DynamicH1Container>
-          {/* Headline Group */}
-          <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
-            {/* H1: Using Master Controller H1 component with hero animation */}
-            {/* Aggressive curve: reaches 150px at 3000px, drops fast to 1920px, then gradual */}
-            <H1
-              id="hero-heading"
-              style={{
-                fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
-              }}
-            >
-              SMART AGENT ALLIANCE
-            </H1>
-            <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.9s">
-              For Agents Who Want More
-            </Tagline>
-          </div>
-
-          {/* CTA Button Group - ensure 15px+ clearance from fold */}
-          <div className="flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center pb-6">
-            <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.3s">
-              JOIN THE ALLIANCE
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/" heroAnimate animationDelay="1.7s">
-              LEARN MORE
-            </CTAButton>
-          </div>
-          </DynamicH1Container>
-        </div>
-
-        {/* Mobile: CSS-only positioning (optimized for performance) - Visible only on mobile */}
-        <div
-          className="md:hidden absolute left-1/2 -translate-x-1/2 z-10 w-[95%] space-y-8"
-          style={{
-            // Mobile-optimized CSS positioning
-            // Current position covering 55% - need to move down to 75%
-            // If 55% = 8dvh + 182px, then 75% needs more offset
-            // Adjusting: 8dvh + 15px + (75% of image height)
-            // Mobile image height ~222px, so 75% = 167px
-            // But need to account for actual rendered position
-            // Increasing offset to: 8dvh + 240px (moved down ~58px more)
-            top: 'calc(8dvh + 240px)',
-          }}
-        >
-          {/* Headline Group */}
-          <div className="space-y-4 text-center" style={{ perspective: '1000px' }}>
-            {/* H1: Using Master Controller H1 component with hero animation */}
-            <H1
-              id="hero-heading-mobile"
-              style={{
-                fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
-              }}
-            >
-              SMART AGENT ALLIANCE
-            </H1>
-            <Tagline className="hero-tagline-mobile-spacing" heroAnimate animationDelay="0.9s">
-              For Agents Who Want More
-            </Tagline>
-          </div>
-
-          {/* CTA Button Group */}
-          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center pb-6">
-            <CTAButton href="/join-exp-sponsor-team/" heroAnimate animationDelay="1.3s">
-              JOIN THE ALLIANCE
-            </CTAButton>
-            <CTAButton href="/exp-realty-sponsor/" heroAnimate animationDelay="1.7s">
-              LEARN MORE
-            </CTAButton>
-          </div>
-        </div>
       </section>
 
       {/* Homepage Sections */}
