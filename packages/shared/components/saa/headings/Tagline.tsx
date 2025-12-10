@@ -138,10 +138,10 @@ export default function Tagline({
             </span>
           </span>
 
-          {/* Counter numbers + plus sign - uses Synonym font, targetable by CounterAnimation */}
+          {/* Counter numbers + plus sign - plain Synonym font, no glow */}
           <span
             className="tagline-word counter-numbers-mobile"
-            style={{ display: 'inline-flex', alignItems: 'center', position: 'relative' }}
+            style={{ display: 'inline-flex', position: 'relative' }}
           >
             {['3', '7', '0', '0'].map((digit, i) => (
               <span
@@ -150,30 +150,28 @@ export default function Tagline({
                 style={{
                   display: 'inline-block',
                   color: '#bfbdb0',
-                  textShadow,
-                  transform: 'translateZ(20px)',
                   position: 'relative',
                   fontFamily: 'var(--font-synonym), monospace',
                   fontWeight: 300,
                   fontSize: 'calc(1em + 10px)',
                   minWidth: '0.6em',
                   textAlign: 'center',
+                  transform: 'translateY(-0.1em)',
                 }}
               >
                 {digit}
               </span>
             ))}
-            {/* Plus sign - no space, same enlarged size, Synonym font */}
+            {/* Plus sign - no space, same styling as numbers */}
             <span
               style={{
                 display: 'inline-block',
                 color: '#bfbdb0',
-                textShadow,
-                transform: 'translateZ(20px)',
                 position: 'relative',
                 fontFamily: 'var(--font-synonym), monospace',
                 fontWeight: 300,
                 fontSize: 'calc(1em + 10px)',
+                transform: 'translateY(-0.1em)',
               }}
             >
               +
