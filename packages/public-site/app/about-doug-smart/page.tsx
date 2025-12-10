@@ -62,8 +62,8 @@ export default function AboutDougSmart() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {highlights.map((item, index) => (
                   <GenericCard key={index} padding="sm">
-                    <p className="text-[#dcdbd5]/60 text-sm">{item.label}</p>
-                    <p className="text-[#e5e4dd] font-medium">{item.value}</p>
+                    <p className="text-[#dcdbd5]/60" style={{ fontSize: 'var(--font-size-caption)' }}>{item.label}</p>
+                    <p className="text-[#e5e4dd] font-medium" style={{ fontSize: 'var(--font-size-body)' }}>{item.value}</p>
                   </GenericCard>
                 ))}
               </div>
@@ -80,8 +80,8 @@ export default function AboutDougSmart() {
               <H2>The Builder</H2>
             </div>
 
-            <div className="space-y-6 text-[#dcdbd5]">
-              <p className="text-lg">
+            <div className="space-y-6 text-body">
+              <p>
                 Doug is the architect behind Smart Agent Alliance's entire digital infrastructure. This website,
                 the automation systems, agent webpages, and the technology stack that gives our agents an
                 <strong className="text-[#ffd700]"> unfair advantage</strong> in their markets—he built it all.
@@ -108,14 +108,14 @@ export default function AboutDougSmart() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Systems That Scale Your Business</H2>
-              <p className="text-[#dcdbd5] mt-4">What you get access to when you join Smart Agent Alliance</p>
+              <p className="text-body mt-4">What you get access to when you join Smart Agent Alliance</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {systemsBuilt.map((system, index) => (
                 <GenericCard key={index} padding="md" hover className="h-full">
-                  <h3 className="text-[#e5e4dd] font-bold text-lg mb-2">{system.name}</h3>
-                  <p className="text-[#dcdbd5]/80 text-sm">{system.desc}</p>
+                  <h3 className="text-h6 mb-2">{system.name}</h3>
+                  <p className="text-body opacity-80">{system.desc}</p>
                 </GenericCard>
               ))}
             </div>
@@ -130,7 +130,7 @@ export default function AboutDougSmart() {
             <div className="text-center mb-8">
               <H2>Beyond the Code</H2>
             </div>
-            <p className="text-[#dcdbd5] max-w-2xl mx-auto">
+            <p className="text-body max-w-2xl mx-auto">
               Based in San Jose, California. Basketball fanatic. Gym regular. The kind of disciplined
               focus that builds multi-million dollar homes also builds systems that scale businesses.
             </p>
@@ -144,11 +144,11 @@ export default function AboutDougSmart() {
           <div className="max-w-[1900px] mx-auto">
             <CyberCard padding="lg">
               <div className="text-center">
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Get in Touch</h3>
-                <a href="mailto:doug@smartagentalliance.com" className="text-[#ffd700] hover:underline text-lg">
+                <h3 className="text-h5 mb-4">Get in Touch</h3>
+                <a href="mailto:doug@smartagentalliance.com" className="text-link hover:underline">
                   doug@smartagentalliance.com
                 </a>
-                <p className="text-[#dcdbd5]/60 text-sm mt-2">314-320-5606</p>
+                <p className="text-body opacity-60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>314-320-5606</p>
               </div>
             </CyberCard>
           </div>
@@ -160,7 +160,7 @@ export default function AboutDougSmart() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Level Up?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Join Smart Agent Alliance and get access to the digital infrastructure that powers top-producing agents.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

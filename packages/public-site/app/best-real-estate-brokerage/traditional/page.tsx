@@ -115,27 +115,27 @@ export default function TraditionalBrokerageComparison() {
         <div className="max-w-[1900px] mx-auto">
           <div className="grid md:grid-cols-4 gap-6 text-center">
             <CyberCard padding="md">
-              <div className="text-3xl font-bold text-[#ffd700] mb-2">$85</div>
-              <p className="text-[#dcdbd5] text-sm">eXp Monthly Fee</p>
-              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs $500-$2,000+ traditional</p>
+              <div className="text-h4 text-link mb-2">$85</div>
+              <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>eXp Monthly Fee</p>
+              <p className="text-caption mt-1">vs $500-$2,000+ traditional</p>
             </CyberCard>
 
             <CyberCard padding="md">
-              <div className="text-3xl font-bold text-[#ffd700] mb-2">100%</div>
-              <p className="text-[#dcdbd5] text-sm">Commission After Cap</p>
-              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 50-70% traditional</p>
+              <div className="text-h4 text-link mb-2">100%</div>
+              <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Commission After Cap</p>
+              <p className="text-caption mt-1">vs 50-70% traditional</p>
             </CyberCard>
 
             <CyberCard padding="md">
-              <div className="text-3xl font-bold text-[#ffd700] mb-2">$0</div>
-              <p className="text-[#dcdbd5] text-sm">Franchise Fees</p>
-              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 6-8% traditional</p>
+              <div className="text-h4 text-link mb-2">$0</div>
+              <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Franchise Fees</p>
+              <p className="text-caption mt-1">vs 6-8% traditional</p>
             </CyberCard>
 
             <CyberCard padding="md">
-              <div className="text-3xl font-bold text-[#ffd700] mb-2">7</div>
-              <p className="text-[#dcdbd5] text-sm">Revenue Share Tiers</p>
-              <p className="text-[#dcdbd5]/60 text-xs mt-1">vs 0 traditional</p>
+              <div className="text-h4 text-link mb-2">7</div>
+              <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Revenue Share Tiers</p>
+              <p className="text-caption mt-1">vs 0 traditional</p>
             </CyberCard>
           </div>
         </div>
@@ -147,7 +147,7 @@ export default function TraditionalBrokerageComparison() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The Numbers Don't Lie</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Every metric that impacts your bottom line, compared.
               </p>
             </div>
@@ -156,16 +156,16 @@ export default function TraditionalBrokerageComparison() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-white/20">
-                    <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Category</th>
-                    <th className="text-left py-4 px-4 text-[#dcdbd5]/80 font-medium">Traditional</th>
-                    <th className="text-left py-4 px-4 text-[#ffd700] font-medium">eXp Realty</th>
+                    <th className="text-left py-4 px-4 text-body font-medium">Category</th>
+                    <th className="text-left py-4 px-4 text-body font-medium">Traditional</th>
+                    <th className="text-left py-4 px-4 text-link font-medium">eXp Realty</th>
                   </tr>
                 </thead>
                 <tbody>
                   {comparisonData.map((row, index) => (
                     <tr key={index} className="border-b border-white/10 hover:bg-white/5">
-                      <td className="py-4 px-4 text-[#e5e4dd] font-medium">{row.category}</td>
-                      <td className="py-4 px-4 text-[#dcdbd5]/80">{row.traditional}</td>
+                      <td className="py-4 px-4 text-body font-medium">{row.category}</td>
+                      <td className="py-4 px-4 text-body">{row.traditional}</td>
                       <td className="py-4 px-4 text-green-400">{row.exp}</td>
                     </tr>
                   ))}
@@ -182,7 +182,7 @@ export default function TraditionalBrokerageComparison() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The Full Picture</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Every model has trade-offs. Here's an honest look at both.
               </p>
             </div>
@@ -190,13 +190,13 @@ export default function TraditionalBrokerageComparison() {
             <div className="grid md:grid-cols-2 gap-8">
               {/* Traditional */}
               <div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-6 text-center">Traditional Brokerages</h3>
+                <h3 className="text-h5 mb-6 text-center">Traditional Brokerages</h3>
 
                 <div className="mb-6">
                   <h4 className="text-green-400 font-medium mb-3">Pros</h4>
                   <ul className="space-y-2">
                     {traditionalPros.map((pro, index) => (
-                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                      <li key={index} className="flex items-start gap-2 text-body">
                         <span className="text-green-400">+</span>
                         {pro}
                       </li>
@@ -208,7 +208,7 @@ export default function TraditionalBrokerageComparison() {
                   <h4 className="text-red-400 font-medium mb-3">Cons</h4>
                   <ul className="space-y-2">
                     {traditionalCons.map((con, index) => (
-                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                      <li key={index} className="flex items-start gap-2 text-body">
                         <span className="text-red-400">-</span>
                         {con}
                       </li>
@@ -219,13 +219,13 @@ export default function TraditionalBrokerageComparison() {
 
               {/* eXp */}
               <div>
-                <h3 className="text-xl font-bold text-[#ffd700] mb-6 text-center">eXp Realty</h3>
+                <h3 className="text-h5 text-link mb-6 text-center">eXp Realty</h3>
 
                 <div className="mb-6">
                   <h4 className="text-green-400 font-medium mb-3">Pros</h4>
                   <ul className="space-y-2">
                     {expPros.map((pro, index) => (
-                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                      <li key={index} className="flex items-start gap-2 text-body">
                         <span className="text-green-400">+</span>
                         {pro}
                       </li>
@@ -237,7 +237,7 @@ export default function TraditionalBrokerageComparison() {
                   <h4 className="text-red-400 font-medium mb-3">Cons</h4>
                   <ul className="space-y-2">
                     {expCons.map((con, index) => (
-                      <li key={index} className="flex items-start gap-2 text-[#dcdbd5]">
+                      <li key={index} className="flex items-start gap-2 text-body">
                         <span className="text-red-400">-</span>
                         {con}
                       </li>
@@ -255,14 +255,14 @@ export default function TraditionalBrokerageComparison() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>The Bottom Line</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-4">
+            <p className="text-body mt-4 mb-4">
               Traditional brokerages made sense when agents needed physical offices, fax machines, and local MLS access.
               Today, with cloud-based tools and remote work capabilities, eXp Realty offers a more cost-effective model
               with better earning potential.
             </p>
-            <p className="text-[#dcdbd5] mb-8">
+            <p className="text-body mb-8">
               The question isn't just about commission splits - it's about building long-term wealth through
-              <strong className="text-[#ffd700]"> stock ownership</strong> and <strong className="text-[#ffd700]">revenue share</strong>,
+              <strong className="text-link"> stock ownership</strong> and <strong className="text-link">revenue share</strong>,
               opportunities that traditional brokerages simply don't offer.
             </p>
           </div>
@@ -291,7 +291,7 @@ export default function TraditionalBrokerageComparison() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Stop Paying for Someone Else's Office?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Thousands of agents have made the switch. Join them.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

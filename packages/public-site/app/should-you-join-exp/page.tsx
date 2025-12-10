@@ -37,7 +37,7 @@ export default function ShouldYouJoinExp() {
             </div>
           </div>
 
-          <p className="text-[#dcdbd5] text-center mt-6">
+          <p className="text-body text-center mt-6">
             Based on the quiz above, you should be able to get a quick understanding of whether or not
             eXp Realty may be a good fit for you.
           </p>
@@ -50,7 +50,7 @@ export default function ShouldYouJoinExp() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>See It In Action</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Hear directly from agents who made the move.
               </p>
             </div>
@@ -77,7 +77,7 @@ export default function ShouldYouJoinExp() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The eXp Advantage</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 What makes agents switch—and stay.
               </p>
             </div>
@@ -85,38 +85,38 @@ export default function ShouldYouJoinExp() {
             <div className="grid md:grid-cols-3 gap-6">
               <GenericCard padding="md">
                 <div className="text-4xl mb-4">💰</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Better Commission</h3>
-                <p className="text-[#dcdbd5]/80">Up to 100% commission after capping at $16K to eXp. No franchise or royalty fees.</p>
+                <h3 className="text-h5 mb-2">Better Commission</h3>
+                <p className="text-body" style={{ opacity: 0.8 }}>Up to 100% commission after capping at $16K to eXp. No franchise or royalty fees.</p>
               </GenericCard>
 
               <GenericCard padding="md">
                 <div className="text-4xl mb-4">📈</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Revenue Share</h3>
-                <p className="text-[#dcdbd5]/80">7-tier revenue share program for passive income. Can be willed to your loved ones.</p>
+                <h3 className="text-h5 mb-2">Revenue Share</h3>
+                <p className="text-body" style={{ opacity: 0.8 }}>7-tier revenue share program for passive income. Can be willed to your loved ones.</p>
               </GenericCard>
 
               <GenericCard padding="md">
                 <div className="text-4xl mb-4">🌍</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Global Reach</h3>
-                <p className="text-[#dcdbd5]/80">89,000+ agents in 27+ countries. Build a truly international business.</p>
+                <h3 className="text-h5 mb-2">Global Reach</h3>
+                <p className="text-body" style={{ opacity: 0.8 }}>89,000+ agents in 27+ countries. Build a truly international business.</p>
               </GenericCard>
 
               <GenericCard padding="md">
                 <div className="text-4xl mb-4">📚</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Training</h3>
-                <p className="text-[#dcdbd5]/80">50+ weekly training sessions, courses, and mentorship programs included.</p>
+                <h3 className="text-h5 mb-2">Training</h3>
+                <p className="text-body" style={{ opacity: 0.8 }}>50+ weekly training sessions, courses, and mentorship programs included.</p>
               </GenericCard>
 
               <GenericCard padding="md">
                 <div className="text-4xl mb-4">📊</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Stock Awards</h3>
-                <p className="text-[#dcdbd5]/80">Earn equity in a publicly traded company through production milestones.</p>
+                <h3 className="text-h5 mb-2">Stock Awards</h3>
+                <p className="text-body" style={{ opacity: 0.8 }}>Earn equity in a publicly traded company through production milestones.</p>
               </GenericCard>
 
               <GenericCard padding="md">
                 <div className="text-4xl mb-4">🤝</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Community</h3>
-                <p className="text-[#dcdbd5]/80">Join a collaborative culture with strong support and accountability.</p>
+                <h3 className="text-h5 mb-2">Community</h3>
+                <p className="text-body" style={{ opacity: 0.8 }}>Join a collaborative culture with strong support and accountability.</p>
               </GenericCard>
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function ShouldYouJoinExp() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Explore?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Talk to us. No pressure. Just answers.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

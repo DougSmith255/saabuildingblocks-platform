@@ -105,7 +105,7 @@ export default function RevenueShareCalculator() {
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                   <div className="sm:w-1/3">
                     <p className="text-[#e5e4dd] font-medium">{config.label}</p>
-                    <p className="text-[#dcdbd5]/60 text-sm">
+                    <p className="text-caption" style={{ opacity: 0.6 }}>
                       {(config.rate * 100).toFixed(1)}% rate, ${config.cap} cap
                       {config.bonusEligible && <span className="text-[#ffd700]"> +bonus</span>}
                     </p>
@@ -136,28 +136,28 @@ export default function RevenueShareCalculator() {
           {/* Results */}
           <div className="grid md:grid-cols-3 gap-6">
             <GenericCard padding="md" centered>
-              <p className="text-[#dcdbd5]/80 mb-2">Monthly Minimum</p>
-              <p className="text-3xl font-bold text-[#e5e4dd]">
+              <p className="text-body mb-2" style={{ opacity: 0.8 }}>Monthly Minimum</p>
+              <p className="text-h3 text-[#e5e4dd]">
                 ${results.monthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
             </GenericCard>
 
             <GenericCard padding="md" centered>
-              <p className="text-[#dcdbd5]/80 mb-2">Yearly Minimum</p>
-              <p className="text-3xl font-bold text-[#e5e4dd]">
+              <p className="text-body mb-2" style={{ opacity: 0.8 }}>Yearly Minimum</p>
+              <p className="text-h3 text-[#e5e4dd]">
                 ${results.yearly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
             </GenericCard>
 
             <GenericCard padding="md" centered>
-              <p className="text-[#dcdbd5]/80 mb-2">With ~30% Bonus*</p>
-              <p className="text-3xl font-bold text-[#ffd700]">
+              <p className="text-body mb-2" style={{ opacity: 0.8 }}>With ~30% Bonus*</p>
+              <p className="text-h3 text-[#ffd700]">
                 ${results.withBonus.toLocaleString(undefined, { maximumFractionDigits: 0 })}
               </p>
             </GenericCard>
           </div>
 
-          <p className="text-[#dcdbd5]/60 text-sm text-center mt-6">
+          <p className="text-caption text-center mt-6" style={{ opacity: 0.6 }}>
             *~30% adjustment bonus applies to Tiers 1-3 (varies, not guaranteed)
           </p>
         </div>
@@ -169,12 +169,12 @@ export default function RevenueShareCalculator() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The Mechanics</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 How eXp's revenue share creates passive income for agents who grow the company.
               </p>
             </div>
 
-            <div className="space-y-6 text-[#dcdbd5]">
+            <div className="space-y-6 text-body">
               <p>
                 eXp Realty's revenue share program allows agents to earn passive income by growing the company.
                 When you sponsor other agents, you earn a percentage of their gross commission income (GCI)
@@ -182,7 +182,7 @@ export default function RevenueShareCalculator() {
               </p>
 
               <GenericCard padding="md">
-                <h3 className="text-[#e5e4dd] font-bold mb-4">Tier Structure:</h3>
+                <h3 className="text-h5 mb-4">Tier Structure:</h3>
                 <ul className="space-y-2">
                   <li><strong className="text-[#ffd700]">Tier 1:</strong> Direct recruits - 3.5% rate, $1,400 cap per agent</li>
                   <li><strong className="text-[#ffd700]">Tier 2:</strong> Their recruits - 4% rate, $1,600 cap</li>
@@ -204,7 +204,7 @@ export default function RevenueShareCalculator() {
       <section className="relative py-8 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-xl p-6">
-            <p className="text-[#ffd700] text-sm text-center">
+            <p className="text-caption text-center" style={{ color: '#ffd700' }}>
               <strong>Important:</strong> Figures are illustrative only and do not represent actual or guaranteed income.
               Results depend on many factors including agent production, retention, and eXp Realty policies.
             </p>
@@ -217,7 +217,7 @@ export default function RevenueShareCalculator() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Build Your Income Stream?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Join the Wolf Pack and start building passive income that can outlast your career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

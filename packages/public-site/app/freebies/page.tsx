@@ -64,8 +64,8 @@ export default function Freebies() {
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <CyberCardGold padding="lg">
-            <NeonGoldText as="h3" className="text-xl font-bold mb-4">Grab Everything</NeonGoldText>
-            <p className="text-[#dcdbd5] mb-8 max-w-md mx-auto">
+            <NeonGoldText as="h3" className="text-h5 mb-4">Grab Everything</NeonGoldText>
+            <p className="text-body mb-8 max-w-md mx-auto">
               All 6 resources in one download. Build your arsenal today.
             </p>
             <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
@@ -81,7 +81,7 @@ export default function Freebies() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Your Free Arsenal</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Tools that actually move the needle. Click any card to grab your copy.
               </p>
             </div>
@@ -112,13 +112,13 @@ export default function Freebies() {
 
                       {/* Content */}
                       <div className="flex-1 flex flex-col">
-                        <h3 className="text-lg font-bold text-[#e5e4dd] mb-2 group-hover:text-[#ffd700] transition-colors">
+                        <h3 className="text-h6 mb-2 group-hover:text-[#ffd700] transition-colors">
                           {freebie.title}
                         </h3>
-                        <p className="text-[#dcdbd5]/80 text-sm mb-4 flex-1">
+                        <p className="text-caption mb-4 flex-1" style={{ opacity: 0.8 }}>
                           {freebie.description}
                         </p>
-                        <span className="inline-flex items-center gap-2 text-[#ffd700] text-sm font-medium group-hover:gap-3 transition-all">
+                        <span className="inline-flex items-center gap-2 text-[#ffd700] font-medium group-hover:gap-3 transition-all" style={{ fontSize: 'var(--font-size-caption)' }}>
                           Download Free
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -140,29 +140,29 @@ export default function Freebies() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Why Free?</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Because value creates trust. And trust builds partnerships.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
               <GenericCard padding="md" centered>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Lift the Industry</h3>
-                <p className="text-[#dcdbd5]/80 text-sm">
+                <h3 className="text-h6 mb-2">Lift the Industry</h3>
+                <p className="text-caption" style={{ opacity: 0.8 }}>
                   When agents succeed, everyone wins. These tools work.
                 </p>
               </GenericCard>
 
               <GenericCard padding="md" centered>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">Value First</h3>
-                <p className="text-[#dcdbd5]/80 text-sm">
+                <h3 className="text-h6 mb-2">Value First</h3>
+                <p className="text-caption" style={{ opacity: 0.8 }}>
                   Real partnerships start with giving, not asking.
                 </p>
               </GenericCard>
 
               <GenericCard padding="md" centered>
-                <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">This Is Just a Sample</h3>
-                <p className="text-[#dcdbd5]/80 text-sm">
+                <h3 className="text-h6 mb-2">This Is Just a Sample</h3>
+                <p className="text-caption" style={{ opacity: 0.8 }}>
                   If the free stuff is this good, imagine what members get.
                 </p>
               </GenericCard>
@@ -176,7 +176,7 @@ export default function Freebies() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Want the Full Arsenal?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               These downloads are just a preview. Join the Wolf Pack for the complete library.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

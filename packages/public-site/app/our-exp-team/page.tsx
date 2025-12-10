@@ -87,7 +87,7 @@ export default function OurExpTeam() {
         <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
             <H2>Your Direct Mentors</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+            <p className="text-body mt-4 max-w-2xl mx-auto">
               Your first two points of contact. We built the systems, run the community, and are personally invested in your success.
             </p>
           </div>
@@ -102,7 +102,7 @@ export default function OurExpTeam() {
                   <div className="relative">
                     {/* Tier Badge */}
                     <div className="absolute -top-3 -left-3 z-10 w-10 h-10 rounded-full bg-[#ffd700] flex items-center justify-center shadow-lg">
-                      <span className="text-black font-bold text-lg">{founder.tier}</span>
+                      <span className="text-black font-bold" style={{ fontSize: 'var(--font-size-caption)' }}>{founder.tier}</span>
                     </div>
                     <ProfileCyberFrame size="xl" index={index}>
                       <Image
@@ -116,9 +116,9 @@ export default function OurExpTeam() {
                   </div>
                 </div>
                 <div className="lg:w-2/3">
-                  <h3 className="text-2xl font-bold text-[#e5e4dd] mb-1">{founder.name}</h3>
-                  <p className="text-[#ffd700] mb-4">{founder.title}</p>
-                  <div className="space-y-4 text-[#dcdbd5]">
+                  <h3 className="text-h3 mb-1">{founder.name}</h3>
+                  <p className="text-link mb-4">{founder.title}</p>
+                  <div className="space-y-4 text-body">
                     {founder.bio.map((paragraph, pIndex) => (
                       <p key={pIndex}>{paragraph}</p>
                     ))}
@@ -136,7 +136,7 @@ export default function OurExpTeam() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The Wolf Pack Leadership</H2>
-              <p className="text-[#dcdbd5] mt-4">
+              <p className="text-body mt-4">
                 Your extended upline. Access to their resources, training, and a community of 2,900+ agents across 24+ countries.
               </p>
             </div>
@@ -147,7 +147,7 @@ export default function OurExpTeam() {
                   <div className="relative inline-block">
                     {/* Tier Badge */}
                     <div className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-[#ffd700] flex items-center justify-center shadow-lg">
-                      <span className="text-black font-bold text-sm">{partner.tier}</span>
+                      <span className="text-black font-bold" style={{ fontSize: 'var(--font-size-caption)' }}>{partner.tier}</span>
                     </div>
                     <ProfileCyberFrame size="md" index={index}>
                       <Image
@@ -159,8 +159,8 @@ export default function OurExpTeam() {
                       />
                     </ProfileCyberFrame>
                   </div>
-                  <h4 className="text-xl font-bold text-[#e5e4dd] text-center mb-2">{partner.name}</h4>
-                  <p className="text-[#dcdbd5]/80 text-sm text-center">{partner.bio}</p>
+                  <h4 className="text-h5 text-center mb-2">{partner.name}</h4>
+                  <p className="text-caption text-center">{partner.bio}</p>
                 </GenericCard>
               ))}
             </div>
@@ -173,10 +173,10 @@ export default function OurExpTeam() {
         <section className="relative py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <CyberCardGold padding="lg">
-              <NeonGoldText as="p" className="text-lg text-center mb-4">
+              <NeonGoldText as="p" className="text-h6 text-center mb-4">
                 Passive Income Potential
               </NeonGoldText>
-              <p className="text-[#dcdbd5] text-center mb-4">
+              <p className="text-body text-center mb-4">
                 This same 7-tier structure works in reverse for agents you bring in - earning you passive income paid by eXp Realty, not your recruits.
               </p>
               <div className="flex justify-center">
@@ -194,7 +194,7 @@ export default function OurExpTeam() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Join Smart Agent Alliance?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Get 7 layers of support above you, plus access to all our systems, training, and community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

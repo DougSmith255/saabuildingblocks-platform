@@ -70,7 +70,7 @@ export default function AgentPortal() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-lg border border-[#ffd700]/30 bg-black/30 backdrop-blur-sm text-[#e5e4dd] mb-4"
+            className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-lg border border-[#ffd700]/30 bg-black/30 backdrop-blur-sm text-body mb-4"
           >
             <span className="text-[#ffd700]">☰</span>
             <span>Menu</span>
@@ -97,7 +97,7 @@ export default function AgentPortal() {
                     w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-300
                     ${activeSection === item.id
                       ? 'bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/30'
-                      : 'text-[#a0a0a0] hover:text-[#e5e4dd] hover:bg-white/5 border border-transparent'
+                      : 'text-body hover:text-[#e5e4dd] hover:bg-white/5 border border-transparent'
                     }
                   `}
                 >
@@ -161,10 +161,10 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
             <GenericCard className="h-full" hover padding="md">
               <div className="space-y-3">
                 <span className="text-4xl">{card.icon}</span>
-                <h3 className="text-xl font-bold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors">
+                <h3 className="text-h5 group-hover:text-[#ffd700] transition-colors">
                   {card.title}
                 </h3>
-                <p className="text-[#a0a0a0] text-sm">
+                <p className="text-caption">
                   {card.description}
                 </p>
               </div>
@@ -245,17 +245,17 @@ function TeamCallsSection() {
   return (
     <SectionWrapper title="Team Calls & More">
       <div className="space-y-8">
-        <h3 className="text-2xl font-semibold text-[#e5e4dd] text-center mb-6">Mastermind Calls</h3>
+        <h3 className="text-h3 text-center mb-6">Mastermind Calls</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <GenericCard padding="md">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">📹</span>
-                <h4 className="text-xl font-bold text-[#ffd700]">Connor Steinbrook Mastermind</h4>
+                <h4 className="text-h5 text-[#ffd700]">Connor Steinbrook Mastermind</h4>
               </div>
-              <p className="text-[#a0a0a0]">Mindset-based discussions and teachings</p>
-              <p className="text-[#e5e4dd]"><strong>Mondays</strong> at 8:00 am (PST)</p>
+              <p className="text-body">Mindset-based discussions and teachings</p>
+              <p className="text-body"><strong>Mondays</strong> at 8:00 am (PST)</p>
               <a
                 href="https://zoom.us/j/4919666038?pwd=487789"
                 target="_blank"
@@ -264,7 +264,7 @@ function TeamCallsSection() {
               >
                 Join Zoom Call
               </a>
-              <p className="text-sm text-[#a0a0a0]">Password: 487789</p>
+              <p className="text-caption">Password: 487789</p>
             </div>
           </GenericCard>
 
@@ -272,10 +272,10 @@ function TeamCallsSection() {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-3xl">📹</span>
-                <h4 className="text-xl font-bold text-[#8300E9]">Mike Sherrard Mastermind</h4>
+                <h4 className="text-h5 text-[#8300E9]">Mike Sherrard Mastermind</h4>
               </div>
-              <p className="text-[#a0a0a0]">Production-based discussions and teachings</p>
-              <p className="text-[#e5e4dd]"><strong>Tuesdays</strong> at 2:00 pm (PST)</p>
+              <p className="text-body">Production-based discussions and teachings</p>
+              <p className="text-body"><strong>Tuesdays</strong> at 2:00 pm (PST)</p>
               <a
                 href="https://us02web.zoom.us/j/88399766561"
                 target="_blank"
@@ -301,13 +301,13 @@ function TemplatesSection() {
       <div className="space-y-8">
         <GenericCard padding="lg">
           <div className="space-y-6">
-            <h3 className="text-2xl font-semibold text-[#ffd700]">Using SAA Canva Templates</h3>
-            <p className="text-[#e5e4dd]">Use your eXp account credentials to login to Canva</p>
+            <h3 className="text-h3 text-[#ffd700]">Using SAA Canva Templates</h3>
+            <p className="text-body">Use your eXp account credentials to login to Canva</p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
               <div>
-                <h4 className="text-lg font-semibold text-[#e5e4dd] mb-4">Templates Available For:</h4>
-                <ul className="space-y-2 text-[#a0a0a0]">
+                <h4 className="text-h5 mb-4">Templates Available For:</h4>
+                <ul className="space-y-2 text-body">
                   <li>• Frames</li>
                   <li>• Buyer / Seller Presentations</li>
                   <li>• Self Promo / Testimonials / Marketing</li>
@@ -321,7 +321,7 @@ function TemplatesSection() {
               <div className="flex items-center justify-center">
                 <div className="text-center p-6 rounded-xl border border-[#ffd700]/20">
                   <span className="text-5xl mb-4 block">🎨</span>
-                  <p className="text-[#e5e4dd]">Access templates through your eXp Canva account</p>
+                  <p className="text-body">Access templates through your eXp Canva account</p>
                 </div>
               </div>
             </div>
@@ -338,30 +338,30 @@ function TemplatesSection() {
 function CoursesSection() {
   return (
     <SectionWrapper title="Elite Courses">
-      <p className="text-center text-[#a0a0a0] mb-8">Refer to Wolf Pack emails to find login details</p>
+      <p className="text-center text-body mb-8">Refer to Wolf Pack emails to find login details</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <GenericCard padding="md" centered>
           <div className="text-center space-y-4">
             <span className="text-5xl">🐺</span>
-            <h3 className="text-xl font-bold text-[#ffd700]">Wolf Pack Skool Portal & HUB</h3>
-            <p className="text-[#a0a0a0]">Access the Wolfpack HUB in courses</p>
+            <h3 className="text-h5 text-[#ffd700]">Wolf Pack Skool Portal & HUB</h3>
+            <p className="text-body">Access the Wolfpack HUB in courses</p>
           </div>
         </GenericCard>
 
         <GenericCard padding="md" centered>
           <div className="text-center space-y-4">
             <span className="text-5xl">📱</span>
-            <h3 className="text-xl font-bold text-[#ffd700]">Social Agent Academy</h3>
-            <p className="text-[#a0a0a0]">Learn how to dominate online</p>
+            <h3 className="text-h5 text-[#ffd700]">Social Agent Academy</h3>
+            <p className="text-body">Learn how to dominate online</p>
           </div>
         </GenericCard>
 
         <GenericCard padding="md" centered>
           <div className="text-center space-y-4">
             <span className="text-5xl">🏠</span>
-            <h3 className="text-xl font-bold text-[#ffd700]">Investor Army</h3>
-            <p className="text-[#a0a0a0]">Learn to flip houses</p>
+            <h3 className="text-h5 text-[#ffd700]">Investor Army</h3>
+            <p className="text-body">Learn to flip houses</p>
           </div>
         </GenericCard>
       </div>
@@ -412,16 +412,16 @@ Referral Networks to consider:
           <GenericCard padding="md">
             <div className="space-y-4">
               <span className="text-4xl">🏗️</span>
-              <h3 className="text-xl font-bold text-[#ffd700]">Build Landing Pages (Bold Trail)</h3>
-              <p className="text-[#a0a0a0]">How to build them</p>
+              <h3 className="text-h5 text-[#ffd700]">Build Landing Pages (Bold Trail)</h3>
+              <p className="text-body">How to build them</p>
             </div>
           </GenericCard>
 
           <GenericCard padding="md">
             <div className="space-y-4">
               <span className="text-4xl">#️⃣</span>
-              <h3 className="text-xl font-bold text-[#ffd700]">Landing Page Hashtags & Links</h3>
-              <p className="text-[#a0a0a0]">Be sure to watch the how-to video first</p>
+              <h3 className="text-h5 text-[#ffd700]">Landing Page Hashtags & Links</h3>
+              <p className="text-body">Be sure to watch the how-to video first</p>
             </div>
           </GenericCard>
         </div>
@@ -430,9 +430,9 @@ Referral Networks to consider:
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <span className="text-3xl">✉️</span>
-              <h3 className="text-xl font-bold text-[#ffd700]">Email Campaigns for Lead Magnets</h3>
+              <h3 className="text-h5 text-[#ffd700]">Email Campaigns for Lead Magnets</h3>
             </div>
-            <p className="text-[#a0a0a0]">Automate your nurturing of leads</p>
+            <p className="text-body">Automate your nurturing of leads</p>
           </div>
         </GenericCard>
 
@@ -471,9 +471,9 @@ Tips for getting started:
         <GenericCard padding="lg" centered>
           <div className="text-center space-y-4 py-4">
             <span className="text-6xl">💰</span>
-            <h3 className="text-2xl font-bold text-[#ffd700]">Grow Your Downline</h3>
-            <p className="text-[#e5e4dd] text-lg">No experience needed</p>
-            <p className="text-[#a0a0a0]">Learn how to build passive income through eXp's revenue share program</p>
+            <h3 className="text-h3 text-[#ffd700]">Grow Your Downline</h3>
+            <p className="text-body">No experience needed</p>
+            <p className="text-body">Learn how to build passive income through eXp's revenue share program</p>
           </div>
         </GenericCard>
 
@@ -493,8 +493,8 @@ function ExpLinksSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <GenericCard padding="md">
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-[#ffd700]">For Production Questions:</h3>
-              <p className="text-[#a0a0a0]">Go to eXp World and visit your State Broker's room</p>
+              <h3 className="text-h5 text-[#ffd700]">For Production Questions:</h3>
+              <p className="text-body">Go to eXp World and visit your State Broker's room</p>
               <a
                 href="https://exp.world/welcome"
                 target="_blank"
@@ -508,8 +508,8 @@ function ExpLinksSection() {
 
           <GenericCard padding="md">
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-[#ffd700]">For Other Questions:</h3>
-              <p className="text-[#a0a0a0]">Visit Expert Care in eXp World</p>
+              <h3 className="text-h5 text-[#ffd700]">For Other Questions:</h3>
+              <p className="text-body">Visit Expert Care in eXp World</p>
               <a
                 href="https://exp.world/expertcare"
                 target="_blank"
@@ -524,8 +524,8 @@ function ExpLinksSection() {
 
         <GenericCard padding="md">
           <div className="space-y-4">
-            <h3 className="text-xl font-bold text-[#ffd700]">Still can't find the answer?</h3>
-            <p className="text-[#a0a0a0]">Contact us directly:</p>
+            <h3 className="text-h5 text-[#ffd700]">Still can't find the answer?</h3>
+            <p className="text-body">Contact us directly:</p>
             <div className="flex flex-wrap gap-4">
               <a
                 href="mailto:doug@smartagentalliance.com"
@@ -544,7 +544,7 @@ function ExpLinksSection() {
         </GenericCard>
 
         <div>
-          <h3 className="text-xl font-semibold text-[#e5e4dd] mb-4">Quick Links</h3>
+          <h3 className="text-h5 mb-4">Quick Links</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               { label: 'eXp Realty US', url: 'https://us.exprealty.com/' },
@@ -582,13 +582,13 @@ function NewAgentsSection() {
           <div className="space-y-6">
             <div className="text-center">
               <span className="text-6xl mb-4 block">🎯</span>
-              <h3 className="text-2xl font-bold text-[#ffd700]">Welcome to Smart Agent Alliance!</h3>
-              <p className="text-[#e5e4dd] text-lg mt-2">Information tailored specifically for new agents</p>
+              <h3 className="text-h3 text-[#ffd700]">Welcome to Smart Agent Alliance!</h3>
+              <p className="text-body mt-2">Information tailored specifically for new agents</p>
             </div>
 
             <div className="border-t border-white/10 pt-6">
-              <h4 className="text-lg font-semibold text-[#e5e4dd] mb-4">Your First Steps:</h4>
-              <ol className="space-y-3 text-[#a0a0a0]">
+              <h4 className="text-h5 mb-4">Your First Steps:</h4>
+              <ol className="space-y-3 text-body">
                 <li className="flex gap-3">
                   <span className="text-[#ffd700] font-bold">1.</span>
                   <span>Complete the "Start Here" section to understand how to use SAA tools</span>
@@ -615,7 +615,7 @@ function NewAgentsSection() {
         </GenericCard>
 
         <div className="text-center">
-          <p className="text-[#a0a0a0] mb-4">Questions? Reach out to your sponsor or contact us:</p>
+          <p className="text-body mb-4">Questions? Reach out to your sponsor or contact us:</p>
           <a
             href="mailto:doug@smartagentalliance.com"
             className="inline-block px-6 py-3 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"

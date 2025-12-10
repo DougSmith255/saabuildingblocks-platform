@@ -70,8 +70,8 @@ export default function AboutKarrieHill() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {highlights.map((item, index) => (
                   <GenericCard key={index} padding="sm">
-                    <p className="text-[#dcdbd5]/60 text-sm">{item.label}</p>
-                    <p className="text-[#e5e4dd] font-medium">{item.value}</p>
+                    <p className="text-[#dcdbd5]/60" style={{ fontSize: 'var(--font-size-caption)' }}>{item.label}</p>
+                    <p className="text-body font-medium">{item.value}</p>
                   </GenericCard>
                 ))}
               </div>
@@ -88,8 +88,8 @@ export default function AboutKarrieHill() {
               <H2>The Strategist</H2>
             </div>
 
-            <div className="space-y-6 text-[#dcdbd5]">
-              <p className="text-lg">
+            <div className="space-y-6 text-body">
+              <p>
                 UC Berkeley Law graduate (<strong className="text-[#ffd700]">top 5% of her class</strong>), eXp Certified Mentor,
                 and the strategic mind behind agent success at Smart Agent Alliance. Karrie built a
                 <strong className="text-[#ffd700]"> six-figure real estate business in her first full year</strong>—no
@@ -123,8 +123,8 @@ export default function AboutKarrieHill() {
               {achievements.map((achievement, index) => (
                 <GenericCard key={index} padding="md">
                   <div className="flex items-start gap-4">
-                    <div className="text-[#ffd700] text-xl flex-shrink-0">✓</div>
-                    <p className="text-[#dcdbd5]">{achievement}</p>
+                    <div className="text-[#ffd700] text-h5 flex-shrink-0">✓</div>
+                    <p className="text-body">{achievement}</p>
                   </div>
                 </GenericCard>
               ))}
@@ -144,7 +144,7 @@ export default function AboutKarrieHill() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {certifications.map((cert, index) => (
                 <GenericCard key={index} padding="sm" centered>
-                  <p className="text-[#e5e4dd] font-medium">{cert}</p>
+                  <p className="text-body font-medium">{cert}</p>
                 </GenericCard>
               ))}
             </div>
@@ -159,7 +159,7 @@ export default function AboutKarrieHill() {
             <div className="text-center mb-8">
               <H2>Beyond Real Estate</H2>
             </div>
-            <p className="text-[#dcdbd5] max-w-2xl mx-auto">
+            <p className="text-body max-w-2xl mx-auto">
               30+ year Marin County resident. Living in Tiburon with her husband and two dogs—Baxter and Lily.
               Mother of three, grandmother. Her creative talents have been featured on HGTV and in national magazines
               for interior design.
@@ -174,11 +174,11 @@ export default function AboutKarrieHill() {
           <div className="max-w-[1900px] mx-auto">
             <CyberCard padding="lg">
               <div className="text-center">
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Get in Touch</h3>
-                <a href="mailto:karrie.hill@exprealty.com" className="text-[#ffd700] hover:underline text-lg">
+                <h3 className="text-h5 mb-4">Get in Touch</h3>
+                <a href="mailto:karrie.hill@exprealty.com" className="text-link hover:underline">
                   karrie.hill@exprealty.com
                 </a>
-                <p className="text-[#dcdbd5]/60 text-sm mt-2">415-435-7777 (no text)</p>
+                <p className="text-[#dcdbd5]/60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>415-435-7777 (no text)</p>
               </div>
             </CyberCard>
           </div>
@@ -190,7 +190,7 @@ export default function AboutKarrieHill() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Level Up?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Get mentorship from Karrie and access the strategies that built a six-figure business in year one.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

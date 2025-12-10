@@ -59,7 +59,7 @@ export default function BestRealEstateBrokerage() {
         <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
             <H2>Pick Your Battle</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+            <p className="text-body mt-4 max-w-2xl mx-auto">
               See how eXp stacks up against the competition.
             </p>
           </div>
@@ -68,10 +68,10 @@ export default function BestRealEstateBrokerage() {
             {comparisons.map((comparison, index) => (
               <a key={index} href={comparison.href} className="block group">
                 <GenericCard hover padding="lg" className="h-full">
-                  <div className="text-[#ffd700] text-sm font-medium mb-2">{comparison.highlight}</div>
-                  <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{comparison.title}</h3>
-                  <p className="text-[#dcdbd5]/80 mb-4">{comparison.description}</p>
-                  <span className="text-[#ffd700] group-hover:underline">View Comparison →</span>
+                  <div className="text-link font-medium mb-2" style={{ fontSize: 'var(--font-size-caption)' }}>{comparison.highlight}</div>
+                  <h3 className="text-h5 mb-3">{comparison.title}</h3>
+                  <p className="text-body mb-4">{comparison.description}</p>
+                  <span className="text-link group-hover:underline">View Comparison →</span>
                 </GenericCard>
               </a>
             ))}
@@ -85,7 +85,7 @@ export default function BestRealEstateBrokerage() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>What Actually Matters</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Your brokerage choice impacts your income for years. Focus on these.
               </p>
             </div>
@@ -93,8 +93,8 @@ export default function BestRealEstateBrokerage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {whyCompare.map((item, index) => (
                 <GenericCard key={index} padding="md">
-                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{item.title}</h3>
-                  <p className="text-[#dcdbd5]/80 text-sm">{item.description}</p>
+                  <h3 className="text-h6 mb-2">{item.title}</h3>
+                  <p className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>{item.description}</p>
                 </GenericCard>
               ))}
             </div>
@@ -108,28 +108,28 @@ export default function BestRealEstateBrokerage() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The eXp Edge</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 The numbers speak for themselves.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 text-center">
               <CyberCard padding="md">
-                <div className="text-4xl font-bold text-[#ffd700] mb-2">100%</div>
-                <p className="text-[#dcdbd5]">Commission After Cap</p>
-                <p className="text-[#dcdbd5]/60 text-sm mt-1">Cap at just $16,000</p>
+                <div className="text-h3 text-link mb-2">100%</div>
+                <p className="text-body">Commission After Cap</p>
+                <p className="text-caption mt-1">Cap at just $16,000</p>
               </CyberCard>
 
               <CyberCard padding="md">
-                <div className="text-4xl font-bold text-[#ffd700] mb-2">$85</div>
-                <p className="text-[#dcdbd5]">Monthly Fee</p>
-                <p className="text-[#dcdbd5]/60 text-sm mt-1">No desk or franchise fees</p>
+                <div className="text-h3 text-link mb-2">$85</div>
+                <p className="text-body">Monthly Fee</p>
+                <p className="text-caption mt-1">No desk or franchise fees</p>
               </CyberCard>
 
               <CyberCard padding="md">
-                <div className="text-4xl font-bold text-[#ffd700] mb-2">4</div>
-                <p className="text-[#dcdbd5]">Income Streams</p>
-                <p className="text-[#dcdbd5]/60 text-sm mt-1">Commission, stock, rev share, referrals</p>
+                <div className="text-h3 text-link mb-2">4</div>
+                <p className="text-body">Income Streams</p>
+                <p className="text-caption mt-1">Commission, stock, rev share, referrals</p>
               </CyberCard>
             </div>
           </div>
@@ -141,7 +141,7 @@ export default function BestRealEstateBrokerage() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Make the Move?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Stop leaving money on the table. Join the Wolf Pack.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

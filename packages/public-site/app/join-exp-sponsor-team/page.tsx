@@ -90,11 +90,11 @@ export default function JoinExpSponsorTeam() {
                   className="object-cover object-top"
                 />
               </ProfileCyberFrame>
-              <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Karrie Hill</h3>
-              <p className="text-[#ffd700] mb-4">Co-Founder, Smart Agent Alliance</p>
-              <div className="space-y-2 text-[#dcdbd5]">
+              <h3 className="text-h5 mb-2">Karrie Hill</h3>
+              <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
+              <div className="space-y-2 text-body">
                 <p>
-                  <a href="mailto:karrie.hill@exprealty.com" className="hover:text-[#ffd700] transition-colors">
+                  <a href="mailto:karrie.hill@exprealty.com" className="text-link transition-colors">
                     karrie.hill@exprealty.com
                   </a>
                 </p>
@@ -113,11 +113,11 @@ export default function JoinExpSponsorTeam() {
                   className="object-cover object-top"
                 />
               </ProfileCyberFrame>
-              <h3 className="text-2xl font-bold text-[#e5e4dd] mb-2">Doug Smart</h3>
-              <p className="text-[#ffd700] mb-4">Co-Founder, Smart Agent Alliance</p>
-              <div className="space-y-2 text-[#dcdbd5]">
+              <h3 className="text-h5 mb-2">Doug Smart</h3>
+              <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
+              <div className="space-y-2 text-body">
                 <p>
-                  <a href="mailto:doug@smartagentalliance.com" className="hover:text-[#ffd700] transition-colors">
+                  <a href="mailto:doug@smartagentalliance.com" className="text-link transition-colors">
                     doug@smartagentalliance.com
                   </a>
                 </p>
@@ -145,20 +145,20 @@ export default function JoinExpSponsorTeam() {
             <div className="grid md:grid-cols-3 gap-6">
               <CyberCard padding="md">
                 <div className="text-4xl mb-4 text-[#ffd700]">2,900+</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
-                <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
+                <h3 className="text-h6 mb-2">Realtors Strong</h3>
+                <p className="text-body">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
               </CyberCard>
 
               <CyberCard padding="md">
                 <div className="text-4xl mb-4 text-[#ffd700]">100%</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
-                <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
+                <h3 className="text-h6 mb-2">Free Resources</h3>
+                <p className="text-body">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
               </CyberCard>
 
               <CyberCard padding="md">
                 <div className="text-4xl mb-4 text-[#ffd700]">#1</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
-                <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
+                <h3 className="text-h6 mb-2">Retention Rate</h3>
+                <p className="text-body">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
               </CyberCard>
             </div>
           </div>
@@ -182,7 +182,7 @@ export default function JoinExpSponsorTeam() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Take the Next Step?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Join the Smart Agent Alliance team at eXp Realty and start your journey towards a more successful real estate career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

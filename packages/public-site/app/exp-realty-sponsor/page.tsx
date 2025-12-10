@@ -60,7 +60,7 @@ export default function ExpRealtySponsor() {
       {/* Intro Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto text-center">
-          <p className="text-[#dcdbd5] text-lg">
+          <p className="text-body">
             We partner with broker-owners, teams, top producers, growing agents, and brand-new licensees.
             <strong className="text-[#ffd700]"> 2,900+ agents</strong> across the US, Canada, Mexico, Australia, and beyond.
           </p>
@@ -98,7 +98,7 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>What You Get With The Wolf Pack</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Immediate access to systems, training, and resources that would cost thousands elsewhere. All free when you join.
               </p>
             </div>
@@ -121,8 +121,8 @@ export default function ExpRealtySponsor() {
                     </div>
                   </div>
                   <div className="lg:w-1/2 text-center lg:text-left">
-                    <h3 className="text-2xl font-bold text-[#e5e4dd] mb-4">{item.title}</h3>
-                    <p className="text-[#dcdbd5] text-lg">{item.description}</p>
+                    <h3 className="text-h3 mb-4">{item.title}</h3>
+                    <p className="text-body">{item.description}</p>
                   </div>
                 </div>
               ))}
@@ -137,7 +137,7 @@ export default function ExpRealtySponsor() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>The Full Arsenal</H2>
-              <p className="text-[#dcdbd5] mt-4">Every tool, strategy, and system you need to dominate your market</p>
+              <p className="text-body mt-4">Every tool, strategy, and system you need to dominate your market</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -155,7 +155,7 @@ export default function ExpRealtySponsor() {
                     {index === 8 && "📈"}
                     {index === 9 && "💬"}
                   </div>
-                  <h4 className="text-[#e5e4dd] font-medium text-sm">{feature.title}</h4>
+                  <h4 className="text-caption">{feature.title}</h4>
                 </GenericCard>
               ))}
             </div>
@@ -170,17 +170,17 @@ export default function ExpRealtySponsor() {
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <CyberCard padding="lg">
                 <div className="text-5xl font-bold text-[#ffd700] mb-2">2,900+</div>
-                <p className="text-[#dcdbd5]">Agents Strong</p>
+                <p className="text-body">Agents Strong</p>
               </CyberCard>
 
               <CyberCard padding="lg">
                 <div className="text-5xl font-bold text-[#ffd700] mb-2">24+</div>
-                <p className="text-[#dcdbd5]">Countries</p>
+                <p className="text-body">Countries</p>
               </CyberCard>
 
               <CyberCard padding="lg">
                 <div className="text-5xl font-bold text-[#ffd700] mb-2">5</div>
-                <p className="text-[#dcdbd5]">Weekly Calls</p>
+                <p className="text-body">Weekly Calls</p>
               </CyberCard>
             </div>
           </div>
@@ -192,7 +192,7 @@ export default function ExpRealtySponsor() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Run With The Pack?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Stop going it alone. Join 2,900+ agents who have access to the training, systems, and support that accelerates success.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

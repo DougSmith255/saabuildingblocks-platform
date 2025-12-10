@@ -78,7 +78,7 @@ export default function Awards() {
         <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
             <H2>Major Recognition</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+            <p className="text-body mt-4 max-w-2xl mx-auto">
               Year after year, the industry's most respected rankings prove what we already know.
             </p>
           </div>
@@ -86,9 +86,9 @@ export default function Awards() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {majorAwards.map((award, index) => (
               <GenericCard key={index} padding="md">
-                <div className="text-[#ffd700] text-sm font-medium mb-2">{award.year}</div>
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">{award.title}</h3>
-                <p className="text-[#dcdbd5]/80">{award.detail}</p>
+                <div className="text-link mb-2" style={{ fontSize: 'var(--font-size-caption)' }}>{award.year}</div>
+                <h3 className="text-h5 mb-3">{award.title}</h3>
+                <p className="text-body opacity-80">{award.detail}</p>
               </GenericCard>
             ))}
           </div>
@@ -101,7 +101,7 @@ export default function Awards() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>RealTrends Dominance</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 The numbers don't lie. eXp leads where it matters.
               </p>
             </div>
@@ -109,8 +109,8 @@ export default function Awards() {
             <GenericCard padding="lg">
               <ul className="space-y-4">
                 {realTrendsAchievements.map((achievement, index) => (
-                  <li key={index} className="flex items-start gap-4 text-[#dcdbd5]">
-                    <span className="text-[#ffd700] text-xl">✓</span>
+                  <li key={index} className="flex items-start gap-4 text-body">
+                    <span className="text-link text-h5">✓</span>
                     {achievement}
                   </li>
                 ))}
@@ -126,7 +126,7 @@ export default function Awards() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Leadership Excellence</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 eXp's executives setting the standard for the industry.
               </p>
             </div>
@@ -134,8 +134,8 @@ export default function Awards() {
             <div className="grid md:grid-cols-3 gap-6">
               {executiveRecognition.map((exec, index) => (
                 <GenericCard key={index} padding="md" centered>
-                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{exec.name}</h3>
-                  <p className="text-[#ffd700] text-sm">{exec.award}</p>
+                  <h3 className="text-h6 mb-2">{exec.name}</h3>
+                  <p className="text-link" style={{ fontSize: 'var(--font-size-caption)' }}>{exec.award}</p>
                 </GenericCard>
               ))}
             </div>
@@ -149,7 +149,7 @@ export default function Awards() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Wolf Pack Supremacy</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Inside eXp, the Wolf Pack leads the pack. Here's why agents stay.
               </p>
             </div>
@@ -157,8 +157,8 @@ export default function Awards() {
             <div className="grid md:grid-cols-3 gap-6">
               {wolfPackAwards.map((award, index) => (
                 <CyberCard key={index} padding="md">
-                  <h3 className="text-xl font-bold text-[#ffd700] mb-3">{award.title}</h3>
-                  <p className="text-[#dcdbd5]">{award.description}</p>
+                  <h3 className="text-h5 text-link mb-3">{award.title}</h3>
+                  <p className="text-body">{award.description}</p>
                 </CyberCard>
               ))}
             </div>
@@ -171,7 +171,7 @@ export default function Awards() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Join the Industry Leader</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               The fastest-growing brokerage. The highest retention group. Your move.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

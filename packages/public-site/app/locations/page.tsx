@@ -67,8 +67,8 @@ export default function Locations() {
           <div className="grid md:grid-cols-3 gap-6 text-center">
             {stats.map((stat, index) => (
               <CyberCard key={index} padding="lg">
-                <div className="text-5xl font-bold text-[#ffd700] mb-2">{stat.value}</div>
-                <p className="text-[#dcdbd5]">{stat.label}</p>
+                <div className="text-h2 text-[#ffd700] mb-2">{stat.value}</div>
+                <p className="text-body">{stat.label}</p>
               </CyberCard>
             ))}
           </div>
@@ -81,7 +81,7 @@ export default function Locations() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Where eXp Operates</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Real estate without borders. Build your business anywhere on the planet.
               </p>
             </div>
@@ -89,10 +89,10 @@ export default function Locations() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {regions.map((region, index) => (
                 <GenericCard key={index} padding="md">
-                  <h3 className="text-xl font-bold text-[#ffd700] mb-4">{region.name}</h3>
+                  <h3 className="text-h5 text-[#ffd700] mb-4">{region.name}</h3>
                   <ul className="space-y-2">
                     {region.countries.map((country, cIndex) => (
-                      <li key={cIndex} className="text-[#dcdbd5] flex items-center gap-2">
+                      <li key={cIndex} className="text-body flex items-center gap-2">
                         <span className="text-[#ffd700]">•</span>
                         {country}
                       </li>
@@ -111,7 +111,7 @@ export default function Locations() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Agent Advantages</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Everything you need to dominate your market—included, not extra.
               </p>
             </div>
@@ -119,8 +119,8 @@ export default function Locations() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {agentBenefits.map((benefit, index) => (
                 <GenericCard key={index} padding="md" hover>
-                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
-                  <p className="text-[#dcdbd5]/80">{benefit.description}</p>
+                  <h3 className="text-h6 text-[#e5e4dd] mb-2">{benefit.title}</h3>
+                  <p className="text-body">{benefit.description}</p>
                 </GenericCard>
               ))}
             </div>
@@ -134,7 +134,7 @@ export default function Locations() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Team & Brokerage Power</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Scale internationally without brick-and-mortar overhead.
               </p>
             </div>
@@ -142,8 +142,8 @@ export default function Locations() {
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               {teamBenefits.map((benefit, index) => (
                 <GenericCard key={index} padding="md">
-                  <h3 className="text-lg font-bold text-[#e5e4dd] mb-2">{benefit.title}</h3>
-                  <p className="text-[#dcdbd5]/80">{benefit.description}</p>
+                  <h3 className="text-h6 text-[#e5e4dd] mb-2">{benefit.title}</h3>
+                  <p className="text-body">{benefit.description}</p>
                 </GenericCard>
               ))}
             </div>
@@ -156,7 +156,7 @@ export default function Locations() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Borderless Revenue Share</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               eXp's revenue share program works internationally—earn passive income from agents you attract
               across the United States and <strong className="text-[#ffd700]">24+ other countries</strong>.
             </p>
@@ -172,7 +172,7 @@ export default function Locations() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Go Global?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Join the fastest-growing cloud brokerage and build without borders.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

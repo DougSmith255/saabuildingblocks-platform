@@ -36,7 +36,7 @@ export default function OnlineBrokerageComparison() {
         <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
             <H2>The Full Breakdown</H2>
-            <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+            <p className="text-body mt-4 max-w-2xl mx-auto">
               Financial strength. Agent earnings. Fees. Support. Every metric that matters.
             </p>
           </div>
@@ -45,35 +45,35 @@ export default function OnlineBrokerageComparison() {
           <div className="flex flex-wrap gap-6 justify-center mb-8">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-yellow-300 border border-black"></span>
-              <span className="text-[#dcdbd5] text-sm">Financial Strength</span>
+              <span className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Financial Strength</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-green-500 border border-black"></span>
-              <span className="text-[#dcdbd5] text-sm">Agent Earnings</span>
+              <span className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Agent Earnings</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-red-500 border border-black"></span>
-              <span className="text-[#dcdbd5] text-sm">Agent Fees</span>
+              <span className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Agent Fees</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-blue-500 border border-black"></span>
-              <span className="text-[#dcdbd5] text-sm">Support</span>
+              <span className="text-body" style={{ fontSize: 'var(--font-size-caption)' }}>Support</span>
             </div>
           </div>
 
           {/* Main Comparison Table */}
           <div className="overflow-x-auto rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-            <table className="w-full text-sm">
+            <table className="w-full" style={{ fontSize: 'var(--font-size-caption)' }}>
               <thead>
                 <tr className="bg-black/50 text-gold-500">
-                  <th className="p-4 text-left text-[#ffd700] font-bold">Cloud Based Brokerage</th>
-                  <th className="p-4 text-left text-[#ffd700] font-bold">eXp Realty</th>
-                  <th className="p-4 text-left text-[#ffd700] font-bold">Real Broker</th>
-                  <th className="p-4 text-left text-[#ffd700] font-bold">LPT Realty</th>
-                  <th className="p-4 text-left text-[#ffd700] font-bold">Fathom Realty</th>
+                  <th className="p-4 text-left text-link font-bold">Cloud Based Brokerage</th>
+                  <th className="p-4 text-left text-link font-bold">eXp Realty</th>
+                  <th className="p-4 text-left text-link font-bold">Real Broker</th>
+                  <th className="p-4 text-left text-link font-bold">LPT Realty</th>
+                  <th className="p-4 text-left text-link font-bold">Fathom Realty</th>
                 </tr>
               </thead>
-              <tbody className="text-[#dcdbd5]">
+              <tbody className="text-body">
                 {/* Financial Strength Rows */}
                 <tr className="border-t border-white/10 bg-yellow-500/10">
                   <td className="p-4 font-medium">Founded</td>
@@ -197,23 +197,23 @@ export default function OnlineBrokerageComparison() {
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
               <H2>Long-Term Wealth Building</H2>
-              <p className="text-[#dcdbd5] mt-4 max-w-2xl mx-auto">
+              <p className="text-body mt-4 max-w-2xl mx-auto">
                 Revenue share determines your passive income potential. The differences are massive.
               </p>
             </div>
 
             <div className="overflow-x-auto rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-              <table className="w-full text-sm">
+              <table className="w-full" style={{ fontSize: 'var(--font-size-caption)' }}>
                 <thead>
                   <tr className="bg-black/50">
-                    <th className="p-4 text-left text-[#ffd700] font-bold">Rev Share MLM Brokerages</th>
-                    <th className="p-4 text-left text-[#ffd700] font-bold">eXp Realty</th>
-                    <th className="p-4 text-left text-[#ffd700] font-bold">Real Broker</th>
-                    <th className="p-4 text-left text-[#ffd700] font-bold">LPT Realty</th>
-                    <th className="p-4 text-left text-[#ffd700] font-bold">Fathom</th>
+                    <th className="p-4 text-left text-link font-bold">Rev Share MLM Brokerages</th>
+                    <th className="p-4 text-left text-link font-bold">eXp Realty</th>
+                    <th className="p-4 text-left text-link font-bold">Real Broker</th>
+                    <th className="p-4 text-left text-link font-bold">LPT Realty</th>
+                    <th className="p-4 text-left text-link font-bold">Fathom</th>
                   </tr>
                 </thead>
-                <tbody className="text-[#dcdbd5]">
+                <tbody className="text-body">
                   <tr className="border-t border-white/10 hover:bg-white/5">
                     <td className="p-4 font-medium">Max $ for Rev Share Pool</td>
                     <td className="p-4">$8,000/agent</td>
@@ -271,24 +271,24 @@ export default function OnlineBrokerageComparison() {
               <H2>Detailed Analysis</H2>
             </div>
 
-            <div className="space-y-8 text-[#dcdbd5]">
+            <div className="space-y-8 text-body">
               <GenericCard padding="md">
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Financial Strength and Profitability</h3>
+                <h3 className="text-h5 mb-3">Financial Strength and Profitability</h3>
                 <p>eXp Realty demonstrates robust financial health with 15 profitable quarters out of 20. Real Broker and Fathom Realty each have only one profitable quarter out of 19, and LPT Realty's financial details are not publicly available. This profitability is reflected in their stock performance: eXp Realty (EXPI) trades around $14, Real Broker (REAL) around $6, and Fathom Realty (FATH) around $2.</p>
               </GenericCard>
 
               <GenericCard padding="md">
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Agent Count and Geographic Reach</h3>
+                <h3 className="text-h5 mb-3">Agent Count and Geographic Reach</h3>
                 <p>eXp Realty leads with over 80,000 agents, operating in all 50 states and 24 countries. Real Broker follows with 20,000+ agents in 50 states and 2 countries. LPT Realty and Fathom Realty each have 11,000+ agents, but LPT Realty is active in 24 states and 1 country, while Fathom Realty covers 41 states and 5 countries.</p>
               </GenericCard>
 
               <GenericCard padding="md">
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Revenue Share and Stock Awards</h3>
+                <h3 className="text-h5 mb-3">Revenue Share and Stock Awards</h3>
                 <p>eXp Realty leads with a potential revenue share pool of $204 million if 30% of its agents cap, significantly higher than Real Broker's $43 million and LPT Realty's $16.5 million. eXp Realty agents earn revenue share across seven tiers, compared to five tiers for both Real Broker and Fathom, and seven for LPT Realty. Only eXp offers stock awards for attracting agents and completing transactions.</p>
               </GenericCard>
 
               <GenericCard padding="md">
-                <h3 className="text-xl font-bold text-[#e5e4dd] mb-3">Training and Support</h3>
+                <h3 className="text-h5 mb-3">Training and Support</h3>
                 <p>Unique to eXp Realty is its extensive support system, including 50+ live training hours per week and a virtual world (eXp World 2.0). Real Broker offers 30+ live training hours but lacks a virtual world. LPT Realty and Fathom Realty do not provide such extensive training options. eXp Realty also offers healthcare options and a 60/40 mentorship program for the first three sales.</p>
               </GenericCard>
             </div>
@@ -347,7 +347,7 @@ export default function OnlineBrokerageComparison() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Make the Move?</H2>
-            <p className="text-[#dcdbd5] mt-4 mb-8">
+            <p className="text-body mt-4 mb-8">
               Stop leaving money on the table. Join the Wolf Pack at eXp.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
