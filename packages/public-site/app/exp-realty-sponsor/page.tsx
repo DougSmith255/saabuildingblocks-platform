@@ -13,27 +13,22 @@ export default function ExpRealtySponsor() {
     {
       title: "FREE Social Media Training Course",
       description: "Quick Wins, Massive Momentum, Tangible Results FASTER than Any Other Program.",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Social-Agent-Academy-2.0.png"
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/33907e8d78946e3c-Social-Agent-Academy-PRO.webp/public"
     },
     {
-      title: "eXp Realty Success Course",
+      title: "Elite Training Courses",
       description: "Quick Onboarding with Roadmaps to Quick Production & Revenue Share Wins",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Wolfpack-HUB.png"
-    },
-    {
-      title: "Investor Courses",
-      description: "From the #1 Real Estate Investor in all of eXp's 89,000+ agents",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Investor-1.png"
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/f1fc2fdbb7666b9d-Free-Elite-Courses-Featured-Images.webp/public"
     },
     {
       title: "Live Training & Community",
       description: "5 MasterMind Video Support & Training Calls Each Week",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Mike-call-1.jpg"
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4c85e5e6f78b780b-5-weekly-mastermind-calls.webp/public"
     },
     {
-      title: "Private Women's Weekly Call",
-      description: "Dedicated support and community for women agents",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/women-of-the-wolf-pack.jpg"
+      title: "Customizable Marketing Assets",
+      description: "Ready-to-use templates to build your brand and generate leads",
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bee7eb0a134ef266-customizable-assets.webp/public"
     }
   ];
 
@@ -55,15 +50,6 @@ export default function ExpRealtySponsor() {
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1400px] mx-auto w-full text-center">
-          <div className="mb-8">
-            <Image
-              src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/WP-Lettering-BRIGHTER3.png"
-              alt="Wolf Pack"
-              width={600}
-              height={172}
-              className="mx-auto"
-            />
-          </div>
           <H1>THE WOLF PACK</H1>
           <Tagline className="mt-4">
             Free Resources, Tools, Training, Support, & Community — No Extra Cost or Split Ever!
