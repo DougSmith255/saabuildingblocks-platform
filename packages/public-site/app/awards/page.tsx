@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -147,10 +147,10 @@ export default function Awards() {
 
             <div className="grid md:grid-cols-3 gap-6">
               {wolfPackAwards.map((award, index) => (
-                <GenericCard key={index} padding="md" centered>
+                <CyberCard key={index} padding="md">
                   <h3 className="text-xl font-bold text-amber-400 mb-3">{award.title}</h3>
                   <p className="text-[#dcdbd5]">{award.description}</p>
-                </GenericCard>
+                </CyberCard>
               ))}
             </div>
           </div>

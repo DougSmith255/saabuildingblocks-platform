@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -171,8 +171,11 @@ export default function OurExpTeam() {
       {/* Revenue Share Callout */}
       <LazySection height={200}>
         <section className="relative py-12 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[900px] mx-auto">
-            <GenericCard padding="lg" centered>
+          <div className="max-w-[700px] mx-auto">
+            <CyberCardGold padding="lg">
+              <NeonGoldText as="p" className="text-lg text-center mb-4">
+                Passive Income Potential
+              </NeonGoldText>
               <p className="text-[#dcdbd5] text-center mb-4">
                 This same 7-tier structure works in reverse for agents you bring in - earning you passive income paid by eXp Realty, not your recruits.
               </p>
@@ -181,7 +184,7 @@ export default function OurExpTeam() {
                   Calculate Your Potential
                 </CTAButton>
               </div>
-            </GenericCard>
+            </CyberCardGold>
           </div>
         </section>
       </LazySection>

@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -143,23 +143,23 @@ export default function JoinExpSponsorTeam() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              <GenericCard padding="md">
+              <CyberCard padding="md">
                 <div className="text-4xl mb-4 text-amber-400">2,900+</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Realtors Strong</h3>
                 <p className="text-[#dcdbd5]/80">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
-              </GenericCard>
+              </CyberCard>
 
-              <GenericCard padding="md">
+              <CyberCard padding="md">
                 <div className="text-4xl mb-4 text-amber-400">100%</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Free Resources</h3>
                 <p className="text-[#dcdbd5]/80">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
-              </GenericCard>
+              </CyberCard>
 
-              <GenericCard padding="md">
+              <CyberCard padding="md">
                 <div className="text-4xl mb-4 text-amber-400">#1</div>
                 <h3 className="text-xl font-bold text-[#e5e4dd] mb-2">Retention Rate</h3>
                 <p className="text-[#dcdbd5]/80">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
-              </GenericCard>
+              </CyberCard>
             </div>
           </div>
         </section>

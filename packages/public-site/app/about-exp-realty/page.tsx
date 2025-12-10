@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -74,25 +74,25 @@ export default function AboutExpRealty() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-4xl font-bold text-amber-400 mb-2">89,000+</div>
               <p className="text-[#dcdbd5]">Agents Worldwide</p>
-            </GenericCard>
+            </CyberCard>
 
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-4xl font-bold text-amber-400 mb-2">24+</div>
               <p className="text-[#dcdbd5]">Countries</p>
-            </GenericCard>
+            </CyberCard>
 
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
               <p className="text-[#dcdbd5]">Commission After Cap</p>
-            </GenericCard>
+            </CyberCard>
 
-            <GenericCard padding="md" centered>
+            <CyberCard padding="md">
               <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
               <p className="text-[#dcdbd5]">Per Month</p>
-            </GenericCard>
+            </CyberCard>
           </div>
         </div>
       </section>

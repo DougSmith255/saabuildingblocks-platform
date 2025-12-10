@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -181,20 +181,20 @@ export default function ExpRealtySponsor() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1200px] mx-auto">
             <div className="grid md:grid-cols-3 gap-8 text-center">
-              <GenericCard padding="lg" centered>
+              <CyberCard padding="lg">
                 <div className="text-5xl font-bold text-amber-400 mb-2">2,900+</div>
                 <p className="text-[#dcdbd5]">Agents Strong</p>
-              </GenericCard>
+              </CyberCard>
 
-              <GenericCard padding="lg" centered>
+              <CyberCard padding="lg">
                 <div className="text-5xl font-bold text-amber-400 mb-2">24+</div>
                 <p className="text-[#dcdbd5]">Countries</p>
-              </GenericCard>
+              </CyberCard>
 
-              <GenericCard padding="lg" centered>
+              <CyberCard padding="lg">
                 <div className="text-5xl font-bold text-amber-400 mb-2">5</div>
                 <p className="text-[#dcdbd5]">Weekly Calls</p>
-              </GenericCard>
+              </CyberCard>
             </div>
           </div>
         </section>

@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
@@ -60,18 +60,18 @@ export default function Freebies() {
         </div>
       </section>
 
-      {/* Download All CTA - Using generic card style */}
+      {/* Download All CTA - Premium gold card */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[800px] mx-auto text-center">
-          <GenericCard padding="lg">
-            <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Want Everything?</h3>
+        <div className="max-w-[600px] mx-auto">
+          <CyberCardGold padding="lg">
+            <NeonGoldText as="h3" className="text-xl font-bold mb-4">Want Everything?</NeonGoldText>
             <p className="text-[#dcdbd5] mb-8 max-w-md mx-auto">
               Download all 6 resources in one click and start building your real estate toolkit today.
             </p>
             <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
               DOWNLOAD ALL ASSETS
             </CTAButton>
-          </GenericCard>
+          </CyberCardGold>
         </div>
       </section>
 

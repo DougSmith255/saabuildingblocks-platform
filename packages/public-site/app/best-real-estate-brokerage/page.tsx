@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -109,23 +109,23 @@ export default function BestRealEstateBrokerage() {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 text-center">
-              <GenericCard padding="md" centered>
+              <CyberCard padding="md">
                 <div className="text-4xl font-bold text-amber-400 mb-2">100%</div>
                 <p className="text-[#dcdbd5]">Commission After Cap</p>
                 <p className="text-[#dcdbd5]/60 text-sm mt-1">Cap at just $16,000</p>
-              </GenericCard>
+              </CyberCard>
 
-              <GenericCard padding="md" centered>
+              <CyberCard padding="md">
                 <div className="text-4xl font-bold text-amber-400 mb-2">$85</div>
                 <p className="text-[#dcdbd5]">Monthly Fee</p>
                 <p className="text-[#dcdbd5]/60 text-sm mt-1">No desk or franchise fees</p>
-              </GenericCard>
+              </CyberCard>
 
-              <GenericCard padding="md" centered>
+              <CyberCard padding="md">
                 <div className="text-4xl font-bold text-amber-400 mb-2">4</div>
                 <p className="text-[#dcdbd5]">Income Streams</p>
                 <p className="text-[#dcdbd5]/60 text-sm mt-1">Commission, stock, rev share, referrals</p>
-              </GenericCard>
+              </CyberCard>
             </div>
           </div>
         </section>

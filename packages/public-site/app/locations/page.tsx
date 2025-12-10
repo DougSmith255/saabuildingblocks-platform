@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 
 /**
@@ -66,10 +66,10 @@ export default function Locations() {
         <div className="max-w-[900px] mx-auto">
           <div className="grid md:grid-cols-3 gap-6 text-center">
             {stats.map((stat, index) => (
-              <GenericCard key={index} padding="lg" centered>
+              <CyberCard key={index} padding="lg">
                 <div className="text-5xl font-bold text-amber-400 mb-2">{stat.value}</div>
                 <p className="text-[#dcdbd5]">{stat.label}</p>
-              </GenericCard>
+              </CyberCard>
             ))}
           </div>
         </div>
