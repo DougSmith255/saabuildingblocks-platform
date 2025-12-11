@@ -95,20 +95,22 @@ const synonym = localFont({
  * Optimized for SEO and social sharing
  */
 export const metadata: Metadata = {
-  metadataBase: new URL('https://staging.smartagentalliance.com'),
+  metadataBase: new URL('https://smartagentalliance.com'),
   title: {
-    default: 'Smart Agent Alliance - Empowering Intelligent AI Collaboration',
+    default: 'Smart Agent Alliance - For Agents Who Want More',
     template: '%s | Smart Agent Alliance',
   },
   description:
-    'Join the Smart Agent Alliance to discover cutting-edge AI agent technologies, collaborative frameworks, and building blocks for the future of intelligent systems.',
+    'Join the Smart Agent Alliance and eXp Realty to build your real estate career with industry-leading commission splits, revenue share, and mentorship from Doug Smart and Karrie Hill.',
   keywords: [
-    'AI agents',
-    'intelligent systems',
-    'AI collaboration',
-    'machine learning',
-    'autonomous agents',
-    'AI framework',
+    'eXp Realty',
+    'real estate agent',
+    'join eXp',
+    'real estate career',
+    'Doug Smart',
+    'Karrie Hill',
+    'revenue share',
+    'real estate team',
   ],
   authors: [{ name: 'Smart Agent Alliance' }],
   creator: 'Smart Agent Alliance',
@@ -121,11 +123,11 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://staging.smartagentalliance.com',
+    url: 'https://smartagentalliance.com',
     siteName: 'Smart Agent Alliance',
-    title: 'Smart Agent Alliance - Empowering Intelligent AI Collaboration',
+    title: 'Smart Agent Alliance - For Agents Who Want More',
     description:
-      'Discover cutting-edge AI agent technologies and collaborative frameworks for intelligent systems.',
+      'Join the Smart Agent Alliance and eXp Realty to build your real estate career with industry-leading commission splits, revenue share, and mentorship.',
     images: [
       {
         url: '/og-image.jpg',
@@ -137,9 +139,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Smart Agent Alliance - Empowering Intelligent AI Collaboration',
+    title: 'Smart Agent Alliance - For Agents Who Want More',
     description:
-      'Discover cutting-edge AI agent technologies and collaborative frameworks.',
+      'Join eXp Realty with the Smart Agent Alliance for industry-leading commission splits and revenue share.',
     images: ['/twitter-image.jpg'],
     creator: '@smartagentalliance',
   },
