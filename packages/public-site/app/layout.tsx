@@ -64,12 +64,13 @@ const taskor = localFont({
   weight: '400',
 });
 
-// Split Amulya into normal and italic to control preloading independently
+// Amulya fonts - NOT preloaded (not used above fold - only in content areas)
+// CategoryBadge now uses Taskor, so Amulya can be deferred
 const amulya = localFont({
   src: '../public/fonts/Amulya-Variable.woff2',
   variable: '--font-amulya',
-  display: 'block', // Block render until font loads
-  preload: true,
+  display: 'swap', // Swap when loaded - allows content to render immediately
+  preload: false, // Don't preload - not used above fold
   weight: '100 900',
 });
 

@@ -38,19 +38,19 @@ export interface Icon3DProps {
  */
 export function Icon3D({
   children,
-  color = '#ffd700',
+  color = '#c4a94d',
   size,
   className = '',
   style = {},
 }: Icon3DProps) {
-  // Option 6: Dual Tone Glow - white-hot inner core with warm gold outer glow
+  // Option 3: Metal Backing Only - solid 3D embossed metal effect
   const filter = `
-    drop-shadow(0 0 1px #fff)
-    drop-shadow(0 0 2px #fff)
-    drop-shadow(0 0 3px rgba(255, 255, 255, 0.8))
-    drop-shadow(0 0 6px rgba(255, 215, 0, 0.9))
-    drop-shadow(0 0 12px rgba(255, 179, 71, 0.6))
-    drop-shadow(0 0 20px rgba(255, 140, 0, 0.3))
+    drop-shadow(-1px -1px 0 #ffe680)
+    drop-shadow(1px 1px 0 #8a7a3d)
+    drop-shadow(2px 2px 0 #6a5a2d)
+    drop-shadow(3px 3px 0 #4a3a1d)
+    drop-shadow(4px 4px 0 #2a2a1d)
+    drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5))
   `;
 
   return (
@@ -62,6 +62,7 @@ export function Icon3D({
         justifyContent: 'center',
         color: color,
         filter: filter.trim(),
+        transform: 'perspective(500px) rotateX(8deg)',
         ...(size && { width: size, height: size }),
         ...style,
       }}

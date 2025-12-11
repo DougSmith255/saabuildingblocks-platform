@@ -1796,6 +1796,19 @@ body.is-404-page footer {
   --faq-icon-color: #00aa66;
 }
 
+/* ========================================
+   LIGHT MODE - Blog Post Hero Elements
+   Keep gold colors, but disable H1 breathing animation
+   (prevents bright yellow glow on light background)
+   ======================================== */
+
+/* Light mode H1 - Disable breathing animation */
+.light-mode .text-h1,
+.light-mode h1.text-h1 {
+  animation: none !important;
+  filter: none !important;
+}
+
 /* RankMath FAQ Block Styling - Accordion style matching homepage */
 .blog-content .wp-block-rank-math-faq-block {
   margin: 2rem 0;

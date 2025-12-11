@@ -117,14 +117,19 @@ export function BlogPostHero({
       </div>
 
       {/* Content container - centered */}
-      <div className="relative z-10 max-w-[1900px] mx-auto text-center">
+      {/* minHeight prevents CLS from font loading - reserves space for H1 + meta row */}
+      <div
+        className="relative z-10 max-w-[1900px] mx-auto text-center"
+        style={{ minHeight: 'clamp(180px, 20vw + 80px, 280px)' }}
+      >
         {/* Category badge - centered with 3D effect */}
-        <div className="mb-6 flex justify-center">
+        <div className="mb-6 flex justify-center" style={{ minHeight: '32px' }}>
           <CategoryBadge category={category} variant="featured" effect3d />
         </div>
 
         {/* Title - H1 with Master Controller effects, blog-specific sizing */}
-        <div className="mb-8">
+        {/* minHeight prevents CLS when Taskor font loads with alt glyphs */}
+        <div className="mb-8" style={{ minHeight: 'clamp(50px, 6vw + 20px, 120px)' }}>
           <H1
             style={{
               fontSize: 'clamp(32px, 4vw + 16px, 82px)',
@@ -135,13 +140,14 @@ export function BlogPostHero({
         </div>
 
         {/* Meta info row - centered */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-[#dcdbd5]">
+        {/* minHeight prevents CLS when Amulya font loads */}
+        <div className="flex flex-wrap items-center justify-center gap-6 text-[#dcdbd5]" style={{ minHeight: '28px' }}>
           {/* Author */}
           <div className="flex items-center gap-2">
             <Icon3D size={16}>
               <User className="w-4 h-4" />
             </Icon3D>
-            <span className="text-sm font-[var(--font-amulya)]">{author}</span>
+            <span className="text-sm font-[var(--font-synonym)]">{author}</span>
           </div>
 
           {/* Date */}
@@ -149,7 +155,7 @@ export function BlogPostHero({
             <Icon3D size={16}>
               <Calendar className="w-4 h-4" />
             </Icon3D>
-            <span className="text-sm font-[var(--font-amulya)]">{date}</span>
+            <span className="text-sm font-[var(--font-synonym)]">{date}</span>
           </div>
 
           {/* Reading time */}
@@ -157,7 +163,7 @@ export function BlogPostHero({
             <Icon3D size={16}>
               <Clock className="w-4 h-4" />
             </Icon3D>
-            <span className="text-sm font-[var(--font-amulya)]">{readingTime}</span>
+            <span className="text-sm font-[var(--font-synonym)]">{readingTime}</span>
           </div>
         </div>
 

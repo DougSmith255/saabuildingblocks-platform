@@ -35,10 +35,12 @@ export function CategoryBadge({
   effect3d = false,
   className = ''
 }: CategoryBadgeProps) {
-  // Base styles without text color - text color handled separately for light/dark mode
+  // Base styles - uses Taskor font to avoid needing Amulya on initial load
+  // Text color handled by category-badge-text CSS class for light/dark mode
   const variantStyles = {
     default: `
       px-3 py-1.5 text-xs uppercase tracking-wider
+      font-[var(--font-taskor)]
       bg-[#ffd700]/10
       border border-[#ffd700]/30
       rounded-md
@@ -50,6 +52,7 @@ export function CategoryBadge({
     `,
     featured: `
       px-4 py-2 text-sm uppercase tracking-widest font-bold
+      font-[var(--font-taskor)]
       bg-gradient-to-r from-[#ffd700]/20 to-[#ffd700]/10
       border-2 border-[#ffd700]/50
       rounded-lg
@@ -75,6 +78,7 @@ export function CategoryBadge({
     `,
     minimal: `
       px-2 py-1 text-xs uppercase tracking-wide
+      font-[var(--font-taskor)]
       border border-[#ffd700]/20
       rounded
       hover:border-[#ffd700]/40
