@@ -109,13 +109,12 @@ export default function Tagline({
           <span
             className="counter-numbers-mobile"
             style={{
-              display: 'inline-block',
+              display: 'inline',
               color: '#bfbdb0',
               fontFamily: 'var(--font-synonym), monospace',
               fontWeight: 300,
-              fontSize: 'calc(1em + 10px)',
+              fontSize: '1em',
               textShadow: 'none',
-              transform: 'translateY(calc(-0.1em - 2px))',
             }}
           >
             <span>(</span>
