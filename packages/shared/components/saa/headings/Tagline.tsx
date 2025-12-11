@@ -102,11 +102,9 @@ export default function Tagline({
       {showAgentCounter && (
         <span
           className="tagline-counter-suffix"
+          style={{ display: 'inline-flex', alignItems: 'baseline', gap: 0 }}
         >
-          {/* Opening parenthesis - inherits glow from parent */}
-          <span>(</span>
-
-          {/* Counter numbers + plus sign - plain Synonym font, no glow */}
+          {/* Counter numbers with opening parenthesis - plain Synonym font, no glow */}
           {/* Individual digit spans for scramble animation */}
           <span
             className="counter-numbers-mobile"
@@ -120,6 +118,7 @@ export default function Tagline({
               transform: 'translateY(calc(-0.1em - 2px))',
             }}
           >
+            <span>(</span>
             <span className="counter-digit">3</span>
             <span className="counter-digit">7</span>
             <span className="counter-digit">0</span>
@@ -128,7 +127,7 @@ export default function Tagline({
           </span>
 
           {/* "Agents)" text - with glow, alt glyphs */}
-          <span>{convertToAltGlyphs('Agents)')}</span>
+          <span>{convertToAltGlyphs(' Agents)')}</span>
         </span>
       )}
     </p>
