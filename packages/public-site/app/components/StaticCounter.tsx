@@ -16,9 +16,9 @@ import './StaticCounter.css';
  */
 export function StaticCounter() {
   return (
-    /* Agent Counter - Top Right on desktop, Top Left on mobile */
+    /* Agent Counter - Top Right on desktop (lg+), Top Left on mobile */
     <div
-      className="agent-counter-wrapper absolute z-50 left-2 xlg:left-auto xlg:right-8"
+      className="agent-counter-wrapper absolute z-50 left-2 lg:left-auto lg:right-8"
       style={{
         top: '80px',
       }}

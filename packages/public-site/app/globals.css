@@ -3241,12 +3241,11 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
    ======================================== */
 
 /* ========================================
-   MOBILE TAGLINE SPACING - SCREENS < 1400px
+   HERO TAGLINE SPACING - ALL SCREEN SIZES
+   Adds spacing between H1 and Tagline on homepage
    ======================================== */
-@media (max-width: 1400px) {
-  .hero-tagline-mobile-spacing {
-    margin-top: 20px;
-  }
+.hero-tagline-mobile-spacing {
+  margin-top: 20px;
 }
 
 /* ========================================
