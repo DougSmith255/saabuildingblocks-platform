@@ -47,7 +47,7 @@ export default function AgentPortal() {
         className="relative px-4 sm:px-8 md:px-12 pt-32 pb-12 flex items-center justify-center"
       >
         <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1 heroAnimate animationDelay="0.3s">AGENT PORTAL</H1>
+          <H1>AGENT PORTAL</H1>
         </div>
 
         {/* Decorative grid lines */}

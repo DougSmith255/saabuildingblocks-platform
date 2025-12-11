@@ -126,7 +126,6 @@ export function BlogPostHero({
         {/* Title - H1 with Master Controller effects, blog-specific sizing */}
         <div className="mb-8">
           <H1
-            heroAnimate={true}
             style={{
               fontSize: 'clamp(32px, 4vw + 16px, 82px)',
             }}
