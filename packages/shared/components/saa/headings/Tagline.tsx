@@ -107,6 +107,7 @@ export default function Tagline({
           <span>(</span>
 
           {/* Counter numbers + plus sign - plain Synonym font, no glow */}
+          {/* Individual digit spans for scramble animation */}
           <span
             className="counter-numbers-mobile"
             style={{
@@ -116,10 +117,14 @@ export default function Tagline({
               fontWeight: 300,
               fontSize: 'calc(1em + 10px)',
               textShadow: 'none',
-              transform: 'translateY(calc(-0.1em - 5px))',
+              transform: 'translateY(calc(-0.1em - 2px))',
             }}
           >
-            3700+
+            <span className="counter-digit">3</span>
+            <span className="counter-digit">7</span>
+            <span className="counter-digit">0</span>
+            <span className="counter-digit">0</span>
+            <span>+</span>
           </span>
 
           {/* "Agents)" text - with glow, alt glyphs */}

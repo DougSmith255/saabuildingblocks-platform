@@ -3,6 +3,213 @@
 import React, { useEffect, useState } from 'react';
 
 /**
+ * GLASS EFFECT LAYERS TEST PAGE
+ *
+ * Shows each layer of the header glass effect separately
+ * Ordered bottom to top, left to right
+ */
+
+// ============================================================================
+// GLASS LAYER COMPONENTS
+// ============================================================================
+
+function GlassLayerDemo({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col items-center">
+      <div
+        className="relative w-full h-[100px] rounded-b-[20px] overflow-hidden"
+        style={{ background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%)' }}
+      >
+        {children}
+      </div>
+      <p className="text-sm text-[#ffd700] mt-3 font-bold uppercase tracking-wider">{title}</p>
+      <p className="text-xs text-[#888] mt-1 text-center max-w-[300px]">{description}</p>
+    </div>
+  );
+}
+
+// Layer 1: glassBase (bottom layer)
+function GlassBaseLayer() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        background: `
+          linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+          repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px)
+        `,
+        backdropFilter: 'blur(8px) saturate(1.5)',
+        WebkitBackdropFilter: 'blur(8px) saturate(1.5)',
+        boxShadow: '0 0 30px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,255,255,0.05)',
+        filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+        borderRadius: '0 0 20px 20px',
+      }}
+    />
+  );
+}
+
+// Layer 2: glassBase::after (matrix grid)
+function GlassBaseAfterLayer() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: '2px',
+        background: `
+          repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
+          linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83))
+        `,
+        borderRadius: '0 0 18px 18px',
+      }}
+    />
+  );
+}
+
+// Layer 3: shimmerLayer container
+function ShimmerLayerContainer() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        opacity: 0.7,
+        mixBlendMode: 'overlay',
+        overflow: 'hidden',
+        background: 'rgba(128, 128, 128, 0.3)', // Visible placeholder
+      }}
+    />
+  );
+}
+
+// Layer 4: shimmerLayer::before (gradient)
+function ShimmerBeforeLayer() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        opacity: 0.7,
+        mixBlendMode: 'overlay',
+        background: `linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.05) 0%,
+          rgba(255, 255, 255, 0.15) 20%,
+          rgba(255, 255, 255, 0.25) 40%,
+          rgba(255, 255, 255, 0.15) 60%,
+          rgba(255, 255, 255, 0.05) 80%,
+          rgba(255, 255, 255, 0.02) 100%
+        )`,
+      }}
+    />
+  );
+}
+
+// Layer 5-7: Unused layers (display: none in CSS)
+function UnusedLayer({ name }: { name: string }) {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(255, 0, 0, 0.1)',
+        border: '2px dashed rgba(255, 0, 0, 0.3)',
+      }}
+    >
+      <span className="text-red-500/50 text-xs">UNUSED</span>
+    </div>
+  );
+}
+
+// Combined: All active layers stacked
+function CombinedGlassEffect() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Layer 1: glassBase */}
+      <GlassBaseLayer />
+      {/* Layer 2: glassBase::after (simulated) */}
+      <GlassBaseAfterLayer />
+      {/* Layer 3+4: shimmerLayer with ::before */}
+      <ShimmerBeforeLayer />
+    </div>
+  );
+}
+
+// Layers 1+2 Only (simplified header)
+function SimplifiedGlassEffect() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Layer 1: glassBase */}
+      <GlassBaseLayer />
+      {/* Layer 2: glassBase::after (simulated) */}
+      <GlassBaseAfterLayer />
+    </div>
+  );
+}
+
+// Layers 1+2+3 (with shimmer container, no gradient)
+function Layers123Effect() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Layer 1: glassBase */}
+      <GlassBaseLayer />
+      {/* Layer 2: glassBase::after (simulated) */}
+      <GlassBaseAfterLayer />
+      {/* Layer 3: shimmerLayer container (overlay blend) */}
+      <ShimmerLayerContainer />
+    </div>
+  );
+}
+
+// Layers 1+2+4 (with shimmer gradient, no container)
+function Layers124Effect() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        inset: 0,
+        borderRadius: '0 0 20px 20px',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Layer 1: glassBase */}
+      <GlassBaseLayer />
+      {/* Layer 2: glassBase::after (simulated) */}
+      <GlassBaseAfterLayer />
+      {/* Layer 4: shimmerLayer::before (diagonal gradient) */}
+      <ShimmerBeforeLayer />
+    </div>
+  );
+}
+
+/**
  * H1 ANIMATION TEST PAGE
  *
  * Base styling: Option 10 (neon + metal backing)
@@ -392,6 +599,126 @@ export default function Test3DEffectsPage() {
   return (
     <main className="min-h-screen py-20 px-4">
       <div className="max-w-6xl mx-auto space-y-24">
+
+        {/* ================================================================
+            GLASS EFFECT LAYERS SECTION
+            ================================================================ */}
+        <section>
+          <header className="text-center mb-12">
+            <h2 className="text-2xl text-[#e5e4dd] mb-4" style={{ fontFamily: 'var(--font-synonym)' }}>
+              Header Glass Effect Layers
+            </h2>
+            <p className="text-[#a0a0a0]">
+              Each layer shown separately, ordered bottom → top, left → right.
+              <br />
+              <span className="text-[#ffd700]">Note: 3 layers are set to display:none in CSS (unused).</span>
+            </p>
+          </header>
+
+          {/* Layer grid - 4 columns on desktop */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Layer 1: glassBase */}
+            <GlassLayerDemo
+              title="1. glassBase"
+              description="Dark gradient + gold vertical lines + blur(8px) backdrop + box-shadow"
+            >
+              <GlassBaseLayer />
+            </GlassLayerDemo>
+
+            {/* Layer 2: glassBase::after */}
+            <GlassLayerDemo
+              title="2. ::after (grid)"
+              description="Horizontal white lines (matrix grid) + dark gradient overlay"
+            >
+              <GlassBaseAfterLayer />
+            </GlassLayerDemo>
+
+            {/* Layer 3: shimmerLayer (container) */}
+            <GlassLayerDemo
+              title="3. shimmerLayer"
+              description="Container with opacity:0.7, mix-blend-mode:overlay (shown with gray bg)"
+            >
+              <ShimmerLayerContainer />
+            </GlassLayerDemo>
+
+            {/* Layer 4: shimmerLayer::before */}
+            <GlassLayerDemo
+              title="4. ::before (gradient)"
+              description="135° diagonal gradient white highlight sweep"
+            >
+              <ShimmerBeforeLayer />
+            </GlassLayerDemo>
+          </div>
+
+          {/* Unused layers row */}
+          <div className="mt-12">
+            <p className="text-center text-sm text-[#666] mb-6 uppercase tracking-wider">
+              Unused Layers (display: none in CSS)
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-3xl mx-auto">
+              <GlassLayerDemo
+                title="5. refractionLayer"
+                description="UNUSED - set to display:none"
+              >
+                <UnusedLayer name="refraction" />
+              </GlassLayerDemo>
+
+              <GlassLayerDemo
+                title="6. textureLayer"
+                description="UNUSED - set to display:none"
+              >
+                <UnusedLayer name="texture" />
+              </GlassLayerDemo>
+
+              <GlassLayerDemo
+                title="7. edgeHighlight"
+                description="UNUSED - set to display:none"
+              >
+                <UnusedLayer name="edge" />
+              </GlassLayerDemo>
+            </div>
+          </div>
+
+          {/* Layer combinations comparison */}
+          <div className="mt-16">
+            <p className="text-center text-sm text-[#888] mb-6 uppercase tracking-wider">
+              Layer Combinations Comparison
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+              <GlassLayerDemo
+                title="Layers 1+2"
+                description="glassBase + ::after grid only"
+              >
+                <SimplifiedGlassEffect />
+              </GlassLayerDemo>
+              <GlassLayerDemo
+                title="Layers 1+2+3"
+                description="+ shimmer container (gray overlay blend)"
+              >
+                <Layers123Effect />
+              </GlassLayerDemo>
+              <GlassLayerDemo
+                title="Layers 1+2+4"
+                description="+ shimmer gradient (diagonal highlight)"
+              >
+                <Layers124Effect />
+              </GlassLayerDemo>
+              <GlassLayerDemo
+                title="Full (1+2+3+4)"
+                description="All active layers combined"
+              >
+                <CombinedGlassEffect />
+              </GlassLayerDemo>
+            </div>
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="border-t border-[#333] pt-12" />
+
+        {/* ================================================================
+            H1 ANIMATION OPTIONS SECTION
+            ================================================================ */}
         <header className="text-center mb-16">
           <h2 className="text-2xl text-[#e5e4dd] mb-4" style={{ fontFamily: 'var(--font-synonym)' }}>
             H1 Animation Options

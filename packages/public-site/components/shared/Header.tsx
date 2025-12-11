@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import styles from './GlassShimmer.module.css';
 import { usePathname } from 'next/navigation';
 import { CTAButton } from '@saa/shared/components/saa';
-import DesktopNav from './DesktopNav';
 import MobileMenu from './MobileMenu';
+
+// Lazy load DesktopNav - only imported on desktop viewports
+const DesktopNav = dynamic(() => import('./DesktopNav'), { ssr: false });
 
 // Breakpoint: 1450px (90.625rem) - matches xlg breakpoint
 // Desktop nav shows at ≥1450px, mobile menu shows at <1450px
@@ -23,6 +26,8 @@ export default function Header() {
   const [is404Page, setIs404Page] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  // Track viewport for conditional rendering - only render DesktopNav on desktop
+  const [isDesktop, setIsDesktop] = useState(false);
   // Track first page load for slide-in animation
   // Check sessionStorage synchronously to prevent flash on page refresh
   const [isFirstLoad, setIsFirstLoad] = useState(() => {
@@ -70,6 +75,21 @@ export default function Header() {
   // Font loading handled by page-level settling mask
   useEffect(() => {
     setFontsLoaded(true);
+  }, []);
+
+  // Track viewport width for conditional rendering of DesktopNav
+  // This prevents rendering ~37 DOM nodes on mobile
+  useEffect(() => {
+    const checkViewport = () => {
+      setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
+    };
+
+    // Check immediately
+    checkViewport();
+
+    // Listen for resize
+    window.addEventListener('resize', checkViewport);
+    return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
   // Detect 404 page
@@ -191,13 +211,10 @@ export default function Header() {
               : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
           }}
         >
-          {/* Enhanced Glassmorphism Background with Prismatic Shimmer Effect */}
+          {/* Glass Background - 3 layers only */}
           <div className={styles['glassContainer']}>
             <div className={styles['glassBase']} />
-            <div className={styles['shimmerLayer']} />
-            <div className={styles['refractionLayer']} />
-            <div className={styles['textureLayer']} />
-            <div className={styles['edgeHighlight']} />
+            <div className={styles['shimmerGradient']} />
           </div>
 
           <div
@@ -253,11 +270,10 @@ export default function Header() {
             </Link>
             )}
 
-            {/* Desktop Navigation - Always render, CSS hides on mobile - Hidden on 404 */}
-            {!is404Page && (
-              <div className="hidden xlg:block">
-                <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
-              </div>
+            {/* Desktop Navigation - Only render on desktop viewports (≥1450px) - Hidden on 404 */}
+            {/* This prevents ~37 DOM nodes from being rendered on mobile */}
+            {!is404Page && isDesktop && (
+              <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
             )}
 
           {/* Go Home Button - Only on 404 */}
