@@ -31,6 +31,9 @@ export { BlogPostHero, type BlogPostHeroProps } from './BlogPostHero';
 export { ThemeSwitch, type ThemeSwitchProps } from './ThemeSwitch';
 export { BlogPostTemplate, type BlogPostTemplateProps } from './BlogPostTemplate';
 
+// Real Estate Schools section
+export { SchoolCardsSection, SCHOOL_DATABASE, POST_SCHOOLS_MAP, type SchoolData } from './SchoolCardsSection';
+
 // Category-specific templates
 export {
   CategoryBlogPostTemplate,

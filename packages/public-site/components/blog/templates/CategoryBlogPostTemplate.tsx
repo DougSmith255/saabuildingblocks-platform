@@ -9,6 +9,7 @@ import { RelatedPosts } from '../RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from '../Breadcrumbs';
+import { SchoolCardsSection } from '../SchoolCardsSection';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import { LazySection } from '@/components/shared/LazySection';
 import type { BlogPost } from '@/lib/wordpress/types';
@@ -220,6 +221,17 @@ export function CategoryBlogPostTemplate({
           onThemeChange={handleThemeChange}
         />
       </div>
+
+      {/* School Cards Section - Only for Real Estate Schools category */}
+      {categorySlug === 'real-estate-schools' && (
+        <LazySection height={400}>
+          <section className="relative py-8 md:py-12 px-4 sm:px-8 md:px-12">
+            <div className="max-w-[1900px] mx-auto">
+              <SchoolCardsSection postSlug={post.slug} />
+            </div>
+          </section>
+        </LazySection>
+      )}
 
       {/* Comparison Images - Collapsible accordion for brokerage comparison posts ONLY */}
       {post.comparisonImages && post.comparisonImages.length > 0 && categorySlug === 'brokerage-comparison' && (
