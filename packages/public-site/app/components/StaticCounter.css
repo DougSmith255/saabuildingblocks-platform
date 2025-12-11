@@ -11,3 +11,23 @@
 .counter-animate {
   /* No animation - keep static for performance */
 }
+
+/* ==========================================================================
+   COUNTER VISIBILITY BREAKPOINTS (500px)
+   - Desktop (>=500px): Show corner counter, hide tagline counter
+   - Mobile (<500px): Show tagline counter, hide corner counter
+   ========================================================================== */
+
+/* Mobile: Hide the corner counter on small screens */
+@media (max-width: 499px) {
+  .agent-counter-wrapper {
+    display: none !important;
+  }
+}
+
+/* Desktop: Hide the tagline counter on larger screens */
+@media (min-width: 500px) {
+  .tagline-counter-suffix {
+    display: none !important;
+  }
+}
