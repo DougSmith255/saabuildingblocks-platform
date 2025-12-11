@@ -20,27 +20,37 @@ export function CounterAnimation() {
   const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Find the VISIBLE counter element and individual digit spans
-    // Both desktop and mobile counters now use .counter-numbers-mobile class
-    // Desktop (>=1450px): .agent-counter-wrapper is visible
-    // Mobile (<1450px): .tagline-counter-suffix is visible
-    const desktopWrapper = document.querySelector('.agent-counter-wrapper');
-    const mobileWrapper = document.querySelector('.tagline-counter-suffix');
+    // Find the counter element - try both desktop and mobile
+    // Since React conditionally renders based on viewport, only one will exist at a time
+    const findDigitElements = (): NodeListOf<Element> | null => {
+      // Try desktop first
+      const desktopWrapper = document.querySelector('.agent-counter-wrapper');
+      if (desktopWrapper) {
+        const counterEl = desktopWrapper.querySelector('.counter-numbers-mobile');
+        if (counterEl) {
+          const digits = counterEl.querySelectorAll('.counter-digit');
+          if (digits.length === 4) return digits;
+        }
+      }
 
-    // Use the one whose wrapper is visible
-    let counterElement: Element | null = null;
-    if (desktopWrapper && getComputedStyle(desktopWrapper).display !== 'none') {
-      counterElement = desktopWrapper.querySelector('.counter-numbers-mobile');
-    } else if (mobileWrapper && getComputedStyle(mobileWrapper).display !== 'none') {
-      counterElement = mobileWrapper.querySelector('.counter-numbers-mobile');
-    }
+      // Try mobile/tagline
+      const mobileWrapper = document.querySelector('.tagline-counter-suffix');
+      if (mobileWrapper) {
+        const counterEl = mobileWrapper.querySelector('.counter-numbers-mobile');
+        if (counterEl) {
+          const digits = counterEl.querySelectorAll('.counter-digit');
+          if (digits.length === 4) return digits;
+        }
+      }
 
-    if (!counterElement) return;
-
-    const digitElements = counterElement.querySelectorAll('.counter-digit');
-    if (digitElements.length !== 4) return;
+      return null;
+    };
 
     const animateScramble = () => {
+      // Re-find elements each time in case viewport changed
+      const digitElements = findDigitElements();
+      if (!digitElements) return;
+
       const target = 3700;
       const duration = 2000; // 2 seconds
       const startTime = performance.now();
@@ -103,15 +113,19 @@ export function CounterAnimation() {
       }, 5000);
     };
 
-    // Use requestIdleCallback to defer, with setTimeout fallback
-    if ('requestIdleCallback' in window) {
-      startDelayId = window.requestIdleCallback(startAnimations, { timeout: 2000 });
-    } else {
-      // Fallback for Safari - use setTimeout
-      setTimeout(startAnimations, 500);
-    }
+    // Wait a bit for hydration to complete, then start
+    const initTimeout = setTimeout(() => {
+      // Use requestIdleCallback to defer, with setTimeout fallback
+      if ('requestIdleCallback' in window) {
+        startDelayId = window.requestIdleCallback(startAnimations, { timeout: 2000 });
+      } else {
+        // Fallback for Safari - use setTimeout
+        setTimeout(startAnimations, 500);
+      }
+    }, 200); // Wait 200ms for React hydration
 
     return () => {
+      clearTimeout(initTimeout);
       if (startDelayId && 'cancelIdleCallback' in window) {
         window.cancelIdleCallback(startDelayId);
       }
