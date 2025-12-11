@@ -6,7 +6,7 @@
 export interface BlogPost {
   id: number;
   slug: string;
-  /** Full permalink path extracted from WordPress link (e.g., 'real-estate-agent-job/career/part-time') */
+  /** Full permalink path extracted from WordPress link (e.g., 'blog/agent-career-info/part-time') */
   permalink: string;
   title: string;
   content: string;
@@ -39,7 +39,7 @@ export interface BlogPost {
 export interface WordPressPost {
   id: number;
   slug: string;
-  /** Full URL to the post (e.g., 'https://wp.saabuildingblocks.com/real-estate-agent-job/career/part-time/') */
+  /** Full URL to the post (e.g., 'https://wp.saabuildingblocks.com/blog/agent-career-info/part-time/') */
   link: string;
   title: { rendered: string };
   content: { rendered: string };

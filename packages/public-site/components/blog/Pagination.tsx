@@ -30,7 +30,7 @@ export interface PaginationProps {
 export function Pagination({
   currentPage,
   totalPages,
-  basePath = '/real-estate-agent-job'
+  basePath = '/blog'
 }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();

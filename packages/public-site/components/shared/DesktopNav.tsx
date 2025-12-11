@@ -29,7 +29,7 @@ const navItems: NavItem[] = [
       { label: 'Commission & Fees Calc', href: '/exp-commission-calculator/' },
       { label: 'RevShare Calc', href: '/exp-realty-revenue-share-calculator/' },
       { label: 'Compare Brokerages', href: '/best-real-estate-brokerage/' },
-      { label: 'Agent Success Hub', href: '/real-estate-agent-job/' },
+      { label: 'Agent Success Hub', href: '/blog/' },
       { label: 'eXp Locations', href: '/locations/' },
       { label: 'eXp Awards', href: '/awards/' },
     ],

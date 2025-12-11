@@ -11,7 +11,7 @@ module.exports = {
   exclude: [
     '/testing-page',
     '/blog-preview',
-    '/real-estate-agent-job-posts-temp/*',
+    '/blog-posts-temp/*',
     '/master-controller/*',
   ],
 

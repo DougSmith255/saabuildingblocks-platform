@@ -89,13 +89,13 @@ export function Breadcrumbs({
   // Build breadcrumb items
   const items = [
     { label: 'Home', href: '/', position: 1 },
-    { label: 'Blog', href: '/real-estate-agent-job', position: 2 },
+    { label: 'Blog', href: '/blog', position: 2 },
   ];
 
   if (category && resolvedSlug) {
     items.push({
       label: category,
-      href: `/real-estate-agent-job/#category=${resolvedSlug}`,
+      href: `/blog/#category=${resolvedSlug}`,
       position: 3
     });
   }

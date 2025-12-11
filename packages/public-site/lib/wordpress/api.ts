@@ -46,12 +46,12 @@ function createAuthHeader(): string | undefined {
 
 /**
  * Extracts permalink path from WordPress full URL
- * @param link - Full WordPress URL (e.g., 'https://wp.saabuildingblocks.com/real-estate-agent-job/career/part-time/')
- * @returns Permalink path (e.g., 'real-estate-agent-job/career/part-time') or slug as fallback
+ * @param link - Full WordPress URL (e.g., 'https://wp.saabuildingblocks.com/blog/agent-career-info/part-time/')
+ * @returns Permalink path (e.g., 'blog/agent-career-info/part-time') or slug as fallback
  *
  * @example
- * extractPermalink('https://wp.saabuildingblocks.com/real-estate-agent-job/career/part-time/')
- * // Returns: 'real-estate-agent-job/career/part-time'
+ * extractPermalink('https://wp.saabuildingblocks.com/blog/agent-career-info/part-time/')
+ * // Returns: 'blog/agent-career-info/part-time'
  *
  * extractPermalink('https://wp.saabuildingblocks.com/simple-post/')
  * // Returns: 'simple-post'
@@ -236,12 +236,12 @@ export const fetchPostBySlug = cache(async (slug: string): Promise<BlogPost | nu
  * Supports both legacy slug-based and new multi-level permalink paths
  * Cached for build-time optimization
  *
- * @param permalink - Full permalink path (e.g., 'real-estate-agent-job/career/part-time' or 'simple-post')
+ * @param permalink - Full permalink path (e.g., 'blog/agent-career-info/part-time' or 'simple-post')
  * @returns BlogPost object or null if not found
  *
  * @example
  * // Multi-level permalink
- * await fetchPostByPermalink('real-estate-agent-job/career/part-time')
+ * await fetchPostByPermalink('blog/agent-career-info/part-time')
  *
  * // Single-level permalink (backward compatible)
  * await fetchPostByPermalink('simple-post')
