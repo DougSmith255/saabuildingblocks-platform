@@ -8,6 +8,9 @@
 #
 # @see https://developers.cloudflare.com/cache/advanced-configuration/early-hints/
 
+# ============================================================
+# DEFAULT HEADERS (all routes)
+# ============================================================
 /*
   # Security headers
   X-Frame-Options: DENY
@@ -28,14 +31,69 @@
   Access-Control-Allow-Headers: Content-Type, Authorization
   Access-Control-Allow-Credentials: true
 
-  # Cache control for static assets
+# ============================================================
+# HTML PAGES - Cache until next deploy
+# Cloudflare Pages automatically purges cache on deploy
+# ============================================================
+/
   Cache-Control: public, max-age=31536000, immutable
 
-# Cache control for HTML pages (shorter cache)
 /*.html
-  Cache-Control: public, max-age=3600, must-revalidate
+  Cache-Control: public, max-age=31536000, immutable
 
-# No cache for API proxied routes
+/blog/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/about-*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ============================================================
+# STATIC ASSETS - Long cache (hashed filenames = immutable)
+# ============================================================
+# Next.js bundled assets are hashed - cache forever
+/_next/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts - cache forever
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Static images in public folder
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Blog post JSON data chunks - cache until next deploy
+/blog-posts-chunk-*.json
+  Cache-Control: public, max-age=31536000, immutable
+
+# Other static assets
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.ico
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.svg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.png
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+# ============================================================
+# NO CACHE - Dynamic/API routes
+# ============================================================
 /api/*
   Cache-Control: no-store, no-cache, must-revalidate
 
