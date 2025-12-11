@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
 
@@ -9,25 +7,34 @@ export interface HeadingProps {
   style?: React.CSSProperties;
 }
 
-// Map specific characters to alternate glyphs
-const ALT_GLYPHS: Record<string, string> = {
-  'N': '\uf015',
-  'E': '\uf011',
-  'M': '\uf016'
-};
+/**
+ * Convert text to use alt glyphs for N, E, M characters
+ */
+function convertToAltGlyphs(text: string): string {
+  return text.split('').map(char => {
+    const upper = char.toUpperCase();
+    if (upper === 'N') return '\uf015';
+    if (upper === 'E') return '\uf011';
+    if (upper === 'M') return '\uf016';
+    return char;
+  }).join('');
+}
 
 /**
- * H2 Component
+ * H2 Component - Optimized for Performance
  *
- * Displays H2 heading with static 3D neon glow effects.
- * Text is split into individual characters per word with alt glyph substitution.
+ * PERFORMANCE OPTIMIZATIONS:
+ * - Single text node per word (was per-character rendering)
+ * - CSS text-shadow for glow effects (GPU accelerated)
+ * - Metal backing plate via ::before/::after pseudo-elements
+ * - ~80% reduction in DOM nodes
  *
  * Features:
- * - Static neon glow (NO animation)
- * - 3D transform with rotateX and translateZ
- * - Metal backing plate
- * - Per-character rendering with alt glyphs
- * - Gold neon color scheme
+ * - Neon glow using text-shadow (matches Tagline style)
+ * - 3D transform with rotateX
+ * - Metal backing plate per word
+ * - Alt glyphs for N, E, M characters
+ * - Body text color (#bfbdb0)
  *
  * @example
  * ```tsx
@@ -46,84 +53,57 @@ export default function H2({
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
 
+  // Neon glow text-shadow - using tagline color (#bfbdb0)
+  // Same as Tagline for consistency
+  const textShadow = `
+    /* WHITE-HOT CORE */
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    /* NEON GLOW - tagline color */
+    0 0 0.04em #bfbdb0,
+    0 0 0.07em #bfbdb0,
+    0 0 0.11em rgba(191, 189, 176, 0.9),
+    0 0 0.16em rgba(191, 189, 176, 0.7),
+    0 0 0.22em rgba(154, 152, 136, 0.5),
+    /* DEPTH SHADOW */
+    0 0.03em 0.05em rgba(0,0,0,0.4)
+  `;
+
   return (
     <>
-      <style jsx global>{`
-        :global(.h2-char) {
-          display: inline-block;
-          position: relative;
-        }
-
-        /* Per-word metal backing plate with neon text */
-        /* Using em units so glow scales with font size */
-        :global(.h2-word) {
-          display: inline-flex;
-          position: relative;
-          /* Neon glow text-shadow - em units for responsive scaling */
-          color: #bfbdb0;
-          text-shadow:
-            -0.02em -0.02em 0 rgba(255,255,255, 0.4),
-            0.02em -0.02em 0 rgba(255,255,255, 0.4),
-            -0.02em 0.02em 0 rgba(255,255,255, 0.4),
-            0.02em 0.02em 0 rgba(255,255,255, 0.4),
-            0 -0.03em 0.1em #bfbdb0,
-            0 0 0.03em #bfbdb0,
-            0 0 0.07em #bfbdb0,
-            0 0 0.12em #9a9888,
-            0 0.03em 0.05em #000;
-        }
-
+      <style>{`
         /* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
-        :global(.h2-word::before) {
+        .h2-word::before {
           content: "";
           position: absolute;
-          /* Negative inset extends plate beyond the word - equal top/bottom */
           top: -0.25em;
           left: -0.3em;
           right: -0.3em;
           bottom: -0.25em;
-          /* Brushed gunmetal gradient - lighter for metallic look */
-          background: linear-gradient(
-            180deg,
-            #3d3d3d 0%,
-            #2f2f2f 40%,
-            #252525 100%
-          );
-          /* Rounded corners on all sides */
+          background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
           border-radius: 0.15em;
           z-index: -1;
-          /* Beveled edge effect - lighter top/left for raised look */
           border-top: 2px solid rgba(180,180,180,0.45);
           border-left: 1px solid rgba(130,130,130,0.35);
           border-right: 1px solid rgba(60,60,60,0.6);
           border-bottom: 2px solid rgba(0,0,0,0.7);
-          /* Multi-layer shadow for depth and floating effect */
           box-shadow:
-            /* Inner highlight at top for glossy reflection */
             inset 0 1px 0 rgba(255,255,255,0.12),
-            /* Inner shadow at bottom for depth */
             inset 0 -1px 2px rgba(0,0,0,0.25),
-            /* Main drop shadow */
             0 4px 8px rgba(0,0,0,0.5),
-            /* Soft ambient shadow */
             0 2px 4px rgba(0,0,0,0.3);
         }
 
         /* Glossy highlight overlay on metal plate */
-        :global(.h2-word::after) {
+        .h2-word::after {
           content: "";
           position: absolute;
           top: -0.25em;
           left: -0.3em;
           right: -0.3em;
           height: 50%;
-          /* Glossy reflection gradient */
-          background: linear-gradient(
-            180deg,
-            rgba(255,255,255,0.06) 0%,
-            rgba(255,255,255,0.02) 50%,
-            transparent 100%
-          );
+          background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
           border-radius: 0.15em 0.15em 0 0;
           z-index: -1;
           pointer-events: none;
@@ -132,16 +112,14 @@ export default function H2({
 
       <h2
         className={`text-h2 ${className}`}
+        aria-label={plainText}
         style={{
           display: 'flex',
           justifyContent: 'center',
           gap: '0.5em',
           flexWrap: 'wrap',
-          transformStyle: 'preserve-3d',
           transform: 'rotateX(15deg)',
           position: 'relative',
-          // Padding to compensate for metal plate negative inset (-0.3em horizontal)
-          // Ensures plates don't extend beyond container edges
           paddingLeft: '0.35em',
           paddingRight: '0.35em',
           ...style
@@ -155,23 +133,13 @@ export default function H2({
             key={wordIndex}
             className="h2-word"
             style={{
-              display: 'inline-flex',
-              position: 'relative'
+              display: 'inline-block',
+              position: 'relative',
+              color: '#bfbdb0',
+              textShadow,
             }}
           >
-            {word.split('').map((char, charIndex) => {
-              // Apply alt glyph if available
-              const displayChar = ALT_GLYPHS[char.toUpperCase()] || char;
-
-              return (
-                <span
-                  key={charIndex}
-                  className="h2-char"
-                >
-                  {displayChar}
-                </span>
-              );
-            })}
+            {convertToAltGlyphs(word)}
           </span>
         ))}
       </h2>

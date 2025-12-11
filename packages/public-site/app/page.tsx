@@ -149,7 +149,7 @@ export default function Home() {
             }}
           >
             {/* Headline Group */}
-            <div className="space-y-4" style={{ perspective: '1000px' }}>
+            <div className="space-y-6 sm:space-y-8" style={{ perspective: '1000px' }}>
               <H1
                 id="hero-heading"
                 style={{

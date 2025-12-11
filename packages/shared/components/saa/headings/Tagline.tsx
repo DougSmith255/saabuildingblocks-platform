@@ -98,15 +98,10 @@ export default function Tagline({
       {/* Main tagline text - single node */}
       {displayText}
 
-      {/* Agent Counter Suffix - inline with tagline */}
+      {/* Agent Counter Suffix - inline with tagline (hidden above 500px via CSS) */}
       {showAgentCounter && (
         <span
           className="tagline-counter-suffix"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'baseline',
-            gap: '0'
-          }}
         >
           {/* Opening parenthesis - inherits glow from parent */}
           <span>(</span>
