@@ -83,17 +83,15 @@ export default function H1({
             0 0 0.11em rgba(255, 215, 0, 0.9),
             0 0 0.16em rgba(255, 215, 0, 0.7),
             0 0 0.22em rgba(255, 179, 71, 0.5),
-            /* METAL BACKING */
-            0.02em 0.02em 0 #6a6a6a,
-            0.03em 0.03em 0 #585858,
-            0.04em 0.04em 0 #464646,
-            0.05em 0.05em 0 #343434,
-            0.06em 0.06em 0 #222222,
-            /* LIGHT ON METAL */
-            0.03em 0.03em 0.06em rgba(255, 215, 0, 0.3),
+            /* THICK + DARK METAL BACKING (1.5x) */
+            0.03em 0.03em 0 #2a2a2a,
+            0.045em 0.045em 0 #1a1a1a,
+            0.06em 0.06em 0 #0f0f0f,
+            0.075em 0.075em 0 #080808,
+            0.09em 0.09em 0 #000000,
             /* DEPTH SHADOW */
-            0.08em 0.08em 0.05em rgba(0,0,0,0.6),
-            0.1em 0.1em 0.1em rgba(0,0,0,0.4)
+            0.12em 0.12em 0.08em rgba(0,0,0,0.85),
+            0.15em 0.15em 0.12em rgba(0,0,0,0.7)
           `,
           animation: animate ? 'h1GlowBreathe 4s ease-in-out infinite' : 'none',
           ...style,

@@ -9,7 +9,7 @@ import { LazySection } from '@/components/shared/LazySection';
  */
 export default function Locations() {
   const stats = [
-    { value: "24+", label: "Countries" },
+    { value: "28+", label: "Countries" },
     { value: "89,000+", label: "Agents Worldwide" },
     { value: "4,000+", label: "Regus Offices" }
   ];
@@ -17,19 +17,23 @@ export default function Locations() {
   const regions = [
     {
       name: "North America",
-      countries: ["United States", "Canada", "Mexico"]
+      countries: ["United States", "Canada", "Mexico", "Puerto Rico"]
     },
     {
       name: "Europe",
-      countries: ["United Kingdom", "Germany", "France", "Spain", "Portugal", "Italy", "Poland", "Greece"]
+      countries: ["United Kingdom", "Germany", "France", "Spain", "Portugal", "Italy", "Poland", "Greece", "Türkiye", "Luxembourg"]
     },
     {
       name: "Asia-Pacific",
-      countries: ["Australia", "New Zealand", "India", "Hong Kong", "Japan"]
+      countries: ["Australia", "New Zealand", "India", "Hong Kong", "Dubai (UAE)"]
     },
     {
-      name: "Other Regions",
-      countries: ["Israel", "Colombia", "Brazil", "South Africa", "Puerto Rico"]
+      name: "Middle East & Africa",
+      countries: ["Israel", "Egypt", "South Africa"]
+    },
+    {
+      name: "Latin America & Caribbean",
+      countries: ["Colombia", "Brazil", "Panama", "Chile", "Peru", "Dominican Republic"]
     }
   ];
 
@@ -39,14 +43,14 @@ export default function Locations() {
     { title: "$85/Month Flat", description: "No desk fees. No franchise fees. No royalty fees." },
     { title: "ICON Program", description: "Hit production goals, get your $16K cap back in stock" },
     { title: "Stock Equity", description: "Earn shares in a publicly traded company" },
-    { title: "Global Referrals", description: "25% referral fee from agents in 24+ countries" }
+    { title: "Global Referrals", description: "25% referral fee from agents in 28+ countries" }
   ];
 
   const teamBenefits = [
     { title: "Zero Royalty Fees", description: "Build your brand without paying royalties" },
     { title: "2,000+ Support Staff", description: "Salaried employees dedicated to your success" },
     { title: "Cloud Infrastructure", description: "No brick-and-mortar overhead costs" },
-    { title: "International Expansion", description: "Grow your team across 24+ countries" }
+    { title: "International Expansion", description: "Grow your team across 28+ countries" }
   ];
 
   return (
@@ -56,7 +60,7 @@ export default function Locations() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>GLOBAL PRESENCE</H1>
           <Tagline className="mt-4">
-            A borderless brokerage. 89,000+ agents. 24+ countries. One cloud-based platform.
+            A borderless brokerage. 89,000+ agents. 28+ countries. One cloud-based platform.
           </Tagline>
         </div>
       </section>
@@ -158,7 +162,7 @@ export default function Locations() {
             <H2>Borderless Revenue Share</H2>
             <p className="text-body mt-4 mb-8">
               eXp's revenue share program works internationally—earn passive income from agents you attract
-              across the United States and <strong className="text-[#ffd700]">24+ other countries</strong>.
+              across the United States and <strong className="text-[#ffd700]">28+ other countries</strong>.
             </p>
             <CTAButton href="/exp-realty-revenue-share-calculator/">
               Calculate Your Potential
