@@ -156,7 +156,7 @@ export default function Tagline({
                   fontSize: 'calc(1em + 10px)',
                   minWidth: '0.6em',
                   textAlign: 'center',
-                  transform: 'translateY(-0.1em)',
+                  transform: 'translateY(calc(-0.1em - 5px))',
                 }}
               >
                 {digit}
@@ -171,7 +171,7 @@ export default function Tagline({
                 fontFamily: 'var(--font-synonym), monospace',
                 fontWeight: 300,
                 fontSize: 'calc(1em + 10px)',
-                transform: 'translateY(-0.1em)',
+                transform: 'translateY(calc(-0.1em - 5px))',
               }}
             >
               +
