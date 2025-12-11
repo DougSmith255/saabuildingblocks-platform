@@ -60,7 +60,7 @@ export function AgentCounter() {
             fontSize: 'clamp(1.75rem, 2.625vw, 2.1875rem)',
           }}
         >
-          {/* Counter numbers - no parentheses */}
+          {/* Counter numbers - no parentheses, 10px larger than base */}
           <span
             className="counter-numbers-mobile"
             style={{
@@ -68,7 +68,7 @@ export function AgentCounter() {
               color: '#bfbdb0',
               fontFamily: 'var(--font-synonym), monospace',
               fontWeight: 300,
-              fontSize: '1em',
+              fontSize: 'calc(1em + 10px)',
               textShadow: 'none',
             }}
           >
