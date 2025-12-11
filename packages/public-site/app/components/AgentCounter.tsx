@@ -55,7 +55,7 @@ export function AgentCounter() {
         <span
           style={{
             display: 'inline-flex',
-            alignItems: 'baseline',
+            alignItems: 'center',
             gap: '0.25em',
             fontSize: 'clamp(1.75rem, 2.625vw, 2.1875rem)',
           }}
@@ -79,14 +79,13 @@ export function AgentCounter() {
             <span>+</span>
           </span>
 
-          {/* "AGENTS" text - Taskor font with glow, extra space before */}
+          {/* "AGENTS" text - Taskor font with glow */}
           <span
             style={{
               textShadow,
               fontFamily: 'var(--font-taskor), sans-serif',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
-              marginLeft: '0.15em',
             }}
           >
             AGENTS
