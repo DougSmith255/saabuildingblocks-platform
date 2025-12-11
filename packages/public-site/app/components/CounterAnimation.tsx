@@ -21,16 +21,16 @@ export function CounterAnimation() {
 
   useEffect(() => {
     // Find the VISIBLE counter element and individual digit spans
-    // Check which counter is currently displayed (desktop vs mobile)
-    // Desktop/tablet (500px+): .agent-counter-wrapper is visible
-    // Mobile (<500px): .tagline-counter-suffix is visible, .agent-counter-wrapper is hidden
+    // Both desktop and mobile counters now use .counter-numbers-mobile class
+    // Desktop (>=1450px): .agent-counter-wrapper is visible
+    // Mobile (<1450px): .tagline-counter-suffix is visible
     const desktopWrapper = document.querySelector('.agent-counter-wrapper');
     const mobileWrapper = document.querySelector('.tagline-counter-suffix');
 
     // Use the one whose wrapper is visible
     let counterElement: Element | null = null;
     if (desktopWrapper && getComputedStyle(desktopWrapper).display !== 'none') {
-      counterElement = desktopWrapper.querySelector('.counter-numbers');
+      counterElement = desktopWrapper.querySelector('.counter-numbers-mobile');
     } else if (mobileWrapper && getComputedStyle(mobileWrapper).display !== 'none') {
       counterElement = mobileWrapper.querySelector('.counter-numbers-mobile');
     }
