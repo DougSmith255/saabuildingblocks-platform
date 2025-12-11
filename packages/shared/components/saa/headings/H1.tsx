@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface HeadingProps {
@@ -6,134 +8,115 @@ export interface HeadingProps {
   className?: string;
   style?: React.CSSProperties;
   id?: string;
-  /** @deprecated Animation removed - using page-level settling mask instead */
-  heroAnimate?: boolean;
-  /** @deprecated Animation removed - using page-level settling mask instead */
-  animationDelay?: string;
+  /** Disable the glow breathe animation */
+  noAnimation?: boolean;
 }
 
 /**
- * H1 Component - Server Component (No JavaScript Required)
+ * Convert text to use alt glyphs for N, E, M characters
+ */
+function convertToAltGlyphs(text: string): string {
+  return text.split('').map(char => {
+    const upper = char.toUpperCase();
+    if (upper === 'N') return '\uf015';
+    if (upper === 'E') return '\uf011';
+    if (upper === 'M') return '\uf016';
+    return char;
+  }).join('');
+}
+
+/**
+ * H1 Component - Optimized Neon Sign Effect
  *
  * PERFORMANCE OPTIMIZATIONS:
- * - Pure Server Component (no 'use client')
- * - CSS-only fade-in animation (no React hydration needed)
- * - Static neon glow (no flickering or gradient animations)
- * - Static HTML rendered on server
+ * - Single DOM node (was ~40 nodes with per-character rendering)
+ * - CSS text-shadow for all effects (GPU accelerated)
+ * - Animation delayed 100ms to not block LCP
+ * - ~97% reduction in DOM nodes
  *
  * VISUAL EFFECT:
  * - 3D perspective with rotateX
- * - Dark letter body with depth shadows
- * - Static neon yellow glow layer
- * - Metal backing plate for depth
+ * - Neon gold glow with white-hot core
+ * - Metal backing plate (gray gradient)
+ * - Glow Breathe animation (slow dramatic pulse)
+ * - Alt glyphs for N, E, M characters
  */
-export default function H1({ children, className = '', style = {}, id }: HeadingProps) {
+export default function H1({
+  children,
+  className = '',
+  style = {},
+  id,
+  noAnimation = false,
+}: HeadingProps) {
+  const [animate, setAnimate] = useState(false);
+
+  // Delay animation start to not block LCP
+  useEffect(() => {
+    if (noAnimation) return;
+    const timer = setTimeout(() => setAnimate(true), 100);
+    return () => clearTimeout(timer);
+  }, [noAnimation]);
+
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
 
-  // Convert children to string for processing
+  // Convert children to string and apply alt glyphs
   const text = typeof children === 'string' ? children : String(children);
-
-  // Split text into words
-  const words = text.split(' ');
+  const displayText = convertToAltGlyphs(text);
 
   return (
-    <h1
-      id={id}
-      className={`text-h1 text-display ${className}`}
-      style={{
-        transformStyle: 'preserve-3d',
-        transform: 'rotateX(15deg)',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        rowGap: 0,
-        columnGap: '0.5em',
-        ...style,
-      }}
-    >
-      {/* SEO-friendly hidden text for search engines and screen readers */}
-      <span className="sr-only">{plainText}</span>
+    <>
+      <h1
+        id={id}
+        className={`text-h1 text-display ${className}`}
+        aria-label={plainText}
+        style={{
+          color: '#ffd700',
+          transform: 'perspective(800px) rotateX(12deg)',
+          textShadow: `
+            /* NEON TUBE - STRONGER GLOW */
+            0 0 0.01em #fff,
+            0 0 0.02em #fff,
+            0 0 0.03em rgba(255,255,255,0.8),
+            0 0 0.04em #ffd700,
+            0 0 0.07em #ffd700,
+            0 0 0.11em rgba(255, 215, 0, 0.9),
+            0 0 0.16em rgba(255, 215, 0, 0.7),
+            0 0 0.22em rgba(255, 179, 71, 0.5),
+            /* METAL BACKING */
+            0.02em 0.02em 0 #6a6a6a,
+            0.03em 0.03em 0 #585858,
+            0.04em 0.04em 0 #464646,
+            0.05em 0.05em 0 #343434,
+            0.06em 0.06em 0 #222222,
+            /* LIGHT ON METAL */
+            0.03em 0.03em 0.06em rgba(255, 215, 0, 0.3),
+            /* DEPTH SHADOW */
+            0.08em 0.08em 0.05em rgba(0,0,0,0.6),
+            0.1em 0.1em 0.1em rgba(0,0,0,0.4)
+          `,
+          animation: animate ? 'h1GlowBreathe 4s ease-in-out infinite' : 'none',
+          ...style,
+        }}
+      >
+        {/* SEO-friendly hidden text for search engines and screen readers */}
+        <span className="sr-only">{plainText}</span>
+        {displayText}
+      </h1>
 
-      {words.map((word, wordIndex) => (
-        <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-          {word.split('').map((char, charIndex) => {
-            // Alt glyphs: N = U+f015, E = U+f011, M = U+f016
-            let displayChar = char;
-            const upperChar = char.toUpperCase();
-            if (upperChar === 'N') displayChar = '\uf015';
-            if (upperChar === 'E') displayChar = '\uf011';
-            if (upperChar === 'M') displayChar = '\uf016';
-
-            return (
-              <span
-                key={charIndex}
-                className="neon-char-static"
-                data-char={displayChar}
-                style={{
-                  transform: 'translateZ(20px)',
-                  display: 'inline-block',
-                  position: 'relative',
-                  transformStyle: 'preserve-3d',
-                  // Gold neon letter with glow effect applied directly
-                  // (no stacked span needed - fixes Firefox subpixel rendering bug)
-                  color: '#ffd700',
-                  textShadow: `
-                    -0.02em -0.02em 0 rgba(255,255,255, 0.4),
-                    0.02em -0.02em 0 rgba(255,255,255, 0.4),
-                    -0.02em 0.02em 0 rgba(255,255,255, 0.4),
-                    0.02em 0.02em 0 rgba(255,255,255, 0.4),
-                    0 -0.03em 0.1em #ffd700,
-                    0 0 0.03em #ffd700,
-                    0 0 0.07em #ffd700,
-                    0 0 0.12em #ffb347,
-                    0 0.03em 0.05em #000
-                  `,
-                }}
-              >
-                {displayChar}
-                {/* Metal backing plate - visual only, not selectable */}
-                <span
-                  aria-hidden="true"
-                  style={{
-                    position: 'absolute',
-                    top: '2px',
-                    left: '2px',
-                    width: '100%',
-                    height: '100%',
-                    background: 'linear-gradient(145deg, #8a8270 0%, #7a7268 15%, #6a6258 35%, #5a5248 50%, #6a6258 65%, #7a7268 85%, #8a8270 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    zIndex: -2,
-                    transform: 'translateZ(-25px)',
-                    opacity: 1.0,
-                    textShadow: `
-                      1px 1px 0 #4a4a4a,
-                      2px 2px 0 #3a3a3a,
-                      3px 3px 0 #2f2f2f,
-                      4px 4px 0 #2a2a2a,
-                      5px 5px 0 #252525,
-                      -1px -1px 0 #6a6a6a,
-                      -1px 0 0 #5a5a5a,
-                      0 -1px 0 #5a5a5a,
-                      6px 6px 12px rgba(0,0,0,0.9),
-                      8px 8px 20px rgba(0,0,0,0.8),
-                      10px 10px 30px rgba(0,0,0,0.6)
-                    `,
-                    filter: 'contrast(1.2) brightness(1.3)',
-                    pointerEvents: 'none',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                  }}
-                >
-                  {displayChar}
-                </span>
-              </span>
-            );
-          })}
-        </span>
-      ))}
-    </h1>
+      {/* Glow Breathe animation - injected once */}
+      {!noAnimation && (
+        <style>{`
+          @keyframes h1GlowBreathe {
+            0%, 100% {
+              filter: brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3));
+            }
+            50% {
+              filter: brightness(1.2) drop-shadow(0 0 0.2em rgba(255, 215, 0, 0.6));
+            }
+          }
+        `}</style>
+      )}
+    </>
   );
 }
