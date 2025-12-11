@@ -45,22 +45,22 @@ export function AgentCounter() {
     0 0.03em 0.05em rgba(0,0,0,0.4)
   `;
 
-  // Desktop: Corner counter - same format as tagline "(3700+ Agents)"
+  // Desktop: Corner counter - "3700+ AGENTS" format (no parentheses, Taskor font, 1.75x size)
   if (isCounterDesktop) {
     return (
       <div
         className="agent-counter-wrapper absolute z-50 left-2 lg:left-auto lg:right-8"
-        style={{ top: '80px' }}
+        style={{ top: '130px' }}
       >
         <span
           style={{
             display: 'inline-flex',
             alignItems: 'baseline',
-            gap: 0,
-            fontSize: 'clamp(1rem, 1.5vw, 1.25rem)',
+            gap: '0.25em',
+            fontSize: 'clamp(1.75rem, 2.625vw, 2.1875rem)',
           }}
         >
-          {/* Counter numbers with opening parenthesis */}
+          {/* Counter numbers - no parentheses */}
           <span
             className="counter-numbers-mobile"
             style={{
@@ -72,16 +72,24 @@ export function AgentCounter() {
               textShadow: 'none',
             }}
           >
-            <span>(</span>
             <span className="counter-digit">3</span>
             <span className="counter-digit">7</span>
             <span className="counter-digit">0</span>
             <span className="counter-digit">0</span>
-            <span>+ </span>
+            <span>+</span>
           </span>
 
-          {/* "Agents)" text - with glow, alt glyphs */}
-          <span style={{ textShadow }}>{convertToAltGlyphs('Agents)')}</span>
+          {/* "AGENTS" text - Taskor font with glow */}
+          <span
+            style={{
+              textShadow,
+              fontFamily: 'var(--font-taskor), sans-serif',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+            }}
+          >
+            AGENTS
+          </span>
         </span>
       </div>
     );
