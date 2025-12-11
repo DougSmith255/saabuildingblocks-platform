@@ -32,46 +32,57 @@ function convertToAltGlyphs(text: string): string {
 export function AgentCounter() {
   const { isCounterDesktop } = useViewport();
 
-  // Desktop: Corner counter with neon glow (positioned absolutely)
+  // Neon glow text-shadow matching tagline style
+  const textShadow = `
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    0 0 0.04em #bfbdb0,
+    0 0 0.07em #bfbdb0,
+    0 0 0.11em rgba(191, 189, 176, 0.9),
+    0 0 0.16em rgba(191, 189, 176, 0.7),
+    0 0 0.22em rgba(154, 152, 136, 0.5),
+    0 0.03em 0.05em rgba(0,0,0,0.4)
+  `;
+
+  // Desktop: Corner counter - same format as tagline "(3700+ Agents)"
   if (isCounterDesktop) {
     return (
       <div
         className="agent-counter-wrapper absolute z-50 left-2 lg:left-auto lg:right-8"
         style={{ top: '80px' }}
       >
-        <div
-          className="flex items-center justify-center"
+        <span
           style={{
-            fontWeight: 100,
-            gap: 'clamp(0.5rem, 0.75rem, 1rem)',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '32px',
-            minWidth: '280px',
+            display: 'inline-flex',
+            alignItems: 'baseline',
+            gap: 0,
+            fontSize: 'clamp(1rem, 1.5vw, 1.25rem)',
           }}
         >
-          {/* Numbers container - body font only */}
-          <div className="counter-numbers-wrapper">
-            <div className="counter-numbers counter-animate">
-              <span className="counter-digit">3</span>
-              <span className="counter-digit">7</span>
-              <span className="counter-digit">0</span>
-              <span className="counter-digit">0</span>
-            </div>
-          </div>
+          {/* Counter numbers with opening parenthesis */}
+          <span
+            className="counter-numbers-mobile"
+            style={{
+              display: 'inline',
+              color: '#bfbdb0',
+              fontFamily: 'var(--font-synonym), monospace',
+              fontWeight: 300,
+              fontSize: '1em',
+              textShadow: 'none',
+            }}
+          >
+            <span>(</span>
+            <span className="counter-digit">3</span>
+            <span className="counter-digit">7</span>
+            <span className="counter-digit">0</span>
+            <span className="counter-digit">0</span>
+            <span>+ </span>
+          </span>
 
-          {/* Glow effects container - Amulya font with neon glow */}
-          <div className="counter-glow-container">
-            <span className="counter-plus neon-glow">+</span>
-            <span className="counter-text counter-glow-wrapper">
-              <span className="neon-glow">A</span>
-              <span className="neon-glow">G</span>
-              <span className="neon-glow">E</span>
-              <span className="neon-glow">N</span>
-              <span className="neon-glow">T</span>
-              <span className="neon-glow">S</span>
-            </span>
-          </div>
-        </div>
+          {/* "Agents)" text - with glow, alt glyphs */}
+          <span style={{ textShadow }}>{convertToAltGlyphs('Agents)')}</span>
+        </span>
       </div>
     );
   }
@@ -130,11 +141,11 @@ export function TaglineCounterSuffix() {
         <span className="counter-digit">7</span>
         <span className="counter-digit">0</span>
         <span className="counter-digit">0</span>
-        <span>+</span>
+        <span>+ </span>
       </span>
 
       {/* "Agents)" text - with glow, alt glyphs */}
-      <span style={{ textShadow }}>{convertToAltGlyphs(' Agents)')}</span>
+      <span style={{ textShadow }}>{convertToAltGlyphs('Agents)')}</span>
     </span>
   );
 }
