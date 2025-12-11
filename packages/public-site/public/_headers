@@ -1,5 +1,12 @@
-# Cloudflare Pages Security Headers
+# Cloudflare Pages Headers
 # Applied to all static pages served from Cloudflare Pages
+#
+# PERFORMANCE OPTIMIZATION via Early Hints (103):
+# - Link headers tell browsers to preload critical resources BEFORE HTML arrives
+# - Cloudflare automatically converts Link headers to 103 Early Hints
+# - This can save 100-300ms on page load by starting font/resource downloads early
+#
+# @see https://developers.cloudflare.com/cache/advanced-configuration/early-hints/
 
 /*
   # Security headers
@@ -7,6 +14,13 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+  # Early Hints - Preload critical fonts (converted to 103 by Cloudflare)
+  Link: </fonts/taskor-regular-webfont.woff2>; rel=preload; as=font; type="font/woff2"; crossorigin=anonymous
+  Link: </fonts/Synonym-Variable.woff2>; rel=preload; as=font; type="font/woff2"; crossorigin=anonymous
+
+  # Early Hints - Preconnect to image CDN (establishes TCP+TLS early)
+  Link: <https://imagedelivery.net>; rel=preconnect
 
   # CORS for API calls to origin server
   Access-Control-Allow-Origin: https://saabuildingblocks.com
