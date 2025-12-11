@@ -106,7 +106,7 @@ export default function PaginationControls({
   };
 
   return (
-    <div className="mt-12 flex flex-col items-center gap-8">
+    <div className="mt-12 mb-8 pb-8 flex flex-col items-center gap-8">
       {/* Navigation Buttons */}
       <div className="flex items-center gap-6">
         {/* Previous Button */}

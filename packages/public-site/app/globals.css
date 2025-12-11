@@ -927,34 +927,10 @@ main {
   .blog-card-animate:nth-child(11) { animation-delay: 0.55s; }
   .blog-card-animate:nth-child(12) { animation-delay: 0.6s; }
 
-  /* Blog Card Hover Effects - GPU Accelerated */
+  /* Blog Card Hover Effects - Simplified to work with GenericCard */
+  /* No extra effects - GenericCard handles hover with gold border/glow */
   .blog-card-hover {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-  }
-
-  .blog-card-hover:hover {
-    will-change: transform;
-  }
-
-  .blog-card-hover:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow:
-      0 0 20px rgba(0, 255, 136, 0.2),
-      0 0 40px rgba(0, 255, 136, 0.1),
-      0 10px 30px rgba(0, 0, 0, 0.3);
-  }
-
-  /* Blog card image scale on hover */
-  .blog-card-image-hover {
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .blog-card-hover:hover .blog-card-image-hover {
-    will-change: transform;
-  }
-
-  .blog-card-hover:hover .blog-card-image-hover {
-    transform: scale(1.05);
+    /* Intentionally empty - GenericCard handles all hover effects */
   }
 
   /* Featured Post Enhanced Hover */

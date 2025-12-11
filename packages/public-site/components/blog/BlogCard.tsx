@@ -67,14 +67,15 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
 
   return (
     <div ref={cardRef} className={`h-full ${className}`}>
-      <GenericCard hover padding="sm" className="h-full overflow-hidden p-0">
+      <GenericCard hover padding="sm" className="h-full overflow-hidden !p-0">
         <Link
           href={`/blog/${categorySlug}/${post.slug}`}
           className="flex flex-col h-full group"
           aria-label={`Read full article: ${post.title}`}
         >
           {/* Featured Image - Only loads when card is near viewport */}
-          <div className="relative w-full h-64 flex-shrink-0 overflow-hidden bg-gradient-to-br from-[#2a2a2a] to-[#191818]">
+          {/* Image extends to card edges with rounded corners at top only */}
+          <div className="relative w-full h-64 flex-shrink-0 overflow-hidden bg-gradient-to-br from-[#2a2a2a] to-[#191818] rounded-t-xl">
             {isVisible && post.featuredImage ? (
               <>
                 <Image

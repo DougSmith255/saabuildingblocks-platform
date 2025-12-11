@@ -260,7 +260,7 @@ export default function BlogPageClient({ categories }: BlogPageClientProps) {
 
       {/* Blog Posts Grid */}
       <section
-        className="relative px-4 sm:px-8 md:px-12"
+        className="relative px-4 sm:px-8 md:px-12 pb-16"
         aria-labelledby="posts-heading"
       >
         <div className="max-w-[2500px] mx-auto">

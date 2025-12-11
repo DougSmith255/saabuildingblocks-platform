@@ -320,7 +320,7 @@ async function migrate(): Promise<void> {
 
     try {
       // Try to fetch with the simple slug URL first
-      let html: string;
+      let html: string | undefined;
       let sourceUrl = `${SOURCE_URL}/${post.slug}/`;
 
       try {
@@ -328,20 +328,18 @@ async function migrate(): Promise<void> {
       } catch {
         // If simple slug fails, try with category prefix (common patterns)
         const categoryPrefixes = ['about-exp-realty', 'exp-realty-sponsor', 'brokerage-comparison'];
-        let found = false;
 
         for (const prefix of categoryPrefixes) {
           try {
             sourceUrl = `${SOURCE_URL}/${prefix}/${post.slug}/`;
             html = await fetchSourcePage(sourceUrl);
-            found = true;
             break;
           } catch {
             continue;
           }
         }
 
-        if (!found) {
+        if (!html) {
           console.log(`   ⏭️  SKIPPED: Could not find source page`);
           skipped++;
           continue;
@@ -351,7 +349,7 @@ async function migrate(): Promise<void> {
       console.log(`   Source: ${sourceUrl}`);
 
       // Extract SEO meta
-      const meta = extractSeoMeta(html);
+      const meta = extractSeoMeta(html!);
 
       if (!meta.title && !meta.description) {
         console.log(`   ⏭️  SKIPPED: No SEO meta found in source`);
