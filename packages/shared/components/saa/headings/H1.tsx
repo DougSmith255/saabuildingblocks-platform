@@ -10,6 +10,10 @@ export interface HeadingProps {
   id?: string;
   /** Disable the glow breathe animation */
   noAnimation?: boolean;
+  /** @deprecated No longer used - animation is now automatic */
+  heroAnimate?: boolean;
+  /** @deprecated No longer used - animation is now automatic */
+  animationDelay?: string;
 }
 
 /**
