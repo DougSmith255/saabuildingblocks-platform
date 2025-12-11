@@ -8,6 +8,7 @@ import { DeferredFooter } from '@saa/shared/components/performance/DeferredConte
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 import { ViewportHeightLock } from './ViewportHeightLock';
+import { ViewportProvider } from '@/contexts/ViewportContext';
 
 /**
  * LayoutWrapper - Global layout with automatic performance optimization
@@ -54,7 +55,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   }, [pathname, noHeaderFooterRoutes]);
 
   return (
-    <>
+    <ViewportProvider>
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />
@@ -71,6 +72,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
           <Footer />
         </DeferredFooter>
       )}
-    </>
+    </ViewportProvider>
   );
 }

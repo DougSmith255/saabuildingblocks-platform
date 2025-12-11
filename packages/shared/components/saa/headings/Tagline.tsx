@@ -9,8 +9,10 @@ export interface TaglineProps {
   heroAnimate?: boolean;
   /** @deprecated Animation removed - using page-level settling mask instead */
   animationDelay?: string;
-  /** Optional counter suffix (e.g., "– 3,700+ Agents") - renders inline with same styling */
+  /** @deprecated Use counterSuffix prop with a client component instead */
   showAgentCounter?: boolean;
+  /** Optional counter suffix ReactNode - pass a client component for viewport-aware rendering */
+  counterSuffix?: React.ReactNode;
 }
 
 /**
@@ -50,7 +52,7 @@ export default function Tagline({
   children,
   className = '',
   style = {},
-  showAgentCounter = false,
+  counterSuffix,
 }: TaglineProps) {
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
@@ -98,37 +100,8 @@ export default function Tagline({
       {/* Main tagline text - single node */}
       {displayText}
 
-      {/* Agent Counter Suffix - inline with tagline (hidden above 500px via CSS) */}
-      {showAgentCounter && (
-        <span
-          className="tagline-counter-suffix"
-          style={{ display: 'inline-flex', alignItems: 'baseline', gap: 0 }}
-        >
-          {/* Counter numbers with opening parenthesis - plain Synonym font, no glow */}
-          {/* Individual digit spans for scramble animation */}
-          <span
-            className="counter-numbers-mobile"
-            style={{
-              display: 'inline',
-              color: '#bfbdb0',
-              fontFamily: 'var(--font-synonym), monospace',
-              fontWeight: 300,
-              fontSize: '1em',
-              textShadow: 'none',
-            }}
-          >
-            <span>(</span>
-            <span className="counter-digit">3</span>
-            <span className="counter-digit">7</span>
-            <span className="counter-digit">0</span>
-            <span className="counter-digit">0</span>
-            <span>+</span>
-          </span>
-
-          {/* "Agents)" text - with glow, alt glyphs */}
-          <span>{convertToAltGlyphs(' Agents)')}</span>
-        </span>
-      )}
+      {/* Agent Counter Suffix - viewport-aware client component */}
+      {counterSuffix}
     </p>
   );
 }

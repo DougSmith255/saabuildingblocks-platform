@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
-import { StaticCounter } from './components/StaticCounter';
+import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
@@ -58,8 +58,8 @@ export default function Home() {
           justifyContent: 'center',
         }}
       >
-        {/* Static Counter - positioned absolutely */}
-        <StaticCounter />
+        {/* Agent Counter - viewport-aware (only renders desktop OR mobile counter) */}
+        <AgentCounter />
 
         {/* Wolf Pack Background Image */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
@@ -158,7 +158,7 @@ export default function Home() {
               >
                 SMART AGENT ALLIANCE
               </H1>
-              <Tagline className="hero-tagline-mobile-spacing" showAgentCounter>
+              <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
                 For Agents Who Want More
               </Tagline>
             </div>
