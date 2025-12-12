@@ -148,7 +148,7 @@ export default function OurExpTeam() {
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <div className="text-center mb-12">
-              <H2>The Wolf Pack Leadership</H2>
+              <H2>5 More Tiers in Your Corner</H2>
               <p className="text-body mt-4">
                 Your extended upline. Access to their resources, training, and a community of 3,700+ agents across 24+ countries.
               </p>

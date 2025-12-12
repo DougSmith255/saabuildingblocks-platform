@@ -3410,25 +3410,10 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 /* Pulsing glow animation - GPU-accelerated opacity animation */
 /* Uses a pseudo-element with static box-shadow, animates opacity instead */
 /* This avoids expensive box-shadow recalculation every frame */
-/* Randomized pulse effect - quick flickers with varying intensity */
+/* Simplified pulse effect - reduced keyframes for better Chrome performance */
 @keyframes ctaLightPulseOpacity {
-  0% { opacity: 0.5; }
-  5% { opacity: 0.95; }
-  10% { opacity: 0.6; }
-  15% { opacity: 0.85; }
-  20% { opacity: 0.55; }
-  30% { opacity: 0.9; }
-  35% { opacity: 0.5; }
-  45% { opacity: 1; }
-  50% { opacity: 0.65; }
-  55% { opacity: 0.85; }
-  60% { opacity: 0.5; }
-  70% { opacity: 0.95; }
-  75% { opacity: 0.6; }
-  85% { opacity: 0.8; }
-  90% { opacity: 0.55; }
-  95% { opacity: 0.9; }
-  100% { opacity: 0.5; }
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 /* Apply pulse animation via pseudo-element for GPU acceleration */
@@ -3437,32 +3422,30 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 }
 
 /* Base glow layer (dimmer state) - always visible */
+/* Simplified to 2 shadow layers for Chrome performance */
 .cta-light-bar-pulse::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    0 0 3px 1px rgba(255, 215, 0, 0.5),
-    0 0 8px 3px rgba(255, 215, 0, 0.35),
-    0 0 16px 6px rgba(255, 215, 0, 0.2),
-    0 0 30px 10px rgba(255, 215, 0, 0.1);
+    0 0 6px 2px rgba(255, 215, 0, 0.45),
+    0 0 20px 8px rgba(255, 215, 0, 0.15);
   pointer-events: none;
 }
 
 /* Intensified glow layer - fades in/out via opacity */
+/* Simplified to 2 shadow layers for Chrome performance */
 .cta-light-bar-pulse::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    0 0 5px 2px rgba(255, 215, 0, 0.6),
-    0 0 14px 6px rgba(255, 215, 0, 0.4),
-    0 0 28px 12px rgba(255, 215, 0, 0.25),
-    0 0 50px 20px rgba(255, 215, 0, 0.12);
+    0 0 10px 4px rgba(255, 215, 0, 0.5),
+    0 0 35px 15px rgba(255, 215, 0, 0.2);
   pointer-events: none;
-  animation: ctaLightPulseOpacity 3s linear infinite;
+  animation: ctaLightPulseOpacity 3s ease-in-out infinite;
   animation-delay: inherit;
   will-change: opacity;
   transform: translateZ(0); /* Force GPU compositor layer */

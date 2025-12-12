@@ -46,28 +46,9 @@
   }
 }
 
-/* Twinkle effect using opacity animation */
-.star::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: inherit;
-  border-radius: inherit;
-  animation: starTwinkle 3s ease-in-out infinite;
-  animation-delay: inherit;
-}
-
-@keyframes starTwinkle {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
-}
+/* Twinkle effect - disabled for Chrome performance */
+/* Stars now rely solely on the float animation */
+/* The visual effect is still good without the twinkle */
 
 /* Mobile viewport stability */
 @media screen and (max-width: 768px) {
@@ -91,9 +72,5 @@
 
 /* PAUSE ANIMATIONS DURING SCROLL for smooth 60fps scrolling */
 :global(body.is-scrolling) .star {
-  animation-play-state: paused !important;
-}
-
-:global(body.is-scrolling) .star::before {
   animation-play-state: paused !important;
 }
