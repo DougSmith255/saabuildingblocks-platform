@@ -358,28 +358,6 @@ main {
     }
   }
 
-  /* Hero Fade-In Animation - Simple fade */
-  @keyframes hero-fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  /* Hero Fade-In with Upward Movement */
-  @keyframes hero-fade-in-up {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   @keyframes text-glow {
     0% {
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
@@ -808,18 +786,6 @@ main {
    */
 
   /* Base animation keyframes - 2025 GPU-optimized */
-  /* Includes rotateX(15deg) for H1 3D tilt effect */
-  @keyframes fadeInUp2025 {
-    from {
-      opacity: 0;
-      transform: rotateX(15deg) translate3d(0, 30px, 0);  /* GPU-accelerated */
-    }
-    to {
-      opacity: 1;
-      transform: rotateX(15deg) translate3d(0, 0, 0);
-    }
-  }
-
   @keyframes fadeIn2025 {
     from {
       opacity: 0;
@@ -1473,75 +1439,15 @@ body.is-scrolling .cyber-card-gold-frame::after {
   }
 }
 
-/* ========================================
-   WORDPRESS HOMEPAGE CSS - EXACT COPY
-   ======================================== */
-
-/* Hero Section */
-.hero-title-container {
-    height: clamp(120px, 100px + 6vw, 180px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-}
-
-.hero-title {
-    font-family: var(--font-amulya);
-    font-size: clamp(2.5rem, 5vw + 1rem, 6rem);
-    color: #ffd700;
-    text-align: center;
-    margin: 0;
-    animation: fadeInUp 1s ease;
-    line-height: 1.1;
-    letter-spacing: -3px;
-    width: clamp(95%, 90% + 2vw, 100%);
-    white-space: normal;
-    word-wrap: break-word;
-}
-
-.section-title {
-    font-family: var(--font-synonym);
-    font-weight: 700;
-    font-size: clamp(2rem, 4vw, 3.5rem);
-    color: #ffffff;
-    text-align: center;
-    margin: 2rem 0;
-    line-height: 1.2;
-}
-
-.saa-homepage {
-    padding-left: clamp(15px, 3.7vw + 10px, 200px) !important;
-    padding-right: clamp(15px, 3.7vw + 10px, 200px) !important;
-}
-
-.saa-container {
-    max-width: none;
-    width: 100%;
-    margin: 0 auto;
-    padding: 0;
-}
-
-.content-section {
-    padding: 60px 0;
-    position: relative;
-}
-
+/* Hero section - used by homepage and blog */
 .hero-section {
-    min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     position: relative;
-}
-
-.hero-subtitle {
-    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-    color: rgba(255, 255, 255, 0.9);
-    margin: 1.5rem 0;
-    font-family: var(--font-amulya);
 }
 
 .hero-tagline {
@@ -1554,62 +1460,6 @@ body.is-scrolling .cyber-card-gold-frame::after {
     margin-bottom: 2.5rem;
     text-align: center;
     text-wrap: balance;
-}
-
-.tagline-block {
-    display: inline-block;
-    text-align: center;
-}
-
-.cta-buttons {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.cta-button a {
-    display: inline-block;
-    padding: 15px 40px;
-    background: linear-gradient(135deg, #ffd700 0%, #ffed80 100%);
-    color: #000;
-    text-decoration: none;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.cta-button a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Team section styles (placeholder for now) */
-.saa-team-main-container,
-.saa-team-carousel-section,
-.saa-team-card,
-.saa-team-controls-section {
-    /* Will be styled when team carousel JS is added */
-}
-
-/* Accordion styles (placeholder for now) */
-.accordion,
-.accordion-item,
-.accordion-header,
-.accordion-content {
-    /* Will be styled when accordion JS is added */
 }
 
 /* ========================================
@@ -1636,19 +1486,6 @@ footer {
   position: relative;
   z-index: 2;
 }
-
-/* ========================================
-   NEON FLICKER EFFECT - INDIVIDUAL LETTERS
-   ======================================== */
-
-/* Per-character glitch effect */
-.neon-char {
-  position: relative;
-  display: inline-block;
-  color: #ffd700;
-}
-
-/* H1 neon glow animations removed - using static glow for performance */
 
 /* ========================================
    404 PAGE STYLES
@@ -2725,82 +2562,6 @@ body.light-mode .blog-content .wp-block-media-text__media:hover {
   }
 }
 
-/* ========================================
-   YOUTUBE VIDEO EMBED STYLING
-   CyberFrame-inspired metal frame for video embeds
-   ======================================== */
-
-.youtube-embed-container {
-  /* 3D Metal Frame - matches CyberFrame component */
-  padding: 6px;
-  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(150,150,150,0.4);
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 15px rgba(0,255,136,0.1);
-  transition: all 0.3s ease;
-}
-
-.youtube-embed-container:hover {
-  box-shadow:
-    0 4px 25px rgba(0,0,0,0.7),
-    inset 0 1px 0 rgba(255,255,255,0.2),
-    inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 25px rgba(0,255,136,0.2);
-  border-color: rgba(0,255,136,0.3);
-}
-
-.youtube-embed-container iframe {
-  border-radius: 6px;
-}
-
-/* ========================================
-   FEATURED IMAGE AT TOP OF CONTENT
-   Hero-style treatment with CyberFrame styling
-   ======================================== */
-
-.blog-featured-image {
-  position: relative;
-  margin: 0;
-  /* 3D Metal Frame - matches CyberFrame */
-  padding: 6px;
-  background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
-  border-radius: 12px;
-  border: 1px solid rgba(150,150,150,0.4);
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.15),
-    inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 15px rgba(0,255,136,0.1);
-  transition: all 0.3s ease;
-}
-
-.blog-featured-image:hover {
-  box-shadow:
-    0 4px 25px rgba(0,0,0,0.7),
-    inset 0 1px 0 rgba(255,255,255,0.2),
-    inset 0 -1px 0 rgba(0,0,0,0.3),
-    0 0 25px rgba(0,255,136,0.2);
-  border-color: rgba(0,255,136,0.3);
-}
-
-.blog-featured-image > div {
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.blog-featured-image figcaption {
-  font-family: var(--font-amulya);
-  font-size: 0.875rem;
-  color: #808080;
-  margin-top: 0.75rem;
-  text-align: center;
-  font-style: italic;
-}
-
 /* Tables */
 .blog-content table {
   width: 100%;
@@ -3363,18 +3124,6 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   100% {
     background: #ffd700;
     filter: drop-shadow(0 0 5px #ffd700) drop-shadow(0 0 15px #ffd700) drop-shadow(0 0 30px #ffd700) brightness(1.2);
-  }
-}
-
-/* H1 Fade-in Animation - includes rotateX(15deg) for 3D tilt effect */
-@keyframes fadeInUp2025 {
-  from {
-    opacity: 0;
-    transform: rotateX(15deg) translate3d(0, 30px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: rotateX(15deg) translate3d(0, 0, 0);
   }
 }
 

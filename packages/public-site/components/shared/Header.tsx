@@ -112,9 +112,13 @@ export default function Header() {
   }, []);
 
   // Handle scroll for header hide/show (500px down to hide, 250px up to show)
+  // Throttled to 100ms to reduce CPU usage (was running every frame at 60fps)
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+    let ticking = false;
+    let lastKnownScrollY = window.scrollY;
+
+    const updateHeader = () => {
+      const currentScrollY = lastKnownScrollY;
 
       // Detect scroll direction
       const currentDirection = currentScrollY > lastScrollY ? 'down' : 'up';
@@ -140,6 +144,16 @@ export default function Header() {
       }
 
       setLastScrollY(currentScrollY);
+      ticking = false;
+    };
+
+    const handleScroll = () => {
+      lastKnownScrollY = window.scrollY;
+      if (!ticking) {
+        // Use requestAnimationFrame for smooth throttling
+        requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

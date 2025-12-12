@@ -14,14 +14,16 @@
  *
  * Performance optimization:
  * - Wrapped with React.memo to prevent re-renders when props haven't changed
+ * - Uses shared IntersectionObserver (1 observer for all cards vs 20+ separate ones)
  */
 
-import { memo, useState, useRef, useEffect } from 'react';
+import { memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { GenericCard } from '@saa/shared/components/saa';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
+import { useSharedVisibility } from './useSharedVisibility';
 
 export interface BlogCardProps {
   post: BlogPost;
@@ -40,30 +42,8 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
   const primaryCategory = post.categories[0] || 'uncategorized';
   const categorySlug = categoryToSlug(primaryCategory);
 
-  // Defer image loading until card is near viewport
-  const [isVisible, setIsVisible] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Stop observing once visible
-        }
-      },
-      {
-        rootMargin: '200px', // Start loading 200px before entering viewport
-        threshold: 0
-      }
-    );
-
-    if (cardRef.current) {
-      observer.observe(cardRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  // Use shared IntersectionObserver for all blog cards (1 observer vs 20+)
+  const [cardRef, isVisible] = useSharedVisibility<HTMLDivElement>();
 
   return (
     <div ref={cardRef} className={`h-full ${className}`}>
