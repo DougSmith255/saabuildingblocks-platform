@@ -35,7 +35,7 @@ export default function AboutDougSmart() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>DOUG SMART</H1>
           <Tagline className="mt-4">
-            The architect behind every digital system that gives our agents an unfair advantage
+            Your unfair advantage, engineered
           </Tagline>
         </div>
       </section>
