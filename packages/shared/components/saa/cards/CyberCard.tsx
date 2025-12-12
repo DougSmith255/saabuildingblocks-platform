@@ -163,6 +163,14 @@ export function CyberCard({
           transform-style: preserve-3d;
           transform: translateZ(0);
         }
+
+        /* Brand yellow for headings inside CyberCard */
+        .cyber-card-content h3,
+        .cyber-card-content h4,
+        .cyber-card-content h5,
+        .cyber-card-content h6 {
+          color: #ffd700;
+        }
       `}</style>
 
       <div className={`cyber-card-3d ${isInteractive ? 'cyber-card-interactive' : ''} ${className}`}>

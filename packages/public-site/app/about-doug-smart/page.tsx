@@ -142,13 +142,13 @@ export default function AboutDougSmart() {
       <LazySection height={200}>
         <section className="relative py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
-            <CyberCard padding="lg">
+            <CyberCard padding="lg" className="max-w-[450px] mx-auto">
               <div className="text-center">
                 <h3 className="text-h5 mb-4">Get in Touch</h3>
-                <a href="mailto:doug@smartagentalliance.com" className="text-link hover:underline">
-                  doug@smartagentalliance.com
+                <a href="mailto:team@smartagentalliance.com">
+                  team@smartagentalliance.com
                 </a>
-                <p className="text-body opacity-60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>314-320-5606</p>
+                <p className="text-body opacity-60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>314-320-5606 (Text Only)</p>
               </div>
             </CyberCard>
           </div>
