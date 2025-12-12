@@ -35,12 +35,14 @@ export function CategoryBadge({
 
   return (
     <span
-      className={`inline-block text-xs uppercase tracking-wider ${className}`}
+      className={`inline-block uppercase tracking-wider ${className}`}
       style={{
         fontFamily: 'var(--font-taskor)',
         color: '#c4a94d',
         filter: filter.trim(),
         transform: 'perspective(500px) rotateX(8deg)',
+        // Use H4 clamp for fluid sizing: 24px min → 40px max
+        fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)',
       }}
     >
       {category}
