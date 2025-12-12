@@ -38,13 +38,13 @@ export default function StarBackgroundCanvas() {
     for (let i = 0; i < starCount; i++) {
       // 3 layers with different speeds (parallax effect)
       const layer = i % 3;
-      // Speeds in pixels per second (faster = closer/larger stars)
-      const speeds = [0.8, 1.2, 1.8]; // px/s - gentle floating motion
+      // Speeds in pixels per second (slower = more subtle floating motion)
+      const speeds = [0.4, 0.6, 0.9]; // px/s - halved for gentler motion
 
       stars.push({
         x: Math.random() * width,
         y: Math.random() * height, // Start randomly distributed
-        size: Math.random() * (layer * 0.8 + 1) + 0.3,
+        size: Math.random() * (layer * 0.4 + 0.6) + 0.3, // Smaller size range: 0.3-1.5px
         speed: speeds[layer],
         opacity: Math.random() * 0.4 + 0.4, // 0.4 to 0.8
       });

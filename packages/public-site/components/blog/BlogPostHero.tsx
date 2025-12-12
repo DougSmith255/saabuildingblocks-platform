@@ -148,7 +148,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <User style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#dcdbd5' }}>{author}</span>
+            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{author}</span>
           </div>
 
           {/* Date */}
@@ -156,7 +156,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Calendar style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#dcdbd5' }}>{date}</span>
+            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{date}</span>
           </div>
 
           {/* Reading time */}
@@ -164,7 +164,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Clock style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#dcdbd5' }}>{readingTime}</span>
+            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{readingTime}</span>
           </div>
         </div>
 
