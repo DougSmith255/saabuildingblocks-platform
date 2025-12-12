@@ -43,7 +43,7 @@ export default function AboutKarrieHill() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>KARRIE HILL, JD</H1>
           <Tagline className="mt-4">
-            The strategic mind engineering agent success at Smart Agent Alliance
+            Strategy meets success
           </Tagline>
         </div>
       </section>

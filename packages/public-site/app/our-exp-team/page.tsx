@@ -1,12 +1,12 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText, ProfileCyberFrame, Icon3D } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
-// Cloudflare-ready image URLs (using same as WhoWeAre section)
-const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png';
-const DOUG_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png';
+// Cloudflare Images CDN URLs
+const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
+const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public';
 
 /**
  * About Us / Our eXp Team Page
@@ -41,31 +41,31 @@ export default function OurExpTeam() {
     {
       tier: 3,
       name: "Mike Sherrard",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-1.webp",
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/c7d78c1c7d39f9bc-Upline-1.webp/public",
       bio: "#1 Personal Attractor at eXp. Most personally sponsored actively producing agents worldwide. Trained 1000s of agents every year how to scale their business with social media. Top 3 Realtor on YouTube Globally with 85,000+ subscribers. Co-Founder of the Wolf Pack."
     },
     {
       tier: 4,
       name: "Connor Steinbrook",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-2.webp",
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/c5b1dae986466b48-Upline-2.webp/public",
       bio: "Top Social Media Influencer with a 35,000+ subscriber YouTube channel Investor Army. Top 43 Influencer at eXp Realty Who Built a Team of Over 2900 Agents in 4 Years. Co-Founder of the Wolf Pack."
     },
     {
       tier: 5,
       name: "Chris Soignier",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-3.webp",
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/0d57e885d0b45fb6-Upline-3.webp/public",
       bio: "Broker Associate experienced in multi-family and commercial Real Estate investments. Chris is a Top 50 eXp Influencer amassing a Team of Agents Spanning Over 40 US States and 7 Countries."
     },
     {
       tier: 6,
       name: "Ian Flannigan",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-4.webp",
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/d2afacd47dcdf3a4-Upline-4.webp/public",
       bio: "Top 50 eXp Influencer. Built an international team of real estate agents in 7 years. Accomplished Entrepreneur, National Speaker, and Industry Leader with a strong passion for helping people achieve their personal and business goals."
     },
     {
       tier: 7,
       name: "Pat Hays",
-      image: "https://wp.saabuildingblocks.com/wp-content/uploads/2023/12/Upline-5.webp",
+      image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/8fee6badeca55e90-Upline-5.webp/public",
       bio: "Top Producing Real Estate Agent, Team Leader, Mentor. Who did $3.2 Million in Production His First Year in Real Estate. Pat has Built a Team of Over 2000 Agents Across North America in 42 States and 3 Canadian Provinces."
     }
   ];
@@ -77,7 +77,7 @@ export default function OurExpTeam() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>YOUR UPLINE</H1>
           <Tagline className="mt-4">
-            7 layers of mentorship, support, and proven expertise backing every agent who joins Smart Agent Alliance
+            7 tiers of proven expertise in your corner
           </Tagline>
         </div>
       </section>
@@ -100,9 +100,20 @@ export default function OurExpTeam() {
               >
                 <div className="lg:w-1/3 flex justify-center">
                   <div className="relative">
-                    {/* Tier Badge */}
-                    <div className="absolute -top-3 -left-3 z-10 w-10 h-10 rounded-full bg-[#ffd700] flex items-center justify-center shadow-lg">
-                      <span className="text-black font-bold" style={{ fontSize: 'var(--font-size-caption)' }}>{founder.tier}</span>
+                    {/* 3D Tier Number */}
+                    <div className="absolute -top-4 -left-4 z-10">
+                      <Icon3D>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-taskor), sans-serif',
+                            fontSize: 'var(--font-size-h2)',
+                            fontWeight: 700,
+                            lineHeight: 1,
+                          }}
+                        >
+                          {founder.tier}
+                        </span>
+                      </Icon3D>
                     </div>
                     <ProfileCyberFrame size="xl" index={index}>
                       <Image
@@ -116,13 +127,15 @@ export default function OurExpTeam() {
                   </div>
                 </div>
                 <div className="lg:w-2/3">
-                  <h3 className="text-h3 mb-1">{founder.name}</h3>
-                  <p className="text-link mb-4">{founder.title}</p>
-                  <div className="space-y-4 text-body">
-                    {founder.bio.map((paragraph, pIndex) => (
-                      <p key={pIndex}>{paragraph}</p>
-                    ))}
-                  </div>
+                  <GenericCard padding="md">
+                    <h3 className="text-h3 mb-1">{founder.name}</h3>
+                    <p className="text-link mb-4">{founder.title}</p>
+                    <div className="space-y-4 text-body">
+                      {founder.bio.map((paragraph, pIndex) => (
+                        <p key={pIndex}>{paragraph}</p>
+                      ))}
+                    </div>
+                  </GenericCard>
                 </div>
               </div>
             ))}
@@ -145,9 +158,20 @@ export default function OurExpTeam() {
               {uplinePartners.map((partner, index) => (
                 <GenericCard key={index} padding="md" centered className="h-full">
                   <div className="relative inline-block">
-                    {/* Tier Badge */}
-                    <div className="absolute -top-2 -left-2 z-10 w-8 h-8 rounded-full bg-[#ffd700] flex items-center justify-center shadow-lg">
-                      <span className="text-black font-bold" style={{ fontSize: 'var(--font-size-caption)' }}>{partner.tier}</span>
+                    {/* 3D Tier Number */}
+                    <div className="absolute -top-3 -left-3 z-10">
+                      <Icon3D>
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-taskor), sans-serif',
+                            fontSize: 'var(--font-size-h2)',
+                            fontWeight: 700,
+                            lineHeight: 1,
+                          }}
+                        >
+                          {partner.tier}
+                        </span>
+                      </Icon3D>
                     </div>
                     <ProfileCyberFrame size="md" index={index}>
                       <Image
@@ -173,7 +197,7 @@ export default function OurExpTeam() {
         <section className="relative py-12 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto">
             <CyberCardGold padding="lg">
-              <NeonGoldText as="p" className="text-h6 text-center mb-4">
+              <NeonGoldText as="p" className="text-h3 text-center mb-4">
                 Passive Income Potential
               </NeonGoldText>
               <p className="text-body text-center mb-4">
@@ -181,7 +205,7 @@ export default function OurExpTeam() {
               </p>
               <div className="flex justify-center">
                 <CTAButton href="/exp-realty-revenue-share-calculator/">
-                  Calculate Your Potential
+                  View Your Potential
                 </CTAButton>
               </div>
             </CyberCardGold>
@@ -199,7 +223,7 @@ export default function OurExpTeam() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join Our Team
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">
                 See Our Value
