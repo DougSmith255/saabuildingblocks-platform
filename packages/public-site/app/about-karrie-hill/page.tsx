@@ -162,8 +162,8 @@ export default function AboutKarrieHill() {
             <CyberCard padding="lg" className="max-w-[450px] mx-auto">
               <div className="text-center">
                 <h3 className="text-h5 mb-4">Contact Info</h3>
-                <a href="mailto:karrie.hill@exprealty.com">
-                  karrie.hill@exprealty.com
+                <a href="mailto:karrie@smartagentalliance.com">
+                  karrie@smartagentalliance.com
                 </a>
                 <p className="text-body opacity-60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>415-435-7777 (No Text)</p>
               </div>

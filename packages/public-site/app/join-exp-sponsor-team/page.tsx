@@ -68,7 +68,7 @@ export default function JoinExpSponsorTeam() {
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1900px] mx-auto w-full text-center">
-          <H1>JOIN THE WOLF PACK</H1>
+          <H1>JOIN THE ALLIANCE</H1>
           <Tagline className="mt-4">
             Your first step to more
           </Tagline>
@@ -98,8 +98,8 @@ export default function JoinExpSponsorTeam() {
               <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-body">
                 <p>
-                  <a href="mailto:karrie.hill@exprealty.com" className="text-link transition-colors">
-                    karrie.hill@exprealty.com
+                  <a href="mailto:karrie@smartagentalliance.com" className="text-link transition-colors">
+                    karrie@smartagentalliance.com
                   </a>
                 </p>
                 <p>415-435-7777 (no text)</p>

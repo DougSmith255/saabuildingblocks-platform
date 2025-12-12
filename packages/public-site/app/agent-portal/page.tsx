@@ -534,10 +534,10 @@ function ExpLinksSection() {
                 doug@smartagentalliance.com
               </a>
               <a
-                href="mailto:karrie.hill@exprealty.com"
+                href="mailto:karrie@smartagentalliance.com"
                 className="inline-block px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[#e5e4dd] hover:bg-white/10 transition-colors"
               >
-                karrie.hill@exprealty.com
+                karrie@smartagentalliance.com
               </a>
             </div>
           </div>

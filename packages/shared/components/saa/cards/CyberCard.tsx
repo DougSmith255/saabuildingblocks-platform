@@ -105,7 +105,29 @@ export function CyberCard({
             0 6px 16px rgba(0,0,0,0.5),
             /* Soft ambient shadow */
             0 2px 6px rgba(0,0,0,0.3);
+        }
 
+        /* Organic glow pulse overlay - same animation as CTA buttons */
+        .cyber-card-plate::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: 12px;
+          pointer-events: none;
+          z-index: 0;
+          box-shadow: 0 0 12px 3px rgba(255, 215, 0, 0.15);
+          animation: cyberCardPulse 2.4s linear infinite;
+        }
+
+        @keyframes cyberCardPulse {
+          0% { opacity: 0.55; }
+          13% { opacity: 0.95; }
+          28% { opacity: 0.6; }
+          41% { opacity: 0.85; }
+          54% { opacity: 0.5; }
+          67% { opacity: 1; }
+          83% { opacity: 0.7; }
+          100% { opacity: 0.55; }
         }
 
         /* Glossy highlight overlay on metal plate */

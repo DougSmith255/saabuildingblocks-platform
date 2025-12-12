@@ -121,10 +121,10 @@ export default function KarrieLinktree() {
       {/* Email */}
       <div className="mt-8 text-center">
         <a
-          href="mailto:karrie.hill@exprealty.com"
+          href="mailto:karrie@smartagentalliance.com"
           className="text-link hover:underline"
         >
-          karrie.hill@exprealty.com
+          karrie@smartagentalliance.com
         </a>
         <p className="text-[#dcdbd5]/60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>415-435-7777 (no text)</p>
       </div>
