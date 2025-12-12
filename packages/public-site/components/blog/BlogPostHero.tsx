@@ -141,29 +141,30 @@ export function BlogPostHero({
 
         {/* Meta info row - centered */}
         {/* minHeight prevents CLS when Amulya font loads */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-[#dcdbd5]" style={{ minHeight: '28px' }}>
+        {/* Icon clamp: 15px → 30px (2X) at 3000px viewport */}
+        <div className="flex flex-wrap items-center justify-center gap-6" style={{ minHeight: '28px' }}>
           {/* Author */}
           <div className="flex items-center gap-2">
-            <Icon3D style={{ width: 'clamp(15px, calc(11.36px + 0.15vw), 30px)', height: 'clamp(15px, calc(11.36px + 0.15vw), 30px)' }}>
+            <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <User style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)' }}>{author}</span>
+            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#dcdbd5' }}>{author}</span>
           </div>
 
           {/* Date */}
           <div className="flex items-center gap-2">
-            <Icon3D style={{ width: 'clamp(15px, calc(11.36px + 0.15vw), 30px)', height: 'clamp(15px, calc(11.36px + 0.15vw), 30px)' }}>
+            <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Calendar style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)' }}>{date}</span>
+            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#dcdbd5' }}>{date}</span>
           </div>
 
           {/* Reading time */}
           <div className="flex items-center gap-2">
-            <Icon3D style={{ width: 'clamp(15px, calc(11.36px + 0.15vw), 30px)', height: 'clamp(15px, calc(11.36px + 0.15vw), 30px)' }}>
+            <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Clock style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)' }}>{readingTime}</span>
+            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#dcdbd5' }}>{readingTime}</span>
           </div>
         </div>
 

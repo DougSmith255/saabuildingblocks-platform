@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import StarBackground from '@/components/shared/StarBackground';
+import StarBackground from '@/components/shared/StarBackgroundCanvas';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
 import ScrollProgress from '@/components/shared/ScrollProgress';
@@ -13,7 +13,6 @@ import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import SmoothScroll from '@/components/SmoothScroll';
-import PageTransition from '@/components/shared/PageTransition';
 
 // Read critical CSS at build time for consolidation
 const criticalCSS = readFileSync(
@@ -308,9 +307,6 @@ export default async function RootLayout({
         }}
         suppressHydrationWarning
       >
-        {/* Page Transition - Fades main content on navigation */}
-        <PageTransition />
-
         {/* Public-site package: Always static export with baked-in CSS */}
         <SmoothScroll />
         <ScrollToTop />
