@@ -20,11 +20,11 @@ export default function AboutDougSmart() {
   ];
 
   const systemsBuilt = [
-    { name: "Agent Websites", desc: "Custom IDX-integrated sites that convert" },
+    { name: "Agent Attraction Pages", desc: "Custom websites that recruit agents to your team" },
     { name: "Marketing Automations", desc: "Email sequences that nurture leads 24/7" },
     { name: "Lead Funnels", desc: "Capture systems that work while you sleep" },
     { name: "Brand Identity", desc: "Stand out in a sea of generic agents" },
-    { name: "CRM Integrations", desc: "Tech that talks to each other seamlessly" },
+    { name: "Social Media Templates", desc: "Ready-to-post content that builds your brand" },
     { name: "Revenue Systems", desc: "Passive income infrastructure" }
   ];
 
@@ -165,10 +165,10 @@ export default function AboutDougSmart() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join Our Team
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/our-exp-team/">
-                Meet The Full Team
+                Meet The Team
               </CTAButton>
             </div>
           </div>
