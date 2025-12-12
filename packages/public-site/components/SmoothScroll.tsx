@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Lenis from 'lenis';
 
 /**
  * Lenis Smooth Scroll Component
  *
- * Industry-standard smooth scrolling for mouse wheel, trackpad, and touch.
- * Handles cross-browser compatibility automatically.
+ * Industry-standard smooth scrolling for mouse wheel and trackpad.
+ * DESKTOP ONLY - disabled on mobile/touch devices for native scroll performance.
  *
  * Also handles:
  * - Disabling browser scroll restoration (prevents scroll position being restored on navigation)
@@ -20,31 +20,44 @@ import Lenis from 'lenis';
 export default function SmoothScroll() {
   const lenisRef = useRef<Lenis | null>(null);
   const rafIdRef = useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(true); // Default to mobile (SSR safe)
 
   useEffect(() => {
+    // Detect mobile/touch devices - disable Lenis on mobile for native scroll
+    const checkMobile = () => {
+      const hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isNarrowScreen = window.innerWidth < 768;
+      return hasTouchScreen && isNarrowScreen;
+    };
+
+    setIsMobile(checkMobile());
+
     // Disable browser's automatic scroll restoration
-    // This prevents the browser from restoring scroll position when navigating between pages
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
 
-    // Scroll to top on initial page load (for static export navigation)
+    // Scroll to top on initial page load
     window.scrollTo(0, 0);
+
+    // Skip Lenis on mobile - use native scroll
+    if (checkMobile()) {
+      return;
+    }
 
     // Defer Lenis initialization to avoid blocking main thread
     const initLenis = () => {
-      // Initialize Lenis
-      // NOTE: For snappier mouse wheel, use lower duration and higher wheelMultiplier
+      // Initialize Lenis with DEFAULT settings
       const lenis = new Lenis({
-        duration: 0.5, // Reduced from 0.7 for snappier response
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Easing function (default)
-        orientation: 'vertical', // Scroll direction
-        gestureOrientation: 'vertical', // Gesture direction
-        smoothWheel: true, // Enable smooth scrolling for mouse wheel
-        wheelMultiplier: 1.0, // Increased from 0.8 - more responsive to wheel input
-        touchMultiplier: 2, // Touch sensitivity
-        infinite: false, // Disable infinite scroll
-        lerp: 0.15, // Linear interpolation intensity (0-1, higher = snappier, default ~0.1)
+        duration: 1.2, // Default duration
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Default easing
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1, // Default
+        touchMultiplier: 1, // Default (not used since disabled on mobile)
+        infinite: false,
+        lerp: 0.1, // Default lerp
       });
 
       lenisRef.current = lenis;
@@ -58,12 +71,11 @@ export default function SmoothScroll() {
       rafIdRef.current = requestAnimationFrame(raf);
     };
 
-    // Use requestIdleCallback to defer initialization, with setTimeout fallback
+    // Use requestIdleCallback to defer initialization
     let idleCallbackId: number | undefined;
     if ('requestIdleCallback' in window) {
       idleCallbackId = window.requestIdleCallback(initLenis, { timeout: 1000 });
     } else {
-      // Fallback for Safari - defer to next frame
       setTimeout(initLenis, 50);
     }
 
@@ -81,5 +93,5 @@ export default function SmoothScroll() {
     };
   }, []);
 
-  return null; // This component doesn't render anything
+  return null;
 }
