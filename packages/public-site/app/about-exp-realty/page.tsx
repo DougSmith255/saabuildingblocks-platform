@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
+import { PathSelector } from '@/app/components/sections/PathSelector';
 
 /**
  * About eXp Realty Page
@@ -62,6 +63,9 @@ export default function AboutExpRealty() {
           </Tagline>
         </div>
       </section>
+
+      {/* Path Selector - synced with homepage via localStorage */}
+      <PathSelector />
 
       {/* Stats Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

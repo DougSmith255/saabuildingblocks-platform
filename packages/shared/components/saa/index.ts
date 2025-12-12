@@ -39,3 +39,6 @@ export * from './media';
 
 // Visual Effects (lightning, animations)
 export * from './effects';
+
+// Loaders
+export * from './loaders';

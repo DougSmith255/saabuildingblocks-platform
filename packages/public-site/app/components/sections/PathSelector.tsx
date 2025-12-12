@@ -1,10 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { H2, GenericButton, CTAButton } from '@saa/shared/components/saa';
 import { UserPlus, Briefcase, Users, Crown } from 'lucide-react';
 
 type PathType = 'new-agent' | 'seasoned-agent' | 'team-leader' | 'empire-builder' | null;
+
+// localStorage key for cross-page state persistence
+const STORAGE_KEY = 'saa-visitor-type';
 
 interface PathContent {
   problem: string;
@@ -45,6 +48,42 @@ const pathContent: Record<Exclude<PathType, null>, PathContent> = {
 export function PathSelector() {
   const [selectedPath, setSelectedPath] = useState<PathType>(null);
 
+  // Load saved selection from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && ['new-agent', 'seasoned-agent', 'team-leader', 'empire-builder'].includes(saved)) {
+      setSelectedPath(saved as PathType);
+    }
+  }, []);
+
+  // Save selection to localStorage and sync across tabs
+  const handlePathSelect = (pathId: PathType) => {
+    const newPath = selectedPath === pathId ? null : pathId;
+    setSelectedPath(newPath);
+
+    if (newPath) {
+      localStorage.setItem(STORAGE_KEY, newPath);
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  };
+
+  // Listen for storage changes from other tabs/pages
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) {
+        if (e.newValue && ['new-agent', 'seasoned-agent', 'team-leader', 'empire-builder'].includes(e.newValue)) {
+          setSelectedPath(e.newValue as PathType);
+        } else {
+          setSelectedPath(null);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
   return (
     <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
       <div className="max-w-[1900px] mx-auto">
@@ -62,7 +101,7 @@ export function PathSelector() {
             <GenericButton
               key={path.id}
               selected={selectedPath === path.id}
-              onClick={() => setSelectedPath(selectedPath === path.id ? null : path.id)}
+              onClick={() => handlePathSelect(path.id)}
               aria-pressed={selectedPath === path.id}
             >
               <span className="flex items-center gap-2">

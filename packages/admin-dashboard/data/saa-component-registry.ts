@@ -23,7 +23,8 @@ export type SAAComponentCategory =
   | 'interactive'
   | 'layouts'
   | 'forms'
-  | 'typography';
+  | 'typography'
+  | 'loaders';
 
 export interface SAAComponent {
   id: string;
@@ -243,6 +244,20 @@ export const saaComponentRegistry: SAAComponent[] = [
     tags: ['icon', '3d', 'metal', 'depth', 'shadow', 'perspective'],
   },
 
+  // ============================================
+  // LOADERS (1)
+  // ============================================
+  {
+    id: 'claude-loader',
+    name: 'Claude Loader',
+    category: 'loaders',
+    description: 'Claude Code style loading indicator with rotating symbols and random "thinking" words. Features gold neon glow, monospace font, and configurable color/size/speed.',
+    reactPath: '../shared/components/saa/loaders/ClaudeLoader.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['loader', 'loading', 'spinner', 'animation', 'claude', 'thinking', 'symbols'],
+  },
+
 ];
 
 /**
@@ -311,4 +326,5 @@ export const SAA_CATEGORY_LABELS: Record<SAAComponentCategory, string> = {
   layouts: 'Layouts',
   forms: 'Forms',
   typography: 'Typography',
+  loaders: 'Loaders',
 };
