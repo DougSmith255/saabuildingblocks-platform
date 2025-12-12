@@ -4,8 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { H1, H2 } from '@saa/shared/components/saa';
 
 /**
- * Test Page: 12 Space-Themed Scroll Hero Effects
- * ALL EFFECTS USE FULL-WIDTH, EDGE-TO-EDGE SCALE
+ * Test Page: 13 Space-Themed Scroll Hero Effects
+ * KEEPING: Effect 1 (Reveal Mask), Effect 2 (Asteroid Belt), Effect 3 (Diagonal Slashes)
+ * NEW: 10 varied effects - no plain lines, more interesting visuals
  */
 
 // Hook to track scroll position with smoothing
@@ -49,7 +50,7 @@ function useScrollProgress(ref: React.RefObject<HTMLElement | null>, smoothFacto
 }
 
 // ============================================================================
-// EFFECT 1: Reveal Mask (KEPT - DO NOT MODIFY)
+// EFFECT 1: Reveal Mask (KEPT)
 // ============================================================================
 function Effect1RevealMask() {
   const ref = useRef<HTMLElement>(null);
@@ -84,17 +85,16 @@ function Effect1RevealMask() {
 }
 
 // ============================================================================
-// EFFECT 2: Asteroid Belt (Centered, 75% height, tilted)
+// EFFECT 2: Asteroid Belt (KEPT - lowered more)
 // ============================================================================
 function Effect2AsteroidBelt() {
   const ref = useRef<HTMLElement>(null);
   const progress = useScrollProgress(ref);
 
-  // Asteroids now centered in a horizontal band with reduced vertical spread
+  // Asteroids in a lower horizontal band (55-65% of viewport)
   const asteroids = [...Array(24)].map((_, i) => ({
     x: (i * 137.5) % 100,
-    // Center vertically: y ranges from 35% to 65% (30% band centered at 50%)
-    y: 42 + Math.sin(i * 0.8) * 8,
+    y: 52 + Math.sin(i * 0.8) * 6, // Lowered to 52% center with 6% spread
     size: 10 + (i % 5) * 7,
     speed: 0.5 + (i % 3) * 0.3,
     rotation: i * 45,
@@ -106,7 +106,7 @@ function Effect2AsteroidBelt() {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          transform: 'rotate(-5deg) scale(1.1)', // Slight tilt
+          transform: 'rotate(-5deg) scale(1.1)',
           transformOrigin: 'center center',
         }}
       >
@@ -137,127 +137,9 @@ function Effect2AsteroidBelt() {
 }
 
 // ============================================================================
-// EFFECT 3: Horizontal Light Bars (FULL WIDTH)
+// EFFECT 3: Diagonal Slashes (KEPT - was Effect 5)
 // ============================================================================
-function Effect3LightBars() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const bars = [
-    { y: 15, delay: 0, color: 'rgba(255,215,0,0.6)' },
-    { y: 30, delay: 0.1, color: 'rgba(255,180,0,0.5)' },
-    { y: 45, delay: 0.2, color: 'rgba(255,150,0,0.4)' },
-    { y: 60, delay: 0.15, color: 'rgba(255,200,0,0.5)' },
-    { y: 75, delay: 0.25, color: 'rgba(255,215,0,0.4)' },
-    { y: 88, delay: 0.05, color: 'rgba(255,170,0,0.5)' },
-  ];
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Full-width light bars sweeping across */}
-      {bars.map((bar, i) => {
-        const adjustedProgress = Math.max(0, Math.min(1, (progress - bar.delay) * 1.5));
-        const xPos = -100 + adjustedProgress * 200;
-        return (
-          <div
-            key={i}
-            className="absolute left-0 right-0 pointer-events-none"
-            style={{
-              top: `${bar.y}%`,
-              height: '3px',
-              background: `linear-gradient(90deg, transparent 0%, ${bar.color} 40%, ${bar.color} 60%, transparent 100%)`,
-              transform: `translateX(${xPos}%)`,
-              boxShadow: `0 0 30px ${bar.color}, 0 0 60px ${bar.color}`,
-            }}
-          />
-        );
-      })}
-
-      {/* Vertical scan line */}
-      <div
-        className="absolute top-0 bottom-0 w-[2px] pointer-events-none"
-        style={{
-          left: `${progress * 100}%`,
-          background: 'linear-gradient(180deg, transparent, rgba(255,215,0,0.8), transparent)',
-          boxShadow: '0 0 20px rgba(255,215,0,0.5)',
-        }}
-      />
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 3: Light Bars</p>
-        <H1>SCANNING GRID</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Horizontal light beams sweep across the viewport.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 4: Edge Curtains (FULL WIDTH - slides in from edges)
-// ============================================================================
-function Effect4EdgeCurtains() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const leftCurtain = Math.max(0, 50 - progress * 50);
-  const rightCurtain = Math.max(0, 50 - progress * 50);
-  const topGlow = progress * 100;
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Left curtain */}
-      <div
-        className="absolute left-0 top-0 bottom-0 pointer-events-none"
-        style={{
-          width: `${leftCurtain}%`,
-          background: 'linear-gradient(90deg, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0.1) 50%, transparent 100%)',
-          boxShadow: 'inset -50px 0 100px rgba(255,215,0,0.2)',
-        }}
-      />
-
-      {/* Right curtain */}
-      <div
-        className="absolute right-0 top-0 bottom-0 pointer-events-none"
-        style={{
-          width: `${rightCurtain}%`,
-          background: 'linear-gradient(270deg, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0.1) 50%, transparent 100%)',
-          boxShadow: 'inset 50px 0 100px rgba(255,215,0,0.2)',
-        }}
-      />
-
-      {/* Top glow bar */}
-      <div
-        className="absolute top-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: '4px',
-          background: `linear-gradient(90deg, transparent ${50 - topGlow/2}%, rgba(255,215,0,0.8) 50%, transparent ${50 + topGlow/2}%)`,
-          boxShadow: '0 0 40px rgba(255,215,0,0.5), 0 0 80px rgba(255,215,0,0.3)',
-        }}
-      />
-
-      {/* Bottom glow bar */}
-      <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: '4px',
-          background: `linear-gradient(90deg, transparent ${50 - topGlow/2}%, rgba(255,215,0,0.8) 50%, transparent ${50 + topGlow/2}%)`,
-          boxShadow: '0 0 40px rgba(255,215,0,0.5), 0 0 80px rgba(255,215,0,0.3)',
-        }}
-      />
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 4: Edge Curtains</p>
-        <H1>UNVEILING</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Golden curtains part to reveal the content.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 5: Diagonal Slashes (FULL WIDTH)
-// ============================================================================
-function Effect5DiagonalSlashes() {
+function Effect3DiagonalSlashes() {
   const ref = useRef<HTMLElement>(null);
   const progress = useScrollProgress(ref);
 
@@ -294,7 +176,6 @@ function Effect5DiagonalSlashes() {
         );
       })}
 
-      {/* Counter-rotating slashes */}
       {slashes.slice(0, 4).map((slash, i) => {
         const adjustedProgress = Math.max(0, Math.min(1, (progress - slash.delay - 0.1) * 1.3));
         const yOffset = 150 - adjustedProgress * 300;
@@ -315,7 +196,7 @@ function Effect5DiagonalSlashes() {
       })}
 
       <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 5: Diagonal Slashes</p>
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 3: Diagonal Slashes</p>
         <H1>ENERGY BLADES</H1>
         <p className="text-body text-[#dcdbd5] mt-6">Diagonal light slashes cut across the screen.</p>
       </div>
@@ -324,470 +205,615 @@ function Effect5DiagonalSlashes() {
 }
 
 // ============================================================================
-// EFFECT 6: Radial Burst (FULL WIDTH from center to edges)
+// EFFECT 4: Nebula Cloud (NEW - organic cloud shapes)
 // ============================================================================
-function Effect6RadialBurst() {
+function Effect4NebulaCloud() {
   const ref = useRef<HTMLElement>(null);
   const progress = useScrollProgress(ref);
 
-  const rays = 16;
-  const burstSize = 50 + progress * 200;
+  const clouds = [
+    { x: 20, y: 30, size: 400, color: 'rgba(255,180,0,0.15)', delay: 0 },
+    { x: 70, y: 25, size: 350, color: 'rgba(255,215,0,0.12)', delay: 0.1 },
+    { x: 40, y: 60, size: 500, color: 'rgba(255,150,0,0.1)', delay: 0.05 },
+    { x: 80, y: 70, size: 300, color: 'rgba(255,200,0,0.14)', delay: 0.15 },
+    { x: 10, y: 65, size: 380, color: 'rgba(255,215,0,0.11)', delay: 0.08 },
+  ];
 
   return (
     <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Radial rays extending to edges */}
-      {[...Array(rays)].map((_, i) => {
-        const angle = (i / rays) * 360;
-        const length = burstSize;
+      {clouds.map((cloud, i) => {
+        const adjustedProgress = Math.max(0, (progress - cloud.delay) * 1.2);
+        const scale = 0.3 + adjustedProgress * 1.2;
+        const opacity = Math.min(1, adjustedProgress * 1.5);
         return (
           <div
             key={i}
-            className="absolute left-1/2 top-1/2 origin-left pointer-events-none"
-            style={{
-              width: `${length}vw`,
-              height: '2px',
-              background: `linear-gradient(90deg, rgba(255,215,0,${0.6 - progress * 0.3}) 0%, rgba(255,215,0,${0.2 * progress}) 50%, transparent 100%)`,
-              transform: `rotate(${angle}deg) translateX(20px)`,
-              boxShadow: progress > 0.3 ? `0 0 10px rgba(255,215,0,${0.3})` : 'none',
-            }}
-          />
-        );
-      })}
-
-      {/* Expanding ring */}
-      <div
-        className="absolute rounded-full border-2 pointer-events-none"
-        style={{
-          width: `${burstSize}vw`,
-          height: `${burstSize}vw`,
-          maxWidth: '200vw',
-          maxHeight: '200vw',
-          borderColor: `rgba(255,215,0,${0.5 - progress * 0.3})`,
-          boxShadow: `0 0 ${30 + progress * 50}px rgba(255,215,0,${0.3 - progress * 0.2}), inset 0 0 ${20 + progress * 30}px rgba(255,215,0,${0.1})`,
-        }}
-      />
-
-      {/* Second ring */}
-      <div
-        className="absolute rounded-full border pointer-events-none"
-        style={{
-          width: `${burstSize * 0.6}vw`,
-          height: `${burstSize * 0.6}vw`,
-          borderColor: `rgba(255,215,0,${0.3})`,
-        }}
-      />
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 6: Radial Burst</p>
-        <H1>COSMIC EXPLOSION</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Energy rays burst outward from the center.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 7: Wave Distortion (FULL WIDTH horizontal waves)
-// ============================================================================
-function Effect7WaveDistortion() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const waves = 6;
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {[...Array(waves)].map((_, i) => {
-        const waveY = 10 + i * 15;
-        const amplitude = 20 + progress * 40;
-        const frequency = 2 + i * 0.5;
-        const phaseShift = progress * Math.PI * 4 + i;
-
-        return (
-          <svg
-            key={i}
-            className="absolute left-0 w-full pointer-events-none"
-            style={{ top: `${waveY}%`, height: '100px' }}
-            viewBox="0 0 1000 100"
-            preserveAspectRatio="none"
-          >
-            <path
-              d={`M 0 50 ${[...Array(20)].map((_, j) => {
-                const x = j * 50;
-                const y = 50 + Math.sin((j / 5) * frequency + phaseShift) * amplitude;
-                return `L ${x} ${y}`;
-              }).join(' ')} L 1000 50`}
-              stroke={`rgba(255,215,0,${0.2 + (waves - i) * 0.05})`}
-              strokeWidth={2 - i * 0.2}
-              fill="none"
-              style={{
-                filter: `drop-shadow(0 0 ${10 + progress * 10}px rgba(255,215,0,${0.3}))`,
-              }}
-            />
-          </svg>
-        );
-      })}
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 7: Wave Distortion</p>
-        <H1>QUANTUM RIPPLES</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Energy waves pulse across the screen.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 8: Corner Flares (FULL WIDTH from all corners)
-// ============================================================================
-function Effect8CornerFlares() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const flareSize = 30 + progress * 70;
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Top-left flare */}
-      <div
-        className="absolute top-0 left-0 pointer-events-none"
-        style={{
-          width: `${flareSize}%`,
-          height: `${flareSize}%`,
-          background: `radial-gradient(ellipse at 0% 0%, rgba(255,215,0,${0.4 * progress}) 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Top-right flare */}
-      <div
-        className="absolute top-0 right-0 pointer-events-none"
-        style={{
-          width: `${flareSize}%`,
-          height: `${flareSize}%`,
-          background: `radial-gradient(ellipse at 100% 0%, rgba(255,180,0,${0.35 * progress}) 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Bottom-left flare */}
-      <div
-        className="absolute bottom-0 left-0 pointer-events-none"
-        style={{
-          width: `${flareSize}%`,
-          height: `${flareSize}%`,
-          background: `radial-gradient(ellipse at 0% 100%, rgba(255,200,0,${0.35 * progress}) 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Bottom-right flare */}
-      <div
-        className="absolute bottom-0 right-0 pointer-events-none"
-        style={{
-          width: `${flareSize}%`,
-          height: `${flareSize}%`,
-          background: `radial-gradient(ellipse at 100% 100%, rgba(255,215,0,${0.4 * progress}) 0%, transparent 70%)`,
-        }}
-      />
-
-      {/* Connecting edge glows */}
-      <div
-        className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
-        style={{
-          background: `linear-gradient(90deg, rgba(255,215,0,${0.5 * progress}) 0%, transparent 30%, transparent 70%, rgba(255,215,0,${0.5 * progress}) 100%)`,
-          boxShadow: `0 0 30px rgba(255,215,0,${0.3 * progress})`,
-        }}
-      />
-      <div
-        className="absolute bottom-0 left-0 right-0 h-[2px] pointer-events-none"
-        style={{
-          background: `linear-gradient(90deg, rgba(255,215,0,${0.5 * progress}) 0%, transparent 30%, transparent 70%, rgba(255,215,0,${0.5 * progress}) 100%)`,
-          boxShadow: `0 0 30px rgba(255,215,0,${0.3 * progress})`,
-        }}
-      />
-      <div
-        className="absolute left-0 top-0 bottom-0 w-[2px] pointer-events-none"
-        style={{
-          background: `linear-gradient(180deg, rgba(255,215,0,${0.5 * progress}) 0%, transparent 30%, transparent 70%, rgba(255,215,0,${0.5 * progress}) 100%)`,
-          boxShadow: `0 0 30px rgba(255,215,0,${0.3 * progress})`,
-        }}
-      />
-      <div
-        className="absolute right-0 top-0 bottom-0 w-[2px] pointer-events-none"
-        style={{
-          background: `linear-gradient(180deg, rgba(255,215,0,${0.5 * progress}) 0%, transparent 30%, transparent 70%, rgba(255,215,0,${0.5 * progress}) 100%)`,
-          boxShadow: `0 0 30px rgba(255,215,0,${0.3 * progress})`,
-        }}
-      />
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 8: Corner Flares</p>
-        <H1>POWER SURGE</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Energy builds from all corners of the screen.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 9: Horizon Split (FULL WIDTH horizontal)
-// ============================================================================
-function Effect9HorizonSplit() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const splitGap = 100 - progress * 100; // Closes as you scroll
-  const glowIntensity = progress;
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Top half gradient */}
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          top: 0,
-          height: `calc(50% - ${splitGap / 2}px)`,
-          background: `linear-gradient(180deg, transparent 0%, rgba(255,215,0,${0.1 * glowIntensity}) 70%, rgba(255,215,0,${0.3 * glowIntensity}) 100%)`,
-        }}
-      />
-
-      {/* Bottom half gradient */}
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          bottom: 0,
-          height: `calc(50% - ${splitGap / 2}px)`,
-          background: `linear-gradient(0deg, transparent 0%, rgba(255,215,0,${0.1 * glowIntensity}) 70%, rgba(255,215,0,${0.3 * glowIntensity}) 100%)`,
-        }}
-      />
-
-      {/* Central horizon line */}
-      <div
-        className="absolute left-0 right-0 pointer-events-none"
-        style={{
-          top: '50%',
-          height: '4px',
-          transform: 'translateY(-50%)',
-          background: `linear-gradient(90deg, transparent 0%, rgba(255,215,0,${0.8 * glowIntensity}) 20%, rgba(255,255,255,${glowIntensity}) 50%, rgba(255,215,0,${0.8 * glowIntensity}) 80%, transparent 100%)`,
-          boxShadow: `0 0 ${40 * glowIntensity}px rgba(255,215,0,${0.6 * glowIntensity}), 0 0 ${80 * glowIntensity}px rgba(255,215,0,${0.4 * glowIntensity})`,
-        }}
-      />
-
-      {/* Lens flare elements */}
-      {progress > 0.3 && (
-        <>
-          <div
             className="absolute rounded-full pointer-events-none"
             style={{
-              width: 100 * (progress - 0.3),
-              height: 100 * (progress - 0.3),
-              background: `radial-gradient(circle, rgba(255,255,255,${0.3 * (progress - 0.3)}) 0%, transparent 70%)`,
-            }}
-          />
-          <div
-            className="absolute rounded-full pointer-events-none"
-            style={{
-              top: '45%',
-              left: '60%',
-              width: 50 * (progress - 0.3),
-              height: 50 * (progress - 0.3),
-              background: `radial-gradient(circle, rgba(255,215,0,${0.4 * (progress - 0.3)}) 0%, transparent 70%)`,
-            }}
-          />
-        </>
-      )}
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 9: Horizon Split</p>
-        <H1>NEW DAWN</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Light breaks across the horizon line.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 10: Matrix Rain (FULL WIDTH vertical lines)
-// ============================================================================
-function Effect10MatrixRain() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const columns = 30;
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {[...Array(columns)].map((_, i) => {
-        const x = (i / columns) * 100;
-        const speed = 0.5 + (i % 5) * 0.2;
-        const delay = (i * 0.03) % 1;
-        const adjustedProgress = Math.max(0, Math.min(1, (progress - delay) * 1.5));
-        const yOffset = -100 + adjustedProgress * 200;
-        const height = 20 + (i % 4) * 15;
-
-        return (
-          <div
-            key={i}
-            className="absolute pointer-events-none"
-            style={{
-              left: `${x}%`,
-              top: `${yOffset}%`,
-              width: '2px',
-              height: `${height}%`,
-              background: `linear-gradient(180deg, transparent 0%, rgba(255,215,0,${0.1 + (i % 3) * 0.1}) 20%, rgba(255,215,0,${0.4 + (i % 3) * 0.1}) 50%, rgba(255,215,0,${0.1 + (i % 3) * 0.1}) 80%, transparent 100%)`,
-              boxShadow: `0 0 10px rgba(255,215,0,${0.2})`,
+              left: `${cloud.x}%`,
+              top: `${cloud.y}%`,
+              width: cloud.size,
+              height: cloud.size * 0.6,
+              background: `radial-gradient(ellipse at center, ${cloud.color} 0%, transparent 70%)`,
+              transform: `translate(-50%, -50%) scale(${scale}) rotate(${i * 30 + progress * 20}deg)`,
+              opacity,
+              filter: `blur(${40 + progress * 20}px)`,
             }}
           />
         );
       })}
 
-      {/* Horizontal glow lines */}
-      {[20, 50, 80].map((y, i) => (
-        <div
-          key={`h-${i}`}
-          className="absolute left-0 right-0 pointer-events-none"
-          style={{
-            top: `${y}%`,
-            height: '1px',
-            background: `linear-gradient(90deg, transparent, rgba(255,215,0,${0.2 * progress}), transparent)`,
-          }}
-        />
-      ))}
-
-      <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 10: Matrix Rain</p>
-        <H1>DATA STREAM</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Digital rain cascades across the screen.</p>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// EFFECT 11: Converging Lines (FULL WIDTH from all edges to center)
-// ============================================================================
-function Effect11ConvergingLines() {
-  const ref = useRef<HTMLElement>(null);
-  const progress = useScrollProgress(ref);
-
-  const lineCount = 12;
-
-  return (
-    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Lines from edges converging to center */}
-      {[...Array(lineCount)].map((_, i) => {
-        const angle = (i / lineCount) * 360;
-        const startDistance = 100 - progress * 70; // Start at edge, move toward center
-
-        return (
-          <div
-            key={i}
-            className="absolute pointer-events-none"
-            style={{
-              left: '50%',
-              top: '50%',
-              width: `${150}vw`,
-              height: '2px',
-              background: `linear-gradient(90deg, rgba(255,215,0,${0.5 * progress}) 0%, rgba(255,215,0,${0.8 * progress}) 50%, transparent ${startDistance}%)`,
-              transform: `rotate(${angle}deg)`,
-              transformOrigin: '0 50%',
-              boxShadow: `0 0 15px rgba(255,215,0,${0.3 * progress})`,
-            }}
-          />
-        );
-      })}
-
-      {/* Central convergence glow */}
+      {/* Central bright core */}
       <div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: 20 + progress * 100,
-          height: 20 + progress * 100,
-          background: `radial-gradient(circle, rgba(255,255,255,${0.8 * progress}) 0%, rgba(255,215,0,${0.5 * progress}) 30%, transparent 70%)`,
-          boxShadow: `0 0 ${50 * progress}px rgba(255,215,0,${0.5 * progress})`,
+          width: 100 + progress * 200,
+          height: 100 + progress * 200,
+          background: `radial-gradient(circle, rgba(255,255,255,${0.2 * progress}) 0%, rgba(255,215,0,${0.15 * progress}) 30%, transparent 70%)`,
+          filter: 'blur(20px)',
         }}
       />
 
       <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 11: Converging Lines</p>
-        <H1>FOCAL POINT</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Energy lines converge from all directions.</p>
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 4: Nebula Cloud</p>
+        <H1>COSMIC NURSERY</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Ethereal gas clouds drift through space.</p>
       </div>
     </section>
   );
 }
 
 // ============================================================================
-// EFFECT 12: Edge Pulse (FULL WIDTH pulsing border)
+// EFFECT 5: Hexagonal Grid (NEW - honeycomb pattern)
 // ============================================================================
-function Effect12EdgePulse() {
+function Effect5HexagonalGrid() {
   const ref = useRef<HTMLElement>(null);
   const progress = useScrollProgress(ref);
 
-  const pulseWidth = 10 + Math.sin(progress * Math.PI * 4) * 5 + progress * 20;
-  const pulseOpacity = 0.2 + progress * 0.4;
+  const hexagons: { x: number; y: number; delay: number }[] = [];
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 12; col++) {
+      const xOffset = row % 2 === 0 ? 0 : 4.5;
+      hexagons.push({
+        x: col * 9 + xOffset,
+        y: row * 13,
+        delay: (row + col) * 0.02,
+      });
+    }
+  }
 
   return (
     <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-      {/* Top edge pulse */}
-      <div
-        className="absolute top-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: `${pulseWidth}%`,
-          background: `linear-gradient(180deg, rgba(255,215,0,${pulseOpacity}) 0%, transparent 100%)`,
-          boxShadow: `inset 0 5px 30px rgba(255,215,0,${pulseOpacity * 0.5})`,
-        }}
-      />
-
-      {/* Bottom edge pulse */}
-      <div
-        className="absolute bottom-0 left-0 right-0 pointer-events-none"
-        style={{
-          height: `${pulseWidth}%`,
-          background: `linear-gradient(0deg, rgba(255,215,0,${pulseOpacity}) 0%, transparent 100%)`,
-          boxShadow: `inset 0 -5px 30px rgba(255,215,0,${pulseOpacity * 0.5})`,
-        }}
-      />
-
-      {/* Left edge pulse */}
-      <div
-        className="absolute top-0 bottom-0 left-0 pointer-events-none"
-        style={{
-          width: `${pulseWidth}%`,
-          background: `linear-gradient(90deg, rgba(255,215,0,${pulseOpacity}) 0%, transparent 100%)`,
-          boxShadow: `inset 5px 0 30px rgba(255,215,0,${pulseOpacity * 0.5})`,
-        }}
-      />
-
-      {/* Right edge pulse */}
-      <div
-        className="absolute top-0 bottom-0 right-0 pointer-events-none"
-        style={{
-          width: `${pulseWidth}%`,
-          background: `linear-gradient(270deg, rgba(255,215,0,${pulseOpacity}) 0%, transparent 100%)`,
-          boxShadow: `inset -5px 0 30px rgba(255,215,0,${pulseOpacity * 0.5})`,
-        }}
-      />
-
-      {/* Corner accents */}
-      {[
-        { top: 0, left: 0 },
-        { top: 0, right: 0 },
-        { bottom: 0, left: 0 },
-        { bottom: 0, right: 0 },
-      ].map((pos, i) => (
-        <div
-          key={i}
-          className="absolute w-20 h-20 pointer-events-none"
-          style={{
-            ...pos,
-            background: `radial-gradient(circle at ${pos.left !== undefined ? '0% ' : '100% '}${pos.top !== undefined ? '0%' : '100%'}, rgba(255,215,0,${pulseOpacity * 1.5}) 0%, transparent 70%)`,
-          }}
-        />
-      ))}
+      {hexagons.map((hex, i) => {
+        const adjustedProgress = Math.max(0, Math.min(1, (progress - hex.delay) * 2));
+        const opacity = adjustedProgress * 0.4;
+        const scale = 0.5 + adjustedProgress * 0.5;
+        return (
+          <div
+            key={i}
+            className="absolute pointer-events-none"
+            style={{
+              left: `${hex.x}%`,
+              top: `${hex.y}%`,
+              width: '80px',
+              height: '92px',
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+              background: `linear-gradient(180deg, rgba(255,215,0,${opacity}) 0%, rgba(255,180,0,${opacity * 0.5}) 100%)`,
+              transform: `scale(${scale})`,
+              boxShadow: adjustedProgress > 0.5 ? `0 0 20px rgba(255,215,0,${opacity * 0.5})` : 'none',
+            }}
+          />
+        );
+      })}
 
       <div className="relative z-10 text-center px-4 max-w-4xl">
-        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 12: Edge Pulse</p>
-        <H1>CONTAINMENT FIELD</H1>
-        <p className="text-body text-[#dcdbd5] mt-6">Energy pulses along all edges of the viewport.</p>
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 5: Hexagonal Grid</p>
+        <H1>DIGITAL MATRIX</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">A honeycomb pattern materializes from the void.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 6: Orbiting Rings (NEW - 3D ring system)
+// ============================================================================
+function Effect6OrbitingRings() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const rings = [
+    { size: 300, tilt: 75, speed: 1, color: 'rgba(255,215,0,0.4)' },
+    { size: 400, tilt: 60, speed: -0.7, color: 'rgba(255,180,0,0.3)' },
+    { size: 500, tilt: 80, speed: 0.5, color: 'rgba(255,200,0,0.25)' },
+    { size: 350, tilt: 45, speed: -1.2, color: 'rgba(255,215,0,0.35)' },
+  ];
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      <div className="absolute" style={{ perspective: '1000px' }}>
+        {rings.map((ring, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full border-2 pointer-events-none"
+            style={{
+              width: ring.size + progress * 100,
+              height: ring.size + progress * 100,
+              left: '50%',
+              top: '50%',
+              borderColor: ring.color,
+              transform: `translate(-50%, -50%) rotateX(${ring.tilt}deg) rotateZ(${progress * 360 * ring.speed}deg)`,
+              boxShadow: `0 0 ${20 + progress * 30}px ${ring.color}, inset 0 0 ${10 + progress * 20}px ${ring.color}`,
+            }}
+          />
+        ))}
+
+        {/* Central orb */}
+        <div
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            width: 60 + progress * 40,
+            height: 60 + progress * 40,
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: `radial-gradient(circle, rgba(255,255,255,${0.6 + progress * 0.4}) 0%, rgba(255,215,0,${0.4 + progress * 0.3}) 40%, transparent 70%)`,
+            boxShadow: `0 0 ${40 + progress * 60}px rgba(255,215,0,0.5)`,
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 6: Orbiting Rings</p>
+        <H1>CELESTIAL DANCE</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Orbital rings spin around a glowing core.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 7: Particle Storm (NEW - scattered particles)
+// ============================================================================
+function Effect7ParticleStorm() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const particles = [...Array(60)].map((_, i) => ({
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    size: 3 + Math.random() * 8,
+    speed: 0.5 + Math.random() * 1.5,
+    angle: Math.random() * 360,
+  }));
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      {particles.map((p, i) => {
+        const moveX = Math.cos(p.angle * Math.PI / 180) * progress * 50;
+        const moveY = Math.sin(p.angle * Math.PI / 180) * progress * 50;
+        const opacity = 0.3 + Math.sin(progress * Math.PI * 2 + i) * 0.3;
+        return (
+          <div
+            key={i}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `calc(${p.x}% + ${moveX}vw)`,
+              top: `calc(${p.y}% + ${moveY}vh)`,
+              width: p.size,
+              height: p.size,
+              background: `radial-gradient(circle, rgba(255,215,0,${opacity}) 0%, rgba(255,180,0,${opacity * 0.5}) 50%, transparent 100%)`,
+              boxShadow: `0 0 ${p.size * 2}px rgba(255,215,0,${opacity * 0.5})`,
+            }}
+          />
+        );
+      })}
+
+      {/* Trailing effects */}
+      {[...Array(20)].map((_, i) => {
+        const trailProgress = Math.max(0, progress - i * 0.02);
+        return (
+          <div
+            key={`trail-${i}`}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `${50 + Math.cos(i + progress * 10) * 30 * trailProgress}%`,
+              top: `${50 + Math.sin(i + progress * 10) * 30 * trailProgress}%`,
+              width: 4,
+              height: 4,
+              background: `rgba(255,215,0,${0.4 * trailProgress})`,
+              boxShadow: `0 0 10px rgba(255,215,0,${0.3 * trailProgress})`,
+            }}
+          />
+        );
+      })}
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 7: Particle Storm</p>
+        <H1>SOLAR WIND</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Charged particles scatter through the cosmos.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 8: Warp Tunnel (NEW - hyperspace effect)
+// ============================================================================
+function Effect8WarpTunnel() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const streaks = [...Array(40)].map((_, i) => ({
+    angle: (i / 40) * 360,
+    length: 100 + Math.random() * 200,
+    width: 1 + Math.random() * 3,
+    distance: 20 + Math.random() * 30,
+  }));
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      {/* Streaking lines from center */}
+      {streaks.map((streak, i) => {
+        const stretchFactor = 1 + progress * 3;
+        const opacity = 0.2 + progress * 0.4;
+        return (
+          <div
+            key={i}
+            className="absolute pointer-events-none origin-center"
+            style={{
+              left: '50%',
+              top: '50%',
+              width: streak.length * stretchFactor,
+              height: streak.width,
+              background: `linear-gradient(90deg, transparent 0%, rgba(255,215,0,${opacity}) 30%, rgba(255,255,255,${opacity * 0.8}) 50%, rgba(255,215,0,${opacity}) 70%, transparent 100%)`,
+              transform: `rotate(${streak.angle}deg) translateX(${streak.distance + progress * 100}px)`,
+              transformOrigin: 'left center',
+            }}
+          />
+        );
+      })}
+
+      {/* Central vortex */}
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: 150 - progress * 100,
+          height: 150 - progress * 100,
+          background: `radial-gradient(circle, rgba(0,0,0,0.8) 0%, rgba(255,215,0,${0.3 * progress}) 50%, transparent 100%)`,
+          boxShadow: `0 0 ${50 + progress * 50}px rgba(255,215,0,0.4)`,
+        }}
+      />
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 8: Warp Tunnel</p>
+        <H1>LIGHTSPEED</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Stars streak past as you enter hyperspace.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 9: Shattered Glass (NEW - fragmented planes)
+// ============================================================================
+function Effect9ShatteredGlass() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const shards = [...Array(25)].map((_, i) => ({
+    x: 10 + (i % 5) * 20,
+    y: 10 + Math.floor(i / 5) * 20,
+    rotation: Math.random() * 60 - 30,
+    size: 80 + Math.random() * 100,
+    delay: Math.random() * 0.3,
+  }));
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      {shards.map((shard, i) => {
+        const adjustedProgress = Math.max(0, (progress - shard.delay) * 1.5);
+        const moveX = (shard.x - 50) * adjustedProgress * 0.5;
+        const moveY = (shard.y - 50) * adjustedProgress * 0.5;
+        const opacity = 0.15 + adjustedProgress * 0.25;
+        return (
+          <div
+            key={i}
+            className="absolute pointer-events-none"
+            style={{
+              left: `${shard.x + moveX}%`,
+              top: `${shard.y + moveY}%`,
+              width: shard.size,
+              height: shard.size * 0.8,
+              background: `linear-gradient(${135 + shard.rotation}deg, rgba(255,215,0,${opacity}) 0%, rgba(255,255,255,${opacity * 0.3}) 50%, rgba(255,180,0,${opacity * 0.8}) 100%)`,
+              clipPath: 'polygon(20% 0%, 80% 10%, 100% 60%, 70% 100%, 10% 80%)',
+              transform: `rotate(${shard.rotation + adjustedProgress * 20}deg)`,
+              boxShadow: adjustedProgress > 0.3 ? `0 0 20px rgba(255,215,0,${opacity * 0.5})` : 'none',
+            }}
+          />
+        );
+      })}
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 9: Shattered Glass</p>
+        <H1>FRACTURED REALITY</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Space-time splinters into golden fragments.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 10: Pulsing Orbs (NEW - floating spheres)
+// ============================================================================
+function Effect10PulsingOrbs() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const orbs = [
+    { x: 15, y: 25, size: 120, phase: 0 },
+    { x: 75, y: 20, size: 100, phase: 0.5 },
+    { x: 85, y: 60, size: 140, phase: 0.25 },
+    { x: 25, y: 70, size: 110, phase: 0.75 },
+    { x: 50, y: 45, size: 160, phase: 0.33 },
+    { x: 60, y: 80, size: 90, phase: 0.66 },
+    { x: 35, y: 15, size: 80, phase: 0.1 },
+  ];
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      {orbs.map((orb, i) => {
+        const pulse = Math.sin((progress + orb.phase) * Math.PI * 3);
+        const scale = 0.8 + pulse * 0.3 + progress * 0.4;
+        const opacity = 0.3 + pulse * 0.2 + progress * 0.2;
+        const floatY = Math.sin((progress + orb.phase) * Math.PI * 2) * 20;
+        return (
+          <div
+            key={i}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `${orb.x}%`,
+              top: `${orb.y}%`,
+              width: orb.size,
+              height: orb.size,
+              transform: `translate(-50%, calc(-50% + ${floatY}px)) scale(${scale})`,
+              background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,${opacity * 0.5}) 0%, rgba(255,215,0,${opacity}) 30%, rgba(255,180,0,${opacity * 0.5}) 60%, transparent 100%)`,
+              boxShadow: `0 0 ${30 + pulse * 20}px rgba(255,215,0,${opacity * 0.6}), inset 0 0 ${20 + pulse * 10}px rgba(255,255,255,${opacity * 0.2})`,
+            }}
+          />
+        );
+      })}
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 10: Pulsing Orbs</p>
+        <H1>ENERGY SPHERES</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Glowing orbs pulse with cosmic energy.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 11: Lightning Network (NEW - branching electricity)
+// ============================================================================
+function Effect11LightningNetwork() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  // Generate lightning bolt paths
+  const generateLightningPath = (startX: number, startY: number, seed: number) => {
+    let path = `M ${startX} ${startY}`;
+    let x = startX;
+    let y = startY;
+    const segments = 8;
+    for (let i = 0; i < segments; i++) {
+      x += (Math.sin(seed + i) * 60) + 30;
+      y += 80 + Math.cos(seed + i) * 40;
+      path += ` L ${x} ${y}`;
+    }
+    return path;
+  };
+
+  const bolts = [
+    { startX: 100, startY: 0, seed: 1 },
+    { startX: 300, startY: 0, seed: 2.5 },
+    { startX: 500, startY: 0, seed: 4 },
+    { startX: 700, startY: 0, seed: 5.5 },
+    { startX: 900, startY: 0, seed: 7 },
+  ];
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice">
+        {bolts.map((bolt, i) => {
+          const opacity = Math.max(0, Math.sin((progress * 3 + i * 0.5) * Math.PI) * 0.8);
+          const pathLength = progress * 1000;
+          return (
+            <g key={i}>
+              <path
+                d={generateLightningPath(bolt.startX, bolt.startY, bolt.seed)}
+                stroke={`rgba(255,215,0,${opacity})`}
+                strokeWidth="3"
+                fill="none"
+                strokeDasharray={pathLength}
+                strokeDashoffset={1000 - pathLength}
+                style={{
+                  filter: `drop-shadow(0 0 10px rgba(255,215,0,${opacity})) drop-shadow(0 0 20px rgba(255,215,0,${opacity * 0.5}))`,
+                }}
+              />
+              {/* Glow layer */}
+              <path
+                d={generateLightningPath(bolt.startX, bolt.startY, bolt.seed)}
+                stroke={`rgba(255,255,255,${opacity * 0.5})`}
+                strokeWidth="1"
+                fill="none"
+                strokeDasharray={pathLength}
+                strokeDashoffset={1000 - pathLength}
+              />
+            </g>
+          );
+        })}
+      </svg>
+
+      {/* Node points where lightning connects */}
+      {[...Array(8)].map((_, i) => {
+        const pulseIntensity = Math.sin((progress * 4 + i * 0.3) * Math.PI);
+        return (
+          <div
+            key={i}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `${15 + i * 12}%`,
+              top: `${30 + Math.sin(i * 1.5) * 20}%`,
+              width: 15 + pulseIntensity * 10,
+              height: 15 + pulseIntensity * 10,
+              background: `radial-gradient(circle, rgba(255,255,255,${0.8 * Math.max(0, pulseIntensity)}) 0%, rgba(255,215,0,${0.5 * Math.max(0, pulseIntensity)}) 50%, transparent 100%)`,
+              boxShadow: `0 0 ${20 + pulseIntensity * 20}px rgba(255,215,0,${0.5 * Math.max(0, pulseIntensity)})`,
+            }}
+          />
+        );
+      })}
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 11: Lightning Network</p>
+        <H1>ELECTRIC STORM</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Energy arcs between cosmic nodes.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 12: Spiral Galaxy (NEW - rotating spiral arms)
+// ============================================================================
+function Effect12SpiralGalaxy() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const arms = 4;
+  const dotsPerArm = 30;
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      {[...Array(arms)].map((_, armIndex) => (
+        <div key={armIndex} className="absolute inset-0 pointer-events-none">
+          {[...Array(dotsPerArm)].map((_, dotIndex) => {
+            const baseAngle = (armIndex / arms) * 360 + dotIndex * 12;
+            const radius = 30 + dotIndex * 12;
+            const angle = baseAngle + progress * 180;
+            const radians = angle * Math.PI / 180;
+            const x = 50 + Math.cos(radians) * radius * 0.4;
+            const y = 50 + Math.sin(radians) * radius * 0.25;
+            const size = 3 + (dotsPerArm - dotIndex) * 0.3;
+            const opacity = 0.2 + (dotsPerArm - dotIndex) / dotsPerArm * 0.5 * progress;
+            return (
+              <div
+                key={dotIndex}
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  left: `${x}%`,
+                  top: `${y}%`,
+                  width: size,
+                  height: size,
+                  background: `rgba(255,215,0,${opacity})`,
+                  boxShadow: `0 0 ${size * 2}px rgba(255,215,0,${opacity * 0.5})`,
+                }}
+              />
+            );
+          })}
+        </div>
+      ))}
+
+      {/* Galactic core */}
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: 80 + progress * 40,
+          height: 80 + progress * 40,
+          background: `radial-gradient(circle, rgba(255,255,255,${0.4 + progress * 0.3}) 0%, rgba(255,215,0,${0.3 + progress * 0.2}) 30%, rgba(255,180,0,${0.1 + progress * 0.1}) 60%, transparent 100%)`,
+          boxShadow: `0 0 ${60 + progress * 40}px rgba(255,215,0,0.4)`,
+        }}
+      />
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 12: Spiral Galaxy</p>
+        <H1>COSMIC VORTEX</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">A spiral galaxy rotates in the void.</p>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// EFFECT 13: Constellation Map (NEW - connected star patterns)
+// ============================================================================
+function Effect13ConstellationMap() {
+  const ref = useRef<HTMLElement>(null);
+  const progress = useScrollProgress(ref);
+
+  const stars = [
+    { x: 15, y: 20 }, { x: 25, y: 35 }, { x: 40, y: 25 }, { x: 35, y: 45 },
+    { x: 55, y: 30 }, { x: 65, y: 15 }, { x: 75, y: 40 }, { x: 85, y: 25 },
+    { x: 20, y: 60 }, { x: 45, y: 65 }, { x: 60, y: 55 }, { x: 80, y: 70 },
+    { x: 30, y: 80 }, { x: 50, y: 85 }, { x: 70, y: 75 }, { x: 90, y: 60 },
+  ];
+
+  const connections = [
+    [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7],
+    [8, 9], [9, 10], [10, 11], [12, 13], [13, 14], [14, 15],
+    [1, 8], [3, 9], [4, 10], [6, 11], [9, 13], [10, 14],
+  ];
+
+  return (
+    <section ref={ref} className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
+      {/* Connection lines */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none">
+        {connections.map(([from, to], i) => {
+          const delay = i * 0.02;
+          const lineProgress = Math.max(0, Math.min(1, (progress - delay) * 2));
+          const opacity = lineProgress * 0.4;
+          return (
+            <line
+              key={i}
+              x1={`${stars[from].x}%`}
+              y1={`${stars[from].y}%`}
+              x2={`${stars[from].x + (stars[to].x - stars[from].x) * lineProgress}%`}
+              y2={`${stars[from].y + (stars[to].y - stars[from].y) * lineProgress}%`}
+              stroke={`rgba(255,215,0,${opacity})`}
+              strokeWidth="1"
+              style={{ filter: `drop-shadow(0 0 3px rgba(255,215,0,${opacity}))` }}
+            />
+          );
+        })}
+      </svg>
+
+      {/* Star points */}
+      {stars.map((star, i) => {
+        const delay = i * 0.03;
+        const starProgress = Math.max(0, (progress - delay) * 1.5);
+        const pulse = Math.sin((progress * 3 + i * 0.5) * Math.PI);
+        const size = 6 + starProgress * 4 + pulse * 2;
+        return (
+          <div
+            key={i}
+            className="absolute rounded-full pointer-events-none"
+            style={{
+              left: `${star.x}%`,
+              top: `${star.y}%`,
+              width: size,
+              height: size,
+              transform: 'translate(-50%, -50%)',
+              background: `radial-gradient(circle, rgba(255,255,255,${0.8 * starProgress}) 0%, rgba(255,215,0,${0.5 * starProgress}) 50%, transparent 100%)`,
+              boxShadow: `0 0 ${10 + pulse * 5}px rgba(255,215,0,${0.5 * starProgress})`,
+            }}
+          />
+        );
+      })}
+
+      <div className="relative z-10 text-center px-4 max-w-4xl">
+        <p className="text-caption uppercase tracking-widest mb-4 text-[#ffd700]">Effect 13: Constellation Map</p>
+        <H1>STAR CHART</H1>
+        <p className="text-body text-[#dcdbd5] mt-6">Ancient patterns emerge in the night sky.</p>
       </div>
     </section>
   );
@@ -802,21 +828,22 @@ export default function TestParallaxHeroes() {
       {/* Navigation hint */}
       <div className="fixed top-24 right-4 z-50 bg-black/80 border border-[#ffd700]/30 rounded-lg p-4 text-caption text-[#dcdbd5]/80 max-w-[200px]">
         <p className="text-[#ffd700] font-medium mb-2">Space Effects Demo</p>
-        <p>12 full-width scroll effects</p>
+        <p>13 scroll effects</p>
       </div>
 
       <Effect1RevealMask />
       <Effect2AsteroidBelt />
-      <Effect3LightBars />
-      <Effect4EdgeCurtains />
-      <Effect5DiagonalSlashes />
-      <Effect6RadialBurst />
-      <Effect7WaveDistortion />
-      <Effect8CornerFlares />
-      <Effect9HorizonSplit />
-      <Effect10MatrixRain />
-      <Effect11ConvergingLines />
-      <Effect12EdgePulse />
+      <Effect3DiagonalSlashes />
+      <Effect4NebulaCloud />
+      <Effect5HexagonalGrid />
+      <Effect6OrbitingRings />
+      <Effect7ParticleStorm />
+      <Effect8WarpTunnel />
+      <Effect9ShatteredGlass />
+      <Effect10PulsingOrbs />
+      <Effect11LightningNetwork />
+      <Effect12SpiralGalaxy />
+      <Effect13ConstellationMap />
 
       {/* End section */}
       <section className="min-h-[50vh] flex items-center justify-center">
