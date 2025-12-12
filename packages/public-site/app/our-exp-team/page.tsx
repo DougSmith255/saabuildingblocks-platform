@@ -86,7 +86,7 @@ export default function OurExpTeam() {
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
           <div className="text-center mb-12">
-            <H2>Your Direct Mentors</H2>
+            <H2>Your Team Leaders</H2>
             <p className="text-body mt-4 max-w-2xl mx-auto">
               Your first two points of contact. We built the systems, run the community, and are personally invested in your success.
             </p>
@@ -150,7 +150,7 @@ export default function OurExpTeam() {
             <div className="text-center mb-12">
               <H2>The Wolf Pack Leadership</H2>
               <p className="text-body mt-4">
-                Your extended upline. Access to their resources, training, and a community of 2,900+ agents across 24+ countries.
+                Your extended upline. Access to their resources, training, and a community of 3,700+ agents across 24+ countries.
               </p>
             </div>
 

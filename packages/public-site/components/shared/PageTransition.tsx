@@ -27,20 +27,39 @@ export function PageTransition() {
   // Check if we arrived here via client-side navigation (should animate in)
   // Re-runs whenever pathname changes (i.e., navigation occurred)
   useEffect(() => {
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
     const shouldAnimate = sessionStorage.getItem('page-transitioning') === 'true';
     if (shouldAnimate) {
       sessionStorage.removeItem('page-transitioning');
-      const mainContent = document.getElementById('main-content');
-      if (mainContent) {
-        // Add class to trigger CSS animation
-        mainContent.classList.add('page-transitioning');
-        // Remove class after animation completes
-        setTimeout(() => {
-          mainContent.classList.remove('page-transitioning');
-        }, 250);
-      }
+      // Add class to trigger CSS animation
+      mainContent.classList.add('page-transitioning');
+      // Remove class after animation completes
+      setTimeout(() => {
+        mainContent.classList.remove('page-transitioning');
+      }, 250);
+    } else {
+      // Ensure opacity is reset (handles browser back/forward navigation)
+      mainContent.style.opacity = '1';
+      mainContent.style.transition = '';
     }
   }, [pathname]);
+
+  // Handle browser back/forward navigation (popstate)
+  useEffect(() => {
+    const handlePopState = () => {
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) {
+        // Reset opacity immediately for back/forward navigation
+        mainContent.style.opacity = '1';
+        mainContent.style.transition = '';
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
