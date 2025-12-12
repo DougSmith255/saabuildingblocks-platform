@@ -25,8 +25,9 @@ export default function StarBackgroundCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
   const animationRef = useRef<number>(0);
-  const isScrollingRef = useRef(false);
   const lastTimeRef = useRef(0);
+  // Store logical dimensions (without DPR scaling)
+  const dimensionsRef = useRef({ width: 0, height: 0 });
 
   // Generate stars once on mount
   const generateStars = useCallback((width: number, height: number) => {
@@ -38,8 +39,8 @@ export default function StarBackgroundCanvas() {
     for (let i = 0; i < starCount; i++) {
       // 3 layers with different speeds (parallax effect)
       const layer = i % 3;
-      // Speeds in pixels per second (slower = more subtle floating motion)
-      const speeds = [0.4, 0.6, 0.9]; // px/s - halved for gentler motion
+      // Speeds in pixels per second (very slow, subtle floating motion)
+      const speeds = [0.2, 0.4, 0.7]; // px/s - slower for gentler motion
 
       stars.push({
         x: Math.random() * width,
@@ -79,24 +80,25 @@ export default function StarBackgroundCanvas() {
     const deltaTime = lastTimeRef.current ? (timestamp - lastTimeRef.current) / 1000 : 0;
     lastTimeRef.current = timestamp;
 
-    // Only update positions if not scrolling (matches CSS behavior)
-    if (!isScrollingRef.current && deltaTime > 0 && deltaTime < 0.1) {
-      const height = canvas.height;
+    // Get logical dimensions (not scaled by DPR)
+    const { width, height } = dimensionsRef.current;
 
+    // Always update positions (removed scroll pause - was causing stars to disappear on mobile)
+    if (deltaTime > 0 && deltaTime < 0.1) {
       // Update star positions (move upward)
       for (const star of starsRef.current) {
         star.y -= star.speed * deltaTime * 60; // Normalize to ~60fps base
 
-        // Wrap around when star goes off top
+        // Wrap around when star goes off top - use logical dimensions
         if (star.y < -star.size) {
           star.y = height + star.size;
-          star.x = Math.random() * canvas.width; // New random X position
+          star.x = Math.random() * width; // New random X position
         }
       }
     }
 
-    // Draw stars
-    drawStars(ctx, canvas.width, canvas.height);
+    // Draw stars using logical dimensions
+    drawStars(ctx, width, height);
 
     // Continue animation loop
     animationRef.current = requestAnimationFrame(animate);
@@ -112,6 +114,9 @@ export default function StarBackgroundCanvas() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
+    // Store logical dimensions for animation loop
+    dimensionsRef.current = { width, height };
+
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     canvas.style.width = `${width}px`;
@@ -126,25 +131,6 @@ export default function StarBackgroundCanvas() {
     // Regenerate stars for new dimensions
     generateStars(width, height);
   }, [generateStars]);
-
-  // Set up scroll detection (pause animation during scroll for performance)
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout;
-
-    const handleScroll = () => {
-      isScrollingRef.current = true;
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 150); // Resume after 150ms of no scroll
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
-    };
-  }, []);
 
   // Initialize canvas and start animation
   useEffect(() => {
