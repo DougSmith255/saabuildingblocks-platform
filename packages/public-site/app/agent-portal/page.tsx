@@ -41,7 +41,7 @@ export default function AgentPortal() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <main className="min-h-screen">
+    <main id="main-content" className="min-h-screen">
       {/* Hero Header */}
       <section
         className="relative px-4 sm:px-8 md:px-12 pt-32 pb-12 flex items-center justify-center"

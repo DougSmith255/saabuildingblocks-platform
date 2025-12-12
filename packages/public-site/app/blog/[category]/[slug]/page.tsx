@@ -151,7 +151,7 @@ export default async function BlogPostPage({
   const category = post.categories[0] || 'uncategorized';
 
   return (
-    <main>
+    <main id="main-content">
       <CategoryBlogPostTemplate post={post} relatedPosts={relatedPosts} category={category} />
     </main>
   );

@@ -4,6 +4,10 @@ import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFr
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
+// Profile images from Cloudflare Images CDN
+const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
+const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public';
+
 /**
  * Join Our eXp Realty Sponsor Team Page
  */
@@ -60,7 +64,7 @@ export default function JoinExpSponsorTeam() {
   ];
 
   return (
-    <main>
+    <main id="main-content">
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1900px] mx-auto w-full text-center">
@@ -83,7 +87,7 @@ export default function JoinExpSponsorTeam() {
             <GenericCard padding="lg" centered>
               <ProfileCyberFrame size="lg" index={1}>
                 <Image
-                  src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Contact-Us-Profile-Photos-1.png"
+                  src={KARRIE_PROFILE_IMAGE}
                   alt="Karrie Hill - eXp Realty Sponsor"
                   fill
                   sizes="(max-width: 768px) 192px, 224px"
@@ -106,7 +110,7 @@ export default function JoinExpSponsorTeam() {
             <GenericCard padding="lg" centered>
               <ProfileCyberFrame size="lg" index={0}>
                 <Image
-                  src="https://wp.saabuildingblocks.com/wp-content/uploads/2023/11/Contact-Us-Profile-Photos.png"
+                  src={DOUG_PROFILE_IMAGE}
                   alt="Doug Smart - eXp Realty Sponsor"
                   fill
                   sizes="(max-width: 768px) 192px, 224px"

@@ -153,7 +153,7 @@ export default function TestCategoryBadge() {
   `;
 
   return (
-    <main className="min-h-screen py-24 px-4 sm:px-8">
+    <main id="main-content" className="min-h-screen py-24 px-4 sm:px-8">
       {/* Glow Breathe animation */}
       <style>{`
         @keyframes h1GlowBreathe {

@@ -3,8 +3,8 @@
 import { GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import Image from 'next/image';
 
-// Cloudflare-ready image URL (using same as WhoWeAre section)
-const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png';
+// Cloudflare Images CDN URL
+const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
 
 /**
  * Karrie Hill Linktree Page
@@ -63,7 +63,7 @@ export default function KarrieLinktree() {
   ];
 
   return (
-    <main className="flex flex-col items-center py-12 px-4 min-h-screen">
+    <main id="main-content" className="flex flex-col items-center py-12 px-4 min-h-screen">
       {/* Profile Section */}
       <div className="text-center mb-8">
         <ProfileCyberFrame size="md" index={1}>

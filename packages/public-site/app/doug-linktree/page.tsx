@@ -3,8 +3,8 @@
 import { GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import Image from 'next/image';
 
-// Cloudflare-ready image URL (using same as WhoWeAre section)
-const DOUG_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png';
+// Cloudflare Images CDN URL
+const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public';
 
 /**
  * Doug Smart Linktree Page
@@ -68,7 +68,7 @@ export default function DougLinktree() {
   ];
 
   return (
-    <main className="flex flex-col items-center py-12 px-4 min-h-screen">
+    <main id="main-content" className="flex flex-col items-center py-12 px-4 min-h-screen">
       {/* Profile Section */}
       <div className="text-center mb-8">
         <ProfileCyberFrame size="md">

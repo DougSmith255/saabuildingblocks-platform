@@ -20,7 +20,7 @@ export default function ExpCommissionCalculator() {
   }, []);
 
   return (
-    <main className="min-h-screen">
+    <main id="main-content" className="min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
         <div className="max-w-[1900px] mx-auto w-full text-center">
