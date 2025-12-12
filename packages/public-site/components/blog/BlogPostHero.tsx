@@ -124,7 +124,7 @@ export function BlogPostHero({
       >
         {/* Category badge - centered with 3D effect */}
         <div className="mb-6 flex justify-center" style={{ minHeight: '32px' }}>
-          <CategoryBadge category={category} variant="featured" effect3d />
+          <CategoryBadge category={category} />
         </div>
 
         {/* Title - H1 with Master Controller effects, blog-specific sizing */}

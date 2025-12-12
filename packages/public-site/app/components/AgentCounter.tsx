@@ -32,17 +32,16 @@ function convertToAltGlyphs(text: string): string {
 export function AgentCounter() {
   const { isCounterDesktop } = useViewport();
 
-  // Neon glow text-shadow matching tagline style
+  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
+  // Matches Tagline component optimization
   const textShadow = `
     0 0 0.01em #fff,
     0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    0 0 0.04em #bfbdb0,
-    0 0 0.07em #bfbdb0,
-    0 0 0.11em rgba(191, 189, 176, 0.9),
-    0 0 0.16em rgba(191, 189, 176, 0.7),
-    0 0 0.22em rgba(154, 152, 136, 0.5),
-    0 0.03em 0.05em rgba(0,0,0,0.4)
+    0 0 0.03em rgba(255,255,255,0.8)
+  `;
+  const filter = `
+    drop-shadow(0 0 0.04em #bfbdb0)
+    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
   // Desktop: Corner counter - "3700+ AGENTS" format (no parentheses, Taskor font, 1.75x size)
@@ -83,6 +82,7 @@ export function AgentCounter() {
           <span
             style={{
               textShadow,
+              filter: filter.trim(),
               fontFamily: 'var(--font-taskor), sans-serif',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
@@ -114,17 +114,15 @@ export function TaglineCounterSuffix() {
     return null;
   }
 
-  // Neon glow text-shadow for "Agents)" text
+  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
   const textShadow = `
     0 0 0.01em #fff,
     0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    0 0 0.04em #bfbdb0,
-    0 0 0.07em #bfbdb0,
-    0 0 0.11em rgba(191, 189, 176, 0.9),
-    0 0 0.16em rgba(191, 189, 176, 0.7),
-    0 0 0.22em rgba(154, 152, 136, 0.5),
-    0 0.03em 0.05em rgba(0,0,0,0.4)
+    0 0 0.03em rgba(255,255,255,0.8)
+  `;
+  const filter = `
+    drop-shadow(0 0 0.04em #bfbdb0)
+    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
   return (
@@ -153,7 +151,7 @@ export function TaglineCounterSuffix() {
       </span>
 
       {/* "Agents)" text - with glow, alt glyphs */}
-      <span style={{ textShadow }}>{convertToAltGlyphs('Agents)')}</span>
+      <span style={{ textShadow, filter: filter.trim() }}>{convertToAltGlyphs('Agents)')}</span>
     </span>
   );
 }

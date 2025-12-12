@@ -43,11 +43,10 @@ export function Icon3D({
   className = '',
   style = {},
 }: Icon3DProps) {
-  // Optimized 5-layer metal effect (removed layer 3: Metal 2)
+  // Optimized 4-layer metal effect
   const filter = `
     drop-shadow(-1px -1px 0 #ffe680)
     drop-shadow(1px 1px 0 #8a7a3d)
-    drop-shadow(3px 3px 0 #4a3a1d)
     drop-shadow(4px 4px 0 #2a2a1d)
     drop-shadow(5px 5px 3px rgba(0, 0, 0, 0.5))
   `;
