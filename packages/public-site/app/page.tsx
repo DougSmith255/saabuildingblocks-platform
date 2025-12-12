@@ -50,7 +50,7 @@ export default function Home() {
         className="relative min-h-[100dvh] w-full"
         aria-label="Hero"
         style={{
-          maxWidth: '1900px',
+          maxWidth: '3000px',
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',

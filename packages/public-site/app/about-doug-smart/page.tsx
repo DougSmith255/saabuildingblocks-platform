@@ -123,28 +123,16 @@ export default function AboutDougSmart() {
         </section>
       </LazySection>
 
-      {/* Personal Section */}
-      <LazySection height={250}>
+      {/* Contact Section */}
+      <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
-            <div className="text-center mb-8">
-              <H2>Beyond the Code</H2>
+            <div className="text-center mb-12">
+              <H2>Get in Touch</H2>
             </div>
-            <p className="text-body max-w-2xl mx-auto">
-              Based in Tiburon, California. Basketball fanatic. Gym regular. The kind of disciplined
-              focus that builds multi-million dollar homes also builds systems that scale businesses.
-            </p>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* Contact Section */}
-      <LazySection height={200}>
-        <section className="relative py-12 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
             <CyberCard padding="lg" className="max-w-[450px] mx-auto">
               <div className="text-center">
-                <h3 className="text-h5 mb-4">Get in Touch</h3>
+                <h3 className="text-h5 mb-4">Contact Info</h3>
                 <a href="mailto:team@smartagentalliance.com">
                   team@smartagentalliance.com
                 </a>
