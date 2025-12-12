@@ -24,14 +24,15 @@ body {
 /* ========================================
    GLOBAL LINK STYLES (Non-blog pages)
    ======================================== */
-/* Default link styling with yellow glow on hover - excludes blog content */
-main:not(.blog-content) a:not(.no-link-style):not([class*="cta"]):not([class*="btn"]):not([class*="button"]):not(.nav-link) {
+/* Default link styling with yellow glow on hover - ONLY applies to links inside paragraphs */
+/* This ensures buttons (CTAButton, SecondaryButton) are not affected */
+main:not(.blog-content) p a {
   color: #ffd700;
   text-decoration: none;
   transition: text-shadow 0.2s ease, color 0.2s ease;
 }
 
-main:not(.blog-content) a:not(.no-link-style):not([class*="cta"]):not([class*="btn"]):not([class*="button"]):not(.nav-link):hover {
+main:not(.blog-content) p a:hover {
   color: #ffed80;
   text-shadow:
     0 0 4px rgba(255, 215, 0, 0.6),
