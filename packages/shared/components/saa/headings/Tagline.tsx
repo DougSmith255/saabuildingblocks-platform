@@ -61,21 +61,19 @@ export default function Tagline({
   const text = typeof children === 'string' ? children : String(children);
   const displayText = convertToAltGlyphs(text);
 
-  // Neon glow text-shadow - using tagline color (#bfbdb0)
-  // Adapted from H1 glow layers but with tagline's warm gray color
+  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
+  // White core in text-shadow, glow via filter: drop-shadow
   const textShadow = `
-    /* WHITE-HOT CORE */
+    /* WHITE CORE (3) - em units for scaling */
     0 0 0.01em #fff,
     0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    /* NEON GLOW - tagline color */
-    0 0 0.04em #bfbdb0,
-    0 0 0.07em #bfbdb0,
-    0 0 0.11em rgba(191, 189, 176, 0.9),
-    0 0 0.16em rgba(191, 189, 176, 0.7),
-    0 0 0.22em rgba(154, 152, 136, 0.5),
-    /* DEPTH SHADOW */
-    0 0.03em 0.05em rgba(0,0,0,0.4)
+    0 0 0.03em rgba(255,255,255,0.8)
+  `;
+
+  // GPU-accelerated glow via filter
+  const filter = `
+    drop-shadow(0 0 0.04em #bfbdb0)
+    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
   return (
@@ -91,6 +89,7 @@ export default function Tagline({
         position: 'relative',
         color: '#bfbdb0',
         textShadow,
+        filter: filter.trim(),
         ...style
       }}
     >

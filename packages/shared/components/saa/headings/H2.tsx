@@ -53,21 +53,20 @@ export default function H2({
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
 
-  // Neon glow text-shadow - using tagline color (#bfbdb0)
-  // Same as Tagline for consistency
+  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
+  // White core in text-shadow, glow via filter: drop-shadow
+  // Note: Metal backing plate is handled via ::before/::after pseudo-elements
   const textShadow = `
-    /* WHITE-HOT CORE */
+    /* WHITE CORE (3) - em units for scaling */
     0 0 0.01em #fff,
     0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8),
-    /* NEON GLOW - tagline color */
-    0 0 0.04em #bfbdb0,
-    0 0 0.07em #bfbdb0,
-    0 0 0.11em rgba(191, 189, 176, 0.9),
-    0 0 0.16em rgba(191, 189, 176, 0.7),
-    0 0 0.22em rgba(154, 152, 136, 0.5),
-    /* DEPTH SHADOW */
-    0 0.03em 0.05em rgba(0,0,0,0.4)
+    0 0 0.03em rgba(255,255,255,0.8)
+  `;
+
+  // GPU-accelerated glow via filter
+  const filter = `
+    drop-shadow(0 0 0.04em #bfbdb0)
+    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
   return (
@@ -137,6 +136,7 @@ export default function H2({
               position: 'relative',
               color: '#bfbdb0',
               textShadow,
+              filter: filter.trim(),
             }}
           >
             {convertToAltGlyphs(word)}

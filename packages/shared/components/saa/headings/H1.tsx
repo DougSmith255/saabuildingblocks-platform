@@ -74,25 +74,25 @@ export default function H1({
           color: '#ffd700',
           transform: 'perspective(800px) rotateX(12deg)',
           textShadow: `
-            /* NEON TUBE - STRONGER GLOW */
+            /* WHITE CORE (3) */
             0 0 0.01em #fff,
             0 0 0.02em #fff,
             0 0 0.03em rgba(255,255,255,0.8),
-            0 0 0.04em #ffd700,
+            /* GOLD GLOW (4) */
             0 0 0.07em #ffd700,
             0 0 0.11em rgba(255, 215, 0, 0.9),
             0 0 0.16em rgba(255, 215, 0, 0.7),
             0 0 0.22em rgba(255, 179, 71, 0.5),
-            /* THICK + DARK METAL BACKING (1.5x) */
+            /* METAL BACKING (4) */
             0.03em 0.03em 0 #2a2a2a,
             0.045em 0.045em 0 #1a1a1a,
             0.06em 0.06em 0 #0f0f0f,
-            0.075em 0.075em 0 #080808,
-            0.09em 0.09em 0 #000000,
-            /* DEPTH SHADOW */
-            0.12em 0.12em 0.08em rgba(0,0,0,0.85),
-            0.15em 0.15em 0.12em rgba(0,0,0,0.7)
+            0.075em 0.075em 0 #080808
           `,
+          /* GPU-accelerated depth shadow */
+          filter: animate
+            ? 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3))'
+            : 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))',
           animation: animate ? 'h1GlowBreathe 4s ease-in-out infinite' : 'none',
           ...style,
         }}
