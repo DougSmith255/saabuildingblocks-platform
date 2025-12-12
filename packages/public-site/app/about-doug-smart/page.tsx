@@ -16,7 +16,7 @@ export default function AboutDougSmart() {
     { label: "Role", value: "Co-Founder, Smart Agent Alliance" },
     { label: "Specialty", value: "Digital Systems Architect" },
     { label: "Ranking", value: "Top 0.1% eXp Team Builders" },
-    { label: "Base", value: "San Jose, California" }
+    { label: "Base", value: "Tiburon, California" }
   ];
 
   const systemsBuilt = [
@@ -131,7 +131,7 @@ export default function AboutDougSmart() {
               <H2>Beyond the Code</H2>
             </div>
             <p className="text-body max-w-2xl mx-auto">
-              Based in San Jose, California. Basketball fanatic. Gym regular. The kind of disciplined
+              Based in Tiburon, California. Basketball fanatic. Gym regular. The kind of disciplined
               focus that builds multi-million dollar homes also builds systems that scale businesses.
             </p>
           </div>
