@@ -41,8 +41,8 @@ export function CategoryBadge({
         color: '#c4a94d',
         filter: filter.trim(),
         transform: 'perspective(500px) rotateX(8deg)',
-        // Use H4 clamp for fluid sizing: 24px min → 40px max
-        fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)',
+        // Fluid sizing: 15px min → 40px max
+        fontSize: 'clamp(15px, calc(12.73px + 0.93vw), 40px)',
       }}
     >
       {category}
