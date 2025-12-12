@@ -24,7 +24,7 @@ interface Star {
  * - Prevents "jumping" when mobile browser chrome changes
  * - Canvas sized to layout viewport, not visual viewport
  *
- * Star counts: Desktop 275, Mobile 150
+ * Star counts: Desktop 275, Mobile 115
  */
 export default function StarBackgroundCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -39,8 +39,8 @@ export default function StarBackgroundCanvas() {
   // Generate stars once on mount
   const generateStars = useCallback((width: number, height: number) => {
     const isMobile = width < 768;
-    // Star counts: Desktop 275, Mobile 150
-    const starCount = isMobile ? 150 : 275;
+    // Star counts: Desktop 275, Mobile 115
+    const starCount = isMobile ? 115 : 275;
     const stars: Star[] = [];
 
     for (let i = 0; i < starCount; i++) {
