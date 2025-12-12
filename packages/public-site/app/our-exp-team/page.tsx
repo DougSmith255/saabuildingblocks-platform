@@ -42,31 +42,31 @@ export default function OurExpTeam() {
       tier: 3,
       name: "Mike Sherrard",
       image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/c7d78c1c7d39f9bc-Upline-1.webp/public",
-      bio: "#1 Personal Attractor at eXp. Most personally sponsored actively producing agents worldwide. Trained 1000s of agents every year how to scale their business with social media. Top 3 Realtor on YouTube Globally with 85,000+ subscribers. Co-Founder of the Wolf Pack."
+      bio: "#1 Personal Attractor at eXp. Top 3 Realtor on YouTube globally (85K+ subs). Trains thousands of agents annually on social media scaling. Co-Founder of the Wolf Pack."
     },
     {
       tier: 4,
       name: "Connor Steinbrook",
       image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/c5b1dae986466b48-Upline-2.webp/public",
-      bio: "Top Social Media Influencer with a 35,000+ subscriber YouTube channel Investor Army. Top 43 Influencer at eXp Realty Who Built a Team of Over 2900 Agents in 4 Years. Co-Founder of the Wolf Pack."
+      bio: "Built a 2,900+ agent team in 4 years. Runs Investor Army YouTube (35K+ subs). Top 43 eXp Influencer. Co-Founder of the Wolf Pack."
     },
     {
       tier: 5,
       name: "Chris Soignier",
       image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/0d57e885d0b45fb6-Upline-3.webp/public",
-      bio: "Broker Associate experienced in multi-family and commercial Real Estate investments. Chris is a Top 50 eXp Influencer amassing a Team of Agents Spanning Over 40 US States and 7 Countries."
+      bio: "Top 50 eXp Influencer. Multi-family and commercial specialist. Team spans 40+ US states and 7 countries."
     },
     {
       tier: 6,
       name: "Ian Flannigan",
       image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/d2afacd47dcdf3a4-Upline-4.webp/public",
-      bio: "Top 50 eXp Influencer. Built an international team of real estate agents in 7 years. Accomplished Entrepreneur, National Speaker, and Industry Leader with a strong passion for helping people achieve their personal and business goals."
+      bio: "Top 50 eXp Influencer. Built an international agent network in 7 years. National speaker and industry leader."
     },
     {
       tier: 7,
       name: "Pat Hays",
       image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/8fee6badeca55e90-Upline-5.webp/public",
-      bio: "Top Producing Real Estate Agent, Team Leader, Mentor. Who did $3.2 Million in Production His First Year in Real Estate. Pat has Built a Team of Over 2000 Agents Across North America in 42 States and 3 Canadian Provinces."
+      bio: "$3.2M production in year one. Built a 2,000+ agent team across 42 states and 3 Canadian provinces."
     }
   ];
 
@@ -100,13 +100,13 @@ export default function OurExpTeam() {
               >
                 <div className="lg:w-1/3 flex justify-center">
                   <div className="relative">
-                    {/* 3D Tier Number */}
-                    <div className="absolute -top-4 -left-4 z-10">
+                    {/* 3D Tier Number - z-20 to ensure it's above ProfileCyberFrame layers */}
+                    <div className="absolute -top-4 -left-4 z-20">
                       <Icon3D>
                         <span
                           style={{
                             fontFamily: 'var(--font-taskor), sans-serif',
-                            fontSize: 'var(--font-size-h2)',
+                            fontSize: 'clamp(43px, calc(39px + 1.60vw), 87px)',
                             fontWeight: 700,
                             lineHeight: 1,
                           }}
@@ -158,8 +158,8 @@ export default function OurExpTeam() {
               {uplinePartners.map((partner, index) => (
                 <GenericCard key={index} padding="md" centered className="h-full">
                   <div className="relative inline-block">
-                    {/* 3D Tier Number */}
-                    <div className="absolute -top-3 -left-3 z-10">
+                    {/* 3D Tier Number - z-20 to ensure it's above ProfileCyberFrame layers */}
+                    <div className="absolute -top-3 -left-3 z-20">
                       <Icon3D>
                         <span
                           style={{
@@ -184,7 +184,7 @@ export default function OurExpTeam() {
                     </ProfileCyberFrame>
                   </div>
                   <h4 className="text-h5 text-center mb-2">{partner.name}</h4>
-                  <p className="text-caption text-center">{partner.bio}</p>
+                  <p className="text-body text-center">{partner.bio}</p>
                 </GenericCard>
               ))}
             </div>
