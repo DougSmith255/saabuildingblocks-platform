@@ -29,9 +29,24 @@ export default function Header() {
   // Track viewport for conditional rendering - only render DesktopNav on desktop
   const [isDesktop, setIsDesktop] = useState(false);
   // Track first page load for slide-in animation
-  // Always start with slide-in animation on page load (including hard refresh)
-  // The animation only skips for client-side navigation (pathname changes)
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  // Use performance.navigation or PerformanceNavigationTiming to detect actual page loads
+  // vs client-side navigation (which shouldn't trigger the animation)
+  const [isFirstLoad, setIsFirstLoad] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    // Check if this is a real page load or just a client-side navigation
+    // Real page loads: type 0 (navigate) or type 1 (reload)
+    // Client-side nav: the Header component remounts but document was already loaded
+    const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
+    if (navEntry) {
+      // If domContentLoaded already happened more than 500ms ago, this is likely
+      // a client-side navigation causing a remount, not a real page load
+      const timeSinceLoad = performance.now();
+      if (timeSinceLoad > 1000) {
+        return false; // Skip animation for client-side navigation
+      }
+    }
+    return true;
+  });
   const [hasSlideIn, setHasSlideIn] = useState(false);
 
   // Track pathname for route change detection
@@ -39,21 +54,26 @@ export default function Header() {
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state and trigger slide-in animation on every page load
+  // Track mount state and trigger slide-in animation on actual page loads only
   useEffect(() => {
     setHasMounted(true);
 
-    // Always trigger slide-in animation on component mount
-    // This runs on every page load (including hard refresh)
-    requestAnimationFrame(() => {
+    // Only trigger slide-in animation on actual page loads (not client-side navigation)
+    // isFirstLoad is false when performance.now() > 1000ms (client-side nav remount)
+    if (isFirstLoad) {
       requestAnimationFrame(() => {
-        setHasSlideIn(true);
-        // After slide-in animation completes (500ms), switch to normal scroll behavior
-        setTimeout(() => {
-          setIsFirstLoad(false);
-        }, 500);
+        requestAnimationFrame(() => {
+          setHasSlideIn(true);
+          // After slide-in animation completes (500ms), switch to normal scroll behavior
+          setTimeout(() => {
+            setIsFirstLoad(false);
+          }, 500);
+        });
       });
-    });
+    } else {
+      // For client-side navigation, immediately show header without animation
+      setHasSlideIn(true);
+    }
   }, []);
 
   // Reset header visibility on route change - ensures header is visible on new pages

@@ -1,6 +1,13 @@
 {
   "posts": [
     {
+      "id": 270975,
+      "categories": [
+        "exp-realty-sponsor"
+      ],
+      "chunk": 1
+    },
+    {
       "id": 270973,
       "categories": [
         "exp-realty-sponsor"
@@ -61,7 +68,7 @@
       "categories": [
         "exp-realty-sponsor"
       ],
-      "chunk": 1
+      "chunk": 2
     },
     {
       "id": 270955,
@@ -124,7 +131,7 @@
       "categories": [
         "exp-realty-sponsor"
       ],
-      "chunk": 2
+      "chunk": 3
     },
     {
       "id": 270388,
@@ -187,7 +194,7 @@
       "categories": [
         "exp-realty-sponsor"
       ],
-      "chunk": 3
+      "chunk": 4
     },
     {
       "id": 270288,
@@ -250,7 +257,7 @@
       "categories": [
         "exp-realty-sponsor"
       ],
-      "chunk": 4
+      "chunk": 5
     },
     {
       "id": 270129,
@@ -313,7 +320,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 5
+      "chunk": 6
     },
     {
       "id": 269889,
@@ -376,7 +383,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 6
+      "chunk": 7
     },
     {
       "id": 269481,
@@ -439,7 +446,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 7
+      "chunk": 8
     },
     {
       "id": 268726,
@@ -502,7 +509,7 @@
       "categories": [
         "exp-realty-sponsor"
       ],
-      "chunk": 8
+      "chunk": 9
     },
     {
       "id": 267757,
@@ -565,7 +572,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 9
+      "chunk": 10
     },
     {
       "id": 267416,
@@ -628,7 +635,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 10
+      "chunk": 11
     },
     {
       "id": 266655,
@@ -691,7 +698,7 @@
       "categories": [
         "exp-realty-sponsor"
       ],
-      "chunk": 11
+      "chunk": 12
     },
     {
       "id": 266161,
@@ -754,7 +761,7 @@
       "categories": [
         "agent-career-info"
       ],
-      "chunk": 12
+      "chunk": 13
     },
     {
       "id": 265340,
@@ -817,7 +824,7 @@
       "categories": [
         "agent-career-info"
       ],
-      "chunk": 13
+      "chunk": 14
     },
     {
       "id": 262924,
@@ -880,7 +887,7 @@
       "categories": [
         "marketing-mastery"
       ],
-      "chunk": 14
+      "chunk": 15
     },
     {
       "id": 262707,
@@ -943,7 +950,7 @@
       "categories": [
         "about-exp-realty"
       ],
-      "chunk": 15
+      "chunk": 16
     },
     {
       "id": 249948,
@@ -1006,7 +1013,7 @@
       "categories": [
         "fun-for-agents"
       ],
-      "chunk": 16
+      "chunk": 17
     },
     {
       "id": 249617,
@@ -1069,7 +1076,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 17
+      "chunk": 18
     },
     {
       "id": 249446,
@@ -1132,7 +1139,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 18
+      "chunk": 19
     },
     {
       "id": 247636,
@@ -1195,7 +1202,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 19
+      "chunk": 20
     },
     {
       "id": 247390,
@@ -1258,7 +1265,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 20
+      "chunk": 21
     },
     {
       "id": 247676,
@@ -1321,7 +1328,7 @@
       "categories": [
         "industry-trends"
       ],
-      "chunk": 21
+      "chunk": 22
     },
     {
       "id": 244178,
@@ -1384,7 +1391,7 @@
       "categories": [
         "real-estate-schools"
       ],
-      "chunk": 22
+      "chunk": 23
     },
     {
       "id": 245964,
@@ -1447,7 +1454,7 @@
       "categories": [
         "real-estate-schools"
       ],
-      "chunk": 23
+      "chunk": 24
     },
     {
       "id": 245571,
@@ -1510,7 +1517,7 @@
       "categories": [
         "become-an-agent"
       ],
-      "chunk": 24
+      "chunk": 25
     },
     {
       "id": 245176,
@@ -1573,7 +1580,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 25
+      "chunk": 26
     },
     {
       "id": 243464,
@@ -1636,7 +1643,7 @@
       "categories": [
         "real-estate-schools"
       ],
-      "chunk": 26
+      "chunk": 27
     },
     {
       "id": 242802,
@@ -1699,7 +1706,7 @@
       "categories": [
         "brokerage-comparison"
       ],
-      "chunk": 27
+      "chunk": 28
     },
     {
       "id": 242035,
@@ -1762,7 +1769,7 @@
       "categories": [
         "marketing-mastery"
       ],
-      "chunk": 28
+      "chunk": 29
     },
     {
       "id": 240655,
@@ -1825,7 +1832,7 @@
       "categories": [
         "industry-trends"
       ],
-      "chunk": 29
+      "chunk": 30
     },
     {
       "id": 5571,
@@ -1888,7 +1895,7 @@
       "categories": [
         "marketing-mastery"
       ],
-      "chunk": 30
+      "chunk": 31
     },
     {
       "id": 4435,
@@ -1951,7 +1958,7 @@
       "categories": [
         "agent-career-info"
       ],
-      "chunk": 31
+      "chunk": 32
     },
     {
       "id": 4015,
@@ -1977,7 +1984,7 @@
       5,
       6,
       8,
-      11,
+      9,
       12
     ],
     "about-exp-realty": [
@@ -2030,7 +2037,7 @@
       31
     ],
     "brokerage-comparison": [
-      7,
+      8,
       13,
       17,
       18,
@@ -2048,7 +2055,6 @@
     "agent-career-info": [
       8,
       9,
-      12,
       13,
       14,
       15,
@@ -2057,7 +2063,8 @@
       26,
       29,
       30,
-      31
+      31,
+      32
     ],
     "fun-for-agents": [
       9,
@@ -2067,7 +2074,7 @@
     "industry-trends": [
       9,
       21,
-      29,
+      22,
       30
     ],
     "become-an-agent": [
@@ -2082,11 +2089,10 @@
       23,
       24,
       25,
-      26,
       27
     ]
   },
-  "totalPosts": 281,
+  "totalPosts": 282,
   "totalChunks": 32,
   "postsPerChunk": 9
 }
