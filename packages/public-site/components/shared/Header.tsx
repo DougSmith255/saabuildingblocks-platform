@@ -29,40 +29,32 @@ export default function Header() {
   // Track viewport for conditional rendering - only render DesktopNav on desktop
   const [isDesktop, setIsDesktop] = useState(false);
   // Track first page load for slide-in animation
-  // Check sessionStorage synchronously to prevent flash on page refresh
-  const [isFirstLoad, setIsFirstLoad] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    return !sessionStorage.getItem('headerSlideInDone');
-  });
-  const [hasSlideIn, setHasSlideIn] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return !!sessionStorage.getItem('headerSlideInDone');
-  });
+  // Always start with slide-in animation on page load (including hard refresh)
+  // The animation only skips for client-side navigation (pathname changes)
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [hasSlideIn, setHasSlideIn] = useState(false);
 
   // Track pathname for route change detection
   const pathname = usePathname();
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state and trigger first load slide-in animation
+  // Track mount state and trigger slide-in animation on every page load
   useEffect(() => {
     setHasMounted(true);
 
-    // Only trigger animation if this is actually the first load
-    if (isFirstLoad && !hasSlideIn) {
-      // First load - trigger slide-in after a brief delay
+    // Always trigger slide-in animation on component mount
+    // This runs on every page load (including hard refresh)
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setHasSlideIn(true);
-          sessionStorage.setItem('headerSlideInDone', 'true');
-          // After slide-in animation completes (500ms), switch to normal scroll behavior
-          setTimeout(() => {
-            setIsFirstLoad(false);
-          }, 500);
-        });
+        setHasSlideIn(true);
+        // After slide-in animation completes (500ms), switch to normal scroll behavior
+        setTimeout(() => {
+          setIsFirstLoad(false);
+        }, 500);
       });
-    }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    });
+  }, []);
 
   // Reset header visibility on route change - ensures header is visible on new pages
   useEffect(() => {
