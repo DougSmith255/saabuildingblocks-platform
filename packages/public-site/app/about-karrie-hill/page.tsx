@@ -4,8 +4,8 @@ import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, ProfileCyberFrame }
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
-// Cloudflare-ready image URL (using same as WhoWeAre section)
-const KARRIE_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Karrie-Profile-Picture.png';
+// Cloudflare Images CDN URL
+const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
 
 /**
  * About Karrie Hill Page
@@ -152,33 +152,20 @@ export default function AboutKarrieHill() {
         </section>
       </LazySection>
 
-      {/* Personal Section */}
-      <LazySection height={250}>
+      {/* Contact Section */}
+      <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
-            <div className="text-center mb-8">
-              <H2>Beyond Real Estate</H2>
+            <div className="text-center mb-12">
+              <H2>Get in Touch</H2>
             </div>
-            <p className="text-body max-w-2xl mx-auto">
-              30+ year Marin County resident. Living in Tiburon with her husband and two dogs—Baxter and Lily.
-              Mother of three, grandmother. Her creative talents have been featured on HGTV and in national magazines
-              for interior design.
-            </p>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* Contact Section */}
-      <LazySection height={200}>
-        <section className="relative py-12 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <CyberCard padding="lg">
+            <CyberCard padding="lg" className="max-w-[450px] mx-auto">
               <div className="text-center">
-                <h3 className="text-h5 mb-4">Get in Touch</h3>
-                <a href="mailto:karrie.hill@exprealty.com" className="text-link hover:underline">
+                <h3 className="text-h5 mb-4">Contact Info</h3>
+                <a href="mailto:karrie.hill@exprealty.com">
                   karrie.hill@exprealty.com
                 </a>
-                <p className="text-[#dcdbd5]/60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>415-435-7777 (no text)</p>
+                <p className="text-body opacity-60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>415-435-7777 (No Text)</p>
               </div>
             </CyberCard>
           </div>
@@ -195,10 +182,10 @@ export default function AboutKarrieHill() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
-                Join Our Team
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/our-exp-team/">
-                Meet The Full Team
+                Meet The Team
               </CTAButton>
             </div>
           </div>
