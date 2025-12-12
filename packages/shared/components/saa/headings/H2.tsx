@@ -53,20 +53,15 @@ export default function H2({
   const text = React.Children.toArray(children).join('');
   const words = text.split(' ');
 
-  // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
-  // White core in text-shadow, glow via filter: drop-shadow
-  // Note: Metal backing plate is handled via ::before/::after pseudo-elements
+  // Text-shadow for white core glow on the text itself
+  // NOTE: We do NOT use filter: drop-shadow() on H2 because it would affect
+  // the metal backing plate (::before pseudo-element). H2 gets its visual
+  // punch from the metal plate, not from an outer glow.
   const textShadow = `
-    /* WHITE CORE (3) - em units for scaling */
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8)
-  `;
-
-  // GPU-accelerated glow via filter
-  const filter = `
-    drop-shadow(0 0 0.04em #bfbdb0)
-    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgba(255,255,255,0.8),
+    0 0 8px rgba(255,255,255,0.4)
   `;
 
   return (
@@ -136,7 +131,6 @@ export default function H2({
               position: 'relative',
               color: '#bfbdb0',
               textShadow,
-              filter: filter.trim(),
             }}
           >
             {convertToAltGlyphs(word)}

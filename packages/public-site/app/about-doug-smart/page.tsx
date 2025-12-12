@@ -4,8 +4,8 @@ import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, ProfileCyberFrame }
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 
-// Cloudflare-ready image URL (using same as WhoWeAre section)
-const DOUG_PROFILE_IMAGE = 'https://wp.saabuildingblocks.com/wp-content/uploads/2025/12/Doug-Profile-Picture.png';
+// Cloudflare Images CDN URL
+const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public';
 
 /**
  * About Doug Smart Page
@@ -113,10 +113,10 @@ export default function AboutDougSmart() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {systemsBuilt.map((system, index) => (
-                <GenericCard key={index} padding="md" hover className="h-full">
+                <CyberCard key={index} padding="md" className="h-full">
                   <h3 className="text-h6 mb-2">{system.name}</h3>
                   <p className="text-body opacity-80">{system.desc}</p>
-                </GenericCard>
+                </CyberCard>
               ))}
             </div>
           </div>
