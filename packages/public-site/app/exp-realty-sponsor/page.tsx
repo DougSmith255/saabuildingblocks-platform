@@ -52,7 +52,7 @@ export default function ExpRealtySponsor() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>THE WOLF PACK</H1>
           <Tagline className="mt-4">
-            Free training, systems, and community that costs you nothing extra. No split increases. No hidden fees.
+            3,700+ agents. One mission. Your success.
           </Tagline>
         </div>
       </section>

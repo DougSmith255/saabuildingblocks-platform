@@ -55,7 +55,7 @@ export default function Freebies() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>FREE RESOURCES</H1>
           <Tagline className="mt-4">
-            Battle-tested tools to level up your real estate game. No strings. No catch.
+            Value first. Always.
           </Tagline>
         </div>
       </section>

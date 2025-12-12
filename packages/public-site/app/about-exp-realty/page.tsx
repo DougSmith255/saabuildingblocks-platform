@@ -59,7 +59,7 @@ export default function AboutExpRealty() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>ABOUT EXP REALTY</H1>
           <Tagline className="mt-4">
-            The cloud-based brokerage that redefined real estate. 89,000+ agents. 24+ countries. One platform.
+            The network behind your net worth
           </Tagline>
         </div>
       </section>

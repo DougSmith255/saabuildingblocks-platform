@@ -65,7 +65,7 @@ export default function RevenueShareCalculator() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>PASSIVE INCOME POTENTIAL</H1>
           <Tagline className="mt-4">
-            Project your earnings from eXp's 7-tier revenue share program. Build wealth while you sleep.
+            What 7 tiers could mean for you
           </Tagline>
         </div>
       </section>

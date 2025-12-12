@@ -49,7 +49,7 @@ export default function BestRealEstateBrokerage() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>KNOW THE NUMBERS</H1>
           <Tagline className="mt-4">
-            Compare commissions, fees, technology, and wealth-building opportunities. Make the right move.
+            Facts over feelings
           </Tagline>
         </div>
       </section>

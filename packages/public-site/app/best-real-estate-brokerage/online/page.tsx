@@ -15,7 +15,7 @@ export default function OnlineBrokerageComparison() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>CLOUD VS CLOUD</H1>
           <Tagline className="mt-4">
-            eXp Realty vs Real Broker vs LPT Realty vs Fathom. The data tells the story.
+            The online showdown
           </Tagline>
           <div className="flex flex-wrap gap-4 justify-center mt-8">
             <a href="#comparison-chart" className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors">

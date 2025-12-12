@@ -105,7 +105,7 @@ export default function TraditionalBrokerageComparison() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>CLOUD VS BRICK & MORTAR</H1>
           <Tagline className="mt-4">
-            eXp Realty vs Keller Williams, RE/MAX, Coldwell Banker. The future vs the past.
+            Old School vs New School
           </Tagline>
         </div>
       </section>

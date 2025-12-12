@@ -15,7 +15,7 @@ export default function ShouldYouJoinExp() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>IS EXP RIGHT FOR YOU?</H1>
           <Tagline className="mt-4">
-            5-minute quiz. Honest answers. Find out if eXp matches your goals.
+            Fit check: you + eXp
           </Tagline>
         </div>
       </section>

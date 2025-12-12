@@ -70,7 +70,7 @@ export default function JoinExpSponsorTeam() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>JOIN THE WOLF PACK</H1>
           <Tagline className="mt-4">
-            Book a call. Ask your questions. See if Smart Agent Alliance is the right fit for your goals.
+            Your first step to more
           </Tagline>
         </div>
       </section>

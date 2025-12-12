@@ -68,7 +68,7 @@ export default function Awards() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>INDUSTRY DOMINANCE</H1>
           <Tagline className="mt-4">
-            Forbes. Glassdoor. RealTrends. The industry's biggest names recognize eXp's unstoppable rise.
+            The receipts are in
           </Tagline>
         </div>
       </section>

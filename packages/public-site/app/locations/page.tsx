@@ -60,7 +60,7 @@ export default function Locations() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>GLOBAL PRESENCE</H1>
           <Tagline className="mt-4">
-            A borderless brokerage. 89,000+ agents. 28+ countries. One cloud-based platform.
+            Real estate without boundaries
           </Tagline>
         </div>
       </section>

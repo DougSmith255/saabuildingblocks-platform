@@ -26,7 +26,7 @@ export default function ExpCommissionCalculator() {
         <div className="max-w-[1900px] mx-auto w-full text-center">
           <H1>KNOW YOUR NUMBERS</H1>
           <Tagline className="mt-4">
-            Calculate your net commission with eXp's transparent fee structure. No surprises.
+            No hidden fees. Just facts.
           </Tagline>
         </div>
       </section>
