@@ -120,6 +120,20 @@ export default function Header() {
     const updateHeader = () => {
       const currentScrollY = lastKnownScrollY;
 
+      // Always show header at top of page (with small buffer for mobile bounce)
+      // This takes priority over all other logic
+      if (currentScrollY <= 50) {
+        if (isHidden) {
+          setIsHidden(false);
+        }
+        // Reset anchor and direction when at top
+        setScrollAnchor(0);
+        setScrollDirection(null);
+        setLastScrollY(currentScrollY);
+        ticking = false;
+        return;
+      }
+
       // Detect scroll direction
       const currentDirection = currentScrollY > lastScrollY ? 'down' : 'up';
 
@@ -132,12 +146,8 @@ export default function Header() {
       // Calculate scroll distance from anchor
       const scrollDistance = Math.abs(currentScrollY - scrollAnchor);
 
-      // Always show header at top of page
-      if (currentScrollY <= 0) {
-        setIsHidden(false);
-      }
       // Apply thresholds: 500px down to hide, 250px up to show
-      else if (currentDirection === 'down' && scrollDistance >= 500) {
+      if (currentDirection === 'down' && scrollDistance >= 500) {
         setIsHidden(true);
       } else if (currentDirection === 'up' && scrollDistance >= 250) {
         setIsHidden(false);
@@ -158,7 +168,7 @@ export default function Header() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, scrollAnchor, scrollDirection]);
+  }, [lastScrollY, scrollAnchor, scrollDirection, isHidden]);
 
 
   // Handle hamburger menu click - lazy load mobile menu on first click

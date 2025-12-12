@@ -19,6 +19,11 @@ interface Star {
  * - Lower memory usage
  * - No CSS animation overhead per-star
  *
+ * MOBILE BROWSER FIX:
+ * - Uses visualViewport API to handle address bar show/hide
+ * - Prevents "jumping" when mobile browser chrome changes
+ * - Canvas sized to layout viewport, not visual viewport
+ *
  * Star counts: Desktop 275, Mobile 150
  */
 export default function StarBackgroundCanvas() {
@@ -28,6 +33,8 @@ export default function StarBackgroundCanvas() {
   const lastTimeRef = useRef(0);
   // Store logical dimensions (without DPR scaling)
   const dimensionsRef = useRef({ width: 0, height: 0 });
+  // Track initial viewport height to prevent address bar resize issues
+  const initialHeightRef = useRef(0);
 
   // Generate stars once on mount
   const generateStars = useCallback((width: number, height: number) => {
@@ -39,8 +46,8 @@ export default function StarBackgroundCanvas() {
     for (let i = 0; i < starCount; i++) {
       // 3 layers with different speeds (parallax effect)
       const layer = i % 3;
-      // Speeds in pixels per second (very slow, subtle floating motion)
-      const speeds = [0.2, 0.4, 0.7]; // px/s - slower for gentler motion
+      // Speeds in pixels per second (extremely slow, barely perceptible motion)
+      const speeds = [0.08, 0.15, 0.25]; // px/s - very gentle drift
 
       stars.push({
         x: Math.random() * width,
@@ -104,8 +111,8 @@ export default function StarBackgroundCanvas() {
     animationRef.current = requestAnimationFrame(animate);
   }, [drawStars]);
 
-  // Handle resize
-  const handleResize = useCallback(() => {
+  // Handle resize - use initial height to prevent mobile address bar issues
+  const handleResize = useCallback((forceRegenerate = false) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -114,13 +121,23 @@ export default function StarBackgroundCanvas() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
+    // On first resize, capture the initial height
+    // This prevents stars from regenerating when mobile address bar hides/shows
+    if (initialHeightRef.current === 0) {
+      initialHeightRef.current = height;
+    }
+
+    // Use the larger of current or initial height to cover full possible area
+    // This prevents "jumping" when mobile address bar hides
+    const stableHeight = Math.max(height, initialHeightRef.current);
+
     // Store logical dimensions for animation loop
-    dimensionsRef.current = { width, height };
+    dimensionsRef.current = { width, height: stableHeight };
 
     canvas.width = width * dpr;
-    canvas.height = height * dpr;
+    canvas.height = stableHeight * dpr;
     canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.style.height = `${stableHeight}px`;
 
     // Scale context for retina displays
     const ctx = canvas.getContext('2d');
@@ -128,22 +145,27 @@ export default function StarBackgroundCanvas() {
       ctx.scale(dpr, dpr);
     }
 
-    // Regenerate stars for new dimensions
-    generateStars(width, height);
+    // Only regenerate stars on actual width changes or forced regenerate
+    // Skip regeneration for height-only changes (mobile address bar)
+    if (forceRegenerate || starsRef.current.length === 0) {
+      generateStars(width, stableHeight);
+    }
   }, [generateStars]);
 
   // Initialize canvas and start animation
   useEffect(() => {
-    handleResize();
+    // Force regenerate on initial mount
+    handleResize(true);
 
     // Start animation loop
     animationRef.current = requestAnimationFrame(animate);
 
-    // Handle window resize
-    window.addEventListener('resize', handleResize);
+    // Handle window resize - don't regenerate stars, just resize canvas
+    const onResize = () => handleResize(false);
+    window.addEventListener('resize', onResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', onResize);
       cancelAnimationFrame(animationRef.current);
     };
   }, [handleResize, animate]);
