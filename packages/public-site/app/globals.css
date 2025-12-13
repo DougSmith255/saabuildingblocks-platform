@@ -97,25 +97,18 @@ main#main-content > section:not(:first-child) {
 
 /* Apply scroll-driven animations when supported */
 @supports (animation-timeline: view()) {
-  /* Hero section: Push back and fade out as user scrolls past it */
-  /* Target main#main-content directly (pages have their own main element) */
+  /* Hero section: Shrink and fade out as user scrolls past it */
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
     animation-timeline: view();
-    /* Use longhand for explicit control: exit range from 0% to 60% */
-    animation-range-start: exit 0%;
-    animation-range-end: exit 60%;
-    will-change: transform, opacity;
+    animation-range: exit;
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
   body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
     animation: section-scroll-in linear both;
     animation-timeline: view();
-    /* Use longhand: entry range from 0% to 100% */
-    animation-range-start: entry 0%;
-    animation-range-end: entry 100%;
-    will-change: transform, opacity;
+    animation-range: entry;
   }
 
   /* Completely disable transitions mode */
