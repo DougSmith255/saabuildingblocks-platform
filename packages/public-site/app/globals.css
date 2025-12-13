@@ -107,11 +107,13 @@ main#main-content > section:not(:first-child) {
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
+  /* DISABLED: view() timeline fires animationend immediately on page load, breaking the effect
   body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
     animation: section-scroll-in linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 50%;
   }
+  */
 
   /* Completely disable transitions mode */
   body[data-no-section-transitions] main#main-content section {
