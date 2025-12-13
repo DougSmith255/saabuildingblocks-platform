@@ -107,10 +107,10 @@ export function AgentCounter() {
  * and viewport is mobile (<500px)
  */
 export function TaglineCounterSuffix() {
-  const { isCounterDesktop } = useViewport();
+  const { isCounterDesktop, hasMounted } = useViewport();
 
-  // Only render on mobile
-  if (isCounterDesktop) {
+  // On desktop (after mount confirmed), don't render at all
+  if (hasMounted && isCounterDesktop) {
     return null;
   }
 
@@ -125,10 +125,21 @@ export function TaglineCounterSuffix() {
     drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
+  // Before mount: render invisible to reserve space (prevents CLS on mobile)
+  // After mount on mobile: render visible
+  const isVisible = hasMounted && !isCounterDesktop;
+
   return (
     <span
       className="tagline-counter-suffix"
-      style={{ display: 'inline-flex', alignItems: 'baseline', gap: 0 }}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'baseline',
+        gap: 0,
+        // Hidden until we confirm mobile, then visible
+        opacity: isVisible ? 1 : 0,
+        transition: 'opacity 0.2s ease-in',
+      }}
     >
       {/* Counter numbers with opening parenthesis */}
       <span
