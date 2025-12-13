@@ -184,8 +184,9 @@ function DataStreamEffect() {
         scrollVelocityRef.current *= VELOCITY_DECAY;
       }
 
+      // Loop the animation instead of stopping
       if (currentRef.current > 2) {
-        currentRef.current = 2;
+        currentRef.current = currentRef.current % 2;
       }
 
       setProgress(currentRef.current);
