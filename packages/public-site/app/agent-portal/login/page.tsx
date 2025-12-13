@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { H1, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { H1, CyberCardGold } from '@saa/shared/components/saa';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
@@ -9,7 +9,7 @@ const INITIAL_PROGRESS_END = 0.5;
 
 /**
  * Agent Portal Login Page
- * Features the Data Stream effect in neon blue with centered login form
+ * Features the Data Stream effect in green with centered login form in CyberCardGold
  */
 export default function AgentPortalLogin() {
   const [email, setEmail] = useState('');
@@ -29,7 +29,7 @@ export default function AgentPortalLogin() {
 
   return (
     <main id="main-content" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Data Stream Effect - Neon Blue */}
+      {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
       {/* Login Content */}
@@ -37,15 +37,15 @@ export default function AgentPortalLogin() {
         {/* Heading */}
         <div className="text-center mb-8">
           <H1 className="mb-2">ALLIANCE HQ</H1>
-          <p className="text-body text-[#00d4ff]/80">Access your agent command center</p>
+          <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
         </div>
 
-        {/* Login Form */}
-        <GenericCard padding="lg">
+        {/* Login Form - CyberCardGold */}
+        <CyberCardGold padding="lg" centered={false}>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <label htmlFor="email" className="block text-caption text-[#00d4ff] uppercase tracking-wider">
+              <label htmlFor="email" className="block text-caption text-[#ffd700] uppercase tracking-wider">
                 Agent ID / Email
               </label>
               <input
@@ -54,14 +54,14 @@ export default function AgentPortalLogin() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-black/50 border border-[#00d4ff]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#00d4ff] focus:ring-1 focus:ring-[#00d4ff]/50 transition-all"
+                className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
                 placeholder="agent@example.com"
               />
             </div>
 
             {/* Password Field */}
             <div className="space-y-2">
-              <label htmlFor="password" className="block text-caption text-[#00d4ff] uppercase tracking-wider">
+              <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
                 Access Code
               </label>
               <input
@@ -70,7 +70,7 @@ export default function AgentPortalLogin() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-black/50 border border-[#00d4ff]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#00d4ff] focus:ring-1 focus:ring-[#00d4ff]/50 transition-all"
+                className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
                 placeholder="Enter access code"
               />
             </div>
@@ -79,11 +79,11 @@ export default function AgentPortalLogin() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 bg-[#00d4ff]/20 border-2 border-[#00d4ff] rounded-lg text-[#00d4ff] font-bold uppercase tracking-wider hover:bg-[#00d4ff]/30 hover:shadow-[0_0_20px_rgba(0,212,255,0.4)] focus:outline-none focus:ring-2 focus:ring-[#00d4ff]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <span className="w-5 h-5 border-2 border-[#00d4ff]/30 border-t-[#00d4ff] rounded-full animate-spin" />
+                  <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
                   Initializing...
                 </span>
               ) : (
@@ -95,19 +95,19 @@ export default function AgentPortalLogin() {
             <div className="text-center">
               <a
                 href="#"
-                className="text-caption text-[#00d4ff]/60 hover:text-[#00d4ff] transition-colors"
+                className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors"
               >
                 Forgot access code?
               </a>
             </div>
           </form>
-        </GenericCard>
+        </CyberCardGold>
 
         {/* Back to Home */}
         <div className="text-center mt-6">
           <a
             href="/"
-            className="text-caption text-[#e5e4dd]/60 hover:text-[#00d4ff] transition-colors"
+            className="text-caption text-[#e5e4dd]/60 hover:text-[#ffd700] transition-colors"
           >
             Return to base
           </a>
@@ -118,7 +118,7 @@ export default function AgentPortalLogin() {
 }
 
 /**
- * Data Stream Effect - Neon Blue Matrix-style rain
+ * Data Stream Effect - Green Matrix-style rain (matches test page)
  *
  * Animation behavior:
  * 1. Intro: Fast animation from START to END over 3 seconds
@@ -211,9 +211,11 @@ function DataStreamEffect() {
     };
   }, []);
 
-  // Generate data columns
-  const columns = [...Array(25)].map((_, i) => ({
-    x: i * 4,
+  // Generate data columns - fewer columns with more spacing for mobile
+  // Desktop: 20 columns at 5% width each = full coverage
+  // Mobile: same columns but with gap between them
+  const columns = [...Array(20)].map((_, i) => ({
+    x: i * 5, // 5% spacing between columns (was 4%)
     speed: 0.5 + (i % 4) * 0.3,
     length: 5 + (i % 6),
     delay: (i * 0.02) % 0.4,
@@ -222,7 +224,7 @@ function DataStreamEffect() {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {/* Neon blue data columns */}
+      {/* Green data columns (matches test page) */}
       {columns.map((col, i) => {
         const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);
         const yOffset = colProgress * 100;
@@ -234,7 +236,7 @@ function DataStreamEffect() {
             style={{
               left: `${col.x}%`,
               top: 0,
-              width: '4%',
+              width: '3%', // Slightly narrower columns for better spacing
               height: '100%',
               overflow: 'hidden',
               fontFamily: 'monospace',
@@ -254,12 +256,13 @@ function DataStreamEffect() {
                   style={{
                     position: 'absolute',
                     top: `${charY}%`,
+                    // Green colors matching test page
                     color: isHead
                       ? `rgba(255,255,255,${0.95 * fadeAtBottom})`
-                      : `rgba(0,212,255,${brightness * 0.7 * fadeAtBottom})`,
+                      : `rgba(100,255,100,${brightness * 0.7 * fadeAtBottom})`,
                     textShadow: isHead
-                      ? `0 0 15px rgba(0,212,255,${0.8 * fadeAtBottom})`
-                      : `0 0 5px rgba(0,212,255,${brightness * 0.3 * fadeAtBottom})`,
+                      ? `0 0 15px rgba(100,255,100,${0.8 * fadeAtBottom})`
+                      : `0 0 5px rgba(100,255,100,${brightness * 0.3 * fadeAtBottom})`,
                   }}
                 >
                   {char}

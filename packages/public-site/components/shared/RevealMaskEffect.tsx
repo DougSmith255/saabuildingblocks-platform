@@ -33,7 +33,7 @@ export function RevealMaskEffect() {
 
   useEffect(() => {
     const INTRO_DURATION = 3000; // 3 seconds for intro animation
-    const IDLE_SPEED = 0.00002; // Base time increment per ms (very slow)
+    const IDLE_SPEED = 0.00005; // Base time increment per ms (slightly faster idle)
     const SCROLL_SPEED_MULTIPLIER = 0.0006; // How much scroll speeds up animation
     const SCROLL_DECAY = 0.99; // How fast scroll boost decays
     const TRANSITION_DURATION = 2000; // 2 seconds to blend from intro to idle
