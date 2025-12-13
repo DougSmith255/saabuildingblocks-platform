@@ -62,7 +62,7 @@ export default function Freebies() {
 
       {/* Download All CTA - Premium gold card */}
       <section className="relative py-12 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1900px] mx-auto">
+        <div className="max-w-[1400px] mx-auto">
           <CyberCardGold padding="lg">
             <NeonGoldText as="h3" className="text-h3 mb-4">Grab Everything</NeonGoldText>
             <p className="text-body mb-8 max-w-md mx-auto">
@@ -78,7 +78,7 @@ export default function Freebies() {
       {/* Freebies Grid */}
       <LazySection height={800}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
+          <div className="max-w-[1400px] mx-auto">
             <div className="text-center mb-12">
               <H2>Your Free Arsenal</H2>
               <p className="text-body mt-4 max-w-2xl mx-auto">
