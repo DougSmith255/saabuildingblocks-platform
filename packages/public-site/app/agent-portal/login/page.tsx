@@ -32,88 +32,76 @@ export default function AgentPortalLogin() {
 
       {/* Login Content - centered vertically and horizontally */}
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
-        {/* Content wrapper - H1 and login box centered together */}
-        <div className="flex flex-col items-center w-full max-w-[2400px]">
-          {/* Heading - full width */}
+        {/* Content wrapper - everything centered as one unit */}
+        <div className="w-full max-w-md">
+          {/* Heading */}
           <div className="text-center mb-8">
             <H1 className="mb-2">ALLIANCE HQ</H1>
             <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
           </div>
 
-          <div className="w-full max-w-md">
-        {/* Login Form - CyberCard */}
-        <CyberCard padding="lg" centered={false}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                Agent ID / Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                placeholder="agent@example.com"
-              />
-            </div>
+          {/* Login Form - CyberCard */}
+          <CyberCard padding="lg" centered={false}>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Email Field */}
+              <div className="space-y-2">
+                <label htmlFor="email" className="block text-caption text-[#ffd700] uppercase tracking-wider">
+                  Agent ID / Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
+                  placeholder="agent@example.com"
+                />
+              </div>
 
-            {/* Password Field */}
-            <div className="space-y-2">
-              <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                Access Code
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                placeholder="Enter access code"
-              />
-            </div>
+              {/* Password Field */}
+              <div className="space-y-2">
+                <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
+                  Access Code
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
+                  placeholder="Enter access code"
+                />
+              </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                  Initializing...
-                </span>
-              ) : (
-                'Initialize Uplink'
-              )}
-            </button>
-
-            {/* Forgot Password Link */}
-            <div className="text-center">
-              <a
-                href="#"
-                className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors"
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Forgot access code?
-              </a>
-            </div>
-          </form>
-        </CyberCard>
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                    Initializing...
+                  </span>
+                ) : (
+                  'Initialize Uplink'
+                )}
+              </button>
 
-          {/* Back to Home */}
-          <div className="text-center mt-6">
-            <a
-              href="/"
-              className="text-caption text-[#e5e4dd]/60 hover:text-[#ffd700] transition-colors"
-            >
-              Return to base
-            </a>
-          </div>
-          </div>
+              {/* Forgot Password Link */}
+              <div className="text-center">
+                <a
+                  href="#"
+                  className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors"
+                >
+                  Forgot access code?
+                </a>
+              </div>
+            </form>
+          </CyberCard>
         </div>
       </div>
     </main>
