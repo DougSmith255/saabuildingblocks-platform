@@ -61,8 +61,9 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      // Find effect elements (contain "Effect" in class name)
-      const effectElements = heroSection.querySelectorAll('[class*="Effect"]');
+      // Find effect elements (absolute positioned with pointer-events-none)
+      // These are the canvas/svg/div elements that render the visual effects
+      const effectElements = heroSection.querySelectorAll('.absolute.inset-0.pointer-events-none, [class*="pointer-events-none"][class*="absolute"]');
       effectElements.forEach((el) => {
         const element = el as HTMLElement;
         // Effects stay fixed, only fade and blur
