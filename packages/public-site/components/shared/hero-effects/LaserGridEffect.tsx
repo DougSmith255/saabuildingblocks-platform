@@ -8,11 +8,10 @@ import { useContinuousAnimation } from './useContinuousAnimation';
  * Red crisscrossing laser beams - great for action/security themes
  *
  * Intro: Beams start at full size (1.0) and contract to 0.8 over 3 seconds
- * Idle: Beams oscillate from 0.1 to 1.0 (full range from useContinuousAnimation)
+ * Idle: Beams oscillate slightly around the 0.8 state
  */
 export function LaserGridEffect() {
   const { time, progress } = useContinuousAnimation();
-  const [introComplete, setIntroComplete] = useState(false);
   const [introProgress, setIntroProgress] = useState(0);
 
   useEffect(() => {
@@ -28,13 +27,17 @@ export function LaserGridEffect() {
 
       if (t < 1) {
         requestAnimationFrame(animate);
-      } else {
-        setIntroComplete(true);
       }
     };
 
     requestAnimationFrame(animate);
   }, []);
+
+  // Intro: animate from 1.0 to 0.8 (so beamScale goes 1.0 → 0.8)
+  // After intro, add subtle oscillation from the continuous animation
+  const introScale = 1 - introProgress * 0.2; // 1.0 → 0.8
+  const oscillation = introProgress >= 1 ? (progress - 0.5) * 0.1 : 0; // Small oscillation after intro
+  const beamScale = introScale + oscillation;
 
   const horizontalBeams = [...Array(6)].map((_, i) => ({
     y: 15 + i * 14,
@@ -50,13 +53,11 @@ export function LaserGridEffect() {
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Horizontal laser beams */}
       {horizontalBeams.map((beam, i) => {
-        // During intro: staggered animation from 1.0 to 0.8
-        // After intro: use full progress range (0.1 to 0.8 mapped to beam size)
+        // Stagger the intro per beam
         const staggeredIntro = Math.max(0, introProgress - beam.delay) / (1 - beam.delay);
-        const introScale = 1 - Math.min(staggeredIntro, 1) * 0.2; // 1.0 → 0.8
-
-        // After intro, use the full oscillating progress value
-        const scale = introComplete ? progress : introScale;
+        const beamIntroScale = 1 - Math.min(staggeredIntro, 1) * 0.2;
+        const beamOscillation = staggeredIntro >= 1 ? (progress - 0.5) * 0.1 : 0;
+        const scale = beamIntroScale + beamOscillation;
 
         const width = scale * 100;
         const leftOffset = (100 - width) / 2;
@@ -80,8 +81,9 @@ export function LaserGridEffect() {
       {/* Vertical laser beams */}
       {verticalBeams.map((beam, i) => {
         const staggeredIntro = Math.max(0, introProgress - beam.delay) / (1 - beam.delay);
-        const introScale = 1 - Math.min(staggeredIntro, 1) * 0.2;
-        const scale = introComplete ? progress : introScale;
+        const beamIntroScale = 1 - Math.min(staggeredIntro, 1) * 0.2;
+        const beamOscillation = staggeredIntro >= 1 ? (progress - 0.5) * 0.1 : 0;
+        const scale = beamIntroScale + beamOscillation;
 
         const height = scale * 100;
         const topOffset = (100 - height) / 2;
