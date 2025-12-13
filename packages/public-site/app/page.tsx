@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
+import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 const ValueStack = dynamic(
@@ -45,19 +46,20 @@ const CounterAnimation = dynamic(
 export default function Home() {
   return (
     <main id="main-content">
-      {/* Hero Section */}
-      <section
-        className="relative min-h-[100dvh] w-full"
-        aria-label="Hero"
-        style={{
-          maxWidth: '3000px',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      {/* Hero Section - Fixed in place, content scrolls over it */}
+      <FixedHeroWrapper>
+        <section
+          className="relative min-h-[100dvh] w-full"
+          aria-label="Hero"
+          style={{
+            maxWidth: '3000px',
+            margin: '0 auto',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
         {/* Agent Counter - viewport-aware (only renders desktop OR mobile counter) */}
         <AgentCounter />
 
@@ -178,6 +180,7 @@ export default function Home() {
         {/* Counter Animation - Hydrates after initial render */}
         <CounterAnimation />
       </section>
+      </FixedHeroWrapper>
 
       {/* Homepage Sections */}
       <ValueStack />

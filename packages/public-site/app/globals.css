@@ -107,10 +107,19 @@ main#main-content > section:not(:first-child) {
 /* Apply scroll-driven animations when supported */
 @supports (animation-timeline: scroll()) {
   /* Hero section: Shrinks and fades into the void as you scroll */
-  body:not([data-no-section-transitions]) main#main-content > section:first-child {
+  /* Works with both regular sections and FixedHeroWrapper */
+  body:not([data-no-section-transitions]) main#main-content > section:first-child,
+  body:not([data-no-section-transitions]) .fixed-hero-wrapper section {
     animation: hero-scroll-out ease-out both;
     animation-timeline: scroll(root);
     animation-range: 0px 100vh;
+  }
+
+  /* Content sections scroll over the fixed hero */
+  body:not([data-no-section-transitions]) main#main-content > .fixed-hero-spacer ~ section,
+  body:not([data-no-section-transitions]) main#main-content > .fixed-hero-spacer ~ * section {
+    position: relative;
+    z-index: 1;
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
