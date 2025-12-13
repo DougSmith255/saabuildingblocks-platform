@@ -6,46 +6,47 @@ import { useEffect, useRef, useState } from 'react';
  * RevealMaskEffect - Golden glow that contracts/expands based on scroll
  *
  * Placed behind hero images to create a cosmic portal effect.
- * The mask starts large and shrinks as user scrolls, or vice versa.
  *
  * Animation behavior:
- * 1. Intro: Fast animation from START to END over 3 seconds
- * 2. Transition: Gradually slows down to idle speed (smooth blend)
- * 3. Idle: Continuous slow animation that never stops
- * 4. Scroll: Speeds up when user scrolls
+ * 1. Intro: Fast animation from 0.1 to 0.5 over 3 seconds
+ * 2. Transition: Gradually slows down to idle speed
+ * 3. Idle: Continuous animation - time keeps moving forward forever
+ *    Visual values use sine waves so they naturally oscillate
+ * 4. Scroll: Speeds up the animation
+ *
+ * The animation feels infinite because it uses periodic functions (sin/cos)
+ * that naturally cycle without any abrupt direction changes.
  */
 
-// Initial progress offset - effect animates from START to END on page load
-const INITIAL_PROGRESS_START = 0.05;
+// Intro animates from START to END point
+const INITIAL_PROGRESS_START = 0.1;
 const INITIAL_PROGRESS_END = 0.5;
 
 export function RevealMaskEffect() {
-  const [progress, setProgress] = useState(INITIAL_PROGRESS_START);
-  const currentRef = useRef(INITIAL_PROGRESS_START);
-  const velocityRef = useRef(0); // Current animation velocity
+  // Time accumulator - just keeps incrementing forever
+  const [time, setTime] = useState(0);
+  const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const introStartTimeRef = useRef<number | null>(null);
   const lastScrollY = useRef(0);
-  const scrollVelocityRef = useRef(0);
+  const scrollBoostRef = useRef(0);
 
   useEffect(() => {
     const INTRO_DURATION = 3000; // 3 seconds for intro animation
-    const INTRO_VELOCITY = (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START) / INTRO_DURATION; // Progress per ms during intro
-    const IDLE_VELOCITY = 0.000008; // Very slow continuous velocity (progress per ms)
-    const SCROLL_VELOCITY_MULTIPLIER = 0.0003; // How much scroll affects velocity
-    const VELOCITY_DECAY = 0.995; // How fast velocity decays to idle (per frame)
+    const IDLE_SPEED = 0.00002; // Base time increment per ms (very slow)
+    const SCROLL_SPEED_MULTIPLIER = 0.0006; // How much scroll speeds up animation
+    const SCROLL_DECAY = 0.99; // How fast scroll boost decays
     const TRANSITION_DURATION = 2000; // 2 seconds to blend from intro to idle
     let lastTimestamp = 0;
-    let introEndTime: number | null = null;
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY.current;
+      const scrollDelta = Math.abs(currentScrollY - lastScrollY.current);
       lastScrollY.current = currentScrollY;
 
-      // Add scroll velocity (positive = scrolling down = faster animation)
+      // Add scroll boost
       if (scrollDelta > 0) {
-        scrollVelocityRef.current = Math.min(scrollDelta * SCROLL_VELOCITY_MULTIPLIER, 0.002);
+        scrollBoostRef.current = Math.min(scrollDelta * SCROLL_SPEED_MULTIPLIER, 0.005);
       }
     };
 
@@ -61,56 +62,39 @@ export function RevealMaskEffect() {
       const elapsed = timestamp - introStartTimeRef.current;
 
       // Phase 1: Intro animation (0 to INTRO_DURATION)
+      // During intro, we map time to match the intro progress
       if (elapsed < INTRO_DURATION) {
-        // Ease out cubic for smooth deceleration during intro
         const introProgress = elapsed / INTRO_DURATION;
         const eased = 1 - Math.pow(1 - introProgress, 3);
-        currentRef.current = INITIAL_PROGRESS_START + eased * (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START);
-
-        // Track velocity for smooth transition
-        velocityRef.current = INTRO_VELOCITY * (1 - introProgress); // Velocity decreases during intro
+        // Map intro progress to time value that produces correct visual
+        // We want visual progress from 0.1 to 0.5
+        timeRef.current = INITIAL_PROGRESS_START + eased * (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START);
       }
-      // Phase 2: Transition from intro to idle (INTRO_DURATION to INTRO_DURATION + TRANSITION_DURATION)
+      // Phase 2: Transition from intro speed to idle speed
       else if (elapsed < INTRO_DURATION + TRANSITION_DURATION) {
-        if (introEndTime === null) {
-          introEndTime = timestamp;
-          // Set initial velocity to match end of intro
-          velocityRef.current = INTRO_VELOCITY * 0.1; // Already slowed by ease-out
-        }
-
         const transitionProgress = (elapsed - INTRO_DURATION) / TRANSITION_DURATION;
 
-        // Blend from current velocity to idle velocity
-        const blendedVelocity = velocityRef.current * (1 - transitionProgress) + IDLE_VELOCITY * transitionProgress;
+        // Blend from fast intro speed to slow idle speed
+        const introEndSpeed = 0.0001; // Approximate speed at end of eased intro
+        const blendedSpeed = introEndSpeed * (1 - transitionProgress) + IDLE_SPEED * transitionProgress;
 
-        // Add scroll boost
-        const totalVelocity = blendedVelocity + scrollVelocityRef.current;
+        // Apply speed + scroll boost
+        const totalSpeed = blendedSpeed + scrollBoostRef.current;
+        timeRef.current += totalSpeed * deltaTime;
 
-        // Apply velocity
-        currentRef.current += totalVelocity * deltaTime;
-
-        // Decay scroll velocity
-        scrollVelocityRef.current *= VELOCITY_DECAY;
+        // Decay scroll boost
+        scrollBoostRef.current *= SCROLL_DECAY;
       }
-      // Phase 3: Continuous idle animation (after transition)
+      // Phase 3: Continuous idle animation - time keeps going forever
       else {
-        // Base idle velocity + scroll boost
-        const totalVelocity = IDLE_VELOCITY + scrollVelocityRef.current;
+        const totalSpeed = IDLE_SPEED + scrollBoostRef.current;
+        timeRef.current += totalSpeed * deltaTime;
 
-        // Apply velocity
-        currentRef.current += totalVelocity * deltaTime;
-
-        // Decay scroll velocity
-        scrollVelocityRef.current *= VELOCITY_DECAY;
+        // Decay scroll boost
+        scrollBoostRef.current *= SCROLL_DECAY;
       }
 
-      // Keep progress in reasonable bounds (loop back for continuous effect)
-      // Using modulo-like behavior but smooth
-      if (currentRef.current > 2) {
-        currentRef.current = 2; // Cap to prevent overflow, visual doesn't change much past 1
-      }
-
-      setProgress(currentRef.current);
+      setTime(timeRef.current);
       rafRef.current = requestAnimationFrame(animate);
     };
 
@@ -124,15 +108,19 @@ export function RevealMaskEffect() {
     };
   }, []);
 
-  // Animation values - continuous effect
-  // Mask shrinks as progress increases but never fully disappears
-  const effectiveProgress = Math.min(progress, 1.5); // Cap visual effect at 1.5
-  const maskSize = Math.max(20, 70 - effectiveProgress * 35); // Shrinks from 70% to 20% min
-  const rotation = effectiveProgress * 90;
+  // Use sine waves for smooth, continuous oscillation
+  // Different frequencies create organic, non-repeating feel
+  const wave1 = Math.sin(time * Math.PI * 2); // Primary wave
+  const wave2 = Math.sin(time * Math.PI * 1.3 + 0.5); // Secondary wave (different freq)
+  const wave3 = Math.cos(time * Math.PI * 0.7); // Tertiary wave
 
-  // Gentle opacity reduction for depth but never fully fades
-  const minOpacity = 0.3; // Never go below 30% opacity
-  const opacityFactor = Math.max(minOpacity, 1 - effectiveProgress * 0.5);
+  // Combine waves for organic motion (range roughly -1 to 1, normalized to 0.1-0.8)
+  const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2); // Weighted average
+  const progress = 0.45 + combinedWave * 0.35; // Centers at 0.45, oscillates ±0.35 (0.1 to 0.8)
+
+  // Animation values based on progress
+  const maskSize = 70 - progress * 50; // Shrinks from ~65% to ~30%
+  const rotation = time * 90; // Continuous rotation based on raw time (no oscillation)
 
   return (
     <div className="absolute inset-0 pointer-events-none flex items-center justify-center" style={{ zIndex: 0 }}>
@@ -141,9 +129,9 @@ export function RevealMaskEffect() {
         className="absolute inset-0"
         style={{
           background: `radial-gradient(ellipse ${maskSize}% ${maskSize * 0.8}% at 50% 40%,
-            rgba(255,215,0,${0.35 * opacityFactor}) 0%,
-            rgba(255,180,0,${0.25 * opacityFactor}) 30%,
-            rgba(255,150,0,${0.15 * opacityFactor}) 50%,
+            rgba(255,215,0,0.35) 0%,
+            rgba(255,180,0,0.25) 30%,
+            rgba(255,150,0,0.15) 50%,
             transparent 75%)`,
         }}
       />
@@ -153,8 +141,8 @@ export function RevealMaskEffect() {
         style={{
           top: '35%',
           transform: `translateY(-50%) rotate(${rotation}deg)`,
-          borderRadius: `${20 + effectiveProgress * 30}%`,
-          borderColor: `rgba(255,215,0,${0.4 * opacityFactor})`,
+          borderRadius: `${20 + progress * 30}%`,
+          borderColor: 'rgba(255,215,0,0.4)',
         }}
       />
       {/* Inner rotating border - centered */}
@@ -163,8 +151,8 @@ export function RevealMaskEffect() {
         style={{
           top: '35%',
           transform: `translateY(-50%) rotate(${-rotation * 0.5}deg)`,
-          borderRadius: `${Math.max(20, 50 - effectiveProgress * 30)}%`,
-          borderColor: `rgba(255,215,0,${0.3 * opacityFactor})`,
+          borderRadius: `${Math.max(20, 50 - progress * 30)}%`,
+          borderColor: 'rgba(255,215,0,0.3)',
         }}
       />
     </div>
