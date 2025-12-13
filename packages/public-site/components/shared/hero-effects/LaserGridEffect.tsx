@@ -33,9 +33,9 @@ export function LaserGridEffect() {
     requestAnimationFrame(animate);
   }, []);
 
-  // Intro: animate from 1.0 to 0.7 (so beamScale goes 1.0 → 0.7)
+  // Intro: animate from 1.0 to 0.8 (so beamScale goes 1.0 → 0.8)
   // After intro, add subtle oscillation from the continuous animation
-  const introScale = 1 - introProgress * 0.3; // 1.0 → 0.7
+  const introScale = 1 - introProgress * 0.2; // 1.0 → 0.8
   const oscillation = introProgress >= 1 ? (progress - 0.5) * 0.1 : 0; // Small oscillation after intro
   const beamScale = introScale + oscillation;
 
@@ -55,7 +55,7 @@ export function LaserGridEffect() {
       {horizontalBeams.map((beam, i) => {
         // Stagger the intro per beam
         const staggeredIntro = Math.max(0, introProgress - beam.delay) / (1 - beam.delay);
-        const beamIntroScale = 1 - Math.min(staggeredIntro, 1) * 0.3;
+        const beamIntroScale = 1 - Math.min(staggeredIntro, 1) * 0.2;
         const beamOscillation = staggeredIntro >= 1 ? (progress - 0.5) * 0.1 : 0;
         const scale = beamIntroScale + beamOscillation;
 
@@ -81,7 +81,7 @@ export function LaserGridEffect() {
       {/* Vertical laser beams */}
       {verticalBeams.map((beam, i) => {
         const staggeredIntro = Math.max(0, introProgress - beam.delay) / (1 - beam.delay);
-        const beamIntroScale = 1 - Math.min(staggeredIntro, 1) * 0.3;
+        const beamIntroScale = 1 - Math.min(staggeredIntro, 1) * 0.2;
         const beamOscillation = staggeredIntro >= 1 ? (progress - 0.5) * 0.1 : 0;
         const scale = beamIntroScale + beamOscillation;
 
