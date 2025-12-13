@@ -96,12 +96,12 @@ main#main-content > section:not(:first-child) {
 }
 
 /* Apply scroll-driven animations when supported */
-@supports (animation-timeline: view()) {
-  /* Hero section: Shrink and fade out as user scrolls past it */
+@supports (animation-timeline: scroll()) {
+  /* Hero section: Shrink and fade out based on scroll position */
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
-    animation-timeline: view();
-    animation-range: exit;
+    animation-timeline: scroll();
+    animation-range: 0vh 100vh;
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */

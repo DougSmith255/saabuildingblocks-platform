@@ -1,0 +1,21 @@
+{
+  "routes": [
+    {
+      "routePath": "/wp-content/uploads/:path*",
+      "mountPath": "/wp-content/uploads",
+      "method": "",
+      "module": [
+        "wp-content/uploads/[[path]].js:onRequest"
+      ]
+    },
+    {
+      "routePath": "/",
+      "mountPath": "/",
+      "method": "",
+      "middleware": [
+        "_middleware.js:onRequest"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
