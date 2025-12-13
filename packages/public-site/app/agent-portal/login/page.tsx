@@ -32,15 +32,17 @@ export default function AgentPortalLogin() {
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
-      {/* Login Content - centered between header and bottom */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-[2400px] mx-auto px-4 pt-24 pb-8">
-        {/* Heading - full width */}
-        <div className="text-center mb-8">
-          <H1 className="mb-2">ALLIANCE HQ</H1>
-          <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
-        </div>
+      {/* Login Content - centered vertically and horizontally */}
+      <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
+        {/* Content wrapper - H1 and login box centered together */}
+        <div className="flex flex-col items-center w-full max-w-[2400px]">
+          {/* Heading - full width */}
+          <div className="text-center mb-8">
+            <H1 className="mb-2">ALLIANCE HQ</H1>
+            <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
+          </div>
 
-        <div className="w-full max-w-md">
+          <div className="w-full max-w-md">
         {/* Login Form - CyberCard */}
         <CyberCard padding="lg" centered={false}>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -112,6 +114,7 @@ export default function AgentPortalLogin() {
             >
               Return to base
             </a>
+          </div>
           </div>
         </div>
       </div>
