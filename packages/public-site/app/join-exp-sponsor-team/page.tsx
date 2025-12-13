@@ -3,7 +3,7 @@
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
-import { LaserGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { GreenLaserGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 // Profile images from Cloudflare Images CDN
 const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
@@ -69,7 +69,7 @@ export default function JoinExpSponsorTeam() {
       {/* Hero Section */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          <LaserGridEffect />
+          <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <H1>JOIN THE ALLIANCE</H1>
             <Tagline className="mt-4">

@@ -12,6 +12,7 @@ export { useContinuousAnimation } from './useContinuousAnimation';
 export { SatelliteConstellationEffect } from './SatelliteConstellationEffect';
 export { QuantumGridEffect } from './QuantumGridEffect';
 export { LaserGridEffect } from './LaserGridEffect';
+export { GreenLaserGridEffect } from './GreenLaserGridEffect';
 export { SpiralGalaxyEffect } from './SpiralGalaxyEffect';
 export { ConstellationMapEffect } from './ConstellationMapEffect';
 export { ParticleStormEffect } from './ParticleStormEffect';
