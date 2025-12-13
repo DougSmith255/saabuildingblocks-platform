@@ -80,8 +80,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
       const menu = document.getElementById('mobile-menu');
       let menuLenis: Lenis | null = null;
 
-      let rafId: number | null = null;
-
       if (menu) {
         menuLenis = new Lenis({
           wrapper: menu,
@@ -99,16 +97,12 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
         // Animation frame loop for menu Lenis
         function raf(time: number) {
           menuLenis?.raf(time);
-          rafId = requestAnimationFrame(raf);
+          requestAnimationFrame(raf);
         }
-        rafId = requestAnimationFrame(raf);
+        requestAnimationFrame(raf);
       }
 
       return () => {
-        // Cancel RAF loop
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId);
-        }
         // Cleanup Lenis instance
         if (menuLenis) {
           menuLenis.destroy();
