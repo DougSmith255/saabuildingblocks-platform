@@ -32,16 +32,17 @@ export default function AgentPortalLogin() {
 
       {/* Login Content - centered vertically and horizontally */}
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
-        {/* Content wrapper - everything centered as one unit */}
-        <div className="w-full max-w-md">
-          {/* Heading */}
-          <div className="text-center mb-8">
+        {/* Content wrapper - H1 and card centered together as one unit */}
+        <div className="flex flex-col items-center">
+          {/* Heading - not width constrained */}
+          <div className="text-center mb-8 whitespace-nowrap">
             <H1 className="mb-2">ALLIANCE HQ</H1>
             <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
           </div>
 
-          {/* Login Form - CyberCard */}
-          <CyberCard padding="lg" centered={false}>
+          {/* Login Form - CyberCard - width constrained */}
+          <div className="w-full max-w-md">
+            <CyberCard padding="lg" centered={false}>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Email Field */}
               <div className="space-y-2">
@@ -101,7 +102,8 @@ export default function AgentPortalLogin() {
                 </a>
               </div>
             </form>
-          </CyberCard>
+            </CyberCard>
+          </div>
         </div>
       </div>
     </main>
