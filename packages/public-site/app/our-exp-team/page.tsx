@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText, ProfileCyberFrame, Icon3D } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
+import { QuantumGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 import Image from 'next/image';
 
 // Cloudflare Images CDN URLs
@@ -73,39 +74,43 @@ export default function OurExpTeam() {
   return (
     <main id="main-content">
       {/* Hero Section */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        {/* Wolf Pack Background Image */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[-1]">
-          <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
-            <img
-              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
-              srcSet="
-                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
-                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
-                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
-              "
-              sizes="100vw"
-              alt=""
-              aria-hidden="true"
-              loading="eager"
-              decoding="async"
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{
-                objectPosition: 'center 55%',
-                maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-              }}
-            />
-          </div>
-        </div>
+      <StickyHeroWrapper>
+        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          <QuantumGridEffect />
 
-        <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-          <H1>YOUR UPLINE</H1>
-          <Tagline className="mt-4">
-            7 tiers of proven expertise in your corner
-          </Tagline>
-        </div>
-      </section>
+          {/* Wolf Pack Background Image */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
+            <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
+                srcSet="
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+                "
+                sizes="100vw"
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: 'center 55%',
+                  maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+                }}
+              />
+            </div>
+          </div>
+
+          <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
+            <H1>YOUR UPLINE</H1>
+            <Tagline className="mt-4">
+              7 tiers of proven expertise in your corner
+            </Tagline>
+          </div>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Co-Founders Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

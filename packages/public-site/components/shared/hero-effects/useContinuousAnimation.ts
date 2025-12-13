@@ -23,12 +23,12 @@ export function useContinuousAnimation() {
   const scrollBoostRef = useRef(0);
 
   useEffect(() => {
-    // Speed settings - idle is 2X original, scroll is 4X idle
-    const IDLE_SPEED = 0.0001;
-    const INTRO_SPEED = 0.0008; // 8x idle speed at start
+    // Speed settings - 2X idle and 2X scroll boost
+    const IDLE_SPEED = 0.0002;
+    const INTRO_SPEED = 0.0016; // 8x idle speed at start
     const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
-    const SCROLL_BOOST_MAX = 0.0003; // Max boost: takes total speed to ~4x idle
-    const SCROLL_BOOST_MULTIPLIER = 0.000016; // How much each px of scroll adds
+    const SCROLL_BOOST_MAX = 0.0006; // Max boost: 2X previous scroll boost
+    const SCROLL_BOOST_MULTIPLIER = 0.000032; // How much each px of scroll adds
     const SCROLL_DECAY = 0.92; // Slower decay so boost lasts longer
 
     let lastTimestamp = 0;
@@ -86,7 +86,7 @@ export function useContinuousAnimation() {
 
   // Combine waves for organic motion
   const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
-  const progress = 0.45 + combinedWave * 0.35; // Oscillates between 0.1 and 0.8
+  const progress = 0.5 + combinedWave * 0.45; // Oscillates between 0.05 and 0.95
 
   return {
     time,      // Raw time value (for rotation, continuous movement)
