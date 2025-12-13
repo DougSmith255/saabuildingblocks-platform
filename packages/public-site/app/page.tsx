@@ -69,7 +69,7 @@ export default function Home() {
 
         {/* Hero Content Block - Image + H1 + Tagline + Buttons as one centered unit */}
         <div
-          className="flex flex-col items-center w-full"
+          className="hero-content-wrapper flex flex-col items-center w-full"
           style={{
             maxWidth: '1900px',
           }}

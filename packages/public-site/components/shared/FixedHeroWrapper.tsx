@@ -53,15 +53,22 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      // Find the main content wrapper (the div with flex flex-col items-center w-full)
+      // Find the main content wrapper (hero-content-wrapper class)
       // This contains the image, H1, tagline, buttons - but NOT the RevealMaskEffect
-      const contentWrapper = heroSection.querySelector('.flex.flex-col.items-center.w-full') as HTMLElement;
+      const contentWrapper = heroSection.querySelector('.hero-content-wrapper') as HTMLElement;
 
       if (contentWrapper) {
         contentWrapper.style.transformOrigin = 'center center';
         contentWrapper.style.transform = `scale(${scale}) translateY(${translateY}px)`;
         contentWrapper.style.filter = `blur(${blur}px) brightness(${brightness})`;
         contentWrapper.style.opacity = `${opacity}`;
+      }
+
+      // Also fade out the desktop agent counter (which is outside the main content wrapper)
+      const agentCounter = heroSection.querySelector('.agent-counter-wrapper') as HTMLElement;
+      if (agentCounter) {
+        agentCounter.style.opacity = `${opacity}`;
+        agentCounter.style.filter = `blur(${blur}px) brightness(${brightness})`;
       }
 
       // Hide section when fully scrolled

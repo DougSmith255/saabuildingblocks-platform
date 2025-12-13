@@ -26,12 +26,13 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
+    <main id="main-content" className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
       {/* Login Content - centered vertically and horizontally */}
-      <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
+      {/* Account for header height (~80-120px) with pt-20 (80px) and extra bottom padding for visual balance */}
+      <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4 pt-20 pb-8">
         {/* Content wrapper - H1 and card centered together as one unit */}
         <div className="flex flex-col items-center">
           {/* Heading - not width constrained */}

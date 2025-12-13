@@ -13,7 +13,7 @@ export function AsteroidBeltEffect() {
   // Memoize asteroids to prevent regeneration
   const asteroids = useMemo(() => [...Array(32)].map((_, i) => ({
     x: (i * 137.5) % 100,
-    y: 40 + Math.sin(i * 0.8) * 12,
+    y: 48 + Math.sin(i * 0.8) * 12,
     size: 12 + (i % 5) * 8,
     speed: 0.5 + (i % 3) * 0.3,
     rotation: i * 45,
@@ -24,7 +24,7 @@ export function AsteroidBeltEffect() {
       <div
         className="absolute inset-0"
         style={{
-          transform: 'rotate(-5deg) scale(1.1)',
+          transform: 'rotate(-12deg) scale(1.1)',
           transformOrigin: 'center center',
         }}
       >

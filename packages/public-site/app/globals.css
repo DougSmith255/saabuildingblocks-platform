@@ -3248,6 +3248,23 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 }
 
 /* ========================================
+   HERO CONTENT WRAPPER - Scroll Fade Support
+   Ensures all hero content fades smoothly on scroll
+   ======================================== */
+
+/* Hero content wrapper needs will-change for smooth GPU-accelerated transitions */
+.hero-content-wrapper {
+  will-change: transform, opacity, filter;
+}
+
+/* Ensure backdrop-blur elements inherit opacity correctly from the wrapper */
+/* This fixes the issue where button faces with backdrop-blur disappear instantly */
+.hero-content-wrapper * {
+  /* Force elements to composite in same layer as parent for consistent opacity */
+  backface-visibility: hidden;
+}
+
+/* ========================================
    CTA LIGHT BAR - Shared Component Support
    Used by @saa/shared CTAButton component
    ======================================== */

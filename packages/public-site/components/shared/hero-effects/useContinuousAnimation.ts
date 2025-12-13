@@ -23,12 +23,12 @@ export function useContinuousAnimation() {
   const scrollBoostRef = useRef(0);
 
   useEffect(() => {
-    // Speed settings
-    const IDLE_SPEED = 0.00005;
-    const INTRO_SPEED = 0.0004; // 8x idle speed at start
+    // Speed settings - idle is 2X original, scroll is 4X idle
+    const IDLE_SPEED = 0.0001;
+    const INTRO_SPEED = 0.0008; // 8x idle speed at start
     const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
-    const SCROLL_BOOST_MAX = 0.00020; // Max boost: 4x idle speed total
-    const SCROLL_BOOST_MULTIPLIER = 0.000008; // How much each px of scroll adds
+    const SCROLL_BOOST_MAX = 0.0003; // Max boost: takes total speed to ~4x idle
+    const SCROLL_BOOST_MULTIPLIER = 0.000016; // How much each px of scroll adds
     const SCROLL_DECAY = 0.92; // Slower decay so boost lasts longer
 
     let lastTimestamp = 0;
