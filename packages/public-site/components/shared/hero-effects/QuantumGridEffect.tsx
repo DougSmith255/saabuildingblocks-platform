@@ -32,9 +32,11 @@ export function QuantumGridEffect() {
             transformOrigin: 'top center',
           }}
         >
-          {/* Horizontal lines - pulse visible */}
+          {/* Horizontal lines - exponential spacing for perspective correction */}
           {[...Array(gridLines)].map((_, i) => {
-            const y = (i / gridLines) * 100;
+            // Exponential spacing: more lines near top (horizon), fewer near bottom
+            const t = i / (gridLines - 1);
+            const y = Math.pow(t, 1.8) * 100; // Power curve for gradual spacing
             const pulseY = progress * 100;
             const pulseHit = Math.abs(y - pulseY) < 8;
             return (
