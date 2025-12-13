@@ -47,10 +47,12 @@ main:not(.blog-content) p a:hover {
 /* Defer rendering of off-screen sections (not the first/hero section) */
 /* contain-intrinsic-size provides estimated height to prevent layout shift */
 /* Target main#main-content sections directly (pages have their own main element) */
+/* DISABLED: content-visibility: auto breaks scroll-driven animations with view() timeline
 main#main-content > section:not(:first-child) {
   content-visibility: auto;
   contain-intrinsic-size: auto 800px;
 }
+*/
 
 /* ========================================
    SCROLL-TIMELINE SECTION TRANSITIONS
