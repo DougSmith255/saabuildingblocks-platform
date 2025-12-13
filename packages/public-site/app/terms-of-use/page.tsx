@@ -11,6 +11,7 @@
 
 import { H1 } from '@saa/shared/components/saa';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Terms of Use | Smart Agent Alliance',
@@ -47,8 +48,8 @@ export default function TermsOfUsePage() {
             </p>
             <ul>
               <li>These Terms of Use</li>
-              <li>Our <a href="/privacy-policy">Privacy Policy</a></li>
-              <li>Our <a href="/disclaimer">Disclaimer</a></li>
+              <li>Our <Link href="/privacy-policy">Privacy Policy</Link></li>
+              <li>Our <Link href="/disclaimer">Disclaimer</Link></li>
             </ul>
             <p>
               If you do not agree with any part of these Terms, please do not use this website.

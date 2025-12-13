@@ -1,9 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-// TODO: Store imports removed for monorepo - needs Context provider pattern
-// import { useTypographyStore } from '@/app/master-controller/stores/typographyStore';
-// import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
+import React, { useState, useEffect, useMemo } from 'react';
+
+// Try to dynamically import Next.js Link - will be undefined if not in Next.js context
+let NextLink: React.ComponentType<{ href: string; className?: string; style?: React.CSSProperties; children: React.ReactNode; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void }> | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  NextLink = require('next/link').default;
+} catch {
+  // Not in Next.js context, will use regular anchor
+}
 
 export interface SecondaryButtonProps {
   href?: string;
@@ -11,6 +17,13 @@ export interface SecondaryButtonProps {
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   as?: 'a' | 'button';
+}
+
+/**
+ * Checks if a URL is an internal link (starts with / but not //)
+ */
+function isInternalLink(href: string): boolean {
+  return href.startsWith('/') && !href.startsWith('//');
 }
 
 /**
@@ -24,6 +37,11 @@ export interface SecondaryButtonProps {
  * <SecondaryButton as="button" onClick={handler}>Click Me</SecondaryButton>
  */
 export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
+  // Determine if we should use Next.js Link for client-side navigation
+  const useNextLink = useMemo(() => {
+    return as === 'a' && NextLink && isInternalLink(href);
+  }, [href, as]);
+
   // Use fixed initial value to avoid hydration mismatch, randomize after mount
   const [lightPulseDelay, setLightPulseDelay] = useState('0s');
 
@@ -69,8 +87,6 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
   };
 
-  const ButtonElement = as === 'button' ? 'button' : 'a';
-
   return (
     <div
       className={`
@@ -81,14 +97,34 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
       {/* Button wrapper - inline container with relative positioning for light bars */}
       {/* This ensures light bars are positioned relative to button, not parent container */}
       <div className="relative inline-block">
-        <ButtonElement
-          {...(as === 'a' ? { href } : { type: 'button' as const })}
-          onClick={onClick}
-          className={buttonClasses}
-          style={buttonStyles}
-        >
-          {children}
-        </ButtonElement>
+        {as === 'button' ? (
+          <button
+            type="button"
+            onClick={onClick as (e: React.MouseEvent<HTMLButtonElement>) => void}
+            className={buttonClasses}
+            style={buttonStyles}
+          >
+            {children}
+          </button>
+        ) : useNextLink && NextLink ? (
+          <NextLink
+            href={href}
+            onClick={onClick as (e: React.MouseEvent<HTMLAnchorElement>) => void}
+            className={buttonClasses}
+            style={buttonStyles}
+          >
+            {children}
+          </NextLink>
+        ) : (
+          <a
+            href={href}
+            onClick={onClick as (e: React.MouseEvent<HTMLAnchorElement>) => void}
+            className={buttonClasses}
+            style={buttonStyles}
+          >
+            {children}
+          </a>
+        )}
 
         {/* Left side glow bar - uses same pulsing animation as CTAButton */}
         <div

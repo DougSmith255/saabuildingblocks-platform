@@ -46,7 +46,10 @@ main:not(.blog-content) p a:hover {
 
 /* Defer rendering of off-screen sections (not the first/hero section) */
 /* contain-intrinsic-size provides estimated height to prevent layout shift */
-main > section:not(:first-child) {
+/* Selectors account for both direct sections and nested main elements */
+main > section:not(:first-child),
+main > main > section:not(:first-child),
+main#main-content > section:not(:first-child) {
   content-visibility: auto;
   contain-intrinsic-size: auto 800px;
 }
@@ -97,7 +100,10 @@ main > section:not(:first-child) {
 /* Apply scroll-driven animations when supported */
 @supports (animation-timeline: view()) {
   /* Hero section: Push back and fade out as user scrolls past it */
-  body:not([data-no-section-transitions]) main > section:first-child {
+  /* Selectors account for both direct sections and nested main elements */
+  body:not([data-no-section-transitions]) main > section:first-child,
+  body:not([data-no-section-transitions]) main > main > section:first-child,
+  body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
     animation-timeline: view();
     /* exit 0% = starts when hero begins to leave viewport at top */
@@ -107,7 +113,10 @@ main > section:not(:first-child) {
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
+  /* Selectors account for both direct sections and nested main elements */
   body:not([data-no-section-transitions]) main > section:not(:first-child),
+  body:not([data-no-section-transitions]) main > main > section:not(:first-child),
+  body:not([data-no-section-transitions]) main#main-content > section:not(:first-child),
   body:not([data-no-section-transitions]) main > div > section {
     animation: section-scroll-in linear both;
     animation-timeline: view();
