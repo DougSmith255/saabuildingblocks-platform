@@ -1,8 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-// TODO: Store import removed for monorepo - needs Context provider pattern
-// import { useBrandColorsStore } from '@/app/master-controller/stores/brandColorsStore';
+import React, { useState, useEffect, useMemo } from 'react';
+
+// Try to dynamically import Next.js Link - will be undefined if not in Next.js context
+let NextLink: React.ComponentType<{ href: string; className?: string; style?: React.CSSProperties; children: React.ReactNode; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void }> | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  NextLink = require('next/link').default;
+} catch {
+  // Not in Next.js context, will use regular anchor
+}
 
 export interface CTAButtonProps {
   href?: string;
@@ -15,7 +22,18 @@ export interface CTAButtonProps {
   animationDelay?: string;
 }
 
+/**
+ * Checks if a URL is an internal link (starts with / but not //)
+ */
+function isInternalLink(href: string): boolean {
+  return href.startsWith('/') && !href.startsWith('//');
+}
+
 export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
+  // Determine if we should use Next.js Link for client-side navigation
+  const useNextLink = useMemo(() => {
+    return NextLink && isInternalLink(href);
+  }, [href]);
   const isFullWidth = className.includes('w-full');
   // Use fixed initial value to avoid hydration mismatch, randomize after mount
   const [lightPulseDelay, setLightPulseDelay] = useState('0s');
@@ -49,32 +67,62 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
     >
       {/* Button wrapper - inline container with relative positioning for light bars */}
       <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
-        <a
-          href={href}
-          onClick={onClick}
-          className={`
-            relative flex justify-center items-center
-            ${isFullWidth ? 'w-full' : ''}
-            px-5 py-2
-            bg-[rgb(45,45,45)] backdrop-blur-[15px]
-            rounded-xl border-t border-b border-white/10
-            uppercase tracking-wide
-            z-10
-            transition-all duration-500
-            overflow-hidden
+        {/* Use Next.js Link for internal links (client-side navigation), regular anchor for external */}
+        {useNextLink && NextLink ? (
+          <NextLink
+            href={href}
+            onClick={onClick}
+            className={`
+              relative flex justify-center items-center
+              ${isFullWidth ? 'w-full' : ''}
+              px-5 py-2
+              bg-[rgb(45,45,45)] backdrop-blur-[15px]
+              rounded-xl border-t border-b border-white/10
+              uppercase tracking-wide
+              z-10
+              transition-all duration-500
+              overflow-hidden
 
-            before:content-[''] before:absolute before:inset-0
-            before:bg-gradient-to-l before:from-white/15 before:to-transparent
-            before:w-1/2 before:skew-x-[45deg]
-          `}
-          style={{
-            ...buttonStyles,
-            height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
-            boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
-          }}
-        >
-          {children}
-        </a>
+              before:content-[''] before:absolute before:inset-0
+              before:bg-gradient-to-l before:from-white/15 before:to-transparent
+              before:w-1/2 before:skew-x-[45deg]
+            `}
+            style={{
+              ...buttonStyles,
+              height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
+              boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
+            }}
+          >
+            {children}
+          </NextLink>
+        ) : (
+          <a
+            href={href}
+            onClick={onClick}
+            className={`
+              relative flex justify-center items-center
+              ${isFullWidth ? 'w-full' : ''}
+              px-5 py-2
+              bg-[rgb(45,45,45)] backdrop-blur-[15px]
+              rounded-xl border-t border-b border-white/10
+              uppercase tracking-wide
+              z-10
+              transition-all duration-500
+              overflow-hidden
+
+              before:content-[''] before:absolute before:inset-0
+              before:bg-gradient-to-l before:from-white/15 before:to-transparent
+              before:w-1/2 before:skew-x-[45deg]
+            `}
+            style={{
+              ...buttonStyles,
+              height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
+              boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)'
+            }}
+          >
+            {children}
+          </a>
+        )}
 
       {/* Top light bar - positioned half behind top edge of button */}
       <div
