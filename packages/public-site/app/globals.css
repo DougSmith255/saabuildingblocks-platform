@@ -70,63 +70,59 @@ main > section:not(:first-child) {
    Special: Blog index uses data-hero-only-transitions for hero section only
 */
 
-/* Keyframes for section depth transition */
-@keyframes section-depth-transition {
-  /* Entry state: Behind, very visible effect */
+/* Keyframes for section scroll-in transition (for sections entering viewport) */
+@keyframes section-scroll-in {
   0% {
-    opacity: 0.3;
-    transform: translateY(50px) scale(0.92);
-    filter: blur(4px);
+    opacity: 0;
+    transform: translateY(60px);
   }
-  /* Visible state: Normal position */
-  25% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-  /* Stay visible for most of the scroll */
-  75% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0);
-  }
-  /* Exit state: Push up and fade out */
   100% {
-    opacity: 0.3;
-    transform: translateY(-50px) scale(0.92);
-    filter: blur(4px);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Apply to ALL sections ONLY when scroll-timeline is supported */
-/* Sections need 3D context for translateZ */
+/* Keyframes for hero scroll-out transition (hero pushes back and fades as you scroll) */
+@keyframes hero-scroll-out {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-100px);
+  }
+}
+
+/* Apply scroll-driven animations when supported */
 @supports (animation-timeline: view()) {
-  /* Default: Apply to all sections unless body has exclusion attribute */
-  /* Targets direct sections AND sections inside LazySection wrappers */
-  body:not([data-no-section-transitions]) main > section,
-  body:not([data-no-section-transitions]) main section {
-    animation: section-depth-transition linear both;
+  /* Hero section: Push back and fade out as user scrolls past it */
+  body:not([data-no-section-transitions]) main > section:first-child {
+    animation: hero-scroll-out linear both;
     animation-timeline: view();
-    /* Standard cover range - starts when section enters viewport, ends when it leaves */
-    animation-range: cover 0% cover 100%;
-    /* 3D context for depth effect */
-    transform-style: preserve-3d;
-    /* GPU acceleration */
+    /* exit 0% = starts when hero begins to leave viewport at top */
+    /* exit 60% = completes when hero is 60% out of viewport */
+    animation-range: exit 0% exit 60%;
     will-change: transform, opacity;
   }
 
-  /* Hero-only mode: Only first section gets transitions */
-  body[data-hero-only-transitions] main section {
-    animation: none;
-    will-change: auto;
+  /* Other sections: Fade in and slide up as they enter viewport */
+  body:not([data-no-section-transitions]) main > section:not(:first-child),
+  body:not([data-no-section-transitions]) main > div > section {
+    animation: section-scroll-in linear both;
+    animation-timeline: view();
+    /* entry 0% = animation starts when section enters viewport from bottom */
+    /* cover 40% = animation completes when section is 40% into the viewport */
+    animation-range: entry 0% cover 40%;
+    will-change: transform, opacity;
   }
 
-  body[data-hero-only-transitions] main > section:first-child {
-    animation: section-depth-transition linear both;
-    animation-timeline: view();
-    animation-range: cover 0% cover 100%;
-    transform-style: preserve-3d;
-    will-change: transform, opacity;
+  /* Completely disable transitions mode */
+  body[data-no-section-transitions] main section {
+    animation: none !important;
+    will-change: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
 
