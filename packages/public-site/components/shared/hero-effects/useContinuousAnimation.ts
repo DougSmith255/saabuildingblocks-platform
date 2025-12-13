@@ -6,34 +6,30 @@ import { useEffect, useRef, useState } from 'react';
  * Shared hook for continuous hero animations
  *
  * Animation behavior:
- * 1. Intro: Fast animation over 3 seconds (ease-out)
- * 2. Transition: Gradually slows to idle speed (2 seconds)
- * 3. Idle: Continuous animation using sine waves (never stops)
- * 4. Scroll: Speeds up when user scrolls
+ * - Starts fast and smoothly decelerates to idle speed (no pause/jerk)
+ * - Uses exponential decay for natural-feeling slowdown
+ * - Scroll adds a small boost (1.5x idle speed)
  *
  * Returns a time value that continuously increments. Use sine waves
  * on this time value to create smooth, organic oscillations.
  */
 
-const LOOP_MIN = 0.1;
-const LOOP_MAX = 0.8;
-const INITIAL_PROGRESS_START = 0.1;
-const INITIAL_PROGRESS_END = 0.5;
-
 export function useContinuousAnimation() {
   const [time, setTime] = useState(0);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
-  const introStartTimeRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number | null>(null);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
 
   useEffect(() => {
-    const INTRO_DURATION = 3000;
+    // Speed settings
     const IDLE_SPEED = 0.00005;
-    const SCROLL_BOOST = 0.000025; // Adds 0.5x to reach 1.5x idle speed when scrolling
-    const SCROLL_DECAY = 0.95; // Faster decay so it returns to idle quicker
-    const TRANSITION_DURATION = 2000;
+    const INTRO_SPEED = 0.0004; // 8x idle speed at start
+    const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
+    const SCROLL_BOOST = 0.000025; // Adds 0.5x for 1.5x total during scroll
+    const SCROLL_DECAY = 0.95;
+
     let lastTimestamp = 0;
 
     const handleScroll = () => {
@@ -42,7 +38,6 @@ export function useContinuousAnimation() {
       lastScrollY.current = currentScrollY;
 
       if (scrollDelta > 0) {
-        // Set scroll boost to fixed amount (not proportional to scroll speed)
         scrollBoostRef.current = SCROLL_BOOST;
       }
     };
@@ -51,33 +46,21 @@ export function useContinuousAnimation() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
-      if (introStartTimeRef.current === null) {
-        introStartTimeRef.current = timestamp;
+      if (startTimeRef.current === null) {
+        startTimeRef.current = timestamp;
       }
 
-      const elapsed = timestamp - introStartTimeRef.current;
+      const elapsed = timestamp - startTimeRef.current;
 
-      // Phase 1: Intro animation
-      if (elapsed < INTRO_DURATION) {
-        const introProgress = elapsed / INTRO_DURATION;
-        const eased = 1 - Math.pow(1 - introProgress, 3);
-        timeRef.current = INITIAL_PROGRESS_START + eased * (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START);
-      }
-      // Phase 2: Transition from intro to idle
-      else if (elapsed < INTRO_DURATION + TRANSITION_DURATION) {
-        const transitionProgress = (elapsed - INTRO_DURATION) / TRANSITION_DURATION;
-        const introEndSpeed = 0.0001;
-        const blendedSpeed = introEndSpeed * (1 - transitionProgress) + IDLE_SPEED * transitionProgress;
-        const totalSpeed = blendedSpeed + scrollBoostRef.current;
-        timeRef.current += totalSpeed * deltaTime;
-        scrollBoostRef.current *= SCROLL_DECAY;
-      }
-      // Phase 3: Continuous idle animation
-      else {
-        const totalSpeed = IDLE_SPEED + scrollBoostRef.current;
-        timeRef.current += totalSpeed * deltaTime;
-        scrollBoostRef.current *= SCROLL_DECAY;
-      }
+      // Exponential decay from intro speed to idle speed
+      // speed = idle + (intro - idle) * e^(-elapsed/tau)
+      // tau chosen so we're at ~5% of extra speed after DECAY_TIME
+      const tau = DECAY_TIME / 3; // ~95% decay after 3 tau
+      const extraSpeed = (INTRO_SPEED - IDLE_SPEED) * Math.exp(-elapsed / tau);
+      const currentSpeed = IDLE_SPEED + extraSpeed + scrollBoostRef.current;
+
+      timeRef.current += currentSpeed * deltaTime;
+      scrollBoostRef.current *= SCROLL_DECAY;
 
       setTime(timeRef.current);
       rafRef.current = requestAnimationFrame(animate);
