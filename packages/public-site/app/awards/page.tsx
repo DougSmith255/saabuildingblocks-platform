@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
+import { QuantumGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 /**
  * eXp Realty Awards Page
@@ -64,14 +65,17 @@ export default function Awards() {
   return (
     <main id="main-content">
       {/* Hero Section */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1900px] mx-auto w-full text-center">
-          <H1>INDUSTRY DOMINANCE</H1>
-          <Tagline className="mt-4">
-            The receipts are in
-          </Tagline>
-        </div>
-      </section>
+      <StickyHeroWrapper>
+        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          <QuantumGridEffect />
+          <div className="relative z-10 max-w-[1900px] mx-auto w-full text-center">
+            <H1>INDUSTRY DOMINANCE</H1>
+            <Tagline className="mt-4">
+              The receipts are in
+            </Tagline>
+          </div>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Major Awards Grid */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

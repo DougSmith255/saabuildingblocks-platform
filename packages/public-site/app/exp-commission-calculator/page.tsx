@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { H1, Tagline } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
+import { DataStreamEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 /**
  * eXp Commission & Fees Calculator Page
@@ -22,14 +23,17 @@ export default function ExpCommissionCalculator() {
   return (
     <main id="main-content" className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1900px] mx-auto w-full text-center">
-          <H1>KNOW YOUR NUMBERS</H1>
-          <Tagline className="mt-4">
-            No hidden fees. Just facts.
-          </Tagline>
-        </div>
-      </section>
+      <StickyHeroWrapper>
+        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          <DataStreamEffect />
+          <div className="relative z-10 max-w-[1900px] mx-auto w-full text-center">
+            <H1>KNOW YOUR NUMBERS</H1>
+            <Tagline className="mt-4">
+              No hidden fees. Just facts.
+            </Tagline>
+          </div>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Calculator Section */}
       <section
