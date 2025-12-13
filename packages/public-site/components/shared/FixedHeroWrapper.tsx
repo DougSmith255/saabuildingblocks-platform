@@ -10,13 +10,14 @@ interface FixedHeroWrapperProps {
 /**
  * FixedHeroWrapper - Makes the hero section stay fixed while content scrolls over it
  *
- * The hero stays pinned in place and the CSS scroll animation (blur/darken/shrink)
- * creates the effect of the hero receding into the cosmic void as you scroll.
+ * Creates a parallax-like effect where:
+ * - Hero stays FIXED in place (doesn't scroll)
+ * - Background effects stay full viewport and only FADE
+ * - Hero CONTENT shrinks, blurs, and fades into the cosmic void
+ * - Content sections scroll over the hero
  *
- * Usage:
- * <FixedHeroWrapper>
- *   <section className="...">Hero content</section>
- * </FixedHeroWrapper>
+ * Uses JavaScript scroll events for cross-browser compatibility
+ * (CSS scroll-timeline not supported in Firefox)
  */
 export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,39 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
         setHeroHeight(`${height}px`);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!wrapperRef.current) return;
+
+      const heroSection = wrapperRef.current.querySelector('section');
+      if (!heroSection) return;
+
+      const heroHeight = heroSection.offsetHeight;
+      const scrollY = window.scrollY;
+
+      // Progress from 0 to 1 as we scroll through the hero height
+      const progress = Math.min(scrollY / heroHeight, 1);
+
+      // Apply the scroll-out effect to the entire section
+      // This matches what CSS scroll-timeline was supposed to do
+      const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
+      const blur = progress * 8; // Blur from 0 to 8px
+      const brightness = 1 - progress * 0.8; // Dim from 1 to 0.2
+      const opacity = 1 - progress; // Fade from 1 to 0
+      const translateY = -progress * 15; // Move up slightly
+
+      const section = heroSection as HTMLElement;
+      section.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+      section.style.filter = `blur(${blur}px) brightness(${brightness})`;
+      section.style.opacity = `${opacity}`;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
