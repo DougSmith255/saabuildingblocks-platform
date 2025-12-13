@@ -106,11 +106,21 @@ main#main-content > section:not(:first-child) {
 
 /* Apply scroll-driven animations when supported */
 @supports (animation-timeline: scroll()) {
-  /* Hero section: Shrink straight back into the stars as you scroll */
+  /* Hero section: Stays fixed and shrinks into the void as you scroll past */
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
+    position: sticky;
+    top: 0;
+    z-index: 0;
     animation: hero-scroll-out ease-out both;
     animation-timeline: scroll(root);
-    animation-range: 0px 150vh;
+    animation-range: 0px 100vh;
+  }
+
+  /* Ensure content after hero scrolls over it */
+  body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
+    position: relative;
+    z-index: 1;
+    background: inherit;
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
