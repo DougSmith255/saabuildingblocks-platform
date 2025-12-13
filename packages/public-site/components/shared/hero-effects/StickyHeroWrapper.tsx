@@ -61,23 +61,34 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      // Find effect elements (absolute positioned with pointer-events-none)
-      // These are the canvas/svg/div elements that render the visual effects
-      const effectElements = heroSection.querySelectorAll('.absolute.inset-0.pointer-events-none, [class*="pointer-events-none"][class*="absolute"]');
-      effectElements.forEach((el) => {
-        const element = el as HTMLElement;
-        // Effects stay fixed, only fade and blur
-        element.style.opacity = `${opacity}`;
-        element.style.filter = `blur(${effectBlur}px) brightness(${brightness})`;
-      });
+      // Find effect elements - direct children of section with pointer-events-none
+      // These are the wrapper divs that contain visual effects (particles, grids, etc.)
+      const children = heroSection.children;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as HTMLElement;
+        const classes = child.className || '';
 
-      // Find content elements (have z-10 or z-20 class)
-      const contentElement = heroSection.querySelector('[class*="z-10"], [class*="z-20"]') as HTMLElement;
-      if (contentElement) {
-        contentElement.style.transformOrigin = 'center center';
-        contentElement.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-        contentElement.style.filter = `blur(${contentBlur}px) brightness(${brightness})`;
-        contentElement.style.opacity = `${opacity}`;
+        // Effect elements: have pointer-events-none and absolute positioning
+        if (classes.includes('pointer-events-none') && classes.includes('absolute')) {
+          // Effects stay fixed, only fade and blur
+          child.style.opacity = `${opacity}`;
+          child.style.filter = `blur(${effectBlur}px) brightness(${brightness})`;
+        }
+        // Content elements: have z-10 or z-20 class OR have relative + max-w (content wrapper)
+        else if (classes.includes('z-10') || classes.includes('z-20') ||
+                (classes.includes('relative') && classes.includes('max-w'))) {
+          child.style.transformOrigin = 'center center';
+          child.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+          child.style.filter = `blur(${contentBlur}px) brightness(${brightness})`;
+          child.style.opacity = `${opacity}`;
+        }
+        // Also check for content divs without z-index but with max-w class
+        else if (classes.includes('max-w') && !classes.includes('pointer-events-none')) {
+          child.style.transformOrigin = 'center center';
+          child.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+          child.style.filter = `blur(${contentBlur}px) brightness(${brightness})`;
+          child.style.opacity = `${opacity}`;
+        }
       }
 
       // Hide section when fully scrolled

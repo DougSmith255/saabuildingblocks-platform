@@ -25,7 +25,8 @@ export function ParticleStormEffect() {
       {particles.map((p, i) => {
         const moveX = Math.cos(p.angle * Math.PI / 180) * progress * 50;
         const moveY = Math.sin(p.angle * Math.PI / 180) * progress * 50;
-        const opacity = 0.3 + Math.sin(time * Math.PI * 2 + i) * 0.3;
+        // Brighter: base opacity 0.6, oscillates up to 0.95
+        const opacity = 0.6 + Math.sin(time * Math.PI * 2 + i) * 0.35;
         return (
           <div
             key={i}
@@ -35,14 +36,14 @@ export function ParticleStormEffect() {
               top: `calc(${p.y}% + ${moveY}vh)`,
               width: p.size,
               height: p.size,
-              background: `radial-gradient(circle, rgba(255,215,0,${opacity}) 0%, rgba(255,180,0,${opacity * 0.5}) 50%, transparent 100%)`,
-              boxShadow: `0 0 ${p.size * 2}px rgba(255,215,0,${opacity * 0.5})`,
+              background: `radial-gradient(circle, rgba(255,215,0,${opacity}) 0%, rgba(255,200,0,${opacity * 0.7}) 50%, transparent 100%)`,
+              boxShadow: `0 0 ${p.size * 3}px rgba(255,215,0,${opacity * 0.8}), 0 0 ${p.size * 6}px rgba(255,200,0,${opacity * 0.4})`,
             }}
           />
         );
       })}
 
-      {/* Trail particles */}
+      {/* Trail particles - brighter */}
       {[...Array(20)].map((_, i) => {
         const trailProgress = Math.max(0, progress - i * 0.02);
         return (
@@ -52,10 +53,10 @@ export function ParticleStormEffect() {
             style={{
               left: `${50 + Math.cos(i + time * 10) * 30 * trailProgress}%`,
               top: `${50 + Math.sin(i + time * 10) * 30 * trailProgress}%`,
-              width: 4,
-              height: 4,
-              background: `rgba(255,215,0,${0.4 * trailProgress})`,
-              boxShadow: `0 0 10px rgba(255,215,0,${0.3 * trailProgress})`,
+              width: 6,
+              height: 6,
+              background: `rgba(255,215,0,${0.7 * trailProgress})`,
+              boxShadow: `0 0 15px rgba(255,215,0,${0.6 * trailProgress}), 0 0 30px rgba(255,200,0,${0.3 * trailProgress})`,
             }}
           />
         );
