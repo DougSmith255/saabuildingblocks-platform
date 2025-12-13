@@ -45,9 +45,8 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
     const handleScroll = () => {
       if (!wrapperRef.current) return;
 
-      // Get the inner content div (direct child of wrapper) - same approach as FixedHeroWrapper
-      const innerDiv = wrapperRef.current.querySelector(':scope > div') as HTMLElement;
-      if (!innerDiv) return;
+      const heroSection = wrapperRef.current.querySelector('section');
+      if (!heroSection) return;
 
       const viewportHeight = window.innerHeight;
       const scrollY = window.scrollY;
@@ -55,18 +54,34 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       // Progress from 0 to 1 as we scroll through the viewport height
       const progress = Math.min(scrollY / viewportHeight, 1);
 
-      // Apply the scroll-out effect to the inner div (contains all hero content)
       const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
-      const blur = progress * 8; // Blur from 0 to 8px
+      const contentBlur = progress * 8; // Blur from 0 to 8px
+      const effectBlur = progress * 4; // Lighter blur for effects
       const brightness = 1 - progress; // Dim from 1 to 0
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      innerDiv.style.transformOrigin = 'center center';
-      innerDiv.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-      innerDiv.style.filter = `blur(${blur}px) brightness(${brightness})`;
-      innerDiv.style.opacity = `${opacity}`;
-      innerDiv.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+      // Find effect elements (contain "Effect" in class name)
+      const effectElements = heroSection.querySelectorAll('[class*="Effect"]');
+      effectElements.forEach((el) => {
+        const element = el as HTMLElement;
+        // Effects stay fixed, only fade and blur
+        element.style.opacity = `${opacity}`;
+        element.style.filter = `blur(${effectBlur}px) brightness(${brightness})`;
+      });
+
+      // Find content elements (have z-10 or z-20 class)
+      const contentElement = heroSection.querySelector('[class*="z-10"], [class*="z-20"]') as HTMLElement;
+      if (contentElement) {
+        contentElement.style.transformOrigin = 'center center';
+        contentElement.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+        contentElement.style.filter = `blur(${contentBlur}px) brightness(${brightness})`;
+        contentElement.style.opacity = `${opacity}`;
+      }
+
+      // Hide section when fully scrolled
+      const section = heroSection as HTMLElement;
+      section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
