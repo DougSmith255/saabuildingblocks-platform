@@ -19,12 +19,10 @@ export default function AgentPortalLogin() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // TODO: Implement actual login logic
+    // DEV: Skip authentication, go straight to dashboard
     setTimeout(() => {
-      setIsLoading(false);
-      // Redirect to portal after login
       window.location.href = '/agent-portal';
-    }, 1500);
+    }, 500);
   };
 
   return (
