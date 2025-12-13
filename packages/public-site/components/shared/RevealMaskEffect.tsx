@@ -106,11 +106,12 @@ export function RevealMaskEffect() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-none flex items-center justify-center"
+      className="absolute inset-0 pointer-events-none flex items-center justify-center animate-fade-in-effect"
       style={{
         zIndex: 0,
         opacity: scrollFade,
         visibility: scrollFade <= 0 ? 'hidden' : 'visible',
+        animation: 'fadeInEffect 0.8s ease-out forwards',
       }}
     >
       {/* Golden radial glow - less intense, larger, centered lower */}

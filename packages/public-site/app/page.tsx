@@ -3,7 +3,7 @@ import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
-import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
+import { LazyRevealMaskEffect } from '@/components/shared/hero-effects';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 const ValueStack = dynamic(
@@ -64,8 +64,33 @@ export default function Home() {
         {/* Agent Counter - viewport-aware (only renders desktop OR mobile counter) */}
         <AgentCounter />
 
-        {/* Reveal Mask Effect - Golden glow behind Doug & Karrie */}
-        <RevealMaskEffect />
+        {/* Wolf Pack Background Image */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[0]">
+          <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
+            <img
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
+              srcSet="
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+              "
+              sizes="100vw"
+              alt=""
+              aria-hidden="true"
+              loading="eager"
+              decoding="async"
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{
+                objectPosition: 'center 55%',
+                maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Reveal Mask Effect - Golden glow behind Doug & Karrie (dynamically loaded) */}
+        <LazyRevealMaskEffect />
 
         {/* Hero Content Block - Image + H1 + Tagline + Buttons as one centered unit */}
         <div

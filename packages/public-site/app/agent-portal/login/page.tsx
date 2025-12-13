@@ -1,28 +1,82 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { H1, CyberCard } from '@saa/shared/components/saa';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
 const INITIAL_PROGRESS_END = 0.5;
 
+// Auth API URL - admin dashboard handles authentication (runs on saabuildingblocks.com)
+const AUTH_API_URL = 'https://saabuildingblocks.com';
+
 /**
  * Agent Portal Login Page
  * Features the Data Stream effect in green with centered login form in CyberCardGold
  */
 export default function AgentPortalLogin() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Check if already logged in
+  useEffect(() => {
+    const user = localStorage.getItem('agent_portal_user');
+    if (user) {
+      router.push('/agent-portal');
+    }
+  }, [router]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // DEV: Skip authentication, go straight to dashboard
-    setTimeout(() => {
-      window.location.href = '/agent-portal';
-    }, 500);
+    setError(null);
+
+    try {
+      const response = await fetch(`${AUTH_API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          identifier: email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || 'Invalid credentials. Please try again.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Store user data and token
+      const userData = {
+        id: data.data.user.id,
+        email: data.data.user.email,
+        username: data.data.user.username,
+        firstName: data.data.user.first_name || data.data.user.fullName?.split(' ')[0] || '',
+        lastName: data.data.user.last_name || data.data.user.fullName?.split(' ').slice(1).join(' ') || '',
+        fullName: data.data.user.fullName || `${data.data.user.first_name || ''} ${data.data.user.last_name || ''}`.trim(),
+        role: data.data.user.role,
+        profilePictureUrl: data.data.user.profile_picture_url || null,
+      };
+
+      localStorage.setItem('agent_portal_user', JSON.stringify(userData));
+      localStorage.setItem('agent_portal_token', data.data.accessToken);
+
+      // Redirect to agent portal
+      router.push('/agent-portal');
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('Network error. Please check your connection and try again.');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -35,7 +89,8 @@ export default function AgentPortalLogin() {
       {/* Header is ~80-100px, so -mt-16 (-64px) shifts the entire H1+card block to appear visually centered */}
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
         {/* Content wrapper - H1 and card centered together as one unit */}
-        <div className="flex flex-col items-center -mt-16">
+        {/* pt-[15vh] adds 15% viewport height spacing above the H1 */}
+        <div className="flex flex-col items-center pt-[15vh]">
           {/* Heading - not width constrained */}
           <div className="text-center mb-8 whitespace-nowrap">
             <H1 className="mb-2">ALLIANCE HQ</H1>
@@ -46,6 +101,13 @@ export default function AgentPortalLogin() {
           <div className="w-full max-w-md">
             <CyberCard padding="lg" centered={false}>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Error Message */}
+              {error && (
+                <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
+                  {error}
+                </div>
+              )}
+
               {/* Email Field */}
               <div className="space-y-2">
                 <label htmlFor="email" className="block text-caption text-[#ffd700] uppercase tracking-wider">

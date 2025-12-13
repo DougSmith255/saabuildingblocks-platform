@@ -1,7 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
+
+// User type from stored session
+interface UserData {
+  id: string;
+  email: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  fullName: string;
+  role: 'admin' | 'user';
+  profilePictureUrl: string | null;
+}
 
 // Section types
 type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents';
@@ -37,13 +50,100 @@ const dashboardCards = [
 ];
 
 export default function AgentPortal() {
+  const router = useRouter();
   const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showProfileUpload, setShowProfileUpload] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check authentication on mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('agent_portal_user');
+    if (!storedUser) {
+      router.push('/agent-portal/login');
+      return;
+    }
+    try {
+      setUser(JSON.parse(storedUser));
+    } catch (e) {
+      router.push('/agent-portal/login');
+      return;
+    }
+    setIsLoading(false);
+  }, [router]);
 
   const handleLogout = () => {
-    // TODO: Implement actual logout logic (clear session, etc.)
-    window.location.href = '/agent-portal/login/';
+    localStorage.removeItem('agent_portal_user');
+    localStorage.removeItem('agent_portal_token');
+    router.push('/agent-portal/login');
   };
+
+  const handleProfilePictureClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image must be less than 5MB');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('userId', user.id);
+
+      const token = localStorage.getItem('agent_portal_token');
+      const response = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const updatedUser = { ...user, profilePictureUrl: data.url };
+        setUser(updatedUser);
+        localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+      } else {
+        alert('Failed to upload profile picture. Please try again.');
+      }
+    } catch (err) {
+      console.error('Profile picture upload error:', err);
+      alert('Failed to upload profile picture. Please try again.');
+    }
+  };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-[#ffd700]/60">Loading portal...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // This shouldn't happen but handle edge case
+  if (!user) {
+    return null;
+  }
 
   return (
     <main id="main-content" className="min-h-screen">
@@ -113,9 +213,57 @@ export default function AgentPortal() {
               w-full lg:w-64 flex-shrink-0
             `}
           >
-            <nav
-              className="sticky top-24 rounded-xl p-4 space-y-2 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15"
-            >
+            <div className="sticky top-24 space-y-4">
+              {/* User Profile Section */}
+              <div className="rounded-xl p-4 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15">
+                {/* Hidden file input for profile picture upload */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePictureChange}
+                  className="hidden"
+                />
+
+                {/* Profile Picture */}
+                <div className="flex flex-col items-center mb-4">
+                  <button
+                    onClick={handleProfilePictureClick}
+                    className="relative group w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
+                    title="Click to change profile picture"
+                  >
+                    {user.profilePictureUrl ? (
+                      <img
+                        src={user.profilePictureUrl}
+                        alt={user.fullName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
+                        <span className="text-3xl text-[#ffd700]">
+                          {user.firstName?.charAt(0) || user.email?.charAt(0) || '?'}
+                        </span>
+                      </div>
+                    )}
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                  </button>
+
+                  {/* User Name */}
+                  <h3 className="text-[#ffd700] font-semibold text-center">
+                    {user.firstName} {user.lastName}
+                  </h3>
+                  <p className="text-[#e5e4dd]/60 text-sm">{user.email}</p>
+                </div>
+              </div>
+
+              {/* Navigation Menu */}
+              <nav className="rounded-xl p-4 space-y-2 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15">
               {navItems.map((item) => (
                 <button
                   key={item.id}
@@ -135,7 +283,8 @@ export default function AgentPortal() {
                   <span className="font-medium">{item.label}</span>
                 </button>
               ))}
-            </nav>
+              </nav>
+            </div>
           </aside>
 
           {/* Main Content Area */}

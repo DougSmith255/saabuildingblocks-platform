@@ -1,9 +1,16 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText, ProfileCyberFrame, Icon3D } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
-import { QuantumGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
 import Image from 'next/image';
+
+// Hero effect - dynamically imported with ssr: false to exclude from initial bundle
+const QuantumGridEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.QuantumGridEffect })),
+  { ssr: false }
+);
 
 // Cloudflare Images CDN URLs
 const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';

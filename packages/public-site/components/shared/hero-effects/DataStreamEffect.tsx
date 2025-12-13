@@ -30,7 +30,7 @@ export function DataStreamEffect() {
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" lang="en" translate="no">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden animate-fade-in-effect" lang="en" translate="no">
       {/* Green data columns */}
       {columnConfigs.map((col, i) => {
         const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);

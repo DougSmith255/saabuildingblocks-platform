@@ -19,3 +19,18 @@ export { ParticleStormEffect } from './ParticleStormEffect';
 export { AsteroidBeltEffect } from './AsteroidBeltEffect';
 export { DataStreamEffect } from './DataStreamEffect';
 export { StickyHeroWrapper } from './StickyHeroWrapper';
+export { DeferredEffect } from './DeferredEffect';
+
+// Lazy-loaded hero effects for use in Server Components
+export {
+  LazyRevealMaskEffect,
+  LazyQuantumGridEffect,
+  LazyAsteroidBeltEffect,
+  LazyDataStreamEffect,
+  LazySatelliteConstellationEffect,
+  LazyLaserGridEffect,
+  LazyGreenLaserGridEffect,
+  LazySpiralGalaxyEffect,
+  LazyConstellationMapEffect,
+  LazyParticleStormEffect,
+} from './LazyHeroEffects';

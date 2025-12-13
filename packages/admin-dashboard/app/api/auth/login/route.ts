@@ -25,19 +25,40 @@ const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 5;
 
+// CORS headers for cross-origin requests from public site
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Handle preflight OPTIONS request
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: CORS_HEADERS,
+  });
+}
+
+// Helper to create JSON response with CORS headers
+function jsonResponse(data: object, status: number = 200, extraHeaders?: Record<string, string>) {
+  return NextResponse.json(data, {
+    status,
+    headers: { ...CORS_HEADERS, ...extraHeaders },
+  });
+}
+
 export async function POST(request: NextRequest) {
   // Use service role client to bypass RLS and access password hashes
   const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'SERVICE_UNAVAILABLE',
-        message: 'Authentication service is not available',
-      },
-      { status: 503 }
-    );
+    return jsonResponse({
+      success: false,
+      error: 'SERVICE_UNAVAILABLE',
+      message: 'Authentication service is not available',
+    }, 503);
   }
 
   try {
@@ -49,7 +70,7 @@ export async function POST(request: NextRequest) {
     // Validate request body
     const validation = loginSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json(formatZodErrors(validation.error), { status: 400 });
+      return jsonResponse(formatZodErrors(validation.error), 400);
     }
 
     const { identifier, password, rememberMe } = validation.data;
@@ -70,22 +91,16 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'rate_limit_exceeded', identifier, isEmail },
       });
 
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'RATE_LIMIT_EXCEEDED',
-          message: 'Too many login attempts. Please try again later.',
-          resetAt: new Date(rateLimit.resetAt).toISOString(),
-        },
-        {
-          status: 429,
-          headers: {
-            'X-RateLimit-Limit': String(RATE_LIMIT_MAX_ATTEMPTS),
-            'X-RateLimit-Remaining': String(rateLimit.remaining),
-            'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
-          },
-        }
-      );
+      return jsonResponse({
+        success: false,
+        error: 'RATE_LIMIT_EXCEEDED',
+        message: 'Too many login attempts. Please try again later.',
+        resetAt: new Date(rateLimit.resetAt).toISOString(),
+      }, 429, {
+        'X-RateLimit-Limit': String(RATE_LIMIT_MAX_ATTEMPTS),
+        'X-RateLimit-Remaining': String(rateLimit.remaining),
+        'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
+      });
     }
 
     // Find user by email or username
@@ -105,14 +120,11 @@ export async function POST(request: NextRequest) {
       });
 
       // Generic error message to prevent user enumeration
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'INVALID_CREDENTIALS',
-          message: 'Invalid username/email or password',
-        },
-        { status: 401 }
-      );
+      return jsonResponse({
+        success: false,
+        error: 'INVALID_CREDENTIALS',
+        message: 'Invalid username/email or password',
+      }, 401);
     }
 
     // Check if account is locked
@@ -126,15 +138,12 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'account_locked', lockedUntil: user.locked_until },
       });
 
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'ACCOUNT_LOCKED',
-          message: 'Account locked due to too many failed login attempts',
-          unlockAt: user.locked_until,
-        },
-        { status: 423 }
-      );
+      return jsonResponse({
+        success: false,
+        error: 'ACCOUNT_LOCKED',
+        message: 'Account locked due to too many failed login attempts',
+        unlockAt: user.locked_until,
+      }, 423);
     }
 
     // Verify password
@@ -168,15 +177,12 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'INVALID_CREDENTIALS',
-          message: 'Invalid username/email or password',
-          remainingAttempts: Math.max(0, MAX_FAILED_ATTEMPTS - newFailedAttempts),
-        },
-        { status: 401 }
-      );
+      return jsonResponse({
+        success: false,
+        error: 'INVALID_CREDENTIALS',
+        message: 'Invalid username/email or password',
+        remainingAttempts: Math.max(0, MAX_FAILED_ATTEMPTS - newFailedAttempts),
+      }, 401);
     }
 
     // Check account status (use 'status' field, not 'is_active')
@@ -190,16 +196,13 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'account_inactive', status: user.status },
       });
 
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'ACCOUNT_INACTIVE',
-          message: user.status === 'suspended'
-            ? 'Your account has been suspended. Please contact support.'
-            : 'Your account is not activated yet. Please complete activation first.',
-        },
-        { status: 403 }
-      );
+      return jsonResponse({
+        success: false,
+        error: 'ACCOUNT_INACTIVE',
+        message: user.status === 'suspended'
+          ? 'Your account has been suspended. Please contact support.'
+          : 'Your account is not activated yet. Please complete activation first.',
+      }, 403);
     }
 
     // Generate tokens
@@ -264,14 +267,17 @@ export async function POST(request: NextRequest) {
           username: user.username,
           email: user.email,
           fullName: user.full_name,
+          first_name: user.first_name,
+          last_name: user.last_name,
           role: user.role,
+          profile_picture_url: user.profile_picture_url,
           emailVerified: user.email_verified,
           lastLoginAt: new Date().toISOString(),
         },
         accessToken,
         expiresIn,
       },
-    });
+    }, { headers: CORS_HEADERS });
 
     // Set refresh token in HttpOnly cookie
     response.cookies.set('refreshToken', refreshToken, {
@@ -286,13 +292,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('[Login API] Error:', error);
 
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'INTERNAL_SERVER_ERROR',
-        message: 'An unexpected error occurred. Please try again.',
-      },
-      { status: 500 }
-    );
+    return jsonResponse({
+      success: false,
+      error: 'INTERNAL_SERVER_ERROR',
+      message: 'An unexpected error occurred. Please try again.',
+    }, 500);
   }
 }

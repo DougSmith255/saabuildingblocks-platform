@@ -18,7 +18,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Lock, Rocket, Gauge, Mail, Zap } from 'lucide-react';
+import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Lock, Rocket, Gauge, Mail, Zap, Users } from 'lucide-react';
 import { useUserRole, RoleBadge, canAccessTokenVault } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
@@ -72,12 +72,17 @@ const AutomationsTab = dynamicImport(() => import('./components/tabs/Automations
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Automations tab...</div>
 });
 
+const UserManagementTab = dynamicImport(() => import('./components/tabs/UserManagementTab').then(mod => ({ default: mod.UserManagementTab })), {
+  ssr: false,
+  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Users tab...</div>
+});
+
 // Store hooks - only used in client component after mount
 import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
 
-type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'vault' | 'deployment' | 'performance' | 'email-automations' | 'automations';
+type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'vault' | 'deployment' | 'performance' | 'email-automations' | 'automations' | 'users';
 
 function MasterControllerContent() {
   const router = useRouter();
@@ -86,7 +91,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'typography'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'vault', 'deployment', 'performance', 'email-automations', 'automations'];
+    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'vault', 'deployment', 'performance', 'email-automations', 'automations', 'users'];
     return (tabParam && validTabs.includes(tabParam as TabId)) ? tabParam as TabId : 'typography';
   });
 
@@ -116,6 +121,7 @@ function MasterControllerContent() {
     { id: 'vault' as TabId, label: 'Token Vault', icon: Lock },
     { id: 'deployment' as TabId, label: 'Deployment', icon: Rocket },
     { id: 'performance' as TabId, label: 'Web Performance', icon: Gauge },
+    { id: 'users' as TabId, label: 'Users', icon: Users },
   ];
 
   return (
@@ -236,6 +242,8 @@ function MasterControllerContent() {
         {activeTab === 'deployment' && <DeploymentTab />}
 
         {activeTab === 'performance' && <WebPerformanceTab />}
+
+        {activeTab === 'users' && <UserManagementTab />}
       </div>
 
       {/* Footer Info */}

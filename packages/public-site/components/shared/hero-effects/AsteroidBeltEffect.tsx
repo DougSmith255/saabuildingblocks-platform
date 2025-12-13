@@ -1,26 +1,39 @@
 'use client';
 
 import { useContinuousAnimation } from './useContinuousAnimation';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 /**
  * Asteroid Belt Effect
  * Tumbling asteroids flowing across screen - great for content/comparison themes
+ * Mobile: 35% fewer asteroids for performance
  */
 export function AsteroidBeltEffect() {
   const { time, progress } = useContinuousAnimation();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile on mount
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Desktop: 32 asteroids, Mobile: ~21 asteroids (35% reduction)
+  const asteroidCount = isMobile ? 21 : 32;
 
   // Memoize asteroids to prevent regeneration
-  const asteroids = useMemo(() => [...Array(32)].map((_, i) => ({
+  const asteroids = useMemo(() => [...Array(asteroidCount)].map((_, i) => ({
     x: (i * 137.5) % 100,
     y: 48 + Math.sin(i * 0.8) * 12,
     size: 12 + (i % 5) * 8,
     speed: 0.5 + (i % 3) * 0.3,
     rotation: i * 45,
-  })), []);
+  })), [asteroidCount]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden animate-fade-in-effect">
       <div
         className="absolute inset-0"
         style={{

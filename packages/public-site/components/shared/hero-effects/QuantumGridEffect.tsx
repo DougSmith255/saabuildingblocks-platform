@@ -12,7 +12,7 @@ export function QuantumGridEffect() {
   const gridLines = 24;
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden animate-fade-in-effect">
       {/* Perspective grid at TOP extending to 95% */}
       <div
         className="absolute inset-0"

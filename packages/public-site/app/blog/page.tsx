@@ -24,7 +24,7 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
-import { AsteroidBeltEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper, LazyAsteroidBeltEffect } from '@/components/shared/hero-effects';
 
 /**
  * WordPress categories data (from actual WordPress API)
@@ -120,7 +120,7 @@ export default async function RealEstateAgentBlogPage() {
           className="relative min-h-[100dvh] px-4 sm:px-8 md:px-12 flex items-center justify-center"
           aria-label="Agent Success Hub Hero"
         >
-          <AsteroidBeltEffect />
+          <LazyAsteroidBeltEffect />
 
         {/* Content */}
         <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center">
