@@ -47,9 +47,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/_not-found', // 404 page
   ], []);
 
-  // Routes where header/footer should be hidden, but NOT sub-routes (like /login)
+  // Routes where header/footer should be hidden, but NOT sub-routes
   const exactNoHeaderFooterRoutes = useMemo(() => [
-    '/agent-portal', // Main portal - no header/footer, but login page keeps them
+    '/agent-portal', // Main portal - no header/footer
+  ], []);
+
+  // Routes where only footer should be hidden (header stays)
+  const noFooterRoutes = useMemo(() => [
+    '/agent-portal/login', // Login page - header yes, footer no
   ], []);
 
   // Routes where section transitions should be DISABLED
@@ -133,6 +138,12 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     return false;
   }, [pathname, noHeaderFooterRoutes, exactNoHeaderFooterRoutes]);
 
+  // Check if footer should be hidden (but header stays)
+  const shouldHideFooterOnly = useMemo(() => {
+    if (!pathname) return false;
+    return noFooterRoutes.includes(pathname) || noFooterRoutes.includes(pathname.replace(/\/$/, ''));
+  }, [pathname, noFooterRoutes]);
+
   return (
     <ViewportProvider>
       <ExternalLinkHandler />
@@ -146,12 +157,12 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       */}
       <div
         style={{ minHeight: '100vh', position: 'relative' }}
-        data-no-footer={shouldHideHeaderFooter ? 'true' : undefined}
+        data-no-footer={shouldHideHeaderFooter || shouldHideFooterOnly ? 'true' : undefined}
       >
         {children}
       </div>
       {/* Footer is ALWAYS deferred to improve Core Web Vitals (LCP) */}
-      {!shouldHideHeaderFooter && (
+      {!shouldHideHeaderFooter && !shouldHideFooterOnly && (
         <DeferredFooter>
           <Footer />
         </DeferredFooter>
