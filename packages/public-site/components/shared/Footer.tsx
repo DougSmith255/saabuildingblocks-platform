@@ -163,26 +163,18 @@ export default function Footer() {
         <div className="footer-social">
           <nav className="links">
             {socialIcons.map((social, index) => {
-              const isInternal = social.href.startsWith('/') && !social.href.startsWith('//');
+              const isExternal = social.href.startsWith('http') || social.href.startsWith('mailto:');
               const className = `link ${animatingIcons.has(index) ? 'wave-animate' : ''}`;
               const style = { '--icon': social.icon } as React.CSSProperties;
 
-              return isInternal ? (
-                <Link
-                  key={social.name}
-                  href={social.href}
-                  className={className}
-                  style={style}
-                  aria-label={social.label}
-                />
-              ) : (
+              // Use regular <a> tags for all social icons - CSS custom properties work better
+              return (
                 <a
                   key={social.name}
                   className={className}
                   href={social.href}
                   style={style}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   aria-label={social.label}
                 />
               );
@@ -262,12 +254,22 @@ export default function Footer() {
           width: 120px;
           height: 45px;
           margin: 0 auto;
-          display: flex;
+          display: flex !important;
           align-items: center;
           justify-content: center;
           position: relative;
           transition: transform 0.3s ease;
           cursor: pointer;
+        }
+
+        /* Ensure Link component gets proper display */
+        :global(.footer-logo a) {
+          display: flex !important;
+          width: 120px;
+          height: 45px;
+          margin: 0 auto;
+          align-items: center;
+          justify-content: center;
         }
 
         .footer-logo-container:hover {
