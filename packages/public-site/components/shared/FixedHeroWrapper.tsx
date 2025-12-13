@@ -48,10 +48,9 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
       const progress = Math.min(scrollY / heroHeight, 1);
 
       // Apply the scroll-out effect to the entire section
-      // This matches what CSS scroll-timeline was supposed to do
       const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
       const blur = progress * 8; // Blur from 0 to 8px
-      const brightness = 1 - progress * 0.8; // Dim from 1 to 0.2
+      const brightness = 1 - progress; // Dim from 1 to 0
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 15; // Move up slightly
 
@@ -59,6 +58,9 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
       section.style.transform = `scale(${scale}) translateY(${translateY}px)`;
       section.style.filter = `blur(${blur}px) brightness(${brightness})`;
       section.style.opacity = `${opacity}`;
+
+      // Completely hide when fully scrolled (performance optimization)
+      section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

@@ -61,10 +61,10 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       // Find content layer (the div with relative z-10 or similar)
       const contentLayer = heroSection.querySelector('.relative.z-10, [class*="z-10"]') as HTMLElement;
 
-      // Apply fade only to effect layers
+      // Apply fade to effect layers (fade to 0)
       effectLayers.forEach((layer) => {
         const el = layer as HTMLElement;
-        el.style.opacity = `${1 - progress * 0.8}`; // Fade from 1 to 0.2
+        el.style.opacity = `${1 - progress}`; // Fade from 1 to 0
       });
 
       // Apply shrink/blur/fade to content layer
@@ -75,9 +75,13 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
         const translateY = -progress * 15; // Move up slightly
 
         contentLayer.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-        contentLayer.style.filter = `blur(${blur}px) brightness(${1 - progress * 0.8})`;
+        contentLayer.style.filter = `blur(${blur}px) brightness(${1 - progress})`;
         contentLayer.style.opacity = `${opacity}`;
       }
+
+      // Completely hide when fully scrolled (performance optimization)
+      const section = heroSection as HTMLElement;
+      section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
