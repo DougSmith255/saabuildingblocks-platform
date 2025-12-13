@@ -2,6 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, FAQ, GenericCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
+import { DataStreamEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 /**
  * Online Real Estate Brokerage Comparison Page
@@ -12,7 +13,8 @@ export default function OnlineBrokerageComparison() {
     <main id="main-content">
       {/* Hero Section */}
       <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1900px] mx-auto w-full text-center">
+        <DataStreamEffect />
+        <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
           <H1>CLOUD VS CLOUD</H1>
           <Tagline className="mt-4">
             The online showdown

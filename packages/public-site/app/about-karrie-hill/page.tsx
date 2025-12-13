@@ -3,6 +3,7 @@
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
+import { QuantumGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 // Cloudflare Images CDN URL
 const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
@@ -39,14 +40,17 @@ export default function AboutKarrieHill() {
   return (
     <main id="main-content">
       {/* Hero Section */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1900px] mx-auto w-full text-center">
-          <H1>KARRIE HILL, JD</H1>
-          <Tagline className="mt-4">
-            Strategy meets success
-          </Tagline>
-        </div>
-      </section>
+      <StickyHeroWrapper>
+        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          <QuantumGridEffect />
+          <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
+            <H1>KARRIE HILL, JD</H1>
+            <Tagline className="mt-4">
+              Strategy meets success
+            </Tagline>
+          </div>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Profile Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">

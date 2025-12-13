@@ -3,6 +3,7 @@
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { PathSelector } from '@/app/components/sections/PathSelector';
+import { SatelliteConstellationEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 /**
  * About eXp Realty Page
@@ -55,14 +56,17 @@ export default function AboutExpRealty() {
   return (
     <main id="main-content">
       {/* Hero Section */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-        <div className="max-w-[1900px] mx-auto w-full text-center">
-          <H1>ABOUT EXP REALTY</H1>
-          <Tagline className="mt-4">
-            The network behind your net worth
-          </Tagline>
-        </div>
-      </section>
+      <StickyHeroWrapper>
+        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          <SatelliteConstellationEffect />
+          <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
+            <H1>ABOUT EXP REALTY</H1>
+            <Tagline className="mt-4">
+              The network behind your net worth
+            </Tagline>
+          </div>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Path Selector - synced with homepage via localStorage */}
       <PathSelector />

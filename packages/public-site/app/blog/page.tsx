@@ -24,6 +24,7 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
+import { AsteroidBeltEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
 
 /**
  * WordPress categories data (from actual WordPress API)
@@ -114,11 +115,13 @@ export default async function RealEstateAgentBlogPage() {
   return (
     <main id="main-content" className="min-h-screen">
       {/* Hero Section - No wrapper, renders immediately with <img> tag */}
-      <section
-        className="relative min-h-screen px-4 sm:px-8 md:px-12 flex items-center justify-center"
-        style={{ paddingTop: '50px' }}
-        aria-label="Agent Success Hub Hero"
-      >
+      <StickyHeroWrapper>
+        <section
+          className="relative min-h-screen px-4 sm:px-8 md:px-12 flex items-center justify-center"
+          style={{ paddingTop: '50px' }}
+          aria-label="Agent Success Hub Hero"
+        >
+          <AsteroidBeltEffect />
         {/* Hero Background Image - uses <img> tag for LCP detection */}
         <img
           src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop"
@@ -137,7 +140,7 @@ export default async function RealEstateAgentBlogPage() {
         />
 
         {/* Content */}
-        <div className="relative z-10 max-w-[2500px] mx-auto w-full text-center pt-[15vh]">
+        <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center pt-[15vh]">
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6">
             <H1 id="blog-heading">
@@ -152,7 +155,8 @@ export default async function RealEstateAgentBlogPage() {
             </Tagline>
           </div>
         </div>
-      </section>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Blog content loads progressively with client component */}
       <BlogPageClient categories={WORDPRESS_CATEGORIES} />

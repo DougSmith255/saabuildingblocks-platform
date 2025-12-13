@@ -9,4 +9,12 @@
  */
 
 export { useContinuousAnimation } from './useContinuousAnimation';
-// Effects will be added as they are created
+export { SatelliteConstellationEffect } from './SatelliteConstellationEffect';
+export { QuantumGridEffect } from './QuantumGridEffect';
+export { LaserGridEffect } from './LaserGridEffect';
+export { SpiralGalaxyEffect } from './SpiralGalaxyEffect';
+export { ConstellationMapEffect } from './ConstellationMapEffect';
+export { ParticleStormEffect } from './ParticleStormEffect';
+export { AsteroidBeltEffect } from './AsteroidBeltEffect';
+export { DataStreamEffect } from './DataStreamEffect';
+export { StickyHeroWrapper } from './StickyHeroWrapper';

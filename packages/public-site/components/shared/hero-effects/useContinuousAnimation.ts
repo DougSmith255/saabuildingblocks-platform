@@ -31,7 +31,7 @@ export function useContinuousAnimation() {
   useEffect(() => {
     const INTRO_DURATION = 3000;
     const IDLE_SPEED = 0.00005;
-    const SCROLL_SPEED_MULTIPLIER = 0.0006;
+    const SCROLL_SPEED_MULTIPLIER = 0.0009; // 1.5x scroll speed
     const SCROLL_DECAY = 0.99;
     const TRANSITION_DURATION = 2000;
     let lastTimestamp = 0;
