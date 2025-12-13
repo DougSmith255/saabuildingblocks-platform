@@ -63,11 +63,20 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
         contentWrapper.style.filter = `blur(${blur}px) brightness(${brightness})`;
         contentWrapper.style.opacity = `${opacity}`;
 
-        // Also apply opacity directly to backdrop-blur elements (buttons) to fix compositing issues
-        // backdrop-blur creates separate compositing layers that don't inherit parent opacity correctly
+        // Fix backdrop-blur compositing issues during fade
+        // backdrop-blur doesn't work correctly with opacity, so we disable it during scroll
+        // and rely on the solid background color instead
         const backdropElements = contentWrapper.querySelectorAll('[class*="backdrop-blur"]') as NodeListOf<HTMLElement>;
         backdropElements.forEach(el => {
           el.style.opacity = `${opacity}`;
+          // Disable backdrop-blur during scroll to prevent compositing issues
+          if (progress > 0) {
+            el.style.backdropFilter = 'none';
+            (el.style as any).webkitBackdropFilter = 'none';
+          } else {
+            el.style.backdropFilter = '';
+            (el.style as any).webkitBackdropFilter = '';
+          }
         });
       }
 

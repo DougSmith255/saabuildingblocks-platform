@@ -32,10 +32,10 @@ export default function AgentPortalLogin() {
 
       {/* Login Content - centered vertically and horizontally */}
       {/* Use negative margin to shift content up, compensating for fixed header overlap */}
-      {/* Header is ~80-100px, so -mt-10 (-40px) shifts content to appear visually centered */}
+      {/* Header is ~80-100px, so -mt-16 (-64px) shifts the entire H1+card block to appear visually centered */}
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
         {/* Content wrapper - H1 and card centered together as one unit */}
-        <div className="flex flex-col items-center -mt-10">
+        <div className="flex flex-col items-center -mt-16">
           {/* Heading - not width constrained */}
           <div className="text-center mb-8 whitespace-nowrap">
             <H1 className="mb-2">ALLIANCE HQ</H1>
