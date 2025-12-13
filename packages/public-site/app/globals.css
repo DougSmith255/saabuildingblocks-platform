@@ -1403,6 +1403,8 @@ body.is-scrolling .cyber-card-gold-frame::after {
   body.is-scrolling [class*="backdrop-blur"] {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    /* Ensure buttons remain visible with opaque background when backdrop-blur is disabled */
+    background-color: rgb(45, 45, 45) !important;
   }
 }
 

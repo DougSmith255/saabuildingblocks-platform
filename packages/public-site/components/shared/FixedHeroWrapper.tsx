@@ -65,17 +65,20 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
 
         // Fix backdrop-blur compositing issues during fade
         // backdrop-blur doesn't work correctly with opacity, so we disable it during scroll
-        // and rely on the solid background color instead
+        // and compensate with a fully opaque background
         const backdropElements = contentWrapper.querySelectorAll('[class*="backdrop-blur"]') as NodeListOf<HTMLElement>;
         backdropElements.forEach(el => {
           el.style.opacity = `${opacity}`;
-          // Disable backdrop-blur during scroll to prevent compositing issues
+          // Disable backdrop-blur and use opaque background during scroll
           if (progress > 0) {
             el.style.backdropFilter = 'none';
             (el.style as any).webkitBackdropFilter = 'none';
+            // Use fully opaque background to compensate for removed backdrop-blur
+            el.style.backgroundColor = 'rgb(45, 45, 45)';
           } else {
             el.style.backdropFilter = '';
             (el.style as any).webkitBackdropFilter = '';
+            el.style.backgroundColor = '';
           }
         });
       }
