@@ -38,36 +38,28 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
     const handleScroll = () => {
       if (!wrapperRef.current) return;
 
-      const heroSection = wrapperRef.current.querySelector('section');
-      if (!heroSection) return;
+      // Get the inner content div (direct child of wrapper)
+      const innerDiv = wrapperRef.current.querySelector(':scope > div') as HTMLElement;
+      if (!innerDiv) return;
 
-      const heroHeight = heroSection.offsetHeight;
+      const viewportHeight = window.innerHeight;
       const scrollY = window.scrollY;
 
-      // Progress from 0 to 1 as we scroll through the hero height
-      const progress = Math.min(scrollY / heroHeight, 1);
+      // Progress from 0 to 1 as we scroll through the viewport height
+      const progress = Math.min(scrollY / viewportHeight, 1);
 
-      // Apply the scroll-out effect to the entire section
+      // Apply the scroll-out effect to the inner div (contains all hero content)
       const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
       const blur = progress * 8; // Blur from 0 to 8px
       const brightness = 1 - progress; // Dim from 1 to 0
       const opacity = 1 - progress; // Fade from 1 to 0
-      const translateY = -progress * 15; // Move up slightly
+      const translateY = -progress * 50; // Move up as it shrinks
 
-      const section = heroSection as HTMLElement;
-      section.style.transformOrigin = 'center center';
-      section.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-      section.style.filter = `blur(${blur}px) brightness(${brightness})`;
-      section.style.opacity = `${opacity}`;
-
-      // Completely hide when fully scrolled (performance optimization)
-      section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
-
-      // Also apply to the wrapper for complete coverage
-      if (wrapperRef.current) {
-        wrapperRef.current.style.opacity = `${opacity}`;
-        wrapperRef.current.style.visibility = progress >= 1 ? 'hidden' : 'visible';
-      }
+      innerDiv.style.transformOrigin = 'center center';
+      innerDiv.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+      innerDiv.style.filter = `blur(${blur}px) brightness(${brightness})`;
+      innerDiv.style.opacity = `${opacity}`;
+      innerDiv.style.visibility = progress >= 1 ? 'hidden' : 'visible';
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
