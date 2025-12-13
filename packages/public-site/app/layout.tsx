@@ -188,7 +188,8 @@ export default async function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${taskor.variable} ${amulya.variable} ${amulyaItalic.variable} ${synonym.variable}`}
+      className={`${taskor.variable} ${amulya.variable} ${amulyaItalic.variable} ${synonym.variable} notranslate`}
+      translate="no"
       suppressHydrationWarning
     >
       <head>
@@ -221,6 +222,9 @@ export default async function RootLayout({
 
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#ffd700" />
+
+        {/* Disable Google Translate popup (for decorative Japanese characters in effects) */}
+        <meta name="google" content="notranslate" />
 
         {/* Disable browser scroll restoration - always load pages at top */}
         <script
