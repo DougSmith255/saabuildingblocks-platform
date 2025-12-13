@@ -26,15 +26,16 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content" className="relative min-h-screen flex flex-col overflow-hidden">
+    <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
       {/* Login Content - centered vertically and horizontally */}
-      {/* Account for header height (~80-120px) with pt-20 (80px) and extra bottom padding for visual balance */}
-      <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4 pt-20 pb-8">
+      {/* Use negative margin to shift content up, compensating for fixed header overlap */}
+      {/* Header is ~80-100px, so -mt-10 (-40px) shifts content to appear visually centered */}
+      <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
         {/* Content wrapper - H1 and card centered together as one unit */}
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center -mt-10">
           {/* Heading - not width constrained */}
           <div className="text-center mb-8 whitespace-nowrap">
             <H1 className="mb-2">ALLIANCE HQ</H1>

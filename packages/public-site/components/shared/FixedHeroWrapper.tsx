@@ -62,6 +62,13 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
         contentWrapper.style.transform = `scale(${scale}) translateY(${translateY}px)`;
         contentWrapper.style.filter = `blur(${blur}px) brightness(${brightness})`;
         contentWrapper.style.opacity = `${opacity}`;
+
+        // Also apply opacity directly to backdrop-blur elements (buttons) to fix compositing issues
+        // backdrop-blur creates separate compositing layers that don't inherit parent opacity correctly
+        const backdropElements = contentWrapper.querySelectorAll('[class*="backdrop-blur"]') as NodeListOf<HTMLElement>;
+        backdropElements.forEach(el => {
+          el.style.opacity = `${opacity}`;
+        });
       }
 
       // Also fade out the desktop agent counter (which is outside the main content wrapper)
