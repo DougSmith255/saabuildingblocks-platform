@@ -22,8 +22,10 @@ export function RevealMaskEffect() {
   const introStartTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const INTRO_DURATION = 3000; // 3 seconds for intro animation (doubled)
+    const INTRO_DURATION = 3000; // 3 seconds for intro animation
+    const IDLE_SPEED = 0.00015; // Very slow continuous animation when not scrolling
     const smoothFactor = 0.08;
+    let lastTimestamp = 0;
 
     const handleScroll = () => {
       // Progress based on scroll from top of page
@@ -34,6 +36,9 @@ export function RevealMaskEffect() {
     };
 
     const animate = (timestamp: number) => {
+      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+      lastTimestamp = timestamp;
+
       // Handle intro animation first
       if (!introCompleteRef.current) {
         if (introStartTimeRef.current === null) {
@@ -57,12 +62,25 @@ export function RevealMaskEffect() {
           targetRef.current = INITIAL_PROGRESS_END;
         }
       } else {
-        // Normal scroll-based animation after intro
-        const diff = targetRef.current - currentRef.current;
-        if (Math.abs(diff) > 0.0001) {
-          currentRef.current += diff * smoothFactor;
-          setProgress(currentRef.current);
+        // After intro: slow idle animation + faster scroll response
+        const scrollDiff = targetRef.current - currentRef.current;
+
+        if (Math.abs(scrollDiff) > 0.001) {
+          // User is scrolling - respond faster
+          currentRef.current += scrollDiff * smoothFactor;
+        } else {
+          // No scroll - continue slow idle animation
+          currentRef.current += IDLE_SPEED * deltaTime;
+          targetRef.current = currentRef.current;
         }
+
+        // Cap at max progress
+        if (currentRef.current > 1) {
+          currentRef.current = 1;
+          targetRef.current = 1;
+        }
+
+        setProgress(currentRef.current);
       }
 
       rafRef.current = requestAnimationFrame(animate);
