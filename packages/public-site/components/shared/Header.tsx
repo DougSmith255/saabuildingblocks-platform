@@ -24,7 +24,12 @@ export default function Header() {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [isPortalClicked, setIsPortalClicked] = useState(false);
   const [is404Page, setIs404Page] = useState(false);
-  const [hasMounted, setHasMounted] = useState(false);
+  // Initialize hasMounted based on whether animation already played
+  // This ensures proper transition behavior on client-side navigation
+  const [hasMounted, setHasMounted] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (window as any).__headerSlideInPlayed === true;
+  });
   const [fontsLoaded, setFontsLoaded] = useState(false);
   // Track viewport for conditional rendering - only render DesktopNav on desktop
   const [isDesktop, setIsDesktop] = useState(false);
@@ -39,7 +44,12 @@ export default function Header() {
     }
     return true;
   });
-  const [hasSlideIn, setHasSlideIn] = useState(false);
+  // Initialize hasSlideIn based on whether animation already played
+  // This prevents a flash of hidden header on client-side navigation
+  const [hasSlideIn, setHasSlideIn] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (window as any).__headerSlideInPlayed === true;
+  });
 
   // Track pathname for route change detection
   const pathname = usePathname();

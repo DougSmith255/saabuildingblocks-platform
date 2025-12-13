@@ -72,29 +72,29 @@ main > section:not(:first-child) {
 
 /* Keyframes for section depth transition */
 @keyframes section-depth-transition {
-  /* Entry state: Behind, invisible */
+  /* Entry state: Behind, very visible effect */
   0% {
-    opacity: 0;
-    transform: translateZ(-80px) scale(0.95);
-    filter: blur(2px);
+    opacity: 0.3;
+    transform: translateY(50px) scale(0.92);
+    filter: blur(4px);
   }
   /* Visible state: Normal position */
-  15% {
+  25% {
     opacity: 1;
-    transform: translateZ(0) scale(1);
+    transform: translateY(0) scale(1);
     filter: blur(0);
   }
   /* Stay visible for most of the scroll */
-  85% {
+  75% {
     opacity: 1;
-    transform: translateZ(0) scale(1);
+    transform: translateY(0) scale(1);
     filter: blur(0);
   }
-  /* Exit state: Push back, fade out */
+  /* Exit state: Push up and fade out */
   100% {
-    opacity: 0;
-    transform: translateZ(-80px) scale(0.95);
-    filter: blur(2px);
+    opacity: 0.3;
+    transform: translateY(-50px) scale(0.92);
+    filter: blur(4px);
   }
 }
 
@@ -107,8 +107,8 @@ main > section:not(:first-child) {
   body:not([data-no-section-transitions]) main section {
     animation: section-depth-transition linear both;
     animation-timeline: view();
-    /* Extended visibility: Start 20% before entering, end 20% after leaving */
-    animation-range: entry -20% exit 120%;
+    /* Standard cover range - starts when section enters viewport, ends when it leaves */
+    animation-range: cover 0% cover 100%;
     /* 3D context for depth effect */
     transform-style: preserve-3d;
     /* GPU acceleration */
@@ -124,7 +124,7 @@ main > section:not(:first-child) {
   body[data-hero-only-transitions] main > section:first-child {
     animation: section-depth-transition linear both;
     animation-timeline: view();
-    animation-range: entry -20% exit 120%;
+    animation-range: cover 0% cover 100%;
     transform-style: preserve-3d;
     will-change: transform, opacity;
   }
