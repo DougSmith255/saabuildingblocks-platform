@@ -13,21 +13,29 @@ import { useMemo } from 'react';
 export function DataStreamEffect() {
   const { time, progress } = useContinuousAnimation();
 
-  // Memoize columns to prevent regeneration
-  const columns = useMemo(() => [...Array(20)].map((_, i) => ({
+  // Memoize column positions (but not chars - those change with time)
+  const columnConfigs = useMemo(() => [...Array(20)].map((_, i) => ({
     x: i * 5,
     speed: 0.5 + (i % 4) * 0.3,
     length: 5 + (i % 6),
     delay: (i * 0.02) % 0.4,
-    chars: [...Array(22)].map(() => String.fromCharCode(0x30A0 + Math.random() * 96)),
   })), []);
+
+  // Generate characters that change over time based on position and time
+  const getChar = (colIndex: number, charIndex: number) => {
+    // Use time to make characters flip periodically
+    const flipRate = 0.5 + (colIndex % 3) * 0.3; // Different flip rates per column
+    const charSeed = Math.floor(time * 10 * flipRate + colIndex * 7 + charIndex * 13);
+    return String.fromCharCode(0x30A0 + (charSeed % 96));
+  };
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden">
       {/* Green data columns */}
-      {columns.map((col, i) => {
+      {columnConfigs.map((col, i) => {
         const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);
         const yOffset = colProgress * 100;
+        const numChars = 22;
 
         return (
           <div
@@ -44,9 +52,9 @@ export function DataStreamEffect() {
               lineHeight: '1.2',
             }}
           >
-            {col.chars.map((char, j) => {
+            {[...Array(numChars)].map((_, j) => {
               const charY = ((j * 5 + yOffset) % 105);
-              const isHead = j === Math.floor(colProgress * col.chars.length) % col.chars.length;
+              const isHead = j === Math.floor(colProgress * numChars) % numChars;
               const brightness = isHead ? 1 : Math.max(0, 1 - j * 0.06);
               const fadeAtBottom = charY > 70 ? Math.max(0, 1 - (charY - 70) / 30) : 1;
 
@@ -64,7 +72,7 @@ export function DataStreamEffect() {
                       : `0 0 5px rgba(100,255,100,${brightness * 0.3 * fadeAtBottom})`,
                   }}
                 >
-                  {char}
+                  {getChar(i, j)}
                 </div>
               );
             })}

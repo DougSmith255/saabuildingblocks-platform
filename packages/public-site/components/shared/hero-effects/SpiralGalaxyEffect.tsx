@@ -54,6 +54,14 @@ export function SpiralGalaxyEffect() {
           boxShadow: `0 0 ${60 + progress * 40}px rgba(255,215,0,0.4)`,
         }}
       />
+
+      {/* Gradient overlay for depth */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+        }}
+      />
     </div>
   );
 }
