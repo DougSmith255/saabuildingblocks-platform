@@ -38,9 +38,8 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
     const handleScroll = () => {
       if (!wrapperRef.current) return;
 
-      // Get the inner content div (direct child of wrapper)
-      const innerDiv = wrapperRef.current.querySelector(':scope > div') as HTMLElement;
-      if (!innerDiv) return;
+      const heroSection = wrapperRef.current.querySelector('section');
+      if (!heroSection) return;
 
       const viewportHeight = window.innerHeight;
       const scrollY = window.scrollY;
@@ -48,18 +47,26 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
       // Progress from 0 to 1 as we scroll through the viewport height
       const progress = Math.min(scrollY / viewportHeight, 1);
 
-      // Apply the scroll-out effect to the inner div (contains all hero content)
       const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
       const blur = progress * 8; // Blur from 0 to 8px
       const brightness = 1 - progress; // Dim from 1 to 0
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      innerDiv.style.transformOrigin = 'center center';
-      innerDiv.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-      innerDiv.style.filter = `blur(${blur}px) brightness(${brightness})`;
-      innerDiv.style.opacity = `${opacity}`;
-      innerDiv.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+      // Find the main content wrapper (the div with flex flex-col items-center w-full)
+      // This contains the image, H1, tagline, buttons - but NOT the RevealMaskEffect
+      const contentWrapper = heroSection.querySelector('.flex.flex-col.items-center.w-full') as HTMLElement;
+
+      if (contentWrapper) {
+        contentWrapper.style.transformOrigin = 'center center';
+        contentWrapper.style.transform = `scale(${scale}) translateY(${translateY}px)`;
+        contentWrapper.style.filter = `blur(${blur}px) brightness(${brightness})`;
+        contentWrapper.style.opacity = `${opacity}`;
+      }
+
+      // Hide section when fully scrolled
+      const section = heroSection as HTMLElement;
+      section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
