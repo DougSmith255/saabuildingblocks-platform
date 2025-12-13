@@ -407,7 +407,8 @@ export default function Footer() {
           flex-wrap: wrap;
         }
 
-        .footer-nav-link {
+        /* Use :global for Link components which render outside styled-jsx scope */
+        :global(.footer-nav-link) {
           color: #cccccc;
           text-decoration: none;
           font-family: 'Synonym', sans-serif;
@@ -415,7 +416,7 @@ export default function Footer() {
           transition: all 0.3s ease;
         }
 
-        .footer-nav-link:hover {
+        :global(.footer-nav-link:hover) {
           color: #ffd700;
           text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
         }
