@@ -83,31 +83,36 @@ export function RevealMaskEffect() {
   const fadeOut = progress > 0.6 ? 1 - (progress - 0.6) / 0.4 : 1;
 
   return (
-    <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
-      {/* Golden radial glow */}
+    <div className="absolute inset-0 pointer-events-none flex items-center justify-center" style={{ zIndex: 0 }}>
+      {/* Golden radial glow - BOOSTED intensity */}
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse ${maskSize}% ${maskSize}% at 50% 50%,
-            rgba(255,215,0,${0.15 * fadeOut}) 0%, rgba(255,150,0,${0.1 * fadeOut}) 40%, transparent 70%)`,
+          background: `radial-gradient(ellipse ${maskSize}% ${maskSize * 0.8}% at 50% 40%,
+            rgba(255,215,0,${0.35 * fadeOut}) 0%,
+            rgba(255,180,0,${0.25 * fadeOut}) 30%,
+            rgba(255,150,0,${0.15 * fadeOut}) 50%,
+            transparent 75%)`,
         }}
       />
-      {/* Outer rotating border */}
+      {/* Outer rotating border - centered */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[600px] max-h-[600px] border-2"
+        className="absolute w-[80vw] h-[80vw] max-w-[600px] max-h-[600px] border-2"
         style={{
-          transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+          top: '35%',
+          transform: `translateY(-50%) rotate(${rotation}deg)`,
           borderRadius: `${20 + progress * 30}%`,
-          borderColor: `rgba(255,215,0,${0.3 * fadeOut})`,
+          borderColor: `rgba(255,215,0,${0.4 * fadeOut})`,
         }}
       />
-      {/* Inner rotating border */}
+      {/* Inner rotating border - centered */}
       <div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[60vw] h-[60vw] max-w-[450px] max-h-[450px] border"
+        className="absolute w-[60vw] h-[60vw] max-w-[450px] max-h-[450px] border"
         style={{
-          transform: `translate(-50%, -50%) rotate(${-rotation * 0.5}deg)`,
+          top: '35%',
+          transform: `translateY(-50%) rotate(${-rotation * 0.5}deg)`,
           borderRadius: `${50 - progress * 30}%`,
-          borderColor: `rgba(255,215,0,${0.2 * fadeOut})`,
+          borderColor: `rgba(255,215,0,${0.3 * fadeOut})`,
         }}
       />
     </div>
