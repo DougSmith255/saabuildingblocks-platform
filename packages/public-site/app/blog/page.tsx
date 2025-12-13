@@ -122,22 +122,6 @@ export default async function RealEstateAgentBlogPage() {
           aria-label="Agent Success Hub Hero"
         >
           <AsteroidBeltEffect />
-        {/* Hero Background Image - uses <img> tag for LCP detection */}
-        <img
-          src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop"
-          srcSet="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/mobile 640w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/tablet 1024w, https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/519d8e6a89a9e48e-Agent-Success-Hub.webp/desktop 2000w"
-          sizes="100vw"
-          alt="Agent Success Hub - Real Estate Career Resources"
-          fetchPriority="high"
-          loading="eager"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover -z-10 hero-bg"
-          style={{
-            objectPosition: 'center 55%',
-            maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-          }}
-        />
 
         {/* Content */}
         <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center pt-[15vh]">
