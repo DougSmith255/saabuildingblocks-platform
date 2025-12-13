@@ -28,12 +28,12 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content" className="relative min-h-screen flex flex-col overflow-hidden">
+    <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
       {/* Login Content - centered between header and bottom */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-4 pt-24 pb-8">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full max-w-[2400px] mx-auto px-4 pt-24 pb-8">
         <div className="w-full max-w-md">
           {/* Heading */}
           <div className="text-center mb-8">
