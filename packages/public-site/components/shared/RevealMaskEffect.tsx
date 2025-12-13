@@ -9,8 +9,9 @@ import { useEffect, useRef, useState } from 'react';
  * The mask starts large and shrinks as user scrolls, or vice versa.
  */
 
-// Initial progress offset - effect starts at this progress value on page load
-const INITIAL_PROGRESS = 0.35;
+// Initial progress offset - effect animates from START to END on page load
+const INITIAL_PROGRESS_START = 0.05;
+const INITIAL_PROGRESS_END = 0.5;
 
 export function RevealMaskEffect() {
   const [progress, setProgress] = useState(0);
@@ -21,14 +22,14 @@ export function RevealMaskEffect() {
   const introStartTimeRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const INTRO_DURATION = 1500; // 1.5 seconds for intro animation
+    const INTRO_DURATION = 3000; // 3 seconds for intro animation (doubled)
     const smoothFactor = 0.08;
 
     const handleScroll = () => {
       // Progress based on scroll from top of page
       const scrollProgress = Math.min(1, window.scrollY / window.innerHeight);
-      // Add initial offset
-      const adjustedProgress = INITIAL_PROGRESS + scrollProgress * (1 - INITIAL_PROGRESS);
+      // Add initial offset - scroll continues from where intro ended
+      const adjustedProgress = INITIAL_PROGRESS_END + scrollProgress * (1 - INITIAL_PROGRESS_END);
       targetRef.current = adjustedProgress;
     };
 
@@ -43,7 +44,8 @@ export function RevealMaskEffect() {
 
         // Ease out cubic for smooth deceleration
         const eased = 1 - Math.pow(1 - introProgress, 3);
-        const introValue = eased * INITIAL_PROGRESS;
+        // Animate from START to END
+        const introValue = INITIAL_PROGRESS_START + eased * (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START);
 
         currentRef.current = introValue;
         targetRef.current = Math.max(targetRef.current, introValue);
@@ -51,8 +53,8 @@ export function RevealMaskEffect() {
 
         if (introProgress >= 1) {
           introCompleteRef.current = true;
-          currentRef.current = INITIAL_PROGRESS;
-          targetRef.current = INITIAL_PROGRESS;
+          currentRef.current = INITIAL_PROGRESS_END;
+          targetRef.current = INITIAL_PROGRESS_END;
         }
       } else {
         // Normal scroll-based animation after intro
