@@ -1,15 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
-
-// Try to dynamically import Next.js Link - will be undefined if not in Next.js context
-let NextLink: React.ComponentType<{ href: string; className?: string; style?: React.CSSProperties; children: React.ReactNode; onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void }> | null = null;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  NextLink = require('next/link').default;
-} catch {
-  // Not in Next.js context, will use regular anchor
-}
+import Link from 'next/link';
 
 export interface CTAButtonProps {
   href?: string;
@@ -32,7 +24,7 @@ function isInternalLink(href: string): boolean {
 export function CTAButton({ href = '#', children, className = '', onClick }: CTAButtonProps) {
   // Determine if we should use Next.js Link for client-side navigation
   const useNextLink = useMemo(() => {
-    return NextLink && isInternalLink(href);
+    return isInternalLink(href);
   }, [href]);
   const isFullWidth = className.includes('w-full');
   // Use fixed initial value to avoid hydration mismatch, randomize after mount
@@ -68,8 +60,8 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
       {/* Button wrapper - inline container with relative positioning for light bars */}
       <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
         {/* Use Next.js Link for internal links (client-side navigation), regular anchor for external */}
-        {useNextLink && NextLink ? (
-          <NextLink
+        {useNextLink ? (
+          <Link
             href={href}
             onClick={onClick}
             className={`
@@ -94,7 +86,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
             }}
           >
             {children}
-          </NextLink>
+          </Link>
         ) : (
           <a
             href={href}

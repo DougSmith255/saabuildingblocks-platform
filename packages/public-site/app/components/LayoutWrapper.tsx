@@ -124,12 +124,17 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />
       {!shouldHideHeaderFooter && <Header />}
-      <main
+      {/*
+        Using div instead of main to avoid nested <main> elements.
+        Pages already have their own <main id="main-content"> for accessibility.
+        CSS scroll animations target main > section, so this prevents nesting issues.
+      */}
+      <div
         style={{ minHeight: '100vh', position: 'relative' }}
         data-no-footer={shouldHideHeaderFooter ? 'true' : undefined}
       >
         {children}
-      </main>
+      </div>
       {/* Footer is ALWAYS deferred to improve Core Web Vitals (LCP) */}
       {!shouldHideHeaderFooter && (
         <DeferredFooter>

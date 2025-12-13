@@ -46,9 +46,7 @@ main:not(.blog-content) p a:hover {
 
 /* Defer rendering of off-screen sections (not the first/hero section) */
 /* contain-intrinsic-size provides estimated height to prevent layout shift */
-/* Selectors account for both direct sections and nested main elements */
-main > section:not(:first-child),
-main > main > section:not(:first-child),
+/* Target main#main-content sections directly (pages have their own main element) */
 main#main-content > section:not(:first-child) {
   content-visibility: auto;
   contain-intrinsic-size: auto 800px;
@@ -100,9 +98,7 @@ main#main-content > section:not(:first-child) {
 /* Apply scroll-driven animations when supported */
 @supports (animation-timeline: view()) {
   /* Hero section: Push back and fade out as user scrolls past it */
-  /* Selectors account for both direct sections and nested main elements */
-  body:not([data-no-section-transitions]) main > section:first-child,
-  body:not([data-no-section-transitions]) main > main > section:first-child,
+  /* Target main#main-content directly (pages have their own main element) */
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
     animation-timeline: view();
@@ -113,11 +109,7 @@ main#main-content > section:not(:first-child) {
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
-  /* Selectors account for both direct sections and nested main elements */
-  body:not([data-no-section-transitions]) main > section:not(:first-child),
-  body:not([data-no-section-transitions]) main > main > section:not(:first-child),
-  body:not([data-no-section-transitions]) main#main-content > section:not(:first-child),
-  body:not([data-no-section-transitions]) main > div > section {
+  body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
     animation: section-scroll-in linear both;
     animation-timeline: view();
     /* entry 0% = animation starts when section enters viewport from bottom */
@@ -127,7 +119,7 @@ main#main-content > section:not(:first-child) {
   }
 
   /* Completely disable transitions mode */
-  body[data-no-section-transitions] main section {
+  body[data-no-section-transitions] main#main-content section {
     animation: none !important;
     will-change: auto !important;
     opacity: 1 !important;
@@ -137,7 +129,7 @@ main#main-content > section:not(:first-child) {
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  main section {
+  main#main-content section {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;
@@ -1381,17 +1373,15 @@ body.is-scrolling .cyber-card-gold-frame::after {
   animation-play-state: paused !important;
 }
 
-/* Mobile: Pause ALL animations while scrolling for smooth scroll performance */
+/* Mobile: Pause decorative animations while scrolling for smooth scroll performance */
+/* NOTE: We no longer pause ALL animations because scroll-driven animations MUST run during scroll */
 @media (hover: none) and (pointer: coarse), (max-width: 1024px) {
-  /* When scrolling, pause all infinite animations to free up compositor */
-  body.is-scrolling * {
+  /* Only pause specific decorative animations - NOT scroll-driven section animations */
+  body.is-scrolling [class*="StarBackground_star"],
+  body.is-scrolling [class*="starfieldContainer"] [class*="star"],
+  body.is-scrolling .cta-light-bar-pulse::after,
+  body.is-scrolling .cyber-card-gold-frame::after {
     animation-play-state: paused !important;
-  }
-
-  /* Keep essential UI animations running (short, one-time animations) */
-  body.is-scrolling .page-transition-enter,
-  body.is-scrolling [data-animation="essential"] {
-    animation-play-state: running !important;
   }
 
   /* Simplify expensive effects during scroll */
