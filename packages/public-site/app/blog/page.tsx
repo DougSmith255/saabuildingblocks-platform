@@ -117,14 +117,13 @@ export default async function RealEstateAgentBlogPage() {
       {/* Hero Section - No wrapper, renders immediately with <img> tag */}
       <StickyHeroWrapper>
         <section
-          className="relative min-h-screen px-4 sm:px-8 md:px-12 flex items-center justify-center"
-          style={{ paddingTop: '50px' }}
+          className="relative min-h-[100dvh] px-4 sm:px-8 md:px-12 flex items-center justify-center"
           aria-label="Agent Success Hub Hero"
         >
           <AsteroidBeltEffect />
 
         {/* Content */}
-        <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center pt-[15vh]">
+        <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center">
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6">
             <H1 id="blog-heading">
