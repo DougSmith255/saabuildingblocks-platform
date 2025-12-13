@@ -100,8 +100,8 @@ main#main-content > section:not(:first-child) {
   /* Hero section: Shrink and fade out based on scroll position */
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
-    animation-timeline: scroll();
-    animation-range: 0vh 100vh;
+    animation-timeline: scroll(root);
+    animation-range: 0px 100vh;
   }
 
   /* Other sections: Fade in and slide up as they enter viewport */
