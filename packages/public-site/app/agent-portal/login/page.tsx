@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { H1, CyberCardGold } from '@saa/shared/components/saa';
+import { H1, CyberCard } from '@saa/shared/components/saa';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
@@ -28,20 +28,21 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <main id="main-content" className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
-      {/* Login Content */}
-      <div className="relative z-10 w-full max-w-md px-4">
-        {/* Heading */}
-        <div className="text-center mb-8">
-          <H1 className="mb-2">ALLIANCE HQ</H1>
-          <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
-        </div>
+      {/* Login Content - centered between header and bottom */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center w-full px-4 pt-24 pb-8">
+        <div className="w-full max-w-md">
+          {/* Heading */}
+          <div className="text-center mb-8">
+            <H1 className="mb-2">ALLIANCE HQ</H1>
+            <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
+          </div>
 
-        {/* Login Form - CyberCardGold */}
-        <CyberCardGold padding="lg" centered={false}>
+        {/* Login Form - CyberCard */}
+        <CyberCard padding="lg" centered={false}>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
@@ -101,16 +102,17 @@ export default function AgentPortalLogin() {
               </a>
             </div>
           </form>
-        </CyberCardGold>
+        </CyberCard>
 
-        {/* Back to Home */}
-        <div className="text-center mt-6">
-          <a
-            href="/"
-            className="text-caption text-[#e5e4dd]/60 hover:text-[#ffd700] transition-colors"
-          >
-            Return to base
-          </a>
+          {/* Back to Home */}
+          <div className="text-center mt-6">
+            <a
+              href="/"
+              className="text-caption text-[#e5e4dd]/60 hover:text-[#ffd700] transition-colors"
+            >
+              Return to base
+            </a>
+          </div>
         </div>
       </div>
     </main>
