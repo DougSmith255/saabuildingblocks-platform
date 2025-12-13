@@ -55,12 +55,19 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
       const translateY = -progress * 15; // Move up slightly
 
       const section = heroSection as HTMLElement;
+      section.style.transformOrigin = 'center center';
       section.style.transform = `scale(${scale}) translateY(${translateY}px)`;
       section.style.filter = `blur(${blur}px) brightness(${brightness})`;
       section.style.opacity = `${opacity}`;
 
       // Completely hide when fully scrolled (performance optimization)
       section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+
+      // Also apply to the wrapper for complete coverage
+      if (wrapperRef.current) {
+        wrapperRef.current.style.opacity = `${opacity}`;
+        wrapperRef.current.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

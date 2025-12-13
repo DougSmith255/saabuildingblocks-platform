@@ -11,10 +11,13 @@ import { useEffect, useRef, useState } from 'react';
  * - Starts fast and smoothly decelerates to idle speed (no pause/jerk)
  * - Uses exponential decay for natural-feeling slowdown
  * - Scroll adds a small boost (1.5x idle speed)
+ * - Fades to 0 and hides when scrolled past hero
  */
 
 export function RevealMaskEffect() {
   const [time, setTime] = useState(0);
+  const [scrollFade, setScrollFade] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const startTimeRef = useRef<number | null>(null);
@@ -39,6 +42,11 @@ export function RevealMaskEffect() {
       if (scrollDelta > 0) {
         scrollBoostRef.current = SCROLL_BOOST;
       }
+
+      // Calculate fade based on scroll position
+      const viewportHeight = window.innerHeight;
+      const fadeProgress = Math.min(currentScrollY / viewportHeight, 1);
+      setScrollFade(1 - fadeProgress);
     };
 
     const animate = (timestamp: number) => {
@@ -65,6 +73,7 @@ export function RevealMaskEffect() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
+    handleScroll(); // Initial fade calculation
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
@@ -86,8 +95,21 @@ export function RevealMaskEffect() {
   const maskSize = 70 - progress * 50; // Shrinks from ~65% to ~30%
   const rotation = time * 90; // Continuous rotation based on raw time
 
+  // Hide completely when faded out
+  if (scrollFade <= 0) {
+    return null;
+  }
+
   return (
-    <div className="absolute inset-0 pointer-events-none flex items-center justify-center" style={{ zIndex: 0 }}>
+    <div
+      ref={containerRef}
+      className="absolute inset-0 pointer-events-none flex items-center justify-center"
+      style={{
+        zIndex: 0,
+        opacity: scrollFade,
+        visibility: scrollFade <= 0 ? 'hidden' : 'visible',
+      }}
+    >
       {/* Golden radial glow - continuous visibility */}
       <div
         className="absolute inset-0"
