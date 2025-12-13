@@ -102,8 +102,9 @@ main#main-content > section:not(:first-child) {
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
     animation-timeline: view();
-    /* Use shorthand: exit range from 0% to 60% */
-    animation-range: exit 0% 60%;
+    /* Use longhand for explicit control: exit range from 0% to 60% */
+    animation-range-start: exit 0%;
+    animation-range-end: exit 60%;
     will-change: transform, opacity;
   }
 
@@ -111,8 +112,9 @@ main#main-content > section:not(:first-child) {
   body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
     animation: section-scroll-in linear both;
     animation-timeline: view();
-    /* Use shorthand: entry range from 0% to 100% (full entry animation) */
-    animation-range: entry;
+    /* Use longhand: entry range from 0% to 100% */
+    animation-range-start: entry 0%;
+    animation-range-end: entry 100%;
     will-change: transform, opacity;
   }
 
