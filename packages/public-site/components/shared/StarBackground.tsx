@@ -17,6 +17,10 @@ interface Star {
 export default function StarBackground() {
   // Track if we've already initialized to prevent double-initialization
   const hasInitialized = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Lock the viewport height on initial load to prevent shift when browser chrome hides
+  const [lockedHeight, setLockedHeight] = useState<number | null>(null);
 
   // Initialize stars immediately to prevent flash on page navigation
   // Stars only generate once per session using sessionStorage
@@ -99,8 +103,35 @@ export default function StarBackground() {
     }
   }, [stars.length]);
 
+  // Lock viewport height on mount to prevent shift when mobile browser chrome hides
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Capture the initial viewport height and lock it
+    // This prevents the stars from shifting when the address bar hides/shows
+    const initialHeight = window.innerHeight;
+    setLockedHeight(initialHeight);
+
+    // Also store in sessionStorage so it persists across navigations
+    try {
+      const storedHeight = sessionStorage.getItem('starBackgroundHeight');
+      if (storedHeight) {
+        setLockedHeight(parseInt(storedHeight, 10));
+      } else {
+        sessionStorage.setItem('starBackgroundHeight', String(initialHeight));
+      }
+    } catch {
+      // Ignore storage errors
+    }
+  }, []);
+
   return (
-    <div className={styles.starfieldContainer} aria-hidden="true">
+    <div
+      ref={containerRef}
+      className={styles.starfieldContainer}
+      aria-hidden="true"
+      style={lockedHeight ? { height: `${lockedHeight}px` } : undefined}
+    >
       {stars.map((star) => (
         <div
           key={star.id}

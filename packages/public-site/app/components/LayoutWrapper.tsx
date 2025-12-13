@@ -47,6 +47,11 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/_not-found', // 404 page
   ], []);
 
+  // Routes where header/footer should be hidden, but NOT sub-routes (like /login)
+  const exactNoHeaderFooterRoutes = useMemo(() => [
+    '/agent-portal', // Main portal - no header/footer, but login page keeps them
+  ], []);
+
   // Routes where section transitions should be DISABLED
   const noSectionTransitionRoutes = useMemo(() => [
     '/agent-portal',
@@ -115,8 +120,18 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     // If pathname is null/undefined, don't hide (let it render normally)
     if (!pathname) return false;
 
-    return noHeaderFooterRoutes.some(route => pathname.startsWith(route));
-  }, [pathname, noHeaderFooterRoutes]);
+    // Check prefix-based routes (e.g., /master-controller/*)
+    if (noHeaderFooterRoutes.some(route => pathname.startsWith(route))) {
+      return true;
+    }
+
+    // Check exact match routes (e.g., /agent-portal but NOT /agent-portal/login)
+    if (exactNoHeaderFooterRoutes.includes(pathname) || exactNoHeaderFooterRoutes.includes(pathname.replace(/\/$/, ''))) {
+      return true;
+    }
+
+    return false;
+  }, [pathname, noHeaderFooterRoutes, exactNoHeaderFooterRoutes]);
 
   return (
     <ViewportProvider>

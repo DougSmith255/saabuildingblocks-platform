@@ -34,7 +34,7 @@ const navItems: NavItem[] = [
       { label: 'eXp Awards', href: '/awards/' },
     ],
   },
-  { label: 'Agent Portal', href: '/agent-portal/' },
+  { label: 'Agent Portal', href: '/agent-portal/login/' },
 ];
 
 interface DesktopNavProps {
