@@ -92,7 +92,7 @@ export function RevealMaskEffect() {
   const progress = 0.45 + combinedWave * 0.35; // Oscillates between 0.1 and 0.8
 
   // Animation values based on progress
-  const maskSize = 70 - progress * 50; // Shrinks from ~65% to ~30%
+  const maskSize = 90 - progress * 40; // Larger: shrinks from ~85% to ~50%
   const rotation = time * 90; // Continuous rotation based on raw time
 
   // Hide completely when faded out
@@ -110,35 +110,35 @@ export function RevealMaskEffect() {
         visibility: scrollFade <= 0 ? 'hidden' : 'visible',
       }}
     >
-      {/* Golden radial glow - continuous visibility */}
+      {/* Golden radial glow - less intense, larger, centered lower */}
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse ${maskSize}% ${maskSize * 0.8}% at 50% 40%,
-            rgba(255,215,0,0.35) 0%,
-            rgba(255,180,0,0.25) 30%,
-            rgba(255,150,0,0.15) 50%,
-            transparent 75%)`,
+          background: `radial-gradient(ellipse ${maskSize}% ${maskSize * 0.7}% at 50% 50%,
+            rgba(255,215,0,0.2) 0%,
+            rgba(255,180,0,0.12) 35%,
+            rgba(255,150,0,0.06) 55%,
+            transparent 80%)`,
         }}
       />
-      {/* Outer rotating border - centered */}
+      {/* Outer rotating border - centered between photo top and tagline bottom */}
       <div
-        className="absolute w-[80vw] h-[80vw] max-w-[600px] max-h-[600px] border-2"
+        className="absolute w-[80vw] h-[80vw] max-w-[700px] max-h-[700px] border-2"
         style={{
-          top: '35%',
+          top: '45%',
           transform: `translateY(-50%) rotate(${rotation}deg)`,
           borderRadius: `${20 + progress * 30}%`,
-          borderColor: 'rgba(255,215,0,0.4)',
+          borderColor: 'rgba(255,215,0,0.25)',
         }}
       />
-      {/* Inner rotating border - centered */}
+      {/* Inner rotating border - centered between photo top and tagline bottom */}
       <div
-        className="absolute w-[60vw] h-[60vw] max-w-[450px] max-h-[450px] border"
+        className="absolute w-[60vw] h-[60vw] max-w-[520px] max-h-[520px] border"
         style={{
-          top: '35%',
+          top: '45%',
           transform: `translateY(-50%) rotate(${-rotation * 0.5}deg)`,
           borderRadius: `${Math.max(20, 50 - progress * 30)}%`,
-          borderColor: 'rgba(255,215,0,0.3)',
+          borderColor: 'rgba(255,215,0,0.18)',
         }}
       />
     </div>
