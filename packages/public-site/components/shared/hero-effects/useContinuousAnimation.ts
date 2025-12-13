@@ -27,8 +27,9 @@ export function useContinuousAnimation() {
     const IDLE_SPEED = 0.00005;
     const INTRO_SPEED = 0.0004; // 8x idle speed at start
     const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
-    const SCROLL_BOOST = 0.000025; // Adds 0.5x for 1.5x total during scroll
-    const SCROLL_DECAY = 0.95;
+    const SCROLL_BOOST_MAX = 0.00015; // Max boost: 3x idle speed total
+    const SCROLL_BOOST_MULTIPLIER = 0.000008; // How much each px of scroll adds
+    const SCROLL_DECAY = 0.92; // Slower decay so boost lasts longer
 
     let lastTimestamp = 0;
 
@@ -38,7 +39,9 @@ export function useContinuousAnimation() {
       lastScrollY.current = currentScrollY;
 
       if (scrollDelta > 0) {
-        scrollBoostRef.current = SCROLL_BOOST;
+        // Boost proportional to scroll speed, capped at max
+        const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
+        scrollBoostRef.current = Math.max(scrollBoostRef.current, boost);
       }
     };
 
