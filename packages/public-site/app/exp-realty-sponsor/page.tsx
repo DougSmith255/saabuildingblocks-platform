@@ -53,7 +53,7 @@ export default function ExpRealtySponsor() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <QuantumGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>THE WOLF PACK</H1>
+            <H1>THE ALLIANCE</H1>
             <Tagline className="mt-4">
               3,700+ agents. One mission. Your success.
             </Tagline>
