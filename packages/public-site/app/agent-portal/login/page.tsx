@@ -119,57 +119,90 @@ export default function AgentPortalLogin() {
 
 /**
  * Data Stream Effect - Neon Blue Matrix-style rain
+ *
+ * Animation behavior:
+ * 1. Intro: Fast animation from START to END over 3 seconds
+ * 2. Transition: Gradually slows down to idle speed (smooth blend)
+ * 3. Idle: Continuous slow animation that never stops
+ * 4. Scroll: Speeds up when user scrolls
  */
 function DataStreamEffect() {
   const [progress, setProgress] = useState(INITIAL_PROGRESS_START);
-  const targetRef = useRef(INITIAL_PROGRESS_START);
   const currentRef = useRef(INITIAL_PROGRESS_START);
+  const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
-  const introCompleteRef = useRef(false);
   const introStartTimeRef = useRef<number | null>(null);
+  const lastScrollY = useRef(0);
+  const scrollVelocityRef = useRef(0);
 
   useEffect(() => {
     const INTRO_DURATION = 3000;
-    const smoothFactor = 0.08;
+    const INTRO_VELOCITY = (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START) / INTRO_DURATION;
+    const IDLE_VELOCITY = 0.000008;
+    const SCROLL_VELOCITY_MULTIPLIER = 0.0003;
+    const VELOCITY_DECAY = 0.995;
+    const TRANSITION_DURATION = 2000;
+    let lastTimestamp = 0;
+    let introEndTime: number | null = null;
 
     const handleScroll = () => {
-      const scrollProgress = Math.min(1, window.scrollY / window.innerHeight);
-      const adjustedProgress = INITIAL_PROGRESS_END + scrollProgress * (1 - INITIAL_PROGRESS_END);
-      targetRef.current = adjustedProgress;
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY.current;
+      lastScrollY.current = currentScrollY;
+
+      if (scrollDelta > 0) {
+        scrollVelocityRef.current = Math.min(scrollDelta * SCROLL_VELOCITY_MULTIPLIER, 0.002);
+      }
     };
 
     const animate = (timestamp: number) => {
-      if (!introCompleteRef.current) {
-        if (introStartTimeRef.current === null) {
-          introStartTimeRef.current = timestamp;
-        }
-        const elapsed = timestamp - introStartTimeRef.current;
-        const introProgress = Math.min(1, elapsed / INTRO_DURATION);
-        const eased = 1 - Math.pow(1 - introProgress, 3);
-        const introValue = INITIAL_PROGRESS_START + eased * (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START);
+      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+      lastTimestamp = timestamp;
 
-        currentRef.current = introValue;
-        targetRef.current = Math.max(targetRef.current, introValue);
-        setProgress(introValue);
-
-        if (introProgress >= 1) {
-          introCompleteRef.current = true;
-          currentRef.current = INITIAL_PROGRESS_END;
-          targetRef.current = INITIAL_PROGRESS_END;
-        }
-      } else {
-        const diff = targetRef.current - currentRef.current;
-        if (Math.abs(diff) > 0.0001) {
-          currentRef.current += diff * smoothFactor;
-          setProgress(currentRef.current);
-        }
+      if (introStartTimeRef.current === null) {
+        introStartTimeRef.current = timestamp;
       }
 
+      const elapsed = timestamp - introStartTimeRef.current;
+
+      // Phase 1: Intro animation
+      if (elapsed < INTRO_DURATION) {
+        const introProgress = elapsed / INTRO_DURATION;
+        const eased = 1 - Math.pow(1 - introProgress, 3);
+        currentRef.current = INITIAL_PROGRESS_START + eased * (INITIAL_PROGRESS_END - INITIAL_PROGRESS_START);
+        velocityRef.current = INTRO_VELOCITY * (1 - introProgress);
+      }
+      // Phase 2: Transition from intro to idle
+      else if (elapsed < INTRO_DURATION + TRANSITION_DURATION) {
+        if (introEndTime === null) {
+          introEndTime = timestamp;
+          velocityRef.current = INTRO_VELOCITY * 0.1;
+        }
+
+        const transitionProgress = (elapsed - INTRO_DURATION) / TRANSITION_DURATION;
+        const blendedVelocity = velocityRef.current * (1 - transitionProgress) + IDLE_VELOCITY * transitionProgress;
+        const totalVelocity = blendedVelocity + scrollVelocityRef.current;
+
+        currentRef.current += totalVelocity * deltaTime;
+        scrollVelocityRef.current *= VELOCITY_DECAY;
+      }
+      // Phase 3: Continuous idle animation
+      else {
+        const totalVelocity = IDLE_VELOCITY + scrollVelocityRef.current;
+        currentRef.current += totalVelocity * deltaTime;
+        scrollVelocityRef.current *= VELOCITY_DECAY;
+      }
+
+      if (currentRef.current > 2) {
+        currentRef.current = 2;
+      }
+
+      setProgress(currentRef.current);
       rafRef.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
+    lastScrollY.current = window.scrollY;
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
