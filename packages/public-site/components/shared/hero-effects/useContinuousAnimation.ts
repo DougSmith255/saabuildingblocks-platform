@@ -31,8 +31,8 @@ export function useContinuousAnimation() {
   useEffect(() => {
     const INTRO_DURATION = 3000;
     const IDLE_SPEED = 0.00005;
-    const SCROLL_SPEED_MULTIPLIER = 0.0009; // 1.5x scroll speed
-    const SCROLL_DECAY = 0.99;
+    const SCROLL_BOOST = 0.000025; // Adds 0.5x to reach 1.5x idle speed when scrolling
+    const SCROLL_DECAY = 0.95; // Faster decay so it returns to idle quicker
     const TRANSITION_DURATION = 2000;
     let lastTimestamp = 0;
 
@@ -42,7 +42,8 @@ export function useContinuousAnimation() {
       lastScrollY.current = currentScrollY;
 
       if (scrollDelta > 0) {
-        scrollBoostRef.current = Math.min(scrollDelta * SCROLL_SPEED_MULTIPLIER, 0.005);
+        // Set scroll boost to fixed amount (not proportional to scroll speed)
+        scrollBoostRef.current = SCROLL_BOOST;
       }
     };
 
