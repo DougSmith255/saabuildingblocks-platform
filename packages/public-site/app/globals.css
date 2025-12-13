@@ -108,7 +108,7 @@ main#main-content > section:not(:first-child) {
   body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
     animation: section-scroll-in linear both;
     animation-timeline: view();
-    animation-range: entry;
+    animation-range: entry 0% entry 50%;
   }
 
   /* Completely disable transitions mode */
