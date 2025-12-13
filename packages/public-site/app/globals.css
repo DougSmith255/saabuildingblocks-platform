@@ -102,9 +102,8 @@ main#main-content > section:not(:first-child) {
   body:not([data-no-section-transitions]) main#main-content > section:first-child {
     animation: hero-scroll-out linear both;
     animation-timeline: view();
-    /* exit 0% = starts when hero begins to leave viewport at top */
-    /* exit 60% = completes when hero is 60% out of viewport */
-    animation-range: exit 0% exit 60%;
+    /* Use shorthand: exit range from 0% to 60% */
+    animation-range: exit 0% 60%;
     will-change: transform, opacity;
   }
 
@@ -112,9 +111,8 @@ main#main-content > section:not(:first-child) {
   body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
     animation: section-scroll-in linear both;
     animation-timeline: view();
-    /* entry 0% = animation starts when section enters viewport from bottom */
-    /* cover 40% = animation completes when section is 40% into the viewport */
-    animation-range: entry 0% cover 40%;
+    /* Use shorthand: entry range from 0% to 100% (full entry animation) */
+    animation-range: entry;
     will-change: transform, opacity;
   }
 
