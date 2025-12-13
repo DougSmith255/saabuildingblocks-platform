@@ -107,29 +107,6 @@ export function CyberCard({
             0 2px 6px rgba(0,0,0,0.3);
         }
 
-        /* Organic glow pulse overlay - same animation as CTA buttons */
-        .cyber-card-plate::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: 12px;
-          pointer-events: none;
-          z-index: 0;
-          box-shadow: 0 0 12px 3px rgba(255, 215, 0, 0.15);
-          animation: cyberCardPulse 2.4s linear infinite;
-        }
-
-        @keyframes cyberCardPulse {
-          0% { opacity: 0.55; }
-          13% { opacity: 0.95; }
-          28% { opacity: 0.6; }
-          41% { opacity: 0.85; }
-          54% { opacity: 0.5; }
-          67% { opacity: 1; }
-          83% { opacity: 0.7; }
-          100% { opacity: 0.55; }
-        }
-
         /* Glossy highlight overlay on metal plate */
         .cyber-card-plate::before {
           content: "";
@@ -186,12 +163,17 @@ export function CyberCard({
           transform: translateZ(0);
         }
 
-        /* Brand yellow for headings inside CyberCard */
+        /* Neon yellow glow for headings inside CyberCard */
         .cyber-card-content h3,
         .cyber-card-content h4,
         .cyber-card-content h5,
         .cyber-card-content h6 {
           color: #ffd700;
+          text-shadow:
+            0 0 5px rgba(255, 215, 0, 0.6),
+            0 0 10px rgba(255, 215, 0, 0.4),
+            0 0 20px rgba(255, 215, 0, 0.25),
+            0 0 40px rgba(255, 215, 0, 0.1);
         }
       `}</style>
 

@@ -84,17 +84,19 @@ export function CyberCardGold({
           overflow: visible;
         }
 
-        /* GPU-accelerated pulsing glow - animates opacity instead of box-shadow */
-        @keyframes cyberCardGoldPulseOpacity {
-          0%, 100% {
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
+        /* Organic pulsing glow - matches CTA button light bars */
+        @keyframes cyberCardGoldOrganicPulse {
+          0% { opacity: 0.55; }
+          13% { opacity: 0.95; }
+          28% { opacity: 0.6; }
+          41% { opacity: 0.85; }
+          54% { opacity: 0.5; }
+          67% { opacity: 1; }
+          83% { opacity: 0.7; }
+          100% { opacity: 0.55; }
         }
 
-        /* Intensified glow layer - fades in/out via opacity (GPU-accelerated) */
+        /* Intensified glow layer - organic pulse via opacity (GPU-accelerated) */
         .cyber-card-gold-frame::after {
           content: "";
           position: absolute;
@@ -112,7 +114,7 @@ export function CyberCardGold({
             0 6px 16px rgba(0,0,0,0.35);
           pointer-events: none;
           z-index: -1;
-          animation: cyberCardGoldPulseOpacity 2s ease-in-out infinite;
+          animation: cyberCardGoldOrganicPulse 2.4s linear infinite;
           will-change: opacity;
         }
 
