@@ -85,60 +85,19 @@ main#main-content > section:not(:first-child) {
   }
 }
 
-/* Keyframes for hero scroll-out transition (hero recedes into the dark cosmic void) */
-@keyframes hero-scroll-out {
-  0% {
-    transform: scale(1) translateY(0);
-    filter: blur(0px) brightness(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(0.8) translateY(-5px);
-    filter: blur(2px) brightness(0.8);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(0.6) translateY(-15px);
-    filter: blur(8px) brightness(0.2);
-    opacity: 0;
-  }
-}
+/*
+ * Hero scroll animation is now handled entirely by JavaScript (FixedHeroWrapper.tsx, StickyHeroWrapper.tsx)
+ * This allows fine-grained control: content shrinks/blurs/fades, but effect layers ONLY fade.
+ * CSS scroll-timeline was removed because it applied transforms to the entire section,
+ * causing effect layers to compress along with content on Chrome (which supports scroll-timeline).
+ * JavaScript provides consistent behavior across all browsers.
+ */
 
-/* Apply scroll-driven animations when supported */
-@supports (animation-timeline: scroll()) {
-  /* Hero section: Shrinks and fades into the void as you scroll */
-  /* Works with both regular sections and FixedHeroWrapper */
-  body:not([data-no-section-transitions]) main#main-content > section:first-child,
-  body:not([data-no-section-transitions]) .fixed-hero-wrapper section {
-    animation: hero-scroll-out ease-out both;
-    animation-timeline: scroll(root);
-    animation-range: 0px 100vh;
-  }
-
-  /* Content sections scroll over the fixed hero */
-  body:not([data-no-section-transitions]) main#main-content > .fixed-hero-spacer ~ section,
-  body:not([data-no-section-transitions]) main#main-content > .fixed-hero-spacer ~ * section {
-    position: relative;
-    z-index: 1;
-  }
-
-
-  /* Other sections: Fade in and slide up as they enter viewport */
-  /* DISABLED: view() timeline fires animationend immediately on page load, breaking the effect
-  body:not([data-no-section-transitions]) main#main-content > section:not(:first-child) {
-    animation: section-scroll-in linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 50%;
-  }
-  */
-
-  /* Completely disable transitions mode */
-  body[data-no-section-transitions] main#main-content section {
-    animation: none !important;
-    will-change: auto !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
+/* Content sections scroll over the fixed hero */
+.fixed-hero-spacer ~ section,
+.fixed-hero-spacer ~ * section {
+  position: relative;
+  z-index: 1;
 }
 
 /* Respect reduced motion preference */
