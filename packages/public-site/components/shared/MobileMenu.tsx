@@ -52,6 +52,7 @@ interface MobileMenuProps {
 export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Page, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {
   const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
+  const [closingDropdown, setClosingDropdown] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const savedScrollY = useRef<number>(0);
 
@@ -104,7 +105,24 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
   }, [isMobileMenuOpen]);
 
   const toggleDropdown = (index: number) => {
-    setOpenDropdown(openDropdown === index ? null : index);
+    const previousDropdown = openDropdown;
+
+    if (previousDropdown === index) {
+      // Closing the same dropdown - animate close
+      setClosingDropdown(index);
+      setOpenDropdown(null);
+      // Clear closing state after animation completes
+      setTimeout(() => setClosingDropdown(null), 250);
+    } else {
+      // Opening a different dropdown
+      if (previousDropdown !== null) {
+        // Close the previous one with animation
+        setClosingDropdown(previousDropdown);
+        setTimeout(() => setClosingDropdown(null), 250);
+      }
+      // Open the new one
+      setOpenDropdown(index);
+    }
   };
 
   if (is404Page) {
@@ -193,7 +211,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
                     </button>
                     <div
                       className={`mobile-dropdown overflow-hidden pl-4 ${
-                        openDropdown === index ? 'dropdown-open' : 'dropdown-closed'
+                        openDropdown === index ? 'dropdown-open' : closingDropdown === index ? 'dropdown-closing' : 'dropdown-closed'
                       }`}
                     >
                       {item.dropdown.map((dropdownItem, dropdownIndex) => (

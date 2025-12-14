@@ -235,8 +235,9 @@ export default function Header() {
         {/* Sliding container for background and content */}
         {/* First load: starts off-screen (-translate-y-full), slides down when hasSlideIn becomes true */}
         {/* Subsequent loads: no slide animation, just normal scroll hide/show behavior */}
+        {/* Fades out when mobile menu is open */}
         <div
-          className={`${hasMounted ? 'transition-transform duration-500' : ''} ease-in-out`}
+          className={`header-bg-container ${hasMounted ? 'transition-all duration-300' : ''} ease-in-out`}
           style={{
             width: '100%',
             maxWidth: '100%',
@@ -244,12 +245,15 @@ export default function Header() {
             borderRadius: '0 0 20px 20px',
             borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-            willChange: 'transform',
+            willChange: 'transform, opacity',
             contain: 'layout style',
             // First load: start hidden, slide down; After: normal scroll behavior
             transform: isFirstLoad
               ? (hasSlideIn ? 'translateY(0) translateZ(0)' : 'translateY(-100%) translateZ(0)')
               : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
+            // Fade out when mobile menu is open
+            opacity: isMobileMenuOpen ? 0 : 1,
+            pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           }}
         >
           {/* Glass Background - 3 layers only */}
@@ -460,6 +464,12 @@ export default function Header() {
           transform: scaleY(1) translate3d(0, 0, 0);
           opacity: 1;
           max-height: none;
+        }
+
+        .dropdown-closing {
+          transform: scaleY(0) translate3d(0, 0, 0);
+          opacity: 0;
+          max-height: 500px; /* Keep height during animation */
         }
 
         .dropdown-closed {
