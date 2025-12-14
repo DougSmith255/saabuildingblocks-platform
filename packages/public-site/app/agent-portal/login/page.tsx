@@ -11,6 +11,9 @@ const INITIAL_PROGRESS_END = 0.5;
 // Auth API URL - admin dashboard handles authentication (runs on saabuildingblocks.com)
 const AUTH_API_URL = 'https://saabuildingblocks.com';
 
+// Password Reset Modal States
+type ResetStep = 'email' | 'success';
+
 /**
  * Agent Portal Login Page
  * Features the Data Stream effect in green with centered login form in CyberCardGold
@@ -21,6 +24,14 @@ export default function AgentPortalLogin() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Password reset state
+  const [showResetModal, setShowResetModal] = useState(false);
+  const [resetStep, setResetStep] = useState<ResetStep>('email');
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
 
   // Check if already logged in
   useEffect(() => {
@@ -77,6 +88,68 @@ export default function AgentPortalLogin() {
       setError('Network error. Please check your connection and try again.');
       setIsLoading(false);
     }
+  };
+
+  // Password reset handler
+  const handleResetRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResetLoading(true);
+    setResetError(null);
+    setResetMessage(null);
+
+    try {
+      const response = await fetch(`${AUTH_API_URL}/api/auth/password-reset/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: resetEmail,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok && response.status !== 429) {
+        setResetError(data.message || 'Failed to send reset email. Please try again.');
+        setResetLoading(false);
+        return;
+      }
+
+      if (response.status === 429) {
+        setResetError('Too many requests. Please wait before trying again.');
+        setResetLoading(false);
+        return;
+      }
+
+      // Success - show confirmation
+      setResetMessage(data.message || 'If an account exists with this email, a password reset link has been sent.');
+      setResetStep('success');
+      setResetLoading(false);
+    } catch (err) {
+      console.error('Password reset error:', err);
+      setResetError('Network error. Please check your connection and try again.');
+      setResetLoading(false);
+    }
+  };
+
+  // Open reset modal
+  const openResetModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowResetModal(true);
+    setResetStep('email');
+    setResetEmail('');
+    setResetError(null);
+    setResetMessage(null);
+  };
+
+  // Close reset modal
+  const closeResetModal = () => {
+    setShowResetModal(false);
+    setResetStep('email');
+    setResetEmail('');
+    setResetError(null);
+    setResetMessage(null);
   };
 
   return (
@@ -158,18 +231,125 @@ export default function AgentPortalLogin() {
 
               {/* Forgot Password Link */}
               <div className="text-center">
-                <a
-                  href="#"
-                  className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors"
+                <button
+                  type="button"
+                  onClick={openResetModal}
+                  className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors cursor-pointer bg-transparent border-none"
                 >
                   Forgot access code?
-                </a>
+                </button>
               </div>
             </form>
             </CyberCard>
           </div>
         </div>
       </div>
+
+      {/* Password Reset Modal */}
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={closeResetModal}
+          />
+
+          {/* Modal */}
+          <div className="relative w-full max-w-md">
+            <CyberCard padding="lg" centered={false}>
+              {/* Close button */}
+              <button
+                onClick={closeResetModal}
+                className="absolute top-4 right-4 text-[#ffd700]/60 hover:text-[#ffd700] transition-colors text-xl"
+              >
+                &times;
+              </button>
+
+              {resetStep === 'email' ? (
+                <>
+                  <h2 className="text-h3 text-center mb-2">Reset Access Code</h2>
+                  <p className="text-body text-center text-[#e5e4dd]/70 mb-6">
+                    Enter your email and we&apos;ll send you a reset link.
+                  </p>
+
+                  <form onSubmit={handleResetRequest} className="space-y-6">
+                    {/* Error Message */}
+                    {resetError && (
+                      <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
+                        {resetError}
+                      </div>
+                    )}
+
+                    {/* Email Field */}
+                    <div className="space-y-2">
+                      <label htmlFor="reset-email" className="block text-caption text-[#ffd700] uppercase tracking-wider">
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="reset-email"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        required
+                        autoFocus
+                        className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
+                        placeholder="agent@example.com"
+                      />
+                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                      type="submit"
+                      disabled={resetLoading}
+                      className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {resetLoading ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                          Sending...
+                        </span>
+                      ) : (
+                        'Send Reset Link'
+                      )}
+                    </button>
+
+                    {/* Cancel Link */}
+                    <div className="text-center">
+                      <button
+                        type="button"
+                        onClick={closeResetModal}
+                        className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors"
+                      >
+                        Back to login
+                      </button>
+                    </div>
+                  </form>
+                </>
+              ) : (
+                <>
+                  <div className="text-center py-8">
+                    <div className="text-5xl mb-4">📧</div>
+                    <h2 className="text-h3 mb-2">Check Your Email</h2>
+                    <p className="text-body text-[#e5e4dd]/70 mb-6">
+                      {resetMessage}
+                    </p>
+                    <p className="text-caption text-[#e5e4dd]/50 mb-6">
+                      The link will expire in 15 minutes.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={closeResetModal}
+                      className="px-8 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all"
+                    >
+                      Back to Login
+                    </button>
+                  </div>
+                </>
+              )}
+            </CyberCard>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -22,6 +22,24 @@ import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
 import { hashToken, logAuthEvent, checkRateLimit } from '@/lib/auth/jwt';
 import { passwordResetRequestSchema, formatZodErrors } from '@/lib/validation/password-schemas';
 
+// CORS headers for cross-origin requests (public site calls this API)
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Handle CORS preflight
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
+// Helper to add CORS headers to responses
+function corsResponse(body: object, status: number = 200, extraHeaders: Record<string, string> = {}) {
+  return NextResponse.json(body, { status, headers: { ...CORS_HEADERS, ...extraHeaders } });
+}
+
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const RATE_LIMIT_MAX_ATTEMPTS = 3;
 const TOKEN_EXPIRY_MINUTES = 15;
@@ -42,13 +60,13 @@ export async function POST(request: NextRequest) {
   const supabase = getSupabaseClient();
 
   if (!supabase) {
-    return NextResponse.json(
+    return corsResponse(
       {
         success: false,
         error: 'SERVICE_UNAVAILABLE',
         message: 'Password reset service is not available',
       },
-      { status: 503 }
+      503
     );
   }
 
@@ -60,7 +78,7 @@ export async function POST(request: NextRequest) {
     // Validate request body
     const validation = passwordResetRequestSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json(formatZodErrors(validation.error), { status: 400 });
+      return corsResponse(formatZodErrors(validation.error), 400);
     }
 
     const { email } = validation.data;
@@ -78,20 +96,18 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'rate_limit_exceeded', email: maskEmail(email), action: 'password_reset' },
       });
 
-      return NextResponse.json(
+      return corsResponse(
         {
           success: false,
           error: 'RATE_LIMIT_EXCEEDED',
           message: 'Too many password reset attempts. Please try again later.',
           resetAt: new Date(rateLimit.resetAt).toISOString(),
         },
+        429,
         {
-          status: 429,
-          headers: {
-            'X-RateLimit-Limit': String(RATE_LIMIT_MAX_ATTEMPTS),
-            'X-RateLimit-Remaining': String(rateLimit.remaining),
-            'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
-          },
+          'X-RateLimit-Limit': String(RATE_LIMIT_MAX_ATTEMPTS),
+          'X-RateLimit-Remaining': String(rateLimit.remaining),
+          'X-RateLimit-Reset': String(Math.floor(rateLimit.resetAt / 1000)),
         }
       );
     }
@@ -125,7 +141,7 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'user_not_found', email: maskedEmail, action: 'password_reset' },
       });
 
-      return NextResponse.json(genericResponse);
+      return corsResponse(genericResponse);
     }
 
     // Check if user account is active
@@ -146,7 +162,7 @@ export async function POST(request: NextRequest) {
         metadata: { reason: 'account_inactive', action: 'password_reset' },
       });
 
-      return NextResponse.json(genericResponse);
+      return corsResponse(genericResponse);
     }
 
     // Generate cryptographically secure token (32 bytes = 64 hex chars)
@@ -173,13 +189,13 @@ export async function POST(request: NextRequest) {
 
     if (tokenError) {
       console.error('[Password Reset] Token creation error:', tokenError);
-      return NextResponse.json(
+      return corsResponse(
         {
           success: false,
           error: 'INTERNAL_SERVER_ERROR',
           message: 'Failed to create password reset token',
         },
-        { status: 500 }
+        500
       );
     }
 
@@ -217,17 +233,17 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Password Reset] Token generated for user ${user.id}. Email sent: ${emailResult.success}`);
 
-    return NextResponse.json(genericResponse);
+    return corsResponse(genericResponse);
   } catch (error) {
     console.error('[Password Reset Request] Error:', error);
 
-    return NextResponse.json(
+    return corsResponse(
       {
         success: false,
         error: 'INTERNAL_SERVER_ERROR',
         message: 'An unexpected error occurred. Please try again.',
       },
-      { status: 500 }
+      500
     );
   }
 }

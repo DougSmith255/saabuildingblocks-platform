@@ -59,6 +59,32 @@ export default function ExpRealtySponsor() {
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <QuantumGridEffect />
+
+          {/* Wolf Pack Background Image */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1]">
+            <div className="relative w-full min-w-[300px] max-w-[2000px] h-full">
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
+                srcSet="
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+                  https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+                "
+                sizes="100vw"
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="async"
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition: 'center 55%',
+                  maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+                  WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+                }}
+              />
+            </div>
+          </div>
+
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <H1>THE ALLIANCE</H1>
             <Tagline className="mt-4">
