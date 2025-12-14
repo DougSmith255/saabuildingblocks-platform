@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 
 interface Star {
   x: number;
@@ -20,9 +20,9 @@ interface Star {
  * - No CSS animation overhead per-star
  *
  * MOBILE BROWSER FIX:
- * - Uses visualViewport API to handle address bar show/hide
- * - Prevents "jumping" when mobile browser chrome changes
- * - Canvas sized to layout viewport, not visual viewport
+ * - Captures initial viewport height on mount
+ * - Uses that fixed height regardless of address bar changes
+ * - Prevents "jumping" when mobile browser chrome hides/shows
  *
  * Star counts: Desktop 275, Mobile 115
  */
@@ -35,6 +35,8 @@ export default function StarBackgroundCanvas() {
   const dimensionsRef = useRef({ width: 0, height: 0 });
   // Track initial viewport height to prevent address bar resize issues
   const initialHeightRef = useRef(0);
+  // Track viewport offset for mobile address bar compensation
+  const [viewportOffset, setViewportOffset] = useState(0);
 
   // Generate stars once on mount
   const generateStars = useCallback((width: number, height: number) => {
@@ -152,6 +154,29 @@ export default function StarBackgroundCanvas() {
     }
   }, [generateStars]);
 
+  // Track visualViewport offset to compensate for mobile address bar
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const handleViewportChange = () => {
+      // When address bar hides, visualViewport.offsetTop becomes negative
+      // We need to counter-translate the canvas to keep stars in place
+      setViewportOffset(viewport.offsetTop);
+    };
+
+    viewport.addEventListener('resize', handleViewportChange);
+    viewport.addEventListener('scroll', handleViewportChange);
+
+    // Initial check
+    handleViewportChange();
+
+    return () => {
+      viewport.removeEventListener('resize', handleViewportChange);
+      viewport.removeEventListener('scroll', handleViewportChange);
+    };
+  }, []);
+
   // Initialize canvas and start animation
   useEffect(() => {
     // Force regenerate on initial mount
@@ -183,6 +208,8 @@ export default function StarBackgroundCanvas() {
         zIndex: -1,
         pointerEvents: 'none',
         backgroundColor: 'transparent',
+        // Counter-translate when mobile address bar hides to keep stars stationary
+        transform: viewportOffset !== 0 ? `translateY(${-viewportOffset}px)` : undefined,
       }}
     />
   );
