@@ -3,11 +3,11 @@
 import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, FAQ, GenericCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
-import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
 // Hero effect - dynamically imported with ssr: false to exclude from initial bundle
 const DataStreamEffect = dynamic(
-  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.DataStreamEffect })),
+  () => import('@/components/shared/hero-effects/DataStreamEffect').then(mod => ({ default: mod.DataStreamEffect })),
   { ssr: false }
 );
 

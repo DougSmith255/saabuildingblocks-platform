@@ -7,7 +7,7 @@ import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 
 const RevealMaskEffect = dynamic(
-  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.RevealMaskEffect })),
+  () => import('@/components/shared/RevealMaskEffect').then(mod => ({ default: mod.RevealMaskEffect })),
   { ssr: false }
 );
 

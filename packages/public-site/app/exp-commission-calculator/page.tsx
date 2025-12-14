@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { H1, Tagline, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
-import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
 // Dynamic import for the data stream effect to prevent CLS
 // The effect renders 440 animated elements - deferring prevents layout shifts during LCP

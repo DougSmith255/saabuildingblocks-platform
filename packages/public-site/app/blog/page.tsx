@@ -27,10 +27,10 @@ import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
-import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
 const AsteroidBeltEffect = dynamic(
-  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.AsteroidBeltEffect })),
+  () => import('@/components/shared/hero-effects/AsteroidBeltEffect').then(mod => ({ default: mod.AsteroidBeltEffect })),
   { ssr: false }
 );
 

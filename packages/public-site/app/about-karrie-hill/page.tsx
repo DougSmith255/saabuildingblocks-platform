@@ -4,11 +4,11 @@ import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
-import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
 // Hero effect - dynamically imported with ssr: false to exclude from initial bundle
 const QuantumGridEffect = dynamic(
-  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.QuantumGridEffect })),
+  () => import('@/components/shared/hero-effects/QuantumGridEffect').then(mod => ({ default: mod.QuantumGridEffect })),
   { ssr: false }
 );
 
