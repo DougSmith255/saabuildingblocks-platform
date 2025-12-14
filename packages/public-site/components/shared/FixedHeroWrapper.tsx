@@ -138,7 +138,6 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
   return (
     <>
       {/* Fixed hero container */}
-      {/* Uses 100dvh to cover full viewport including when mobile browser bar hides */}
       <div
         ref={wrapperRef}
         className={`fixed-hero-wrapper ${className}`}
@@ -147,13 +146,11 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
           top: 0,
           left: 0,
           right: 0,
-          bottom: 0,
-          height: '100dvh', // Dynamic viewport height - expands when mobile browser bar hides
           zIndex: 0,
           pointerEvents: 'none',
         }}
       >
-        <div style={{ pointerEvents: 'auto', height: '100%', minHeight: '100dvh' }}>
+        <div style={{ pointerEvents: 'auto' }}>
           {children}
         </div>
       </div>
