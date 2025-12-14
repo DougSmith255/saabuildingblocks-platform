@@ -33,61 +33,65 @@ export function ConstellationMapEffect() {
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
-      {/* Connection lines */}
-      <svg className="absolute inset-0 w-full h-full">
-        {connections.map(([from, to], i) => {
-          const delay = i * 0.01;
-          const lineProgress = Math.max(0, Math.min(1, (progress - delay) * 2.5));
-          const opacity = lineProgress * 0.5;
-          const lineColor = i % 2 === 0 ? `rgba(180,100,255,${opacity})` : `rgba(100,180,255,${opacity})`;
+    <>
+      {/* Animation container - has overflow-hidden for performance */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+        {/* Connection lines */}
+        <svg className="absolute inset-0 w-full h-full">
+          {connections.map(([from, to], i) => {
+            const delay = i * 0.01;
+            const lineProgress = Math.max(0, Math.min(1, (progress - delay) * 2.5));
+            const opacity = lineProgress * 0.5;
+            const lineColor = i % 2 === 0 ? `rgba(180,100,255,${opacity})` : `rgba(100,180,255,${opacity})`;
+            return (
+              <line
+                key={i}
+                x1={`${stars[from].x}%`}
+                y1={`${stars[from].y}%`}
+                x2={`${stars[from].x + (stars[to].x - stars[from].x) * lineProgress}%`}
+                y2={`${stars[from].y + (stars[to].y - stars[from].y) * lineProgress}%`}
+                stroke={lineColor}
+                strokeWidth="1"
+                style={{ filter: `drop-shadow(0 0 3px ${lineColor})` }}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Stars */}
+        {stars.map((star, i) => {
+          const delay = i * 0.015;
+          const starProgress = Math.max(0, (progress - delay) * 2);
+          const pulse = Math.sin((time * 3 + i * 0.5) * Math.PI);
+          const size = 6 + starProgress * 4 + pulse * 2;
+          const color = getStarColor(i);
           return (
-            <line
+            <div
               key={i}
-              x1={`${stars[from].x}%`}
-              y1={`${stars[from].y}%`}
-              x2={`${stars[from].x + (stars[to].x - stars[from].x) * lineProgress}%`}
-              y2={`${stars[from].y + (stars[to].y - stars[from].y) * lineProgress}%`}
-              stroke={lineColor}
-              strokeWidth="1"
-              style={{ filter: `drop-shadow(0 0 3px ${lineColor})` }}
+              className="absolute rounded-full"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                width: size,
+                height: size,
+                transform: 'translate(-50%, -50%)',
+                background: `radial-gradient(circle, rgba(255,255,255,${0.9 * Math.min(1, starProgress)}) 0%, rgba(${color.r},${color.g},${color.b},${0.7 * Math.min(1, starProgress)}) 50%, transparent 100%)`,
+                boxShadow: `0 0 ${10 + pulse * 5}px rgba(${color.r},${color.g},${color.b},${0.6 * Math.min(1, starProgress)})`,
+              }}
             />
           );
         })}
-      </svg>
+      </div>
 
-      {/* Stars */}
-      {stars.map((star, i) => {
-        const delay = i * 0.015;
-        const starProgress = Math.max(0, (progress - delay) * 2);
-        const pulse = Math.sin((time * 3 + i * 0.5) * Math.PI);
-        const size = 6 + starProgress * 4 + pulse * 2;
-        const color = getStarColor(i);
-        return (
-          <div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: size,
-              height: size,
-              transform: 'translate(-50%, -50%)',
-              background: `radial-gradient(circle, rgba(255,255,255,${0.9 * Math.min(1, starProgress)}) 0%, rgba(${color.r},${color.g},${color.b},${0.7 * Math.min(1, starProgress)}) 50%, transparent 100%)`,
-              boxShadow: `0 0 ${10 + pulse * 5}px rgba(${color.r},${color.g},${color.b},${0.6 * Math.min(1, starProgress)})`,
-            }}
-          />
-        );
-      })}
-
-      {/* Gradient overlay for depth - extends 100px below fold */}
+      {/* Vignette overlay - outside overflow-hidden to extend below fold */}
       <div
-        className="absolute left-0 right-0 top-0"
+        className="absolute left-0 right-0 top-0 pointer-events-none hero-effect-layer"
         style={{
           height: 'calc(100% + 100px)',
           background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          zIndex: 1,
         }}
       />
-    </div>
+    </>
   );
 }

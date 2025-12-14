@@ -109,62 +109,67 @@ export function CalculatorDataStreamEffect() {
   }));
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer" lang="en" translate="no">
-      {/* Green data columns */}
-      {columns.map((col, i) => {
-        const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);
-        const yOffset = colProgress * 100;
+    <>
+      {/* Animation container - has overflow-hidden for performance */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer" lang="en" translate="no">
+        {/* Green data columns */}
+        {columns.map((col, i) => {
+          const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);
+          const yOffset = colProgress * 100;
 
-        return (
-          <div
-            key={i}
-            className="absolute"
-            style={{
-              left: `${col.x}%`,
-              top: 0,
-              width: '3%',
-              height: '100%',
-              overflow: 'hidden',
-              fontFamily: 'monospace',
-              fontSize: '14px',
-              lineHeight: '1.2',
-            }}
-          >
-            {col.chars.map((char, j) => {
-              const charY = ((j * 5 + yOffset) % 105);
-              const isHead = j === Math.floor(colProgress * col.chars.length) % col.chars.length;
-              const brightness = isHead ? 1 : Math.max(0, 1 - j * 0.06);
-              const fadeAtBottom = charY > 70 ? Math.max(0, 1 - (charY - 70) / 30) : 1;
+          return (
+            <div
+              key={i}
+              className="absolute"
+              style={{
+                left: `${col.x}%`,
+                top: 0,
+                width: '3%',
+                height: '100%',
+                overflow: 'hidden',
+                fontFamily: 'monospace',
+                fontSize: '14px',
+                lineHeight: '1.2',
+              }}
+            >
+              {col.chars.map((char, j) => {
+                const charY = ((j * 5 + yOffset) % 105);
+                const isHead = j === Math.floor(colProgress * col.chars.length) % col.chars.length;
+                const brightness = isHead ? 1 : Math.max(0, 1 - j * 0.06);
+                const fadeAtBottom = charY > 70 ? Math.max(0, 1 - (charY - 70) / 30) : 1;
 
-              return (
-                <div
-                  key={j}
-                  style={{
-                    position: 'absolute',
-                    top: `${charY}%`,
-                    color: isHead
-                      ? `rgba(255,255,255,${0.95 * fadeAtBottom})`
-                      : `rgba(100,255,100,${brightness * 0.7 * fadeAtBottom})`,
-                    textShadow: isHead
-                      ? `0 0 15px rgba(100,255,100,${0.8 * fadeAtBottom})`
-                      : `0 0 5px rgba(100,255,100,${brightness * 0.3 * fadeAtBottom})`,
-                  }}
-                >
-                  {char}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+                return (
+                  <div
+                    key={j}
+                    style={{
+                      position: 'absolute',
+                      top: `${charY}%`,
+                      color: isHead
+                        ? `rgba(255,255,255,${0.95 * fadeAtBottom})`
+                        : `rgba(100,255,100,${brightness * 0.7 * fadeAtBottom})`,
+                      textShadow: isHead
+                        ? `0 0 15px rgba(100,255,100,${0.8 * fadeAtBottom})`
+                        : `0 0 5px rgba(100,255,100,${brightness * 0.3 * fadeAtBottom})`,
+                    }}
+                  >
+                    {char}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
 
-      {/* Gradient overlay for depth */}
+      {/* Vignette overlay - outside overflow-hidden to extend below fold */}
       <div
-        className="absolute inset-0"
+        className="absolute left-0 right-0 top-0 pointer-events-none hero-effect-layer"
         style={{
+          height: 'calc(100% + 100px)',
           background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          zIndex: 1,
         }}
       />
-    </div>
+    </>
   );
 }

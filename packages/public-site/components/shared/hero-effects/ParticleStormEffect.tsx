@@ -20,56 +20,60 @@ export function ParticleStormEffect() {
   })), []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
-      {/* Main particles */}
-      {particles.map((p, i) => {
-        const moveX = Math.cos(p.angle * Math.PI / 180) * progress * 50;
-        const moveY = Math.sin(p.angle * Math.PI / 180) * progress * 50;
-        // Brighter: base opacity 0.6, oscillates up to 0.95
-        const opacity = 0.6 + Math.sin(time * Math.PI * 2 + i) * 0.35;
-        return (
-          <div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: `calc(${p.x}% + ${moveX}vw)`,
-              top: `calc(${p.y}% + ${moveY}vh)`,
-              width: p.size,
-              height: p.size,
-              background: `radial-gradient(circle, rgba(255,215,0,${opacity}) 0%, rgba(255,200,0,${opacity * 0.7}) 50%, transparent 100%)`,
-              boxShadow: `0 0 ${p.size * 3}px rgba(255,215,0,${opacity * 0.8}), 0 0 ${p.size * 6}px rgba(255,200,0,${opacity * 0.4})`,
-            }}
-          />
-        );
-      })}
+    <>
+      {/* Animation container - has overflow-hidden for performance */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+        {/* Main particles */}
+        {particles.map((p, i) => {
+          const moveX = Math.cos(p.angle * Math.PI / 180) * progress * 50;
+          const moveY = Math.sin(p.angle * Math.PI / 180) * progress * 50;
+          // Brighter: base opacity 0.6, oscillates up to 0.95
+          const opacity = 0.6 + Math.sin(time * Math.PI * 2 + i) * 0.35;
+          return (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                left: `calc(${p.x}% + ${moveX}vw)`,
+                top: `calc(${p.y}% + ${moveY}vh)`,
+                width: p.size,
+                height: p.size,
+                background: `radial-gradient(circle, rgba(255,215,0,${opacity}) 0%, rgba(255,200,0,${opacity * 0.7}) 50%, transparent 100%)`,
+                boxShadow: `0 0 ${p.size * 3}px rgba(255,215,0,${opacity * 0.8}), 0 0 ${p.size * 6}px rgba(255,200,0,${opacity * 0.4})`,
+              }}
+            />
+          );
+        })}
 
-      {/* Trail particles - brighter */}
-      {[...Array(20)].map((_, i) => {
-        const trailProgress = Math.max(0, progress - i * 0.02);
-        return (
-          <div
-            key={`trail-${i}`}
-            className="absolute rounded-full"
-            style={{
-              left: `${50 + Math.cos(i + time * 10) * 30 * trailProgress}%`,
-              top: `${50 + Math.sin(i + time * 10) * 30 * trailProgress}%`,
-              width: 6,
-              height: 6,
-              background: `rgba(255,215,0,${0.7 * trailProgress})`,
-              boxShadow: `0 0 15px rgba(255,215,0,${0.6 * trailProgress}), 0 0 30px rgba(255,200,0,${0.3 * trailProgress})`,
-            }}
-          />
-        );
-      })}
+        {/* Trail particles - brighter */}
+        {[...Array(20)].map((_, i) => {
+          const trailProgress = Math.max(0, progress - i * 0.02);
+          return (
+            <div
+              key={`trail-${i}`}
+              className="absolute rounded-full"
+              style={{
+                left: `${50 + Math.cos(i + time * 10) * 30 * trailProgress}%`,
+                top: `${50 + Math.sin(i + time * 10) * 30 * trailProgress}%`,
+                width: 6,
+                height: 6,
+                background: `rgba(255,215,0,${0.7 * trailProgress})`,
+                boxShadow: `0 0 15px rgba(255,215,0,${0.6 * trailProgress}), 0 0 30px rgba(255,200,0,${0.3 * trailProgress})`,
+              }}
+            />
+          );
+        })}
+      </div>
 
-      {/* Gradient overlay for depth - extends 100px below fold */}
+      {/* Vignette overlay - outside overflow-hidden to extend below fold */}
       <div
-        className="absolute left-0 right-0 top-0"
+        className="absolute left-0 right-0 top-0 pointer-events-none hero-effect-layer"
         style={{
           height: 'calc(100% + 100px)',
           background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          zIndex: 1,
         }}
       />
-    </div>
+    </>
   );
 }

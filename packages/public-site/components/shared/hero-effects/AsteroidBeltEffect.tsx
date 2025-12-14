@@ -33,40 +33,44 @@ export function AsteroidBeltEffect() {
   })), [asteroidCount]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
-      <div
-        className="absolute inset-0"
-        style={{
-          transform: 'rotate(-12deg) scale(1.1)',
-          transformOrigin: 'center center',
-        }}
-      >
-        {asteroids.map((asteroid, i) => (
-          <div
-            key={i}
-            className="absolute"
-            style={{
-              left: `${(asteroid.x + time * 100 * asteroid.speed) % 120 - 10}%`,
-              top: `${asteroid.y + Math.sin(time * Math.PI * 2 + i) * 4}%`,
-              width: asteroid.size,
-              height: asteroid.size * 0.7,
-              background: `linear-gradient(135deg, rgba(120,110,100,0.8) 0%, rgba(60,55,50,0.9) 100%)`,
-              borderRadius: '30% 70% 50% 50%',
-              transform: `rotate(${asteroid.rotation + time * 180}deg)`,
-              boxShadow: 'inset -2px -2px 4px rgba(0,0,0,0.5), 1px 1px 2px rgba(255,255,255,0.1)',
-            }}
-          />
-        ))}
+    <>
+      {/* Animation container - has overflow-hidden for performance */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
+        <div
+          className="absolute inset-0"
+          style={{
+            transform: 'rotate(-12deg) scale(1.1)',
+            transformOrigin: 'center center',
+          }}
+        >
+          {asteroids.map((asteroid, i) => (
+            <div
+              key={i}
+              className="absolute"
+              style={{
+                left: `${(asteroid.x + time * 100 * asteroid.speed) % 120 - 10}%`,
+                top: `${asteroid.y + Math.sin(time * Math.PI * 2 + i) * 4}%`,
+                width: asteroid.size,
+                height: asteroid.size * 0.7,
+                background: `linear-gradient(135deg, rgba(120,110,100,0.8) 0%, rgba(60,55,50,0.9) 100%)`,
+                borderRadius: '30% 70% 50% 50%',
+                transform: `rotate(${asteroid.rotation + time * 180}deg)`,
+                boxShadow: 'inset -2px -2px 4px rgba(0,0,0,0.5), 1px 1px 2px rgba(255,255,255,0.1)',
+              }}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Gradient overlay for depth - extends 100px below fold */}
+      {/* Vignette overlay - outside overflow-hidden to extend below fold */}
       <div
-        className="absolute left-0 right-0 top-0"
+        className="absolute left-0 right-0 top-0 pointer-events-none hero-effect-layer"
         style={{
           height: 'calc(100% + 100px)',
           background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          zIndex: 1,
         }}
       />
-    </div>
+    </>
   );
 }
