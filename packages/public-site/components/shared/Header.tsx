@@ -327,41 +327,34 @@ export default function Header() {
               GO HOME
             </CTAButton>
           )}
+
+            {/* Hamburger Menu Button - Inside header container so it animates with header */}
+            {!is404Page && (
+              <button
+                className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
+                onClick={handleHamburgerClick}
+                aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
+              >
+                <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
+                  <path
+                    className="line line-top-bottom"
+                    d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                    stroke="none"
+                    fill="none"
+                  />
+                  <path
+                    className="line"
+                    d="M7 16 27 16"
+                    stroke="none"
+                    fill="none"
+                  />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
-
-        {/* Hamburger Menu Button - Only on mobile/tablet (<1450px) - Hidden on 404 */}
-        {/* Slides down with header on first load, then becomes fixed */}
-        {!is404Page && (
-          <button
-            className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''} ${hasMounted ? 'transition-transform duration-500' : ''}`}
-            onClick={handleHamburgerClick}
-            aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-menu"
-            style={{
-              // First load: slide down with header; After: fixed position (no transform)
-              transform: isFirstLoad
-                ? (hasSlideIn ? 'translateY(0)' : 'translateY(-100px)')
-                : (isHidden ? 'translateY(-100px)' : 'translateY(0)'),
-            }}
-          >
-            <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
-              <path
-                className="line line-top-bottom"
-                d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
-                stroke="none"
-                fill="none"
-              />
-              <path
-                className="line"
-                d="M7 16 27 16"
-                stroke="none"
-                fill="none"
-              />
-            </svg>
-          </button>
-        )}
       </header>
 
       {/* Mobile Menu Component - Only loaded when hamburger is clicked */}
@@ -452,30 +445,32 @@ export default function Header() {
           }
         }
 
-        /* Mobile dropdown animations - GPU accelerated with scaleY */
+        /* Mobile dropdown animations - CSS Grid for smooth height transitions */
+        /* This animates actual height, pushing content below smoothly */
         .mobile-dropdown {
-          transform-origin: top center;
-          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
+          display: grid;
+          grid-template-rows: 0fr;
+          transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          opacity: 0;
+        }
+
+        .mobile-dropdown > * {
+          overflow: hidden;
         }
 
         .dropdown-open {
-          transform: scaleY(1) translate3d(0, 0, 0);
+          grid-template-rows: 1fr;
           opacity: 1;
-          max-height: none;
         }
 
         .dropdown-closing {
-          transform: scaleY(0) translate3d(0, 0, 0);
+          grid-template-rows: 0fr;
           opacity: 0;
-          max-height: 500px; /* Keep height during animation */
         }
 
         .dropdown-closed {
-          transform: scaleY(0) translate3d(0, 0, 0);
+          grid-template-rows: 0fr;
           opacity: 0;
-          max-height: 0;
         }
 
         /* Header Navigation Links - Override global green link color */

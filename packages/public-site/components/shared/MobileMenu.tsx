@@ -210,28 +210,30 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
                       />
                     </button>
                     <div
-                      className={`mobile-dropdown overflow-hidden pl-4 ${
+                      className={`mobile-dropdown pl-4 ${
                         openDropdown === index ? 'dropdown-open' : closingDropdown === index ? 'dropdown-closing' : 'dropdown-closed'
                       }`}
                     >
-                      {item.dropdown.map((dropdownItem, dropdownIndex) => (
-                        <Link
-                          key={dropdownIndex}
-                          href={dropdownItem.href}
-                          onClick={() => setIsMobileMenuOpen(false)}
-                          className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)]"
-                          style={{
-                            fontSize: 'var(--font-size-menuSubItem)',
-                            fontFamily: 'var(--font-family-menuSubItem)',
-                            fontWeight: 'var(--font-weight-menuSubItem)',
-                            letterSpacing: 'var(--letter-spacing-menuSubItem)',
-                            lineHeight: 'var(--line-height-menuSubItem)',
-                            color: 'var(--color-body-text)',
-                          }}
-                        >
-                          {dropdownItem.label}
-                        </Link>
-                      ))}
+                      <div className="dropdown-content">
+                        {item.dropdown.map((dropdownItem, dropdownIndex) => (
+                          <Link
+                            key={dropdownIndex}
+                            href={dropdownItem.href}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="block px-6 py-3 transition-all duration-300 rounded-lg my-1 hover:bg-[rgba(42,42,42,0.8)]"
+                            style={{
+                              fontSize: 'var(--font-size-menuSubItem)',
+                              fontFamily: 'var(--font-family-menuSubItem)',
+                              fontWeight: 'var(--font-weight-menuSubItem)',
+                              letterSpacing: 'var(--letter-spacing-menuSubItem)',
+                              lineHeight: 'var(--line-height-menuSubItem)',
+                              color: 'var(--color-body-text)',
+                            }}
+                          >
+                            {dropdownItem.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </>
                 ) : item.label === 'Agent Portal' ? (
