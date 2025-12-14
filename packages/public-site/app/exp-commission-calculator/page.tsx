@@ -65,7 +65,7 @@ export default function ExpCommissionCalculator() {
   const sliderProgress = ((transactions - 1) / 49) * 100;
 
   return (
-    <main id="main-content" className="min-h-screen bg-[#191818]">
+    <main id="main-content" className="min-h-screen">
       {/* Hero Section */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
@@ -80,7 +80,7 @@ export default function ExpCommissionCalculator() {
       </StickyHeroWrapper>
 
       {/* Calculator Section */}
-      <section className="py-12 px-4 bg-[#191818]">
+      <section className="py-12 px-4">
         <div className="max-w-[700px] mx-auto">
           <CyberCard padding="lg" centered={false}>
             {/* Commission Input */}
@@ -226,7 +226,7 @@ export default function ExpCommissionCalculator() {
         </div>
       </section>
 
-      {/* Custom slider thumb styles */}
+      {/* Custom slider thumb styles and hide number input spinners */}
       <style jsx>{`
         input[type="range"]::-webkit-slider-thumb {
           -webkit-appearance: none;
@@ -252,6 +252,15 @@ export default function ExpCommissionCalculator() {
         }
         input[type="range"]::-moz-range-thumb:hover {
           box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+        /* Hide number input spinners */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+        input[type="number"] {
+          -moz-appearance: textfield;
         }
       `}</style>
     </main>
