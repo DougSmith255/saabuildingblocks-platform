@@ -82,25 +82,39 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
         });
       }
 
-      // Fade out background effects (RevealMaskEffect, etc.) - elements outside hero-content-wrapper
+      // Fade out background effects - elements with hero-effect-layer class
       // These should ONLY FADE - no blur, no scale, no transform
-      // Query by class name
-      const backgroundEffects = heroSection.querySelectorAll('.reveal-mask-effect, .hero-background-effect') as NodeListOf<HTMLElement>;
-      backgroundEffects.forEach(el => {
+      const heroEffects = heroSection.querySelectorAll('.hero-effect-layer') as NodeListOf<HTMLElement>;
+      heroEffects.forEach(el => {
         el.style.opacity = `${opacity}`;
         el.style.visibility = progress >= 1 ? 'hidden' : 'visible';
       });
 
-      // Also find any elements with pointer-events-none + absolute/inset-0
+      // Also find RevealMaskEffect and other named effects
+      const namedEffects = heroSection.querySelectorAll('.reveal-mask-effect, .hero-background-effect') as NodeListOf<HTMLElement>;
+      namedEffects.forEach(el => {
+        if (!el.classList.contains('hero-effect-layer')) { // Avoid double-processing
+          el.style.opacity = `${opacity}`;
+          el.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+        }
+      });
+
+      // Also find any elements with pointer-events-none class that are positioned absolutely
       // This catches lazy-loaded effects that might not have specific class names
       // Effects should ONLY FADE - no blur, no scale, no transform
-      const allEffects = heroSection.querySelectorAll('.pointer-events-none.inset-0, .pointer-events-none.absolute');
-      allEffects.forEach((el) => {
+      const pointerNoneElements = heroSection.querySelectorAll('[class*="pointer-events-none"]');
+      pointerNoneElements.forEach((el) => {
         const element = el as HTMLElement;
+        const classes = element.className || '';
         // Skip elements inside hero-content-wrapper (like the backdrop blur elements)
         if (element.closest('.hero-content-wrapper')) return;
-        element.style.opacity = `${opacity}`;
-        element.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+        // Skip already processed elements
+        if (classes.includes('hero-effect-layer') || classes.includes('reveal-mask-effect')) return;
+        // Only target absolute/inset positioned elements
+        if (classes.includes('absolute') || classes.includes('inset-0')) {
+          element.style.opacity = `${opacity}`;
+          element.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+        }
       });
 
       // Also fade out the desktop agent counter (which is outside the main content wrapper)

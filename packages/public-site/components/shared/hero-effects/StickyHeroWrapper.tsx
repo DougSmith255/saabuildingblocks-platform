@@ -62,15 +62,30 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       const translateY = -progress * 50; // Move up as it shrinks
 
       // Find effect elements by marker class or common patterns
-      // Effects have: pointer-events-none + absolute/inset-0, or hero-effect-layer class
+      // Effects have: hero-effect-layer class, OR pointer-events-none with absolute/inset-0
       // Effects should ONLY FADE - no blur, no scale, no transform
-      const effectElements = heroSection.querySelectorAll('.hero-effect-layer, .pointer-events-none.inset-0, .pointer-events-none.absolute');
+      const effectElements = heroSection.querySelectorAll('.hero-effect-layer');
       effectElements.forEach((el) => {
         const element = el as HTMLElement;
         // Effects only fade out - no blur, no scale, no transform
         element.style.opacity = `${opacity}`;
         // Set visibility to hidden when fully scrolled to ensure complete removal
         element.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+      });
+
+      // Also find elements with pointer-events-none class that are positioned absolutely
+      // These are typically background effects that should only fade
+      const pointerNoneElements = heroSection.querySelectorAll('[class*="pointer-events-none"]');
+      pointerNoneElements.forEach((el) => {
+        const element = el as HTMLElement;
+        const classes = element.className || '';
+        // Only target absolute/inset positioned elements that aren't inside content wrappers
+        if ((classes.includes('absolute') || classes.includes('inset-0')) &&
+            !element.closest('.hero-content-wrapper') &&
+            !classes.includes('hero-effect-layer')) { // Avoid double-processing
+          element.style.opacity = `${opacity}`;
+          element.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+        }
       });
 
       // Find content elements (direct children of section that aren't effects)
