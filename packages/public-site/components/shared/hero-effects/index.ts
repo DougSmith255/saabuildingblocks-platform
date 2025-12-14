@@ -20,6 +20,7 @@ export { AsteroidBeltEffect } from './AsteroidBeltEffect';
 export { DataStreamEffect } from './DataStreamEffect';
 export { StickyHeroWrapper } from './StickyHeroWrapper';
 export { DeferredEffect } from './DeferredEffect';
+export { RevealMaskEffect } from '../RevealMaskEffect';
 
 // Lazy-loaded hero effects for use in Server Components
 export {

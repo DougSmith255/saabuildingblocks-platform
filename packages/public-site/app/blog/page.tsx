@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Real Estate Agent Resources Blog Page
  * Main blog landing page with magazine-style layout
@@ -20,11 +22,17 @@
  * - Neon: #00ff88 (for interactive elements)
  */
 
+import dynamic from 'next/dynamic';
 import { H1, Tagline } from '@saa/shared/components/saa';
 import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
-import { StickyHeroWrapper, LazyAsteroidBeltEffect } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+
+const AsteroidBeltEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.AsteroidBeltEffect })),
+  { ssr: false }
+);
 
 /**
  * WordPress categories data (from actual WordPress API)
@@ -104,13 +112,11 @@ const WORDPRESS_CATEGORIES = [
 ];
 
 /**
- * Blog Page Component (Server Component)
+ * Blog Page Component (Client Component)
  * Hero section renders immediately
- * Blog posts are loaded asynchronously from static JSON file for instant page load
+ * Blog posts are loaded client-side from static JSON file for instant page load
  */
-export default async function RealEstateAgentBlogPage() {
-  // Note: We don't fetch posts here anymore - they're loaded client-side from /blog-posts.json
-  // This keeps the HTML tiny and allows hero section to load instantly
+export default function RealEstateAgentBlogPage() {
 
   return (
     <main id="main-content" className="min-h-screen">
@@ -120,7 +126,7 @@ export default async function RealEstateAgentBlogPage() {
           className="relative min-h-[100dvh] px-4 sm:px-8 md:px-12 flex items-center justify-center"
           aria-label="Agent Success Hub Hero"
         >
-          <LazyAsteroidBeltEffect />
+          <AsteroidBeltEffect />
 
         {/* Content */}
         <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center">

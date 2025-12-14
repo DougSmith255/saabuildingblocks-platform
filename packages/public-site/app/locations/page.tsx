@@ -1,8 +1,14 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
-import { ConstellationMapEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+
+const ConstellationMapEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.ConstellationMapEffect })),
+  { ssr: false }
+);
 
 /**
  * eXp Realty Global Locations Page

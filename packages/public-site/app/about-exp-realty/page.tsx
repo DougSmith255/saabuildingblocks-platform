@@ -1,9 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { PathSelector } from '@/app/components/sections/PathSelector';
-import { SatelliteConstellationEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+
+const SatelliteConstellationEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.SatelliteConstellationEffect })),
+  { ssr: false }
+);
 
 /**
  * About eXp Realty Page

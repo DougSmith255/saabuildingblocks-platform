@@ -1,9 +1,15 @@
+'use client';
+
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
-import { LazyRevealMaskEffect } from '@/components/shared/hero-effects';
+
+const RevealMaskEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.RevealMaskEffect })),
+  { ssr: false }
+);
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 const ValueStack = dynamic(
@@ -65,7 +71,7 @@ export default function Home() {
         <AgentCounter />
 
         {/* Reveal Mask Effect - Golden glow behind Doug & Karrie (dynamically loaded) */}
-        <LazyRevealMaskEffect />
+        <RevealMaskEffect />
 
         {/* Dark gradient backdrop - vignette effect for depth */}
         <div

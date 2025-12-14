@@ -1,9 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
-import { ParticleStormEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+
+const ParticleStormEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.ParticleStormEffect })),
+  { ssr: false }
+);
 
 /**
  * Freebies Page

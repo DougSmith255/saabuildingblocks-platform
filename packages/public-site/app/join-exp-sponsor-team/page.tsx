@@ -1,9 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
-import { GreenLaserGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+
+const GreenLaserGridEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.GreenLaserGridEffect })),
+  { ssr: false }
+);
 
 // Profile images from Cloudflare Images CDN
 const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';

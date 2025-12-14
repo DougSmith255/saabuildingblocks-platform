@@ -1,9 +1,15 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
-import { LaserGridEffect, StickyHeroWrapper } from '@/components/shared/hero-effects';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects';
+
+const LaserGridEffect = dynamic(
+  () => import('@/components/shared/hero-effects').then(mod => ({ default: mod.LaserGridEffect })),
+  { ssr: false }
+);
 
 /**
  * eXp Realty Revenue Share Calculator
