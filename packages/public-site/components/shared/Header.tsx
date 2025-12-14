@@ -245,19 +245,21 @@ export default function Header() {
             borderRadius: '0 0 20px 20px',
             borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-            willChange: 'transform, opacity',
+            willChange: 'transform',
             contain: 'layout style',
             // First load: start hidden, slide down; After: normal scroll behavior
             transform: isFirstLoad
               ? (hasSlideIn ? 'translateY(0) translateZ(0)' : 'translateY(-100%) translateZ(0)')
               : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
-            // Fade out when mobile menu is open
-            opacity: isMobileMenuOpen ? 0 : 1,
-            pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
           }}
         >
-          {/* Glass Background - 3 layers only */}
-          <div className={styles['glassContainer']}>
+          {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
+          <div
+            className={`${styles['glassContainer']} ${hasMounted ? 'transition-opacity duration-300' : ''}`}
+            style={{
+              opacity: isMobileMenuOpen ? 0 : 1,
+            }}
+          >
             <div className={styles['glassBase']} />
             <div className={styles['shimmerGradient']} />
           </div>
@@ -277,11 +279,11 @@ export default function Header() {
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
-            {/* Logo - Hidden on 404 */}
+            {/* Logo - Hidden on 404, fades when mobile menu opens */}
             {!is404Page && (
             <Link
               href="/"
-              className="logo-container"
+              className={`logo-container ${hasMounted ? 'transition-opacity duration-300' : ''}`}
               aria-label="Smart Agent Alliance Home"
               style={{
                 width: '126px',
@@ -298,6 +300,8 @@ export default function Header() {
                 overflow: 'visible',
                 willChange: 'transform',
                 transform: 'translateZ(0)',
+                opacity: isMobileMenuOpen ? 0 : 1,
+                pointerEvents: isMobileMenuOpen ? 'none' : 'auto',
               }}
             >
               <svg width="126px" height="45px" viewBox="0 0 201.96256 75.736626" version="1.1" style={{width: '100%', height: '100%', objectFit: 'contain'}} className="hover:scale-110 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation">
