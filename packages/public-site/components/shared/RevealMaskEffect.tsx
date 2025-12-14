@@ -11,12 +11,11 @@ import { useEffect, useRef, useState } from 'react';
  * - Starts fast and smoothly decelerates to idle speed (no pause/jerk)
  * - Uses exponential decay for natural-feeling slowdown
  * - Scroll adds a small boost (1.5x idle speed)
- * - Fades to 0 and hides when scrolled past hero
+ * - Fading is handled by FixedHeroWrapper (not internally)
  */
 
 export function RevealMaskEffect() {
   const [time, setTime] = useState(0);
-  const [scrollFade, setScrollFade] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
@@ -45,11 +44,6 @@ export function RevealMaskEffect() {
         const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
         scrollBoostRef.current = Math.max(scrollBoostRef.current, boost);
       }
-
-      // Calculate fade based on scroll position
-      const viewportHeight = window.innerHeight;
-      const fadeProgress = Math.min(currentScrollY / viewportHeight, 1);
-      setScrollFade(1 - fadeProgress);
     };
 
     const animate = (timestamp: number) => {
@@ -76,7 +70,6 @@ export function RevealMaskEffect() {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
-    handleScroll(); // Initial fade calculation
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
@@ -98,19 +91,12 @@ export function RevealMaskEffect() {
   const maskSize = 90 - progress * 40; // Larger: shrinks from ~85% to ~50%
   const rotation = time * 90; // Continuous rotation based on raw time
 
-  // Hide completely when faded out
-  if (scrollFade <= 0) {
-    return null;
-  }
-
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 pointer-events-none flex items-center justify-center animate-fade-in-effect"
+      className="reveal-mask-effect absolute inset-0 pointer-events-none flex items-center justify-center animate-fade-in-effect"
       style={{
         zIndex: 0,
-        opacity: scrollFade,
-        visibility: scrollFade <= 0 ? 'hidden' : 'visible',
         animation: 'fadeInEffect 0.8s ease-out forwards',
       }}
     >

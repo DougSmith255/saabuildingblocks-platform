@@ -64,11 +64,10 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
         contentWrapper.style.opacity = `${opacity}`;
 
         // Fix backdrop-blur compositing issues during fade
-        // backdrop-blur doesn't work correctly with opacity, so we disable it during scroll
-        // and compensate with a fully opaque background
+        // backdrop-blur doesn't work correctly with opacity on parent, so we disable it during scroll
+        // NOTE: Do NOT set opacity on these elements - parent opacity handles fade uniformly
         const backdropElements = contentWrapper.querySelectorAll('[class*="backdrop-blur"]') as NodeListOf<HTMLElement>;
         backdropElements.forEach(el => {
-          el.style.opacity = `${opacity}`;
           // Disable backdrop-blur and use opaque background during scroll
           if (progress > 0) {
             el.style.backdropFilter = 'none';
@@ -82,6 +81,13 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
           }
         });
       }
+
+      // Fade out background effects (RevealMaskEffect, etc.) - elements outside hero-content-wrapper
+      // These should fade but not scale/blur/translate
+      const backgroundEffects = heroSection.querySelectorAll('.reveal-mask-effect, .hero-background-effect') as NodeListOf<HTMLElement>;
+      backgroundEffects.forEach(el => {
+        el.style.opacity = `${opacity}`;
+      });
 
       // Also fade out the desktop agent counter (which is outside the main content wrapper)
       const agentCounter = heroSection.querySelector('.agent-counter-wrapper') as HTMLElement;
