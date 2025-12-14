@@ -207,19 +207,22 @@ export default function ExpCommissionCalculator() {
               </p>
             </CyberCard>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-12">
+            {/* CTA Section */}
+            <h2 className="text-2xl font-bold text-[#ffd700] text-center mt-12 mb-6">
+              Commission & Fees Fully Explained
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <a
-                href="/about-exp-realty/fees/"
+                href="/blog/about-exp/commission"
                 className="px-6 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-semibold text-center hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all"
               >
-                eXp Fees Fully Explained Blog
+                eXp Commission
               </a>
               <a
-                href="/about-exp-realty/commission/"
+                href="/blog/about-exp/fees"
                 className="px-6 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-semibold text-center hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all"
               >
-                eXp Commission Fully Explained Blog
+                eXp Fees
               </a>
             </div>
           </LazySection>
