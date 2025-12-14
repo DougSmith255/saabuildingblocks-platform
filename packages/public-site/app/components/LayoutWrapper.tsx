@@ -8,6 +8,8 @@ import { DeferredFooter } from '@saa/shared/components/performance/DeferredConte
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 import { ViewportHeightLock } from './ViewportHeightLock';
+import { SectionScrollAnimator } from './SectionScrollAnimator';
+import { ViewTransitionHandler } from './ViewTransitionHandler';
 import { ViewportProvider } from '@/contexts/ViewportContext';
 
 /**
@@ -149,6 +151,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />
+      <SectionScrollAnimator />
+      <ViewTransitionHandler />
       {!shouldHideHeaderFooter && <Header />}
       {/*
         Using div instead of main to avoid nested <main> elements.

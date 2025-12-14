@@ -80,59 +80,25 @@ main#main-content > section:not(:first-child) {
  * Wheel-like depth effect: sections expand/blur/fade in on entry,
  * compress/blur/fade out on exit - like cards rotating on a wheel.
  *
- * Uses CSS scroll-driven animations with view() timeline.
- * Supported: Chrome 116+, Edge 116+, Safari 18+
- * Fallback: Sections display normally (no animation)
+ * JavaScript-based for universal browser support (including Firefox).
+ * SectionScrollAnimator component applies transforms via CSS variables.
  */
 
-/* Keyframes for the wheel effect - entry to exit in one animation */
-@keyframes section-wheel {
-  /* Entry state: expanded, blurred, faded (coming from "behind" the wheel) */
-  0% {
-    opacity: 0;
-    filter: blur(8px);
-    transform: scale(1.03) translateY(30px);
-  }
-  /* Entry complete: normal state */
-  15% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: scale(1) translateY(0);
-  }
-  /* Visible on screen: stays normal */
-  85% {
-    opacity: 1;
-    filter: blur(0px);
-    transform: scale(1) translateY(0);
-  }
-  /* Exit state: compressed, blurred, faded (rotating away on the wheel) */
-  100% {
-    opacity: 0;
-    filter: blur(8px);
-    transform: scale(0.97) translateY(-30px);
-  }
+/* Section animation styles - controlled by JavaScript via CSS variables */
+main#main-content section[data-scroll-animate] {
+  /* Initial state before animation starts */
+  opacity: var(--section-opacity, 0);
+  filter: blur(var(--section-blur, 8px));
+  transform: scale(var(--section-scale, 1.03)) translateY(var(--section-translate, 30px));
+  transition: opacity 0.1s ease-out, filter 0.1s ease-out, transform 0.1s ease-out;
+  will-change: opacity, filter, transform;
 }
 
-/* Apply scroll-driven animation to all sections inside main */
-/* Exclude hero section (first child) - it has its own animation */
-@supports (animation-timeline: view()) {
-  /* Default: all sections get the animation */
-  main#main-content > section:not(:first-child) {
-    animation: section-wheel linear forwards;
-    animation-timeline: view();
-    /* Start when section enters, end when it exits */
-    animation-range: entry 0% exit 100%;
-  }
-
-  /* Hero-only mode: only hero section (with specific aria-label) gets animation */
-  body[data-hero-only-transitions] main#main-content > section:not([aria-label="Hero"]):not(:first-child) {
-    animation: none;
-  }
-
-  /* No transitions mode: disable all section animations */
-  body[data-no-section-transitions] main#main-content > section {
-    animation: none;
-  }
+/* Sections with animation disabled */
+body[data-no-section-transitions] main#main-content section[data-scroll-animate] {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
 }
 
 /*
