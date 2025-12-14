@@ -98,3 +98,4 @@ ROLLBACK_*.sh
 *.tsbuildinfo
 packages/*/tsconfig.tsbuildinfo
 
+.wrangler/
