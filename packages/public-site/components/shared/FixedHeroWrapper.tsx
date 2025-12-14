@@ -84,10 +84,25 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
 
       // Fade out background effects (RevealMaskEffect, etc.) - elements outside hero-content-wrapper
       // These should fade but not scale/blur/translate
+      // Query by class name
       const backgroundEffects = heroSection.querySelectorAll('.reveal-mask-effect, .hero-background-effect') as NodeListOf<HTMLElement>;
       backgroundEffects.forEach(el => {
         el.style.opacity = `${opacity}`;
+        el.style.filter = `blur(${blur * 0.5}px) brightness(${brightness})`;
       });
+
+      // Also find any elements with pointer-events-none + absolute (like StickyHeroWrapper does)
+      // This catches lazy-loaded effects that might not have specific class names
+      const children = heroSection.children;
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i] as HTMLElement;
+        const classes = child.className || '';
+        // Effect elements: have pointer-events-none and absolute positioning
+        if (classes.includes('pointer-events-none') && classes.includes('absolute') && !classes.includes('hero-content-wrapper')) {
+          child.style.opacity = `${opacity}`;
+          child.style.filter = `blur(${blur * 0.5}px) brightness(${brightness})`;
+        }
+      }
 
       // Also fade out the desktop agent counter (which is outside the main content wrapper)
       const agentCounter = heroSection.querySelector('.agent-counter-wrapper') as HTMLElement;

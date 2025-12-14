@@ -59,6 +59,7 @@ export function UserManagementTab() {
     last_name: '',
     email: '',
     username: '',
+    password: '',
     role: 'user' as 'admin' | 'user',
     status: 'active' as 'active' | 'pending' | 'suspended'
   });
@@ -296,6 +297,7 @@ export function UserManagementTab() {
       last_name: user.last_name || '',
       email: user.email,
       username: user.username || '',
+      password: '', // Password field starts empty - only set if changing
       role: user.role,
       status: user.status
     });
@@ -327,17 +329,25 @@ export function UserManagementTab() {
     setEditUserError(null);
 
     try {
+      // Build request body - only include password if it was changed
+      const requestBody: Record<string, string> = {
+        first_name: editUserForm.first_name,
+        last_name: editUserForm.last_name,
+        email: editUserForm.email,
+        username: editUserForm.username,
+        role: editUserForm.role,
+        status: editUserForm.status,
+      };
+
+      // Only include password if user entered a new one
+      if (editUserForm.password && editUserForm.password.trim() !== '') {
+        requestBody.password = editUserForm.password;
+      }
+
       const response = await fetch(`/api/users/${editingUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: editUserForm.first_name,
-          last_name: editUserForm.last_name,
-          email: editUserForm.email,
-          username: editUserForm.username,
-          role: editUserForm.role,
-          status: editUserForm.status,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
@@ -354,6 +364,7 @@ export function UserManagementTab() {
         last_name: '',
         email: '',
         username: '',
+        password: '',
         role: 'user',
         status: 'active',
       });
@@ -807,6 +818,22 @@ export function UserManagementTab() {
                   placeholder="username"
                   disabled={editUserLoading}
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={editUserForm.password}
+                  onChange={(e) => setEditUserForm({ ...editUserForm, password: e.target.value })}
+                  className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
+                  placeholder="Leave blank to keep current password"
+                  disabled={editUserLoading}
+                  minLength={8}
+                />
+                <p className="text-xs text-[#dcdbd5]/50 mt-1">Minimum 8 characters. Only fill if you want to change the password.</p>
               </div>
 
               <div>
