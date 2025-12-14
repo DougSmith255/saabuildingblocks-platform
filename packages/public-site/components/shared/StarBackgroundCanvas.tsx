@@ -179,7 +179,7 @@ export default function StarBackgroundCanvas() {
         top: 0,
         left: 0,
         width: '100vw',
-        height: '100vh',
+        height: '100lvh', // Large viewport height - stable when mobile browser chrome hides/shows
         zIndex: -1,
         pointerEvents: 'none',
         backgroundColor: 'transparent',
