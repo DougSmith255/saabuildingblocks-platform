@@ -24,12 +24,12 @@ export function RevealMaskEffect() {
   const scrollBoostRef = useRef(0);
 
   useEffect(() => {
-    // Speed settings - 1.5X idle and scroll speed
+    // Speed settings - 2X scroll boost speed
     const IDLE_SPEED = 0.000075;
     const INTRO_SPEED = 0.0006; // 8x idle speed at start
     const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
-    const SCROLL_BOOST_MAX = 0.0003; // Max boost: 1.5X original scroll boost
-    const SCROLL_BOOST_MULTIPLIER = 0.000012; // How much each px of scroll adds
+    const SCROLL_BOOST_MAX = 0.0006; // Max boost: 2X previous (was 0.0003)
+    const SCROLL_BOOST_MULTIPLIER = 0.000024; // How much each px of scroll adds (2X previous)
     const SCROLL_DECAY = 0.92; // Slower decay so boost lasts longer
 
     let lastTimestamp = 0;

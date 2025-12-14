@@ -256,14 +256,14 @@ export default function AgentPortalLogin() {
 
           {/* Modal */}
           <div className="relative w-full max-w-md">
+            {/* Close button - positioned outside CyberCard for consistent spacing */}
+            <button
+              onClick={closeResetModal}
+              className="absolute -top-2 -right-2 z-10 w-8 h-8 flex items-center justify-center bg-[#191818] border border-[#ffd700]/30 rounded-full text-[#ffd700]/60 hover:text-[#ffd700] hover:border-[#ffd700] transition-colors text-xl"
+            >
+              &times;
+            </button>
             <CyberCard padding="lg" centered={false}>
-              {/* Close button */}
-              <button
-                onClick={closeResetModal}
-                className="absolute top-4 right-4 text-[#ffd700]/60 hover:text-[#ffd700] transition-colors text-xl"
-              >
-                &times;
-              </button>
 
               {resetStep === 'email' ? (
                 <>
