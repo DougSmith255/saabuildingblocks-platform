@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { CTAButton } from '@saa/shared/components/saa';
-import Lenis from 'lenis';
 
 interface NavItem {
   label: string;
@@ -56,83 +55,38 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
   const [isTransitioning, setIsTransitioning] = useState(false);
   const savedScrollY = useRef<number>(0);
 
-  // Scroll lock - prevent page scrolling while keeping all content visible
+  // Scroll lock - simplified without Lenis for better mobile performance
   useEffect(() => {
     if (isMobileMenuOpen) {
-      // Calculate scrollbar width before hiding it
-      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-
       // Save current scroll position
       savedScrollY.current = window.scrollY;
 
-      // Lock scroll - page stays in place exactly as it was
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${savedScrollY.current}px`;
-      document.body.style.width = '100%';
+      // Simple scroll lock using overflow hidden + touch-action
       document.body.style.overflow = 'hidden';
-
-      // Add padding to prevent layout shift (only on browsers with scrollbar width)
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-
-      // Initialize Lenis smooth scroll for mobile menu
-      const menu = document.getElementById('mobile-menu');
-      let menuLenis: Lenis | null = null;
-      let rafId: number | null = null;
-
-      if (menu) {
-        menuLenis = new Lenis({
-          wrapper: menu,
-          content: menu,
-          duration: 1.2,
-          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-          orientation: 'vertical',
-          gestureOrientation: 'vertical',
-          smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 2,
-          infinite: false,
-        });
-
-        // Animation frame loop for menu Lenis
-        function raf(time: number) {
-          menuLenis?.raf(time);
-          rafId = requestAnimationFrame(raf);
-        }
-        rafId = requestAnimationFrame(raf);
-      }
+      document.body.style.touchAction = 'none';
+      // Prevent iOS Safari bounce
+      document.documentElement.style.overflow = 'hidden';
 
       return () => {
-        // Cancel RAF loop
-        if (rafId !== null) {
-          cancelAnimationFrame(rafId);
-        }
-        // Cleanup Lenis instance
-        if (menuLenis) {
-          menuLenis.destroy();
-        }
+        // Cleanup handled in the else branch
       };
     } else {
       // Show transition overlay to mask scroll restoration
       setIsTransitioning(true);
 
-      // Small delay to ensure overlay is visible before scroll restoration
+      // Restore body styles
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      document.documentElement.style.overflow = '';
+
+      // Restore scroll position instantly (no animation)
+      window.scrollTo({ top: savedScrollY.current, behavior: 'instant' });
+
+      // Fade out the transition overlay after scroll is restored
       requestAnimationFrame(() => {
-        // Restore body styles
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-        document.body.style.paddingRight = '';
-
-        // Restore scroll position instantly (no animation)
-        window.scrollTo({ top: savedScrollY.current, behavior: 'instant' });
-
-        // Fade out the transition overlay after scroll is restored
         setTimeout(() => {
           setIsTransitioning(false);
-        }, 150);
+        }, 100);
       });
     }
   }, [isMobileMenuOpen]);
@@ -187,11 +141,17 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
             isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
           }`}
           style={{
-            background: 'rgba(15, 15, 15, 0.95)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            willChange: 'transform',
-            transform: isMobileMenuOpen ? 'translateZ(0)' : 'translateY(-100%) translateZ(0)',
+            background: 'rgba(15, 15, 15, 0.98)',
+            // Reduced blur for better performance (was 20px)
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            // GPU acceleration with translate3d
+            transform: isMobileMenuOpen ? 'translate3d(0, 0, 0)' : 'translate3d(0, -100%, 0)',
+            // Prevent flickering on webkit
+            WebkitBackfaceVisibility: 'hidden',
+            backfaceVisibility: 'hidden',
+            WebkitPerspective: 1000,
+            perspective: 1000,
             overscrollBehavior: 'contain',
             pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
             WebkitOverflowScrolling: 'touch',

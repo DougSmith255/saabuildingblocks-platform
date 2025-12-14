@@ -373,31 +373,31 @@ export default function Header() {
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`
-        /* Mobile menu slide animations */
+        /* Mobile menu slide animations - GPU accelerated with translate3d */
         @keyframes slideDown {
           from {
-            transform: translateY(-100%);
+            transform: translate3d(0, -100%, 0);
           }
           to {
-            transform: translateY(0);
+            transform: translate3d(0, 0, 0);
           }
         }
 
         @keyframes slideUp {
           from {
-            transform: translateY(0);
+            transform: translate3d(0, 0, 0);
           }
           to {
-            transform: translateY(-100%);
+            transform: translate3d(0, -100%, 0);
           }
         }
 
         .menu-opening {
-          animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         .menu-closing {
-          animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+          animation: slideUp 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
         /* Menu transition overlay - fades out to mask scroll restoration */
@@ -448,19 +448,24 @@ export default function Header() {
           }
         }
 
-        /* Mobile dropdown animations - simultaneous open/close */
+        /* Mobile dropdown animations - GPU accelerated with scaleY */
         .mobile-dropdown {
-          transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+          transform-origin: top center;
+          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
         }
 
         .dropdown-open {
-          max-height: 500px;
+          transform: scaleY(1) translate3d(0, 0, 0);
           opacity: 1;
+          max-height: none;
         }
 
         .dropdown-closed {
-          max-height: 0;
+          transform: scaleY(0) translate3d(0, 0, 0);
           opacity: 0;
+          max-height: 0;
         }
 
         /* Header Navigation Links - Override global green link color */
