@@ -2,9 +2,15 @@
 
 import { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import Header from '@/components/shared/Header';
-import Footer from '@/components/shared/Footer';
 import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
+
+// Dynamic import Footer - JS only loads when user scrolls near bottom
+const Footer = dynamic(() => import('@/components/shared/Footer'), { ssr: false });
+
+// Dynamic import SmoothScroll (Lenis) - deferred to reduce initial JS bundle
+const SmoothScroll = dynamic(() => import('@/components/SmoothScroll'), { ssr: false });
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 import { ViewportHeightLock } from './ViewportHeightLock';
@@ -82,6 +88,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   return (
     <ViewportProvider>
+      <SmoothScroll />
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />

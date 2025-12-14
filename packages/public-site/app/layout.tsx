@@ -2,8 +2,6 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import StarBackground from '@/components/shared/StarBackgroundCanvas';
-import Header from '@/components/shared/Header';
-import Footer from '@/components/shared/Footer';
 import ScrollProgress from '@/components/shared/ScrollProgress';
 import ScrollToTop from '@/components/shared/ScrollToTop';
 import LayoutWrapper from './components/LayoutWrapper';
@@ -12,7 +10,6 @@ import { SkipLink } from './components/SkipLink';
 import { generateStaticCSS } from './master-controller/lib/buildTimeCSS';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import SmoothScroll from '@/components/SmoothScroll';
 
 // Read critical CSS at build time for consolidation
 const criticalCSS = readFileSync(
@@ -312,7 +309,7 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         {/* Public-site package: Always static export with baked-in CSS */}
-        <SmoothScroll />
+        {/* SmoothScroll moved to LayoutWrapper for dynamic import */}
         <ScrollToTop />
         <SkipLink />
         <StarBackground />

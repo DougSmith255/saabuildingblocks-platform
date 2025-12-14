@@ -641,9 +641,9 @@ export default function Header() {
           background-color: transparent !important;
           /* Fixed positioning so it stays in place when header slides up */
           position: fixed;
-          /* Center vertically within 72px mobile header height */
-          /* Button is 65px tall, so center = (72px - 65px) / 2 = 3.5px */
-          top: 3.5px;
+          /* Center vertically within 64px mobile header height */
+          /* Button is 65px tall, so center = (64px - 65px) / 2 = -0.5px */
+          top: -0.5px;
           right: 15px;
           width: 65px;
           height: 65px;
@@ -715,10 +715,10 @@ export default function Header() {
           }
         }
 
-        /* Mobile header height - fixed 72px below 1450px breakpoint */
+        /* Mobile header height - fixed 64px below 1450px breakpoint */
         @media (max-width: 90.625rem) {
           .header-container {
-            height: 72px !important;
+            height: 64px !important;
           }
         }
 
