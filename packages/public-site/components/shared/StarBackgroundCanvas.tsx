@@ -172,15 +172,19 @@ export default function StarBackgroundCanvas() {
 
   return (
     <>
-      {/* Mobile: extend 100px above viewport to prevent jump when address bar hides */}
-      {/* bottom: 0 anchors to bottom, top: -100px extends above viewport */}
+      {/* Mobile fix for address bar hide/show:
+          - Use bottom: 0 to anchor to bottom of viewport
+          - Use height: 100lvh (largest viewport) so it's always tall enough
+          - When address bar hides, viewport grows from top, but background stays anchored at bottom
+          - This prevents the "jumping" appearance */}
       <style jsx>{`
         .star-canvas {
           position: fixed;
           left: 0;
           right: 0;
           bottom: 0;
-          top: -100px;
+          /* 100lvh = largest viewport height (when address bar is hidden) */
+          height: 100lvh;
           z-index: -1;
           pointer-events: none;
           background-color: transparent;
@@ -188,6 +192,8 @@ export default function StarBackgroundCanvas() {
         @media (min-width: 768px) {
           .star-canvas {
             top: 0;
+            bottom: 0;
+            height: auto;
           }
         }
       `}</style>

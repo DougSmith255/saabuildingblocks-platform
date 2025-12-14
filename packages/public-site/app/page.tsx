@@ -74,9 +74,9 @@ export default function Home() {
         <RevealMaskEffect />
 
         {/* Hero Content Block - Image + H1 + Tagline + Buttons as one centered unit */}
-        {/* Mobile: 5% top padding to push content below header */}
+        {/* Mobile: 8% top padding to push content below header */}
         <div
-          className="hero-content-wrapper flex flex-col items-center w-full pt-[5%] md:pt-0"
+          className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0"
           style={{
             maxWidth: '1900px',
           }}
