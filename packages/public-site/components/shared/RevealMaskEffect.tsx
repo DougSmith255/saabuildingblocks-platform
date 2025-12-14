@@ -97,6 +97,7 @@ export function RevealMaskEffect() {
       className="reveal-mask-effect hero-effect-layer absolute inset-0 pointer-events-none flex items-center justify-center"
       style={{
         zIndex: 0,
+        minHeight: '100dvh', // Dynamic viewport height - covers full screen when mobile browser bar hides
       }}
     >
       {/* Golden radial glow - less intense, larger, centered lower */}
@@ -131,10 +132,12 @@ export function RevealMaskEffect() {
         }}
       />
       {/* Gradient overlay for depth - same as all other hero effects */}
+      {/* Uses minHeight to cover full viewport when mobile browser bar hides */}
       <div
         className="absolute inset-0"
         style={{
           background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          minHeight: '100dvh',
         }}
       />
     </div>

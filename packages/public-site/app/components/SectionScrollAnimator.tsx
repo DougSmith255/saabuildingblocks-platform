@@ -1,19 +1,22 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 /**
  * SectionScrollAnimator - JavaScript-based scroll animations for sections
  *
  * Creates a "wheel" effect where sections:
- * - Enter: expand, blur, fade in from below
+ * - Enter: expand from larger scale, blur, fade in from below
  * - Visible: normal state
- * - Exit: compress, blur, fade out above
+ * - Exit: compress to smaller scale, blur, fade out above
  *
  * Works in ALL browsers (Chrome, Firefox, Safari, Edge)
- * Uses scroll position to calculate progress through viewport
+ * Updates every frame synced to scroll position (no CSS transitions)
  */
 export function SectionScrollAnimator() {
+  const sectionsRef = useRef<NodeListOf<Element> | null>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
     // Skip if user prefers reduced motion
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -25,110 +28,146 @@ export function SectionScrollAnimator() {
       return;
     }
 
-    // Find all sections inside main#main-content (excluding hero)
-    const main = document.querySelector('main#main-content');
-    if (!main) return;
+    // Initialize sections for animation
+    const initializeSections = (): NodeListOf<Element> | null => {
+      const main = document.querySelector('main#main-content');
+      if (!main) return null;
 
-    const sections = main.querySelectorAll('section:not([aria-label="Hero"])');
-    if (sections.length === 0) return;
+      const sections = main.querySelectorAll('section:not([aria-label="Hero"])');
+      if (sections.length === 0) return null;
 
-    // Mark sections for animation and set initial state
-    sections.forEach((section) => {
-      section.setAttribute('data-scroll-animate', '');
-    });
-
-    // Calculate animation values based on scroll position
-    const updateSections = () => {
-      const viewportHeight = window.innerHeight;
-
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        const sectionHeight = rect.height;
-
-        // Calculate how far through the viewport the section is
-        // 0 = just entering from bottom, 1 = just exiting from top
-        const sectionTop = rect.top;
-        const sectionBottom = rect.bottom;
-
-        // Entry progress: 0 when bottom at viewport bottom, 1 when fully visible
-        // Section enters when its top crosses the bottom of viewport
-        const entryStart = viewportHeight;
-        const entryEnd = viewportHeight * 0.3; // Fully visible when top is 30% from bottom
-        const entryProgress = Math.min(1, Math.max(0, (entryStart - sectionTop) / (entryStart - entryEnd)));
-
-        // Exit progress: 0 when visible, 1 when exiting top
-        // Section exits when its bottom crosses 30% from top
-        const exitStart = viewportHeight * 0.3;
-        const exitEnd = -sectionHeight * 0.3;
-        const exitProgress = Math.min(1, Math.max(0, (exitStart - sectionBottom) / (exitStart - exitEnd)));
-
-        // Determine which state we're in
-        let opacity: number;
-        let blur: number;
-        let scale: number;
-        let translateY: number;
-
-        if (entryProgress < 1) {
-          // Entering: fade in, unblur, scale down, move up
-          opacity = entryProgress;
-          blur = 8 * (1 - entryProgress);
-          scale = 1.03 - (0.03 * entryProgress);
-          translateY = 30 * (1 - entryProgress);
-        } else if (exitProgress > 0) {
-          // Exiting: fade out, blur, scale down, move up
-          opacity = 1 - exitProgress;
-          blur = 8 * exitProgress;
-          scale = 1 - (0.03 * exitProgress);
-          translateY = -30 * exitProgress;
-        } else {
-          // Fully visible: normal state
-          opacity = 1;
-          blur = 0;
-          scale = 1;
-          translateY = 0;
-        }
-
-        // Apply CSS variables
-        const el = section as HTMLElement;
-        el.style.setProperty('--section-opacity', String(opacity));
-        el.style.setProperty('--section-blur', `${blur}px`);
-        el.style.setProperty('--section-scale', String(scale));
-        el.style.setProperty('--section-translate', `${translateY}px`);
-      });
+      return sections;
     };
 
-    // Initial update
-    updateSections();
+    // Calculate animation values based on scroll position
+    const createUpdateFunction = (sections: NodeListOf<Element>) => {
+      return () => {
+        const viewportHeight = window.innerHeight;
 
-    // Update on scroll with requestAnimationFrame for performance
-    let ticking = false;
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateSections();
-          ticking = false;
+        sections.forEach((section) => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top;
+          const sectionBottom = rect.bottom;
+
+          // ENTRY: Quick fade in when section top enters bottom 20% of viewport
+          const entryZone = viewportHeight * 0.2;
+          const entryStart = viewportHeight;
+          const entryEnd = viewportHeight - entryZone;
+          const entryProgress = Math.min(1, Math.max(0, (entryStart - sectionTop) / (entryStart - entryEnd)));
+
+          // EXIT: Fade out when section bottom leaves top 20% of viewport
+          const exitZone = viewportHeight * 0.2;
+          const exitStart = exitZone;
+          const exitEnd = -50;
+          const exitProgress = Math.min(1, Math.max(0, (exitStart - sectionBottom) / (exitStart - exitEnd)));
+
+          // Determine which state we're in and calculate values
+          let opacity: number;
+          let blur: number;
+          let scale: number;
+          let translateY: number;
+
+          if (entryProgress < 1) {
+            // ENTERING: Start large and expanded, shrink to normal
+            const eased = Math.pow(entryProgress, 0.6);
+            opacity = eased;
+            blur = 6 * (1 - eased);
+            scale = 1.06 - (0.06 * eased);
+            translateY = 40 * (1 - eased);
+          } else if (exitProgress > 0) {
+            // EXITING: Compress and fade out going up
+            const eased = Math.pow(exitProgress, 0.6);
+            opacity = 1 - eased;
+            blur = 6 * eased;
+            scale = 1 - (0.06 * eased);
+            translateY = -40 * eased;
+          } else {
+            // FULLY VISIBLE: Normal state
+            opacity = 1;
+            blur = 0;
+            scale = 1;
+            translateY = 0;
+          }
+
+          // Apply CSS variables directly (no transitions, instant update)
+          const el = section as HTMLElement;
+          el.style.setProperty('--section-opacity', String(opacity));
+          el.style.setProperty('--section-blur', `${blur}px`);
+          el.style.setProperty('--section-scale', String(scale));
+          el.style.setProperty('--section-translate', `${translateY}px`);
         });
-        ticking = true;
+      };
+    };
+
+    // Setup animations for sections
+    const setupAnimations = (sections: NodeListOf<Element>) => {
+      sectionsRef.current = sections;
+
+      // Mark sections for animation
+      sections.forEach((section) => {
+        section.setAttribute('data-scroll-animate', '');
+      });
+
+      const updateSections = createUpdateFunction(sections);
+
+      // Initial update
+      updateSections();
+
+      // Update on every scroll event
+      const handleScroll = () => {
+        requestAnimationFrame(updateSections);
+      };
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('resize', updateSections, { passive: true });
+
+      // Return cleanup function
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', updateSections);
+        sections.forEach((section) => {
+          section.removeAttribute('data-scroll-animate');
+          const el = section as HTMLElement;
+          el.style.removeProperty('--section-opacity');
+          el.style.removeProperty('--section-blur');
+          el.style.removeProperty('--section-scale');
+          el.style.removeProperty('--section-translate');
+        });
+      };
+    };
+
+    // Try immediately
+    let sections = initializeSections();
+
+    if (sections) {
+      cleanupRef.current = setupAnimations(sections);
+      return () => cleanupRef.current?.();
+    }
+
+    // If no sections found, use requestAnimationFrame to wait for DOM render
+    // This handles race condition where LayoutWrapper renders before page content
+    let attempts = 0;
+    const maxAttempts = 10; // Try up to 10 frames (~166ms at 60fps)
+
+    const tryInit = () => {
+      attempts++;
+      sections = initializeSections();
+
+      if (sections) {
+        cleanupRef.current = setupAnimations(sections);
+      } else if (attempts < maxAttempts) {
+        // Keep trying for a few more frames
+        requestAnimationFrame(tryInit);
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', updateSections, { passive: true });
+    const rafId = requestAnimationFrame(tryInit);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', updateSections);
-      // Clean up data attributes
-      sections.forEach((section) => {
-        section.removeAttribute('data-scroll-animate');
-        const el = section as HTMLElement;
-        el.style.removeProperty('--section-opacity');
-        el.style.removeProperty('--section-blur');
-        el.style.removeProperty('--section-scale');
-        el.style.removeProperty('--section-translate');
-      });
+      cancelAnimationFrame(rafId);
+      cleanupRef.current?.();
     };
   }, []);
 
-  return null; // This component only adds behavior, no UI
+  return null;
 }

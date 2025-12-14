@@ -85,12 +85,11 @@ main#main-content > section:not(:first-child) {
  */
 
 /* Section animation styles - controlled by JavaScript via CSS variables */
+/* NO CSS transitions - JavaScript updates values every frame for smooth scroll-linked animation */
 main#main-content section[data-scroll-animate] {
-  /* Initial state before animation starts */
-  opacity: var(--section-opacity, 0);
-  filter: blur(var(--section-blur, 8px));
-  transform: scale(var(--section-scale, 1.03)) translateY(var(--section-translate, 30px));
-  transition: opacity 0.1s ease-out, filter 0.1s ease-out, transform 0.1s ease-out;
+  opacity: var(--section-opacity, 1);
+  filter: blur(var(--section-blur, 0px));
+  transform: scale(var(--section-scale, 1)) translateY(var(--section-translate, 0px));
   will-change: opacity, filter, transform;
 }
 
