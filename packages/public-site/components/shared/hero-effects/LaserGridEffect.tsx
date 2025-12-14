@@ -22,7 +22,7 @@ export function LaserGridEffect() {
   }));
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
       {/* Horizontal laser beams */}
       {horizontalBeams.map((beam, i) => {
         const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));

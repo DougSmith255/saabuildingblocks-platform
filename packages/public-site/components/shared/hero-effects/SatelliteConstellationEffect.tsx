@@ -16,7 +16,7 @@ export function SatelliteConstellationEffect() {
   ];
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
       {/* Subtle blue radiating gradient background */}
       <div
         className="absolute inset-0"

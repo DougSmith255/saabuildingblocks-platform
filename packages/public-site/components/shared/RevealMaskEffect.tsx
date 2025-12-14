@@ -94,7 +94,7 @@ export function RevealMaskEffect() {
   return (
     <div
       ref={containerRef}
-      className="reveal-mask-effect absolute inset-0 pointer-events-none flex items-center justify-center animate-fade-in-effect"
+      className="reveal-mask-effect hero-effect-layer absolute inset-0 pointer-events-none flex items-center justify-center animate-fade-in-effect"
       style={{
         zIndex: 0,
         animation: 'fadeInEffect 0.8s ease-out forwards',

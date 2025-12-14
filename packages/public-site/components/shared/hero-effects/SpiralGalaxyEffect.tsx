@@ -13,7 +13,7 @@ export function SpiralGalaxyEffect() {
   const dotsPerArm = 30;
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden flex items-center justify-center hero-effect-layer">
       {/* Spiral arms */}
       {[...Array(arms)].map((_, armIndex) => (
         <div key={armIndex} className="absolute inset-0">

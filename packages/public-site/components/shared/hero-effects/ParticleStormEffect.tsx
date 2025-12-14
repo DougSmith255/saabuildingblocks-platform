@@ -20,7 +20,7 @@ export function ParticleStormEffect() {
   })), []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
       {/* Main particles */}
       {particles.map((p, i) => {
         const moveX = Math.cos(p.angle * Math.PI / 180) * progress * 50;

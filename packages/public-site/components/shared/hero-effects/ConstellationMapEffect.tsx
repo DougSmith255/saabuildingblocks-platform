@@ -33,7 +33,7 @@ export function ConstellationMapEffect() {
   };
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
       {/* Connection lines */}
       <svg className="absolute inset-0 w-full h-full">
         {connections.map(([from, to], i) => {
