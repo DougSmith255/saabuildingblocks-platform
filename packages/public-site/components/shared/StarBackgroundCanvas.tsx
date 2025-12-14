@@ -171,16 +171,31 @@ export default function StarBackgroundCanvas() {
   }, [handleResize, animate]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      aria-hidden="true"
-      style={{
-        position: 'fixed',
-        inset: 0, // top: 0, right: 0, bottom: 0, left: 0 - let browser handle sizing
-        zIndex: -1,
-        pointerEvents: 'none',
-        backgroundColor: 'transparent',
-      }}
-    />
+    <>
+      {/* Mobile: extend 100px above viewport to prevent jump when address bar hides */}
+      {/* bottom: 0 anchors to bottom, top: -100px extends above viewport */}
+      <style jsx>{`
+        .star-canvas {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          top: -100px;
+          z-index: -1;
+          pointer-events: none;
+          background-color: transparent;
+        }
+        @media (min-width: 768px) {
+          .star-canvas {
+            top: 0;
+          }
+        }
+      `}</style>
+      <canvas
+        ref={canvasRef}
+        aria-hidden="true"
+        className="star-canvas"
+      />
+    </>
   );
 }

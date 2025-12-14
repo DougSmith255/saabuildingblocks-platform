@@ -243,8 +243,8 @@ export default function Header() {
             maxWidth: '100%',
             boxSizing: 'border-box',
             borderRadius: '0 0 20px 20px',
-            borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+            borderBottom: isMobileMenuOpen ? '2px solid transparent' : '2px solid rgba(60, 60, 60, 0.8)',
+            boxShadow: isMobileMenuOpen ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.3)',
             willChange: 'transform',
             contain: 'layout style',
             // First load: start hidden, slide down; After: normal scroll behavior
@@ -337,6 +337,7 @@ export default function Header() {
               <button
                 className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
                 onClick={handleHamburgerClick}
+                style={{ marginTop: '3px' }}
                 aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
