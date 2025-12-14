@@ -76,10 +76,11 @@ export function QuantumGridEffect() {
         </div>
       </div>
 
-      {/* Gradient overlay for depth */}
+      {/* Gradient overlay for depth - extends 100px below fold */}
       <div
-        className="absolute inset-0"
+        className="absolute left-0 right-0 top-0"
         style={{
+          height: 'calc(100% + 100px)',
           background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
         }}
       />
