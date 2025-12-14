@@ -3652,37 +3652,61 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   font-family: var(--font-synonym), sans-serif !important;
 }
 
-/* Table styling for pricing tables */
+/* Table styling for pricing tables - use !important to override WordPress inline styles */
 .blog-content table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1.5rem 0;
-  background: rgba(20, 20, 20, 0.6);
-  border-radius: 8px;
-  overflow: hidden;
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  background: rgba(20, 20, 20, 0.6) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
 }
 
 .blog-content th {
-  background: rgba(255, 215, 0, 0.15);
-  color: #ffd700;
-  font-weight: 600;
-  text-align: left;
-  padding: 1rem;
-  border-bottom: 2px solid rgba(255, 215, 0, 0.3);
+  background: rgba(255, 215, 0, 0.15) !important;
+  color: #ffd700 !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 1rem !important;
+  border-bottom: 2px solid rgba(255, 215, 0, 0.3) !important;
+  border-color: rgba(255, 215, 0, 0.3) !important;
 }
 
 .blog-content td {
-  padding: 1rem;
-  border-bottom: 1px solid rgba(100, 100, 100, 0.3);
-  vertical-align: top;
+  padding: 1rem !important;
+  border-bottom: 1px solid rgba(100, 100, 100, 0.3) !important;
+  border-color: rgba(100, 100, 100, 0.3) !important;
+  vertical-align: top !important;
+  color: #e5e4dd !important;
+  background: transparent !important;
+}
+
+.blog-content tr {
+  background: transparent !important;
 }
 
 .blog-content tr:last-child td {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
 .blog-content tr:hover td {
-  background: rgba(255, 215, 0, 0.05);
+  background: rgba(255, 215, 0, 0.05) !important;
+}
+
+/* Override any WordPress text color inline styles on table elements */
+.blog-content table *[style*="color"] {
+  color: inherit !important;
+}
+
+.blog-content th *[style*="color"],
+.blog-content th[style*="color"] {
+  color: #ffd700 !important;
+}
+
+.blog-content td *[style*="color"],
+.blog-content td[style*="color"] {
+  color: #e5e4dd !important;
 }
 
 /* Remove font-size from strong tags that had inline styling */
@@ -3716,17 +3740,33 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 }
 
 .light-mode .blog-content table {
-  background: rgba(240, 240, 240, 0.6);
+  background: rgba(240, 240, 240, 0.6) !important;
+  border-color: rgba(179, 143, 0, 0.3) !important;
 }
 
 .light-mode .blog-content th {
-  background: rgba(179, 143, 0, 0.15);
-  color: #8b6914;
-  border-bottom-color: rgba(179, 143, 0, 0.3);
+  background: rgba(179, 143, 0, 0.15) !important;
+  color: #8b6914 !important;
+  border-bottom-color: rgba(179, 143, 0, 0.3) !important;
+}
+
+.light-mode .blog-content td {
+  color: #3a3a3a !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 .light-mode .blog-content tr:hover td {
-  background: rgba(179, 143, 0, 0.05);
+  background: rgba(179, 143, 0, 0.05) !important;
+}
+
+.light-mode .blog-content th *[style*="color"],
+.light-mode .blog-content th[style*="color"] {
+  color: #8b6914 !important;
+}
+
+.light-mode .blog-content td *[style*="color"],
+.light-mode .blog-content td[style*="color"] {
+  color: #3a3a3a !important;
 }
 
 /* School Cards Grid - displays school logos, names, and CTA buttons */

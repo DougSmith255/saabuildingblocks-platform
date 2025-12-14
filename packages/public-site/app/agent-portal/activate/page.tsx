@@ -40,23 +40,22 @@ function ActivatePageContent() {
 
     const validateToken = async () => {
       try {
-        const response = await fetch(`${AUTH_API_URL}/api/invitations/validate`, {
-          method: 'POST',
+        const response = await fetch(`${AUTH_API_URL}/api/invitations/validate?token=${encodeURIComponent(token)}`, {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ token }),
         });
 
         const data = await response.json();
 
         if (!response.ok || !data.valid) {
-          setError(data.message || 'This invitation link is invalid or has expired. Please request a new invitation.');
+          setError(data.error || data.message || 'This invitation link is invalid or has expired. Please request a new invitation.');
           setTokenValid(false);
         } else {
           setTokenValid(true);
           setUserEmail(data.email || '');
-          setUserName(data.full_name || data.first_name || '');
+          setUserName(data.firstName || data.full_name || data.first_name || '');
         }
       } catch (err) {
         console.error('Token validation error:', err);

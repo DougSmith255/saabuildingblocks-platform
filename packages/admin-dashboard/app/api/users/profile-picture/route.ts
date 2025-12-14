@@ -12,6 +12,19 @@ import { verifyAccessToken } from '@/lib/auth/jwt';
 
 export const dynamic = 'force-dynamic';
 
+// CORS headers
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Handle CORS preflight
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 // R2 Configuration
 const R2_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
@@ -36,7 +49,7 @@ export async function POST(request: NextRequest) {
     if (!authHeader?.startsWith('Bearer ')) {
       return NextResponse.json(
         { error: 'Unauthorized', message: 'Missing authorization header' },
-        { status: 401 }
+        { status: 401, headers: CORS_HEADERS }
       );
     }
 
@@ -46,7 +59,7 @@ export async function POST(request: NextRequest) {
     if (!tokenResult.valid || !tokenResult.payload) {
       return NextResponse.json(
         { error: 'Unauthorized', message: tokenResult.error || 'Invalid or expired token' },
-        { status: 401 }
+        { status: 401, headers: CORS_HEADERS }
       );
     }
 
@@ -60,14 +73,14 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { error: 'Bad Request', message: 'No file provided' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
     if (!userId) {
       return NextResponse.json(
         { error: 'Bad Request', message: 'No userId provided' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -76,7 +89,7 @@ export async function POST(request: NextRequest) {
     if (payload.sub !== userId && payload.role !== 'admin') {
       return NextResponse.json(
         { error: 'Forbidden', message: 'Cannot update another user\'s profile picture' },
-        { status: 403 }
+        { status: 403, headers: CORS_HEADERS }
       );
     }
 
@@ -85,7 +98,7 @@ export async function POST(request: NextRequest) {
     if (!allowedTypes.includes(file.type)) {
       return NextResponse.json(
         { error: 'Bad Request', message: 'Invalid file type. Allowed: JPEG, PNG, GIF, WebP' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -94,7 +107,7 @@ export async function POST(request: NextRequest) {
     if (file.size > maxSize) {
       return NextResponse.json(
         { error: 'Bad Request', message: 'File too large. Maximum size: 5MB' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -126,7 +139,7 @@ export async function POST(request: NextRequest) {
     if (!supabase) {
       return NextResponse.json(
         { error: 'Service Unavailable', message: 'Database connection unavailable' },
-        { status: 503 }
+        { status: 503, headers: CORS_HEADERS }
       );
     }
 
@@ -142,7 +155,7 @@ export async function POST(request: NextRequest) {
       console.error('Failed to update user profile picture URL:', updateError);
       return NextResponse.json(
         { error: 'Internal Server Error', message: 'Failed to update user record' },
-        { status: 500 }
+        { status: 500, headers: CORS_HEADERS }
       );
     }
 
@@ -150,7 +163,7 @@ export async function POST(request: NextRequest) {
       success: true,
       url: publicUrl,
       message: 'Profile picture uploaded successfully',
-    });
+    }, { headers: CORS_HEADERS });
   } catch (error) {
     console.error('Profile picture upload error:', error);
     return NextResponse.json(
@@ -158,7 +171,7 @@ export async function POST(request: NextRequest) {
         error: 'Internal Server Error',
         message: error instanceof Error ? error.message : 'Unknown error occurred',
       },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }

@@ -83,26 +83,25 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
       }
 
       // Fade out background effects (RevealMaskEffect, etc.) - elements outside hero-content-wrapper
-      // These should fade but not scale/blur/translate
+      // These should ONLY FADE - no blur, no scale, no transform
       // Query by class name
       const backgroundEffects = heroSection.querySelectorAll('.reveal-mask-effect, .hero-background-effect') as NodeListOf<HTMLElement>;
       backgroundEffects.forEach(el => {
         el.style.opacity = `${opacity}`;
-        el.style.filter = `blur(${blur * 0.5}px) brightness(${brightness})`;
+        el.style.visibility = progress >= 1 ? 'hidden' : 'visible';
       });
 
-      // Also find any elements with pointer-events-none + absolute (like StickyHeroWrapper does)
+      // Also find any elements with pointer-events-none + absolute/inset-0
       // This catches lazy-loaded effects that might not have specific class names
-      const children = heroSection.children;
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i] as HTMLElement;
-        const classes = child.className || '';
-        // Effect elements: have pointer-events-none and absolute positioning
-        if (classes.includes('pointer-events-none') && classes.includes('absolute') && !classes.includes('hero-content-wrapper')) {
-          child.style.opacity = `${opacity}`;
-          child.style.filter = `blur(${blur * 0.5}px) brightness(${brightness})`;
-        }
-      }
+      // Effects should ONLY FADE - no blur, no scale, no transform
+      const allEffects = heroSection.querySelectorAll('.pointer-events-none.inset-0, .pointer-events-none.absolute');
+      allEffects.forEach((el) => {
+        const element = el as HTMLElement;
+        // Skip elements inside hero-content-wrapper (like the backdrop blur elements)
+        if (element.closest('.hero-content-wrapper')) return;
+        element.style.opacity = `${opacity}`;
+        element.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+      });
 
       // Also fade out the desktop agent counter (which is outside the main content wrapper)
       const agentCounter = heroSection.querySelector('.agent-counter-wrapper') as HTMLElement;

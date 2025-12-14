@@ -61,23 +61,26 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      // Find effect elements - use querySelectorAll to find nested effects too
-      // This handles dynamically loaded components that may be wrapped in extra divs
-      const effectElements = heroSection.querySelectorAll('.pointer-events-none.absolute, .pointer-events-none.inset-0, [class*="pointer-events-none"][class*="absolute"]');
+      // Find effect elements by marker class or common patterns
+      // Effects have: pointer-events-none + absolute/inset-0, or hero-effect-layer class
+      // Effects should ONLY FADE - no blur, no scale, no transform
+      const effectElements = heroSection.querySelectorAll('.hero-effect-layer, .pointer-events-none.inset-0, .pointer-events-none.absolute');
       effectElements.forEach((el) => {
         const element = el as HTMLElement;
+        // Effects only fade out - no blur, no scale, no transform
         element.style.opacity = `${opacity}`;
-        element.style.filter = `blur(${effectBlur}px) brightness(${brightness})`;
+        // Set visibility to hidden when fully scrolled to ensure complete removal
+        element.style.visibility = progress >= 1 ? 'hidden' : 'visible';
       });
 
-      // Find content elements
+      // Find content elements (direct children of section that aren't effects)
       const children = heroSection.children;
       for (let i = 0; i < children.length; i++) {
         const child = children[i] as HTMLElement;
         const classes = child.className || '';
 
         // Skip effect elements (already handled above)
-        if (classes.includes('pointer-events-none')) continue;
+        if (classes.includes('pointer-events-none') || classes.includes('hero-effect-layer')) continue;
 
         // Content elements: have z-10 or z-20 class OR have relative + max-w (content wrapper)
         if (classes.includes('z-10') || classes.includes('z-20') ||
@@ -90,9 +93,15 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
         }
       }
 
-      // Hide section when fully scrolled
+      // Hide entire section when fully scrolled to ensure complete disappearance
       const section = heroSection as HTMLElement;
-      section.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+      if (progress >= 1) {
+        section.style.visibility = 'hidden';
+        section.style.opacity = '0';
+      } else {
+        section.style.visibility = 'visible';
+        section.style.opacity = '1';
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });

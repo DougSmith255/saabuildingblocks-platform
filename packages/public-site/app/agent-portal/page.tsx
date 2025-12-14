@@ -225,17 +225,19 @@ export default function AgentPortal() {
         body: formData,
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         const updatedUser = { ...user, profilePictureUrl: data.url };
         setUser(updatedUser);
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       } else {
-        alert('Failed to upload profile picture. Please try again.');
+        console.error('Profile picture upload failed:', data);
+        alert(data.message || 'Failed to upload profile picture. Please try again.');
       }
     } catch (err) {
       console.error('Profile picture upload error:', err);
-      alert('Failed to upload profile picture. Please try again.');
+      alert('Failed to upload profile picture. Please check your connection and try again.');
     }
   };
 

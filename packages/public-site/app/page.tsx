@@ -67,6 +67,14 @@ export default function Home() {
         {/* Reveal Mask Effect - Golden glow behind Doug & Karrie (dynamically loaded) */}
         <LazyRevealMaskEffect />
 
+        {/* Dark gradient backdrop - vignette effect for depth */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.5) 100%)',
+          }}
+        />
+
         {/* Hero Content Block - Image + H1 + Tagline + Buttons as one centered unit */}
         <div
           className="hero-content-wrapper flex flex-col items-center w-full"
