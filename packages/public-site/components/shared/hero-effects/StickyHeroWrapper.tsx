@@ -122,7 +122,17 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    // Re-check after dynamic components load (ssr: false loads after hydration)
+    const timer1 = setTimeout(handleScroll, 100);
+    const timer2 = setTimeout(handleScroll, 300);
+    const timer3 = setTimeout(handleScroll, 600);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+    };
   }, []);
 
   return (
