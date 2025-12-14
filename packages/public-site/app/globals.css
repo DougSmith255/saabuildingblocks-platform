@@ -54,60 +54,6 @@ main#main-content > section:not(:first-child) {
 }
 */
 
-/* ========================================
-   SCROLL-TIMELINE SECTION TRANSITIONS
-   ======================================== */
-/*
-   CSS scroll-driven animations for section depth transitions
-   Browser support: Chrome 116+, Safari 26+
-   Firefox: No support (graceful fallback - sections display normally)
-
-   Effect: Sections fade in/out with Z-depth as you scroll
-   - Entry: Fades in from behind (pushed back) to normal position
-   - Exit: Fades out while pushing back
-   - Extended visibility window via animation-range
-
-   Exclusions (via data-no-section-transitions on body):
-   - Agent portal, linktree pages, legal pages, test pages, blog posts
-
-   Special: Blog index uses data-hero-only-transitions for hero section only
-*/
-
-/* ========================================
-   SECTION SCROLL WHEEL ANIMATION
-   ======================================== */
-/*
- * Wheel-like depth effect: sections expand/blur/fade in on entry,
- * compress/blur/fade out on exit - like cards rotating on a wheel.
- *
- * JavaScript-based for universal browser support (including Firefox).
- * SectionScrollAnimator component applies transforms via CSS variables.
- */
-
-/* Section animation styles - controlled by JavaScript via CSS variables */
-/* NO CSS transitions - JavaScript updates values every frame for smooth scroll-linked animation */
-main#main-content section[data-scroll-animate] {
-  opacity: var(--section-opacity, 1);
-  filter: blur(var(--section-blur, 0px));
-  transform: scale(var(--section-scale, 1)) translateY(var(--section-translate, 0px));
-  will-change: opacity, filter, transform;
-}
-
-/* Sections with animation disabled */
-body[data-no-section-transitions] main#main-content section[data-scroll-animate] {
-  opacity: 1 !important;
-  filter: none !important;
-  transform: none !important;
-}
-
-/*
- * Hero scroll animation is now handled entirely by JavaScript (FixedHeroWrapper.tsx, StickyHeroWrapper.tsx)
- * This allows fine-grained control: content shrinks/blurs/fades, but effect layers ONLY fade.
- * CSS scroll-timeline was removed because it applied transforms to the entire section,
- * causing effect layers to compress along with content on Chrome (which supports scroll-timeline).
- * JavaScript provides consistent behavior across all browsers.
- */
-
 /* Content sections scroll over the fixed hero */
 .fixed-hero-spacer ~ section,
 .fixed-hero-spacer ~ * section {
@@ -115,44 +61,11 @@ body[data-no-section-transitions] main#main-content section[data-scroll-animate]
   z-index: 1;
 }
 
-/* Respect reduced motion preference */
-@media (prefers-reduced-motion: reduce) {
-  main#main-content section {
-    animation: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-    filter: none !important;
-    will-change: auto !important;
-  }
-}
-
-/* Let browser optimize compositing layers automatically */
-/* Removed explicit will-change from elements to let browser decide */
-
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-}
-
-/* ========================================
-   VIEW TRANSITIONS - Page Navigation
-   ======================================== */
-/* Smooth crossfade between pages when navigating */
-/* Supported: Chrome, Edge, Safari 18+. Graceful fallback for others. */
-
-::view-transition-old(root) {
-  animation: fade-out 200ms ease-out forwards;
-}
-
-::view-transition-new(root) {
-  animation: fade-in 200ms ease-in forwards;
-}
-
-@keyframes fade-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }
 
 @keyframes fade-in {

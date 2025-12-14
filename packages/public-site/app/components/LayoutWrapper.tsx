@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 import { usePathname } from 'next/navigation';
 import Header from '@/components/shared/Header';
 import Footer from '@/components/shared/Footer';
@@ -8,8 +8,6 @@ import { DeferredFooter } from '@saa/shared/components/performance/DeferredConte
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 import { ViewportHeightLock } from './ViewportHeightLock';
-import { SectionScrollAnimator } from './SectionScrollAnimator';
-import { ViewTransitionHandler } from './ViewTransitionHandler';
 import { ViewportProvider } from '@/contexts/ViewportContext';
 
 /**
@@ -20,12 +18,6 @@ import { ViewportProvider } from '@/contexts/ViewportContext';
  * - Improves LCP (Largest Contentful Paint) by 25-35%
  * - Animations pause during scroll on mobile for smooth 60fps
  * - Works with static site export
- * - CSS scroll-timeline section transitions (Chrome 116+, Safari 26+)
- *
- * SECTION TRANSITIONS:
- * - Most pages: All sections get depth transition on scroll
- * - Blog index: Only hero section gets transition
- * - Excluded pages: No transitions (legal, test pages, blog posts, etc.)
  *
  * OVERRIDE BEHAVIOR (when building pages):
  * Use data-defer-priority attribute on any element:
@@ -58,64 +50,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   const noFooterRoutes = useMemo(() => [
     '/agent-portal/login', // Login page - header yes, footer no
   ], []);
-
-  // Routes where section transitions should be DISABLED
-  const noSectionTransitionRoutes = useMemo(() => [
-    '/agent-portal',
-    '/doug-linktree',
-    '/karrie-linktree',
-    '/cookie-policy',
-    '/disclaimer',
-    '/privacy-policy',
-    '/terms-of-use',
-    '/test-category-badge',
-    '/test-parallax-heroes',
-    '/master-controller',
-  ], []);
-
-  // Routes where ONLY hero section gets transitions
-  const heroOnlyTransitionRoutes = useMemo(() => [
-    '/blog', // Blog index - hero only, not individual posts
-  ], []);
-
-  // Determine section transition mode based on pathname
-  const sectionTransitionMode = useMemo(() => {
-    if (!pathname) return 'full'; // Default to full transitions
-
-    // Check for no transitions (exact matches or starts with)
-    if (noSectionTransitionRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))) {
-      return 'none';
-    }
-
-    // Check for individual blog posts (has category/slug pattern)
-    // Pattern: /blog/[category]/[slug] - 3+ segments means it's a post
-    const segments = pathname.split('/').filter(Boolean);
-    if (segments[0] === 'blog' && segments.length >= 3) {
-      return 'none'; // Blog posts get no transitions
-    }
-
-    // Check for hero-only transitions (exact match only)
-    if (heroOnlyTransitionRoutes.includes(pathname)) {
-      return 'hero-only';
-    }
-
-    return 'full'; // Default: all sections get transitions
-  }, [pathname, noSectionTransitionRoutes, heroOnlyTransitionRoutes]);
-
-  // Set body data attributes for CSS to read
-  useEffect(() => {
-    // Remove both attributes first
-    document.body.removeAttribute('data-no-section-transitions');
-    document.body.removeAttribute('data-hero-only-transitions');
-
-    // Set appropriate attribute based on mode
-    if (sectionTransitionMode === 'none') {
-      document.body.setAttribute('data-no-section-transitions', '');
-    } else if (sectionTransitionMode === 'hero-only') {
-      document.body.setAttribute('data-hero-only-transitions', '');
-    }
-    // 'full' mode = no attribute needed (CSS default)
-  }, [sectionTransitionMode]);
 
   // Check if current path matches any no-header-footer route (SSR-safe)
   const shouldHideHeaderFooter = useMemo(() => {
@@ -151,13 +85,10 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />
-      <SectionScrollAnimator />
-      <ViewTransitionHandler />
       {!shouldHideHeaderFooter && <Header />}
       {/*
         Using div instead of main to avoid nested <main> elements.
         Pages already have their own <main id="main-content"> for accessibility.
-        CSS scroll animations target main > section, so this prevents nesting issues.
       */}
       <div
         style={{ minHeight: '100vh', position: 'relative' }}
