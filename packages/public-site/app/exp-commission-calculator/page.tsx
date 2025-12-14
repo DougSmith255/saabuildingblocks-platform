@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { H1, Tagline } from '@saa/shared/components/saa';
+import { H1, Tagline, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects';
 
@@ -12,20 +12,60 @@ const INITIAL_PROGRESS_END = 0.5;
 /**
  * eXp Commission & Fees Calculator Page
  *
- * Calculator code copied directly from WordPress for exact functionality.
+ * Dark theme with gold accents matching the site design.
  */
 export default function ExpCommissionCalculator() {
+  const [transactions, setTransactions] = useState(1);
+  const [avgCommission, setAvgCommission] = useState(10000);
+  const [results, setResults] = useState({
+    expSplit: 0,
+    brokerFee: 0,
+    eoFee: 0,
+    postCap250: 0,
+    postCap75: 0,
+    totalFees: 0,
+    netCommission: 0,
+  });
+
+  // Calculate commission whenever inputs change
   useEffect(() => {
-    // Initialize calculations when component mounts
-    const slider = document.getElementById('transactions') as HTMLInputElement;
-    if (slider) {
-      updateSlider(slider);
-      updateCalculation();
-    }
-  }, []);
+    const totalCommission = transactions * avgCommission;
+
+    // Commission calculation
+    const commissionPerDealToExp = 0.2 * avgCommission;
+    const potentialExpCommission = transactions * commissionPerDealToExp;
+    const expCommission = Math.min(potentialExpCommission, 16000);
+
+    // Post-cap fees calculation
+    const dealsAfterCap = Math.max((potentialExpCommission - 16000) / commissionPerDealToExp, 0);
+    const postCapFirstTier = Math.min(dealsAfterCap, 20);
+    const postCapSecondTier = Math.max(dealsAfterCap - 20, 0);
+    const postCap250 = postCapFirstTier * 250;
+    const postCap75 = postCapSecondTier * 75;
+
+    // Other fees
+    const eoFee = Math.min(transactions * 60, 750);
+    const brokerFee = transactions * 25;
+
+    // Total calculations
+    const totalFees = expCommission + eoFee + brokerFee + postCap250 + postCap75;
+    const netCommission = totalCommission - totalFees;
+
+    setResults({
+      expSplit: Math.round(expCommission),
+      brokerFee: Math.round(brokerFee),
+      eoFee: Math.round(eoFee),
+      postCap250: Math.round(postCap250),
+      postCap75: Math.round(postCap75),
+      totalFees: Math.round(totalFees),
+      netCommission: Math.round(netCommission),
+    });
+  }, [transactions, avgCommission]);
+
+  const sliderProgress = ((transactions - 1) / 49) * 100;
 
   return (
-    <main id="main-content" className="min-h-screen">
+    <main id="main-content" className="min-h-screen bg-[#191818]">
       {/* Hero Section */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
@@ -40,268 +80,144 @@ export default function ExpCommissionCalculator() {
       </StickyHeroWrapper>
 
       {/* Calculator Section */}
-      <section
-        className="py-8 px-4"
-      >
-        <div className="max-w-[1000px] mx-auto">
-          {/* Calculator Module - Code copied from WordPress */}
-          <div className="calculator-module">
-            <style jsx>{`
-              @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&family=Exo:wght@400;700&display=swap');
-
-              .calculator-module {
-                  font-family: 'Open Sans', sans-serif;
-                  background-color: #fff;
-                  width: 100%;
-                  max-width: 1000px;
-                  margin: 0 auto;
-                  padding: 20px;
-                  border-radius: 10px;
-                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-              }
-
-              .calculator-inputs {
-                  margin-bottom: 30px;
-              }
-
-              .calculator-inputs input {
-                  width: 100%;
-                  padding: 12px;
-                  border: 2px solid #004CF4;
-                  border-radius: 8px;
-                  font-size: 16px;
-                  margin-top: 8px;
-              }
-
-              .slider-container {
-                  position: relative;
-                  margin: 40px 0;
-              }
-
-              .slider-wrapper {
-                  position: relative;
-                  height: 50px;
-              }
-
-              #transactionValue {
-                  position: absolute;
-                  top: -30px;
-                  left: 0;
-                  transform: translateX(-50%);
-                  background: #004CF4;
-                  color: white;
-                  padding: 4px 8px;
-                  border-radius: 4px;
-                  font-family: 'Exo', sans-serif;
-                  transition: left 0.1s ease;
-              }
-
-              input[type="range"] {
-                  -webkit-appearance: none;
-                  width: 100%;
-                  height: 6px;
-                  background: linear-gradient(to right, #004CF4 var(--progress), #ddd var(--progress));
-                  border-radius: 3px;
-                  margin: 20px 0;
-              }
-
-              input[type="range"]::-webkit-slider-thumb {
-                  -webkit-appearance: none;
-                  width: 24px;
-                  height: 24px;
-                  background: #004CF4;
-                  border-radius: 50%;
-                  cursor: pointer;
-                  position: relative;
-                  z-index: 2;
-              }
-
-              .results {
-                  display: flex;
-                  justify-content: center;
-                  gap: 40px;
-                  margin-top: 30px;
-                  padding: 25px;
-                  background-color: #333;
-                  border-radius: 10px;
-              }
-
-              .result-item {
-                  text-align: center;
-              }
-
-              .result-item h3 {
-                  color: white;
-                  margin: 0 0 10px 0;
-                  font-size: 18px;
-              }
-
-              .result-item p {
-                  color: white;
-                  margin: 0;
-                  font-size: 28px;
-                  font-family: 'Exo', sans-serif;
-                  font-weight: bold;
-              }
-
-              .breakdown-rows {
-                  display: flex;
-                  flex-direction: column;
-                  gap: 15px;
-                  margin: 20px 0;
-              }
-
-              .breakdown-row {
-                  display: grid;
-                  gap: 15px;
-              }
-
-              .breakdown-row.top {
-                  grid-template-columns: repeat(3, 1fr);
-              }
-
-              .breakdown-row.bottom {
-                  grid-template-columns: repeat(2, 1fr);
-              }
-
-              .breakdown-item {
-                  text-align: center;
-                  padding: 15px;
-                  background: #333;
-                  border-radius: 8px;
-                  color: white;
-              }
-
-              .breakdown-item h4 {
-                  margin: 0 0 8px 0;
-                  font-size: 14px;
-                  font-weight: 400;
-                  color: white;
-              }
-
-              .breakdown-item p {
-                  margin: 0;
-                  font-size: 18px;
-                  font-family: 'Exo', sans-serif;
-                  font-weight: bold;
-              }
-
-              @media (max-width: 768px) {
-                  .breakdown-row.top,
-                  .breakdown-row.bottom {
-                      grid-template-columns: 1fr;
-                  }
-
-                  .results {
-                      flex-direction: column;
-                      gap: 20px;
-                  }
-              }
-            `}</style>
-
-            <div className="calculator-inputs">
-              <label htmlFor="avgCommission" style={{ color: '#333', fontWeight: 'bold' }}>
+      <section className="py-12 px-4 bg-[#191818]">
+        <div className="max-w-[700px] mx-auto">
+          <CyberCard padding="lg" centered={false}>
+            {/* Commission Input */}
+            <div className="mb-8">
+              <label
+                htmlFor="avgCommission"
+                className="block text-caption text-[#ffd700] uppercase tracking-wider mb-2"
+              >
                 Average Commission Per Deal ($)
               </label>
               <input
                 type="number"
                 id="avgCommission"
-                defaultValue={10000}
+                value={avgCommission}
+                onChange={(e) => setAvgCommission(parseFloat(e.target.value) || 0)}
                 min={1}
-                onInput={() => updateCalculation()}
+                className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all text-lg font-mono"
               />
             </div>
 
-            <div className="slider-container">
-              <div className="slider-wrapper">
-                <div id="transactionValue">1</div>
+            {/* Transaction Slider */}
+            <div className="mb-8">
+              <label className="block text-caption text-[#ffd700] uppercase tracking-wider mb-4">
+                Number of Transactions
+              </label>
+              <div className="relative pt-8 pb-4">
+                {/* Value bubble */}
+                <div
+                  className="absolute -top-0 px-3 py-1 bg-[#ffd700] text-[#191818] rounded font-bold text-sm transition-all"
+                  style={{
+                    left: `${sliderProgress}%`,
+                    transform: 'translateX(-50%)',
+                  }}
+                >
+                  {transactions}
+                </div>
+
+                {/* Custom slider */}
                 <input
                   type="range"
                   id="transactions"
                   min={1}
                   max={50}
-                  defaultValue={1}
-                  onInput={(e) => updateSlider(e.target as HTMLInputElement)}
-                  style={{ '--progress': '0%' } as React.CSSProperties}
+                  value={transactions}
+                  onChange={(e) => setTransactions(parseInt(e.target.value))}
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right, #ffd700 0%, #ffd700 ${sliderProgress}%, rgba(255,215,0,0.2) ${sliderProgress}%, rgba(255,215,0,0.2) 100%)`,
+                  }}
                 />
               </div>
             </div>
 
-            <div className="breakdown-rows">
-              <div className="breakdown-row top">
-                <div className="breakdown-item">
-                  <h4>To eXp (20%)</h4>
-                  <p id="expSplit">$0</p>
+            {/* Fee Breakdown */}
+            <div className="space-y-3 mb-8">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-black/30 border border-[#ffd700]/20 rounded-lg p-4 text-center">
+                  <p className="text-xs text-[#e5e4dd]/60 mb-1">To eXp (20%)</p>
+                  <p className="text-lg font-bold text-[#ffd700] font-mono">
+                    ${results.expSplit.toLocaleString()}
+                  </p>
                 </div>
-                <div className="breakdown-item">
-                  <h4>$25/Deal Review</h4>
-                  <p id="brokerFee">$0</p>
+                <div className="bg-black/30 border border-[#ffd700]/20 rounded-lg p-4 text-center">
+                  <p className="text-xs text-[#e5e4dd]/60 mb-1">$25/Deal Review</p>
+                  <p className="text-lg font-bold text-[#ffd700] font-mono">
+                    ${results.brokerFee.toLocaleString()}
+                  </p>
                 </div>
-                <div className="breakdown-item">
-                  <h4>E&O Insurance</h4>
-                  <p id="eoFee">$0</p>
+                <div className="bg-black/30 border border-[#ffd700]/20 rounded-lg p-4 text-center">
+                  <p className="text-xs text-[#e5e4dd]/60 mb-1">E&O Insurance</p>
+                  <p className="text-lg font-bold text-[#ffd700] font-mono">
+                    ${results.eoFee.toLocaleString()}
+                  </p>
                 </div>
               </div>
-              <div className="breakdown-row bottom">
-                <div className="breakdown-item">
-                  <h4>Post-Cap $250/deal</h4>
-                  <p id="postCap250">$0</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-black/30 border border-[#ffd700]/20 rounded-lg p-4 text-center">
+                  <p className="text-xs text-[#e5e4dd]/60 mb-1">Post-Cap $250/deal</p>
+                  <p className="text-lg font-bold text-[#ffd700] font-mono">
+                    ${results.postCap250.toLocaleString()}
+                  </p>
                 </div>
-                <div className="breakdown-item">
-                  <h4>Post 20 Deals $75/deal</h4>
-                  <p id="postCap75">$0</p>
+                <div className="bg-black/30 border border-[#ffd700]/20 rounded-lg p-4 text-center">
+                  <p className="text-xs text-[#e5e4dd]/60 mb-1">Post 20 Deals $75/deal</p>
+                  <p className="text-lg font-bold text-[#ffd700] font-mono">
+                    ${results.postCap75.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="results">
-              <div className="result-item">
-                <h3>Total Fees</h3>
-                <p id="totalFees">$0</p>
+            {/* Results */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-[#ffd700]/10 border-2 border-[#ffd700]/40 rounded-lg p-6 text-center">
+                <p className="text-sm text-[#ffd700]/80 uppercase tracking-wider mb-2">Total Fees</p>
+                <p className="text-3xl font-bold text-[#ffd700] font-mono">
+                  ${results.totalFees.toLocaleString()}
+                </p>
               </div>
-              <div className="result-item">
-                <h3>Net Commission</h3>
-                <p id="netCommission">$0</p>
+              <div className="bg-[#10b981]/10 border-2 border-[#10b981]/40 rounded-lg p-6 text-center">
+                <p className="text-sm text-[#10b981]/80 uppercase tracking-wider mb-2">Net Commission</p>
+                <p className="text-3xl font-bold text-[#10b981] font-mono">
+                  ${results.netCommission.toLocaleString()}
+                </p>
               </div>
             </div>
-          </div>
+          </CyberCard>
 
           {/* Info Box */}
           <LazySection height={350}>
-            <div
-              className="mt-8 p-5 bg-white rounded-lg text-center"
-              style={{
-                boxShadow: '0 1px 3px rgba(0,0,0,0.16)',
-                lineHeight: '1.6'
-              }}
-            >
-              <p className="text-gray-700 mb-4">
+            <CyberCard padding="md" centered={true} className="mt-8">
+              <p className="text-[#e5e4dd]/80 mb-4">
                 This calculator shows real estate agents their net commission at eXp Realty. It factors in:
               </p>
-              <p className="text-gray-700"><strong>20% to eXp</strong> (capped at $16k annually)</p>
-              <p className="text-gray-700"><strong>$25/deal broker review</strong></p>
-              <p className="text-gray-700"><strong>$60/deal E&O Insurance</strong> (capped at $750)</p>
-              <p className="text-gray-700"><strong>$250/deal Post-cap</strong> (After 100% commission)</p>
-              <p className="text-gray-700"><strong>$75/deal after 20 more transactions Post-cap</strong></p>
-              <p className="text-gray-700 mt-4">
-                Adjust the average commission per deal and number of transactions (1-50) to see instant results.
+              <div className="space-y-2 text-sm text-[#e5e4dd]/70">
+                <p><span className="text-[#ffd700] font-semibold">20% to eXp</span> (capped at $16k annually)</p>
+                <p><span className="text-[#ffd700] font-semibold">$25/deal</span> broker review</p>
+                <p><span className="text-[#ffd700] font-semibold">$60/deal</span> E&O Insurance (capped at $750)</p>
+                <p><span className="text-[#ffd700] font-semibold">$250/deal</span> Post-cap (After 100% commission)</p>
+                <p><span className="text-[#ffd700] font-semibold">$75/deal</span> after 20 more transactions Post-cap</p>
+              </div>
+              <p className="text-[#e5e4dd]/60 text-sm mt-4 italic">
+                Calculator does not include additional stock awards, ICON rewards, or revenue share income.
               </p>
-              <p className="text-gray-700 mt-4">
-                <strong>(Calculator does not include additional stock awards, ICON rewards, or revenue share income)</strong>
-              </p>
-            </div>
+            </CyberCard>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-12">
               <a
                 href="/about-exp-realty/fees/"
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity"
+                className="px-6 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-semibold text-center hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all"
               >
                 eXp Fees Fully Explained Blog
               </a>
               <a
                 href="/about-exp-realty/commission/"
-                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold rounded-lg text-center hover:opacity-90 transition-opacity"
+                className="px-6 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-semibold text-center hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all"
               >
                 eXp Commission Fully Explained Blog
               </a>
@@ -309,74 +225,37 @@ export default function ExpCommissionCalculator() {
           </LazySection>
         </div>
       </section>
+
+      {/* Custom slider thumb styles */}
+      <style jsx>{`
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 24px;
+          height: 24px;
+          background: #ffd700;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+          transition: box-shadow 0.2s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+          box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+        input[type="range"]::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+          background: #ffd700;
+          border-radius: 50%;
+          cursor: pointer;
+          border: none;
+          box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        input[type="range"]::-moz-range-thumb:hover {
+          box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        }
+      `}</style>
     </main>
   );
-}
-
-// Calculator functions - copied from WordPress
-function updateSlider(element: HTMLInputElement) {
-  const transactions = parseInt(element.value);
-  const percent = ((transactions - 1) / 49) * 100;
-  element.style.setProperty('--progress', `${percent}%`);
-
-  const bubble = document.getElementById('transactionValue');
-  if (bubble) {
-    const sliderWidth = element.offsetWidth;
-    const bubblePosition = (transactions - 1) / 49 * sliderWidth;
-    bubble.style.left = `${bubblePosition}px`;
-    bubble.textContent = String(transactions);
-  }
-  updateCalculation();
-}
-
-function updateCalculation() {
-  const transactionsEl = document.getElementById('transactions') as HTMLInputElement;
-  const avgCommissionEl = document.getElementById('avgCommission') as HTMLInputElement;
-
-  if (!transactionsEl || !avgCommissionEl) return;
-
-  const transactions = parseInt(transactionsEl.value);
-  const avgCommission = parseFloat(avgCommissionEl.value) || 10000;
-  const totalCommission = transactions * avgCommission;
-
-  // Corrected commission calculation
-  const commissionPerDealToExp = 0.2 * avgCommission;
-  const potentialExpCommission = transactions * commissionPerDealToExp;
-  const expCommission = Math.min(potentialExpCommission, 16000);
-
-  // Post-cap fees calculation
-  const dealsAfterCap = Math.max((potentialExpCommission - 16000) / commissionPerDealToExp, 0);
-  const postCapFirstTier = Math.min(dealsAfterCap, 20);
-  const postCapSecondTier = Math.max(dealsAfterCap - 20, 0);
-  const postCap250 = postCapFirstTier * 250;
-  const postCap75 = postCapSecondTier * 75;
-
-  // Other fees
-  const eoFee = Math.min(transactions * 60, 750);
-  const brokerFee = transactions * 25;
-
-  // Total calculations
-  const totalFees = expCommission + eoFee + brokerFee + postCap250 + postCap75;
-  const netCommission = totalCommission - totalFees;
-
-  // Update breakdown display
-  const expSplitEl = document.getElementById('expSplit');
-  const brokerFeeEl = document.getElementById('brokerFee');
-  const eoFeeEl = document.getElementById('eoFee');
-  const postCap250El = document.getElementById('postCap250');
-  const postCap75El = document.getElementById('postCap75');
-  const totalFeesEl = document.getElementById('totalFees');
-  const netCommissionEl = document.getElementById('netCommission');
-
-  if (expSplitEl) expSplitEl.textContent = `$${Math.round(expCommission).toLocaleString()}`;
-  if (brokerFeeEl) brokerFeeEl.textContent = `$${Math.round(brokerFee).toLocaleString()}`;
-  if (eoFeeEl) eoFeeEl.textContent = `$${Math.round(eoFee).toLocaleString()}`;
-  if (postCap250El) postCap250El.textContent = `$${Math.round(postCap250).toLocaleString()}`;
-  if (postCap75El) postCap75El.textContent = `$${Math.round(postCap75).toLocaleString()}`;
-
-  // Update total display
-  if (totalFeesEl) totalFeesEl.textContent = `$${Math.round(totalFees).toLocaleString()}`;
-  if (netCommissionEl) netCommissionEl.textContent = `$${Math.round(netCommission).toLocaleString()}`;
 }
 
 /**
