@@ -295,8 +295,8 @@ export async function sendInvitationEmail({
   role?: string;
   expiresInDays?: number;
 }): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
-  const activationLink = `${baseUrl}/activate?token=${activationToken}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
+  const activationLink = `${baseUrl}/agent-portal/activate?token=${activationToken}`;
   const expiresIn = expiresInDays === 1 ? '24 hours' : `${expiresInDays} days`;
 
   // Determine full name for email template

@@ -7,7 +7,7 @@
  * Features:
  * - Personalized greeting with invitee name
  * - Optional inviter name for personal touch
- * - Professional SAA Building Blocks branding
+ * - Professional Smart Agent Alliance branding
  * - Clear CTA with secure activation link
  * - Expiration notice and security information
  */
@@ -37,29 +37,27 @@ export function InvitationEmail({
   role = 'user',
 }: InvitationEmailProps) {
   return (
-    <EmailLayout preview={`${full_name}, you're invited to join SAA Building Blocks`}>
-      <EmailHeading>You're Invited! 🎉</EmailHeading>
+    <EmailLayout preview={`${full_name}, you're invited to join The Alliance!`}>
+      <EmailHeading>You're Invited to The Alliance!</EmailHeading>
 
       <EmailParagraph>Hello {full_name},</EmailParagraph>
 
       {inviterName && (
         <EmailParagraph>
-          <strong>{inviterName}</strong> has invited you to join SAA Building Blocks,
-          the Smart Agent Alliance platform where you can collaborate with intelligent
-          agents and streamline your workflows.
+          <strong>{inviterName}</strong> has invited you to join the Smart Agent Alliance,
+          a community of elite real estate professionals collaborating to achieve extraordinary results.
         </EmailParagraph>
       )}
 
       {!inviterName && (
         <EmailParagraph>
-          You've been invited to join SAA Building Blocks! We're excited to welcome you
-          to our platform where you can collaborate with intelligent agents and streamline
-          your workflows.
+          You've been invited to join The Alliance! We're excited to welcome you
+          to our community of elite real estate professionals working together to achieve extraordinary results.
         </EmailParagraph>
       )}
 
       <EmailParagraph>
-        To complete your registration and activate your account, simply click the
+        To complete your registration and join the team, simply click the
         button below:
       </EmailParagraph>
 
@@ -68,13 +66,12 @@ export function InvitationEmail({
       </div>
 
       <EmailAlert type="warning">
-        <strong>⏰ Time-Sensitive:</strong> This invitation link will expire in{' '}
-        <strong>{expiresIn}</strong>. Please activate your account before the link expires
-        to ensure access to the platform.
+        <strong>Time-Sensitive:</strong> This invitation link will expire in{' '}
+        <strong>{expiresIn}</strong>. Please activate your account before the link expires.
       </EmailAlert>
 
       <EmailParagraph style={{ marginTop: '32px' }}>
-        <strong>🚀 Getting Started:</strong>
+        <strong>Getting Started:</strong>
       </EmailParagraph>
 
       <ol style={{ color: '#525252', fontSize: '14px', lineHeight: '24px', paddingLeft: '20px' }}>
@@ -82,34 +79,31 @@ export function InvitationEmail({
           Click the "Accept Invitation" button above
         </li>
         <li style={{ marginBottom: '8px' }}>
-          Set up your secure password and complete your profile
+          Set up your secure access code
         </li>
         <li style={{ marginBottom: '8px' }}>
           {role === 'admin' ? 'Access the admin dashboard and configure settings' :
-           'Explore the platform features and agent capabilities'}
-        </li>
-        <li style={{ marginBottom: '8px' }}>
-          Start collaborating with intelligent agents
+           'Access your Agent Portal and explore the resources'}
         </li>
       </ol>
 
       <EmailAlert type="info">
-        <strong>🔒 Security Note:</strong>
+        <strong>Security Note:</strong>
         <br />
         This invitation link is unique and secure. For your protection, it can only be
         used once and will expire automatically after {expiresIn}.
       </EmailAlert>
 
       <EmailAlert type="success" style={{ marginTop: '16px' }}>
-        <strong>💡 Need Help?</strong>
+        <strong>Need Help?</strong>
         <br />
         If you have any questions or encounter issues during activation, our support
         team is ready to assist. Contact us at{' '}
         <a
-          href="mailto:support@saabuildingblocks.com"
+          href="mailto:support@smartagentalliance.com"
           style={{ color: '#10b981', textDecoration: 'none', fontWeight: 'bold' }}
         >
-          support@saabuildingblocks.com
+          support@smartagentalliance.com
         </a>
       </EmailAlert>
 
@@ -120,15 +114,13 @@ export function InvitationEmail({
       </EmailParagraph>
 
       <EmailParagraph style={{ marginTop: '32px' }}>
-        We look forward to having you as part of the SAA Building Blocks community!
+        We look forward to having you as part of the Smart Agent Alliance community!
       </EmailParagraph>
 
       <EmailParagraph>
         Best regards,
         <br />
-        <strong>SAA Building Blocks Team</strong>
-        <br />
-        Smart Agent Alliance
+        <strong>The SAA Team</strong>
       </EmailParagraph>
     </EmailLayout>
   );

@@ -30,7 +30,7 @@ export function EmailLayout({
   children,
   showFooter = true,
 }: EmailLayoutProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
 
   return (
     <Html>
@@ -38,25 +38,29 @@ export function EmailLayout({
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header */}
+          {/* Header - spacing only, logo moved to footer/signature */}
           <Section style={header}>
-            <Img
-              src={`${baseUrl}/logo.png`}
-              width="150"
-              height="50"
-              alt="Smart Agent Alliance"
-              style={logo}
-            />
+            <Text style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a1a1a', margin: 0 }}>
+              Smart Agent Alliance
+            </Text>
           </Section>
 
           {/* Content */}
           <Section style={content}>{children}</Section>
 
-          {/* Footer */}
+          {/* Footer with logo in signature */}
           {showFooter && (
             <>
               <Hr style={hr} />
               <Section style={footer}>
+                {/* Logo in signature area - email clients typically show these */}
+                <Img
+                  src="https://smartagentalliance.com/apple-touch-icon.png"
+                  width="60"
+                  height="60"
+                  alt="Smart Agent Alliance"
+                  style={{ margin: '0 auto 16px', borderRadius: '12px' }}
+                />
                 <Text style={footerText}>
                   This email was sent by Smart Agent Alliance
                 </Text>
