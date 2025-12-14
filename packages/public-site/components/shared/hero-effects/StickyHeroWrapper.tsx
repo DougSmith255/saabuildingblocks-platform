@@ -61,29 +61,28 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
-      // Find effect elements - direct children of section with pointer-events-none
-      // These are the wrapper divs that contain visual effects (particles, grids, etc.)
+      // Find effect elements - use querySelectorAll to find nested effects too
+      // This handles dynamically loaded components that may be wrapped in extra divs
+      const effectElements = heroSection.querySelectorAll('.pointer-events-none.absolute, .pointer-events-none.inset-0, [class*="pointer-events-none"][class*="absolute"]');
+      effectElements.forEach((el) => {
+        const element = el as HTMLElement;
+        element.style.opacity = `${opacity}`;
+        element.style.filter = `blur(${effectBlur}px) brightness(${brightness})`;
+      });
+
+      // Find content elements
       const children = heroSection.children;
       for (let i = 0; i < children.length; i++) {
         const child = children[i] as HTMLElement;
         const classes = child.className || '';
 
-        // Effect elements: have pointer-events-none and absolute positioning
-        if (classes.includes('pointer-events-none') && classes.includes('absolute')) {
-          // Effects stay fixed, only fade and blur
-          child.style.opacity = `${opacity}`;
-          child.style.filter = `blur(${effectBlur}px) brightness(${brightness})`;
-        }
+        // Skip effect elements (already handled above)
+        if (classes.includes('pointer-events-none')) continue;
+
         // Content elements: have z-10 or z-20 class OR have relative + max-w (content wrapper)
-        else if (classes.includes('z-10') || classes.includes('z-20') ||
-                (classes.includes('relative') && classes.includes('max-w'))) {
-          child.style.transformOrigin = 'center center';
-          child.style.transform = `scale(${scale}) translateY(${translateY}px)`;
-          child.style.filter = `blur(${contentBlur}px) brightness(${brightness})`;
-          child.style.opacity = `${opacity}`;
-        }
-        // Also check for content divs without z-index but with max-w class
-        else if (classes.includes('max-w') && !classes.includes('pointer-events-none')) {
+        if (classes.includes('z-10') || classes.includes('z-20') ||
+            (classes.includes('relative') && classes.includes('max-w')) ||
+            (classes.includes('max-w') && !classes.includes('pointer-events-none'))) {
           child.style.transformOrigin = 'center center';
           child.style.transform = `scale(${scale}) translateY(${translateY}px)`;
           child.style.filter = `blur(${contentBlur}px) brightness(${brightness})`;

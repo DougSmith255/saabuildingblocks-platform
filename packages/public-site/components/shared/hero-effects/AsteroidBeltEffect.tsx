@@ -33,7 +33,7 @@ export function AsteroidBeltEffect() {
   })), [asteroidCount]);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden animate-fade-in-effect">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden animate-fade-in-effect hero-effect-layer">
       <div
         className="absolute inset-0"
         style={{
