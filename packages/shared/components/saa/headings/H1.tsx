@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface HeadingProps {
@@ -31,7 +31,8 @@ function convertToAltGlyphs(text: string): string {
  * PERFORMANCE OPTIMIZATIONS:
  * - Single DOM node (was ~40 nodes with per-character rendering)
  * - CSS text-shadow for all effects (GPU accelerated)
- * - Animation delayed 100ms to not block LCP
+ * - All styles applied immediately (no flash-in)
+ * - Animation starts via CSS (no JS delay)
  * - ~97% reduction in DOM nodes
  *
  * VISUAL EFFECT:
@@ -48,15 +49,6 @@ export default function H1({
   id,
   noAnimation = false,
 }: HeadingProps) {
-  const [animate, setAnimate] = useState(false);
-
-  // Delay animation start to not block LCP
-  useEffect(() => {
-    if (noAnimation) return;
-    const timer = setTimeout(() => setAnimate(true), 100);
-    return () => clearTimeout(timer);
-  }, [noAnimation]);
-
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
 
@@ -89,11 +81,9 @@ export default function H1({
             0.06em 0.06em 0 #0f0f0f,
             0.075em 0.075em 0 #080808
           `,
-          /* GPU-accelerated depth shadow */
-          filter: animate
-            ? 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3))'
-            : 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7))',
-          animation: animate ? 'h1GlowBreathe 4s ease-in-out infinite' : 'none',
+          /* GPU-accelerated depth shadow - applied immediately */
+          filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3))',
+          animation: noAnimation ? 'none' : 'h1GlowBreathe 4s ease-in-out infinite',
           ...style,
         }}
       >
@@ -107,10 +97,10 @@ export default function H1({
         <style>{`
           @keyframes h1GlowBreathe {
             0%, 100% {
-              filter: brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3));
+              filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3));
             }
             50% {
-              filter: brightness(1.2) drop-shadow(0 0 0.2em rgba(255, 215, 0, 0.6));
+              filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.2) drop-shadow(0 0 0.2em rgba(255, 215, 0, 0.6));
             }
           }
         `}</style>

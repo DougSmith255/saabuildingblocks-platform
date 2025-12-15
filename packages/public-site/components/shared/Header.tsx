@@ -2,18 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import styles from './GlassShimmer.module.css';
 import { usePathname } from 'next/navigation';
 import { CTAButton } from '@saa/shared/components/saa';
 import MobileMenu from './MobileMenu';
-
-// Lazy load DesktopNav - only imported on desktop viewports
-const DesktopNav = dynamic(() => import('./DesktopNav'), { ssr: false });
-
-// Breakpoint: 1450px (90.625rem) - matches xlg breakpoint
-// Desktop nav shows at ≥1450px, mobile menu shows at <1450px
-const DESKTOP_BREAKPOINT = 1450;
+import DesktopNav from './DesktopNav';
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -24,61 +17,17 @@ export default function Header() {
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [isPortalClicked, setIsPortalClicked] = useState(false);
   const [is404Page, setIs404Page] = useState(false);
-  // Initialize hasMounted based on whether animation already played
-  // This ensures proper transition behavior on client-side navigation
-  const [hasMounted, setHasMounted] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return (window as any).__headerSlideInPlayed === true;
-  });
+  const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  // Track viewport for conditional rendering - only render DesktopNav on desktop
-  const [isDesktop, setIsDesktop] = useState(false);
-  // Track first page load for slide-in animation
-  // Use a global flag to ensure animation only plays once per session
-  // This persists across client-side navigations even if component remounts
-  const [isFirstLoad, setIsFirstLoad] = useState(() => {
-    if (typeof window === 'undefined') return true;
-    // Check if we've already played the slide-in animation this session
-    if ((window as any).__headerSlideInPlayed) {
-      return false; // Animation already played, skip it
-    }
-    return true;
-  });
-  // Initialize hasSlideIn based on whether animation already played
-  // This prevents a flash of hidden header on client-side navigation
-  const [hasSlideIn, setHasSlideIn] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return (window as any).__headerSlideInPlayed === true;
-  });
 
   // Track pathname for route change detection
   const pathname = usePathname();
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state and trigger slide-in animation on actual page loads only
+  // Track mount state
   useEffect(() => {
     setHasMounted(true);
-
-    // Only trigger slide-in animation on actual page loads (not client-side navigation)
-    // isFirstLoad is false when __headerSlideInPlayed is already set
-    if (isFirstLoad) {
-      // Mark that we're playing the animation - prevents replay on client-side nav
-      (window as any).__headerSlideInPlayed = true;
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setHasSlideIn(true);
-          // After slide-in animation completes (500ms), switch to normal scroll behavior
-          setTimeout(() => {
-            setIsFirstLoad(false);
-          }, 500);
-        });
-      });
-    } else {
-      // For client-side navigation, immediately show header without animation
-      setHasSlideIn(true);
-    }
   }, []);
 
   // Reset header visibility on route change - ensures header is visible on new pages
@@ -92,21 +41,6 @@ export default function Header() {
   // Font loading handled by page-level settling mask
   useEffect(() => {
     setFontsLoaded(true);
-  }, []);
-
-  // Track viewport width for conditional rendering of DesktopNav
-  // This prevents rendering ~37 DOM nodes on mobile
-  useEffect(() => {
-    const checkViewport = () => {
-      setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
-    };
-
-    // Check immediately
-    checkViewport();
-
-    // Listen for resize
-    window.addEventListener('resize', checkViewport);
-    return () => window.removeEventListener('resize', checkViewport);
   }, []);
 
   // Detect 404 page
@@ -233,8 +167,7 @@ export default function Header() {
         }}
       >
         {/* Sliding container for background and content */}
-        {/* First load: starts off-screen (-translate-y-full), slides down when hasSlideIn becomes true */}
-        {/* Subsequent loads: no slide animation, just normal scroll hide/show behavior */}
+        {/* Visible by default, slides up when scrolling down */}
         {/* Fades out when mobile menu is open */}
         <div
           className={`header-bg-container ${hasMounted ? 'transition-all duration-300' : ''} ease-in-out`}
@@ -247,10 +180,8 @@ export default function Header() {
             boxShadow: isMobileMenuOpen ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.3)',
             willChange: 'transform',
             contain: 'layout style',
-            // First load: start hidden, slide down; After: normal scroll behavior
-            transform: isFirstLoad
-              ? (hasSlideIn ? 'translateY(0) translateZ(0)' : 'translateY(-100%) translateZ(0)')
-              : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
+            // Visible by default, hide on scroll down
+            transform: isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)',
           }}
         >
           {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
@@ -319,10 +250,11 @@ export default function Header() {
             </Link>
             )}
 
-            {/* Desktop Navigation - Only render on desktop viewports (≥1450px) - Hidden on 404 */}
-            {/* This prevents ~37 DOM nodes from being rendered on mobile */}
-            {!is404Page && isDesktop && (
-              <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
+            {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1450px (xlg breakpoint) */}
+            {!is404Page && (
+              <div className="hidden xlg:block">
+                <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
+              </div>
             )}
 
           {/* Go Home Button - Only on 404 */}

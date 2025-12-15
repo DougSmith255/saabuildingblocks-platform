@@ -29,11 +29,12 @@ export function LaserGridEffect() {
     <>
       {/* Animation container - has overflow-hidden for performance */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
-        {/* Horizontal laser beams - use scaleX instead of width */}
+        {/* Horizontal laser beams - grow from 0 to full (reversed animation) */}
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          const scale = Math.max(0, (100 - beamProgress * 120) / 100);
-          const opacity = scale > 0.05 ? 1 : scale / 0.05;
+          // Reversed: beams grow from 0 to 1 instead of shrinking
+          const scale = Math.min(1, beamProgress * 1.2);
+          const opacity = scale < 0.05 ? scale / 0.05 : 1;
 
           return (
             <div
@@ -53,11 +54,12 @@ export function LaserGridEffect() {
           );
         })}
 
-        {/* Vertical laser beams - use scaleY instead of height */}
+        {/* Vertical laser beams - grow from 0 to full (reversed animation) */}
         {verticalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          const scale = Math.max(0, (100 - beamProgress * 120) / 100);
-          const opacity = scale > 0.05 ? 1 : scale / 0.05;
+          // Reversed: beams grow from 0 to 1 instead of shrinking
+          const scale = Math.min(1, beamProgress * 1.2);
+          const opacity = scale < 0.05 ? scale / 0.05 : 1;
 
           return (
             <div
@@ -77,13 +79,14 @@ export function LaserGridEffect() {
           );
         })}
 
-        {/* Intersection sparks - use transform for size changes */}
+        {/* Intersection sparks - appear when beams reach intersection */}
         {horizontalBeams.map((hBeam, hi) =>
           verticalBeams.map((vBeam, vi) => {
             const hProgress = Math.max(0, Math.min(1, (progress - hBeam.delay) * hBeam.speed * 1.2));
             const vProgress = Math.max(0, Math.min(1, (progress - vBeam.delay) * vBeam.speed * 1.2));
-            const hScale = Math.max(0, (100 - hProgress * 120) / 100);
-            const vScale = Math.max(0, (100 - vProgress * 120) / 100);
+            // Reversed: scales grow from 0 to 1
+            const hScale = Math.min(1, hProgress * 1.2);
+            const vScale = Math.min(1, vProgress * 1.2);
 
             // Spark is visible when both beams reach this intersection
             // Horizontal beam extends from center, check if it reaches this x position
