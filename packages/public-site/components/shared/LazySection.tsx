@@ -1,24 +1,18 @@
 'use client';
 
 import { useState, useRef, useEffect, ReactNode } from 'react';
-import { SectionSkeleton } from './SectionSkeleton';
 
 /**
  * LazySection - Defers rendering of section content until near viewport
  *
- * Unlike dynamic() which code-splits at build time, this component
- * defers RENDERING of already-loaded code until the section is
- * near the viewport. Use this for inline sections that aren't
- * extracted into separate component files.
- *
- * For imported components, prefer dynamic() with SectionSkeleton.
- * For inline sections, use this wrapper.
+ * CLS-OPTIMIZED: Renders nothing during SSR to prevent page height issues.
+ * Content only renders after client-side hydration when section is in/near viewport.
  *
  * Features:
- * - Defers rendering until 200px before viewport
- * - Shows shimmer skeleton during load
+ * - Renders nothing during SSR (no skeleton = no CLS from page height)
+ * - Uses IntersectionObserver to detect when section is near viewport
  * - Smooth fade-in when content renders
- * - Configurable skeleton height
+ * - Content loads when 200px before entering viewport
  *
  * Usage:
  * <LazySection height={600}>
@@ -31,7 +25,7 @@ import { SectionSkeleton } from './SectionSkeleton';
 
 interface LazySectionProps {
   children: ReactNode;
-  /** Approximate height for skeleton placeholder */
+  /** Approximate height - used for scroll calculations, not rendered */
   height: number;
   /** How far before viewport to start rendering (default: 200px) */
   rootMargin?: string;
@@ -45,11 +39,20 @@ export function LazySection({
   rootMargin = '200px',
   className = '',
 }: LazySectionProps) {
+  // Start as false - nothing renders during SSR
+  const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [hasRendered, setHasRendered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Mark as mounted after hydration
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const element = containerRef.current;
     if (!element) return;
 
@@ -69,7 +72,7 @@ export function LazySection({
     observer.observe(element);
 
     return () => observer.disconnect();
-  }, [rootMargin]);
+  }, [isMounted, rootMargin]);
 
   // Trigger fade-in after content renders
   useEffect(() => {
@@ -80,6 +83,11 @@ export function LazySection({
       });
     }
   }, [isVisible]);
+
+  // During SSR or before mount, render nothing (no height contribution)
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <div ref={containerRef} className={className}>
@@ -92,9 +100,7 @@ export function LazySection({
         >
           {children}
         </div>
-      ) : (
-        <SectionSkeleton height={height} />
-      )}
+      ) : null}
     </div>
   );
 }
