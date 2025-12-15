@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-import { LaserGridEffect } from '@/components/shared/hero-effects/LaserGridEffect';
+import { GreenLaserGridEffect } from '@/components/shared/hero-effects/GreenLaserGridEffect';
 
 /**
  * eXp Realty Revenue Share Calculator
@@ -65,7 +65,7 @@ export default function RevenueShareCalculator() {
       {/* Hero Section */}
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          <LaserGridEffect />
+          <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <H1>PASSIVE INCOME POTENTIAL</H1>
             <Tagline className="mt-4">
