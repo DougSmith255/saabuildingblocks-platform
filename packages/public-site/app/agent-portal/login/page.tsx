@@ -495,7 +495,9 @@ function DataStreamEffect() {
                   key={j}
                   style={{
                     position: 'absolute',
-                    top: `${charY}%`,
+                    top: 0,
+                    // Use transform instead of top for CLS optimization
+                    transform: `translateY(${charY}vh)`,
                     // Green colors matching test page
                     color: isHead
                       ? `rgba(255,255,255,${0.95 * fadeAtBottom})`
