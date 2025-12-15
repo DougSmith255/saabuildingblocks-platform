@@ -33,8 +33,9 @@ export function LaserGridEffect() {
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
           // Reversed: beams grow from 0 to 1 instead of shrinking
-          const scale = Math.min(1, beamProgress * 1.2);
-          const opacity = scale < 0.05 ? scale / 0.05 : 1;
+          // Minimum scale of 0.3 ensures beams never disappear completely
+          const scale = Math.max(0.3, Math.min(1, beamProgress * 1.2));
+          const opacity = 1; // Always fully visible since we have minimum scale
 
           return (
             <div
@@ -58,8 +59,9 @@ export function LaserGridEffect() {
         {verticalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
           // Reversed: beams grow from 0 to 1 instead of shrinking
-          const scale = Math.min(1, beamProgress * 1.2);
-          const opacity = scale < 0.05 ? scale / 0.05 : 1;
+          // Minimum scale of 0.3 ensures beams never disappear completely
+          const scale = Math.max(0.3, Math.min(1, beamProgress * 1.2));
+          const opacity = 1; // Always fully visible since we have minimum scale
 
           return (
             <div
@@ -84,9 +86,9 @@ export function LaserGridEffect() {
           verticalBeams.map((vBeam, vi) => {
             const hProgress = Math.max(0, Math.min(1, (progress - hBeam.delay) * hBeam.speed * 1.2));
             const vProgress = Math.max(0, Math.min(1, (progress - vBeam.delay) * vBeam.speed * 1.2));
-            // Reversed: scales grow from 0 to 1
-            const hScale = Math.min(1, hProgress * 1.2);
-            const vScale = Math.min(1, vProgress * 1.2);
+            // Reversed: scales grow from 0 to 1, with minimum of 0.3
+            const hScale = Math.max(0.3, Math.min(1, hProgress * 1.2));
+            const vScale = Math.max(0.3, Math.min(1, vProgress * 1.2));
 
             // Spark is visible when both beams reach this intersection
             // Horizontal beam extends from center, check if it reaches this x position
