@@ -157,9 +157,11 @@ export default function AgentPortalLogin() {
       id="main-content"
       className="relative flex items-center justify-center px-4 overflow-hidden"
       style={{
-        // Full viewport height minus header (85px)
-        minHeight: 'calc(100vh - 85px)',
-        height: 'calc(100vh - 85px)',
+        // Full viewport height - content should fill entire screen
+        minHeight: '100vh',
+        height: '100vh',
+        // Offset content slightly to account for header overlay
+        paddingTop: '85px',
       }}
     >
       {/* Data Stream Effect - Green (matches test page) */}
