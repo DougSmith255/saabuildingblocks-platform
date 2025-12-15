@@ -1,0 +1,29 @@
+# Background Removal Worker
+# Uses Cloudflare Workers AI to remove backgrounds from profile images
+
+name = "saa-background-removal"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+# AI binding for background removal
+[ai]
+binding = "AI"
+
+# R2 bucket for caching processed images
+[[r2_buckets]]
+binding = "CACHE_BUCKET"
+bucket_name = "saa-profile-images"
+
+# Environment variables
+[vars]
+ALLOWED_ORIGINS = "https://smartagentalliance.com,https://saabuildingblocks.com,http://localhost:3000,http://localhost:3001"
+
+# Development settings
+[env.development]
+vars = { ALLOWED_ORIGINS = "*" }
+
+# Production settings
+[env.production]
+routes = [
+  { pattern = "saabuildingblocks.com/api/remove-background/*", zone_name = "saabuildingblocks.com" }
+]

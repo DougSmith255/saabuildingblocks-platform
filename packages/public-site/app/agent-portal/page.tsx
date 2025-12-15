@@ -18,7 +18,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents';
+type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'attraction-page';
 
 interface NavItem {
   id: SectionId;
@@ -36,6 +36,7 @@ const navItems: NavItem[] = [
   { id: 'revshare', label: 'RevShare', icon: '◮' },
   { id: 'exp-links', label: 'eXp Links', icon: '◯' },
   { id: 'new-agents', label: 'New Agents', icon: '◠' },
+  { id: 'attraction-page', label: 'Attraction Page', icon: '◇' },
 ];
 
 // Dashboard quick access cards
@@ -221,6 +222,28 @@ export default function AgentPortal() {
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       alert('Image must be less than 5MB');
+      return;
+    }
+
+    // Validate image dimensions (minimum 900x900 for high-quality display)
+    const MIN_DIMENSION = 900;
+    const imageDimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve({ width: img.width, height: img.height });
+        URL.revokeObjectURL(img.src);
+      };
+      img.onerror = () => {
+        reject(new Error('Failed to load image'));
+        URL.revokeObjectURL(img.src);
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    console.log('Image dimensions:', imageDimensions);
+
+    if (imageDimensions.width < MIN_DIMENSION || imageDimensions.height < MIN_DIMENSION) {
+      alert(`Image must be at least ${MIN_DIMENSION}x${MIN_DIMENSION} pixels for high-quality display on large screens.\n\nYour image is ${imageDimensions.width}x${imageDimensions.height} pixels.`);
       return;
     }
 
@@ -490,6 +513,9 @@ export default function AgentPortal() {
 
             {/* New Agents */}
             {activeSection === 'new-agents' && <NewAgentsSection />}
+
+            {/* Attraction Page */}
+            {activeSection === 'attraction-page' && <AttractionPageSection user={user} />}
           </div>
         </div>
       </div>
@@ -1128,6 +1154,476 @@ function NewAgentsSection() {
           >
             Contact Support
           </a>
+        </div>
+      </div>
+    </SectionWrapper>
+  );
+}
+
+// ============================================================================
+// Attraction Page Section
+// ============================================================================
+interface AgentPageData {
+  id: string;
+  slug: string;
+  display_first_name: string;
+  display_last_name: string;
+  email: string;
+  phone: string | null;
+  show_phone: boolean;
+  phone_text_only: boolean;
+  facebook_url: string | null;
+  instagram_url: string | null;
+  twitter_url: string | null;
+  youtube_url: string | null;
+  tiktok_url: string | null;
+  linkedin_url: string | null;
+  activated: boolean;
+  activated_at: string | null;
+}
+
+function AttractionPageSection({ user }: { user: UserData }) {
+  const [pageData, setPageData] = useState<AgentPageData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    display_first_name: '',
+    display_last_name: '',
+    slug: '',
+    phone: '',
+    show_phone: false,
+    phone_text_only: false,
+    facebook_url: '',
+    instagram_url: '',
+    twitter_url: '',
+    youtube_url: '',
+    tiktok_url: '',
+    linkedin_url: '',
+  });
+
+  // Fetch agent page data
+  useEffect(() => {
+    const fetchPageData = async () => {
+      try {
+        const token = localStorage.getItem('agent_portal_token');
+        const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.page) {
+            setPageData(data.page);
+            setFormData({
+              display_first_name: data.page.display_first_name || '',
+              display_last_name: data.page.display_last_name || '',
+              slug: data.page.slug || '',
+              phone: data.page.phone || '',
+              show_phone: data.page.show_phone || false,
+              phone_text_only: data.page.phone_text_only || false,
+              facebook_url: data.page.facebook_url || '',
+              instagram_url: data.page.instagram_url || '',
+              twitter_url: data.page.twitter_url || '',
+              youtube_url: data.page.youtube_url || '',
+              tiktok_url: data.page.tiktok_url || '',
+              linkedin_url: data.page.linkedin_url || '',
+            });
+          }
+        } else if (response.status === 404) {
+          // No page exists yet - that's okay, they'll need to be added via GHL webhook
+          setPageData(null);
+        } else {
+          setError('Failed to load attraction page data');
+        }
+      } catch (err) {
+        console.error('Error fetching page data:', err);
+        setError('Failed to load attraction page data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchPageData();
+  }, [user.id]);
+
+  const handleInputChange = (field: string, value: string | boolean) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    setHasUnsavedChanges(true);
+    setSuccessMessage(null);
+  };
+
+  const handleSave = async () => {
+    if (!pageData) return;
+
+    setIsSaving(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPageData(data.page);
+        setHasUnsavedChanges(false);
+        setSuccessMessage('Changes saved successfully!');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to save changes');
+      }
+    } catch (err) {
+      console.error('Error saving page data:', err);
+      setError('Failed to save changes. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleActivate = async () => {
+    if (!pageData) return;
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}/activate`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPageData(data.page);
+        setSuccessMessage('Your attraction page is now live!');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to activate page');
+      }
+    } catch (err) {
+      console.error('Error activating page:', err);
+      setError('Failed to activate page. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDeactivate = async () => {
+    if (!pageData) return;
+
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}/deactivate`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPageData(data.page);
+        setSuccessMessage('Your attraction page has been deactivated.');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to deactivate page');
+      }
+    } catch (err) {
+      console.error('Error deactivating page:', err);
+      setError('Failed to deactivate page. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <SectionWrapper title="Agent Attraction Page">
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+        </div>
+      </SectionWrapper>
+    );
+  }
+
+  if (!pageData) {
+    return (
+      <SectionWrapper title="Agent Attraction Page">
+        <GenericCard padding="lg" centered>
+          <div className="text-center space-y-4 py-8">
+            <span className="text-6xl">🚀</span>
+            <h3 className="text-h3 text-[#ffd700]">Coming Soon!</h3>
+            <p className="text-body max-w-md mx-auto">
+              Your personalized Agent Attraction Page will be available once you&apos;ve been added to the active downline.
+              Contact your sponsor if you believe this is an error.
+            </p>
+          </div>
+        </GenericCard>
+      </SectionWrapper>
+    );
+  }
+
+  const pageUrl = `https://smartagentalliance.com/agent/${pageData.slug}`;
+
+  return (
+    <SectionWrapper title="Agent Attraction Page">
+      <div className="space-y-8">
+        {/* Status Banner */}
+        <div className={`p-4 rounded-lg border ${pageData.activated
+          ? 'bg-green-500/10 border-green-500/30'
+          : 'bg-yellow-500/10 border-yellow-500/30'
+        }`}>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center gap-3">
+              <span className={`w-3 h-3 rounded-full ${pageData.activated ? 'bg-green-500' : 'bg-yellow-500'}`} />
+              <span className={pageData.activated ? 'text-green-400' : 'text-yellow-400'}>
+                {pageData.activated ? 'Your page is live!' : 'Your page is not yet active'}
+              </span>
+            </div>
+            {pageData.activated && (
+              <a
+                href={pageUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#ffd700] hover:underline"
+              >
+                View your page →
+              </a>
+            )}
+          </div>
+        </div>
+
+        {/* Error/Success Messages */}
+        {error && (
+          <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400">
+            {error}
+          </div>
+        )}
+        {successMessage && (
+          <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400">
+            {successMessage}
+          </div>
+        )}
+
+        {/* Page URL Preview */}
+        <GenericCard padding="md">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-[#e5e4dd]/80">Your Page URL</label>
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-black/30 border border-white/10">
+              <span className="text-[#e5e4dd]/60">smartagentalliance.com/agent/</span>
+              <span className="text-[#ffd700]">{formData.slug}</span>
+            </div>
+          </div>
+        </GenericCard>
+
+        {/* Display Name */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Display Name</h3>
+          <p className="text-caption mb-4">This is how your name will appear on your attraction page. You can use a different name than your legal name if preferred.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">First Name</label>
+              <input
+                type="text"
+                value={formData.display_first_name}
+                onChange={(e) => handleInputChange('display_first_name', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Last Name</label>
+              <input
+                type="text"
+                value={formData.display_last_name}
+                onChange={(e) => handleInputChange('display_last_name', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+              />
+            </div>
+          </div>
+        </GenericCard>
+
+        {/* Custom URL Slug */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Custom URL (Optional)</h3>
+          <p className="text-caption mb-4">Customize your page URL. Use lowercase letters, numbers, and hyphens only.</p>
+          <div>
+            <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">URL Slug</label>
+            <div className="flex items-center">
+              <span className="px-4 py-3 rounded-l-lg bg-black/50 border border-r-0 border-white/10 text-[#e5e4dd]/60">
+                /agent/
+              </span>
+              <input
+                type="text"
+                value={formData.slug}
+                onChange={(e) => handleInputChange('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
+                className="flex-1 px-4 py-3 rounded-r-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="firstname-lastname"
+              />
+            </div>
+          </div>
+        </GenericCard>
+
+        {/* Phone Settings */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Phone Settings</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Phone Number</label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="(555) 123-4567"
+              />
+            </div>
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="show_phone"
+                checked={formData.show_phone}
+                onChange={(e) => handleInputChange('show_phone', e.target.checked)}
+                className="w-5 h-5 rounded border-white/20 bg-black/30 text-[#ffd700] focus:ring-[#ffd700]/30"
+              />
+              <label htmlFor="show_phone" className="text-[#e5e4dd]">
+                Display phone number on my attraction page
+              </label>
+            </div>
+            {formData.show_phone && (
+              <div className="flex items-center gap-3 ml-8">
+                <input
+                  type="checkbox"
+                  id="phone_text_only"
+                  checked={formData.phone_text_only}
+                  onChange={(e) => handleInputChange('phone_text_only', e.target.checked)}
+                  className="w-5 h-5 rounded border-white/20 bg-black/30 text-[#ffd700] focus:ring-[#ffd700]/30"
+                />
+                <label htmlFor="phone_text_only" className="text-[#e5e4dd]">
+                  Show &quot;text only&quot; indicator
+                </label>
+              </div>
+            )}
+          </div>
+        </GenericCard>
+
+        {/* Social Links */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Social Links</h3>
+          <p className="text-caption mb-4">Add your social media profiles. Only filled links will be displayed on your page.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Facebook</label>
+              <input
+                type="url"
+                value={formData.facebook_url}
+                onChange={(e) => handleInputChange('facebook_url', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="https://facebook.com/yourprofile"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Instagram</label>
+              <input
+                type="url"
+                value={formData.instagram_url}
+                onChange={(e) => handleInputChange('instagram_url', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="https://instagram.com/yourprofile"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">X (Twitter)</label>
+              <input
+                type="url"
+                value={formData.twitter_url}
+                onChange={(e) => handleInputChange('twitter_url', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="https://x.com/yourprofile"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">YouTube</label>
+              <input
+                type="url"
+                value={formData.youtube_url}
+                onChange={(e) => handleInputChange('youtube_url', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="https://youtube.com/@yourchannel"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">TikTok</label>
+              <input
+                type="url"
+                value={formData.tiktok_url}
+                onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="https://tiktok.com/@yourprofile"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">LinkedIn</label>
+              <input
+                type="url"
+                value={formData.linkedin_url}
+                onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                placeholder="https://linkedin.com/in/yourprofile"
+              />
+            </div>
+          </div>
+        </GenericCard>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap gap-4 justify-end">
+          {hasUnsavedChanges && (
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+          )}
+
+          {pageData.activated ? (
+            <button
+              onClick={handleDeactivate}
+              disabled={isSaving}
+              className="px-6 py-3 rounded-lg font-semibold bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Deactivate Page
+            </button>
+          ) : (
+            <button
+              onClick={handleActivate}
+              disabled={isSaving || hasUnsavedChanges}
+              className="px-6 py-3 rounded-lg font-semibold bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              title={hasUnsavedChanges ? 'Save changes first' : 'Activate your page'}
+            >
+              Activate Page
+            </button>
+          )}
         </div>
       </div>
     </SectionWrapper>
