@@ -88,10 +88,13 @@ export function BlogPostHero({
 
   return (
     <section
-      className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 blog-hero-section min-h-[calc(100dvh-85px)]"
+      className="relative flex flex-col items-center px-4 sm:px-8 md:px-12 blog-hero-section"
       style={{
-        // Shift content up by ~8% to position it slightly above true center
-        paddingBottom: '8dvh',
+        // Use fixed padding instead of dynamic centering to prevent CLS
+        // Top padding: space for breadcrumbs area + some breathing room
+        paddingTop: 'clamp(40px, 8vh, 100px)',
+        paddingBottom: 'clamp(40px, 8vh, 100px)',
+        minHeight: 'calc(100dvh - 85px - 111px)', // viewport - header - breadcrumb area
         boxSizing: 'border-box',
       }}
     >
