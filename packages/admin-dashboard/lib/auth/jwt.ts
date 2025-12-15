@@ -19,7 +19,9 @@ const JWT_REFRESH_SECRET = new TextEncoder().encode(
   process.env.JWT_REFRESH_SECRET || 'your-refresh-secret-key-min-32-chars-replace-in-production'
 );
 
-const ACCESS_TOKEN_EXPIRY = '15m';
+// Access token expiry increased to 7 days since frontend doesn't implement token refresh
+// TODO: Implement proper token refresh flow and reduce back to 15m for better security
+const ACCESS_TOKEN_EXPIRY = '7d';
 const REFRESH_TOKEN_EXPIRY = '30d';
 
 export interface AccessTokenData {
@@ -180,7 +182,7 @@ export async function generateTokenPair(
   return {
     accessToken,
     refreshToken,
-    expiresIn: 900, // 15 minutes in seconds
+    expiresIn: 604800, // 7 days in seconds
   };
 }
 
