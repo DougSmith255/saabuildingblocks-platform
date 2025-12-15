@@ -10,6 +10,8 @@ import { usePathname } from 'next/navigation';
  * It ignores hash-only changes (like #category=xyz on the blog listing page)
  * so that filtering doesn't cause unwanted scroll jumps.
  *
+ * Works with both native scroll and Lenis smooth scroll.
+ *
  * Usage: Add to layout.tsx inside the body
  */
 export function ScrollToTop() {
@@ -19,9 +21,17 @@ export function ScrollToTop() {
   useEffect(() => {
     // Only scroll if the pathname actually changed (not just hash)
     if (prevPathnameRef.current !== null && prevPathnameRef.current !== pathname) {
-      // Use requestAnimationFrame to ensure DOM is ready
+      // Immediately scroll to top - use both methods for Lenis compatibility
+      // 1. Native scroll (works on mobile and as fallback)
+      window.scrollTo(0, 0);
+
+      // 2. Also set scrollTop directly for immediate effect
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0; // For Safari
+
+      // 3. Use requestAnimationFrame as backup to ensure it sticks
       requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo(0, 0);
       });
     }
     prevPathnameRef.current = pathname;

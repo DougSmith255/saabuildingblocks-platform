@@ -75,7 +75,7 @@ export default function Home() {
         <div
           className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0"
           style={{
-            maxWidth: '1900px',
+            maxWidth: '3000px',
           }}
         >
           {/* Doug and Karrie Image Container */}
@@ -125,7 +125,7 @@ export default function Home() {
           <div
             className="w-full px-4 sm:px-8 md:px-12 text-center pointer-events-auto z-[2]"
             style={{
-              maxWidth: '1900px',
+              maxWidth: '3000px',
               // Pull up to overlap with bottom 25% of image
               // Image height = width / 1.8, so 25% = width / 7.2
               // But also capped by maxHeight: 50dvh, so we use a blend

@@ -122,14 +122,8 @@ export function RevealMaskEffect() {
           borderColor: 'rgba(255,215,0,0.18)',
         }}
       />
-      {/* Gradient overlay for depth */}
-      <div
-        className="absolute left-0 right-0 top-0"
-        style={{
-          height: 'calc(100% + 100px)',
-          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
-        }}
-      />
+      {/* Gradient overlay for depth - uses CSS class for immediate rendering */}
+      <div className="hero-vignette" />
     </div>
   );
 }

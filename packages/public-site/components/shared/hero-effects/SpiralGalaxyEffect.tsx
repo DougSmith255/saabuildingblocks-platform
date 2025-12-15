@@ -58,15 +58,8 @@ export function SpiralGalaxyEffect() {
         />
       </div>
 
-      {/* Vignette overlay - outside overflow-hidden to extend below fold */}
-      <div
-        className="absolute left-0 right-0 top-0 pointer-events-none hero-effect-layer"
-        style={{
-          height: 'calc(100% + 100px)',
-          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
-          zIndex: 1,
-        }}
-      />
+      {/* Vignette overlay - uses CSS class for immediate rendering */}
+      <div className="hero-vignette hero-effect-layer" style={{ zIndex: 1 }} />
     </>
   );
 }
