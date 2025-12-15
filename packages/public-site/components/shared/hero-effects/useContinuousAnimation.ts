@@ -3,33 +3,31 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * Shared hook for continuous hero animations
+ * Shared hook for continuous hero animations (CLS-Optimized)
  *
  * Animation behavior:
- * - Starts fast and smoothly decelerates to idle speed (no pause/jerk)
- * - Uses exponential decay for natural-feeling slowdown
- * - Scroll adds a small boost (1.5x idle speed)
+ * - Starts at idle speed immediately (no intro boost to prevent CLS)
+ * - Time initialized to 1 so first render matches animated state
+ * - Scroll adds a speed boost for interactivity
  *
  * Returns a time value that continuously increments. Use sine waves
  * on this time value to create smooth, organic oscillations.
  */
 
 export function useContinuousAnimation() {
-  const [time, setTime] = useState(0);
-  const timeRef = useRef(0);
+  // Initialize time to 1 (not 0) so first render positions match animated positions
+  const [time, setTime] = useState(1);
+  const timeRef = useRef(1);
   const rafRef = useRef<number>(0);
-  const startTimeRef = useRef<number | null>(null);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
 
   useEffect(() => {
-    // Speed settings - 2X idle and 2X scroll boost
+    // Speed settings - idle speed only, no intro boost
     const IDLE_SPEED = 0.0002;
-    const INTRO_SPEED = 0.0016; // 8x idle speed at start
-    const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
-    const SCROLL_BOOST_MAX = 0.0006; // Max boost: 2X previous scroll boost
-    const SCROLL_BOOST_MULTIPLIER = 0.000032; // How much each px of scroll adds
-    const SCROLL_DECAY = 0.92; // Slower decay so boost lasts longer
+    const SCROLL_BOOST_MAX = 0.0006;
+    const SCROLL_BOOST_MULTIPLIER = 0.000032;
+    const SCROLL_DECAY = 0.92;
 
     let lastTimestamp = 0;
 
@@ -49,18 +47,8 @@ export function useContinuousAnimation() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
-      if (startTimeRef.current === null) {
-        startTimeRef.current = timestamp;
-      }
-
-      const elapsed = timestamp - startTimeRef.current;
-
-      // Exponential decay from intro speed to idle speed
-      // speed = idle + (intro - idle) * e^(-elapsed/tau)
-      // tau chosen so we're at ~5% of extra speed after DECAY_TIME
-      const tau = DECAY_TIME / 3; // ~95% decay after 3 tau
-      const extraSpeed = (INTRO_SPEED - IDLE_SPEED) * Math.exp(-elapsed / tau);
-      const currentSpeed = IDLE_SPEED + extraSpeed + scrollBoostRef.current;
+      // No intro speed boost - just idle + scroll boost
+      const currentSpeed = IDLE_SPEED + scrollBoostRef.current;
 
       timeRef.current += currentSpeed * deltaTime;
       scrollBoostRef.current *= SCROLL_DECAY;
