@@ -153,11 +153,19 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content" className="relative min-h-[100dvh] flex items-center justify-center px-4 overflow-hidden">
+    <main
+      id="main-content"
+      className="relative flex items-center justify-center px-4 overflow-hidden"
+      style={{
+        // Full viewport height minus header (85px)
+        minHeight: 'calc(100vh - 85px)',
+        height: 'calc(100vh - 85px)',
+      }}
+    >
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
-      {/* Login Content - centered like other hero sections */}
+      {/* Login Content - centered */}
       <div className="relative z-10 flex flex-col items-center w-full max-w-md">
         {/* Heading */}
         <div className="text-center mb-8 whitespace-nowrap">
