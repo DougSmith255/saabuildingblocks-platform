@@ -131,7 +131,7 @@ export function Breadcrumbs({
       {/* Visual Breadcrumbs */}
       <nav
         aria-label="Breadcrumb navigation"
-        className="mb-6 overflow-x-auto"
+        className="overflow-x-auto"
       >
         <ol className="flex items-center gap-2 text-sm text-[#dcdbd5] flex-wrap">
           {items.map((item, idx) => (

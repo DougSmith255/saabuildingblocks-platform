@@ -8,7 +8,6 @@ import { BlogPostHero } from '../BlogPostHero';
 import { RelatedPosts } from '../RelatedPosts';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
-import { Breadcrumbs } from '../Breadcrumbs';
 import { SchoolCardsSection } from '../SchoolCardsSection';
 import { getTemplateConfig, type CategoryTemplateConfig } from './templateConfig';
 import { LazySection } from '@/components/shared/LazySection';
@@ -198,20 +197,11 @@ export function CategoryBlogPostTemplate({
       <div className="relative">
         {!isDarkMode && <CloudBackground />}
 
-        {/* Breadcrumbs - positioned below fixed header (85px header + 1.625rem = ~111px) */}
-        <div className="relative z-10 px-4 sm:px-8 md:px-12 pt-[111px]">
-          <div className="max-w-[1900px] mx-auto">
-            <Breadcrumbs
-              category={primaryCategory}
-              categorySlug={categorySlug}
-              postTitle={post.title}
-            />
-          </div>
-        </div>
-
         <BlogPostHero
           title={post.title}
           category={primaryCategory}
+          categorySlug={categorySlug}
+          postTitle={post.title}
           author={post.author.name}
           date={formattedDate}
           content={post.content}

@@ -6,6 +6,7 @@ import { H1, CyberFrame, YouTubeFacade, Icon3D } from '@saa/shared/components/sa
 import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
+import { Breadcrumbs } from './Breadcrumbs';
 import { calculateReadingTime } from '@/utils/readingTime';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
@@ -31,6 +32,10 @@ export interface BlogPostHeroProps {
   title: string;
   /** Post category name */
   category: string;
+  /** Category URL slug for breadcrumbs */
+  categorySlug?: string;
+  /** Post title for breadcrumbs (can differ from title) */
+  postTitle?: string;
   /** Author name */
   author: string;
   /** Publication date (ISO string or formatted) */
@@ -75,6 +80,8 @@ export interface BlogPostHeroProps {
 export function BlogPostHero({
   title,
   category,
+  categorySlug,
+  postTitle,
   author,
   date,
   content,
@@ -86,6 +93,11 @@ export function BlogPostHero({
 }: BlogPostHeroProps) {
   const readingTime = calculateReadingTime(content);
   const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
+
+  // Build category slug if not provided
+  const resolvedCategorySlug = categorySlug || category.toLowerCase().replace(/\s+/g, '-');
+  // Use postTitle if provided, otherwise use title
+  const breadcrumbTitle = postTitle || title;
 
   return (
     <StickyHeroWrapper>
@@ -103,8 +115,19 @@ export function BlogPostHero({
         />
       )}
 
-      {/* Theme switch - positioned absolutely so it doesn't affect content centering */}
-      <div className="absolute top-2 right-4 sm:top-4 sm:right-8 md:right-12 z-20">
+      {/* Breadcrumbs - fixed at 230px from top viewport */}
+      <div className="absolute left-4 sm:left-8 md:left-12 z-20" style={{ top: '230px' }}>
+        <div className="max-w-[1900px]">
+          <Breadcrumbs
+            category={category}
+            categorySlug={resolvedCategorySlug}
+            postTitle={breadcrumbTitle}
+          />
+        </div>
+      </div>
+
+      {/* Theme switch - fixed at 230px from top viewport */}
+      <div className="absolute right-4 sm:right-8 md:right-12 z-20" style={{ top: '230px' }}>
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
 
@@ -130,32 +153,38 @@ export function BlogPostHero({
           </H1>
         </div>
 
-        {/* Meta info row - centered */}
-        {/* minHeight prevents CLS when Amulya font loads */}
-        {/* Icon clamp: 15px → 30px (2X) at 3000px viewport */}
-        <div className="flex flex-wrap items-center justify-center gap-6" style={{ minHeight: '28px' }}>
+        {/* Meta info row - centered with fixed layout to prevent CLS */}
+        {/* minHeight uses responsive clamp to match icon+text at all viewport sizes */}
+        {/* Icon: 15px→30px, Font: 16px→28px, so row height: ~30px→~35px */}
+        <div
+          className="flex items-center justify-center gap-6"
+          style={{
+            minHeight: 'clamp(30px, calc(24px + 0.5vw), 40px)',
+            flexWrap: 'nowrap'
+          }}
+        >
           {/* Author */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <User style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{author}</span>
+            <span className="font-[var(--font-amulya)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{author}</span>
           </div>
 
           {/* Date */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Calendar style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{date}</span>
+            <span className="font-[var(--font-amulya)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{date}</span>
           </div>
 
           {/* Reading time */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Clock style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)]" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{readingTime}</span>
+            <span className="font-[var(--font-amulya)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{readingTime}</span>
           </div>
         </div>
 
