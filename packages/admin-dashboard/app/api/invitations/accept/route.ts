@@ -225,12 +225,12 @@ export async function POST(request: NextRequest) {
       .update({
         first_name: validatedData.first_name,
         last_name: validatedData.last_name,
-        name: fullName, // Maintain backward compatibility
+        full_name: fullName,
         username,
         password_hash: hashedPassword,
         status: 'active',
         email_verified: true,
-        email_verified_at: new Date().toISOString(),
+        activated_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
       .eq('id', user.id)
@@ -381,7 +381,9 @@ export async function POST(request: NextRequest) {
       data: {
         id: updatedUser.id,
         email: updatedUser.email,
-        name: updatedUser.name,
+        full_name: updatedUser.full_name,
+        first_name: updatedUser.first_name,
+        last_name: updatedUser.last_name,
         username: updatedUser.username,
         role: updatedUser.role,
         status: updatedUser.status,
