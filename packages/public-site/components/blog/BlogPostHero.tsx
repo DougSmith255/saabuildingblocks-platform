@@ -7,6 +7,7 @@ import { Clock, Calendar, User } from 'lucide-react';
 import { CategoryBadge } from './CategoryBadge';
 import { ThemeSwitch } from './ThemeSwitch';
 import { calculateReadingTime } from '@/utils/readingTime';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
 /**
  * Extracts YouTube video ID from various URL formats
@@ -87,19 +88,8 @@ export function BlogPostHero({
   const youtubeId = youtubeVideoUrl ? extractYouTubeId(youtubeVideoUrl) : null;
 
   return (
-    <section
-      className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 blog-hero-section"
-      style={{
-        // Use vh (not dvh) for stable height that doesn't shift with browser UI
-        // minHeight ensures content fits, height provides target, maxHeight caps it
-        minHeight: '500px',
-        height: 'calc(100vh - 196px)', // viewport - header (85px) - breadcrumb area (111px)
-        maxHeight: '800px',
-        paddingTop: '24px',
-        paddingBottom: '24px',
-        boxSizing: 'border-box',
-      }}
-    >
+    <StickyHeroWrapper>
+      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
       {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
       {heroImage && (
         <img
@@ -202,7 +192,8 @@ export function BlogPostHero({
           </div>
         )}
       </div>
-    </section>
+      </section>
+    </StickyHeroWrapper>
   );
 }
 
