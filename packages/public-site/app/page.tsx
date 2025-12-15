@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
-import { SectionSkeleton } from '@/components/shared/SectionSkeleton';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 
 const RevealMaskEffect = dynamic(
@@ -12,31 +11,31 @@ const RevealMaskEffect = dynamic(
 );
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
-// ssr: false prevents skeleton placeholders from rendering during SSR (which causes CLS)
-// Sections will load client-side after hydration
+// ssr: false + loading: null prevents ANY rendering during SSR (no height = no CLS)
+// Sections load client-side only when JS hydrates
 const ValueStack = dynamic(
   () => import('./components/sections/ValueStack').then(mod => ({ default: mod.ValueStack })),
-  { ssr: false, loading: () => <SectionSkeleton height={600} /> }
+  { ssr: false }
 );
 
 const SocialProof = dynamic(
   () => import('./components/sections/SocialProof').then(mod => ({ default: mod.SocialProof })),
-  { ssr: false, loading: () => <SectionSkeleton height={400} /> }
+  { ssr: false }
 );
 
 const WhyExpRealty = dynamic(
   () => import('./components/sections/WhyExpRealty').then(mod => ({ default: mod.WhyExpRealty })),
-  { ssr: false, loading: () => <SectionSkeleton height={700} /> }
+  { ssr: false }
 );
 
 const WhoWeAre = dynamic(
   () => import('./components/sections/WhoWeAre').then(mod => ({ default: mod.WhoWeAre })),
-  { ssr: false, loading: () => <SectionSkeleton height={500} /> }
+  { ssr: false }
 );
 
 const PathSelectorWithContent = dynamic(
   () => import('./components/sections/PathSelectorWithContent').then(mod => ({ default: mod.PathSelectorWithContent })),
-  { ssr: false, loading: () => <SectionSkeleton height={800} /> }
+  { ssr: false }
 );
 
 // Counter animation (scramble effect) - loads after initial paint
