@@ -197,11 +197,24 @@ export default function AgentPortal() {
 
   const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file || !user) {
+      console.log('No file selected or no user');
+      return;
+    }
 
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file');
+    console.log('File selected:', {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+    });
+
+    // Validate file type - be more permissive and check both type and extension
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+    if (!file.type.startsWith('image/') && !validExtensions.includes(fileExtension)) {
+      alert('Please select an image file (JPEG, PNG, GIF, or WebP)');
       return;
     }
 
@@ -217,6 +230,11 @@ export default function AgentPortal() {
       formData.append('userId', user.id);
 
       const token = localStorage.getItem('agent_portal_token');
+
+      console.log('Uploading to API...');
+      console.log('User ID:', user.id);
+      console.log('Token exists:', !!token);
+
       const response = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
         method: 'POST',
         headers: {
@@ -225,19 +243,24 @@ export default function AgentPortal() {
         body: formData,
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       const data = await response.json();
+      console.log('Response data:', data);
 
       if (response.ok && data.success) {
         const updatedUser = { ...user, profilePictureUrl: data.url };
         setUser(updatedUser);
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+        alert('Profile picture updated successfully!');
       } else {
         console.error('Profile picture upload failed:', data);
-        alert(data.message || 'Failed to upload profile picture. Please try again.');
+        alert(data.message || data.error || 'Failed to upload profile picture. Please try again.');
       }
     } catch (err) {
       console.error('Profile picture upload error:', err);
-      alert('Failed to upload profile picture. Please check your connection and try again.');
+      alert('Failed to upload profile picture. Please check your connection and try again.\n\nError: ' + (err instanceof Error ? err.message : 'Unknown error'));
     }
   };
 
@@ -355,10 +378,11 @@ export default function AgentPortal() {
               {/* User Profile Section */}
               <div className="rounded-xl p-4 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15">
                 {/* Hidden file input for profile picture upload */}
+                {/* Using specific MIME types + extensions for cross-platform compatibility */}
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
                   onChange={handleProfilePictureChange}
                   className="hidden"
                 />
