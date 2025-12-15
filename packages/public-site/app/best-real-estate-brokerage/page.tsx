@@ -1,15 +1,9 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-
-// Hero effect - dynamically imported with ssr: false to exclude from initial bundle
-const AsteroidBeltEffect = dynamic(
-  () => import('@/components/shared/hero-effects/AsteroidBeltEffect').then(mod => ({ default: mod.AsteroidBeltEffect })),
-  { ssr: false }
-);
+import { AsteroidBeltEffect } from '@/components/shared/hero-effects/AsteroidBeltEffect';
 
 /**
  * Best Real Estate Brokerage - Parent Comparison Page

@@ -22,17 +22,11 @@
  * - Neon: #00ff88 (for interactive elements)
  */
 
-import dynamic from 'next/dynamic';
 import { H1, Tagline } from '@saa/shared/components/saa';
-import { fetchBlogPosts } from '@/lib/wordpress/blog-api';
 import type { BlogPost } from '@/lib/wordpress/types';
 import BlogPageClient from './BlogPageClient';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
-
-const AsteroidBeltEffect = dynamic(
-  () => import('@/components/shared/hero-effects/AsteroidBeltEffect').then(mod => ({ default: mod.AsteroidBeltEffect })),
-  { ssr: false }
-);
+import { AsteroidBeltEffect } from '@/components/shared/hero-effects/AsteroidBeltEffect';
 
 /**
  * WordPress categories data (from actual WordPress API)
