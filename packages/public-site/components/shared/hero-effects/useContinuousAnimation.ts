@@ -71,7 +71,7 @@ export function useContinuousAnimation() {
 
   // Combine waves for organic motion
   const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
-  const progress = 0.5 + combinedWave * 0.45; // Oscillates between 0.05 and 0.95
+  const progress = 0.525 + combinedWave * 0.425; // Oscillates between 0.1 and 0.95
 
   return {
     time,      // Raw time value (for rotation, continuous movement)
