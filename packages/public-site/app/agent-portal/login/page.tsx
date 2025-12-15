@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, CyberCard } from '@saa/shared/components/saa';
+import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
@@ -153,22 +154,14 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main
-      id="main-content"
-      className="relative flex items-center justify-center px-4 overflow-hidden"
-      style={{
-        // Full viewport height - content should fill entire screen
-        minHeight: '100vh',
-        height: '100vh',
-        // Offset content slightly to account for header overlay
-        paddingTop: '85px',
-      }}
-    >
-      {/* Data Stream Effect - Green (matches test page) */}
-      <DataStreamEffect />
+    <main id="main-content">
+      <StickyHeroWrapper>
+        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+          {/* Data Stream Effect - Green (matches test page) */}
+          <DataStreamEffect />
 
-      {/* Login Content - centered */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-md">
+          {/* Login Content - centered */}
+          <div className="relative z-10 flex flex-col items-center w-full max-w-md">
         {/* Heading */}
         <div className="text-center mb-8 whitespace-nowrap">
           <H1 className="mb-2">ALLIANCE HQ</H1>
@@ -245,7 +238,9 @@ export default function AgentPortalLogin() {
           </div>
           </form>
         </CyberCard>
-      </div>
+          </div>
+        </section>
+      </StickyHeroWrapper>
 
       {/* Password Reset Modal */}
       {showResetModal && (
