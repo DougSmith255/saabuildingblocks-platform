@@ -3,8 +3,13 @@
 import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
- * Green Laser Grid Effect
+ * Green Laser Grid Effect (CLS-Optimized)
  * Neon green crisscrossing laser beams - uses brand green (#00ff88)
+ *
+ * Uses CSS transforms instead of layout properties to prevent CLS:
+ * - scaleX/scaleY instead of width/height
+ * - All beams render at full size, transforms handle visual scaling
+ * - Beams grow outward from 15% to 100%
  */
 export function GreenLaserGridEffect() {
   const { time, progress } = useContinuousAnimation();
@@ -25,23 +30,23 @@ export function GreenLaserGridEffect() {
     <>
       {/* Animation container - has overflow-hidden for performance */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
-        {/* Horizontal laser beams */}
+        {/* Horizontal laser beams - grow from 15% to 100% using scaleX */}
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          // Minimum width of 15% ensures beams never disappear completely
-          const width = Math.max(15, 100 - beamProgress * 120);
-          const leftOffset = (100 - width) / 2;
-          const opacity = 1; // Always visible since we have minimum width
+          // Beams grow from 0.15 to 1.0 (15% to 100%)
+          const scale = Math.max(0.15, Math.min(1, beamProgress * 1.2));
 
           return (
             <div
               key={`h-${i}`}
               className="absolute"
               style={{
-                left: `${leftOffset}%`,
+                left: 0,
+                right: 0,
                 top: `${beam.y}%`,
-                width: `${width}%`,
                 height: 2,
+                transform: `scaleX(${scale})`,
+                opacity: 1,
                 background: `linear-gradient(90deg, rgba(0,255,136,0.9), rgba(0,200,100,0.8), rgba(0,255,136,0.9))`,
                 boxShadow: `0 0 10px rgba(0,255,136,0.6), 0 0 30px rgba(0,255,136,0.3)`,
               }}
@@ -49,13 +54,11 @@ export function GreenLaserGridEffect() {
           );
         })}
 
-        {/* Vertical laser beams */}
+        {/* Vertical laser beams - grow from 15% to 100% using scaleY */}
         {verticalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          // Minimum height of 15% ensures beams never disappear completely
-          const height = Math.max(15, 100 - beamProgress * 120);
-          const topOffset = (100 - height) / 2;
-          const opacity = 1; // Always visible since we have minimum height
+          // Beams grow from 0.15 to 1.0 (15% to 100%)
+          const scale = Math.max(0.15, Math.min(1, beamProgress * 1.2));
 
           return (
             <div
@@ -63,9 +66,11 @@ export function GreenLaserGridEffect() {
               className="absolute"
               style={{
                 left: `${beam.x}%`,
-                top: `${topOffset}%`,
+                top: 0,
+                bottom: 0,
                 width: 2,
-                height: `${height}%`,
+                transform: `scaleY(${scale})`,
+                opacity: 1,
                 background: `linear-gradient(180deg, rgba(0,255,136,0.9), rgba(0,200,100,0.8), rgba(0,255,136,0.9))`,
                 boxShadow: `0 0 10px rgba(0,255,136,0.6), 0 0 30px rgba(0,255,136,0.3)`,
               }}
@@ -73,37 +78,34 @@ export function GreenLaserGridEffect() {
           );
         })}
 
-        {/* Intersection sparks */}
+        {/* Intersection sparks - appear when beams reach intersection */}
         {horizontalBeams.map((hBeam, hi) =>
           verticalBeams.map((vBeam, vi) => {
             const hProgress = Math.max(0, Math.min(1, (progress - hBeam.delay) * hBeam.speed * 1.2));
             const vProgress = Math.max(0, Math.min(1, (progress - vBeam.delay) * vBeam.speed * 1.2));
-            const hWidth = Math.max(15, 100 - hProgress * 120);
-            const vHeight = Math.max(15, 100 - vProgress * 120);
-            const hLeft = (100 - hWidth) / 2;
-            const hRight = hLeft + hWidth;
-            const vTop = (100 - vHeight) / 2;
-            const vBottom = vTop + vHeight;
+            const hScale = Math.max(0.15, Math.min(1, hProgress * 1.2));
+            const vScale = Math.max(0.15, Math.min(1, vProgress * 1.2));
 
-            const beamX = vBeam.x;
-            const beamY = hBeam.y;
-            const sparkVisible = beamX > hLeft && beamX < hRight && beamY > vTop && beamY < vBottom;
+            // Spark is visible when both beams reach this intersection
+            const hReachesX = (vBeam.x >= 50 - hScale * 50) && (vBeam.x <= 50 + hScale * 50);
+            const vReachesY = (hBeam.y >= 50 - vScale * 50) && (hBeam.y <= 50 + vScale * 50);
+            const sparkVisible = hReachesX && vReachesY && hScale > 0 && vScale > 0;
 
             const pulse = Math.sin(time * 20 + hi + vi);
-            const sparkOpacity = sparkVisible ? 0.8 : 0;
+            const sparkScale = 1 + pulse * 0.33;
 
             return (
               <div
                 key={`spark-${hi}-${vi}`}
                 className="absolute rounded-full"
                 style={{
-                  left: `${beamX}%`,
-                  top: `${beamY}%`,
-                  width: 6 + pulse * 2,
-                  height: 6 + pulse * 2,
-                  transform: 'translate(-50%, -50%)',
-                  opacity: sparkOpacity,
-                  background: 'rgba(255,255,255,0.8)',
+                  left: `${vBeam.x}%`,
+                  top: `${hBeam.y}%`,
+                  width: 6,
+                  height: 6,
+                  transform: `translate(-50%, -50%) scale(${sparkVisible ? sparkScale : 0})`,
+                  opacity: sparkVisible ? 0.8 : 0,
+                  background: 'rgba(255,255,255,1)',
                   boxShadow: '0 0 15px rgba(0,255,136,0.8), 0 0 30px rgba(0,255,136,0.48)',
                 }}
               />
