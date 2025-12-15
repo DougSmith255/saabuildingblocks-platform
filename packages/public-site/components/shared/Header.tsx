@@ -289,7 +289,7 @@ export default function Header() {
               <button
                 className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
                 onClick={handleHamburgerClick}
-                style={{ marginTop: '1px' }}
+                style={{ marginTop: '10px' }}
                 aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
