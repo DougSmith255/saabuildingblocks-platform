@@ -1,79 +1,17 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
- * Custom animation hook for CLS testing
- * - No intro speed boost (starts at idle speed)
- * - Initializes time to 1 so first render matches subsequent frames
- */
-function useCLSFixedAnimation() {
-  const [time, setTime] = useState(1); // Start at 1 to avoid CLS
-  const timeRef = useRef(1);
-  const rafRef = useRef<number>(0);
-  const lastScrollY = useRef(0);
-  const scrollBoostRef = useRef(0);
-
-  useEffect(() => {
-    const IDLE_SPEED = 0.0002;
-    const SCROLL_BOOST_MAX = 0.0006;
-    const SCROLL_BOOST_MULTIPLIER = 0.000032;
-    const SCROLL_DECAY = 0.92;
-
-    let lastTimestamp = 0;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = Math.abs(currentScrollY - lastScrollY.current);
-      lastScrollY.current = currentScrollY;
-
-      if (scrollDelta > 0) {
-        const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
-        scrollBoostRef.current = Math.max(scrollBoostRef.current, boost);
-      }
-    };
-
-    const animate = (timestamp: number) => {
-      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
-      lastTimestamp = timestamp;
-
-      // No intro speed - just idle + scroll boost
-      const currentSpeed = IDLE_SPEED + scrollBoostRef.current;
-
-      timeRef.current += currentSpeed * deltaTime;
-      scrollBoostRef.current *= SCROLL_DECAY;
-
-      setTime(timeRef.current);
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    lastScrollY.current = window.scrollY;
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  // Use sine waves for smooth, continuous oscillation
-  const wave1 = Math.sin(time * Math.PI * 2);
-  const wave2 = Math.sin(time * Math.PI * 1.3 + 0.5);
-  const wave3 = Math.cos(time * Math.PI * 0.7);
-
-  const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
-  const progress = 0.5 + combinedWave * 0.45;
-
-  return { time, progress };
-}
-
-/**
- * Laser Grid Effect
+ * Laser Grid Effect (CLS-Optimized)
  * Red crisscrossing laser beams - great for action/security themes
+ *
+ * Uses CSS transforms instead of layout properties to prevent CLS:
+ * - scaleX/scaleY instead of width/height
+ * - All beams render at full size, transforms handle visual scaling
  */
 export function LaserGridEffect() {
-  const { time, progress } = useCLSFixedAnimation();
+  const { time, progress } = useContinuousAnimation();
 
   const horizontalBeams = [...Array(6)].map((_, i) => ({
     y: 15 + i * 14,
@@ -91,86 +29,88 @@ export function LaserGridEffect() {
     <>
       {/* Animation container - has overflow-hidden for performance */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer">
-        {/* Horizontal laser beams */}
+        {/* Horizontal laser beams - use scaleX instead of width */}
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          const width = Math.max(0, 100 - beamProgress * 120);
-          const leftOffset = (100 - width) / 2;
-          const opacity = width > 5 ? 1 : width / 5;
+          const scale = Math.max(0, (100 - beamProgress * 120) / 100);
+          const opacity = scale > 0.05 ? 1 : scale / 0.05;
 
-          return width > 0 ? (
+          return (
             <div
               key={`h-${i}`}
               className="absolute"
               style={{
-                left: `${leftOffset}%`,
+                left: 0,
+                right: 0,
                 top: `${beam.y}%`,
-                width: `${width}%`,
                 height: 2,
-                background: `linear-gradient(90deg, rgba(255,100,100,${0.9 * opacity}), rgba(255,50,50,${0.8 * opacity}), rgba(255,100,100,${0.9 * opacity}))`,
-                boxShadow: `0 0 10px rgba(255,50,50,${0.6 * opacity}), 0 0 30px rgba(255,50,50,${0.3 * opacity})`,
+                transform: `scaleX(${scale})`,
+                opacity: opacity,
+                background: `linear-gradient(90deg, rgba(255,100,100,0.9), rgba(255,50,50,0.8), rgba(255,100,100,0.9))`,
+                boxShadow: `0 0 10px rgba(255,50,50,0.6), 0 0 30px rgba(255,50,50,0.3)`,
               }}
             />
-          ) : null;
+          );
         })}
 
-        {/* Vertical laser beams */}
+        {/* Vertical laser beams - use scaleY instead of height */}
         {verticalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          const height = Math.max(0, 100 - beamProgress * 120);
-          const topOffset = (100 - height) / 2;
-          const opacity = height > 5 ? 1 : height / 5;
+          const scale = Math.max(0, (100 - beamProgress * 120) / 100);
+          const opacity = scale > 0.05 ? 1 : scale / 0.05;
 
-          return height > 0 ? (
+          return (
             <div
               key={`v-${i}`}
               className="absolute"
               style={{
                 left: `${beam.x}%`,
-                top: `${topOffset}%`,
+                top: 0,
+                bottom: 0,
                 width: 2,
-                height: `${height}%`,
-                background: `linear-gradient(180deg, rgba(255,100,100,${0.9 * opacity}), rgba(255,50,50,${0.8 * opacity}), rgba(255,100,100,${0.9 * opacity}))`,
-                boxShadow: `0 0 10px rgba(255,50,50,${0.6 * opacity}), 0 0 30px rgba(255,50,50,${0.3 * opacity})`,
+                transform: `scaleY(${scale})`,
+                opacity: opacity,
+                background: `linear-gradient(180deg, rgba(255,100,100,0.9), rgba(255,50,50,0.8), rgba(255,100,100,0.9))`,
+                boxShadow: `0 0 10px rgba(255,50,50,0.6), 0 0 30px rgba(255,50,50,0.3)`,
               }}
             />
-          ) : null;
+          );
         })}
 
-        {/* Intersection sparks */}
+        {/* Intersection sparks - use transform for size changes */}
         {horizontalBeams.map((hBeam, hi) =>
           verticalBeams.map((vBeam, vi) => {
             const hProgress = Math.max(0, Math.min(1, (progress - hBeam.delay) * hBeam.speed * 1.2));
             const vProgress = Math.max(0, Math.min(1, (progress - vBeam.delay) * vBeam.speed * 1.2));
-            const hWidth = Math.max(0, 100 - hProgress * 120);
-            const vHeight = Math.max(0, 100 - vProgress * 120);
-            const hLeft = (100 - hWidth) / 2;
-            const hRight = hLeft + hWidth;
-            const vTop = (100 - vHeight) / 2;
-            const vBottom = vTop + vHeight;
+            const hScale = Math.max(0, (100 - hProgress * 120) / 100);
+            const vScale = Math.max(0, (100 - vProgress * 120) / 100);
 
-            const beamX = vBeam.x;
-            const beamY = hBeam.y;
-            const sparkVisible = beamX > hLeft && beamX < hRight && beamY > vTop && beamY < vBottom;
+            // Spark is visible when both beams reach this intersection
+            // Horizontal beam extends from center, check if it reaches this x position
+            const hReachesX = (vBeam.x >= 50 - hScale * 50) && (vBeam.x <= 50 + hScale * 50);
+            // Vertical beam extends from center, check if it reaches this y position
+            const vReachesY = (hBeam.y >= 50 - vScale * 50) && (hBeam.y <= 50 + vScale * 50);
+            const sparkVisible = hReachesX && vReachesY && hScale > 0 && vScale > 0;
 
             const pulse = Math.sin(time * 20 + hi + vi);
-            const sparkOpacity = sparkVisible ? 0.8 : 0;
+            const sparkScale = 1 + pulse * 0.33; // Scale from ~0.67 to ~1.33 (equivalent to 6px +/- 2px)
 
-            return sparkVisible ? (
+            return (
               <div
                 key={`spark-${hi}-${vi}`}
                 className="absolute rounded-full"
                 style={{
-                  left: `${beamX}%`,
-                  top: `${beamY}%`,
-                  width: 6 + pulse * 2,
-                  height: 6 + pulse * 2,
-                  transform: 'translate(-50%, -50%)',
-                  background: `rgba(255,255,255,${sparkOpacity})`,
-                  boxShadow: `0 0 15px rgba(255,100,100,${sparkOpacity}), 0 0 30px rgba(255,50,50,${sparkOpacity * 0.6})`,
+                  left: `${vBeam.x}%`,
+                  top: `${hBeam.y}%`,
+                  width: 6,
+                  height: 6,
+                  transform: `translate(-50%, -50%) scale(${sparkVisible ? sparkScale : 0})`,
+                  opacity: sparkVisible ? 0.8 : 0,
+                  background: 'rgba(255,255,255,1)',
+                  boxShadow: '0 0 15px rgba(255,100,100,0.8), 0 0 30px rgba(255,50,50,0.48)',
                 }}
               />
-            ) : null;
+            );
           })
         )}
       </div>
