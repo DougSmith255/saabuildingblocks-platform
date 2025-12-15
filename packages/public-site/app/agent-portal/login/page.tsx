@@ -153,25 +153,21 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
+    <main id="main-content" className="relative min-h-[100dvh] flex items-center justify-center px-4 overflow-hidden">
       {/* Data Stream Effect - Green (matches test page) */}
       <DataStreamEffect />
 
-      {/* Login Content - centered horizontally with fixed top padding to prevent CLS */}
-      {/* Using fixed padding instead of flex centering to prevent layout shift on hydration */}
-      <div className="relative z-10 flex-1 flex flex-col items-center w-full px-4" style={{ paddingTop: 'clamp(80px, 15vh, 200px)' }}>
-        {/* Content wrapper - H1 and card centered together as one unit */}
-        <div className="flex flex-col items-center">
-          {/* Heading - not width constrained */}
-          <div className="text-center mb-8 whitespace-nowrap">
-            <H1 className="mb-2">ALLIANCE HQ</H1>
-            <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
-          </div>
+      {/* Login Content - centered like other hero sections */}
+      <div className="relative z-10 flex flex-col items-center w-full max-w-md">
+        {/* Heading */}
+        <div className="text-center mb-8 whitespace-nowrap">
+          <H1 className="mb-2">ALLIANCE HQ</H1>
+          <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
+        </div>
 
-          {/* Login Form - CyberCard - width constrained */}
-          <div className="w-full max-w-md">
-            <CyberCard padding="lg" centered={false}>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Login Form - CyberCard */}
+        <CyberCard padding="lg" centered={false} className="w-full">
+          <form onSubmit={handleSubmit} className="space-y-6">
               {/* Error Message */}
               {error && (
                 <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
@@ -236,11 +232,9 @@ export default function AgentPortalLogin() {
                 >
                   Forgot access code?
                 </button>
-              </div>
-            </form>
-            </CyberCard>
           </div>
-        </div>
+          </form>
+        </CyberCard>
       </div>
 
       {/* Password Reset Modal */}
