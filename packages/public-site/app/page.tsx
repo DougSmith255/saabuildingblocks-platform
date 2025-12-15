@@ -12,29 +12,31 @@ const RevealMaskEffect = dynamic(
 );
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
+// ssr: false prevents skeleton placeholders from rendering during SSR (which causes CLS)
+// Sections will load client-side after hydration
 const ValueStack = dynamic(
   () => import('./components/sections/ValueStack').then(mod => ({ default: mod.ValueStack })),
-  { loading: () => <SectionSkeleton height={600} /> }
+  { ssr: false, loading: () => <SectionSkeleton height={600} /> }
 );
 
 const SocialProof = dynamic(
   () => import('./components/sections/SocialProof').then(mod => ({ default: mod.SocialProof })),
-  { loading: () => <SectionSkeleton height={400} /> }
+  { ssr: false, loading: () => <SectionSkeleton height={400} /> }
 );
 
 const WhyExpRealty = dynamic(
   () => import('./components/sections/WhyExpRealty').then(mod => ({ default: mod.WhyExpRealty })),
-  { loading: () => <SectionSkeleton height={700} /> }
+  { ssr: false, loading: () => <SectionSkeleton height={700} /> }
 );
 
 const WhoWeAre = dynamic(
   () => import('./components/sections/WhoWeAre').then(mod => ({ default: mod.WhoWeAre })),
-  { loading: () => <SectionSkeleton height={500} /> }
+  { ssr: false, loading: () => <SectionSkeleton height={500} /> }
 );
 
 const PathSelectorWithContent = dynamic(
   () => import('./components/sections/PathSelectorWithContent').then(mod => ({ default: mod.PathSelectorWithContent })),
-  { loading: () => <SectionSkeleton height={800} /> }
+  { ssr: false, loading: () => <SectionSkeleton height={800} /> }
 );
 
 // Counter animation (scramble effect) - loads after initial paint
