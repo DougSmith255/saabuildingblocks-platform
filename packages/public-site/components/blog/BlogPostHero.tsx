@@ -88,13 +88,15 @@ export function BlogPostHero({
 
   return (
     <section
-      className="relative flex flex-col items-center px-4 sm:px-8 md:px-12 blog-hero-section"
+      className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 blog-hero-section"
       style={{
-        // Use fixed padding instead of dynamic centering to prevent CLS
-        // Top padding: space for breadcrumbs area + some breathing room
-        paddingTop: 'clamp(40px, 8vh, 100px)',
-        paddingBottom: 'clamp(40px, 8vh, 100px)',
-        minHeight: 'calc(100dvh - 85px - 111px)', // viewport - header - breadcrumb area
+        // Use vh (not dvh) for stable height that doesn't shift with browser UI
+        // minHeight ensures content fits, height provides target, maxHeight caps it
+        minHeight: '500px',
+        height: 'calc(100vh - 196px)', // viewport - header (85px) - breadcrumb area (111px)
+        maxHeight: '800px',
+        paddingTop: '24px',
+        paddingBottom: '24px',
         boxSizing: 'border-box',
       }}
     >
@@ -116,11 +118,10 @@ export function BlogPostHero({
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
 
-      {/* Content container - centered */}
+      {/* Content container - centered via parent's justify-center */}
       {/* minHeight prevents CLS from font loading - reserves space for H1 + meta row */}
       <div
-        className="relative z-10 max-w-[1900px] mx-auto text-center"
-        style={{ minHeight: 'clamp(180px, 20vw + 80px, 280px)' }}
+        className="relative z-10 max-w-[1900px] w-full text-center"
       >
         {/* Category badge - centered with 3D effect */}
         <div className="mb-6 flex justify-center" style={{ minHeight: '32px' }}>
