@@ -210,7 +210,7 @@ export async function PATCH(
       try {
         const emailResult = await sendInvitationEmail({
           to: invitation.email,
-          full_name: user.name,
+          full_name: user.full_name,
           activationToken: invitation.token,
         });
 

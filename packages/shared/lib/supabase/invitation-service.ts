@@ -30,7 +30,7 @@ export interface Invitation {
 export interface InvitationUser {
   id: string;
   email: string;
-  name: string;
+  full_name: string;
   username: string;
   role: string;
   status: string;
@@ -315,7 +315,7 @@ export async function getUserById(
   try {
     const { data: user, error } = await supabase
       .from('users')
-      .select('id, email, name, username, role, status, gohighlevel_contact_id')
+      .select('id, email, full_name, username, role, status, gohighlevel_contact_id')
       .eq('id', userId)
       .single();
 

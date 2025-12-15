@@ -252,7 +252,7 @@ function ActivatePageContent() {
   }
 
   return (
-    <main id="main-content" className="relative h-screen flex flex-col overflow-hidden">
+    <main id="main-content" className="relative min-h-screen flex flex-col overflow-x-hidden">
       <DataStreamEffect />
 
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
