@@ -391,7 +391,7 @@ export default function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
+                    className="relative group w-[100px] h-[100px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
                     title="Click to change profile picture"
                   >
                     {user.profilePictureUrl ? (
@@ -528,7 +528,7 @@ export default function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-24 h-24 rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
+                  className="relative group w-[116px] h-[116px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
                 >
                   {user.profilePictureUrl ? (
                     <img
