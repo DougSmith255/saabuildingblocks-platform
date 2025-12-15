@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useRef, useEffect, useState } from 'react';
+import { ReactNode, useRef, useEffect } from 'react';
 
 interface FixedHeroWrapperProps {
   children: ReactNode;
@@ -21,18 +21,6 @@ interface FixedHeroWrapperProps {
  */
 export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [heroHeight, setHeroHeight] = useState('100dvh');
-
-  useEffect(() => {
-    // Measure the hero's actual height to create proper spacer
-    if (wrapperRef.current) {
-      const heroSection = wrapperRef.current.querySelector('section');
-      if (heroSection) {
-        const height = heroSection.offsetHeight;
-        setHeroHeight(`${height}px`);
-      }
-    }
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -137,28 +125,19 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
 
   return (
     <>
-      {/* Fixed hero container */}
+      {/* Fixed hero container - use Tailwind classes for immediate CSS application (no CLS) */}
       <div
         ref={wrapperRef}
-        className={`fixed-hero-wrapper ${className}`}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 0,
-          pointerEvents: 'none',
-        }}
+        className={`fixed top-0 left-0 right-0 z-0 pointer-events-none ${className}`}
       >
-        <div style={{ pointerEvents: 'auto' }}>
+        <div className="pointer-events-auto">
           {children}
         </div>
       </div>
 
-      {/* Spacer to maintain scroll height */}
+      {/* Spacer to maintain scroll height - use Tailwind for consistent height */}
       <div
-        className="fixed-hero-spacer"
-        style={{ height: heroHeight }}
+        className="h-dvh"
         aria-hidden="true"
       />
     </>

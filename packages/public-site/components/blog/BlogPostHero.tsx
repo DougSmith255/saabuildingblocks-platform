@@ -91,10 +91,11 @@ export function BlogPostHero({
       className="relative flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 blog-hero-section"
       style={{
         // Height of the area below the header
-        // Uses --vh-locked on mobile (set by ViewportHeightLock) to prevent layout shifts
-        minHeight: 'calc(var(--vh-locked, 1dvh) * 100 - var(--header-height, 85px))',
+        // Uses 100dvh on desktop, --vh-locked on mobile (set by ViewportHeightLock)
+        // Note: Use 100dvh as fallback (not 1dvh * 100) for proper parsing
+        minHeight: 'calc(var(--vh-locked-full, 100dvh) - var(--header-height, 85px))',
         // Shift content up by ~8% to position it slightly above true center
-        paddingBottom: 'calc(var(--vh-locked, 1dvh) * 8)',
+        paddingBottom: '8dvh',
         boxSizing: 'border-box',
       }}
     >

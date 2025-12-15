@@ -68,8 +68,15 @@ body {
 
   /* Use locked viewport height on mobile to prevent layout shifts */
   /* --vh-locked is set by ViewportHeightLock.tsx and only changes on true resize, not address bar */
+  /* --vh-locked-full is the full viewport height (--vh-locked * 100) for use in calc() */
   body {
     min-height: calc(var(--vh-locked, 1dvh) * 100);
+  }
+
+  :root {
+    /* Full viewport height for mobile - used in calc() expressions */
+    /* This is set dynamically by ViewportHeightLock.tsx */
+    --vh-locked-full: calc(var(--vh-locked, 1dvh) * 100);
   }
 
   /* Wolf pack hero background - disable fixed attachment on mobile */

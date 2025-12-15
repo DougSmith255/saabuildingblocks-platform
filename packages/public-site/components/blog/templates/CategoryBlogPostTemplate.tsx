@@ -335,7 +335,6 @@ export function CategoryBlogPostTemplate({
                           sizes="(max-width: 768px) 100vw, 480px"
                           className="object-contain"
                           style={{ maxHeight: '270px', width: 'auto', height: 'auto' }}
-                          priority
                         />
                       </div>
                     </CyberFrame>
