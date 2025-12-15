@@ -6,26 +6,45 @@ import { useEffect, useRef, useState } from 'react';
  * Shared hook for continuous hero animations (CLS-Optimized)
  *
  * Animation behavior:
- * - Initial page load: Frozen until page fully loaded, then eases 0 → idle speed
- * - Client-side navigation: Starts at time=0, eases 0 → idle speed immediately
+ * - Desktop: Frozen until mouse move, then eases 0 → idle speed
+ * - Mobile: Frozen until 2.5s after load (past CLS window), then eases 0 → idle speed
+ * - Client-side navigation: Starts immediately, eases 0 → idle speed
  * - Scroll adds a speed boost for interactivity
  *
  * Returns a time value that continuously increments. Use sine waves
  * on this time value to create smooth, organic oscillations.
  */
 
-// Track if this is the initial page load
+// Global state for animation triggering
 let isInitialPageLoad = true;
-let pageFullyLoaded = false;
+let animationTriggered = false;
 
-// Set up load listener once globally
+// Detect if device is mobile (touch-primary)
+const isMobile = typeof window !== 'undefined' &&
+  ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+// Set up triggers once globally
 if (typeof window !== 'undefined') {
   if (document.readyState === 'complete') {
-    pageFullyLoaded = true;
+    // Page already loaded
+    if (isMobile) {
+      // Mobile: trigger after 2.5s delay (past CLS measurement window)
+      setTimeout(() => { animationTriggered = true; }, 2500);
+    }
   } else {
     window.addEventListener('load', () => {
-      pageFullyLoaded = true;
+      if (isMobile) {
+        // Mobile: trigger after 2.5s delay post-load
+        setTimeout(() => { animationTriggered = true; }, 2500);
+      }
     }, { once: true });
+  }
+
+  // Desktop: trigger on first mouse move
+  if (!isMobile) {
+    window.addEventListener('mousemove', () => {
+      animationTriggered = true;
+    }, { once: true, passive: true });
   }
 }
 
@@ -66,9 +85,9 @@ export function useContinuousAnimation() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
-      // For initial page load: wait until page is fully loaded
+      // For initial page load: wait for trigger (mouse move on desktop, timer on mobile)
       // For client-side nav: start immediately
-      const canAnimate = !isThisInitialLoad.current || pageFullyLoaded;
+      const canAnimate = !isThisInitialLoad.current || animationTriggered;
 
       if (canAnimate) {
         // Start ease-in timer when we first can animate
