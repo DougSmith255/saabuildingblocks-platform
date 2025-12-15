@@ -101,6 +101,22 @@ export function BlogPostHero({
 
   return (
     <StickyHeroWrapper>
+      {/* Breadcrumbs - outside section to avoid scroll transforms, fixed 230px from viewport top */}
+      <div className="absolute left-4 sm:left-8 md:left-12 z-20" style={{ top: '230px' }}>
+        <div className="max-w-[1900px]">
+          <Breadcrumbs
+            category={category}
+            categorySlug={resolvedCategorySlug}
+            postTitle={breadcrumbTitle}
+          />
+        </div>
+      </div>
+
+      {/* Theme switch - outside section to avoid scroll transforms, fixed 230px from viewport top */}
+      <div className="absolute right-4 sm:right-8 md:right-12 z-20" style={{ top: '230px' }}>
+        <ThemeSwitch onToggle={onThemeChange} />
+      </div>
+
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
       {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
       {heroImage && (
@@ -114,22 +130,6 @@ export function BlogPostHero({
           className="absolute inset-0 w-full h-full object-cover opacity-30 -z-10 hero-bg"
         />
       )}
-
-      {/* Breadcrumbs - fixed at 230px from top viewport */}
-      <div className="absolute left-4 sm:left-8 md:left-12 z-20" style={{ top: '230px' }}>
-        <div className="max-w-[1900px]">
-          <Breadcrumbs
-            category={category}
-            categorySlug={resolvedCategorySlug}
-            postTitle={breadcrumbTitle}
-          />
-        </div>
-      </div>
-
-      {/* Theme switch - fixed at 230px from top viewport */}
-      <div className="absolute right-4 sm:right-8 md:right-12 z-20" style={{ top: '230px' }}>
-        <ThemeSwitch onToggle={onThemeChange} />
-      </div>
 
       {/* Content container - centered via parent's justify-center */}
       {/* minHeight prevents CLS from font loading - reserves space for H1 + meta row */}
@@ -168,7 +168,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <User style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{author}</span>
+            <span className="font-[var(--font-synonym)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{author}</span>
           </div>
 
           {/* Date */}
@@ -176,7 +176,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Calendar style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{date}</span>
+            <span className="font-[var(--font-synonym)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{date}</span>
           </div>
 
           {/* Reading time */}
@@ -184,7 +184,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Clock style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-amulya)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{readingTime}</span>
+            <span className="font-[var(--font-synonym)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{readingTime}</span>
           </div>
         </div>
 
