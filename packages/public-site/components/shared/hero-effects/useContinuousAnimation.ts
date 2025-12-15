@@ -6,28 +6,48 @@ import { useEffect, useRef, useState } from 'react';
  * Shared hook for continuous hero animations (CLS-Optimized)
  *
  * Animation behavior:
- * - Starts at idle speed immediately (no intro boost to prevent CLS)
- * - Time initialized to 1 so first render matches animated state
+ * - Initial page load: Frozen until page fully loaded, then eases 0 → idle speed
+ * - Client-side navigation: Starts at time=0, eases 0 → idle speed immediately
  * - Scroll adds a speed boost for interactivity
  *
  * Returns a time value that continuously increments. Use sine waves
  * on this time value to create smooth, organic oscillations.
  */
 
+// Track if this is the initial page load
+let isInitialPageLoad = true;
+let pageFullyLoaded = false;
+
+// Set up load listener once globally
+if (typeof window !== 'undefined') {
+  if (document.readyState === 'complete') {
+    pageFullyLoaded = true;
+  } else {
+    window.addEventListener('load', () => {
+      pageFullyLoaded = true;
+    }, { once: true });
+  }
+}
+
 export function useContinuousAnimation() {
-  // Initialize time to 1 (not 0) so first render positions match animated positions
-  const [time, setTime] = useState(1);
-  const timeRef = useRef(1);
+  // Initial page load: start at time=1 (frozen position)
+  // Client-side nav: start at time=0
+  const initialTime = isInitialPageLoad ? 1 : 0;
+  const [time, setTime] = useState(initialTime);
+  const timeRef = useRef(initialTime);
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
+  const easeStartTimeRef = useRef<number | null>(null);
+  const isThisInitialLoad = useRef(isInitialPageLoad);
 
   useEffect(() => {
-    // Speed settings - idle speed only, no intro boost
+    // Speed settings
     const IDLE_SPEED = 0.0002;
     const SCROLL_BOOST_MAX = 0.0006;
     const SCROLL_BOOST_MULTIPLIER = 0.000032;
     const SCROLL_DECAY = 0.92;
+    const EASE_IN_DURATION = 500; // ms to ease from 0 → idle speed
 
     let lastTimestamp = 0;
 
@@ -37,7 +57,6 @@ export function useContinuousAnimation() {
       lastScrollY.current = currentScrollY;
 
       if (scrollDelta > 0) {
-        // Boost proportional to scroll speed, capped at max
         const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
         scrollBoostRef.current = Math.max(scrollBoostRef.current, boost);
       }
@@ -47,19 +66,39 @@ export function useContinuousAnimation() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
-      // No intro speed boost - just idle + scroll boost
-      const currentSpeed = IDLE_SPEED + scrollBoostRef.current;
+      // For initial page load: wait until page is fully loaded
+      // For client-side nav: start immediately
+      const canAnimate = !isThisInitialLoad.current || pageFullyLoaded;
 
-      timeRef.current += currentSpeed * deltaTime;
-      scrollBoostRef.current *= SCROLL_DECAY;
+      if (canAnimate) {
+        // Start ease-in timer when we first can animate
+        if (easeStartTimeRef.current === null) {
+          easeStartTimeRef.current = timestamp;
+        }
 
-      setTime(timeRef.current);
+        // Calculate ease-in factor (0 to 1 over EASE_IN_DURATION)
+        const easeElapsed = timestamp - easeStartTimeRef.current;
+        let easeFactor = Math.min(1, easeElapsed / EASE_IN_DURATION);
+        // Smooth ease-out curve for natural acceleration
+        easeFactor = 1 - Math.pow(1 - easeFactor, 3);
+
+        const currentSpeed = (IDLE_SPEED + scrollBoostRef.current) * easeFactor;
+        timeRef.current += currentSpeed * deltaTime;
+        scrollBoostRef.current *= SCROLL_DECAY;
+
+        setTime(timeRef.current);
+      }
+      // If not ready to animate, keep time frozen
+
       rafRef.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
     rafRef.current = requestAnimationFrame(animate);
+
+    // After this component mounts, future navigations are client-side
+    isInitialPageLoad = false;
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
