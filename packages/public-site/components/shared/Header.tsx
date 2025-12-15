@@ -19,15 +19,33 @@ export default function Header() {
   const [is404Page, setIs404Page] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  // Track if slide-in animation has played (persists across client-side nav)
+  const [hasSlideIn, setHasSlideIn] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (window as any).__headerSlideInPlayed === true;
+  });
 
   // Track pathname for route change detection
   const pathname = usePathname();
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Track mount state
+  // Track mount state and trigger slide-in animation
   useEffect(() => {
     setHasMounted(true);
+
+    // Only play slide-in on first page load, not client-side navigation
+    if (!(window as any).__headerSlideInPlayed) {
+      (window as any).__headerSlideInPlayed = true;
+      // Trigger slide-in after a brief delay for smooth animation
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setHasSlideIn(true);
+        });
+      });
+    } else {
+      setHasSlideIn(true);
+    }
   }, []);
 
   // Reset header visibility on route change - ensures header is visible on new pages
@@ -167,7 +185,7 @@ export default function Header() {
         }}
       >
         {/* Sliding container for background and content */}
-        {/* Visible by default, slides up when scrolling down */}
+        {/* First load: slides down from off-screen; After: normal scroll hide/show */}
         {/* Fades out when mobile menu is open */}
         <div
           className={`header-bg-container ${hasMounted ? 'transition-all duration-300' : ''} ease-in-out`}
@@ -180,8 +198,10 @@ export default function Header() {
             boxShadow: isMobileMenuOpen ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.3)',
             willChange: 'transform',
             contain: 'layout style',
-            // Visible by default, hide on scroll down
-            transform: isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)',
+            // Start off-screen, slide down when hasSlideIn is true; after that, hide on scroll down
+            transform: !hasSlideIn
+              ? 'translateY(-100%) translateZ(0)'
+              : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
           }}
         >
           {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
