@@ -29,6 +29,8 @@ function ActivatePageContent() {
   const [tokenValid, setTokenValid] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [userName, setUserName] = useState('');
+  const [userFirstName, setUserFirstName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
 
   // Validate token on mount
   useEffect(() => {
@@ -55,7 +57,9 @@ function ActivatePageContent() {
         } else {
           setTokenValid(true);
           setUserEmail(data.email || '');
-          setUserName(data.firstName || data.full_name || data.first_name || '');
+          setUserFirstName(data.first_name || data.firstName || '');
+          setUserLastName(data.last_name || data.lastName || '');
+          setUserName(data.first_name || data.firstName || data.full_name || '');
         }
       } catch (err) {
         console.error('Token validation error:', err);
@@ -87,9 +91,33 @@ function ActivatePageContent() {
       return;
     }
 
+    if (!/[A-Z]/.test(password)) {
+      setError('Password must contain at least one uppercase letter.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/[a-z]/.test(password)) {
+      setError('Password must contain at least one lowercase letter.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/[0-9]/.test(password)) {
+      setError('Password must contain at least one number.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/[^A-Za-z0-9]/.test(password)) {
+      setError('Password must contain at least one special character.');
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      // Activate the account
-      const response = await fetch(`${AUTH_API_URL}/api/auth/activate`, {
+      // Activate the account via invitation accept endpoint
+      const response = await fetch(`${AUTH_API_URL}/api/invitations/accept`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,6 +125,8 @@ function ActivatePageContent() {
         body: JSON.stringify({
           token,
           password,
+          first_name: userFirstName || 'User',
+          last_name: userLastName || 'Agent',
         }),
       });
 
@@ -225,8 +255,8 @@ function ActivatePageContent() {
 
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
         <div className="flex flex-col items-center pt-[15vh]">
-          <div className="text-center mb-8 whitespace-nowrap">
-            <H1 className="mb-2">WELCOME TO THE ALLIANCE</H1>
+          <div className="text-center mb-8 px-4">
+            <H1 className="mb-2" style={{ fontSize: 'clamp(24px, 6vw, 48px)' }}>WELCOME TO THE ALLIANCE</H1>
             <p className="text-body text-[#ffd700]/80">
               {userName ? `Hello ${userName}! ` : ''}Set your access code to get started
             </p>
@@ -266,8 +296,26 @@ function ActivatePageContent() {
                     required
                     minLength={8}
                     className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                    placeholder="Minimum 8 characters"
+                    placeholder="Enter access code"
                   />
+                  {/* Password requirements */}
+                  <div className="text-xs text-[#e5e4dd]/50 space-y-1 pt-1">
+                    <p className={password.length >= 8 ? 'text-green-400' : ''}>
+                      {password.length >= 8 ? '✓' : '○'} At least 8 characters
+                    </p>
+                    <p className={/[A-Z]/.test(password) ? 'text-green-400' : ''}>
+                      {/[A-Z]/.test(password) ? '✓' : '○'} One uppercase letter
+                    </p>
+                    <p className={/[a-z]/.test(password) ? 'text-green-400' : ''}>
+                      {/[a-z]/.test(password) ? '✓' : '○'} One lowercase letter
+                    </p>
+                    <p className={/[0-9]/.test(password) ? 'text-green-400' : ''}>
+                      {/[0-9]/.test(password) ? '✓' : '○'} One number
+                    </p>
+                    <p className={/[^A-Za-z0-9]/.test(password) ? 'text-green-400' : ''}>
+                      {/[^A-Za-z0-9]/.test(password) ? '✓' : '○'} One special character
+                    </p>
+                  </div>
                 </div>
 
                 {/* Confirm Password Field */}
@@ -327,10 +375,12 @@ export default function AgentPortalActivate() {
 
 /**
  * Data Stream Effect - Green Matrix-style rain
+ * Uses ping-pong animation to smoothly reverse direction instead of resetting
  */
 function DataStreamEffect() {
   const [progress, setProgress] = useState(INITIAL_PROGRESS_START);
   const currentRef = useRef(INITIAL_PROGRESS_START);
+  const directionRef = useRef(1); // 1 = forward, -1 = reverse
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
   const introStartTimeRef = useRef<number | null>(null);
@@ -344,6 +394,8 @@ function DataStreamEffect() {
     const SCROLL_VELOCITY_MULTIPLIER = 0.0003;
     const VELOCITY_DECAY = 0.995;
     const TRANSITION_DURATION = 2000;
+    const MAX_PROGRESS = 1.5; // Upper bound for ping-pong
+    const MIN_PROGRESS = 0.1; // Lower bound for ping-pong
     let lastTimestamp = 0;
     let introEndTime: number | null = null;
 
@@ -380,18 +432,23 @@ function DataStreamEffect() {
 
         const transitionProgress = (elapsed - INTRO_DURATION) / TRANSITION_DURATION;
         const blendedVelocity = velocityRef.current * (1 - transitionProgress) + IDLE_VELOCITY * transitionProgress;
-        const totalVelocity = blendedVelocity + scrollVelocityRef.current;
+        const totalVelocity = (blendedVelocity + scrollVelocityRef.current) * directionRef.current;
 
         currentRef.current += totalVelocity * deltaTime;
         scrollVelocityRef.current *= VELOCITY_DECAY;
       } else {
-        const totalVelocity = IDLE_VELOCITY + scrollVelocityRef.current;
+        const totalVelocity = (IDLE_VELOCITY + scrollVelocityRef.current) * directionRef.current;
         currentRef.current += totalVelocity * deltaTime;
         scrollVelocityRef.current *= VELOCITY_DECAY;
       }
 
-      if (currentRef.current > 2) {
-        currentRef.current = currentRef.current % 2;
+      // Ping-pong: reverse direction at bounds instead of resetting
+      if (currentRef.current > MAX_PROGRESS) {
+        currentRef.current = MAX_PROGRESS;
+        directionRef.current = -1;
+      } else if (currentRef.current < MIN_PROGRESS) {
+        currentRef.current = MIN_PROGRESS;
+        directionRef.current = 1;
       }
 
       setProgress(currentRef.current);

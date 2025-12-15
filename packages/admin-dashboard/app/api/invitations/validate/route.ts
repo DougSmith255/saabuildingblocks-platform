@@ -178,21 +178,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user details (use full_name, not first_name)
+    // Get user details
     const { data: user } = await supabase
       .from('users')
-      .select('id, email, name, status')
+      .select('id, email, first_name, last_name, full_name, status')
       .eq('id', invitation.user_id)
       .single();
-
-    // Extract first name from full_name
-    const firstName = user?.name?.split(' ')[0] || '';
 
     // Return success with CORS headers
     return NextResponse.json(
       {
         valid: true,
-        firstName,
+        first_name: user?.first_name || '',
+        last_name: user?.last_name || '',
+        full_name: user?.full_name || '',
         email: invitation.email,
         expiresAt: invitation.expires_at,
       },

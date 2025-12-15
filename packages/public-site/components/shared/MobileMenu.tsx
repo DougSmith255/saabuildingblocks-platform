@@ -282,7 +282,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
 
             {/* Mobile CTA Button */}
             <div className="pt-8 pb-4 text-center">
-              <CTAButton href="/join-exp-sponsor-team/">
+              <CTAButton href="/join-exp-sponsor-team/" onClick={() => setIsMobileMenuOpen(false)}>
                 GET STARTED
               </CTAButton>
             </div>

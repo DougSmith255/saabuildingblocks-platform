@@ -20,6 +20,45 @@ import bcrypt from 'bcryptjs';
 
 export const dynamic = 'force-dynamic';
 
+// CORS configuration for cross-origin requests from public site
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+/**
+ * Generate unique slug from name
+ */
+async function generateUniqueSlug(
+  supabase: ReturnType<typeof getSupabaseServiceClient>,
+  firstName: string,
+  lastName: string
+): Promise<string> {
+  const base = `${firstName}-${lastName}`
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  let slug = base;
+  let counter = 0;
+
+  while (true) {
+    const checkSlug = counter === 0 ? slug : `${slug}-${counter}`;
+    const { data: existing } = await supabase!
+      .from('agent_pages')
+      .select('id')
+      .eq('slug', checkSlug)
+      .single();
+
+    if (!existing) {
+      return checkSlug;
+    }
+    counter++;
+  }
+}
+
 // Rate limiting map: IP -> { count, resetTime }
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
@@ -81,6 +120,7 @@ export async function POST(request: NextRequest) {
         {
           status: 429,
           headers: {
+            ...CORS_HEADERS,
             'Retry-After': '60',
             'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
             'X-RateLimit-Remaining': '0',
@@ -93,7 +133,7 @@ export async function POST(request: NextRequest) {
     if (!supabase) {
       return NextResponse.json(
         { error: 'Database connection unavailable' },
-        { status: 503 }
+        { status: 503, headers: CORS_HEADERS }
       );
     }
 
@@ -107,7 +147,7 @@ export async function POST(request: NextRequest) {
       if (error instanceof ZodError) {
         return NextResponse.json(
           { error: 'Validation error', details: error.issues },
-          { status: 400 }
+          { status: 400, headers: CORS_HEADERS }
         );
       }
       throw error;
@@ -122,7 +162,7 @@ export async function POST(request: NextRequest) {
     if (invitationError || !invitation) {
       return NextResponse.json(
         { error: 'Invalid invitation token' },
-        { status: 404 }
+        { status: 404, headers: CORS_HEADERS }
       );
     }
 
@@ -131,7 +171,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.valid) {
       return NextResponse.json(
         { error: validationResult.reason || 'Invitation is not valid' },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -144,7 +184,7 @@ export async function POST(request: NextRequest) {
     if (userError || !user) {
       return NextResponse.json(
         { error: 'Associated user not found' },
-        { status: 404 }
+        { status: 404, headers: CORS_HEADERS }
       );
     }
 
@@ -152,7 +192,7 @@ export async function POST(request: NextRequest) {
     if (user.status !== 'invited') {
       return NextResponse.json(
         { error: `User account is already ${user.status}` },
-        { status: 400 }
+        { status: 400, headers: CORS_HEADERS }
       );
     }
 
@@ -173,7 +213,7 @@ export async function POST(request: NextRequest) {
       if (existingUser) {
         return NextResponse.json(
           { error: 'Username is already taken' },
-          { status: 409 }
+          { status: 409, headers: CORS_HEADERS }
         );
       }
     }
@@ -200,7 +240,7 @@ export async function POST(request: NextRequest) {
     if (updateUserError) {
       return NextResponse.json(
         { error: 'Failed to activate user account', details: updateUserError.message },
-        { status: 500 }
+        { status: 500, headers: CORS_HEADERS }
       );
     }
 
@@ -284,6 +324,58 @@ export async function POST(request: NextRequest) {
       // Don't fail activation if auth creation fails
     }
 
+    // Create agent_pages record for the newly activated user
+    // This enables them to customize their Agent Attraction Page
+    try {
+      // Check if agent page already exists
+      const { data: existingPage } = await supabase
+        .from('agent_pages')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+
+      if (!existingPage) {
+        // Generate unique slug
+        const slug = await generateUniqueSlug(
+          supabase,
+          validatedData.first_name,
+          validatedData.last_name
+        );
+
+        // Create agent page record
+        const { data: newPage, error: pageError } = await supabase
+          .from('agent_pages')
+          .insert({
+            user_id: user.id,
+            slug,
+            display_first_name: validatedData.first_name,
+            display_last_name: validatedData.last_name,
+            email: user.email,
+            phone: null,
+            show_phone: false,
+            phone_text_only: false,
+            activated: false, // Agent must manually activate their page
+            facebook_url: null,
+            instagram_url: null,
+            twitter_url: null,
+            youtube_url: null,
+            tiktok_url: null,
+            linkedin_url: null,
+          })
+          .select()
+          .single();
+
+        if (pageError) {
+          console.error('Failed to create agent page:', pageError);
+        } else {
+          console.log('✅ Created agent page for user:', user.id, 'slug:', newPage.slug);
+        }
+      }
+    } catch (pageError) {
+      // Don't fail activation if agent page creation fails
+      console.error('Error creating agent page:', pageError);
+    }
+
     return NextResponse.json({
       success: true,
       data: {
@@ -298,6 +390,7 @@ export async function POST(request: NextRequest) {
     }, {
       status: 200,
       headers: {
+        ...CORS_HEADERS,
         'X-RateLimit-Limit': RATE_LIMIT_MAX.toString(),
         'X-RateLimit-Remaining': rateLimit.remainingAttempts.toString(),
       }
@@ -305,7 +398,20 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
+}
+
+/**
+ * OPTIONS handler for CORS preflight requests
+ */
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    status: 200,
+    headers: {
+      ...CORS_HEADERS,
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }

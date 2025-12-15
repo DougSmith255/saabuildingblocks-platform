@@ -61,7 +61,7 @@ export async function createInvitation(
     userId: string;
     email: string;
     expiresInHours: number;
-    createdBy: string;
+    createdBy?: string; // Optional - not all tables have this column
   }
 ): Promise<{ data: Invitation | null; error: Error | null }> {
   try {
@@ -82,8 +82,6 @@ export async function createInvitation(
         expires_at: expiresAt.toISOString(),
         sent_at: now,
         created_at: now,
-        updated_at: now,
-        created_by: data.createdBy,
       })
       .select()
       .single();

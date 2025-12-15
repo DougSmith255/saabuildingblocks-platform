@@ -11,6 +11,7 @@ import { UsernameReminderEmail } from './templates/UsernameReminderEmail';
 import { WelcomeEmail } from './templates/WelcomeEmail';
 import { AccountLockedEmail } from './templates/AccountLockedEmail';
 import { InvitationEmail } from './templates/InvitationEmail';
+import { ApplyInstructionsEmail } from './templates/ApplyInstructionsEmail';
 
 /**
  * Send password reset email with token link
@@ -295,7 +296,7 @@ export async function sendInvitationEmail({
   role?: string;
   expiresInDays?: number;
 }): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
   const activationLink = `${baseUrl}/agent-portal/activate?token=${activationToken}`;
   const expiresIn = expiresInDays === 1 ? '24 hours' : `${expiresInDays} days`;
 
@@ -436,3 +437,73 @@ class EmailQueue {
 
 // Export singleton queue instance
 export const emailQueue = new EmailQueue();
+
+/**
+ * Send Apply Instructions email to someone interested in joining eXp
+ *
+ * @param recipientEmail - Recipient's email address
+ * @param recipientFirstName - Recipient's first name
+ * @param agentName - Sponsoring agent's display name
+ * @param agentEmail - Sponsoring agent's email (for application)
+ */
+export async function sendApplyInstructionsEmail({
+  recipientEmail,
+  recipientFirstName,
+  agentName,
+  agentEmail,
+}: {
+  recipientEmail: string;
+  recipientFirstName: string;
+  agentName: string;
+  agentEmail: string;
+}): Promise<EmailResult> {
+  console.log('📧 [APPLY INSTRUCTIONS] Preparing to send:', {
+    recipient: recipientEmail,
+    recipientName: recipientFirstName,
+    sponsorAgent: agentName,
+    timestamp: new Date().toISOString(),
+  });
+
+  try {
+    const result = await sendEmail({
+      to: recipientEmail,
+      subject: 'How to Join Smart Agent Alliance at eXp',
+      react: ApplyInstructionsEmail({
+        recipientFirstName,
+        agentName,
+        agentEmail,
+      }),
+      tags: [
+        { name: 'category', value: 'apply-instructions' },
+      ],
+    });
+
+    if (result.success) {
+      console.log('✅ [APPLY INSTRUCTIONS] Successfully sent:', {
+        messageId: result.messageId,
+        recipient: recipientEmail,
+        timestamp: result.timestamp,
+      });
+    } else {
+      console.error('❌ [APPLY INSTRUCTIONS] Failed to send:', {
+        recipient: recipientEmail,
+        error: result.error,
+      });
+    }
+
+    return result;
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('❌ [APPLY INSTRUCTIONS] Exception during send:', {
+      recipient: recipientEmail,
+      error: errorMessage,
+    });
+
+    return {
+      success: false,
+      error: errorMessage,
+      timestamp: new Date().toISOString(),
+      recipient: recipientEmail,
+    };
+  }
+}
