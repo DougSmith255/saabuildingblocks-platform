@@ -4,7 +4,7 @@ import { useContinuousAnimation } from './useContinuousAnimation';
 
 /**
  * Laser Grid Effect (CLS-Optimized)
- * Red crisscrossing laser beams - great for action/security themes
+ * Green crisscrossing laser beams - uses brand green (#00ff88)
  *
  * Uses CSS transforms instead of layout properties to prevent CLS:
  * - scaleX/scaleY instead of width/height
@@ -33,8 +33,8 @@ export function LaserGridEffect() {
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
           // Reversed: beams grow from 0 to 1 instead of shrinking
-          // Minimum scale of 0.3 ensures beams never disappear completely
-          const scale = Math.max(0.3, Math.min(1, beamProgress * 1.2));
+          // Minimum scale of 0.15 ensures beams never disappear completely
+          const scale = Math.max(0.15, Math.min(1, beamProgress * 1.2));
           const opacity = 1; // Always fully visible since we have minimum scale
 
           return (
@@ -48,8 +48,8 @@ export function LaserGridEffect() {
                 height: 2,
                 transform: `scaleX(${scale})`,
                 opacity: opacity,
-                background: `linear-gradient(90deg, rgba(255,100,100,0.9), rgba(255,50,50,0.8), rgba(255,100,100,0.9))`,
-                boxShadow: `0 0 10px rgba(255,50,50,0.6), 0 0 30px rgba(255,50,50,0.3)`,
+                background: `linear-gradient(90deg, rgba(0,255,136,0.9), rgba(0,200,100,0.8), rgba(0,255,136,0.9))`,
+                boxShadow: `0 0 10px rgba(0,255,136,0.6), 0 0 30px rgba(0,255,136,0.3)`,
               }}
             />
           );
@@ -59,8 +59,8 @@ export function LaserGridEffect() {
         {verticalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
           // Reversed: beams grow from 0 to 1 instead of shrinking
-          // Minimum scale of 0.3 ensures beams never disappear completely
-          const scale = Math.max(0.3, Math.min(1, beamProgress * 1.2));
+          // Minimum scale of 0.15 ensures beams never disappear completely
+          const scale = Math.max(0.15, Math.min(1, beamProgress * 1.2));
           const opacity = 1; // Always fully visible since we have minimum scale
 
           return (
@@ -74,8 +74,8 @@ export function LaserGridEffect() {
                 width: 2,
                 transform: `scaleY(${scale})`,
                 opacity: opacity,
-                background: `linear-gradient(180deg, rgba(255,100,100,0.9), rgba(255,50,50,0.8), rgba(255,100,100,0.9))`,
-                boxShadow: `0 0 10px rgba(255,50,50,0.6), 0 0 30px rgba(255,50,50,0.3)`,
+                background: `linear-gradient(180deg, rgba(0,255,136,0.9), rgba(0,200,100,0.8), rgba(0,255,136,0.9))`,
+                boxShadow: `0 0 10px rgba(0,255,136,0.6), 0 0 30px rgba(0,255,136,0.3)`,
               }}
             />
           );
@@ -86,9 +86,9 @@ export function LaserGridEffect() {
           verticalBeams.map((vBeam, vi) => {
             const hProgress = Math.max(0, Math.min(1, (progress - hBeam.delay) * hBeam.speed * 1.2));
             const vProgress = Math.max(0, Math.min(1, (progress - vBeam.delay) * vBeam.speed * 1.2));
-            // Reversed: scales grow from 0 to 1, with minimum of 0.3
-            const hScale = Math.max(0.3, Math.min(1, hProgress * 1.2));
-            const vScale = Math.max(0.3, Math.min(1, vProgress * 1.2));
+            // Reversed: scales grow from 0 to 1, with minimum of 0.15
+            const hScale = Math.max(0.15, Math.min(1, hProgress * 1.2));
+            const vScale = Math.max(0.15, Math.min(1, vProgress * 1.2));
 
             // Spark is visible when both beams reach this intersection
             // Horizontal beam extends from center, check if it reaches this x position
@@ -112,7 +112,7 @@ export function LaserGridEffect() {
                   transform: `translate(-50%, -50%) scale(${sparkVisible ? sparkScale : 0})`,
                   opacity: sparkVisible ? 0.8 : 0,
                   background: 'rgba(255,255,255,1)',
-                  boxShadow: '0 0 15px rgba(255,100,100,0.8), 0 0 30px rgba(255,50,50,0.48)',
+                  boxShadow: '0 0 15px rgba(0,255,136,0.8), 0 0 30px rgba(0,255,136,0.48)',
                 }}
               />
             );

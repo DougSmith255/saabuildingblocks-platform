@@ -28,11 +28,12 @@ export function GreenLaserGridEffect() {
         {/* Horizontal laser beams */}
         {horizontalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          const width = Math.max(0, 100 - beamProgress * 120);
+          // Minimum width of 15% ensures beams never disappear completely
+          const width = Math.max(15, 100 - beamProgress * 120);
           const leftOffset = (100 - width) / 2;
-          const opacity = width > 5 ? 1 : width / 5;
+          const opacity = 1; // Always visible since we have minimum width
 
-          return width > 0 ? (
+          return (
             <div
               key={`h-${i}`}
               className="absolute"
@@ -41,21 +42,22 @@ export function GreenLaserGridEffect() {
                 top: `${beam.y}%`,
                 width: `${width}%`,
                 height: 2,
-                background: `linear-gradient(90deg, rgba(0,255,136,${0.9 * opacity}), rgba(0,200,100,${0.8 * opacity}), rgba(0,255,136,${0.9 * opacity}))`,
-                boxShadow: `0 0 10px rgba(0,255,136,${0.6 * opacity}), 0 0 30px rgba(0,255,136,${0.3 * opacity})`,
+                background: `linear-gradient(90deg, rgba(0,255,136,0.9), rgba(0,200,100,0.8), rgba(0,255,136,0.9))`,
+                boxShadow: `0 0 10px rgba(0,255,136,0.6), 0 0 30px rgba(0,255,136,0.3)`,
               }}
             />
-          ) : null;
+          );
         })}
 
         {/* Vertical laser beams */}
         {verticalBeams.map((beam, i) => {
           const beamProgress = Math.max(0, Math.min(1, (progress - beam.delay) * beam.speed * 1.2));
-          const height = Math.max(0, 100 - beamProgress * 120);
+          // Minimum height of 15% ensures beams never disappear completely
+          const height = Math.max(15, 100 - beamProgress * 120);
           const topOffset = (100 - height) / 2;
-          const opacity = height > 5 ? 1 : height / 5;
+          const opacity = 1; // Always visible since we have minimum height
 
-          return height > 0 ? (
+          return (
             <div
               key={`v-${i}`}
               className="absolute"
@@ -64,11 +66,11 @@ export function GreenLaserGridEffect() {
                 top: `${topOffset}%`,
                 width: 2,
                 height: `${height}%`,
-                background: `linear-gradient(180deg, rgba(0,255,136,${0.9 * opacity}), rgba(0,200,100,${0.8 * opacity}), rgba(0,255,136,${0.9 * opacity}))`,
-                boxShadow: `0 0 10px rgba(0,255,136,${0.6 * opacity}), 0 0 30px rgba(0,255,136,${0.3 * opacity})`,
+                background: `linear-gradient(180deg, rgba(0,255,136,0.9), rgba(0,200,100,0.8), rgba(0,255,136,0.9))`,
+                boxShadow: `0 0 10px rgba(0,255,136,0.6), 0 0 30px rgba(0,255,136,0.3)`,
               }}
             />
-          ) : null;
+          );
         })}
 
         {/* Intersection sparks */}
@@ -76,8 +78,8 @@ export function GreenLaserGridEffect() {
           verticalBeams.map((vBeam, vi) => {
             const hProgress = Math.max(0, Math.min(1, (progress - hBeam.delay) * hBeam.speed * 1.2));
             const vProgress = Math.max(0, Math.min(1, (progress - vBeam.delay) * vBeam.speed * 1.2));
-            const hWidth = Math.max(0, 100 - hProgress * 120);
-            const vHeight = Math.max(0, 100 - vProgress * 120);
+            const hWidth = Math.max(15, 100 - hProgress * 120);
+            const vHeight = Math.max(15, 100 - vProgress * 120);
             const hLeft = (100 - hWidth) / 2;
             const hRight = hLeft + hWidth;
             const vTop = (100 - vHeight) / 2;
@@ -90,7 +92,7 @@ export function GreenLaserGridEffect() {
             const pulse = Math.sin(time * 20 + hi + vi);
             const sparkOpacity = sparkVisible ? 0.8 : 0;
 
-            return sparkVisible ? (
+            return (
               <div
                 key={`spark-${hi}-${vi}`}
                 className="absolute rounded-full"
@@ -100,11 +102,12 @@ export function GreenLaserGridEffect() {
                   width: 6 + pulse * 2,
                   height: 6 + pulse * 2,
                   transform: 'translate(-50%, -50%)',
-                  background: `rgba(255,255,255,${sparkOpacity})`,
-                  boxShadow: `0 0 15px rgba(0,255,136,${sparkOpacity}), 0 0 30px rgba(0,255,136,${sparkOpacity * 0.6})`,
+                  opacity: sparkOpacity,
+                  background: 'rgba(255,255,255,0.8)',
+                  boxShadow: '0 0 15px rgba(0,255,136,0.8), 0 0 30px rgba(0,255,136,0.48)',
                 }}
               />
-            ) : null;
+            );
           })
         )}
       </div>
