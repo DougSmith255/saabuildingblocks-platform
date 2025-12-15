@@ -1,7 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { GenericCard } from '@saa/shared/components/saa';
+import { CyberCard } from '@saa/shared/components/saa';
+import H2 from '@saa/shared/components/saa/headings/H2';
 
 /**
  * School data for the cards section
@@ -20,62 +21,62 @@ export interface SchoolData {
 export const SCHOOL_DATABASE: Record<string, SchoolData> = {
   'AceableAgent': {
     name: 'AceableAgent',
-    logo: '/images/schools/aceable-agent-logo.png',
+    logo: '/images/schools/aceable-agent-logo.svg',
     url: 'https://www.aceableagent.com/',
   },
   'The CE Shop': {
     name: 'The CE Shop',
-    logo: '/images/schools/ce-shop-logo.png',
+    logo: '/images/schools/ce-shop-logo.svg',
     url: 'https://www.theceshop.com/',
   },
   'Colibri Real Estate': {
     name: 'Colibri Real Estate',
-    logo: '/images/schools/colibri-logo.png',
+    logo: '/images/schools/colibri-logo.svg',
     url: 'https://www.colibrirealestate.com/',
   },
   'RealEstateU': {
     name: 'RealEstateU',
-    logo: '/images/schools/realestateu-logo.png',
+    logo: '/images/schools/realestateu-logo.svg',
     url: 'https://www.realestateu.com/',
   },
   '360 Training': {
     name: '360 Training',
-    logo: '/images/schools/360-training-logo.png',
+    logo: '/images/schools/360-training-logo.svg',
     url: 'https://www.360training.com/',
   },
   'Allied Real Estate Schools': {
     name: 'Allied Real Estate Schools',
-    logo: '/images/schools/allied-logo.png',
+    logo: '/images/schools/allied-logo.svg',
     url: 'https://www.alliedschools.com/',
   },
   'Kaplan': {
     name: 'Kaplan',
-    logo: '/images/schools/kaplan-logo.png',
+    logo: '/images/schools/kaplan-logo.svg',
     url: 'https://www.kapre.com/',
   },
   'Colorado Real Estate School': {
     name: 'Colorado Real Estate School',
-    logo: '/images/schools/colorado-re-school-logo.png',
+    logo: '/images/schools/colorado-re-school-logo.svg',
     url: 'https://www.coloradorealestatelearning.com/',
   },
   'The Indiana Real Estate Institute': {
     name: 'Indiana Real Estate Institute',
-    logo: '/images/schools/indiana-rei-logo.png',
+    logo: '/images/schools/indiana-rei-logo.svg',
     url: 'https://www.indianarealestatetraining.com/',
   },
   'McColly Real Estate': {
     name: 'McColly Real Estate',
-    logo: '/images/schools/mccolly-logo.png',
+    logo: '/images/schools/mccolly-logo.svg',
     url: 'https://www.mccolly.com/',
   },
   'Cuyahoga Community College': {
     name: 'Cuyahoga Community College',
-    logo: '/images/schools/tri-c-logo.png',
+    logo: '/images/schools/tri-c-logo.svg',
     url: 'https://www.tri-c.edu/',
   },
   'Illinois REALTORS': {
     name: 'Illinois REALTORS',
-    logo: '/images/schools/illinois-realtors-logo.png',
+    logo: '/images/schools/illinois-realtors-logo.svg',
     url: 'https://www.illinoisrealtors.org/',
   },
 };
@@ -135,26 +136,19 @@ export function SchoolCardsSection({ postSlug, schools: overrideSchools }: Schoo
   return (
     <section className="py-8 md:py-12">
       <div className="max-w-[1200px] mx-auto">
-        {/* Section Header */}
-        <h2
-          className="text-center mb-8 text-2xl md:text-3xl font-bold"
-          style={{
-            fontFamily: 'var(--font-taskor, sans-serif)',
-            color: '#e5e4dd',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-          }}
-        >
-          Featured Schools
-        </h2>
+        {/* Section Header with proper H2 styling and spacing */}
+        <div className="mb-12">
+          <H2>FEATURED SCHOOLS</H2>
+        </div>
 
         {/* 3x2 Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {schoolsData.map((school) => (
-            <GenericCard
+            <CyberCard
               key={school.name}
-              className="flex flex-col items-center p-6"
-              padding="md"
+              className="flex flex-col items-center"
+              padding="lg"
+              centered={true}
             >
               {/* Logo Container - Fixed height for alignment */}
               <div className="w-full h-24 flex items-center justify-center mb-4">
@@ -165,6 +159,10 @@ export function SchoolCardsSection({ postSlug, schools: overrideSchools }: Schoo
                     fill
                     className="object-contain"
                     sizes="180px"
+                    onError={(e) => {
+                      // Hide broken image and show school name instead
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
                   />
                 </div>
               </div>
@@ -207,7 +205,7 @@ export function SchoolCardsSection({ postSlug, schools: overrideSchools }: Schoo
               >
                 View Courses
               </a>
-            </GenericCard>
+            </CyberCard>
           ))}
         </div>
       </div>

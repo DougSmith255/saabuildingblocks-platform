@@ -21,7 +21,8 @@ export default function BestRealEstateBrokerage() {
       title: "eXp vs Traditional Brokerages",
       description: "See how eXp stacks up against brick-and-mortar brokerages like Keller Williams, RE/MAX, and Coldwell Banker.",
       href: "/best-real-estate-brokerage/traditional/",
-      highlight: "Cloud vs Brick & Mortar"
+      highlight: "Cloud VS Traditional",
+      tagline: "New School vs Old School"
     }
   ];
 
@@ -73,7 +74,10 @@ export default function BestRealEstateBrokerage() {
             {comparisons.map((comparison, index) => (
               <a key={index} href={comparison.href} className="block group">
                 <GenericCard hover padding="lg" className="h-full">
-                  <div className="text-link font-medium mb-2" style={{ fontSize: 'var(--font-size-caption)' }}>{comparison.highlight}</div>
+                  <div className="text-link font-medium mb-1" style={{ fontSize: 'var(--font-size-caption)' }}>{comparison.highlight}</div>
+                  {'tagline' in comparison && comparison.tagline && (
+                    <div className="text-caption mb-3" style={{ color: 'var(--text-muted)' }}>{comparison.tagline}</div>
+                  )}
                   <h3 className="text-h5 mb-3">{comparison.title}</h3>
                   <p className="text-body mb-4">{comparison.description}</p>
                   <span className="text-link group-hover:underline">View Comparison →</span>

@@ -25,22 +25,26 @@ export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }
 
-// R2 Configuration
-const R2_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
-const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
-const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
-const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || 'saabuildingblocks-assets';
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || '';
-
-// Initialize S3 client for R2
-const s3Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
+// R2 Configuration - getters to ensure env vars are read at runtime
+const getR2Config = () => ({
+  accountId: process.env.CLOUDFLARE_ACCOUNT_ID || '',
+  accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+  secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+  bucketName: process.env.R2_BUCKET_NAME || 'saabuildingblocks-assets',
+  publicUrl: process.env.R2_PUBLIC_URL || '',
 });
+
+// Create S3 client fresh for each request to ensure credentials are current
+const createS3Client = (config: ReturnType<typeof getR2Config>) => {
+  return new S3Client({
+    region: 'auto',
+    endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: config.accessKeyId,
+      secretAccessKey: config.secretAccessKey,
+    },
+  });
+};
 
 export async function POST(request: NextRequest) {
   try {
@@ -143,31 +147,44 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
+    // Get R2 config and create fresh client
+    const r2Config = getR2Config();
+    const client = createS3Client(r2Config);
+
+    // Log config (without secrets) for debugging
+    console.log('R2 Config:', {
+      accountId: r2Config.accountId ? `${r2Config.accountId.substring(0, 8)}...` : 'MISSING',
+      accessKeyId: r2Config.accessKeyId ? `${r2Config.accessKeyId.substring(0, 8)}...` : 'MISSING',
+      secretAccessKey: r2Config.secretAccessKey ? 'SET' : 'MISSING',
+      bucketName: r2Config.bucketName,
+      publicUrl: r2Config.publicUrl,
+    });
+
     // Upload new image to R2
     const uploadCommand = new PutObjectCommand({
-      Bucket: R2_BUCKET_NAME,
+      Bucket: r2Config.bucketName,
       Key: filename,
       Body: buffer,
       ContentType: file.type,
       CacheControl: 'public, max-age=31536000', // Cache for 1 year
     });
 
-    await s3Client.send(uploadCommand);
+    await client.send(uploadCommand);
 
     // Construct public URL
-    const publicUrl = `${R2_PUBLIC_URL}/${filename}`;
+    const publicUrl = `${r2Config.publicUrl}/${filename}`;
 
     // Delete old profile picture from R2 if it exists
-    if (oldProfilePictureUrl && R2_PUBLIC_URL && oldProfilePictureUrl.startsWith(R2_PUBLIC_URL)) {
+    if (oldProfilePictureUrl && r2Config.publicUrl && oldProfilePictureUrl.startsWith(r2Config.publicUrl)) {
       try {
         // Extract the key from the old URL
-        const oldKey = oldProfilePictureUrl.replace(`${R2_PUBLIC_URL}/`, '');
+        const oldKey = oldProfilePictureUrl.replace(`${r2Config.publicUrl}/`, '');
         if (oldKey && oldKey.startsWith('profile-pictures/')) {
           const deleteCommand = new DeleteObjectCommand({
-            Bucket: R2_BUCKET_NAME,
+            Bucket: r2Config.bucketName,
             Key: oldKey,
           });
-          await s3Client.send(deleteCommand);
+          await client.send(deleteCommand);
           console.log('Deleted old profile picture:', oldKey);
         }
       } catch (deleteError) {
