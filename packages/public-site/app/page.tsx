@@ -4,11 +4,7 @@ import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
-
-const RevealMaskEffect = dynamic(
-  () => import('@/components/shared/RevealMaskEffect').then(mod => ({ default: mod.RevealMaskEffect })),
-  { ssr: false }
-);
+import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 // ssr: false + loading: null prevents ANY rendering during SSR (no height = no CLS)

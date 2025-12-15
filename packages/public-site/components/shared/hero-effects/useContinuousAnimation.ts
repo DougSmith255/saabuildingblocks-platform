@@ -3,62 +3,23 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * Shared hook for continuous hero animations (CLS-Optimized)
+ * Shared hook for continuous hero animations
  *
  * Animation behavior:
- * - Desktop: Frozen until mouse move, then eases 0 → idle speed
- * - Mobile: Frozen until 2.5s after load (past CLS window), then eases 0 → idle speed
- * - Client-side navigation: Starts immediately, eases 0 → idle speed
+ * - Starts immediately at idle speed on both mobile and desktop
+ * - No waiting for mouse movement or timers
  * - Scroll adds a speed boost for interactivity
  *
  * Returns a time value that continuously increments. Use sine waves
  * on this time value to create smooth, organic oscillations.
  */
 
-// Global state for animation triggering
-let isInitialPageLoad = true;
-let animationTriggered = false;
-
-// Detect if device is mobile (touch-primary)
-const isMobile = typeof window !== 'undefined' &&
-  ('ontouchstart' in window || navigator.maxTouchPoints > 0);
-
-// Set up triggers once globally
-if (typeof window !== 'undefined') {
-  if (document.readyState === 'complete') {
-    // Page already loaded
-    if (isMobile) {
-      // Mobile: trigger after 2.5s delay (past CLS measurement window)
-      setTimeout(() => { animationTriggered = true; }, 2500);
-    }
-  } else {
-    window.addEventListener('load', () => {
-      if (isMobile) {
-        // Mobile: trigger after 2.5s delay post-load
-        setTimeout(() => { animationTriggered = true; }, 2500);
-      }
-    }, { once: true });
-  }
-
-  // Desktop: trigger on first mouse move
-  if (!isMobile) {
-    window.addEventListener('mousemove', () => {
-      animationTriggered = true;
-    }, { once: true, passive: true });
-  }
-}
-
 export function useContinuousAnimation() {
-  // Initial page load: start at time=1 (frozen position)
-  // Client-side nav: start at time=0
-  const initialTime = isInitialPageLoad ? 1 : 0;
-  const [time, setTime] = useState(initialTime);
-  const timeRef = useRef(initialTime);
+  const [time, setTime] = useState(0);
+  const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
-  const easeStartTimeRef = useRef<number | null>(null);
-  const isThisInitialLoad = useRef(isInitialPageLoad);
 
   useEffect(() => {
     // Speed settings
@@ -66,7 +27,6 @@ export function useContinuousAnimation() {
     const SCROLL_BOOST_MAX = 0.0006;
     const SCROLL_BOOST_MULTIPLIER = 0.000032;
     const SCROLL_DECAY = 0.92;
-    const EASE_IN_DURATION = 500; // ms to ease from 0 → idle speed
 
     let lastTimestamp = 0;
 
@@ -85,39 +45,18 @@ export function useContinuousAnimation() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
-      // For initial page load: wait for trigger (mouse move on desktop, timer on mobile)
-      // For client-side nav: start immediately
-      const canAnimate = !isThisInitialLoad.current || animationTriggered;
+      // Start immediately at idle speed
+      const currentSpeed = IDLE_SPEED + scrollBoostRef.current;
+      timeRef.current += currentSpeed * deltaTime;
+      scrollBoostRef.current *= SCROLL_DECAY;
 
-      if (canAnimate) {
-        // Start ease-in timer when we first can animate
-        if (easeStartTimeRef.current === null) {
-          easeStartTimeRef.current = timestamp;
-        }
-
-        // Calculate ease-in factor (0 to 1 over EASE_IN_DURATION)
-        const easeElapsed = timestamp - easeStartTimeRef.current;
-        let easeFactor = Math.min(1, easeElapsed / EASE_IN_DURATION);
-        // Smooth ease-out curve for natural acceleration
-        easeFactor = 1 - Math.pow(1 - easeFactor, 3);
-
-        const currentSpeed = (IDLE_SPEED + scrollBoostRef.current) * easeFactor;
-        timeRef.current += currentSpeed * deltaTime;
-        scrollBoostRef.current *= SCROLL_DECAY;
-
-        setTime(timeRef.current);
-      }
-      // If not ready to animate, keep time frozen
-
+      setTime(timeRef.current);
       rafRef.current = requestAnimationFrame(animate);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     lastScrollY.current = window.scrollY;
     rafRef.current = requestAnimationFrame(animate);
-
-    // After this component mounts, future navigations are client-side
-    isInitialPageLoad = false;
 
     return () => {
       window.removeEventListener('scroll', handleScroll);

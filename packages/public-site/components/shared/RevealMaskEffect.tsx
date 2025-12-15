@@ -8,29 +8,31 @@ import { useEffect, useRef, useState } from 'react';
  * Placed behind hero images to create a cosmic portal effect.
  *
  * Animation behavior:
- * - Starts fast and smoothly decelerates to idle speed (no pause/jerk)
- * - Uses exponential decay for natural-feeling slowdown
- * - Scroll adds a small boost (1.5x idle speed)
+ * - Renders immediately with static initial state (no pop-in)
+ * - Starts animating at idle speed immediately
+ * - Scroll adds a small boost
  * - Fading is handled by FixedHeroWrapper (not internally)
  */
+
+// Initial values for SSR/first render (time=0, progress=0.45)
+// maskSize = 90 - 0.45 * 40 = 72
+const INITIAL_MASK_SIZE = 72;
+const INITIAL_PROGRESS = 0.45;
 
 export function RevealMaskEffect() {
   const [time, setTime] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
-  const startTimeRef = useRef<number | null>(null);
   const lastScrollY = useRef(0);
   const scrollBoostRef = useRef(0);
 
   useEffect(() => {
-    // Speed settings - 2X scroll boost speed
+    // Speed settings
     const IDLE_SPEED = 0.000075;
-    const INTRO_SPEED = 0.0006; // 8x idle speed at start
-    const DECAY_TIME = 3000; // Time to reach ~95% of idle speed (ms)
-    const SCROLL_BOOST_MAX = 0.0006; // Max boost: 2X previous (was 0.0003)
-    const SCROLL_BOOST_MULTIPLIER = 0.000024; // How much each px of scroll adds (2X previous)
-    const SCROLL_DECAY = 0.92; // Slower decay so boost lasts longer
+    const SCROLL_BOOST_MAX = 0.0006;
+    const SCROLL_BOOST_MULTIPLIER = 0.000024;
+    const SCROLL_DECAY = 0.92;
 
     let lastTimestamp = 0;
 
@@ -40,7 +42,6 @@ export function RevealMaskEffect() {
       lastScrollY.current = currentScrollY;
 
       if (scrollDelta > 0) {
-        // Boost proportional to scroll speed, capped at max
         const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
         scrollBoostRef.current = Math.max(scrollBoostRef.current, boost);
       }
@@ -50,17 +51,8 @@ export function RevealMaskEffect() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
 
-      if (startTimeRef.current === null) {
-        startTimeRef.current = timestamp;
-      }
-
-      const elapsed = timestamp - startTimeRef.current;
-
-      // Exponential decay from intro speed to idle speed
-      const tau = DECAY_TIME / 3; // ~95% decay after 3 tau
-      const extraSpeed = (INTRO_SPEED - IDLE_SPEED) * Math.exp(-elapsed / tau);
-      const currentSpeed = IDLE_SPEED + extraSpeed + scrollBoostRef.current;
-
+      // Start immediately at idle speed
+      const currentSpeed = IDLE_SPEED + scrollBoostRef.current;
       timeRef.current += currentSpeed * deltaTime;
       scrollBoostRef.current *= SCROLL_DECAY;
 
@@ -85,11 +77,11 @@ export function RevealMaskEffect() {
 
   // Combine waves for organic motion
   const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
-  const progress = 0.45 + combinedWave * 0.35; // Oscillates between 0.1 and 0.8
+  const progress = time === 0 ? INITIAL_PROGRESS : (0.45 + combinedWave * 0.35);
 
   // Animation values based on progress
-  const maskSize = 90 - progress * 40; // Larger: shrinks from ~85% to ~50%
-  const rotation = time * 90; // Continuous rotation based on raw time
+  const maskSize = time === 0 ? INITIAL_MASK_SIZE : (90 - progress * 40);
+  const rotation = time * 90;
 
   return (
     <div
@@ -99,7 +91,7 @@ export function RevealMaskEffect() {
         zIndex: 0,
       }}
     >
-      {/* Golden radial glow - less intense, larger, centered lower */}
+      {/* Golden radial glow - renders immediately with initial state */}
       <div
         className="absolute inset-0"
         style={{
@@ -110,7 +102,7 @@ export function RevealMaskEffect() {
             transparent 80%)`,
         }}
       />
-      {/* Outer rotating border - centered between photo top and tagline bottom */}
+      {/* Outer rotating border */}
       <div
         className="absolute w-[80vw] h-[80vw] max-w-[700px] max-h-[700px] border-2"
         style={{
@@ -120,7 +112,7 @@ export function RevealMaskEffect() {
           borderColor: 'rgba(255,215,0,0.25)',
         }}
       />
-      {/* Inner rotating border - centered between photo top and tagline bottom */}
+      {/* Inner rotating border */}
       <div
         className="absolute w-[60vw] h-[60vw] max-w-[520px] max-h-[520px] border"
         style={{
@@ -130,7 +122,7 @@ export function RevealMaskEffect() {
           borderColor: 'rgba(255,215,0,0.18)',
         }}
       />
-      {/* Gradient overlay for depth - extends 100px below fold */}
+      {/* Gradient overlay for depth */}
       <div
         className="absolute left-0 right-0 top-0"
         style={{
