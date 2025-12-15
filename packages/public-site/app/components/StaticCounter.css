@@ -13,7 +13,18 @@
 }
 
 /* ==========================================================================
-   COUNTER VISIBILITY - Now handled via JS conditional rendering
-   ViewportContext determines which counter to render (desktop or mobile)
-   Only ONE counter is rendered at a time - no CSS hiding needed
+   TAGLINE COUNTER SUFFIX - Hidden on desktop via CSS media query
+   This prevents CLS by ensuring the element doesn't take space on desktop
+   from the initial SSR render (before JS hydrates)
    ========================================================================== */
+.tagline-counter-suffix {
+  /* Hidden on desktop by default (>= 500px breakpoint) */
+  display: none !important;
+}
+
+@media (max-width: 499px) {
+  .tagline-counter-suffix {
+    /* Show on mobile - inline-flex for proper alignment */
+    display: inline-flex !important;
+  }
+}

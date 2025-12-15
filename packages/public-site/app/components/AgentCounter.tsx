@@ -105,14 +105,14 @@ export function AgentCounter() {
  *
  * This is used by the Tagline component when showAgentCounter is true
  * and viewport is mobile (<500px)
+ *
+ * IMPORTANT: CSS media query in StaticCounter.css handles visibility.
+ * - Desktop (>=500px): display:none via CSS - no space taken, no CLS
+ * - Mobile (<500px): display:inline-flex via CSS
+ * This ensures consistent rendering between SSR and hydration.
  */
 export function TaglineCounterSuffix() {
-  const { isCounterDesktop, hasMounted } = useViewport();
-
-  // On desktop (after mount confirmed), don't render at all
-  if (hasMounted && isCounterDesktop) {
-    return null;
-  }
+  const { hasMounted, isCounterDesktop } = useViewport();
 
   // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
   const textShadow = `
@@ -125,18 +125,18 @@ export function TaglineCounterSuffix() {
     drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
   `;
 
-  // Before mount: render invisible to reserve space (prevents CLS on mobile)
-  // After mount on mobile: render visible
+  // Opacity: visible on mobile after mount, hidden otherwise
+  // CSS handles display:none on desktop, so opacity only matters on mobile
   const isVisible = hasMounted && !isCounterDesktop;
 
   return (
     <span
       className="tagline-counter-suffix"
       style={{
-        display: 'inline-flex',
+        // CSS media query handles display (none on desktop, inline-flex on mobile)
+        // Don't set display here - let CSS control it to prevent CLS
         alignItems: 'baseline',
         gap: 0,
-        // Hidden until we confirm mobile, then visible
         opacity: isVisible ? 1 : 0,
         transition: 'opacity 0.2s ease-in',
       }}
