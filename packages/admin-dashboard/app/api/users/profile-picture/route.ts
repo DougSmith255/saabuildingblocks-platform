@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { verifyAccessToken } from '@/lib/auth/jwt';
 
 export const dynamic = 'force-dynamic';
@@ -111,8 +111,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate unique filename
-    const fileExtension = file.name.split('.').pop() || 'jpg';
+    // Get database connection first to check for existing profile picture
+    const supabase = getSupabaseServiceClient();
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Service Unavailable', message: 'Database connection unavailable' },
+        { status: 503, headers: CORS_HEADERS }
+      );
+    }
+
+    // Fetch the user's current profile picture URL to delete the old one
+    const { data: userData, error: fetchError } = await supabase
+      .from('users')
+      .select('profile_picture_url')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError) {
+      console.error('Failed to fetch user data:', fetchError);
+      // Continue anyway - we'll just upload the new picture
+    }
+
+    const oldProfilePictureUrl = userData?.profile_picture_url;
+
+    // Generate unique filename - use consistent naming so we can track/replace
+    const fileExtension = file.name.split('.').pop()?.toLowerCase() || 'jpg';
     const timestamp = Date.now();
     const filename = `profile-pictures/${userId}/${timestamp}.${fileExtension}`;
 
@@ -120,7 +143,7 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Upload to R2
+    // Upload new image to R2
     const uploadCommand = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
       Key: filename,
@@ -134,15 +157,26 @@ export async function POST(request: NextRequest) {
     // Construct public URL
     const publicUrl = `${R2_PUBLIC_URL}/${filename}`;
 
-    // Update user record in database
-    const supabase = getSupabaseServiceClient();
-    if (!supabase) {
-      return NextResponse.json(
-        { error: 'Service Unavailable', message: 'Database connection unavailable' },
-        { status: 503, headers: CORS_HEADERS }
-      );
+    // Delete old profile picture from R2 if it exists
+    if (oldProfilePictureUrl && R2_PUBLIC_URL && oldProfilePictureUrl.startsWith(R2_PUBLIC_URL)) {
+      try {
+        // Extract the key from the old URL
+        const oldKey = oldProfilePictureUrl.replace(`${R2_PUBLIC_URL}/`, '');
+        if (oldKey && oldKey.startsWith('profile-pictures/')) {
+          const deleteCommand = new DeleteObjectCommand({
+            Bucket: R2_BUCKET_NAME,
+            Key: oldKey,
+          });
+          await s3Client.send(deleteCommand);
+          console.log('Deleted old profile picture:', oldKey);
+        }
+      } catch (deleteError) {
+        // Log but don't fail the request - old file cleanup is not critical
+        console.error('Failed to delete old profile picture:', deleteError);
+      }
     }
 
+    // Update user record in database
     const { error: updateError } = await supabase
       .from('users')
       .update({
