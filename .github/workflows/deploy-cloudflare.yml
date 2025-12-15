@@ -218,11 +218,16 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
+          # Sanitize commit message (remove emojis and non-ASCII for Cloudflare API)
+          COMMIT_MSG=$(git log -1 --pretty=%s | LC_ALL=C tr -cd '[:print:]' | head -c 100)
+          [ -z "$COMMIT_MSG" ] && COMMIT_MSG="Deploy from GitHub Actions"
+          echo "📝 Commit message: $COMMIT_MSG"
+
           # Retry logic in bash (simpler than multiple workflow steps)
           for attempt in 1 2 3; do
             echo "🚀 Deployment attempt $attempt/3..."
             # Run from packages/public-site/ so wrangler detects ./functions directory
-            if wrangler pages deploy ./out --project-name=saabuildingblocks --branch=main --commit-dirty=true; then
+            if wrangler pages deploy ./out --project-name=saabuildingblocks --branch=main --commit-dirty=true --commit-message="$COMMIT_MSG"; then
               echo "✅ Deployment successful on attempt $attempt"
               echo "status=success" >> $GITHUB_OUTPUT
               exit 0
