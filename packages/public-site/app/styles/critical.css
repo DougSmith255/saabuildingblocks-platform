@@ -245,11 +245,6 @@ p a {
   opacity: 1;
 }
 
-/* Reveal Mask Effect vignette - render immediately with static background */
-.reveal-mask-effect {
-  opacity: 1;
-}
-
 /* Hero Vignette - applies dark edge overlay to hero sections */
 /* Uses class instead of inline style for immediate CSS application */
 .hero-vignette {
@@ -260,6 +255,21 @@ p a {
   height: calc(100% + 100px);
   background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%);
   pointer-events: none;
+}
+
+/* RevealMaskEffect initial state - prevents pop-in by providing immediate CSS */
+/* These styles render before React hydration, then React takes over */
+.reveal-mask-effect {
+  opacity: 1;
+}
+
+/* Golden glow initial state - 72% size (INITIAL_MASK_SIZE) */
+.reveal-mask-effect > div:first-child {
+  background: radial-gradient(ellipse 72% 50.4% at 50% 50%,
+    rgba(255,215,0,0.2) 0%,
+    rgba(255,180,0,0.12) 35%,
+    rgba(255,150,0,0.06) 55%,
+    transparent 80%);
 }
 
 /* Master Controller Variables - Injected by useLiveCSS */

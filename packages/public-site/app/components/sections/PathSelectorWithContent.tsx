@@ -9,6 +9,9 @@ import { FinalCTA } from './FinalCTA';
 
 type PathType = 'new-agent' | 'seasoned-agent' | 'team-leader' | 'empire-builder' | null;
 
+// localStorage key for cross-page state persistence
+const STORAGE_KEY = 'saa-visitor-type';
+
 interface PathContent {
   problem: string;
   answer: string;
@@ -45,13 +48,46 @@ const pathContent: Record<Exclude<PathType, null>, PathContent> = {
   },
 };
 
-export function PathSelectorWithContent() {
+interface PathSelectorWithContentProps {
+  /** Whether to show the content sections below (BuiltForFuture, FAQ, FinalCTA) */
+  showContentBelow?: boolean;
+}
+
+export function PathSelectorWithContent({ showContentBelow = true }: PathSelectorWithContentProps) {
   const [selectedPath, setSelectedPath] = useState<PathType>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [displayedPath, setDisplayedPath] = useState<PathType>(null);
   const hasSelection = selectedPath !== null;
 
-  // Handle path changes with transition animation
+  // Load saved selection from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && ['new-agent', 'seasoned-agent', 'team-leader', 'empire-builder'].includes(saved)) {
+      setSelectedPath(saved as PathType);
+      setDisplayedPath(saved as PathType);
+    }
+  }, []);
+
+  // Listen for storage changes from other tabs/pages
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === STORAGE_KEY) {
+        if (e.newValue && ['new-agent', 'seasoned-agent', 'team-leader', 'empire-builder'].includes(e.newValue)) {
+          const newPath = e.newValue as PathType;
+          setSelectedPath(newPath);
+          setDisplayedPath(newPath);
+        } else {
+          setSelectedPath(null);
+          setDisplayedPath(null);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
+
+  // Handle path changes with transition animation and localStorage sync
   const handlePathSelect = (pathId: PathType) => {
     if (pathId === selectedPath) return;
 
@@ -62,6 +98,14 @@ export function PathSelectorWithContent() {
     setTimeout(() => {
       setSelectedPath(pathId);
       setDisplayedPath(pathId);
+
+      // Save to localStorage for cross-page sync
+      if (pathId) {
+        localStorage.setItem(STORAGE_KEY, pathId);
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+
       // Small delay then remove transition state
       setTimeout(() => {
         setIsTransitioning(false);
@@ -139,17 +183,19 @@ export function PathSelectorWithContent() {
       </section>
 
       {/* Content Below - Blurred until selection, transitions on path change */}
-      <div
-        className="relative transition-all duration-500 ease-out"
-        style={{
-          filter: !hasSelection ? 'blur(8px)' : isTransitioning ? 'blur(6px)' : 'blur(0px)',
-          opacity: !hasSelection ? 0.35 : isTransitioning ? 0.6 : 1,
-        }}
-      >
-        <BuiltForFuture />
-        <FAQ />
-        <FinalCTA />
-      </div>
+      {showContentBelow && (
+        <div
+          className="relative transition-all duration-500 ease-out"
+          style={{
+            filter: !hasSelection ? 'blur(8px)' : isTransitioning ? 'blur(6px)' : 'blur(0px)',
+            opacity: !hasSelection ? 0.35 : isTransitioning ? 0.6 : 1,
+          }}
+        >
+          <BuiltForFuture />
+          <FAQ />
+          <FinalCTA />
+        </div>
+      )}
     </>
   );
 }

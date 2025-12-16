@@ -2,7 +2,7 @@
 
 import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
-import { PathSelector } from '@/app/components/sections/PathSelector';
+import { PathSelectorWithContent } from '@/app/components/sections/PathSelectorWithContent';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { SatelliteConstellationEffect } from '@/components/shared/hero-effects/SatelliteConstellationEffect';
 
@@ -70,7 +70,7 @@ export default function AboutExpRealty() {
       </StickyHeroWrapper>
 
       {/* Path Selector - synced with homepage via localStorage */}
-      <PathSelector />
+      <PathSelectorWithContent showContentBelow={false} />
 
       {/* Stats Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
