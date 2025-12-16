@@ -2871,7 +2871,9 @@ body.light-mode [class*="starfield"],
 body.light-mode [class*="Starfield"],
 body.light-mode [class*="star_"],
 body.light-mode [class*="Star_"],
-.light-mode .starfieldContainer {
+body.light-mode .star-canvas,
+.light-mode .starfieldContainer,
+.light-mode .star-canvas {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
