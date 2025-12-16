@@ -36,10 +36,6 @@ export interface CategoryTemplateConfig {
   heroSubtitle?: string;
   /** Show video section prominently? */
   emphasizeVideo?: boolean;
-  /** Custom CTA button text */
-  ctaText?: string;
-  /** Custom CTA link */
-  ctaLink?: string;
   /** Related posts limit */
   relatedPostsLimit?: number;
   /** Custom CSS class to add to article */
@@ -150,8 +146,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#F39C12', // Orange
     accentColorSecondary: '#D68910',
     heroSubtitle: 'Strategies to attract and convert more clients',
-    ctaText: 'Win More Clients',
-    ctaLink: '/client-strategies',
     emphasizeVideo: true,
     relatedPostsLimit: 3,
     customClassName: 'category-winning-clients',
@@ -163,8 +157,6 @@ export const categoryTemplates: Record<CategorySlug, CategoryTemplateConfig> = {
     accentColor: '#00A3E0', // eXp blue
     accentColorSecondary: '#0077B5',
     heroSubtitle: 'Partner with the Smart Agent Alliance at eXp Realty',
-    ctaText: 'Join Our Team',
-    ctaLink: '/sponsor',
     relatedPostsLimit: 3,
     customClassName: 'category-sponsor',
   },

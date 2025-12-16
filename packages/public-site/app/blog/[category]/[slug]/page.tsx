@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { CategoryBlogPostTemplate } from '@/components/blog';
 import type { BlogPost } from '@/lib/wordpress/types';
 import { cleanExcerpt } from '@/lib/wordpress/fallbacks';
+import { extractFAQs, generateFAQSchema, transformFAQToRankMathMarkup } from '@/lib/faq-utils';
 import type { Metadata } from 'next';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
@@ -150,9 +151,26 @@ export default async function BlogPostPage({
 
   const category = post.categories[0] || 'uncategorized';
 
+  // Transform non-RankMath FAQ content to RankMath-style markup
+  const transformedContent = transformFAQToRankMathMarkup(post.content);
+  const postWithTransformedContent = {
+    ...post,
+    content: transformedContent
+  };
+
+  // Extract FAQs and generate schema
+  const faqs = extractFAQs(post.content);
+  const faqSchema = generateFAQSchema(faqs);
+
   return (
     <main id="main-content">
-      <CategoryBlogPostTemplate post={post} relatedPosts={relatedPosts} category={category} />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
+      <CategoryBlogPostTemplate post={postWithTransformedContent} relatedPosts={relatedPosts} category={category} />
     </main>
   );
 }

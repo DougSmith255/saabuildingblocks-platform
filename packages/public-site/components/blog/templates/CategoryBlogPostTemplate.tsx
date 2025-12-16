@@ -113,7 +113,6 @@ export interface CategoryBlogPostTemplateProps {
  *
  * Extends BlogPostTemplate with category-specific customizations:
  * - Custom accent colors
- * - Category-specific CTAs
  * - Custom related posts limits
  * - Category CSS classes for styling hooks
  *
@@ -332,23 +331,6 @@ export function CategoryBlogPostTemplate({
                 )}
                 <BlogContentRenderer html={post.content} />
               </div>
-
-              {/* Category-specific CTA (if configured) */}
-              {templateConfig.ctaText && templateConfig.ctaLink && (
-                <div className="mt-12 mb-8 text-center">
-                  <a
-                    href={templateConfig.ctaLink}
-                    className="inline-block px-8 py-4 text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105"
-                    style={{
-                      background: `linear-gradient(135deg, ${templateConfig.accentColor}, ${templateConfig.accentColorSecondary})`,
-                      color: '#000',
-                      boxShadow: `0 4px 15px ${templateConfig.accentColor}40`,
-                    }}
-                  >
-                    {templateConfig.ctaText}
-                  </a>
-                </div>
-              )}
 
               {/* Share Buttons */}
               <ShareButtons
