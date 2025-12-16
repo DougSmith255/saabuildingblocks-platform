@@ -1393,7 +1393,7 @@ function AttractionPageSection({ user }: { user: UserData }) {
     );
   }
 
-  const pageUrl = `https://smartagentalliance.com/agent/${pageData.slug}`;
+  const pageUrl = `https://smartagentalliance.com/${pageData.slug}`;
 
   return (
     <SectionWrapper title="Agent Attraction Page">
@@ -1440,7 +1440,7 @@ function AttractionPageSection({ user }: { user: UserData }) {
           <div className="space-y-2">
             <label className="block text-sm font-medium text-[#e5e4dd]/80">Your Page URL</label>
             <div className="flex items-center gap-3 p-3 rounded-lg bg-black/30 border border-white/10">
-              <span className="text-[#e5e4dd]/60">smartagentalliance.com/agent/</span>
+              <span className="text-[#e5e4dd]/60">smartagentalliance.com/</span>
               <span className="text-[#ffd700]">{formData.slug}</span>
             </div>
           </div>
@@ -1480,7 +1480,7 @@ function AttractionPageSection({ user }: { user: UserData }) {
             <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">URL Slug</label>
             <div className="flex items-center">
               <span className="px-4 py-3 rounded-l-lg bg-black/50 border border-r-0 border-white/10 text-[#e5e4dd]/60">
-                /agent/
+                smartagentalliance.com/
               </span>
               <input
                 type="text"

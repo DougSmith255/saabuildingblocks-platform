@@ -49,8 +49,10 @@ export const STATIC_SLUGS = new Set([
 
 /**
  * Generate the complete HTML page for an agent
+ * @param agent - Agent data from KV
+ * @param siteUrl - Base URL of the site (e.g., https://smartagentalliance.com)
  */
-export function generateAgentPageHTML(agent) {
+export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentalliance.com') {
   // Check if agent page is active (support both field names)
   const isActive = agent.activated ?? agent.is_active ?? false;
   if (!isActive) {
@@ -59,6 +61,9 @@ export function generateAgentPageHTML(agent) {
 
   const fullName = `${agent.display_first_name} ${agent.display_last_name}`.trim();
   const title = `${fullName} | Smart Agent Alliance`;
+
+  // Analytics domain (always use smartagentalliance.com for Plausible)
+  const analyticsDomain = 'smartagentalliance.com';
 
   // Build social links array
   const socialLinks = [];
@@ -122,23 +127,23 @@ export function generateAgentPageHTML(agent) {
   ${agent.profile_image_url ? `<meta property="og:image" content="${escapeHTML(agent.profile_image_url)}" />` : ''}
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://saabuildingblocks.com" crossorigin />
-  <link rel="preload" href="https://saabuildingblocks.com/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="preload" href="https://saabuildingblocks.com/_next/static/media/taskor_regular_webfont-s.p.f70f6d00.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preconnect" href="${siteUrl}" crossorigin />
+  <link rel="preload" href="${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.f70f6d00.woff2" as="font" type="font/woff2" crossorigin />
 
   <!-- Favicon -->
-  <link rel="icon" href="https://saabuildingblocks.com/favicon.ico" />
+  <link rel="icon" href="${siteUrl}/favicon.ico" />
 
   <style>
     @font-face {
       font-family: 'Taskor';
-      src: url('https://saabuildingblocks.com/_next/static/media/taskor_regular_webfont-s.p.f70f6d00.woff2') format('woff2');
+      src: url('${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.f70f6d00.woff2') format('woff2');
       font-display: swap;
       font-weight: 400;
     }
     @font-face {
       font-family: 'Synonym';
-      src: url('https://saabuildingblocks.com/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2');
+      src: url('${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2');
       font-display: swap;
       font-weight: 100 900;
     }
@@ -390,16 +395,16 @@ export function generateAgentPageHTML(agent) {
     ${phoneHTML}
 
     <div class="cta-section">
-      <a href="https://saabuildingblocks.com/join-exp-sponsor-team/" class="cta-button">
+      <a href="${siteUrl}/join-exp-sponsor-team/" class="cta-button">
         Join My Team at eXp Realty
       </a>
-      <a href="https://saabuildingblocks.com/" class="secondary-button">
+      <a href="${siteUrl}/" class="secondary-button">
         Learn About Smart Agent Alliance
       </a>
     </div>
 
     <footer class="footer">
-      <a href="https://saabuildingblocks.com/" class="footer-logo">
+      <a href="${siteUrl}/" class="footer-logo">
         Smart Agent Alliance
       </a>
       <p class="footer-text">Powered by Smart Agent Alliance</p>
@@ -407,7 +412,7 @@ export function generateAgentPageHTML(agent) {
   </div>
 
   <!-- Plausible Analytics -->
-  <script defer data-domain="saabuildingblocks.com" src="https://plausible.saabuildingblocks.com/js/script.js"></script>
+  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.js"></script>
 </body>
 </html>`;
 }
@@ -466,8 +471,11 @@ export async function onRequest(context) {
       return next();
     }
 
+    // Get site URL from request (works on any domain)
+    const siteUrl = `${url.protocol}//${url.host}`;
+
     // Generate and return the HTML page
-    const html = generateAgentPageHTML(agentData);
+    const html = generateAgentPageHTML(agentData, siteUrl);
 
     // If page is not active, pass through to 404
     if (!html) {
