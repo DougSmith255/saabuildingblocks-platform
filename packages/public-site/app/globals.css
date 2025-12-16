@@ -1597,6 +1597,13 @@ body.is-404-page footer {
   text-shadow: 0 0 8px rgba(0, 136, 82, 0.8), 0 0 16px rgba(0, 136, 82, 0.5);
 }
 
+/* Hide the WordPress-generated H2 inside TOC block - we use CSS ::before instead */
+/* This prevents duplicate "Table of Contents" headings */
+.blog-content .wp-block-rank-math-toc-block > h2,
+.blog-content #rank-math-toc > h2 {
+  display: none !important;
+}
+
 /* Add "Table of Contents" heading before TOC via CSS - H2 size with Amulya font */
 .blog-content .wp-block-rank-math-toc-block::before {
   content: "Table of Contents";
@@ -2907,6 +2914,19 @@ body.light-mode .breadcrumb-link {
 body.light-mode .breadcrumb-link:hover {
   color: #ffd700 !important; /* Same bright gold on hover */
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+}
+
+/* Light mode breadcrumb text (non-link parts) - off-black for readability */
+body.light-mode nav[aria-label="Breadcrumb navigation"] ol {
+  color: #2a2a2a;
+}
+
+body.light-mode nav[aria-label="Breadcrumb navigation"] ol li:last-child {
+  color: #2a2a2a;
+}
+
+body.light-mode nav[aria-label="Breadcrumb navigation"] svg {
+  color: rgba(42, 42, 42, 0.5);
 }
 
 /* ========================================
