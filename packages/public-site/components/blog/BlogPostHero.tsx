@@ -132,9 +132,9 @@ export function BlogPostHero({
 
       {/* Content container - centered via parent's justify-center */}
       {/* minHeight prevents CLS from font loading - reserves space for H1 + meta row */}
-      {/* pt-[70px] on mobile pushes content below toggle, md:pt-0 resets for desktop */}
+      {/* pt-[100px] on mobile pushes content below toggle, md:pt-0 resets for desktop */}
       <div
-        className="relative z-10 max-w-[1900px] w-full text-center pt-[70px] md:pt-0"
+        className="relative z-10 max-w-[1900px] w-full text-center pt-[100px] md:pt-0"
       >
         {/* Category badge - centered with 3D effect */}
         <div className="mb-6 flex justify-center" style={{ minHeight: '32px' }}>
