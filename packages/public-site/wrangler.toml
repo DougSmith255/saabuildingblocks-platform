@@ -1,0 +1,12 @@
+# Cloudflare Pages Configuration
+# This configures KV bindings for the Pages Functions
+
+name = "saabuildingblocks"
+compatibility_date = "2024-12-01"
+pages_build_output_dir = "out"
+
+# KV Namespace bindings for Pages Functions
+[[kv_namespaces]]
+binding = "AGENT_PAGES"
+id = "9f886b7add144cc480d7fe0f4ef5eb5e"
+preview_id = "a486b1fc0da947aca21e526bccf40537"

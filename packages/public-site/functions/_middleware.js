@@ -1,13 +1,14 @@
 /**
- * Cloudflare Pages Middleware: Performance Optimizations
+ * Cloudflare Pages Middleware: Performance Optimizations + Agent Pages
  *
  * This middleware runs on EVERY request before serving the page.
- * It adds performance optimizations at the edge that can't be done in static HTML:
+ * It handles:
  *
- * 1. Early Hints (103) - Tell browser to preload resources before HTML arrives
- * 2. Preconnect headers - Establish connections to third-party domains early
- * 3. Cache-Control optimization - Ensure proper caching behavior
- * 4. Security headers - Add security best practices
+ * 1. Dynamic Agent Pages - Serve agent pages from KV at /{slug}
+ * 2. Early Hints (103) - Tell browser to preload resources before HTML arrives
+ * 3. Preconnect headers - Establish connections to third-party domains early
+ * 4. Cache-Control optimization - Ensure proper caching behavior
+ * 5. Security headers - Add security best practices
  *
  * @see https://developers.cloudflare.com/pages/functions/middleware/
  */

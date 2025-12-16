@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,6 +88,19 @@ export async function POST(
       slug: updatedPage.slug,
       activatedAt: updatedPage.activated_at,
     });
+
+    // Sync to Cloudflare KV for edge delivery
+    syncAgentPageToKV(updatedPage as AgentPageKVData)
+      .then(result => {
+        if (!result.success) {
+          console.error('KV sync failed on activate:', result.error);
+        } else {
+          console.log('Agent page synced to KV:', updatedPage.slug);
+        }
+      })
+      .catch(err => {
+        console.error('KV sync error on activate:', err);
+      });
 
     return NextResponse.json({
       success: true,

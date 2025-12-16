@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { deleteAgentPageFromKV } from '@/lib/cloudflare-kv';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,6 +80,19 @@ export async function POST(
       slug: updatedPage.slug,
       deactivatedAt: new Date().toISOString(),
     });
+
+    // Remove from Cloudflare KV since page is no longer active
+    deleteAgentPageFromKV(updatedPage.slug)
+      .then(result => {
+        if (!result.success) {
+          console.error('KV delete failed on deactivate:', result.error);
+        } else {
+          console.log('Agent page removed from KV:', updatedPage.slug);
+        }
+      })
+      .catch(err => {
+        console.error('KV delete error on deactivate:', err);
+      });
 
     return NextResponse.json({
       success: true,

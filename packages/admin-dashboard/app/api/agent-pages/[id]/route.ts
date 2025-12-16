@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 
 export const dynamic = 'force-dynamic';
 
@@ -126,6 +127,15 @@ export async function PATCH(
     if (tiktok_url !== undefined) updates.tiktok_url = tiktok_url || null;
     if (linkedin_url !== undefined) updates.linkedin_url = linkedin_url || null;
 
+    // Get current page to check for slug changes
+    const { data: currentPage } = await supabase
+      .from('agent_pages')
+      .select('slug')
+      .eq('id', id)
+      .single();
+
+    const previousSlug = currentPage?.slug;
+
     // Handle slug update with uniqueness check
     if (slug !== undefined && slug !== '') {
       // Validate slug format
@@ -170,6 +180,18 @@ export async function PATCH(
         { status: updateError?.code === 'PGRST116' ? 404 : 500 }
       );
     }
+
+    // Sync to Cloudflare KV for edge delivery
+    // This runs async - we don't wait for it to complete
+    syncAgentPageToKV(updatedPage as AgentPageKVData, previousSlug || undefined)
+      .then(result => {
+        if (!result.success) {
+          console.error('KV sync failed:', result.error);
+        }
+      })
+      .catch(err => {
+        console.error('KV sync error:', err);
+      });
 
     return NextResponse.json({
       success: true,
