@@ -5,11 +5,15 @@ export const dynamic = 'force-dynamic';
  * User Profile Update API Route
  * PATCH /api/users/profile
  *
- * Allows users to update their username and password
+ * Allows users to update their profile including:
+ * - Display name (first/last)
+ * - Email address (also syncs to GoHighLevel)
+ * - Password
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { createGHLClient } from '@/lib/gohighlevel-client';
 import bcrypt from 'bcryptjs';
 
 // CORS headers for cross-origin requests
@@ -46,7 +50,7 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { userId, username, firstName, lastName, currentPassword, newPassword } = body;
+    const { userId, username, firstName, lastName, email, currentPassword, newPassword } = body;
 
     if (!userId) {
       return corsResponse(
@@ -62,7 +66,7 @@ export async function PATCH(request: NextRequest) {
     // Get current user data
     const { data: user, error: fetchError } = await supabase
       .from('users')
-      .select('id, username, first_name, last_name, password_hash')
+      .select('id, username, email, first_name, last_name, password_hash, gohighlevel_contact_id')
       .eq('id', userId)
       .single();
 
@@ -114,6 +118,45 @@ export async function PATCH(request: NextRequest) {
       }
 
       updates.username = username;
+    }
+
+    // Handle email change
+    let emailChanged = false;
+    if (email && email !== user.email) {
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return corsResponse(
+          {
+            success: false,
+            error: 'INVALID_EMAIL',
+            message: 'Please enter a valid email address',
+          },
+          400
+        );
+      }
+
+      // Check if email is already taken
+      const { data: existingUserWithEmail } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', email)
+        .neq('id', userId)
+        .single();
+
+      if (existingUserWithEmail) {
+        return corsResponse(
+          {
+            success: false,
+            error: 'EMAIL_TAKEN',
+            message: 'This email address is already in use',
+          },
+          400
+        );
+      }
+
+      updates.email = email;
+      emailChanged = true;
     }
 
     // Handle password change - no current password required since user is already authenticated
@@ -183,11 +226,27 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
+    // If email changed, sync to GoHighLevel
+    if (emailChanged && user.gohighlevel_contact_id) {
+      try {
+        const ghlClient = createGHLClient();
+        await ghlClient.updateContact(user.gohighlevel_contact_id, {
+          email: updates.email,
+        });
+        console.log('[Profile Update] Email synced to GoHighLevel for contact:', user.gohighlevel_contact_id);
+      } catch (ghlError) {
+        console.error('[Profile Update] Failed to sync email to GoHighLevel:', ghlError);
+        // Don't fail the whole request, just log the error
+        // The email was already updated in Supabase
+      }
+    }
+
     return corsResponse({
       success: true,
       message: 'Profile updated successfully',
       data: {
         username: updates.username || user.username,
+        email: updates.email || user.email,
         firstName: updates.first_name || user.first_name,
         lastName: updates.last_name || user.last_name,
       },

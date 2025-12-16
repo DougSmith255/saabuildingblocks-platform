@@ -119,6 +119,7 @@ export default function AgentPortal() {
   const [editFormData, setEditFormData] = useState({
     displayFirstName: '',
     displayLastName: '',
+    email: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -153,6 +154,7 @@ export default function AgentPortal() {
     setEditFormData({
       displayFirstName: user?.firstName || '',
       displayLastName: user?.lastName || '',
+      email: user?.email || '',
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
@@ -176,6 +178,16 @@ export default function AgentPortal() {
     e.preventDefault();
     setEditFormError('');
     setEditFormSuccess('');
+
+    // Validate email format if changed
+    const emailChanged = editFormData.email !== user?.email;
+    if (emailChanged && editFormData.email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(editFormData.email)) {
+        setEditFormError('Please enter a valid email address');
+        return;
+      }
+    }
 
     // Validate password fields if changing password
     if (editFormData.newPassword || editFormData.confirmPassword) {
@@ -201,6 +213,10 @@ export default function AgentPortal() {
       if (displayNameChanged) {
         updates.firstName = editFormData.displayFirstName;
         updates.lastName = editFormData.displayLastName;
+      }
+
+      if (emailChanged && editFormData.email) {
+        updates.email = editFormData.email;
       }
 
       if (editFormData.newPassword) {
@@ -229,16 +245,18 @@ export default function AgentPortal() {
 
       if (response.ok && data.success) {
         // Update local user data
+        const updatedUser = { ...user! };
         if (displayNameChanged) {
-          const updatedUser = {
-            ...user!,
-            firstName: editFormData.displayFirstName,
-            lastName: editFormData.displayLastName,
-            fullName: `${editFormData.displayFirstName} ${editFormData.displayLastName}`
-          };
-          setUser(updatedUser);
-          localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+          updatedUser.firstName = editFormData.displayFirstName;
+          updatedUser.lastName = editFormData.displayLastName;
+          updatedUser.fullName = `${editFormData.displayFirstName} ${editFormData.displayLastName}`;
         }
+        if (emailChanged && editFormData.email) {
+          updatedUser.email = editFormData.email;
+        }
+        setUser(updatedUser);
+        localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+
         setEditFormSuccess('Profile updated successfully!');
         setEditFormData(prev => ({
           ...prev,
@@ -1025,6 +1043,21 @@ export default function AgentPortal() {
                     placeholder="Last Name"
                   />
                 </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                  Email Address
+                </label>
+                <p className="text-xs text-[#e5e4dd]/50 mb-3">Used for login and communications</p>
+                <input
+                  type="email"
+                  value={editFormData.email}
+                  onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                  className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                  placeholder="your@email.com"
+                />
               </div>
 
               {/* Password Change Section */}
