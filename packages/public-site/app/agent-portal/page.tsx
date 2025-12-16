@@ -6,6 +6,28 @@ import Link from 'next/link';
 import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 
+// Shake animation styles
+const shakeKeyframes = `
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+}
+`;
+
+// Inject shake keyframes into document
+if (typeof document !== 'undefined') {
+  const styleId = 'portal-shake-animation';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = shakeKeyframes;
+    document.head.appendChild(style);
+  }
+}
+
 // User type from stored session
 interface UserData {
   id: string;
@@ -19,7 +41,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'attraction-page';
+type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages';
 
 interface NavItem {
   id: SectionId;
@@ -30,6 +52,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '⬡' },
   { id: 'start-here', label: 'Start Here', icon: '◈' },
+  { id: 'agent-pages', label: 'My SAA Pages', icon: '◇' },
   { id: 'calls', label: 'Team Calls', icon: '◉' },
   { id: 'templates', label: 'Templates', icon: '◫' },
   { id: 'courses', label: 'Elite Courses', icon: '◬' },
@@ -37,7 +60,6 @@ const navItems: NavItem[] = [
   { id: 'revshare', label: 'RevShare', icon: '◮' },
   { id: 'exp-links', label: 'eXp Links', icon: '◯' },
   { id: 'new-agents', label: 'New Agents', icon: '◠' },
-  { id: 'attraction-page', label: 'Attraction Page', icon: '◇' },
 ];
 
 // Dashboard quick access cards
@@ -55,15 +77,48 @@ const dashboardCards = [
 export default function AgentPortal() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
+  const [shakingItem, setShakingItem] = useState<SectionId | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [user, setUser] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [dashboardUploadStatus, setDashboardUploadStatus] = useState<string | null>(null);
+  const [dashboardUploadError, setDashboardUploadError] = useState<string | null>(null);
+  const [attractionUploadStatus, setAttractionUploadStatus] = useState<string | null>(null);
+  const [attractionUploadError, setAttractionUploadError] = useState<string | null>(null);
+  const [isUploadingDashboardImage, setIsUploadingDashboardImage] = useState(false);
+  const [contrastLevel, setContrastLevel] = useState(130); // Default 130%
+  const [originalImageFile, setOriginalImageFile] = useState<File | null>(null); // Store original for reprocessing
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Image crop/edit modal state
+  const [showImageEditor, setShowImageEditor] = useState(false);
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
+  const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null);
+  const [pendingBgRemovedUrl, setPendingBgRemovedUrl] = useState<string | null>(null);
+  const [isRemovingBackground, setIsRemovingBackground] = useState(false);
+  const [bgRemovalProgress, setBgRemovalProgress] = useState(0);
+  const [pendingImageDimensions, setPendingImageDimensions] = useState({ width: 0, height: 0 });
+  const [cropArea, setCropArea] = useState({ x: 0, y: 0, size: 100 }); // percentage-based
+  const [previewContrastLevel, setPreviewContrastLevel] = useState(130);
+  const imageEditorRef = useRef<HTMLDivElement>(null);
+
+  // Track which source triggered the image upload (for showing notifications in correct location)
+  const [uploadSource, setUploadSource] = useState<'dashboard' | 'agent-pages' | null>(null);
+
+  // Check if any popup is open (for header slide animation)
+  const isAnyPopupOpen = showEditProfile || showImageEditor;
+
+  // Calculate minimum crop size percentage based on 900px minimum
+  const MIN_CROP_PX = 900;
+  const minCropSizePercent = pendingImageDimensions.width > 0 && pendingImageDimensions.height > 0
+    ? Math.ceil((MIN_CROP_PX / Math.min(pendingImageDimensions.width, pendingImageDimensions.height)) * 100)
+    : 100;
 
   // Edit profile form state
   const [editFormData, setEditFormData] = useState({
-    username: '',
+    displayFirstName: '',
+    displayLastName: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -96,7 +151,8 @@ export default function AgentPortal() {
 
   const handleOpenEditProfile = () => {
     setEditFormData({
-      username: user?.username || '',
+      displayFirstName: user?.firstName || '',
+      displayLastName: user?.lastName || '',
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
@@ -123,10 +179,6 @@ export default function AgentPortal() {
 
     // Validate password fields if changing password
     if (editFormData.newPassword || editFormData.confirmPassword) {
-      if (!editFormData.currentPassword) {
-        setEditFormError('Current password is required to change password');
-        return;
-      }
       if (editFormData.newPassword !== editFormData.confirmPassword) {
         setEditFormError('New passwords do not match');
         return;
@@ -142,13 +194,16 @@ export default function AgentPortal() {
     try {
       const token = localStorage.getItem('agent_portal_token');
       const updates: any = {};
+      const displayNameChanged =
+        editFormData.displayFirstName !== user?.firstName ||
+        editFormData.displayLastName !== user?.lastName;
 
-      if (editFormData.username !== user?.username) {
-        updates.username = editFormData.username;
+      if (displayNameChanged) {
+        updates.firstName = editFormData.displayFirstName;
+        updates.lastName = editFormData.displayLastName;
       }
 
       if (editFormData.newPassword) {
-        updates.currentPassword = editFormData.currentPassword;
         updates.newPassword = editFormData.newPassword;
       }
 
@@ -174,8 +229,13 @@ export default function AgentPortal() {
 
       if (response.ok && data.success) {
         // Update local user data
-        if (updates.username) {
-          const updatedUser = { ...user!, username: updates.username };
+        if (displayNameChanged) {
+          const updatedUser = {
+            ...user!,
+            firstName: editFormData.displayFirstName,
+            lastName: editFormData.displayLastName,
+            fullName: `${editFormData.displayFirstName} ${editFormData.displayLastName}`
+          };
           setUser(updatedUser);
           localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
         }
@@ -197,94 +257,387 @@ export default function AgentPortal() {
     }
   };
 
+  // Helper function to apply B&W + contrast filter to an image
+  const applyBWContrastFilter = async (imageSource: File | Blob, contrast: number): Promise<Blob> => {
+    const img = new Image();
+    const imageUrl = URL.createObjectURL(imageSource);
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      URL.revokeObjectURL(imageUrl);
+      throw new Error('Could not get canvas context');
+    }
+
+    ctx.filter = `grayscale(100%) contrast(${contrast}%)`;
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(imageUrl);
+
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('Failed to create blob'));
+      }, 'image/png');
+    });
+  };
+
+  // Open image editor modal when user selects a file
   const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) {
-      console.log('No file selected or no user');
-      return;
-    }
+    try {
+      const file = e.target.files?.[0];
+      if (!file || !user) {
+        console.log('[ImageEditor] No file selected or no user');
+        return;
+      }
 
-    console.log('File selected:', {
-      name: file.name,
-      type: file.type,
-      size: file.size,
+      console.log('[ImageEditor] File selected:', file.name, file.type, file.size);
+
+      // Validate file type
+      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+
+      if (!file.type.startsWith('image/') && !validExtensions.includes(fileExtension)) {
+        setDashboardUploadError('Please select an image file (JPEG, PNG, GIF, or WebP)');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setDashboardUploadError('Image must be less than 5MB');
+        return;
+      }
+
+      // Validate image dimensions (minimum 900x900)
+      const MIN_DIMENSION = 900;
+      let imageDimensions: { width: number; height: number };
+
+      try {
+        imageDimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            console.log('[ImageEditor] Image loaded:', img.width, 'x', img.height);
+            resolve({ width: img.width, height: img.height });
+            URL.revokeObjectURL(img.src);
+          };
+          img.onerror = (err) => {
+            console.error('[ImageEditor] Image load error:', err);
+            reject(new Error('Failed to load image'));
+            URL.revokeObjectURL(img.src);
+          };
+          img.src = URL.createObjectURL(file);
+        });
+      } catch (dimError) {
+        console.error('[ImageEditor] Dimension check failed:', dimError);
+        setDashboardUploadError('Failed to load image. Please try another file.');
+        return;
+      }
+
+      if (imageDimensions.width < MIN_DIMENSION || imageDimensions.height < MIN_DIMENSION) {
+        setDashboardUploadError(`Image must be at least ${MIN_DIMENSION}x${MIN_DIMENSION} pixels. Your image is ${imageDimensions.width}x${imageDimensions.height}.`);
+        return;
+      }
+
+      // Open editor modal with the image
+      console.log('[ImageEditor] Opening editor modal from dashboard');
+      setUploadSource('dashboard'); // Track that this came from dashboard
+      setPendingImageFile(file);
+      const originalUrl = URL.createObjectURL(file);
+      setPendingImageUrl(originalUrl);
+      setPendingBgRemovedUrl(null); // Reset bg removed preview
+      setPendingImageDimensions(imageDimensions);
+      setPreviewContrastLevel(130);
+      setCropArea({ x: 0, y: 0, size: 100 });
+      setShowImageEditor(true);
+      setDashboardUploadError(null);
+
+      // Start background removal for preview
+      setIsRemovingBackground(true);
+      setBgRemovalProgress(0);
+      try {
+        const { removeBackground } = await import('@imgly/background-removal');
+        const bgRemovedBlob = await removeBackground(file, {
+          progress: (key, current, total) => {
+            if (key === 'compute:inference') {
+              setBgRemovalProgress(Math.round((current / total) * 100));
+            }
+          },
+        });
+        const bgRemovedUrl = URL.createObjectURL(bgRemovedBlob);
+        setPendingBgRemovedUrl(bgRemovedUrl);
+      } catch (bgErr) {
+        console.error('[ImageEditor] Background removal failed:', bgErr);
+        // Continue without bg removal preview - will still work on confirm
+      } finally {
+        setIsRemovingBackground(false);
+      }
+    } catch (error) {
+      console.error('[ImageEditor] Unexpected error:', error);
+      setDashboardUploadError('An unexpected error occurred. Please try again.');
+    }
+  };
+
+  // Crop image using canvas
+  const cropImage = async (file: File, cropX: number, cropY: number, cropSize: number): Promise<Blob> => {
+    const img = new Image();
+    const imageUrl = URL.createObjectURL(file);
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = reject;
+      img.src = imageUrl;
     });
 
-    // Validate file type - be more permissive and check both type and extension
-    const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+    URL.revokeObjectURL(imageUrl);
 
-    if (!file.type.startsWith('image/') && !validExtensions.includes(fileExtension)) {
-      alert('Please select an image file (JPEG, PNG, GIF, or WebP)');
-      return;
-    }
+    // Calculate crop dimensions based on percentages
+    const minDim = Math.min(img.width, img.height);
+    const actualSize = (cropSize / 100) * minDim;
+    const actualX = (cropX / 100) * (img.width - actualSize);
+    const actualY = (cropY / 100) * (img.height - actualSize);
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Image must be less than 5MB');
-      return;
-    }
+    const canvas = document.createElement('canvas');
+    canvas.width = actualSize;
+    canvas.height = actualSize;
+    const ctx = canvas.getContext('2d');
 
-    // Validate image dimensions (minimum 900x900 for high-quality display)
-    const MIN_DIMENSION = 900;
-    const imageDimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => {
-        resolve({ width: img.width, height: img.height });
-        URL.revokeObjectURL(img.src);
-      };
-      img.onerror = () => {
-        reject(new Error('Failed to load image'));
-        URL.revokeObjectURL(img.src);
-      };
-      img.src = URL.createObjectURL(file);
+    if (!ctx) throw new Error('Could not get canvas context');
+
+    ctx.drawImage(img, actualX, actualY, actualSize, actualSize, 0, 0, actualSize, actualSize);
+
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('Failed to create blob'));
+      }, 'image/png');
     });
+  };
 
-    console.log('Image dimensions:', imageDimensions);
+  // Process and upload the edited image
+  const handleConfirmImageEdit = async () => {
+    if (!pendingImageFile || !user) return;
 
-    if (imageDimensions.width < MIN_DIMENSION || imageDimensions.height < MIN_DIMENSION) {
-      alert(`Image must be at least ${MIN_DIMENSION}x${MIN_DIMENSION} pixels for high-quality display on large screens.\n\nYour image is ${imageDimensions.width}x${imageDimensions.height} pixels.`);
-      return;
-    }
+    // Helper to set status based on upload source
+    const setStatus = (status: string | null) => {
+      if (uploadSource === 'agent-pages') {
+        setAttractionUploadStatus(status);
+      } else {
+        setDashboardUploadStatus(status);
+      }
+    };
+
+    const setError = (error: string | null) => {
+      if (uploadSource === 'agent-pages') {
+        setAttractionUploadError(error);
+      } else {
+        setDashboardUploadError(error);
+      }
+    };
+
+    setShowImageEditor(false);
+    setIsUploadingDashboardImage(true);
+    setError(null);
+    setStatus(null);
+
+    // Store original file and contrast level
+    setOriginalImageFile(pendingImageFile);
+    setContrastLevel(previewContrastLevel);
 
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('userId', user.id);
-
       const token = localStorage.getItem('agent_portal_token');
 
-      console.log('Uploading to API...');
-      console.log('User ID:', user.id);
-      console.log('Token exists:', !!token);
+      // Step 1: Crop the image
+      setStatus('Cropping image...');
+      const croppedBlob = await cropImage(pendingImageFile, cropArea.x, cropArea.y, cropArea.size);
 
-      const response = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
+      // Step 2: Remove background
+      setStatus('Removing background...');
+      const { removeBackground } = await import('@imgly/background-removal');
+
+      const bgRemovedBlob = await removeBackground(croppedBlob, {
+        progress: (key, current, total) => {
+          if (key === 'compute:inference') {
+            const percent = Math.round((current / total) * 100);
+            setStatus(`Removing background... ${percent}%`);
+          }
         },
-        body: formData,
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response ok:', response.ok);
+      // Step 3: Apply B&W + contrast to the cutout
+      setStatus('Applying filters...');
+      const processedBlob = await applyBWContrastFilter(bgRemovedBlob, previewContrastLevel);
 
-      const data = await response.json();
-      console.log('Response data:', data);
+      // Step 4: Upload to dashboard
+      setStatus('Uploading...');
+      const dashboardFormData = new FormData();
+      dashboardFormData.append('file', processedBlob, 'profile.png');
+      dashboardFormData.append('userId', user.id);
 
-      if (response.ok && data.success) {
-        const updatedUser = { ...user, profilePictureUrl: data.url };
-        setUser(updatedUser);
-        localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
-        alert('Profile picture updated successfully!');
-      } else {
-        console.error('Profile picture upload failed:', data);
-        alert(data.message || data.error || 'Failed to upload profile picture. Please try again.');
+      const dashboardResponse = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: dashboardFormData,
+      });
+
+      if (!dashboardResponse.ok) {
+        const errorData = await dashboardResponse.json();
+        throw new Error(errorData.message || 'Failed to upload');
       }
+
+      const dashboardData = await dashboardResponse.json();
+      const updatedUser = { ...user, profilePictureUrl: dashboardData.url };
+      setUser(updatedUser);
+      localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+
+      // Step 5: Upload same to attraction page
+      setStatus('Syncing to attraction page...');
+      const pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (pageResponse.ok) {
+        const currentPageData = await pageResponse.json();
+        if (currentPageData.page?.id) {
+          const attractionFormData = new FormData();
+          attractionFormData.append('file', processedBlob, 'profile.png');
+          attractionFormData.append('pageId', currentPageData.page.id);
+
+          const uploadResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-image', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: attractionFormData,
+          });
+
+          // Update local pageData state if we're in the attraction page section
+          if (uploadResponse.ok) {
+            const uploadResult = await uploadResponse.json();
+            if (uploadResult.data?.url) {
+              // Dispatch a custom event to update the AgentPagesSection's pageData
+              window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
+                detail: { url: uploadResult.data.url }
+              }));
+            }
+          }
+        }
+      }
+
+      setStatus('Profile picture updated!');
+      setTimeout(() => setStatus(null), 3000);
     } catch (err) {
       console.error('Profile picture upload error:', err);
-      alert('Failed to upload profile picture. Please check your connection and try again.\n\nError: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      setError(err instanceof Error ? err.message : 'Failed to upload');
+      setStatus(null);
+    } finally {
+      setIsUploadingDashboardImage(false);
+      setUploadSource(null); // Reset upload source
+      // Clean up
+      if (pendingImageUrl) URL.revokeObjectURL(pendingImageUrl);
+      if (pendingBgRemovedUrl) URL.revokeObjectURL(pendingBgRemovedUrl);
+      setPendingImageFile(null);
+      setPendingImageUrl(null);
+      setPendingBgRemovedUrl(null);
+    }
+  };
+
+  // Cancel image edit
+  const handleCancelImageEdit = () => {
+    setShowImageEditor(false);
+    if (pendingImageUrl) URL.revokeObjectURL(pendingImageUrl);
+    if (pendingBgRemovedUrl) URL.revokeObjectURL(pendingBgRemovedUrl);
+    setPendingImageFile(null);
+    setPendingImageUrl(null);
+    setPendingBgRemovedUrl(null);
+    setIsRemovingBackground(false);
+    setBgRemovalProgress(0);
+  };
+
+  // Re-process existing images with new contrast level
+  const handleReprocessImages = async () => {
+    if (!originalImageFile) {
+      setDashboardUploadError('Please upload a new image first to adjust contrast. The original image is only available during the current session.');
+      return;
+    }
+
+    setIsUploadingDashboardImage(true);
+    setDashboardUploadError(null);
+    setDashboardUploadStatus(null);
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+
+      // Step 1: Remove background from stored original
+      setDashboardUploadStatus('Removing background...');
+      const { removeBackground } = await import('@imgly/background-removal');
+
+      const bgRemovedBlob = await removeBackground(originalImageFile, {
+        progress: (key, current, total) => {
+          if (key === 'compute:inference') {
+            const percent = Math.round((current / total) * 100);
+            setDashboardUploadStatus(`Removing background... ${percent}%`);
+          }
+        },
+      });
+
+      // Step 2: Apply new B&W + contrast
+      setDashboardUploadStatus('Applying new contrast level...');
+      const processedBlob = await applyBWContrastFilter(bgRemovedBlob, contrastLevel);
+
+      // Step 3: Upload to dashboard
+      setDashboardUploadStatus('Updating dashboard...');
+      const dashboardFormData = new FormData();
+      dashboardFormData.append('file', processedBlob, 'profile.png');
+      dashboardFormData.append('userId', user!.id);
+
+      const dashboardResponse = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: dashboardFormData,
+      });
+
+      if (dashboardResponse.ok) {
+        const dashboardData = await dashboardResponse.json();
+        const updatedUser = { ...user!, profilePictureUrl: dashboardData.url };
+        setUser(updatedUser);
+        localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
+      }
+
+      // Step 4: Upload same to attraction page
+      setDashboardUploadStatus('Syncing to attraction page...');
+      const pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user!.id}`, {
+        headers: { 'Authorization': `Bearer ${token}` },
+      });
+
+      if (pageResponse.ok) {
+        const pageData = await pageResponse.json();
+        if (pageData.page?.id) {
+          const attractionFormData = new FormData();
+          attractionFormData.append('file', processedBlob, 'profile.png');
+          attractionFormData.append('pageId', pageData.page.id);
+
+          await fetch('https://saabuildingblocks.com/api/agent-pages/upload-image', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: attractionFormData,
+          });
+        }
+      }
+
+      setDashboardUploadStatus('Images updated successfully!');
+      setTimeout(() => setDashboardUploadStatus(null), 3000);
+    } catch (err) {
+      console.error('Reprocess images error:', err);
+      setDashboardUploadError(err instanceof Error ? err.message : 'Failed to reprocess images');
+      setDashboardUploadStatus(null);
+    } finally {
+      setIsUploadingDashboardImage(false);
     }
   };
 
@@ -308,9 +661,15 @@ export default function AgentPortal() {
   return (
     <main id="main-content" className="min-h-screen">
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
+      {/* Slides up off screen when any popup is open */}
       <header
-        className="fixed top-0 left-0 right-0 z-[10010]"
-        style={{ background: 'transparent', overflow: 'visible' }}
+        className="fixed left-0 right-0 z-[10010] transition-transform duration-300 ease-in-out"
+        style={{
+          background: 'transparent',
+          overflow: 'visible',
+          transform: isAnyPopupOpen ? 'translateY(-100%)' : 'translateY(0)',
+          top: 0,
+        }}
       >
         <div
           className="header-bg-container"
@@ -424,7 +783,7 @@ export default function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[100px] h-[100px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
                     title="Click to change profile picture"
                   >
                     {user.profilePictureUrl ? (
@@ -455,6 +814,19 @@ export default function AgentPortal() {
                   </h3>
                   <p className="text-[#e5e4dd]/60 text-sm">{user.email}</p>
 
+                  {/* Dashboard Upload Status */}
+                  {dashboardUploadStatus && (
+                    <div className="mt-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                      <span className="truncate">{dashboardUploadStatus}</span>
+                    </div>
+                  )}
+                  {dashboardUploadError && (
+                    <div className="mt-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs">
+                      {dashboardUploadError}
+                    </div>
+                  )}
+
                   {/* Edit Profile Button */}
                   <button
                     onClick={handleOpenEditProfile}
@@ -476,17 +848,21 @@ export default function AgentPortal() {
                   onClick={() => {
                     setActiveSection(item.id);
                     setSidebarOpen(false);
+                    // Trigger shake animation
+                    setShakingItem(item.id);
+                    setTimeout(() => setShakingItem(null), 300);
                   }}
                   className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-300
+                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200
                     ${activeSection === item.id
                       ? 'bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/30'
                       : 'text-body hover:text-[#e5e4dd] hover:bg-white/5 border border-transparent'
                     }
                   `}
+                  style={shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : undefined}
                 >
                   <span className="text-lg">{item.icon}</span>
-                  <span className="font-medium">{item.label}</span>
+                  <span className="font-medium font-taskor text-sm">{item.label}</span>
                 </button>
               ))}
               </nav>
@@ -524,8 +900,33 @@ export default function AgentPortal() {
             {/* New Agents */}
             {activeSection === 'new-agents' && <NewAgentsSection />}
 
-            {/* Attraction Page */}
-            {activeSection === 'attraction-page' && <AttractionPageSection user={user} />}
+            {/* My Agent Pages */}
+            {activeSection === 'agent-pages' && (
+              <AgentPagesSection
+                user={user}
+                setUser={setUser}
+                contrastLevel={contrastLevel}
+                setContrastLevel={setContrastLevel}
+                applyBWContrastFilter={applyBWContrastFilter}
+                originalImageFile={originalImageFile}
+                setOriginalImageFile={setOriginalImageFile}
+                setPendingImageFile={setPendingImageFile}
+                setPendingImageUrl={setPendingImageUrl}
+                setPendingImageDimensions={setPendingImageDimensions}
+                setPreviewContrastLevel={setPreviewContrastLevel}
+                setCropArea={setCropArea}
+                setShowImageEditor={setShowImageEditor}
+                setDashboardUploadStatus={setDashboardUploadStatus}
+                setPendingBgRemovedUrl={setPendingBgRemovedUrl}
+                setIsRemovingBackground={setIsRemovingBackground}
+                setBgRemovalProgress={setBgRemovalProgress}
+                setUploadSource={setUploadSource}
+                attractionUploadStatus={attractionUploadStatus}
+                attractionUploadError={attractionUploadError}
+                setAttractionUploadStatus={setAttractionUploadStatus}
+                setAttractionUploadError={setAttractionUploadError}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -564,7 +965,7 @@ export default function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[116px] h-[116px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
+                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
                 >
                   {user.profilePictureUrl ? (
                     <img
@@ -587,39 +988,48 @@ export default function AgentPortal() {
                   </div>
                 </button>
                 <p className="mt-2 text-sm text-[#e5e4dd]/60">Click to change photo</p>
+
+                {/* Dashboard Upload Status in Modal */}
+                {dashboardUploadStatus && (
+                  <div className="mt-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs flex items-center gap-2 w-full">
+                    <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                    <span className="truncate">{dashboardUploadStatus}</span>
+                  </div>
+                )}
+                {dashboardUploadError && (
+                  <div className="mt-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs w-full">
+                    {dashboardUploadError}
+                  </div>
+                )}
               </div>
 
-              {/* Username */}
+              {/* Display Name */}
               <div>
                 <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                  Username
+                  Display Name
                 </label>
-                <input
-                  type="text"
-                  value={editFormData.username}
-                  onChange={(e) => setEditFormData({ ...editFormData, username: e.target.value })}
-                  className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                  placeholder="Username"
-                />
+                <p className="text-xs text-[#e5e4dd]/50 mb-3">This name will appear on your Agent Attraction Page</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    value={editFormData.displayFirstName}
+                    onChange={(e) => setEditFormData({ ...editFormData, displayFirstName: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                    placeholder="First Name"
+                  />
+                  <input
+                    type="text"
+                    value={editFormData.displayLastName}
+                    onChange={(e) => setEditFormData({ ...editFormData, displayLastName: e.target.value })}
+                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                    placeholder="Last Name"
+                  />
+                </div>
               </div>
 
               {/* Password Change Section */}
               <div className="pt-4 border-t border-white/10">
                 <p className="text-sm font-medium text-[#e5e4dd]/80 mb-4">Change Password (optional)</p>
-
-                {/* Current Password */}
-                <div className="mb-4">
-                  <label className="block text-sm text-[#e5e4dd]/60 mb-2">
-                    Current Password
-                  </label>
-                  <input
-                    type="password"
-                    value={editFormData.currentPassword}
-                    onChange={(e) => setEditFormData({ ...editFormData, currentPassword: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                    placeholder="Enter current password"
-                  />
-                </div>
 
                 {/* New Password */}
                 <div className="mb-4">
@@ -631,7 +1041,7 @@ export default function AgentPortal() {
                     value={editFormData.newPassword}
                     onChange={(e) => setEditFormData({ ...editFormData, newPassword: e.target.value })}
                     className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                    placeholder="Enter new password"
+                    placeholder="Enter new password (min 8 characters)"
                   />
                 </div>
 
@@ -680,6 +1090,232 @@ export default function AgentPortal() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Image Editor Modal */}
+      {showImageEditor && pendingImageUrl && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+          onClick={handleCancelImageEdit}
+        >
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+
+          {/* Modal */}
+          <div
+            className="relative w-full max-w-lg bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10">
+              <h2 className="text-lg font-semibold text-[#ffd700]">Edit Profile Picture</h2>
+              <button
+                onClick={handleCancelImageEdit}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Image Preview with Crop */}
+            <div className="p-4">
+              {/* Background removal progress indicator */}
+              {isRemovingBackground && (
+                <div className="mb-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  <span>Removing background... {bgRemovalProgress}%</span>
+                </div>
+              )}
+
+              <div
+                ref={imageEditorRef}
+                className="relative mx-auto rounded-lg overflow-hidden select-none"
+                style={{
+                  maxWidth: '400px',
+                  aspectRatio: '1',
+                  // Checkerboard pattern to show transparency
+                  background: pendingBgRemovedUrl
+                    ? 'repeating-conic-gradient(#2a2a2a 0% 25%, #1a1a1a 0% 50%) 50% / 20px 20px'
+                    : '#000',
+                  touchAction: 'none', // Prevent scroll while dragging on mobile
+                }}
+              >
+                {/* Image with B&W + contrast preview - show bg removed version when available */}
+                <img
+                  src={pendingBgRemovedUrl || pendingImageUrl}
+                  alt="Preview"
+                  className="w-full h-full object-cover"
+                  style={{
+                    filter: `grayscale(100%) contrast(${previewContrastLevel}%)`,
+                  }}
+                  draggable={false}
+                />
+
+                {/* Crop overlay - darkens area outside the crop */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background: `
+                      linear-gradient(to right, rgba(0,0,0,0.7) ${cropArea.x}%, transparent ${cropArea.x}%),
+                      linear-gradient(to left, rgba(0,0,0,0.7) ${100 - cropArea.x - cropArea.size}%, transparent ${100 - cropArea.x - cropArea.size}%),
+                      linear-gradient(to bottom, rgba(0,0,0,0.7) ${cropArea.y}%, transparent ${cropArea.y}%),
+                      linear-gradient(to top, rgba(0,0,0,0.7) ${100 - cropArea.y - cropArea.size}%, transparent ${100 - cropArea.y - cropArea.size}%)
+                    `,
+                  }}
+                />
+
+                {/* Draggable crop border indicator - square for agent page display */}
+                <div
+                  className="absolute border-2 border-[#ffd700] cursor-move"
+                  style={{
+                    left: `${cropArea.x}%`,
+                    top: `${cropArea.y}%`,
+                    width: `${cropArea.size}%`,
+                    height: `${cropArea.size}%`,
+                  }}
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    const containerRect = imageEditorRef.current?.getBoundingClientRect();
+                    if (!containerRect) return;
+
+                    const startX = e.clientX;
+                    const startY = e.clientY;
+                    const startCropX = cropArea.x;
+                    const startCropY = cropArea.y;
+
+                    const handleMouseMove = (moveEvent: MouseEvent) => {
+                      const deltaX = ((moveEvent.clientX - startX) / containerRect.width) * 100;
+                      const deltaY = ((moveEvent.clientY - startY) / containerRect.height) * 100;
+                      const maxPos = 100 - cropArea.size;
+
+                      setCropArea(prev => ({
+                        ...prev,
+                        x: Math.max(0, Math.min(maxPos, startCropX + deltaX)),
+                        y: Math.max(0, Math.min(maxPos, startCropY + deltaY)),
+                      }));
+                    };
+
+                    const handleMouseUp = () => {
+                      document.removeEventListener('mousemove', handleMouseMove);
+                      document.removeEventListener('mouseup', handleMouseUp);
+                    };
+
+                    document.addEventListener('mousemove', handleMouseMove);
+                    document.addEventListener('mouseup', handleMouseUp);
+                  }}
+                  onTouchStart={(e) => {
+                    const touch = e.touches[0];
+                    const containerRect = imageEditorRef.current?.getBoundingClientRect();
+                    if (!containerRect || !touch) return;
+
+                    const startX = touch.clientX;
+                    const startY = touch.clientY;
+                    const startCropX = cropArea.x;
+                    const startCropY = cropArea.y;
+
+                    const handleTouchMove = (moveEvent: TouchEvent) => {
+                      const moveTouch = moveEvent.touches[0];
+                      if (!moveTouch) return;
+
+                      const deltaX = ((moveTouch.clientX - startX) / containerRect.width) * 100;
+                      const deltaY = ((moveTouch.clientY - startY) / containerRect.height) * 100;
+                      const maxPos = 100 - cropArea.size;
+
+                      setCropArea(prev => ({
+                        ...prev,
+                        x: Math.max(0, Math.min(maxPos, startCropX + deltaX)),
+                        y: Math.max(0, Math.min(maxPos, startCropY + deltaY)),
+                      }));
+                    };
+
+                    const handleTouchEnd = () => {
+                      document.removeEventListener('touchmove', handleTouchMove);
+                      document.removeEventListener('touchend', handleTouchEnd);
+                    };
+
+                    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    document.addEventListener('touchend', handleTouchEnd);
+                  }}
+                >
+                  {/* Drag handle indicator in center */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/50 flex items-center justify-center">
+                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-xs text-[#e5e4dd]/50 mt-3 text-center">
+                Drag the crop area to reposition • Background removed automatically
+              </p>
+
+              {/* Crop Size Slider */}
+              <div className="mt-4">
+                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                  Zoom: {cropArea.size}%
+                  {minCropSizePercent < 100 && (
+                    <span className="text-xs text-[#e5e4dd]/50 ml-2">(min {minCropSizePercent}% for 900px)</span>
+                  )}
+                </label>
+                <input
+                  type="range"
+                  min={minCropSizePercent}
+                  max="100"
+                  value={cropArea.size}
+                  onChange={(e) => {
+                    const newSize = Number(e.target.value);
+                    // Adjust position to keep crop within bounds
+                    const maxPos = 100 - newSize;
+                    setCropArea({
+                      x: Math.min(cropArea.x, maxPos),
+                      y: Math.min(cropArea.y, maxPos),
+                      size: newSize,
+                    });
+                  }}
+                  className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
+                />
+              </div>
+
+              {/* Contrast Slider */}
+              <div className="mt-4 pt-4 border-t border-white/10">
+                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                  Contrast: {previewContrastLevel}%
+                </label>
+                <input
+                  type="range"
+                  min="80"
+                  max="200"
+                  value={previewContrastLevel}
+                  onChange={(e) => setPreviewContrastLevel(Number(e.target.value))}
+                  className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
+                />
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 p-4 border-t border-white/10">
+              <button
+                type="button"
+                onClick={handleCancelImageEdit}
+                className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmImageEdit}
+                className="flex-1 px-4 py-3 rounded-lg text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] transition-colors"
+              >
+                Confirm & Upload
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -1171,8 +1807,60 @@ function NewAgentsSection() {
 }
 
 // ============================================================================
-// Attraction Page Section
+// My Agent Pages Section
 // ============================================================================
+
+// Curated icon set for link buttons (Lucide icon names)
+const LINK_ICONS = [
+  { name: 'Home', label: 'Home', path: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10' },
+  { name: 'Building', label: 'Building', path: 'M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2 M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2 M10 6h4 M10 10h4 M10 14h4 M10 18h4' },
+  { name: 'MapPin', label: 'Location', path: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z M12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6z' },
+  { name: 'Phone', label: 'Phone', path: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' },
+  { name: 'Mail', label: 'Email', path: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' },
+  { name: 'Calendar', label: 'Calendar', path: 'M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z M16 2v4 M8 2v4 M3 10h18' },
+  { name: 'Clock', label: 'Clock', path: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 6v6l4 2' },
+  { name: 'Video', label: 'Video', path: 'M23 7l-7 5 7 5V7z M14 5H3a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z' },
+  { name: 'Camera', label: 'Camera', path: 'M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z M12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
+  { name: 'FileText', label: 'Document', path: 'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z M14 2v6h6 M16 13H8 M16 17H8 M10 9H8' },
+  { name: 'Download', label: 'Download', path: 'M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M7 10l5 5 5-5 M12 15V3' },
+  { name: 'ExternalLink', label: 'External Link', path: 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6 M15 3h6v6 M10 14L21 3' },
+  { name: 'Globe', label: 'Website', path: 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M2 12h20 M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z' },
+  { name: 'User', label: 'User', path: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2 M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z' },
+  { name: 'Users', label: 'Team', path: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75' },
+  { name: 'Heart', label: 'Favorites', path: 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z' },
+  { name: 'Star', label: 'Star', path: 'M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z' },
+  { name: 'Award', label: 'Award', path: 'M12 15a7 7 0 1 0 0-14 7 7 0 0 0 0 14z M8.21 13.89L7 23l5-3 5 3-1.21-9.12' },
+  { name: 'TrendingUp', label: 'Growth', path: 'M23 6l-9.5 9.5-5-5L1 18 M17 6h6v6' },
+  { name: 'DollarSign', label: 'Dollar', path: 'M12 1v22 M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+  { name: 'Key', label: 'Key', path: 'M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4' },
+  { name: 'Search', label: 'Search', path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.35-4.35' },
+  { name: 'MessageCircle', label: 'Message', path: 'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z' },
+  { name: 'Send', label: 'Send', path: 'M22 2L11 13 M22 2l-7 20-4-9-9-4 20-7z' },
+  { name: 'Bookmark', label: 'Bookmark', path: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
+];
+
+interface LinksSettings {
+  accentColor: string;
+  iconStyle: 'light' | 'dark';
+  font: 'synonym' | 'taskor';
+  bio: string;
+}
+
+const DEFAULT_LINKS_SETTINGS: LinksSettings = {
+  accentColor: '#ffd700',
+  iconStyle: 'light',
+  font: 'synonym',
+  bio: '',
+};
+
+interface CustomLink {
+  id: string;
+  label: string;
+  url: string;
+  icon?: string;
+  order: number;
+}
+
 interface AgentPageData {
   id: string;
   slug: string;
@@ -1182,29 +1870,82 @@ interface AgentPageData {
   phone: string | null;
   show_phone: boolean;
   phone_text_only: boolean;
+  profile_image_url: string | null;
   facebook_url: string | null;
   instagram_url: string | null;
   twitter_url: string | null;
   youtube_url: string | null;
   tiktok_url: string | null;
   linkedin_url: string | null;
+  custom_links: CustomLink[];
+  links_settings: LinksSettings;
   activated: boolean;
   activated_at: string | null;
 }
 
-function AttractionPageSection({ user }: { user: UserData }) {
+interface AgentPagesSectionProps {
+  user: UserData;
+  setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
+  contrastLevel: number;
+  setContrastLevel: React.Dispatch<React.SetStateAction<number>>;
+  applyBWContrastFilter: (imageSource: File | Blob, contrast: number) => Promise<Blob>;
+  originalImageFile: File | null;
+  setOriginalImageFile: React.Dispatch<React.SetStateAction<File | null>>;
+  // Image editor modal props
+  setPendingImageFile: React.Dispatch<React.SetStateAction<File | null>>;
+  setPendingImageUrl: React.Dispatch<React.SetStateAction<string | null>>;
+  setPendingImageDimensions: React.Dispatch<React.SetStateAction<{ width: number; height: number }>>;
+  setPreviewContrastLevel: React.Dispatch<React.SetStateAction<number>>;
+  setCropArea: React.Dispatch<React.SetStateAction<{ x: number; y: number; size: number }>>;
+  setShowImageEditor: React.Dispatch<React.SetStateAction<boolean>>;
+  setDashboardUploadStatus: React.Dispatch<React.SetStateAction<string | null>>;
+  setPendingBgRemovedUrl: React.Dispatch<React.SetStateAction<string | null>>;
+  setIsRemovingBackground: React.Dispatch<React.SetStateAction<boolean>>;
+  setBgRemovalProgress: React.Dispatch<React.SetStateAction<number>>;
+  setUploadSource: React.Dispatch<React.SetStateAction<'dashboard' | 'agent-pages' | null>>;
+  attractionUploadStatus: string | null;
+  attractionUploadError: string | null;
+  setAttractionUploadStatus: React.Dispatch<React.SetStateAction<string | null>>;
+  setAttractionUploadError: React.Dispatch<React.SetStateAction<string | null>>;
+}
+
+function AgentPagesSection({
+  user,
+  setUser,
+  contrastLevel,
+  setContrastLevel,
+  applyBWContrastFilter,
+  originalImageFile,
+  setOriginalImageFile,
+  setPendingImageFile,
+  setPendingImageUrl,
+  setPendingImageDimensions,
+  setPreviewContrastLevel,
+  setCropArea,
+  setShowImageEditor,
+  setDashboardUploadStatus,
+  setPendingBgRemovedUrl,
+  setIsRemovingBackground,
+  setBgRemovalProgress,
+  setUploadSource,
+  attractionUploadStatus,
+  attractionUploadError,
+  setAttractionUploadStatus,
+  setAttractionUploadError,
+}: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const attractionFileInputRef = useRef<HTMLInputElement>(null);
 
   // Form state
   const [formData, setFormData] = useState({
     display_first_name: '',
     display_last_name: '',
-    slug: '',
     phone: '',
     show_phone: false,
     phone_text_only: false,
@@ -1215,6 +1956,23 @@ function AttractionPageSection({ user }: { user: UserData }) {
     tiktok_url: '',
     linkedin_url: '',
   });
+
+  // Custom links state
+  const [customLinks, setCustomLinks] = useState<CustomLink[]>([]);
+  const [newLinkLabel, setNewLinkLabel] = useState('');
+  const [newLinkUrl, setNewLinkUrl] = useState('');
+  const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
+  const [showIconPicker, setShowIconPicker] = useState(false);
+
+  // Links page global settings state
+  const [linksSettings, setLinksSettings] = useState<LinksSettings>(DEFAULT_LINKS_SETTINGS);
+
+  // Auto-generate slug from display name
+  const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/--+/g, '-')
+    .replace(/^-|-$/g, '');
 
   // Fetch agent page data
   useEffect(() => {
@@ -1234,7 +1992,6 @@ function AttractionPageSection({ user }: { user: UserData }) {
             setFormData({
               display_first_name: data.page.display_first_name || '',
               display_last_name: data.page.display_last_name || '',
-              slug: data.page.slug || '',
               phone: data.page.phone || '',
               show_phone: data.page.show_phone || false,
               phone_text_only: data.page.phone_text_only || false,
@@ -1245,6 +2002,8 @@ function AttractionPageSection({ user }: { user: UserData }) {
               tiktok_url: data.page.tiktok_url || '',
               linkedin_url: data.page.linkedin_url || '',
             });
+            setCustomLinks(data.page.custom_links || []);
+            setLinksSettings(data.page.links_settings || DEFAULT_LINKS_SETTINGS);
           }
         } else if (response.status === 404) {
           // No page exists yet - that's okay, they'll need to be added via GHL webhook
@@ -1262,6 +2021,20 @@ function AttractionPageSection({ user }: { user: UserData }) {
 
     fetchPageData();
   }, [user.id]);
+
+  // Listen for image update events from the parent component
+  useEffect(() => {
+    const handleImageUpdate = (event: CustomEvent<{ url: string }>) => {
+      if (pageData) {
+        setPageData(prev => prev ? { ...prev, profile_image_url: event.detail.url } : null);
+      }
+    };
+
+    window.addEventListener('agent-page-image-updated', handleImageUpdate as EventListener);
+    return () => {
+      window.removeEventListener('agent-page-image-updated', handleImageUpdate as EventListener);
+    };
+  }, [pageData]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -1284,7 +2057,12 @@ function AttractionPageSection({ user }: { user: UserData }) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          slug: generatedSlug, // Auto-generated from display name
+          custom_links: customLinks,
+          links_settings: linksSettings,
+        }),
       });
 
       if (response.ok) {
@@ -1307,11 +2085,32 @@ function AttractionPageSection({ user }: { user: UserData }) {
   const handleActivate = async () => {
     if (!pageData) return;
 
+    // Check for profile image
+    if (!pageData.profile_image_url && !user.profilePictureUrl) {
+      setError('Please upload a profile image before activating your page.');
+      return;
+    }
+
     setIsSaving(true);
     setError(null);
 
     try {
       const token = localStorage.getItem('agent_portal_token');
+
+      // If using user's profile picture, sync it to agent page first
+      if (!pageData.profile_image_url && user.profilePictureUrl) {
+        await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            profile_image_url: user.profilePictureUrl,
+          }),
+        });
+      }
+
       const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}/activate`, {
         method: 'POST',
         headers: {
@@ -1335,34 +2134,163 @@ function AttractionPageSection({ user }: { user: UserData }) {
     }
   };
 
-  const handleDeactivate = async () => {
-    if (!pageData) return;
+  // Open image editor modal when user selects a file from attraction page section
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file || !pageData) return;
 
-    setIsSaving(true);
-    setError(null);
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setAttractionUploadError('Please upload a JPG, PNG, or WebP image');
+      return;
+    }
+
+    // Validate file size (5MB max)
+    if (file.size > 5 * 1024 * 1024) {
+      setAttractionUploadError('Image must be less than 5MB');
+      return;
+    }
+
+    // Validate image dimensions (minimum 900x900)
+    const img = new Image();
+    const imageUrl = URL.createObjectURL(file);
+
+    let dimensions: { width: number; height: number };
+    try {
+      dimensions = await new Promise<{ width: number; height: number }>((resolve, reject) => {
+        img.onload = () => resolve({ width: img.width, height: img.height });
+        img.onerror = reject;
+        img.src = imageUrl;
+      });
+    } catch {
+      setAttractionUploadError('Failed to load image. Please try another file.');
+      URL.revokeObjectURL(imageUrl);
+      return;
+    }
+
+    URL.revokeObjectURL(imageUrl);
+
+    if (dimensions.width < 900 || dimensions.height < 900) {
+      setAttractionUploadError(`Image must be at least 900x900 pixels. Your image is ${dimensions.width}x${dimensions.height}.`);
+      if (attractionFileInputRef.current) {
+        attractionFileInputRef.current.value = '';
+      }
+      return;
+    }
+
+    // Open the image editor modal instead of uploading directly
+    console.log('[ImageEditor] Opening editor modal from attraction page section');
+    setUploadSource('agent-pages'); // Track that this came from agent pages section
+    setPendingImageFile(file);
+    const originalUrl = URL.createObjectURL(file);
+    setPendingImageUrl(originalUrl);
+    setPendingBgRemovedUrl(null); // Reset bg removed preview
+    setPendingImageDimensions(dimensions);
+    setPreviewContrastLevel(contrastLevel || 130);
+    setCropArea({ x: 0, y: 0, size: 100 });
+    setShowImageEditor(true);
+    setAttractionUploadError(null);
+
+    // Start background removal for preview
+    setIsRemovingBackground(true);
+    setBgRemovalProgress(0);
+    try {
+      const { removeBackground } = await import('@imgly/background-removal');
+      const bgRemovedBlob = await removeBackground(file, {
+        progress: (key, current, total) => {
+          if (key === 'compute:inference') {
+            setBgRemovalProgress(Math.round((current / total) * 100));
+          }
+        },
+      });
+      const bgRemovedUrl = URL.createObjectURL(bgRemovedBlob);
+      setPendingBgRemovedUrl(bgRemovedUrl);
+    } catch (bgErr) {
+      console.error('[ImageEditor] Background removal failed:', bgErr);
+      // Continue without bg removal preview - will still work on confirm
+    } finally {
+      setIsRemovingBackground(false);
+    }
+  };
+
+  // Re-process existing images with new contrast level (from attraction page)
+  const handleAttractionReprocessImages = async () => {
+    if (!originalImageFile) {
+      setAttractionUploadError('Please upload a new image first to adjust contrast. The original image is only available during the current session.');
+      return;
+    }
+
+    setIsUploadingImage(true);
+    setAttractionUploadError(null);
+    setAttractionUploadStatus(null);
 
     try {
       const token = localStorage.getItem('agent_portal_token');
-      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}/deactivate`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
+
+      // Step 1: Remove background from stored original
+      setAttractionUploadStatus('Removing background...');
+      const { removeBackground } = await import('@imgly/background-removal');
+
+      const bgRemovedBlob = await removeBackground(originalImageFile, {
+        progress: (key, current, total) => {
+          if (key === 'compute:inference') {
+            const percent = Math.round((current / total) * 100);
+            setAttractionUploadStatus(`Removing background... ${percent}%`);
+          }
         },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setPageData(data.page);
-        setSuccessMessage('Your attraction page has been deactivated.');
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to deactivate page');
+      // Step 2: Apply new B&W + contrast
+      setAttractionUploadStatus('Applying new contrast level...');
+      const processedBlob = await applyBWContrastFilter(bgRemovedBlob, contrastLevel);
+
+      // Step 3: Upload to dashboard
+      setAttractionUploadStatus('Updating dashboard...');
+      const dashboardFormData = new FormData();
+      dashboardFormData.append('file', processedBlob, 'profile.png');
+      dashboardFormData.append('userId', user.id);
+
+      const dashboardResponse = await fetch('https://saabuildingblocks.com/api/users/profile-picture', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: dashboardFormData,
+      });
+
+      if (dashboardResponse.ok) {
+        const dashboardData = await dashboardResponse.json();
+        const updatedUser = { ...user, profilePictureUrl: dashboardData.url };
+        setUser(updatedUser);
+        localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       }
+
+      // Step 4: Upload same to attraction page
+      setAttractionUploadStatus('Updating attraction page...');
+      if (pageData) {
+        const attractionFormData = new FormData();
+        attractionFormData.append('file', processedBlob, 'profile.png');
+        attractionFormData.append('pageId', pageData.id);
+
+        const response = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-image', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: attractionFormData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setPageData(data.data.page);
+        }
+      }
+
+      setAttractionUploadStatus('Images updated successfully!');
+      setTimeout(() => setAttractionUploadStatus(null), 3000);
     } catch (err) {
-      console.error('Error deactivating page:', err);
-      setError('Failed to deactivate page. Please try again.');
+      console.error('Reprocess images error:', err);
+      setAttractionUploadError(err instanceof Error ? err.message : 'Failed to reprocess images');
+      setAttractionUploadStatus(null);
     } finally {
-      setIsSaving(false);
+      setIsUploadingImage(false);
     }
   };
 
@@ -1393,7 +2321,8 @@ function AttractionPageSection({ user }: { user: UserData }) {
     );
   }
 
-  const pageUrl = `https://smartagentalliance.com/${pageData.slug}`;
+  // TODO: Change to smartagentalliance.com when domain migration is complete
+  const pageUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}`;
 
   return (
     <SectionWrapper title="Agent Attraction Page">
@@ -1439,11 +2368,99 @@ function AttractionPageSection({ user }: { user: UserData }) {
         <GenericCard padding="md">
           <div className="space-y-2">
             <label className="block text-sm font-medium text-[#e5e4dd]/80">Your Page URL</label>
+            <p className="text-caption mb-2">This is automatically generated from your display name.</p>
             <div className="flex items-center gap-3 p-3 rounded-lg bg-black/30 border border-white/10">
-              <span className="text-[#e5e4dd]/60">smartagentalliance.com/</span>
-              <span className="text-[#ffd700]">{formData.slug}</span>
+              <span className="text-[#e5e4dd]/60">saabuildingblocks.pages.dev/</span>
+              <span className="text-[#ffd700]">{generatedSlug || 'firstname-lastname'}</span>
             </div>
           </div>
+        </GenericCard>
+
+        {/* Profile Image */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Profile Image <span className="text-red-400">*</span></h3>
+          <p className="text-caption mb-4">
+            Upload a professional photo. The background will be automatically removed and the image converted to black & white.
+          </p>
+          <div className="flex flex-col sm:flex-row items-start gap-6">
+            {/* Image Preview - clickable to upload */}
+            <label
+              htmlFor="attraction-profile-image-upload"
+              className="relative w-32 h-32 rounded-full overflow-hidden border-3 border-[#ffd700] bg-black/30 flex-shrink-0 cursor-pointer group"
+            >
+              {(pageData.profile_image_url || user.profilePictureUrl) ? (
+                <img
+                  src={pageData.profile_image_url || user.profilePictureUrl || ''}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                  style={{ filter: `contrast(${contrastLevel / 130})` }}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
+                  <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                </div>
+              )}
+              {isUploadingImage && (
+                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                  <div className="w-8 h-8 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
+                </div>
+              )}
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" className="text-white">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </div>
+            </label>
+            {/* Upload Button */}
+            <div className="flex-1">
+              <input
+                ref={attractionFileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                onClick={(e) => {
+                  // Reset value to allow selecting the same file again
+                  (e.target as HTMLInputElement).value = '';
+                }}
+                className="hidden"
+                id="attraction-profile-image-upload"
+              />
+              <label
+                htmlFor="attraction-profile-image-upload"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                {pageData.profile_image_url ? 'Change Photo' : 'Upload Photo'}
+              </label>
+              <p className="text-[#e5e4dd]/50 text-sm mt-2">JPG, PNG, or WebP. Min 900x900px. Max 5MB.</p>
+              {!pageData.profile_image_url && !user.profilePictureUrl && !pageData.activated && (
+                <p className="text-yellow-400 text-sm mt-2">A profile image is required to activate your page.</p>
+              )}
+
+              {/* Image Upload Status Messages - visible on mobile */}
+              {attractionUploadStatus && (
+                <div className="mt-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                  {attractionUploadStatus}
+                </div>
+              )}
+              {attractionUploadError && (
+                <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                  {attractionUploadError}
+                </div>
+              )}
+            </div>
+          </div>
+
         </GenericCard>
 
         {/* Display Name */}
@@ -1472,27 +2489,6 @@ function AttractionPageSection({ user }: { user: UserData }) {
           </div>
         </GenericCard>
 
-        {/* Custom URL Slug */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Custom URL (Optional)</h3>
-          <p className="text-caption mb-4">Customize your page URL. Use lowercase letters, numbers, and hyphens only.</p>
-          <div>
-            <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">URL Slug</label>
-            <div className="flex items-center">
-              <span className="px-4 py-3 rounded-l-lg bg-black/50 border border-r-0 border-white/10 text-[#e5e4dd]/60">
-                smartagentalliance.com/
-              </span>
-              <input
-                type="text"
-                value={formData.slug}
-                onChange={(e) => handleInputChange('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                className="flex-1 px-4 py-3 rounded-r-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="firstname-lastname"
-              />
-            </div>
-          </div>
-        </GenericCard>
-
         {/* Phone Settings */}
         <GenericCard padding="md">
           <h3 className="text-h5 text-[#ffd700] mb-4">Phone Settings</h3>
@@ -1513,9 +2509,9 @@ function AttractionPageSection({ user }: { user: UserData }) {
                 id="show_phone"
                 checked={formData.show_phone}
                 onChange={(e) => handleInputChange('show_phone', e.target.checked)}
-                className="w-5 h-5 rounded border-white/20 bg-black/30 text-[#ffd700] focus:ring-[#ffd700]/30"
+                className="w-5 h-5 rounded border-white/20 bg-black/30 focus:ring-[#ffd700]/30 accent-[#ffd700]"
               />
-              <label htmlFor="show_phone" className="text-[#e5e4dd]">
+              <label htmlFor="show_phone" className="text-[#e5e4dd] cursor-pointer">
                 Display phone number on my attraction page
               </label>
             </div>
@@ -1526,9 +2522,9 @@ function AttractionPageSection({ user }: { user: UserData }) {
                   id="phone_text_only"
                   checked={formData.phone_text_only}
                   onChange={(e) => handleInputChange('phone_text_only', e.target.checked)}
-                  className="w-5 h-5 rounded border-white/20 bg-black/30 text-[#ffd700] focus:ring-[#ffd700]/30"
+                  className="w-5 h-5 rounded border-white/20 bg-black/30 focus:ring-[#ffd700]/30 accent-[#ffd700]"
                 />
-                <label htmlFor="phone_text_only" className="text-[#e5e4dd]">
+                <label htmlFor="phone_text_only" className="text-[#e5e4dd] cursor-pointer">
                   Show &quot;text only&quot; indicator
                 </label>
               </div>
@@ -1604,6 +2600,451 @@ function AttractionPageSection({ user }: { user: UserData }) {
           </div>
         </GenericCard>
 
+        {/* Links Page Customization */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Links Page Style</h3>
+          <p className="text-caption mb-4">
+            Customize the appearance of your links page (/{generatedSlug}-links).
+          </p>
+
+          <div className="space-y-6">
+            {/* Bio */}
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Bio</label>
+              <p className="text-caption mb-2">A short description about yourself (appears below your name).</p>
+              <div className="relative">
+                <textarea
+                  value={linksSettings.bio}
+                  onChange={(e) => {
+                    if (e.target.value.length <= 150) {
+                      setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                      setHasUnsavedChanges(true);
+                    }
+                  }}
+                  className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors resize-none"
+                  rows={3}
+                  placeholder="Real estate agent helping families find their dream homes..."
+                />
+                <span className={`absolute bottom-2 right-2 text-sm ${
+                  linksSettings.bio.length >= 150 ? 'text-red-400' :
+                  linksSettings.bio.length >= 130 ? 'text-yellow-400' :
+                  'text-[#e5e4dd]/40'
+                }`}>
+                  {linksSettings.bio.length}/150
+                </span>
+              </div>
+            </div>
+
+            {/* Accent Color */}
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Accent Color</label>
+              <p className="text-caption mb-2">Applied to buttons, profile frame, social icons, and your name.</p>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="relative">
+                  <input
+                    type="color"
+                    value={linksSettings.accentColor}
+                    onChange={(e) => {
+                      setLinksSettings(prev => ({ ...prev, accentColor: e.target.value }));
+                      setHasUnsavedChanges(true);
+                    }}
+                    className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white/20 bg-transparent"
+                  />
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {/* Preset colors */}
+                  {['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81'].map(color => (
+                    <button
+                      key={color}
+                      type="button"
+                      onClick={() => {
+                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                        setHasUnsavedChanges(true);
+                      }}
+                      className={`w-8 h-8 rounded-full border-2 transition-all ${
+                        linksSettings.accentColor === color
+                          ? 'border-white scale-110'
+                          : 'border-transparent hover:scale-105'
+                      }`}
+                      style={{ backgroundColor: color }}
+                      title={color}
+                    />
+                  ))}
+                </div>
+                <span className="text-[#e5e4dd]/50 text-sm ml-2">{linksSettings.accentColor}</span>
+              </div>
+            </div>
+
+            {/* Icon Style */}
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Icon Style</label>
+              <p className="text-caption mb-2">Color of icons on buttons and social links.</p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLinksSettings(prev => ({ ...prev, iconStyle: 'light' }));
+                    setHasUnsavedChanges(true);
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                    linksSettings.iconStyle === 'light'
+                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-white border border-gray-300" />
+                  Light (White)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' }));
+                    setHasUnsavedChanges(true);
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                    linksSettings.iconStyle === 'dark'
+                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
+                  }`}
+                >
+                  <span className="w-4 h-4 rounded-full bg-[#1a1a1a] border border-gray-600" />
+                  Dark (Near-black)
+                </button>
+              </div>
+            </div>
+
+            {/* Font Choice */}
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Font Style</label>
+              <p className="text-caption mb-2">Font for button text and bio (name always uses Taskor for neon effect).</p>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLinksSettings(prev => ({ ...prev, font: 'synonym' }));
+                    setHasUnsavedChanges(true);
+                  }}
+                  className={`px-4 py-2 rounded-lg border transition-colors ${
+                    linksSettings.font === 'synonym'
+                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
+                  }`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Synonym (Modern)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setLinksSettings(prev => ({ ...prev, font: 'taskor' }));
+                    setHasUnsavedChanges(true);
+                  }}
+                  className={`px-4 py-2 rounded-lg border transition-colors ${
+                    linksSettings.font === 'taskor'
+                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
+                  }`}
+                  style={{ fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 'bold' }}
+                >
+                  Taskor (Bold)
+                </button>
+              </div>
+            </div>
+
+            {/* Preview */}
+            <div>
+              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Preview</label>
+              <div className="p-4 rounded-lg bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border border-white/10">
+                <div className="flex flex-col items-center gap-3 max-w-[200px] mx-auto">
+                  {/* Mini profile preview */}
+                  <div
+                    className="w-16 h-16 rounded-full border-2 flex items-center justify-center"
+                    style={{ borderColor: linksSettings.accentColor, backgroundColor: 'rgba(0,0,0,0.5)' }}
+                  >
+                    <span className="text-2xl">👤</span>
+                  </div>
+                  {/* Name preview */}
+                  <span
+                    className="font-bold text-lg"
+                    style={{
+                      color: linksSettings.accentColor,
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                      textShadow: `0 0 10px ${linksSettings.accentColor}40`
+                    }}
+                  >
+                    {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
+                  </span>
+                  {/* Bio preview */}
+                  {linksSettings.bio && (
+                    <p
+                      className="text-xs text-center text-[#e5e4dd]/70"
+                      style={{ fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)' }}
+                    >
+                      {linksSettings.bio.slice(0, 50)}{linksSettings.bio.length > 50 ? '...' : ''}
+                    </p>
+                  )}
+                  {/* Button preview */}
+                  <div
+                    className="w-full py-2 px-3 rounded-lg text-center text-sm font-medium flex items-center justify-center gap-2"
+                    style={{
+                      backgroundColor: linksSettings.accentColor,
+                      color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                      fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                    }}
+                  >
+                    <svg
+                      className="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10" />
+                    </svg>
+                    Sample Button
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </GenericCard>
+
+        {/* Custom Link Buttons (for Links Page) */}
+        <GenericCard padding="md">
+          <h3 className="text-h5 text-[#ffd700] mb-4">Custom Link Buttons</h3>
+          <p className="text-caption mb-4">
+            Add custom buttons to your links page (/{generatedSlug}-links). These appear alongside the default &quot;Join My Team&quot; and &quot;Learn About SAA&quot; buttons.
+          </p>
+
+          {/* Existing custom links */}
+          {customLinks.length > 0 && (
+            <div className="space-y-3 mb-4">
+              {customLinks.map((link, index) => (
+                <div key={link.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-white/10 group">
+                  {/* Drag handle */}
+                  <div className="flex flex-col gap-1 cursor-move opacity-40 group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (index > 0) {
+                          const newLinks = [...customLinks];
+                          [newLinks[index - 1], newLinks[index]] = [newLinks[index], newLinks[index - 1]];
+                          // Update order values
+                          newLinks.forEach((l, i) => l.order = i);
+                          setCustomLinks(newLinks);
+                          setHasUnsavedChanges(true);
+                        }
+                      }}
+                      disabled={index === 0}
+                      className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move up"
+                    >
+                      <svg className="w-4 h-4 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (index < customLinks.length - 1) {
+                          const newLinks = [...customLinks];
+                          [newLinks[index], newLinks[index + 1]] = [newLinks[index + 1], newLinks[index]];
+                          // Update order values
+                          newLinks.forEach((l, i) => l.order = i);
+                          setCustomLinks(newLinks);
+                          setHasUnsavedChanges(true);
+                        }
+                      }}
+                      disabled={index === customLinks.length - 1}
+                      className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move down"
+                    >
+                      <svg className="w-4 h-4 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  </div>
+                  {/* Icon display */}
+                  {link.icon && (
+                    <div className="w-8 h-8 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d={LINK_ICONS.find(i => i.name === link.icon)?.path || ''} />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[#e5e4dd] font-medium truncate">{link.label}</div>
+                    <div className="text-[#e5e4dd]/50 text-sm truncate">{link.url}</div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCustomLinks(prev => prev.filter(l => l.id !== link.id));
+                      setHasUnsavedChanges(true);
+                    }}
+                    className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors"
+                    title="Remove link"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Add new link form */}
+          <div className="space-y-3 p-4 rounded-lg bg-black/20 border border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm text-[#e5e4dd]/60 mb-1">Button Label</label>
+                <input
+                  type="text"
+                  value={newLinkLabel}
+                  onChange={(e) => setNewLinkLabel(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none text-sm"
+                  placeholder="e.g., Book a Call"
+                />
+              </div>
+              <div>
+                <label className="block text-sm text-[#e5e4dd]/60 mb-1">URL</label>
+                <input
+                  type="url"
+                  value={newLinkUrl}
+                  onChange={(e) => setNewLinkUrl(e.target.value)}
+                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none text-sm"
+                  placeholder="https://calendly.com/yourlink"
+                />
+              </div>
+            </div>
+
+            {/* Icon Picker */}
+            <div>
+              <label className="block text-sm text-[#e5e4dd]/60 mb-1">Button Icon (optional)</label>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowIconPicker(!showIconPicker)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] hover:border-[#ffd700]/30 transition-colors text-sm"
+                >
+                  {newLinkIcon ? (
+                    <>
+                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
+                      </svg>
+                      <span>{LINK_ICONS.find(i => i.name === newLinkIcon)?.label}</span>
+                    </>
+                  ) : (
+                    <span className="text-[#e5e4dd]/50">Select an icon...</span>
+                  )}
+                  <svg className="w-4 h-4 ml-auto text-[#e5e4dd]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {newLinkIcon && (
+                  <button
+                    type="button"
+                    onClick={() => setNewLinkIcon(null)}
+                    className="absolute right-10 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-white/10 text-[#e5e4dd]/40 hover:text-[#e5e4dd]"
+                    title="Clear icon"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Icon picker dropdown */}
+                {showIconPicker && (
+                  <div className="absolute z-10 mt-2 w-full max-h-60 overflow-y-auto rounded-lg bg-[#1a1a1a] border border-white/20 shadow-xl">
+                    <div className="grid grid-cols-5 gap-1 p-2">
+                      {LINK_ICONS.map(icon => (
+                        <button
+                          key={icon.name}
+                          type="button"
+                          onClick={() => {
+                            setNewLinkIcon(icon.name);
+                            setShowIconPicker(false);
+                          }}
+                          className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
+                            newLinkIcon === icon.name
+                              ? 'bg-[#ffd700]/20 text-[#ffd700]'
+                              : 'hover:bg-white/10 text-[#e5e4dd]/70'
+                          }`}
+                          title={icon.label}
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d={icon.path} />
+                          </svg>
+                          <span className="text-[10px] truncate max-w-full">{icon.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Preview of new button */}
+            {(newLinkLabel || newLinkIcon) && (
+              <div className="pt-2 border-t border-white/10">
+                <label className="block text-sm text-[#e5e4dd]/60 mb-2">Preview</label>
+                <div
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
+                  style={{
+                    backgroundColor: linksSettings.accentColor,
+                    color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                    fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                  }}
+                >
+                  {newLinkIcon && (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
+                    </svg>
+                  )}
+                  {newLinkLabel || 'Button Label'}
+                </div>
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                if (newLinkLabel.trim() && newLinkUrl.trim()) {
+                  const newLink: CustomLink = {
+                    id: `link-${Date.now()}`,
+                    label: newLinkLabel.trim(),
+                    url: newLinkUrl.trim(),
+                    icon: newLinkIcon || undefined,
+                    order: customLinks.length,
+                  };
+                  setCustomLinks(prev => [...prev, newLink]);
+                  setNewLinkLabel('');
+                  setNewLinkUrl('');
+                  setNewLinkIcon(null);
+                  setHasUnsavedChanges(true);
+                }
+              }}
+              disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
+              className="w-full px-4 py-2 rounded-lg text-sm font-medium bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              + Add Button
+            </button>
+          </div>
+
+          {/* Default buttons info */}
+          <div className="mt-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+            <p className="text-sm text-blue-300">
+              <strong>Default buttons (always shown):</strong>
+            </p>
+            <ul className="text-sm text-blue-300/80 mt-1 ml-4 list-disc">
+              <li>&quot;Join My Team at eXp Realty&quot; - Opens signup form</li>
+              <li>&quot;Learn About Smart Agent Alliance&quot; - Links to your attraction page</li>
+            </ul>
+          </div>
+        </GenericCard>
+
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-4 justify-end">
           {hasUnsavedChanges && (
@@ -1618,18 +3059,24 @@ function AttractionPageSection({ user }: { user: UserData }) {
 
           {pageData.activated ? (
             <button
-              onClick={handleDeactivate}
-              disabled={isSaving}
-              className="px-6 py-3 rounded-lg font-semibold bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              onClick={handleSave}
+              disabled={isSaving || !hasUnsavedChanges}
+              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              Deactivate Page
+              {isSaving ? 'Updating...' : 'Update Page'}
             </button>
           ) : (
             <button
               onClick={handleActivate}
-              disabled={isSaving || hasUnsavedChanges}
+              disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
               className="px-6 py-3 rounded-lg font-semibold bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              title={hasUnsavedChanges ? 'Save changes first' : 'Activate your page'}
+              title={
+                hasUnsavedChanges
+                  ? 'Save changes first'
+                  : (!pageData.profile_image_url && !user.profilePictureUrl)
+                    ? 'Upload a profile image first'
+                    : 'Activate your page'
+              }
             >
               Activate Page
             </button>
@@ -1646,7 +3093,9 @@ function AttractionPageSection({ user }: { user: UserData }) {
 function SectionWrapper({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl p-6 sm:p-8 bg-black/30 backdrop-blur-sm border border-[#ffd700]/10">
-      <H2 className="mb-8">{title}</H2>
+      <div className="mb-[50px]">
+        <H2>{title}</H2>
+      </div>
       {children}
     </div>
   );

@@ -12,12 +12,34 @@
 // KV Namespace configuration
 const KV_NAMESPACE_ID = '9f886b7add144cc480d7fe0f4ef5eb5e';
 const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || 'a1ae4bb5913a89fea98821d7ba1ac304';
-const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN || process.env.CLOUDFLARE_KV_API_TOKEN;
+// Use KV-specific token first, fallback to general API token
+const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_KV_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN;
 
 /**
  * Agent page data structure stored in KV
  * Maps to agent_pages table in Supabase
  */
+/**
+ * Links page global settings
+ */
+export interface LinksSettings {
+  accentColor: string;      // Hex color for buttons, frame, social icons, name glow
+  iconStyle: 'light' | 'dark';  // Light (white) or Dark (near-black) icons
+  font: 'synonym' | 'taskor';   // Font for button text
+  bio: string;              // Bio text (max 150 chars)
+}
+
+/**
+ * Custom link button for agent links page
+ */
+export interface CustomLink {
+  id: string;
+  label: string;
+  url: string;
+  icon?: string;  // Lucide icon name (e.g., "Home", "Phone")
+  order: number;  // For drag-to-reorder
+}
+
 export interface AgentPageKVData {
   id: string;
   user_id: string;
@@ -34,6 +56,8 @@ export interface AgentPageKVData {
   youtube_url: string | null;
   tiktok_url: string | null;
   linkedin_url: string | null;
+  custom_links: CustomLink[]; // Custom link buttons for links page
+  links_settings: LinksSettings; // Global settings for links page
   activated: boolean; // Whether page is publicly visible
   is_active?: boolean; // Alias for compatibility
   updated_at: string;
@@ -58,6 +82,9 @@ export async function writeAgentPageToKV(
   const url = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${KV_NAMESPACE_ID}/values/${encodeURIComponent(slug)}`;
 
   try {
+    console.log(`[KV] Writing to: ${url}`);
+    console.log(`[KV] Token present: ${!!CLOUDFLARE_API_TOKEN}, Token starts with: ${CLOUDFLARE_API_TOKEN?.substring(0, 5)}...`);
+
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
@@ -67,9 +94,11 @@ export async function writeAgentPageToKV(
       body: JSON.stringify(data),
     });
 
+    const responseText = await response.text();
+    console.log(`[KV] Response status: ${response.status}, body: ${responseText}`);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('KV write failed:', response.status, errorText);
+      console.error('KV write failed:', response.status, responseText);
       return { success: false, error: `KV write failed: ${response.status}` };
     }
 

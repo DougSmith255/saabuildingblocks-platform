@@ -11,8 +11,28 @@ import { syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 
 export const dynamic = 'force-dynamic';
 
+// CORS headers for cross-origin requests from public site
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, PATCH, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export async function generateStaticParams() {
   return [];
+}
+
+/**
+ * OPTIONS handler for CORS preflight requests
+ */
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    status: 200,
+    headers: {
+      ...CORS_HEADERS,
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }
 
 /**
@@ -31,7 +51,7 @@ export async function GET(
     if (!supabase) {
       return NextResponse.json(
         { error: 'Database connection unavailable' },
-        { status: 503 }
+        { status: 503, headers: CORS_HEADERS }
       );
     }
 
@@ -57,19 +77,19 @@ export async function GET(
     if (error || !page) {
       return NextResponse.json(
         { error: 'Agent page not found' },
-        { status: 404 }
+        { status: 404, headers: CORS_HEADERS }
       );
     }
 
     return NextResponse.json({
       success: true,
       page,
-    });
+    }, { headers: CORS_HEADERS });
   } catch (error) {
     console.error('Error in GET /api/agent-pages/[id]:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
@@ -90,7 +110,7 @@ export async function PATCH(
     if (!supabase) {
       return NextResponse.json(
         { error: 'Database connection unavailable' },
-        { status: 503 }
+        { status: 503, headers: CORS_HEADERS }
       );
     }
 
@@ -102,16 +122,20 @@ export async function PATCH(
       phone,
       show_phone,
       phone_text_only,
+      profile_image_url,
       facebook_url,
       instagram_url,
       twitter_url,
       youtube_url,
       tiktok_url,
       linkedin_url,
+      custom_links,
+      links_settings,
     } = body;
 
     // Build update object with only provided fields
-    const updates: Record<string, string | boolean | null> = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updates: Record<string, any> = {
       updated_at: new Date().toISOString(),
     };
 
@@ -120,12 +144,20 @@ export async function PATCH(
     if (phone !== undefined) updates.phone = phone || null;
     if (show_phone !== undefined) updates.show_phone = show_phone;
     if (phone_text_only !== undefined) updates.phone_text_only = phone_text_only;
+    if (profile_image_url !== undefined) updates.profile_image_url = profile_image_url || null;
     if (facebook_url !== undefined) updates.facebook_url = facebook_url || null;
     if (instagram_url !== undefined) updates.instagram_url = instagram_url || null;
     if (twitter_url !== undefined) updates.twitter_url = twitter_url || null;
     if (youtube_url !== undefined) updates.youtube_url = youtube_url || null;
     if (tiktok_url !== undefined) updates.tiktok_url = tiktok_url || null;
     if (linkedin_url !== undefined) updates.linkedin_url = linkedin_url || null;
+    if (custom_links !== undefined) updates.custom_links = custom_links || [];
+    if (links_settings !== undefined) updates.links_settings = links_settings || {
+      accentColor: '#ffd700',
+      iconStyle: 'light',
+      font: 'synonym',
+      bio: ''
+    };
 
     // Get current page to check for slug changes
     const { data: currentPage } = await supabase
@@ -143,7 +175,7 @@ export async function PATCH(
       if (!slugPattern.test(slug)) {
         return NextResponse.json(
           { error: 'Slug must contain only lowercase letters, numbers, and hyphens' },
-          { status: 400 }
+          { status: 400, headers: CORS_HEADERS }
         );
       }
 
@@ -158,7 +190,7 @@ export async function PATCH(
       if (existingPage) {
         return NextResponse.json(
           { error: 'This URL slug is already taken. Please choose another.' },
-          { status: 400 }
+          { status: 400, headers: CORS_HEADERS }
         );
       }
 
@@ -177,7 +209,7 @@ export async function PATCH(
       console.error('Error updating agent page:', updateError);
       return NextResponse.json(
         { error: 'Failed to update agent page', details: updateError?.message },
-        { status: updateError?.code === 'PGRST116' ? 404 : 500 }
+        { status: updateError?.code === 'PGRST116' ? 404 : 500, headers: CORS_HEADERS }
       );
     }
 
@@ -197,12 +229,12 @@ export async function PATCH(
       success: true,
       page: updatedPage,
       message: 'Agent page updated successfully',
-    });
+    }, { headers: CORS_HEADERS });
   } catch (error) {
     console.error('Error in PATCH /api/agent-pages/[id]:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }
