@@ -100,9 +100,10 @@ export function BlogPostHero({
   const breadcrumbTitle = postTitle || title;
 
   return (
-    <StickyHeroWrapper>
-      {/* Breadcrumbs - outside section to avoid scroll transforms, fixed 230px from viewport top */}
-      <div className="absolute left-4 sm:left-8 md:left-12 z-20" style={{ top: '230px' }}>
+    <StickyHeroWrapper fadeSpeed={1.33}>
+      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
+      {/* Breadcrumbs - inside section so they fade with scroll, 160px from viewport top */}
+      <div className="absolute left-4 sm:left-8 md:left-12 z-20" style={{ top: '160px' }}>
         <div className="max-w-[1900px]">
           <Breadcrumbs
             category={category}
@@ -112,12 +113,10 @@ export function BlogPostHero({
         </div>
       </div>
 
-      {/* Theme switch - outside section to avoid scroll transforms, fixed 230px from viewport top */}
-      <div className="absolute right-4 sm:right-8 md:right-12 z-20" style={{ top: '230px' }}>
+      {/* Theme switch - inside section so it fades with scroll, 160px from viewport top */}
+      <div className="absolute right-4 sm:right-8 md:right-12 z-20" style={{ top: '160px' }}>
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
-
-      <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
       {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
       {heroImage && (
         <img

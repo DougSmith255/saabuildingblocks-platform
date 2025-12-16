@@ -5,6 +5,8 @@ import { useEffect, useRef, ReactNode } from 'react';
 interface StickyHeroWrapperProps {
   children: ReactNode;
   className?: string;
+  /** Speed multiplier for fade effect. 1 = normal, 1.33 = 3/4 time (faster), 2 = half time */
+  fadeSpeed?: number;
 }
 
 /**
@@ -26,7 +28,7 @@ interface StickyHeroWrapperProps {
  *   </section>
  * </StickyHeroWrapper>
  */
-export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrapperProps) {
+export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: StickyHeroWrapperProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,7 +42,9 @@ export function StickyHeroWrapper({ children, className = '' }: StickyHeroWrappe
       const scrollY = window.scrollY;
 
       // Progress from 0 to 1 as we scroll through the viewport height
-      const progress = Math.min(scrollY / viewportHeight, 1);
+      // fadeSpeed multiplier makes it fade faster (1.33 = 3/4 time, 2 = half time)
+      const rawProgress = Math.min(scrollY / viewportHeight, 1);
+      const progress = Math.min(rawProgress * fadeSpeed, 1);
 
       const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
       const contentBlur = progress * 8; // Blur from 0 to 8px

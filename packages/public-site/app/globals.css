@@ -2920,11 +2920,13 @@ body.light-mode .blog-post section:first-of-type .flex.flex-wrap.items-center.ju
   color: #3a3a3a !important;
 }
 
-/* Keep Icon3D icons gold in light mode - do NOT override to dark gray */
+/* Keep Icon3D icons same color in light mode as dark mode - do NOT change color */
+/* The default color is #c4a94d (muted gold), keep it consistent */
 body.light-mode .blog-post .icon-3d,
 body.light-mode .blog-post .icon-3d span,
 body.light-mode .blog-post .icon-3d svg {
-  color: #ffd700 !important;
+  color: #c4a94d !important;
+  filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8b6914) drop-shadow(0 0 3px rgba(255, 215, 0, 0.4)) drop-shadow(0 0 8px rgba(255, 180, 0, 0.3)) !important;
 }
 
 /* ========================================
