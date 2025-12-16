@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
+import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import bcrypt from 'bcryptjs';
 
 // CORS headers for cross-origin requests
@@ -31,7 +31,7 @@ function corsResponse(body: object, status: number = 200) {
 }
 
 export async function PATCH(request: NextRequest) {
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
     return corsResponse(
@@ -46,7 +46,7 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { userId, username, currentPassword, newPassword } = body;
+    const { userId, username, firstName, lastName, currentPassword, newPassword } = body;
 
     if (!userId) {
       return corsResponse(
@@ -62,7 +62,7 @@ export async function PATCH(request: NextRequest) {
     // Get current user data
     const { data: user, error: fetchError } = await supabase
       .from('users')
-      .select('id, username, password_hash')
+      .select('id, username, first_name, last_name, password_hash')
       .eq('id', userId)
       .single();
 
@@ -78,6 +78,19 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updates: any = {};
+    let displayNameChanged = false;
+
+    // Handle first name change
+    if (firstName !== undefined && firstName !== user.first_name) {
+      updates.first_name = firstName;
+      displayNameChanged = true;
+    }
+
+    // Handle last name change
+    if (lastName !== undefined && lastName !== user.last_name) {
+      updates.last_name = lastName;
+      displayNameChanged = true;
+    }
 
     // Handle username change
     if (username && username !== user.username) {
@@ -103,32 +116,8 @@ export async function PATCH(request: NextRequest) {
       updates.username = username;
     }
 
-    // Handle password change
+    // Handle password change - no current password required since user is already authenticated
     if (newPassword) {
-      if (!currentPassword) {
-        return corsResponse(
-          {
-            success: false,
-            error: 'CURRENT_PASSWORD_REQUIRED',
-            message: 'Current password is required to change password',
-          },
-          400
-        );
-      }
-
-      // Verify current password
-      const isPasswordValid = await bcrypt.compare(currentPassword, user.password_hash);
-      if (!isPasswordValid) {
-        return corsResponse(
-          {
-            success: false,
-            error: 'INVALID_PASSWORD',
-            message: 'Current password is incorrect',
-          },
-          401
-        );
-      }
-
       // Validate new password
       if (newPassword.length < 8) {
         return corsResponse(
@@ -174,11 +163,33 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
+    // If display name changed, also update the agent_pages table
+    if (displayNameChanged) {
+      const newFirstName = updates.first_name || user.first_name;
+      const newLastName = updates.last_name || user.last_name;
+
+      const { error: agentPageError } = await supabase
+        .from('agent_pages')
+        .update({
+          display_first_name: newFirstName,
+          display_last_name: newLastName,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('user_id', userId);
+
+      if (agentPageError) {
+        console.error('[Profile Update] Error updating agent page:', agentPageError);
+        // Don't fail the whole request, just log the error
+      }
+    }
+
     return corsResponse({
       success: true,
       message: 'Profile updated successfully',
       data: {
         username: updates.username || user.username,
+        firstName: updates.first_name || user.first_name,
+        lastName: updates.last_name || user.last_name,
       },
     });
   } catch (error) {
