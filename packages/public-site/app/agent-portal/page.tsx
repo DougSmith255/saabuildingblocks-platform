@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
+import glassStyles from '@/components/shared/GlassShimmer.module.css';
 
 // User type from stored session
 interface UserData {
@@ -306,19 +307,28 @@ export default function AgentPortal() {
 
   return (
     <main id="main-content" className="min-h-screen">
-      {/* Fixed Header Bar - Matches main site header style */}
-      <header className="fixed top-0 left-0 right-0 z-50">
+      {/* Fixed Header Bar - Uses same glass styling as main site header */}
+      <header
+        className="fixed top-0 left-0 right-0 z-[10010]"
+        style={{ background: 'transparent', overflow: 'visible' }}
+      >
         <div
+          className="header-bg-container"
           style={{
-            background: 'rgba(20, 20, 20, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
+            width: '100%',
             borderRadius: '0 0 20px 20px',
             borderBottom: '2px solid rgba(60, 60, 60, 0.8)',
             boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+            position: 'relative',
           }}
         >
-          <div className="flex items-center justify-between px-4 sm:px-8" style={{ height: '85px' }}>
+          {/* Glass Background - 3 layers from GlassShimmer.module.css */}
+          <div className={glassStyles['glassContainer']}>
+            <div className={glassStyles['glassBase']} />
+            <div className={glassStyles['shimmerGradient']} />
+          </div>
+
+          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10" style={{ height: '85px' }}>
             {/* Logo - Same as main site */}
             <Link
               href="/"
