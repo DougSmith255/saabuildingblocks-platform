@@ -94,8 +94,15 @@ export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: S
         // Skip effect elements (already handled above)
         if (classes.includes('pointer-events-none') || classes.includes('hero-effect-layer')) continue;
 
-        // Content elements: have z-10 or z-20 class OR have relative + max-w (content wrapper)
-        if (classes.includes('z-10') || classes.includes('z-20') ||
+        // z-20 elements (breadcrumbs, toggle) - ONLY fade, no blur or scale
+        if (classes.includes('z-20')) {
+          child.style.opacity = `${opacity}`;
+          child.style.visibility = progress >= 1 ? 'hidden' : 'visible';
+          continue;
+        }
+
+        // Content elements: have z-10 class OR have relative + max-w (content wrapper)
+        if (classes.includes('z-10') ||
             (classes.includes('relative') && classes.includes('max-w')) ||
             (classes.includes('max-w') && !classes.includes('pointer-events-none'))) {
           child.style.transformOrigin = 'center center';

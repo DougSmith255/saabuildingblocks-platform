@@ -102,8 +102,8 @@ export function BlogPostHero({
   return (
     <StickyHeroWrapper fadeSpeed={1.33}>
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
-      {/* Breadcrumbs - inside section so they fade with scroll, 80px mobile / 90px desktop */}
-      <div className="absolute left-4 sm:left-8 md:left-12 z-20 top-[80px] md:top-[90px]">
+      {/* Breadcrumbs - inside section so they fade with scroll, 85px mobile / 100px desktop */}
+      <div className="absolute left-4 sm:left-8 md:left-12 z-20 top-[85px] md:top-[100px]">
         <div className="max-w-[1900px]">
           <Breadcrumbs
             category={category}
@@ -113,8 +113,8 @@ export function BlogPostHero({
         </div>
       </div>
 
-      {/* Theme switch - inside section so it fades with scroll, 110px mobile / 90px desktop */}
-      <div className="absolute right-4 sm:right-8 md:right-12 z-20 top-[110px] md:top-[90px]">
+      {/* Theme switch - inside section so it fades with scroll, 150px mobile / 100px desktop */}
+      <div className="absolute right-4 sm:right-8 md:right-12 z-20 top-[150px] md:top-[100px]">
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
       {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
@@ -165,7 +165,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <User style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-synonym)]" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)', color: '#2a2a2a' }}>{author}</span>
+            <span className="font-[var(--font-synonym)] blog-hero-meta-text" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)' }}>{author}</span>
           </div>
 
           {/* Date */}
@@ -173,7 +173,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Calendar style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-synonym)]" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)', color: '#2a2a2a' }}>{date}</span>
+            <span className="font-[var(--font-synonym)] blog-hero-meta-text" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)' }}>{date}</span>
           </div>
 
           {/* Reading time */}
@@ -181,7 +181,7 @@ export function BlogPostHero({
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Clock style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-synonym)]" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)', color: '#2a2a2a' }}>{readingTime}</span>
+            <span className="font-[var(--font-synonym)] blog-hero-meta-text" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)' }}>{readingTime}</span>
           </div>
         </div>
 

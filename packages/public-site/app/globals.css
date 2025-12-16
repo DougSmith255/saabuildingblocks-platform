@@ -2910,9 +2910,17 @@ body.light-mode .breadcrumb-link:hover {
 }
 
 /* ========================================
-   LIGHT MODE - Hero Meta Info (Author, Date, Read Time)
-   DO NOT change from dark mode styling - keep original colors
+   BLOG HERO META TEXT (Author, Date, Read Time)
+   Dark mode: heading color #e5e4dd
+   Light mode: off-black #2a2a2a
    ======================================== */
+.blog-hero-meta-text {
+  color: #e5e4dd;
+}
+
+body.light-mode .blog-hero-meta-text {
+  color: #2a2a2a;
+}
 
 /* ========================================
    LIGHT MODE - Share Buttons Section
