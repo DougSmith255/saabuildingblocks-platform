@@ -19,7 +19,7 @@ import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import LoginForm from './components/LoginForm';
-import { CyberCardHolographic } from '@saa/shared/components/saa/cards/CyberCardHolographic';
+import { CyberCard } from '@saa/shared/components/saa/cards/CyberCard';
 
 function LoginPageContent() {
   const { user, isLoading } = useAuth();
@@ -55,10 +55,10 @@ function LoginPageContent() {
         LOGIN
       </h1>
 
-      {/* Login Card with holographic matrix effect */}
-      <CyberCardHolographic className="w-full min-h-fit">
+      {/* Login Card */}
+      <CyberCard className="w-full min-h-fit">
         <LoginForm />
-      </CyberCardHolographic>
+      </CyberCard>
 
       {/* Footer */}
       <div className="mt-8 text-center text-sm">

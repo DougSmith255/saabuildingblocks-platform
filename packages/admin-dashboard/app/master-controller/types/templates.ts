@@ -166,7 +166,7 @@ export const DEFAULT_TEMPLATE: Omit<BlogTemplate, 'id' | 'createdAt' | 'updatedA
   headerPosition: 'top',
   spacingDensity: 'default',
   isDefault: true,
-  cardComponentId: 'CyberCardHolographic',
+  cardComponentId: 'CyberCard',
   assignedCategories: []
 };
 

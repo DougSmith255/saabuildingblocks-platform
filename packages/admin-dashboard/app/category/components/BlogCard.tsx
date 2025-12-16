@@ -5,7 +5,7 @@
  * Individual blog post card with:
  * - WordPress featured image
  * - Post title, excerpt, date
- * - CyberCardHolographic wrapper (SAA component)
+ * - GenericCard wrapper (SAA component)
  * - Hover animation with scale + glow
  * - Master Controller integration
  */

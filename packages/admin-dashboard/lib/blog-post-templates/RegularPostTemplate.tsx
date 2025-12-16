@@ -6,7 +6,7 @@
  *
  * Features:
  * - Master Controller CSS integration via useLiveCSS pattern
- * - SAA component library (CTAButton, CyberCardHolographic)
+ * - SAA component library (CTAButton, CyberCard)
  * - Performance-optimized scroll animations
  * - Accessible markup with semantic HTML
  * - SEO-friendly structure

@@ -18,7 +18,7 @@ import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import ResetPasswordForm from './components/ResetPasswordForm';
-import { CyberCardHolographic } from '@saa/shared/components/saa/cards/CyberCardHolographic';
+import { CyberCard } from '@saa/shared/components/saa/cards/CyberCard';
 
 function ResetPasswordPageContent() {
   const { user, isLoading } = useAuth();
@@ -56,10 +56,10 @@ function ResetPasswordPageContent() {
         RESET
       </h1>
 
-      {/* Reset Password Card with holographic matrix effect */}
-      <CyberCardHolographic className="w-full min-h-fit">
+      {/* Reset Password Card */}
+      <CyberCard className="w-full min-h-fit">
         <ResetPasswordForm initialToken={token} />
-      </CyberCardHolographic>
+      </CyberCard>
 
       {/* Footer */}
       <div className="mt-8 text-center text-sm">

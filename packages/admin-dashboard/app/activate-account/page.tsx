@@ -23,7 +23,7 @@ import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import ActivateAccountForm from './components/ActivateAccountForm';
-import { CyberCardHolographic } from '@saa/shared/components/saa/cards/CyberCardHolographic';
+import { CyberCard } from '@saa/shared/components/saa/cards/CyberCard';
 
 function ActivateAccountPageContent() {
   const { user, isLoading } = useAuth();
@@ -61,10 +61,10 @@ function ActivateAccountPageContent() {
         ACTIVATE
       </h1>
 
-      {/* Activate Account Card with holographic matrix effect */}
-      <CyberCardHolographic className="w-full min-h-fit">
+      {/* Activate Account Card */}
+      <CyberCard className="w-full min-h-fit">
         <ActivateAccountForm initialToken={token} />
-      </CyberCardHolographic>
+      </CyberCard>
 
       {/* Footer */}
       <div className="mt-8 text-center text-sm">
