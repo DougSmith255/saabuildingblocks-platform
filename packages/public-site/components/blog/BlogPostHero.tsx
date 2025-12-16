@@ -102,8 +102,8 @@ export function BlogPostHero({
   return (
     <StickyHeroWrapper fadeSpeed={1.33}>
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
-      {/* Breadcrumbs - inside section so they fade with scroll, 70px mobile / 80px desktop */}
-      <div className="absolute left-4 sm:left-8 md:left-12 z-20 top-[70px] md:top-[80px]">
+      {/* Breadcrumbs - inside section so they fade with scroll, 80px mobile / 90px desktop */}
+      <div className="absolute left-4 sm:left-8 md:left-12 z-20 top-[80px] md:top-[90px]">
         <div className="max-w-[1900px]">
           <Breadcrumbs
             category={category}
@@ -113,8 +113,8 @@ export function BlogPostHero({
         </div>
       </div>
 
-      {/* Theme switch - inside section so it fades with scroll, 70px mobile / 80px desktop */}
-      <div className="absolute right-4 sm:right-8 md:right-12 z-20 top-[70px] md:top-[80px]">
+      {/* Theme switch - inside section so it fades with scroll, 110px mobile / 90px desktop */}
+      <div className="absolute right-4 sm:right-8 md:right-12 z-20 top-[110px] md:top-[90px]">
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
       {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
@@ -152,38 +152,36 @@ export function BlogPostHero({
           </H1>
         </div>
 
-        {/* Meta info row - centered with fixed layout to prevent CLS */}
-        {/* minHeight uses responsive clamp to match icon+text at all viewport sizes */}
-        {/* Icon: 15px→30px, Font: 16px→28px, so row height: ~30px→~35px */}
+        {/* Meta info row - centered, wraps on mobile to stay within screen */}
+        {/* Icon: 15px→30px, Font: 14px→28px */}
         <div
-          className="flex items-center justify-center gap-6"
+          className="flex items-center justify-center gap-4 md:gap-6 flex-wrap px-4"
           style={{
             minHeight: 'clamp(30px, calc(24px + 0.5vw), 40px)',
-            flexWrap: 'nowrap'
           }}
         >
           {/* Author */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2">
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <User style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-synonym)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{author}</span>
+            <span className="font-[var(--font-synonym)]" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)', color: '#2a2a2a' }}>{author}</span>
           </div>
 
           {/* Date */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2">
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Calendar style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-synonym)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{date}</span>
+            <span className="font-[var(--font-synonym)]" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)', color: '#2a2a2a' }}>{date}</span>
           </div>
 
           {/* Reading time */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2">
             <Icon3D style={{ width: 'clamp(15px, calc(10px + 0.67vw), 30px)', height: 'clamp(15px, calc(10px + 0.67vw), 30px)' }}>
               <Clock style={{ width: '100%', height: '100%' }} />
             </Icon3D>
-            <span className="font-[var(--font-synonym)] whitespace-nowrap" style={{ fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)', color: '#bfbdb0' }}>{readingTime}</span>
+            <span className="font-[var(--font-synonym)]" style={{ fontSize: 'clamp(14px, calc(12px + 0.5vw), 28px)', color: '#2a2a2a' }}>{readingTime}</span>
           </div>
         </div>
 
