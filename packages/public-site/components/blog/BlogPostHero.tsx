@@ -102,8 +102,8 @@ export function BlogPostHero({
   return (
     <StickyHeroWrapper fadeSpeed={1.33}>
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32 blog-hero-section">
-      {/* Breadcrumbs - inside section so they fade with scroll, 20px from viewport top */}
-      <div className="absolute left-4 sm:left-8 md:left-12 z-20" style={{ top: '20px' }}>
+      {/* Breadcrumbs - inside section so they fade with scroll, 70px mobile / 80px desktop */}
+      <div className="absolute left-4 sm:left-8 md:left-12 z-20 top-[70px] md:top-[80px]">
         <div className="max-w-[1900px]">
           <Breadcrumbs
             category={category}
@@ -113,8 +113,8 @@ export function BlogPostHero({
         </div>
       </div>
 
-      {/* Theme switch - inside section so it fades with scroll, 20px from viewport top */}
-      <div className="absolute right-4 sm:right-8 md:right-12 z-20" style={{ top: '20px' }}>
+      {/* Theme switch - inside section so it fades with scroll, 70px mobile / 80px desktop */}
+      <div className="absolute right-4 sm:right-8 md:right-12 z-20 top-[70px] md:top-[80px]">
         <ThemeSwitch onToggle={onThemeChange} />
       </div>
       {/* Hero background - uses <img> tag for LCP detection, star background fallback */}
