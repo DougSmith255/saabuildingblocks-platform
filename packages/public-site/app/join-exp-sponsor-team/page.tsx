@@ -103,11 +103,10 @@ export default function JoinExpSponsorTeam() {
               <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-body">
                 <p>
-                  <a href="mailto:karrie@smartagentalliance.com" className="text-link transition-colors">
-                    karrie@smartagentalliance.com
+                  <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
+                    team@smartagentalliance.com
                   </a>
                 </p>
-                <p>415-435-7777 (no text)</p>
               </div>
             </GenericCard>
 
@@ -126,11 +125,10 @@ export default function JoinExpSponsorTeam() {
               <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
               <div className="space-y-2 text-body">
                 <p>
-                  <a href="mailto:doug@smartagentalliance.com" className="text-link transition-colors">
-                    doug@smartagentalliance.com
+                  <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
+                    team@smartagentalliance.com
                   </a>
                 </p>
-                <p>314-320-5606</p>
               </div>
             </GenericCard>
           </div>

@@ -23,6 +23,7 @@
     "diagnostics:prod": "npx tsx scripts/performance-diagnostics.ts https://saabuildingblocks.com"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "@saa/shared": "*",
     "clsx": "^2.1.1",
     "lenis": "^1.3.15",

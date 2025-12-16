@@ -138,10 +138,9 @@ export default function AboutDougSmart() {
             <CyberCard padding="lg" className="max-w-[450px] mx-auto">
               <div className="text-center">
                 <h3 className="text-h5 mb-4">Contact Info</h3>
-                <a href="mailto:team@smartagentalliance.com">
+                <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
                   team@smartagentalliance.com
                 </a>
-                <p className="text-body opacity-60 mt-2" style={{ fontSize: 'var(--font-size-caption)' }}>314-320-5606 (Text Only)</p>
               </div>
             </CyberCard>
           </div>
