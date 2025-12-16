@@ -41,6 +41,9 @@ export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: S
       const viewportHeight = window.innerHeight;
       const scrollY = window.scrollY;
 
+      // Check if we're in light mode (body has light-mode class)
+      const isLightMode = document.body.classList.contains('light-mode');
+
       // Progress from 0 to 1 as we scroll through the viewport height
       // fadeSpeed multiplier makes it fade faster (1.33 = 3/4 time, 2 = half time)
       const rawProgress = Math.min(scrollY / viewportHeight, 1);
@@ -49,7 +52,9 @@ export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: S
       const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
       const contentBlur = progress * 8; // Blur from 0 to 8px
       const effectBlur = progress * 4; // Lighter blur for effects
-      const brightness = 1 - progress; // Dim from 1 to 0
+      // In light mode: brighten to wash out to #e5e4dd (brightness increases from 1 to 3)
+      // In dark mode: dim from 1 to 0
+      const brightness = isLightMode ? 1 + progress * 2 : 1 - progress;
       const opacity = 1 - progress; // Fade from 1 to 0
       const translateY = -progress * 50; // Move up as it shrinks
 
@@ -115,7 +120,7 @@ export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: S
     handleScroll(); // Initial check
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [fadeSpeed]);
 
   return (
     <>
