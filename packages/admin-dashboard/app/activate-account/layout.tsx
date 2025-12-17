@@ -34,7 +34,7 @@ export default function ActivateAccountLayout({
       {/* Load secondary-button CSS */}
       <link rel="stylesheet" href="/css/wordpress-components/secondary-button.css" />
 
-      <div className="relative min-h-screen flex flex-col">
+      <div className="relative min-h-screen min-h-dvh flex flex-col">
         {/* Star Background - Canvas-based animated starfield */}
         <StarBackground />
 
@@ -47,10 +47,11 @@ export default function ActivateAccountLayout({
         {/* Main content area - No header padding needed */}
         <main
           id="main-content"
-          className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8"
+          className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8"
           style={{
             position: 'relative',
             zIndex: 20, // Above spaceman (10)
+            minHeight: '100dvh', // Use dynamic viewport height for mobile
           }}
         >
           {children}

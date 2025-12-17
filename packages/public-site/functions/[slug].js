@@ -1180,6 +1180,212 @@ function escapeHTML(str) {
 }
 
 /**
+ * Generate a branded 404 page with space theme
+ */
+function generate404PageHTML(siteUrl = 'https://smartagentalliance.com') {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 - Lost in Space | Smart Agent Alliance</title>
+  <meta name="description" content="This page has been removed or never existed." />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="${siteUrl}/favicon.ico" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="${siteUrl}" crossorigin />
+  <link rel="preload" href="${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.f70f6d00.woff2" as="font" type="font/woff2" crossorigin />
+
+  <style>
+    @font-face {
+      font-family: 'Taskor';
+      src: url('${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.f70f6d00.woff2') format('woff2');
+      font-display: swap;
+      font-weight: 400;
+    }
+    @font-face {
+      font-family: 'Synonym';
+      src: url('${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2');
+      font-display: swap;
+      font-weight: 100 900;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Synonym', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
+      background-color: rgb(12, 12, 12);
+      color: #e5e4dd;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
+      font-size: clamp(6rem, 20vw, 12rem);
+      color: #ffd700;
+      line-height: 1;
+      margin-bottom: 1rem;
+      transform: perspective(800px) rotateX(12deg);
+      text-shadow:
+        /* WHITE CORE */
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        /* COLOR GLOW */
+        0 0 0.07em #ffd700,
+        0 0 0.11em rgba(255, 215, 0, 0.9),
+        0 0 0.16em rgba(255, 215, 0, 0.7),
+        0 0 0.22em rgba(255, 215, 0, 0.5),
+        /* METAL BACKING */
+        0.03em 0.03em 0 #2a2a2a,
+        0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f,
+        0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3));
+      animation: glowBreathe 4s ease-in-out infinite;
+    }
+
+    @keyframes glowBreathe {
+      0%, 100% {
+        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3));
+      }
+      50% {
+        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.2) drop-shadow(0 0 0.2em rgba(255, 215, 0, 0.6));
+      }
+    }
+
+    .message {
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      color: #dcdbd5;
+      margin-bottom: 2.5rem;
+      opacity: 0.9;
+      max-width: 400px;
+      line-height: 1.5;
+    }
+
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, #ffd700 0%, #e6c200 100%);
+      color: #1a1a1a;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .home-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+    }
+
+    .home-link svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Animated stars background */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: -1;
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,215,0,0.2), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.4), transparent),
+        radial-gradient(2px 2px at 160px 120px, rgba(255,215,0,0.15), transparent),
+        radial-gradient(1px 1px at 230px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1.5px 1.5px at 300px 200px, rgba(255,255,255,0.35), transparent),
+        radial-gradient(2px 2px at 380px 150px, rgba(255,215,0,0.18), transparent),
+        radial-gradient(1px 1px at 450px 50px, rgba(255,255,255,0.3), transparent);
+      background-size: 500px 400px;
+      animation: twinkle 8s ease-in-out infinite, drift 60s linear infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes drift {
+      0% { background-position: 0 0; }
+      100% { background-position: 500px 400px; }
+    }
+
+    /* Floating astronaut/satellite decoration */
+    .lost-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-10px) rotate(5deg); }
+      75% { transform: translateY(10px) rotate(-5deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+
+  <div class="container">
+    <div class="lost-icon">🛸</div>
+    <h1>404</h1>
+    <p class="message">
+      This signal has been lost to the void—either removed from our network or it never existed in this sector of space.
+    </p>
+    <a href="${siteUrl}/" class="home-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      Return to Base
+    </a>
+  </div>
+</body>
+</html>`;
+}
+
+/**
  * Main handler for /{slug} routes
  * Handles both attraction pages (/{slug}) and links pages (/{slug}-links)
  */
@@ -1235,8 +1441,17 @@ export async function onRequest(context) {
     console.log(`[agent-page] KV result: ${agentData ? 'found' : 'not found'}`);
 
     if (!agentData) {
-      // No agent found, pass through to static content (will 404 if no static page)
-      return next();
+      // No agent found - show branded 404 page
+      const siteUrl = `${url.protocol}//${url.host}`;
+      const html404 = generate404PageHTML(siteUrl);
+      return new Response(html404, {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache',
+          'X-Robots-Tag': 'noindex, nofollow',
+        },
+      });
     }
 
     // Get site URL from request (works on any domain)
@@ -1247,9 +1462,17 @@ export async function onRequest(context) {
       ? generateAgentLinksPageHTML(agentData, siteUrl)
       : generateAgentPageHTML(agentData, siteUrl);
 
-    // If page is not active, pass through to 404
+    // If page is not active, show branded 404 page
     if (!html) {
-      return next();
+      const html404 = generate404PageHTML(siteUrl);
+      return new Response(html404, {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache',
+          'X-Robots-Tag': 'noindex, nofollow',
+        },
+      });
     }
 
     return new Response(html, {

@@ -496,15 +496,19 @@ export function UserManagementTab() {
               <thead>
                 <tr className="border-b border-[#404040]">
                   <th className="text-left py-3 px-4 text-sm font-medium text-[#dcdbd5]/60">Name</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#dcdbd5]/60">Username</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-[#dcdbd5]/60">Password</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-[#dcdbd5]/60">Role</th>
                   <th className="text-left py-3 px-4 text-sm font-medium text-[#dcdbd5]/60">Status</th>
                   <th className="text-right py-3 px-4 text-sm font-medium text-[#dcdbd5]/60">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {users.map((user) => (
+                {users.map((user) => {
+                  // Display name: prefer first_name + last_name, fallback to name (full_name), then email
+                  const displayName = user.first_name && user.last_name
+                    ? `${user.first_name} ${user.last_name}`
+                    : user.name !== user.email ? user.name : user.email.split('@')[0];
+
+                  return (
                   <tr key={user.id} className="border-b border-[#404040]/50 hover:bg-[#191818]/30">
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
@@ -512,18 +516,10 @@ export function UserManagementTab() {
                           <Users className="w-4 h-4 text-[#ffd700]" />
                         </div>
                         <div>
-                          <p className="text-[#dcdbd5] font-medium">{user.name}</p>
+                          <p className="text-[#dcdbd5] font-medium">{displayName}</p>
                           <p className="text-xs text-[#dcdbd5]/60">{user.email}</p>
                         </div>
                       </div>
-                    </td>
-                    <td className="py-4 px-4 text-[#dcdbd5]">
-                      {user.username || (
-                        <span className="text-[#dcdbd5]/40 italic">Not set</span>
-                      )}
-                    </td>
-                    <td className="py-4 px-4 text-[#dcdbd5]">
-                      <span className="font-mono">••••••••</span>
                     </td>
                     <td className="py-4 px-4">
                       <span className="px-3 py-1 bg-[#ffd700]/10 text-[#ffd700] text-sm font-medium rounded-full capitalize">
@@ -555,7 +551,8 @@ export function UserManagementTab() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -802,20 +799,6 @@ export function UserManagementTab() {
                   }}
                   className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
                   placeholder="user@example.com"
-                  disabled={editUserLoading}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
-                  Username
-                </label>
-                <input
-                  type="text"
-                  value={editUserForm.username}
-                  onChange={(e) => setEditUserForm({ ...editUserForm, username: e.target.value })}
-                  className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
-                  placeholder="username"
                   disabled={editUserLoading}
                 />
               </div>

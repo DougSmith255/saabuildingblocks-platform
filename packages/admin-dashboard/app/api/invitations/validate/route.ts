@@ -15,6 +15,21 @@ import { ZodError } from 'zod';
 
 export const dynamic = 'force-dynamic';
 
+// CORS headers for cross-origin requests
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+// Helper to add CORS headers to all responses
+function corsResponse(body: object, status: number = 200, extraHeaders: Record<string, string> = {}) {
+  return NextResponse.json(body, {
+    status,
+    headers: { ...CORS_HEADERS, ...extraHeaders }
+  });
+}
+
 /**
  * GET /api/invitations/validate - Validate invitation token
  *
@@ -30,29 +45,27 @@ export async function GET(request: NextRequest) {
     });
 
     if (!rateLimitResult.success) {
-      return NextResponse.json(
+      return corsResponse(
         {
           valid: false,
           reason: 'rate_limit_exceeded',
           error: 'Too many validation attempts. Please try again later.'
         },
+        429,
         {
-          status: 429,
-          headers: {
-            'Retry-After': '60',
-            'X-RateLimit-Limit': '5',
-            'X-RateLimit-Remaining': '0',
-            'X-RateLimit-Reset': String(rateLimitResult.resetTime || Date.now() + 60000),
-          },
+          'Retry-After': '60',
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': '0',
+          'X-RateLimit-Reset': String(rateLimitResult.resetTime || Date.now() + 60000),
         }
       );
     }
 
     const supabase = getSupabaseServiceClient();
     if (!supabase) {
-      return NextResponse.json(
+      return corsResponse(
         { valid: false, reason: 'service_unavailable' },
-        { status: 503 }
+        503
       );
     }
 
@@ -66,18 +79,16 @@ export async function GET(request: NextRequest) {
       validatedToken = result.token;
     } catch (error) {
       if (error instanceof ZodError) {
-        return NextResponse.json(
+        return corsResponse(
           {
             valid: false,
             reason: 'invalid_format',
             error: 'Invalid token format'
           },
+          400,
           {
-            status: 400,
-            headers: {
-              'X-RateLimit-Limit': '5',
-              'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
-            },
+            'X-RateLimit-Limit': '5',
+            'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
           }
         );
       }
@@ -97,54 +108,48 @@ export async function GET(request: NextRequest) {
       .single();
 
     if (error || !invitation) {
-      return NextResponse.json(
+      return corsResponse(
         {
           valid: false,
           reason: 'not_found',
           error: 'Invitation not found'
         },
+        404,
         {
-          status: 404,
-          headers: {
-            'X-RateLimit-Limit': '5',
-            'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
-          },
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
         }
       );
     }
 
     // Check if invitation has already been used
     if (invitation.status === 'accepted') {
-      return NextResponse.json(
+      return corsResponse(
         {
           valid: false,
           reason: 'already_used',
           error: 'This invitation has already been used'
         },
+        400,
         {
-          status: 400,
-          headers: {
-            'X-RateLimit-Limit': '5',
-            'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
-          },
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
         }
       );
     }
 
     // Check if invitation is cancelled
     if (invitation.status === 'cancelled') {
-      return NextResponse.json(
+      return corsResponse(
         {
           valid: false,
           reason: 'cancelled',
           error: 'This invitation has been cancelled'
         },
+        400,
         {
-          status: 400,
-          headers: {
-            'X-RateLimit-Limit': '5',
-            'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
-          },
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
         }
       );
     }
@@ -162,18 +167,16 @@ export async function GET(request: NextRequest) {
           .eq('id', invitation.id);
       }
 
-      return NextResponse.json(
+      return corsResponse(
         {
           valid: false,
           reason: 'expired',
           error: 'This invitation has expired'
         },
+        400,
         {
-          status: 400,
-          headers: {
-            'X-RateLimit-Limit': '5',
-            'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
-          },
+          'X-RateLimit-Limit': '5',
+          'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
         }
       );
     }
@@ -186,7 +189,7 @@ export async function GET(request: NextRequest) {
       .single();
 
     // Return success with CORS headers
-    return NextResponse.json(
+    return corsResponse(
       {
         valid: true,
         first_name: user?.first_name || '',
@@ -195,15 +198,10 @@ export async function GET(request: NextRequest) {
         email: invitation.email,
         expiresAt: invitation.expires_at,
       },
+      200,
       {
-        status: 200,
-        headers: {
-          'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || '*',
-          'Access-Control-Allow-Methods': 'GET',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'X-RateLimit-Limit': '5',
-          'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
-        },
+        'X-RateLimit-Limit': '5',
+        'X-RateLimit-Remaining': String(rateLimitResult.remaining || 0),
       }
     );
   } catch (error) {
@@ -216,13 +214,13 @@ export async function GET(request: NextRequest) {
       // logger.error('Invitation validation error', { error: errorMessage });
     }
 
-    return NextResponse.json(
+    return corsResponse(
       {
         valid: false,
         reason: 'server_error',
         error: 'An error occurred while validating the invitation'
       },
-      { status: 500 }
+      500
     );
   }
 }
@@ -230,17 +228,12 @@ export async function GET(request: NextRequest) {
 /**
  * OPTIONS handler for CORS preflight requests
  */
-export async function OPTIONS(request: NextRequest) {
-  return NextResponse.json(
-    {},
-    {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || '*',
-        'Access-Control-Allow-Methods': 'GET, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Max-Age': '86400',
-      },
-    }
-  );
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      ...CORS_HEADERS,
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }

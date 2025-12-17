@@ -11,7 +11,9 @@ export const dynamic = 'force-dynamic';
 
 interface User {
   id: string;
-  name: string;
+  first_name?: string;
+  last_name?: string;
+  name: string; // Full name for display (backward compatibility)
   email: string;
   username?: string;
   role: 'admin' | 'user';
@@ -70,17 +72,26 @@ async function fetchUsers(request: NextRequest) {
   }
 
   // Map to standardized User interface
-  const userList: User[] = (users || []).map((user) => ({
-    id: user.id,
-    name: user.name || user.email,
-    email: user.email,
-    username: user.username,
-    role: user.role || 'user',
-    status: user.status || 'active',
-    gohighlevel_contact_id: user.gohighlevel_contact_id,
-    created_at: user.created_at,
-    updated_at: user.updated_at,
-  }));
+  const userList: User[] = (users || []).map((user) => {
+    // Build full name from first_name + last_name, fallback to full_name, then email
+    const fullName = user.first_name && user.last_name
+      ? `${user.first_name} ${user.last_name}`
+      : user.full_name || user.name || user.email;
+
+    return {
+      id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      name: fullName,
+      email: user.email,
+      username: user.username,
+      role: user.role || 'user',
+      status: user.status || 'active',
+      gohighlevel_contact_id: user.gohighlevel_contact_id,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+    };
+  });
 
   return NextResponse.json({
     success: true,

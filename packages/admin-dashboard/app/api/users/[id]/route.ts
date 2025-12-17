@@ -9,6 +9,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import bcryptjs from 'bcryptjs';
+import { deleteProfilePicture } from '@/lib/cloudflare-r2';
+import { deleteAgentPageFromKV } from '@/lib/cloudflare-kv';
 
 export const dynamic = 'force-dynamic';
 
@@ -178,9 +180,13 @@ export async function PUT(
  * DELETE /api/users/[id]
  *
  * Hard delete user and all associated data
- * Deletion order (foreign key dependencies):
- * 1. DELETE FROM user_invitations WHERE user_id = ?
- * 2. DELETE FROM users WHERE id = ?
+ * Deletion order:
+ * 1. Get agent_pages slug for KV deletion
+ * 2. DELETE FROM user_invitations WHERE user_id = ?
+ * 3. DELETE FROM agent_pages WHERE user_id = ?
+ * 4. DELETE FROM users WHERE id = ?
+ * 5. Delete profile picture from Cloudflare R2
+ * 6. Delete agent page from Cloudflare KV
  */
 export async function DELETE(
   request: NextRequest,
@@ -214,7 +220,16 @@ export async function DELETE(
       );
     }
 
-    // Step 1: Delete user_invitations records (foreign key dependency)
+    // Step 1: Get agent page slug before deletion (for KV cleanup)
+    const { data: agentPage } = await supabase
+      .from('agent_pages')
+      .select('slug')
+      .eq('user_id', userId)
+      .single();
+
+    const agentPageSlug = agentPage?.slug;
+
+    // Step 2: Delete user_invitations records (foreign key dependency)
     const { error: invitationsError, count: invitationsCount } = await supabase
       .from('user_invitations')
       .delete()
@@ -231,8 +246,19 @@ export async function DELETE(
       );
     }
 
-    // Step 2: Delete user record
-    const { error: deleteError, count: userCount } = await supabase
+    // Step 3: Delete agent_pages records (foreign key dependency)
+    const { error: agentPagesError, count: agentPagesCount } = await supabase
+      .from('agent_pages')
+      .delete()
+      .eq('user_id', userId);
+
+    if (agentPagesError) {
+      console.error('❌ Error deleting agent_pages:', agentPagesError);
+      // Non-critical - continue with user deletion
+    }
+
+    // Step 4: Delete user record
+    const { error: deleteError } = await supabase
       .from('users')
       .delete()
       .eq('id', userId);
@@ -248,18 +274,50 @@ export async function DELETE(
       );
     }
 
+    // Step 5: Delete profile picture from Cloudflare R2 (non-blocking)
+    let r2DeleteResult: { success: boolean; error?: string } = { success: false, error: 'Not attempted' };
+    try {
+      r2DeleteResult = await deleteProfilePicture(userId);
+      if (!r2DeleteResult.success) {
+        console.warn('⚠️ Failed to delete profile picture from R2:', r2DeleteResult.error);
+      }
+    } catch (r2Error) {
+      console.warn('⚠️ R2 deletion error:', r2Error);
+    }
+
+    // Step 6: Delete agent page from Cloudflare KV (non-blocking)
+    let kvDeleteResult: { success: boolean; error?: string } = { success: false, error: 'Not attempted' };
+    if (agentPageSlug) {
+      try {
+        kvDeleteResult = await deleteAgentPageFromKV(agentPageSlug);
+        if (!kvDeleteResult.success) {
+          console.warn('⚠️ Failed to delete agent page from KV:', kvDeleteResult.error);
+        }
+      } catch (kvError) {
+        console.warn('⚠️ KV deletion error:', kvError);
+      }
+    }
+
     // Audit log for deletion
     console.log('✅ User deleted successfully:', {
       userId,
       email: existingUser.email,
       username: existingUser.username,
       invitationsDeleted: invitationsCount || 0,
+      agentPagesDeleted: agentPagesCount || 0,
+      agentPageSlug: agentPageSlug || 'none',
+      r2Deleted: r2DeleteResult.success,
+      kvDeleted: kvDeleteResult.success,
       timestamp: new Date().toISOString(),
     });
 
     return NextResponse.json({
       success: true,
       message: 'User and all associated data deleted successfully',
+      details: {
+        cloudflareR2: r2DeleteResult.success ? 'cleaned' : 'no image found',
+        cloudflareKV: agentPageSlug ? (kvDeleteResult.success ? 'cleaned' : 'failed') : 'no agent page',
+      },
     });
   } catch (error) {
     console.error('❌ Error in DELETE /api/users/[id]:', error);

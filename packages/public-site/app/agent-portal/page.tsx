@@ -127,6 +127,8 @@ export default function AgentPortal() {
   const [editFormError, setEditFormError] = useState('');
   const [editFormSuccess, setEditFormSuccess] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Check authentication on mount
   useEffect(() => {
@@ -143,6 +145,18 @@ export default function AgentPortal() {
     }
     setIsLoading(false);
   }, [router]);
+
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (isAnyPopupOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isAnyPopupOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem('agent_portal_user');
@@ -226,6 +240,11 @@ export default function AgentPortal() {
       if (Object.keys(updates).length === 0) {
         setEditFormSuccess('No changes to save');
         setIsSubmitting(false);
+        // Close the modal after a brief delay
+        setTimeout(() => {
+          setShowEditProfile(false);
+          setEditFormSuccess('');
+        }, 1500);
         return;
       }
 
@@ -264,6 +283,11 @@ export default function AgentPortal() {
           newPassword: '',
           confirmPassword: '',
         }));
+        // Close the modal after a brief delay so user sees success message
+        setTimeout(() => {
+          setShowEditProfile(false);
+          setEditFormSuccess('');
+        }, 1500);
       } else {
         setEditFormError(data.message || 'Failed to update profile');
       }
@@ -383,9 +407,12 @@ export default function AgentPortal() {
       try {
         const { removeBackground } = await import('@imgly/background-removal');
         const bgRemovedBlob = await removeBackground(file, {
-          progress: (key, current, total) => {
-            if (key === 'compute:inference') {
-              setBgRemovalProgress(Math.round((current / total) * 100));
+          progress: (key: string, current: number, total: number) => {
+            // Track progress across all phases
+            const progress = total > 0 ? Math.round((current / total) * 100) : 0;
+            // Update progress for any phase that reports it
+            if (progress > 0) {
+              setBgRemovalProgress(progress);
             }
           },
         });
@@ -481,9 +508,9 @@ export default function AgentPortal() {
       const { removeBackground } = await import('@imgly/background-removal');
 
       const bgRemovedBlob = await removeBackground(croppedBlob, {
-        progress: (key, current, total) => {
-          if (key === 'compute:inference') {
-            const percent = Math.round((current / total) * 100);
+        progress: (key: string, current: number, total: number) => {
+          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+          if (percent > 0) {
             setStatus(`Removing background... ${percent}%`);
           }
         },
@@ -596,9 +623,9 @@ export default function AgentPortal() {
       const { removeBackground } = await import('@imgly/background-removal');
 
       const bgRemovedBlob = await removeBackground(originalImageFile, {
-        progress: (key, current, total) => {
-          if (key === 'compute:inference') {
-            const percent = Math.round((current / total) * 100);
+        progress: (key: string, current: number, total: number) => {
+          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+          if (percent > 0) {
             setDashboardUploadStatus(`Removing background... ${percent}%`);
           }
         },
@@ -952,19 +979,20 @@ export default function AgentPortal() {
       {/* Edit Profile Modal */}
       {showEditProfile && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={handleCloseEditProfile}
+          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
 
           {/* Modal */}
           <div
-            className="relative w-full max-w-md bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl"
+            className="relative w-full max-w-md my-auto bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/10">
+            <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#1a1a1a] rounded-t-2xl">
               <h2 className="text-xl font-semibold text-[#ffd700]">Edit Profile</h2>
               <button
                 onClick={handleCloseEditProfile}
@@ -1069,13 +1097,53 @@ export default function AgentPortal() {
                   <label className="block text-sm text-[#e5e4dd]/60 mb-2">
                     New Password
                   </label>
-                  <input
-                    type="password"
-                    value={editFormData.newPassword}
-                    onChange={(e) => setEditFormData({ ...editFormData, newPassword: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                    placeholder="Enter new password (min 8 characters)"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? 'text' : 'password'}
+                      value={editFormData.newPassword}
+                      onChange={(e) => setEditFormData({ ...editFormData, newPassword: e.target.value })}
+                      autoComplete="new-password"
+                      className="w-full px-4 py-3 pr-12 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                      placeholder="Enter new password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword(!showNewPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
+                      aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showNewPassword ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  {/* Password requirements - only show when user starts typing */}
+                  {editFormData.newPassword && (
+                    <div className="text-xs text-[#e5e4dd]/50 space-y-1 pt-2">
+                      <p className={editFormData.newPassword.length >= 8 ? 'text-green-400' : ''}>
+                        {editFormData.newPassword.length >= 8 ? '✓' : '○'} At least 8 characters
+                      </p>
+                      <p className={/[A-Z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                        {/[A-Z]/.test(editFormData.newPassword) ? '✓' : '○'} One uppercase letter
+                      </p>
+                      <p className={/[a-z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                        {/[a-z]/.test(editFormData.newPassword) ? '✓' : '○'} One lowercase letter
+                      </p>
+                      <p className={/[0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                        {/[0-9]/.test(editFormData.newPassword) ? '✓' : '○'} One number
+                      </p>
+                      <p className={/[^A-Za-z0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                        {/[^A-Za-z0-9]/.test(editFormData.newPassword) ? '✓' : '○'} One special character
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* Confirm New Password */}
@@ -1083,13 +1151,39 @@ export default function AgentPortal() {
                   <label className="block text-sm text-[#e5e4dd]/60 mb-2">
                     Confirm New Password
                   </label>
-                  <input
-                    type="password"
-                    value={editFormData.confirmPassword}
-                    onChange={(e) => setEditFormData({ ...editFormData, confirmPassword: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                    placeholder="Confirm new password"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={editFormData.confirmPassword}
+                      onChange={(e) => setEditFormData({ ...editFormData, confirmPassword: e.target.value })}
+                      autoComplete="new-password"
+                      className="w-full px-4 py-3 pr-12 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                      placeholder="Confirm new password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
+                      aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showConfirmPassword ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                  {/* Password match indicator */}
+                  {editFormData.confirmPassword && (
+                    <p className={`text-xs pt-2 ${editFormData.newPassword === editFormData.confirmPassword ? 'text-green-400' : 'text-red-400'}`}>
+                      {editFormData.newPassword === editFormData.confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -1130,19 +1224,20 @@ export default function AgentPortal() {
       {/* Image Editor Modal */}
       {showImageEditor && pendingImageUrl && (
         <div
-          className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+          className="fixed inset-0 z-[110] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={handleCancelImageEdit}
+          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
 
           {/* Modal */}
           <div
-            className="relative w-full max-w-lg bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl overflow-hidden"
+            className="relative w-full max-w-lg my-auto bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#1a1a1a] rounded-t-2xl">
               <h2 className="text-lg font-semibold text-[#ffd700]">Edit Profile Picture</h2>
               <button
                 onClick={handleCancelImageEdit}
@@ -2231,9 +2326,10 @@ function AgentPagesSection({
     try {
       const { removeBackground } = await import('@imgly/background-removal');
       const bgRemovedBlob = await removeBackground(file, {
-        progress: (key, current, total) => {
-          if (key === 'compute:inference') {
-            setBgRemovalProgress(Math.round((current / total) * 100));
+        progress: (key: string, current: number, total: number) => {
+          const progress = total > 0 ? Math.round((current / total) * 100) : 0;
+          if (progress > 0) {
+            setBgRemovalProgress(progress);
           }
         },
       });
@@ -2266,9 +2362,9 @@ function AgentPagesSection({
       const { removeBackground } = await import('@imgly/background-removal');
 
       const bgRemovedBlob = await removeBackground(originalImageFile, {
-        progress: (key, current, total) => {
-          if (key === 'compute:inference') {
-            const percent = Math.round((current / total) * 100);
+        progress: (key: string, current: number, total: number) => {
+          const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+          if (percent > 0) {
             setAttractionUploadStatus(`Removing background... ${percent}%`);
           }
         },
