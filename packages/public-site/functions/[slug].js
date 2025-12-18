@@ -1423,12 +1423,8 @@ async function generateAttractionPage(agent, siteUrl, env) {
 
   // === REMOVE NEXT.JS CLIENT-SIDE JAVASCRIPT ===
   // This prevents React hydration from overwriting our server-side modifications
-  // Remove all script tags that load Next.js bundles
-  html = html.replace(/<script[^>]*src="[^"]*\/_next\/[^"]*"[^>]*><\/script>/gi, '');
-  html = html.replace(/<script[^>]*id="__NEXT_DATA__"[^>]*>[\s\S]*?<\/script>/gi, '');
-  html = html.replace(/<script[^>]*>[\s\S]*?__next[\s\S]*?<\/script>/gi, '');
-  // Remove inline scripts that bootstrap Next.js
-  html = html.replace(/<script>self\.__next[\s\S]*?<\/script>/gi, '');
+  // Remove ALL script tags - the attraction page will be fully static HTML
+  html = html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
 
   // === REMOVE HEADER ===
   // Remove the header element entirely
