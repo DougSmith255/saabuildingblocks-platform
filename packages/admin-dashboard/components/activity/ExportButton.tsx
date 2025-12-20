@@ -38,14 +38,7 @@ export function ExportButton({ logs, disabled = false }: ExportButtonProps) {
             : 'bg-[#404040]/60 text-[#ffd700] hover:bg-[#404040] border border-[#ffd700]/30 hover:border-[#ffd700]'
         }
       `}
-      style={
-        !disabled && logs.length > 0
-          ? {
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)',
-            }
-          : undefined
-      }
+      style={undefined}
     >
       <Download className="w-4 h-4" />
       <span>Export CSV</span>

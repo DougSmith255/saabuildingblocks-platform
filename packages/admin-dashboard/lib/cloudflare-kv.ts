@@ -61,6 +61,9 @@ export interface AgentPageKVData {
   activated: boolean; // Whether page is publicly visible
   is_active?: boolean; // Alias for compatibility
   updated_at: string;
+  // eXp Realty fields for join team instructions
+  exp_email: string | null;  // Agent's eXp Realty email (e.g., firstname.lastname@expreferral.com)
+  legal_name: string | null; // Agent's official legal name as it appears in eXp system
 }
 
 /**
@@ -111,6 +114,121 @@ export async function writeAgentPageToKV(
 }
 
 /**
+ * Write a redirect entry to KV
+ *
+ * Used when an agent changes their slug to redirect old URLs to the new one.
+ * Key format: redirect:{old-slug} → {new-slug}
+ *
+ * @param oldSlug - The old slug to redirect from
+ * @param newSlug - The new slug to redirect to
+ * @returns Success boolean and optional error message
+ */
+export async function writeRedirectToKV(
+  oldSlug: string,
+  newSlug: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!CLOUDFLARE_API_TOKEN) {
+    console.error('CLOUDFLARE_API_TOKEN not configured');
+    return { success: false, error: 'KV not configured' };
+  }
+
+  const redirectKey = `redirect:${oldSlug}`;
+  const url = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${KV_NAMESPACE_ID}/values/${encodeURIComponent(redirectKey)}`;
+
+  try {
+    console.log(`[KV] Writing redirect: ${oldSlug} → ${newSlug}`);
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+        'Content-Type': 'text/plain',
+      },
+      body: newSlug, // Just store the target slug as plain text
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('KV redirect write failed:', response.status, errorText);
+      return { success: false, error: `KV redirect write failed: ${response.status}` };
+    }
+
+    console.log(`Successfully created redirect: ${oldSlug} → ${newSlug}`);
+    return { success: true };
+  } catch (error) {
+    console.error('KV redirect write error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
+ * Update all redirects for an agent to point to the new slug
+ *
+ * When an agent changes slug multiple times, we need to update all
+ * existing redirects to point directly to the latest slug (no chains).
+ *
+ * @param agentId - The agent's ID
+ * @param newSlug - The new current slug
+ * @param previousSlugs - Array of all previous slugs for this agent
+ */
+export async function updateAllRedirectsForAgent(
+  newSlug: string,
+  previousSlugs: string[]
+): Promise<{ success: boolean; error?: string }> {
+  // Update each previous slug to point to the new slug
+  for (const oldSlug of previousSlugs) {
+    if (oldSlug !== newSlug) {
+      const result = await writeRedirectToKV(oldSlug, newSlug);
+      if (!result.success) {
+        console.error(`Failed to update redirect for ${oldSlug}:`, result.error);
+        // Continue with other redirects even if one fails
+      }
+    }
+  }
+  return { success: true };
+}
+
+/**
+ * Delete a redirect from KV
+ *
+ * Used when an agent reclaims a previous slug
+ *
+ * @param oldSlug - The slug to remove redirect for
+ */
+export async function deleteRedirectFromKV(
+  oldSlug: string
+): Promise<{ success: boolean; error?: string }> {
+  if (!CLOUDFLARE_API_TOKEN) {
+    console.error('CLOUDFLARE_API_TOKEN not configured');
+    return { success: false, error: 'KV not configured' };
+  }
+
+  const redirectKey = `redirect:${oldSlug}`;
+  const url = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/storage/kv/namespaces/${KV_NAMESPACE_ID}/values/${encodeURIComponent(redirectKey)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+      },
+    });
+
+    if (!response.ok && response.status !== 404) {
+      const errorText = await response.text();
+      console.error('KV redirect delete failed:', response.status, errorText);
+      return { success: false, error: `KV redirect delete failed: ${response.status}` };
+    }
+
+    console.log(`Successfully deleted redirect for: ${oldSlug}`);
+    return { success: true };
+  } catch (error) {
+    console.error('KV redirect delete error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+/**
  * Delete agent page from Cloudflare KV
  *
  * Used when an agent page is deactivated or slug changes
@@ -154,13 +272,16 @@ export async function deleteAgentPageFromKV(
  * Sync agent page to KV after database update
  *
  * Handles both updates (write new slug) and slug changes (delete old, write new)
+ * When slug changes, creates a redirect from old slug to new slug
  *
  * @param page - The full agent page object from database
  * @param previousSlug - Optional previous slug if it changed
+ * @param allPreviousSlugs - Optional array of all previous slugs for this agent (for multi-change scenarios)
  */
 export async function syncAgentPageToKV(
   page: AgentPageKVData,
-  previousSlug?: string
+  previousSlug?: string,
+  allPreviousSlugs?: string[]
 ): Promise<{ success: boolean; error?: string }> {
   // If page is not active, delete from KV
   // Check both 'activated' and 'is_active' for compatibility
@@ -169,9 +290,23 @@ export async function syncAgentPageToKV(
     return deleteAgentPageFromKV(page.slug);
   }
 
-  // If slug changed, delete old key first
+  // If slug changed, handle redirect creation
   if (previousSlug && previousSlug !== page.slug) {
+    // Delete old agent data key
     await deleteAgentPageFromKV(previousSlug);
+
+    // Check if the new slug was a previous redirect target (agent reclaiming old slug)
+    // If so, delete that redirect entry
+    await deleteRedirectFromKV(page.slug);
+
+    // Create redirect from old slug to new slug
+    await writeRedirectToKV(previousSlug, page.slug);
+
+    // If we have a list of all previous slugs, update them all to point to the new slug
+    // This prevents redirect chains (old1 → old2 → current becomes old1 → current, old2 → current)
+    if (allPreviousSlugs && allPreviousSlugs.length > 0) {
+      await updateAllRedirectsForAgent(page.slug, allPreviousSlugs);
+    }
   }
 
   // Write to KV

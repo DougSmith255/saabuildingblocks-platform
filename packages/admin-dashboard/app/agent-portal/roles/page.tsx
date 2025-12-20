@@ -103,8 +103,7 @@ export default function RolesPage() {
         <div
           className="p-6 rounded-lg border border-[#404040]"
           style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            backdropFilter: 'blur(8px)'
+            background: 'rgba(64, 64, 64, 0.5)',
           }}
         >
           <div className="flex items-center gap-3 mb-2">
@@ -116,8 +115,7 @@ export default function RolesPage() {
         <div
           className="p-6 rounded-lg border border-[#404040]"
           style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            backdropFilter: 'blur(8px)'
+            background: 'rgba(64, 64, 64, 0.5)',
           }}
         >
           <div className="flex items-center gap-3 mb-2">
@@ -129,8 +127,7 @@ export default function RolesPage() {
         <div
           className="p-6 rounded-lg border border-[#404040]"
           style={{
-            background: 'rgba(64, 64, 64, 0.3)',
-            backdropFilter: 'blur(8px)'
+            background: 'rgba(64, 64, 64, 0.5)',
           }}
         >
           <div className="flex items-center gap-3 mb-2">
@@ -153,8 +150,7 @@ export default function RolesPage() {
       <div
         className="p-6 rounded-lg border border-[#404040]"
         style={{
-          background: 'rgba(64, 64, 64, 0.3)',
-          backdropFilter: 'blur(8px)'
+          background: 'rgba(64, 64, 64, 0.5)',
         }}
       >
         <RoleTable roles={roles} onDelete={handleDelete} isAdmin={isAdmin} />
@@ -166,8 +162,7 @@ export default function RolesPage() {
           <div
             className="w-full max-w-md p-6 rounded-lg border border-[#404040]"
             style={{
-              background: 'rgba(42, 42, 42, 0.95)',
-              backdropFilter: 'blur(12px)'
+              background: 'rgba(42, 42, 42, 0.98)',
             }}
           >
             <h3 className="text-xl font-bold text-[#e5e4dd] mb-4">Delete Role</h3>

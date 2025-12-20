@@ -109,7 +109,6 @@ export default function AgentPortalDashboard() {
         className="p-6 rounded-lg border"
         style={{
           background: 'rgba(64, 64, 64, 0.5)',
-          backdropFilter: 'blur(8px)',
           borderColor: 'rgba(255, 215, 0, 0.2)',
         }}
       >

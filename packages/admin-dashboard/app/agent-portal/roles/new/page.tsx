@@ -89,8 +89,7 @@ export default function NewRolePage() {
       <div
         className="p-6 rounded-lg border border-[#404040]"
         style={{
-          background: 'rgba(64, 64, 64, 0.3)',
-          backdropFilter: 'blur(8px)'
+          background: 'rgba(64, 64, 64, 0.5)',
         }}
       >
         <RoleForm

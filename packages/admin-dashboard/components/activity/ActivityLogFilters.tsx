@@ -37,9 +37,7 @@ export function ActivityLogFilters({
     <div
       className="p-6 rounded-xl border border-[#404040]/50 mb-6"
       style={{
-        background: 'rgba(64, 64, 64, 0.4)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        background: 'rgba(64, 64, 64, 0.5)',
       }}
     >
       <div className="flex items-center gap-2 mb-4">

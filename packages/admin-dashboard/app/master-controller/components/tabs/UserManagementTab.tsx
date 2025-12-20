@@ -15,6 +15,8 @@ interface User {
   status: 'active' | 'pending' | 'suspended';
   ghl_contact_id?: string;
   created_at: string;
+  exp_email?: string; // Agent's eXp Realty email
+  legal_name?: string; // Agent's official legal name for sponsor search
 }
 
 interface UserStats {
@@ -61,7 +63,9 @@ export function UserManagementTab() {
     username: '',
     password: '',
     role: 'user' as 'admin' | 'user',
-    status: 'active' as 'active' | 'pending' | 'suspended'
+    status: 'active' as 'active' | 'pending' | 'suspended',
+    exp_email: '',
+    legal_name: ''
   });
   const [editUserLoading, setEditUserLoading] = useState(false);
   const [editUserError, setEditUserError] = useState<string | null>(null);
@@ -299,7 +303,9 @@ export function UserManagementTab() {
       username: user.username || '',
       password: '', // Password field starts empty - only set if changing
       role: user.role,
-      status: user.status
+      status: user.status,
+      exp_email: user.exp_email || '',
+      legal_name: user.legal_name || ''
     });
     setEditUserError(null);
     setShowEditUserModal(true);
@@ -337,6 +343,8 @@ export function UserManagementTab() {
         username: editUserForm.username,
         role: editUserForm.role,
         status: editUserForm.status,
+        exp_email: editUserForm.exp_email,
+        legal_name: editUserForm.legal_name,
       };
 
       // Only include password if user entered a new one
@@ -367,6 +375,8 @@ export function UserManagementTab() {
         password: '',
         role: 'user',
         status: 'active',
+        exp_email: '',
+        legal_name: '',
       });
       setShowEmailChangeConfirm(false);
     } catch (err) {
@@ -848,6 +858,41 @@ export function UserManagementTab() {
                   <option value="pending">Pending</option>
                   <option value="suspended">Suspended</option>
                 </select>
+              </div>
+
+              {/* eXp Realty Fields Section */}
+              <div className="border-t border-[#404040] pt-4 mt-4">
+                <p className="text-sm font-medium text-[#ffd700] mb-3">eXp Realty Info (for Join Team Instructions)</p>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
+                    eXp Realty Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editUserForm.exp_email}
+                    onChange={(e) => setEditUserForm({ ...editUserForm, exp_email: e.target.value })}
+                    className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
+                    placeholder="firstname.lastname@expreferral.com"
+                    disabled={editUserLoading}
+                  />
+                  <p className="text-xs text-[#dcdbd5]/50 mt-1">Used in join instructions for sponsor search</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
+                    Legal Name (as in eXp system)
+                  </label>
+                  <input
+                    type="text"
+                    value={editUserForm.legal_name}
+                    onChange={(e) => setEditUserForm({ ...editUserForm, legal_name: e.target.value })}
+                    className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
+                    placeholder="e.g., Sheldon Douglas Smart"
+                    disabled={editUserLoading}
+                  />
+                  <p className="text-xs text-[#dcdbd5]/50 mt-1">Official legal name for sponsor selection</p>
+                </div>
               </div>
 
               <div className="flex gap-3 mt-6">

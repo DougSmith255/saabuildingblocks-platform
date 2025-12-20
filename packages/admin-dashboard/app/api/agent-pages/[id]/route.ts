@@ -213,9 +213,23 @@ export async function PATCH(
       );
     }
 
+    // Fetch user's exp_email and legal_name for KV sync
+    const { data: userData } = await supabase
+      .from('users')
+      .select('exp_email, legal_name')
+      .eq('id', updatedPage.user_id)
+      .single();
+
+    // Merge user data with page data for KV
+    const kvData: AgentPageKVData = {
+      ...updatedPage,
+      exp_email: userData?.exp_email || null,
+      legal_name: userData?.legal_name || null,
+    };
+
     // Sync to Cloudflare KV for edge delivery
     // This runs async - we don't wait for it to complete
-    syncAgentPageToKV(updatedPage as AgentPageKVData, previousSlug || undefined)
+    syncAgentPageToKV(kvData, previousSlug || undefined)
       .then(result => {
         if (!result.success) {
           console.error('KV sync failed:', result.error);

@@ -25,9 +25,7 @@ export function AgentPortalHeader() {
       role="banner"
       className="fixed top-0 left-0 right-0 z-50"
       style={{
-        background: 'rgba(64, 64, 64, 0.6)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        background: 'rgba(64, 64, 64, 0.85)',
         borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
       }}
     >

@@ -21,6 +21,8 @@ interface User {
   gohighlevel_contact_id?: string;
   created_at: string;
   updated_at: string;
+  exp_email?: string; // Agent's eXp Realty email
+  legal_name?: string; // Agent's official legal name
 }
 
 /**
@@ -90,6 +92,8 @@ async function fetchUsers(request: NextRequest) {
       gohighlevel_contact_id: user.gohighlevel_contact_id,
       created_at: user.created_at,
       updated_at: user.updated_at,
+      exp_email: user.exp_email,
+      legal_name: user.legal_name,
     };
   });
 

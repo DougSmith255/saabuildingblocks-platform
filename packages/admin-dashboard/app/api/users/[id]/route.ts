@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import bcryptjs from 'bcryptjs';
 import { deleteProfilePicture } from '@/lib/cloudflare-r2';
-import { deleteAgentPageFromKV } from '@/lib/cloudflare-kv';
+import { deleteAgentPageFromKV, syncAgentPageToKV, AgentPageKVData } from '@/lib/cloudflare-kv';
 
 export const dynamic = 'force-dynamic';
 
@@ -100,7 +100,9 @@ export async function PUT(
       username,
       password,
       role,
-      status
+      status,
+      exp_email,
+      legal_name
     } = body;
 
     // Build update object with only provided fields
@@ -131,6 +133,8 @@ export async function PUT(
     if (username !== undefined) updates.username = username;
     if (role !== undefined) updates.role = role;
     if (status !== undefined) updates.status = status;
+    if (exp_email !== undefined) updates.exp_email = exp_email;
+    if (legal_name !== undefined) updates.legal_name = legal_name;
 
     // Hash new password if provided
     if (password) {
@@ -161,6 +165,38 @@ export async function PUT(
 
     // Remove password_hash from response
     const { password_hash, ...userWithoutPassword } = updatedUser;
+
+    // If exp_email or legal_name was updated, re-sync agent page to KV
+    if (exp_email !== undefined || legal_name !== undefined) {
+      // Fetch the user's agent page
+      const { data: agentPage } = await supabase
+        .from('agent_pages')
+        .select('*')
+        .eq('user_id', id)
+        .single();
+
+      if (agentPage) {
+        // Merge updated user data with agent page for KV sync
+        const kvData: AgentPageKVData = {
+          ...agentPage,
+          exp_email: updatedUser.exp_email || null,
+          legal_name: updatedUser.legal_name || null,
+        };
+
+        // Sync to KV (async, don't wait)
+        syncAgentPageToKV(kvData)
+          .then(result => {
+            if (result.success) {
+              console.log('✅ Agent page KV synced after user exp_email/legal_name update');
+            } else {
+              console.error('❌ KV sync failed:', result.error);
+            }
+          })
+          .catch(err => {
+            console.error('❌ KV sync error:', err);
+          });
+      }
+    }
 
     return NextResponse.json({
       success: true,

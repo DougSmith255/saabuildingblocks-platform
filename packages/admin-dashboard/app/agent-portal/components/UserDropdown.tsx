@@ -74,7 +74,6 @@ export function UserDropdown() {
         className="w-64"
         style={{
           background: 'rgba(64, 64, 64, 0.95)',
-          backdropFilter: 'blur(12px)',
           border: '1px solid rgba(255, 215, 0, 0.2)',
         }}
       >

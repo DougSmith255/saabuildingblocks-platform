@@ -148,9 +148,7 @@ export default function ActivityLogPage() {
       <div
         className="rounded-xl border border-[#404040]/50 overflow-hidden"
         style={{
-          background: 'rgba(42, 42, 42, 0.4)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
+          background: 'rgba(42, 42, 42, 0.6)',
         }}
       >
         <ActivityLogTable logs={logs} loading={loading} />

@@ -55,7 +55,9 @@ export async function GET(
         slug,
         display_first_name,
         display_last_name,
+        email,
         profile_image_url,
+        profile_image_color_url,
         phone,
         show_phone,
         phone_text_only,
@@ -65,12 +67,14 @@ export async function GET(
         youtube_url,
         tiktok_url,
         linkedin_url,
-        is_active,
+        custom_links,
+        links_settings,
+        activated,
         created_at,
         updated_at
       `)
       .eq('slug', slug)
-      .eq('is_active', true)
+      .eq('activated', true)
       .single();
 
     if (error || !page) {

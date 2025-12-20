@@ -41,9 +41,7 @@ export function ActivityLogTable({ logs, loading = false }: ActivityLogTableProp
         <thead
           className="sticky top-0 z-10"
           style={{
-            background: 'rgba(42, 42, 42, 0.95)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
+            background: 'rgba(42, 42, 42, 0.98)',
           }}
         >
           <tr>
