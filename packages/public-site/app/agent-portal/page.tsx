@@ -2340,7 +2340,7 @@ function AgentPagesSection({
   const [showStylesModal, setShowStylesModal] = useState(false);
 
   // Tab navigation state for new UI
-  type TabId = 'profile' | 'linktree' | 'links';
+  type TabId = 'profile' | 'design' | 'links' | 'attraction';
   const [activeTab, setActiveTab] = useState<TabId>('profile');
 
   // Accordion expanded state
@@ -2831,44 +2831,20 @@ function AgentPagesSection({
           {/* LEFT COLUMN: Live Preview (Sticky on Desktop) */}
           <div className="lg:sticky lg:top-6 lg:self-start order-2 lg:order-1">
             <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
-              {/* Preview Header */}
-              <div className="px-4 py-3 border-b border-white/10 bg-black/30">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                  <span className={`text-xs ${activeTab === 'profile' ? 'text-[#ffd700]' : 'text-[#4ecdc4]'}`}>
-                    {activeTab === 'profile' ? 'Attraction Page' : 'Linktree'}
-                  </span>
-                </div>
-              </div>
-
-              {/* Preview Content - Switches based on active tab */}
-              <div className="p-0">
-                {activeTab === 'profile' ? (
-                  /* Attraction Page Preview - Live iframe of actual page */
-                  <div className="relative w-full overflow-hidden rounded-b-xl" style={{ height: '500px' }}>
-                    {pageData.activated && (generatedSlug || pageData.slug) ? (
-                      <iframe
-                        src={pageUrl}
-                        className="border-0"
-                        style={{
-                          transform: 'scale(0.5)',
-                          transformOrigin: 'top left',
-                          width: '200%',
-                          height: '200%',
-                          pointerEvents: 'none',
-                        }}
-                        title="Attraction Page Preview"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-[#e5e4dd]/50 text-sm">
-                        Activate your page to see preview
-                      </div>
-                    )}
-                    {/* Overlay to prevent interaction */}
-                    <div className="absolute inset-0 bg-transparent" />
+              {/* Preview Header - Hidden on Attraction tab */}
+              {activeTab !== 'attraction' && (
+                <div className="px-4 py-3 border-b border-white/10 bg-black/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
+                    <span className="text-xs text-[#4ecdc4]">Linktree</span>
                   </div>
-                ) : (
-                  /* Linktree Preview */
+                </div>
+              )}
+
+              {/* Preview Content - Linktree preview for Profile/Design/Links tabs */}
+              {activeTab !== 'attraction' && (
+                <div className="p-0">
+                  {/* Linktree Preview */}
                   <div className="flex flex-col items-center gap-4 max-w-[260px] mx-auto">
                     {/* Profile Photo */}
                     <div
@@ -3030,8 +3006,8 @@ function AgentPagesSection({
                       })}
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -3082,27 +3058,25 @@ function AgentPagesSection({
                   onClick={() => setActiveTab('profile')}
                   className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
                     activeTab === 'profile'
-                      ? 'text-[#ffd700]'
-                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
-                  }`}
-                >
-                  Profile
-                  <span className="hidden sm:inline ml-1.5 text-xs text-[#e5e4dd]/40">(Attraction + Links)</span>
-                  {activeTab === 'profile' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ffd700]" />
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveTab('linktree')}
-                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
-                    activeTab === 'linktree'
                       ? 'text-[#4ecdc4]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
-                  Style
-                  <span className="hidden sm:inline ml-1 text-xs text-[#e5e4dd]/40">(Links)</span>
-                  {activeTab === 'linktree' && (
+                  Profile
+                  {activeTab === 'profile' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('design')}
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                    activeTab === 'design'
+                      ? 'text-[#4ecdc4]'
+                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
+                  }`}
+                >
+                  Design
+                  {activeTab === 'design' && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
                   )}
                 </button>
@@ -3115,7 +3089,6 @@ function AgentPagesSection({
                   }`}
                 >
                   Links
-                  <span className="hidden sm:inline ml-1 text-xs text-[#e5e4dd]/40">(Links)</span>
                   {customLinks.length > 0 && (
                     <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-[#4ecdc4]/20 text-[#4ecdc4]">
                       {customLinks.length}
@@ -3123,6 +3096,19 @@ function AgentPagesSection({
                   )}
                   {activeTab === 'links' && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('attraction')}
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                    activeTab === 'attraction'
+                      ? 'text-[#ffd700]'
+                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
+                  }`}
+                >
+                  Attraction
+                  {activeTab === 'attraction' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ffd700]" />
                   )}
                 </button>
               </div>
@@ -3369,8 +3355,8 @@ function AgentPagesSection({
                 </>
               )}
 
-              {/* LINKTREE TAB */}
-              {activeTab === 'linktree' && (
+              {/* DESIGN TAB */}
+              {activeTab === 'design' && (
                 <>
                   {/* Bio */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
@@ -3721,6 +3707,156 @@ function AgentPagesSection({
                     </p>
                   </div>
                 </>
+              )}
+
+              {/* ATTRACTION TAB */}
+              {activeTab === 'attraction' && (
+                <div className="space-y-6">
+                  {/* Attraction Page Preview */}
+                  <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-[#ffd700]/20 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-[#ffd700]/20 bg-black/30">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
+                        <span className="text-xs text-[#ffd700]">Agent Attraction Page</span>
+                      </div>
+                    </div>
+                    <div className="relative w-full overflow-hidden" style={{ height: '400px' }}>
+                      {pageData.activated && (generatedSlug || pageData.slug) ? (
+                        <iframe
+                          src={pageUrl}
+                          className="border-0"
+                          style={{
+                            transform: 'scale(0.4)',
+                            transformOrigin: 'top left',
+                            width: '250%',
+                            height: '250%',
+                            pointerEvents: 'none',
+                          }}
+                          title="Attraction Page Preview"
+                        />
+                      ) : (
+                        <div className="flex items-center justify-center h-full text-[#e5e4dd]/50 text-sm">
+                          Activate your page to see preview
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-transparent" />
+                    </div>
+                  </div>
+
+                  {/* How It Works Section */}
+                  <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+                    <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
+
+                    <div className="space-y-4 text-sm text-[#e5e4dd]/80">
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 rounded-full bg-[#4ecdc4]/20 border border-[#4ecdc4]/30 flex items-center justify-center flex-shrink-0">
+                          <span className="text-[#4ecdc4] font-bold">1</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-[#e5e4dd] mb-1">Linktree Page</p>
+                          <p className="text-[#e5e4dd]/60">Your quick-access contact hub with phone, social links, and custom buttons. Perfect for social media bios and email signatures.</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
+                          <span className="text-[#ffd700] font-bold">2</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-[#e5e4dd] mb-1">Agent Attraction Page</p>
+                          <p className="text-[#e5e4dd]/60">Your full value proposition page. Shows prospects why they should join eXp under your sponsorship with detailed info about SAA benefits.</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3">
+                        <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                          </svg>
+                        </div>
+                        <div>
+                          <p className="font-medium text-[#e5e4dd] mb-1">The Funnel</p>
+                          <p className="text-[#e5e4dd]/60">Your Linktree links to your Attraction Page, creating a natural flow: quick contact → full pitch → conversion.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* What Happens When Section */}
+                  <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+                    <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Take Action</h3>
+
+                    <div className="space-y-4 text-sm">
+                      <div className="p-4 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
+                        <div className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <div>
+                            <p className="font-medium text-[#e5e4dd] mb-1">When someone books a call</p>
+                            <p className="text-[#e5e4dd]/60">The call is booked directly with <strong className="text-[#ffd700]">you</strong>, not SAA. You handle the conversation and close the deal.</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-lg bg-green-500/5 border border-green-500/20">
+                        <div className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                          </svg>
+                          <div>
+                            <p className="font-medium text-[#e5e4dd] mb-1">When someone clicks &quot;Join&quot; or applies</p>
+                            <p className="text-[#e5e4dd]/60">They&apos;re instructed to enter <strong className="text-green-400">your name</strong> as their sponsor when applying to eXp. You get credit for the referral and they join under your downline.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Use Cases */}
+                  <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+                    <h3 className="text-lg font-medium text-[#ffd700] mb-4">Where to Share Your Pages</h3>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2 text-[#e5e4dd]/70">
+                        <svg className="w-4 h-4 text-[#4ecdc4]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        Email signature
+                      </div>
+                      <div className="flex items-center gap-2 text-[#e5e4dd]/70">
+                        <svg className="w-4 h-4 text-[#4ecdc4]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        Social media bio links
+                      </div>
+                      <div className="flex items-center gap-2 text-[#e5e4dd]/70">
+                        <svg className="w-4 h-4 text-[#4ecdc4]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
+                        </svg>
+                        Facebook groups
+                      </div>
+                      <div className="flex items-center gap-2 text-[#e5e4dd]/70">
+                        <svg className="w-4 h-4 text-[#4ecdc4]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        Business cards (QR code)
+                      </div>
+                      <div className="flex items-center gap-2 text-[#e5e4dd]/70">
+                        <svg className="w-4 h-4 text-[#4ecdc4]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
+                        </svg>
+                        Direct messages to prospects
+                      </div>
+                      <div className="flex items-center gap-2 text-[#e5e4dd]/70">
+                        <svg className="w-4 h-4 text-[#4ecdc4]" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Recruitment presentations
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
