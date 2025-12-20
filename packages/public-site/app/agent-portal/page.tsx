@@ -2831,13 +2831,38 @@ function AgentPagesSection({
           {/* LEFT COLUMN: Live Preview (Sticky on Desktop) */}
           <div className="lg:sticky lg:top-6 lg:self-start order-2 lg:order-1">
             <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
-              {/* Preview Header - Hidden on Attraction tab */}
-              {activeTab !== 'attraction' && (
-                <div className="px-4 py-3 border-b border-white/10 bg-black/30">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                    <span className="text-xs text-[#4ecdc4]">Linktree</span>
-                  </div>
+              {/* Preview Header */}
+              <div className="px-4 py-3 border-b border-white/10 bg-black/30">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
+                  <span className={`text-xs ${activeTab === 'attraction' ? 'text-[#ffd700]' : 'text-[#4ecdc4]'}`}>
+                    {activeTab === 'attraction' ? 'Agent Attraction Page' : 'Linktree'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Preview Content - Attraction Page preview */}
+              {activeTab === 'attraction' && (
+                <div className="relative w-full overflow-hidden" style={{ height: '600px' }}>
+                  {pageData.activated && (generatedSlug || pageData.slug) ? (
+                    <iframe
+                      src={pageUrl}
+                      className="border-0"
+                      style={{
+                        transform: 'scale(0.35)',
+                        transformOrigin: 'top left',
+                        width: '286%',
+                        height: '286%',
+                        pointerEvents: 'none',
+                      }}
+                      title="Attraction Page Preview"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-[#e5e4dd]/50 text-sm">
+                      Activate your page to see preview
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-transparent" />
                 </div>
               )}
 
@@ -3712,37 +3737,6 @@ function AgentPagesSection({
               {/* ATTRACTION TAB */}
               {activeTab === 'attraction' && (
                 <div className="space-y-6">
-                  {/* Attraction Page Preview */}
-                  <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-[#ffd700]/20 overflow-hidden">
-                    <div className="px-4 py-3 border-b border-[#ffd700]/20 bg-black/30">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                        <span className="text-xs text-[#ffd700]">Agent Attraction Page</span>
-                      </div>
-                    </div>
-                    <div className="relative w-full overflow-hidden" style={{ height: '400px' }}>
-                      {pageData.activated && (generatedSlug || pageData.slug) ? (
-                        <iframe
-                          src={pageUrl}
-                          className="border-0"
-                          style={{
-                            transform: 'scale(0.4)',
-                            transformOrigin: 'top left',
-                            width: '250%',
-                            height: '250%',
-                            pointerEvents: 'none',
-                          }}
-                          title="Attraction Page Preview"
-                        />
-                      ) : (
-                        <div className="flex items-center justify-center h-full text-[#e5e4dd]/50 text-sm">
-                          Activate your page to see preview
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-transparent" />
-                    </div>
-                  </div>
-
                   {/* How It Works Section */}
                   <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
                     <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
