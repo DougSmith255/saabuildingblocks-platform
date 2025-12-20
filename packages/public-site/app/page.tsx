@@ -146,7 +146,7 @@ export default function Home() {
                 For Agents Who Want More
               </Tagline>
               <p className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px' }}>
-                Join eXp under sponsors who invest in your success. Elite systems, training, and community — no splits, no fees, no catch.
+                Smart Agent Alliance is a sponsor team inside eXp Realty. Elite systems, world-class training, real community — no splits, no fees, no catch.
               </p>
             </div>
 

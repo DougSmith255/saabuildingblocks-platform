@@ -1841,7 +1841,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         <div class="hero-text-content">
           <h1 class="headline">SMART AGENT ALLIANCE</h1>
           <p class="tagline text-tagline">Join ${escapeHTML(firstName)}'s Team <span class="tagline-counter-suffix"><span class="counter-numbers-mobile">(<span class="counter-digit">3</span><span class="counter-digit">7</span><span class="counter-digit">0</span><span class="counter-digit">0</span>+ </span>Agents)</span></p>
-          <p class="hero-body-text">Join eXp under sponsors who invest in your success. Elite systems, training, and community — no splits, no fees, no catch.</p>
+          <p class="hero-body-text">Smart Agent Alliance is a sponsor team inside eXp Realty. Elite systems, world-class training, real community — no splits, no fees, no catch.</p>
           <div class="cta-row">
             <button class="btn-primary text-button" onclick="openJoinModal()">Join My Team</button>
             <a href="#webinar" class="btn-secondary text-button">See How It Works</a>
