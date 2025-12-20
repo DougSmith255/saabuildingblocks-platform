@@ -146,7 +146,7 @@ export default function Home() {
                 <span className="hidden sm:inline">For Agents Who Want More, without giving up independence</span>
                 <span className="sm:hidden">For Agents Who Want More</span>
               </Tagline>
-              <p className="text-body text-sm md:text-base opacity-80 mx-auto mt-2 sm:mt-0.5" style={{ maxWidth: '950px' }}>
+              <p className="text-body text-sm md:text-base opacity-80 mx-auto mt-2" style={{ maxWidth: '950px', marginTop: '8px' }}>
                 We are a sponsor-aligned support platform inside eXp Realty, providing systems, training, and a community designed to help agents grow. No commission splits, team fees, or loss of control.
               </p>
             </div>

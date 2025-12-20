@@ -81,7 +81,7 @@ export default function Tagline({
         ...style
       }}
     >
-      {plainText}
+      {children}
 
       {/* Agent Counter Suffix - viewport-aware client component */}
       {counterSuffix}
