@@ -219,6 +219,13 @@ export default async function RootLayout({
 
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#ffd700" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+
+        {/* PWA meta tags for iOS */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="SAA" />
+        <meta name="mobile-web-app-capable" content="yes" />
 
         {/* Disable Google Translate popup (for decorative Japanese characters in effects) */}
         <meta name="google" content="notranslate" />
@@ -227,6 +234,23 @@ export default async function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `if('scrollRestoration' in history){history.scrollRestoration='manual'}`,
+          }}
+        />
+
+        {/* Service Worker Registration for PWA */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('SAA PWA: Service Worker registered with scope:', registration.scope);
+                  }).catch(function(error) {
+                    console.log('SAA PWA: Service Worker registration failed:', error);
+                  });
+                });
+              }
+            `,
           }}
         />
 
