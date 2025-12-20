@@ -70,7 +70,7 @@ export function AgentCounter() {
             <span>+</span>
           </span>
 
-          {/* "AGENTS" text - Taskor font with subtle glow */}
+          {/* "AGENTS" text - Taskor font with tagline glow effect */}
           <span
             style={{
               color: '#bfbdb0',
@@ -78,6 +78,8 @@ export function AgentCounter() {
               fontFeatureSettings: '"ss01" 1',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
+              textShadow: textShadow.trim(),
+              filter: filter.trim(),
             }}
           >
             AGENTS
