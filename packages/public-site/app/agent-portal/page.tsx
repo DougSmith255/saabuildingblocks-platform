@@ -64,13 +64,27 @@ const dashboardCards = [
   { id: 'new-agents' as SectionId, title: 'New Agents', description: 'Information tailored for you', icon: '🏃' },
 ];
 
+// Helper to get initial user from localStorage (runs only on client)
+function getInitialUser(): UserData | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const stored = localStorage.getItem('agent_portal_user');
+    if (stored) return JSON.parse(stored);
+  } catch {
+    // Invalid JSON, clear it
+    localStorage.removeItem('agent_portal_user');
+  }
+  return null;
+}
+
 export default function AgentPortal() {
   const router = useRouter();
   const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
   const [shakingItem, setShakingItem] = useState<SectionId | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user, setUser] = useState<UserData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // Initialize user directly from localStorage to avoid flash
+  const [user, setUser] = useState<UserData | null>(() => getInitialUser());
+  const [isLoading, setIsLoading] = useState(() => typeof window === 'undefined');
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [dashboardUploadStatus, setDashboardUploadStatus] = useState<string | null>(null);
   const [dashboardUploadError, setDashboardUploadError] = useState<string | null>(null);
@@ -126,21 +140,14 @@ export default function AgentPortal() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Check authentication on mount
+  // Check authentication on mount - redirect if not logged in
   useEffect(() => {
-    const storedUser = localStorage.getItem('agent_portal_user');
-    if (!storedUser) {
+    // User is already initialized from localStorage in useState
+    // Just need to redirect if not found
+    if (!user) {
       router.push('/agent-portal/login');
-      return;
     }
-    try {
-      setUser(JSON.parse(storedUser));
-    } catch (e) {
-      router.push('/agent-portal/login');
-      return;
-    }
-    setIsLoading(false);
-  }, [router]);
+  }, [user, router]);
 
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -748,8 +755,8 @@ export default function AgentPortal() {
     }
   };
 
-  // Show loading state
-  if (isLoading) {
+  // Show loading state only during SSR or if no user (redirecting)
+  if (isLoading || !user) {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -758,11 +765,6 @@ export default function AgentPortal() {
         </div>
       </main>
     );
-  }
-
-  // This shouldn't happen but handle edge case
-  if (!user) {
-    return null;
   }
 
   return (
