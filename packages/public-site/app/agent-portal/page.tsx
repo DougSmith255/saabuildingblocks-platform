@@ -2345,6 +2345,9 @@ function AgentPagesSection({
   type TabId = 'profile' | 'design' | 'links' | 'attraction';
   const [activeTab, setActiveTab] = useState<TabId>('profile');
 
+  // Copy link feedback state
+  const [copiedLink, setCopiedLink] = useState<'linktree' | 'attraction' | null>(null);
+
   // Accordion expanded state
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     socialLinks: false,
@@ -3739,6 +3742,63 @@ function AgentPagesSection({
               {/* ATTRACTION TAB */}
               {activeTab === 'attraction' && (
                 <div className="space-y-6">
+                  {/* Copy Link Buttons */}
+                  <div className="p-4 rounded-xl bg-black/30 border border-white/10">
+                    <h3 className="text-sm font-medium text-[#e5e4dd]/80 mb-3">Share Your Pages</h3>
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(linktreeUrl);
+                          setCopiedLink('linktree');
+                          setTimeout(() => setCopiedLink(null), 2000);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 text-[#4ecdc4] hover:bg-[#4ecdc4]/20 transition-colors text-sm font-medium"
+                      >
+                        {copiedLink === 'linktree' ? (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            Copy Linktree Link
+                          </>
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(pageUrl);
+                          setCopiedLink('attraction');
+                          setTimeout(() => setCopiedLink(null), 2000);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm font-medium"
+                      >
+                        {copiedLink === 'attraction' ? (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Copied!
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                            </svg>
+                            Copy Attraction Link
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+
                   {/* How It Works Section */}
                   <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
                     <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
