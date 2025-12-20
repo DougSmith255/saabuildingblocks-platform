@@ -51,7 +51,7 @@ body {
   background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
   background-color: rgb(12, 12, 12);
   background-attachment: fixed;
-  min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
+  min-height: 100svh; /* Use svh (small viewport) to prevent layout shift when mobile address bar hides */
   color: var(--color-text-secondary);
   font-family: var(--font-synonym), 'Courier New', monospace;
   -webkit-font-smoothing: antialiased;
@@ -70,13 +70,13 @@ body {
   /* --vh-locked is set by ViewportHeightLock.tsx and only changes on true resize, not address bar */
   /* --vh-locked-full is the full viewport height (--vh-locked * 100) for use in calc() */
   body {
-    min-height: calc(var(--vh-locked, 1dvh) * 100);
+    min-height: calc(var(--vh-locked, 1svh) * 100);
   }
 
   :root {
     /* Full viewport height for mobile - used in calc() expressions */
     /* This is set dynamically by ViewportHeightLock.tsx */
-    --vh-locked-full: calc(var(--vh-locked, 1dvh) * 100);
+    --vh-locked-full: calc(var(--vh-locked, 1svh) * 100);
   }
 
   /* Wolf pack hero background - disable fixed attachment on mobile */
@@ -148,7 +148,7 @@ main {
 
 /* Hero Section - Above the fold */
 .hero-section {
-  min-height: 100dvh; /* Use dvh to prevent mobile browser address bar scroll jitter */
+  min-height: 100svh; /* Use svh (small viewport) to prevent layout shift when mobile address bar hides */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -163,12 +163,12 @@ main {
 @media (max-width: 1024px), (hover: none) and (pointer: coarse) {
   .hero-section,
   .min-h-\[100dvh\] {
-    min-height: calc(var(--vh-locked, 1dvh) * 100) !important;
+    min-height: calc(var(--vh-locked, 1svh) * 100) !important;
   }
 
   /* For elements using percentage of viewport (e.g., 80dvh) */
   .h-\[80dvh\] {
-    height: calc(var(--vh-locked, 1dvh) * 80) !important;
+    height: calc(var(--vh-locked, 1svh) * 80) !important;
   }
 }
 
