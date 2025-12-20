@@ -72,7 +72,7 @@ export default function JoinExpSponsorTeam() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>JOIN THE ALLIANCE</H1>
+            <H1>JOIN SMART AGENT ALLIANCE</H1>
             <Tagline className="mt-4">
               Your first step to more
             </Tagline>
