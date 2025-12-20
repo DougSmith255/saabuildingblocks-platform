@@ -467,7 +467,7 @@ export async function sendApplyInstructionsEmail({
   try {
     const result = await sendEmail({
       to: recipientEmail,
-      subject: 'How to Join Smart Agent Alliance at eXp',
+      subject: 'How to Join The Alliance at eXp',
       react: ApplyInstructionsEmail({
         recipientFirstName,
         agentName,

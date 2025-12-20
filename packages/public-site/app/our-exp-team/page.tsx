@@ -248,7 +248,7 @@ export default function OurExpTeam() {
       <LazySection height={300}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
           <div className="max-w-[1900px] mx-auto text-center">
-            <H2>Ready to Join Smart Agent Alliance?</H2>
+            <H2>Ready to Join The Alliance?</H2>
             <p className="text-body mt-4 mb-8">
               Get 7 layers of support above you, plus access to all our systems, training, and community.
             </p>

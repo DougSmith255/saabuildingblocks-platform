@@ -444,7 +444,7 @@ function Version1() {
                   Smart Agent Alliance provides systems, training, and community designed to support agent growth without commission splits, control, or loss of independence. With thousands of agents across multiple countries and consistent live collaboration, this is structure built for long-term success.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <CTAButton href="/join-exp-sponsor-team/">Join Smart Agent Alliance</CTAButton>
+                  <CTAButton href="/join-exp-sponsor-team/">Join The Alliance</CTAButton>
                   <SecondaryButton href="/join-exp-sponsor-team/">Book a Call</SecondaryButton>
                   <SecondaryButton href="/about-exp-realty/">Learn about eXp</SecondaryButton>
                 </div>
@@ -941,7 +941,7 @@ function Version2() {
                 Smart Agent Alliance provides systems, training, and community designed to support agent growth without commission splits, control, or loss of independence.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <CTAButton href="/join-exp-sponsor-team/">Join Smart Agent Alliance</CTAButton>
+                <CTAButton href="/join-exp-sponsor-team/">Join The Alliance</CTAButton>
                 <SecondaryButton href="/join-exp-sponsor-team/">Book a Call</SecondaryButton>
                 <SecondaryButton href="/about-exp-realty/">Learn about eXp</SecondaryButton>
               </div>
@@ -1449,7 +1449,7 @@ function Version3() {
                 Systems, training, and community designed for agent growth without commission splits or loss of independence.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <CTAButton href="/join-exp-sponsor-team/">Join Smart Agent Alliance</CTAButton>
+                <CTAButton href="/join-exp-sponsor-team/">Join The Alliance</CTAButton>
                 <SecondaryButton href="/join-exp-sponsor-team/">Book a Call</SecondaryButton>
                 <SecondaryButton href="/about-exp-realty/">Learn about eXp</SecondaryButton>
               </div>
@@ -1854,7 +1854,7 @@ function Version4() {
                 Systems, training, and community designed for agent growth without commission splits.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <V4MagneticButton><CTAButton href="/join-exp-sponsor-team/">Join Smart Agent Alliance</CTAButton></V4MagneticButton>
+                <V4MagneticButton><CTAButton href="/join-exp-sponsor-team/">Join The Alliance</CTAButton></V4MagneticButton>
                 <V4MagneticButton><SecondaryButton href="/join-exp-sponsor-team/">Book a Call</SecondaryButton></V4MagneticButton>
                 <V4MagneticButton><SecondaryButton href="/about-exp-realty/">Learn about eXp</SecondaryButton></V4MagneticButton>
               </div>

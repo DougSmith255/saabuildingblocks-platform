@@ -153,7 +153,7 @@ export default function AboutDougSmart() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Level Up?</H2>
             <p className="text-body mt-4 mb-8">
-              Join Smart Agent Alliance and get access to the digital infrastructure that powers top-producing agents.
+              Join The Alliance and get access to the digital infrastructure that powers top-producing agents.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">

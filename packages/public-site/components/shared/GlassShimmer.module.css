@@ -16,11 +16,12 @@
 }
 
 /* Layer 1: Glass Background - blur + dark gradient + gold vertical lines */
+/* More opaque background to prevent color shift when hero fades during scroll */
 .glassBase {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+    linear-gradient(45deg, rgba(10, 10, 10, 0.92), rgba(26, 26, 26, 0.95)),
     repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px);
   backdrop-filter: blur(8px) saturate(1.5);
   -webkit-backdrop-filter: blur(8px) saturate(1.5);
@@ -68,11 +69,17 @@
   pointer-events: none;
 }
 
-/* Mobile optimization */
+/* Mobile optimization - use solid background to prevent color shift during scroll */
+/* backdrop-filter causes color changes when content behind header moves (address bar, scrolling) */
 @media (max-width: 768px) {
   .glassBase {
-    backdrop-filter: blur(28px) saturate(1.4);
-    -webkit-backdrop-filter: blur(28px) saturate(1.4);
+    /* Disable backdrop-filter on mobile to prevent color shift */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    /* Use fully opaque background instead */
+    background:
+      linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22)),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px);
   }
 }
 

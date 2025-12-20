@@ -56,7 +56,7 @@ export function ApplyInstructionsEmail({
             </Text>
 
             <Heading as="h2" style={headingStyle}>
-              How to Apply to Join Smart Agent Alliance
+              How to Apply to Join The Alliance
             </Heading>
 
             {/* Step 1 */}

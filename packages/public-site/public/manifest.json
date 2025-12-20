@@ -1,7 +1,7 @@
 {
   "name": "Smart Agent Alliance",
   "short_name": "SAA",
-  "description": "Join Smart Agent Alliance - For Agents Who Want More. Elite systems, training, and community for eXp Realty agents.",
+  "description": "Join The Alliance - For Agents Who Want More. Elite systems, training, and community for eXp Realty agents.",
   "start_url": "/agent-portal",
   "scope": "/",
   "display": "standalone",

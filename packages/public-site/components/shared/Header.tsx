@@ -255,33 +255,35 @@ export default function Header() {
               <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
             </div>
 
-            {/* Hamburger Menu Button - Inside header container so it animates with header */}
-            <button
-              className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
-              onClick={handleHamburgerClick}
-              style={{ marginTop: '10px' }}
-              aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
-                <path
-                  className="line line-top-bottom"
-                  d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
-                  stroke="none"
-                  fill="none"
-                />
-                <path
-                  className="line"
-                  d="M7 16 27 16"
-                  stroke="none"
-                  fill="none"
-                />
-              </svg>
-            </button>
+            {/* Placeholder for hamburger - actual button is outside transform container */}
+            <div className="xlg:hidden" style={{ width: '65px', height: '65px' }} aria-hidden="true" />
           </div>
         </div>
       </header>
+
+      {/* Hamburger Menu Button - OUTSIDE header container to avoid transform affecting fixed positioning */}
+      <button
+        className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
+        onClick={handleHamburgerClick}
+        aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
+        aria-expanded={isMobileMenuOpen}
+        aria-controls="mobile-menu"
+      >
+        <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
+          <path
+            className="line line-top-bottom"
+            d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+            stroke="none"
+            fill="none"
+          />
+          <path
+            className="line"
+            d="M7 16 27 16"
+            stroke="none"
+            fill="none"
+          />
+        </svg>
+      </button>
 
       {/* Mobile Menu Component - Only loaded when hamburger is clicked */}
       {/* Note: 404 pages hide header entirely via CSS :has() selector, so this won't render on 404 */}

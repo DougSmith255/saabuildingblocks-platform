@@ -1013,7 +1013,7 @@ export default function ExpRealtySponsor() {
                   Systems, training, and community designed to support agent growth without commission splits, control, or loss of independence. With thousands of agents across multiple countries and consistent live collaboration, this is structure built for long-term success, not short-term hype.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <CTAButton href="/join-exp-sponsor-team/">Join Smart Agent Alliance</CTAButton>
+                  <CTAButton href="/join-exp-sponsor-team/">Join The Alliance</CTAButton>
                   <SecondaryButton href="/join-exp-sponsor-team/">Book a Call</SecondaryButton>
                   <SecondaryButton href="/about-exp-realty/">Learn about eXp</SecondaryButton>
                 </div>

@@ -204,7 +204,7 @@ export default function AboutExpRealty() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Make the Switch?</H2>
             <p className="text-body mt-4 mb-8">
-              Join Smart Agent Alliance and get access to additional training, systems, and support on top of everything eXp provides.
+              Join The Alliance and get access to additional training, systems, and support on top of everything eXp provides.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
