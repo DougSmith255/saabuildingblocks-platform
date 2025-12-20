@@ -30,15 +30,23 @@ interface StickyHeroWrapperProps {
  */
 export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: StickyHeroWrapperProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  // Lock viewport height at mount to prevent jumps when mobile address bar hides/shows
+  const lockedHeightRef = useRef<number>(0);
 
   useEffect(() => {
+    // Lock the initial viewport height - don't let address bar changes affect calculations
+    if (lockedHeightRef.current === 0) {
+      lockedHeightRef.current = window.innerHeight;
+    }
+
     const handleScroll = () => {
       if (!wrapperRef.current) return;
 
       const heroSection = wrapperRef.current.querySelector('section');
       if (!heroSection) return;
 
-      const viewportHeight = window.innerHeight;
+      // Use locked height to prevent jumps from address bar changes
+      const viewportHeight = lockedHeightRef.current;
       const scrollY = window.scrollY;
 
       // Check if we're in light mode (body has light-mode class)
@@ -141,9 +149,9 @@ export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: S
         </div>
       </div>
 
-      {/* Spacer to maintain scroll height */}
+      {/* Spacer to maintain scroll height - use svh to prevent layout shift when mobile address bar hides */}
       <div
-        className="h-dvh"
+        className="h-svh"
         aria-hidden="true"
       />
     </>
