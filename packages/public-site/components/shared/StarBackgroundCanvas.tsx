@@ -111,6 +111,9 @@ export default function StarBackgroundCanvas() {
     animationRef.current = requestAnimationFrame(animate);
   }, [drawStars]);
 
+  // Track previous width to detect actual resize vs address bar changes
+  const prevWidthRef = useRef(0);
+
   // Handle resize - use initial height to prevent mobile address bar issues
   const handleResize = useCallback((forceRegenerate = false) => {
     const canvas = canvasRef.current;
@@ -121,11 +124,20 @@ export default function StarBackgroundCanvas() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
-    // On first resize, capture the initial height
+    // On first resize, capture the initial height and width
     // This prevents stars from regenerating when mobile address bar hides/shows
     if (initialHeightRef.current === 0) {
       initialHeightRef.current = height;
+      prevWidthRef.current = width;
     }
+
+    // Only process if width actually changed or forced (ignore height-only changes from address bar)
+    const widthChanged = Math.abs(width - prevWidthRef.current) > 5; // 5px tolerance
+    if (!forceRegenerate && !widthChanged && starsRef.current.length > 0) {
+      return; // Skip - just an address bar change
+    }
+
+    prevWidthRef.current = width;
 
     // Use the larger of current or initial height to cover full possible area
     // This prevents "jumping" when mobile address bar hides
@@ -146,7 +158,6 @@ export default function StarBackgroundCanvas() {
     }
 
     // Only regenerate stars on actual width changes or forced regenerate
-    // Skip regeneration for height-only changes (mobile address bar)
     if (forceRegenerate || starsRef.current.length === 0) {
       generateStars(width, stableHeight);
     }

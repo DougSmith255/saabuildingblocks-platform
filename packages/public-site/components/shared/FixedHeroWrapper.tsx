@@ -135,9 +135,11 @@ export function FixedHeroWrapper({ children, className = '' }: FixedHeroWrapperP
         </div>
       </div>
 
-      {/* Spacer to maintain scroll height - use Tailwind for consistent height */}
+      {/* Spacer to maintain scroll height - use svh (small viewport height) to prevent
+          layout shift when mobile address bar hides. svh is the smallest possible viewport
+          height (when address bar is visible), so it won't change when scrolling. */}
       <div
-        className="h-dvh"
+        className="h-svh"
         aria-hidden="true"
       />
     </>

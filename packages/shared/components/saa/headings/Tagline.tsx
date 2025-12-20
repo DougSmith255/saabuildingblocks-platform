@@ -68,10 +68,7 @@ export default function Tagline({
     <p
       className={`text-tagline ${className}`}
       style={{
-        display: 'flex',
-        gap: '0.5em',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
+        textAlign: 'center',
         transform: 'rotateX(15deg)',
         position: 'relative',
         color: '#bfbdb0',
@@ -81,10 +78,7 @@ export default function Tagline({
         ...style
       }}
     >
-      {children}
-
-      {/* Agent Counter Suffix - viewport-aware client component */}
-      {counterSuffix}
+      {children} {counterSuffix}
     </p>
   );
 }

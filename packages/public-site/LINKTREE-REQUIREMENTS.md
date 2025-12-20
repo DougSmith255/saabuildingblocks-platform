@@ -81,3 +81,55 @@
 **Answer:** Create a new duplicate of the Master Controller H1 styling
 - Will be configurable for dynamic glow colors based on user's accent color choice
 
+---
+
+# Agent Portal UI Improvements (My SAA Pages Section)
+
+## 9. Notification Text Fix
+- Change "Your page is not yet active" to "Your pages are not yet active"
+
+## 10. Section Title Change
+- Remove "Agent Attraction Page" H2
+- Replace with "Agent Pages Setup" (or better alternative TBD)
+
+## 11. Setting Labels with Badges
+- Add badges to each setting indicating which page(s) it affects:
+  - **Agent Attraction + Linktree**: Profile Image, Display Name, Phone Settings, Social Links
+  - **Linktree Only**: Bio, Color picker, Icon style, Button font, etc.
+
+## 12. Page URLs Section
+- Change "Your Page URL" to "Your Page URLs"
+- Display BOTH URLs:
+  - Agent Attraction page URL
+  - Linktree page URL
+
+---
+
+# Implementation Status
+
+All requirements have been implemented:
+
+| # | Requirement | Status |
+|---|-------------|--------|
+| 0 | Social icons in preview | ✅ Complete |
+| 1 | Bio font always Synonym | ✅ Complete |
+| 2 | Button icon LEFT, text centered | ✅ Complete |
+| 3 | Profile image auto-sync | ✅ Complete |
+| 4 | B&W effect toggle | ✅ Complete |
+| 5 | 150x150 R2 variant | ✅ Complete |
+| 6 | Full color picker | ✅ Complete (react-color) |
+| 7 | Dynamic glow H1 | ✅ Complete |
+| 8 | Edit Styles modal | ✅ Complete |
+| 9 | Plural notification text | ✅ Complete |
+| 10 | Remove H2 titles | ✅ Complete |
+| 11 | Page badges | ✅ Complete |
+| 12 | Both page URLs | ✅ Complete |
+
+---
+
+# Discussion: UI/UX Optimization
+
+**Goal**: Keep "My SAA Pages" section as compact as possible while remaining user-friendly and frictionless (avoid excessive popups).
+
+**Open Question**: After implementing all changes above, should we re-evaluate the overall layout and information architecture?
+
