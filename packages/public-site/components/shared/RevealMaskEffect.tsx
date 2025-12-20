@@ -83,6 +83,10 @@ export function RevealMaskEffect() {
   const maskSize = time === 0 ? INITIAL_MASK_SIZE : (90 - progress * 40);
   const rotation = time * 90;
 
+  // Center point: where the H1 meets the image (approximately 42% from top on desktop)
+  // This accounts for the image taking up ~50dvh and the H1 overlapping its bottom 25%
+  const centerY = '42%';
+
   return (
     <div
       ref={containerRef}
@@ -95,7 +99,7 @@ export function RevealMaskEffect() {
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(ellipse ${maskSize}% ${maskSize * 0.7}% at 50% 50%,
+          background: `radial-gradient(ellipse ${maskSize}% ${maskSize * 0.7}% at 50% ${centerY},
             rgba(255,215,0,0.2) 0%,
             rgba(255,180,0,0.12) 35%,
             rgba(255,150,0,0.06) 55%,
@@ -104,20 +108,20 @@ export function RevealMaskEffect() {
       />
       {/* Outer rotating border */}
       <div
-        className="absolute w-[80vw] h-[80vw] max-w-[700px] max-h-[700px] border-2"
+        className="absolute w-[80vw] h-[80vw] max-w-[700px] max-h-[700px] border-2 left-1/2"
         style={{
-          top: '45%',
-          transform: `translateY(-50%) rotate(${rotation}deg)`,
+          top: centerY,
+          transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
           borderRadius: `${20 + progress * 30}%`,
           borderColor: 'rgba(255,215,0,0.25)',
         }}
       />
       {/* Inner rotating border */}
       <div
-        className="absolute w-[60vw] h-[60vw] max-w-[520px] max-h-[520px] border"
+        className="absolute w-[60vw] h-[60vw] max-w-[520px] max-h-[520px] border left-1/2"
         style={{
-          top: '45%',
-          transform: `translateY(-50%) rotate(${-rotation * 0.5}deg)`,
+          top: centerY,
+          transform: `translate(-50%, -50%) rotate(${-rotation * 0.5}deg)`,
           borderRadius: `${Math.max(20, 50 - progress * 30)}%`,
           borderColor: 'rgba(255,215,0,0.18)',
         }}
