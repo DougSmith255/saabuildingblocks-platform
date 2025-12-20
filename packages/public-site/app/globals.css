@@ -9,9 +9,9 @@
   --header-height: clamp(60px, 8vh, 90px);
 }
 
-/* Smooth scroll for entire site */
+/* Smooth scroll for entire site - disabled when Lenis is active */
 html {
-  scroll-behavior: smooth;
+  /* scroll-behavior: smooth; - DISABLED: Lenis handles smooth scrolling, this conflicts */
   overflow-x: hidden;
   max-width: 100%;
 }
@@ -19,6 +19,11 @@ html {
 body {
   overflow-x: hidden;
   max-width: 100%;
+}
+
+/* Disable tap highlight on mobile - prevents grey flash on touch */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ========================================
@@ -1477,7 +1482,7 @@ main {
 }
 
 /* Remove footer spacing on pages without footer */
-body.is-404-page main,
+main[data-is-404="true"],
 main[data-no-footer="true"],
 main.flex-1 {
   padding-bottom: 0 !important;
@@ -1497,11 +1502,28 @@ footer {
 
 /**
  * Hide header and footer on 404 pages
- * Applied via body.is-404-page class set by not-found.tsx
+ * Applied via data-is-404 attribute on the main element (SSR-safe, no layout shift)
  */
-body.is-404-page header,
-body.is-404-page footer {
+body:has(main[data-is-404="true"]) header,
+body:has(main[data-is-404="true"]) footer,
+body:has(main[data-is-404="true"]) .scroll-progress-bar {
   display: none !important;
+}
+
+/* 404 Page animations */
+@keyframes float-404 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-10px) rotate(5deg); }
+  75% { transform: translateY(10px) rotate(-5deg); }
+}
+
+@keyframes glowBreathe-404 {
+  0%, 100% {
+    filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.1em rgba(255, 215, 0, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.16em rgba(255, 215, 0, 0.4));
+  }
 }
 
 /* ========================================
@@ -3880,3 +3902,27 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   color: #00aa66;
   text-shadow: 0 0 8px rgba(0, 170, 102, 0.4);
 }
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Hide scrollbar while maintaining scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Safe area insets for mobile app-like experience */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.mb-safe {
+  margin-bottom: env(safe-area-inset-bottom, 0);
+}
+

@@ -72,7 +72,7 @@ export function FAQ({
       {items.map((item, index) => (
         <div
           key={index}
-          className="saa-faq-item rounded-xl overflow-hidden transition-all duration-300"
+          className="saa-faq-item rounded-xl overflow-hidden transition-all duration-300 ease-out"
           style={{
             backgroundColor: 'var(--faq-bg, rgba(255,255,255,0.05))',
             border: '1px solid',
@@ -107,8 +107,8 @@ export function FAQ({
 
           {/* Answer */}
           <div
-            className={`saa-faq-answer overflow-hidden transition-all duration-300 ${
-              isOpen(index) ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+            className={`saa-faq-answer overflow-hidden transition-all duration-300 ease-out ${
+              isOpen(index) ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
             <div className="px-5 pt-0 pb-6 text-body">

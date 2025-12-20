@@ -17,10 +17,15 @@ export interface NeonGoldTextProps {
  * Location: @saa/shared/components/saa/text/NeonGoldText
  *
  * Features:
- * - Taskor font with alternate glyphs (N, E, M)
+ * - Taskor font with alternate glyphs (N, E, M) via font-feature-settings "ss01"
  * - Gold color with neon glow effect (matches H1 styling)
  * - White outline on all 4 corners for depth
  * - Works with any text size (pass className like text-h2, text-h4)
+ *
+ * SEO/ACCESSIBILITY:
+ * - Uses real letters in DOM (Google reads correctly)
+ * - Copy/paste gives real letters
+ * - Font's ss01 stylistic set renders alternate glyphs visually
  *
  * Use inside CyberCardGold for premium headings:
  * ```tsx
@@ -35,10 +40,10 @@ export function NeonGoldText({
   as: Component = 'span',
   className = '',
 }: NeonGoldTextProps) {
-  // Convert children to string for character processing
+  // Convert children to string
   const text = typeof children === 'string' ? children : String(children);
 
-  // Split text into words
+  // Split text into words for proper flex gap spacing
   const words = text.split(' ');
 
   return (
@@ -51,47 +56,24 @@ export function NeonGoldText({
         rowGap: 0,
         columnGap: '0.35em',
         fontFamily: 'var(--font-taskor), sans-serif',
+        fontFeatureSettings: '"ss01" 1',
+        color: '#ffd700',
+        textShadow: `
+          -0.02em -0.02em 0 rgba(255,255,255, 0.4),
+          0.02em -0.02em 0 rgba(255,255,255, 0.4),
+          -0.02em 0.02em 0 rgba(255,255,255, 0.4),
+          0.02em 0.02em 0 rgba(255,255,255, 0.4),
+          0 -0.03em 0.1em #ffd700,
+          0 0 0.03em #ffd700,
+          0 0 0.07em #ffd700,
+          0 0 0.12em #ffb347,
+          0 0.03em 0.05em #000
+        `,
       }}
     >
-      {/* SEO-friendly hidden text */}
-      <span className="sr-only">{text}</span>
-
       {words.map((word, wordIndex) => (
         <span key={wordIndex} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
-          {word.split('').map((char, charIndex) => {
-            // Alt glyphs: N = U+f015, E = U+f011, M = U+f016
-            let displayChar = char;
-            const upperChar = char.toUpperCase();
-            if (upperChar === 'N') displayChar = '\uf015';
-            if (upperChar === 'E') displayChar = '\uf011';
-            if (upperChar === 'M') displayChar = '\uf016';
-
-            return (
-              <span
-                key={charIndex}
-                style={{
-                  display: 'inline-block',
-                  position: 'relative',
-                  color: '#ffd700',
-                  // Using em units so glow scales with font size (matches H1 glow)
-                  // Small text = small glow, large text = large glow
-                  textShadow: `
-                    -0.02em -0.02em 0 rgba(255,255,255, 0.4),
-                    0.02em -0.02em 0 rgba(255,255,255, 0.4),
-                    -0.02em 0.02em 0 rgba(255,255,255, 0.4),
-                    0.02em 0.02em 0 rgba(255,255,255, 0.4),
-                    0 -0.03em 0.1em #ffd700,
-                    0 0 0.03em #ffd700,
-                    0 0 0.07em #ffd700,
-                    0 0 0.12em #ffb347,
-                    0 0.03em 0.05em #000
-                  `,
-                }}
-              >
-                {displayChar}
-              </span>
-            );
-          })}
+          {word}
         </span>
       ))}
     </Component>

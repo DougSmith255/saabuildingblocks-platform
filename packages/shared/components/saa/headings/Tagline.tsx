@@ -16,19 +16,6 @@ export interface TaglineProps {
 }
 
 /**
- * Convert text to use alt glyphs for N, E, M characters
- */
-function convertToAltGlyphs(text: string): string {
-  return text.split('').map(char => {
-    const upper = char.toUpperCase();
-    if (upper === 'N') return '\uf015';
-    if (upper === 'E') return '\uf011';
-    if (upper === 'M') return '\uf016';
-    return char;
-  }).join('');
-}
-
-/**
  * Tagline Component - Server Component (No JavaScript Required)
  *
  * PERFORMANCE OPTIMIZATIONS:
@@ -40,8 +27,13 @@ function convertToAltGlyphs(text: string): string {
  * Features:
  * - Neon glow using text-shadow (matches H1 style, tagline colors)
  * - 3D transform with rotateX
- * - Alt glyphs for N, E, M characters
+ * - Alt glyphs for N, E, M via font-feature-settings "ss01"
  * - Body text color (#bfbdb0)
+ *
+ * SEO/ACCESSIBILITY:
+ * - Uses real letters in DOM (Google reads correctly)
+ * - Copy/paste gives real letters
+ * - Font's ss01 stylistic set renders alternate glyphs visually
  *
  * @example
  * ```tsx
@@ -56,10 +48,6 @@ export default function Tagline({
 }: TaglineProps) {
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
-
-  // Convert children to string and apply alt glyphs
-  const text = typeof children === 'string' ? children : String(children);
-  const displayText = convertToAltGlyphs(text);
 
   // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
   // White core in text-shadow, glow via filter: drop-shadow
@@ -79,7 +67,6 @@ export default function Tagline({
   return (
     <p
       className={`text-tagline ${className}`}
-      aria-label={plainText}
       style={{
         display: 'flex',
         gap: '0.5em',
@@ -88,16 +75,13 @@ export default function Tagline({
         transform: 'rotateX(15deg)',
         position: 'relative',
         color: '#bfbdb0',
+        fontFeatureSettings: '"ss01" 1',
         textShadow,
         filter: filter.trim(),
         ...style
       }}
     >
-      {/* SEO-friendly hidden text for search engines and screen readers */}
-      <span className="sr-only">{plainText}</span>
-
-      {/* Main tagline text - single node */}
-      {displayText}
+      {plainText}
 
       {/* Agent Counter Suffix - viewport-aware client component */}
       {counterSuffix}

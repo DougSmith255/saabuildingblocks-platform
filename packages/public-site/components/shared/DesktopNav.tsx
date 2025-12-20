@@ -40,19 +40,17 @@ const navItems: NavItem[] = [
 interface DesktopNavProps {
   isPortalClicked: boolean;
   handlePortalClick: () => void;
-  is404Page: boolean;
 }
 
 /**
  * Desktop Navigation (≥1450px)
  * Horizontal nav with hover dropdowns + CTA button
  */
-export default function DesktopNav({ isPortalClicked, handlePortalClick, is404Page }: DesktopNavProps) {
+export default function DesktopNav({ isPortalClicked, handlePortalClick }: DesktopNavProps) {
   const [hoveredDropdown, setHoveredDropdown] = useState<number | null>(null);
 
-  if (is404Page) {
-    return null;
-  }
+  // Note: 404 pages hide the entire header via CSS :has() selector,
+  // so this component won't be rendered on 404 pages at all.
 
   // Render all navigation items including Resources and Agent Portal
   const navigationItems = navItems;

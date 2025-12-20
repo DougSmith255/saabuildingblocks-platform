@@ -40,7 +40,6 @@ const navItems: NavItem[] = [
 interface MobileMenuProps {
   isPortalClicked: boolean;
   handlePortalClick: () => void;
-  is404Page: boolean;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (open: boolean) => void;
 }
@@ -49,7 +48,7 @@ interface MobileMenuProps {
  * Mobile Menu (<1450px)
  * Fullscreen menu overlay with Lenis smooth scrolling (hamburger button in Header)
  */
-export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Page, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {
+export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {
   const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const [closingDropdown, setClosingDropdown] = useState<number | null>(null);
@@ -125,9 +124,8 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, is404Pa
     }
   };
 
-  if (is404Page) {
-    return null;
-  }
+  // Note: 404 pages hide the entire header via CSS :has() selector,
+  // so this component won't be rendered on 404 pages at all.
 
   return (
     <>

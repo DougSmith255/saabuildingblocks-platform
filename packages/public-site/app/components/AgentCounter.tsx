@@ -4,19 +4,6 @@ import { useViewport } from '@/contexts/ViewportContext';
 import './StaticCounter.css';
 
 /**
- * Convert text to use alt glyphs for N, E, M characters (matches Tagline component)
- */
-function convertToAltGlyphs(text: string): string {
-  return text.split('').map(char => {
-    const upper = char.toUpperCase();
-    if (upper === 'N') return '\uf015';
-    if (upper === 'E') return '\uf011';
-    if (upper === 'M') return '\uf016';
-    return char;
-  }).join('');
-}
-
-/**
  * AgentCounter - Client Component with Viewport-Aware Rendering
  *
  * PERFORMANCE OPTIMIZATION:
@@ -24,6 +11,11 @@ function convertToAltGlyphs(text: string): string {
  * - Conditionally renders ONLY the appropriate counter (desktop OR mobile)
  * - Eliminates hidden DOM nodes - unused counter is never rendered
  * - Default to desktop counter on server (prevents flash for majority of users)
+ *
+ * SEO/ACCESSIBILITY:
+ * - Uses real letters in DOM (Google reads correctly)
+ * - Copy/paste gives real letters
+ * - Font's ss01 stylistic set renders alternate glyphs visually
  *
  * Breakpoint: 500px
  * - Desktop (>=500px): Corner counter with glow effects
@@ -33,7 +25,7 @@ export function AgentCounter() {
   const { isCounterDesktop } = useViewport();
 
   // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
-  // Matches Tagline component optimization
+  // Matches Tagline component exactly
   const textShadow = `
     0 0 0.01em #fff,
     0 0 0.02em #fff,
@@ -78,12 +70,12 @@ export function AgentCounter() {
             <span>+</span>
           </span>
 
-          {/* "AGENTS" text - Taskor font with glow */}
+          {/* "AGENTS" text - Taskor font with subtle glow */}
           <span
             style={{
-              textShadow,
-              filter: filter.trim(),
+              color: '#bfbdb0',
               fontFamily: 'var(--font-taskor), sans-serif',
+              fontFeatureSettings: '"ss01" 1',
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
             }}
@@ -110,11 +102,17 @@ export function AgentCounter() {
  * - Desktop (>=500px): display:none via CSS - no space taken, no CLS
  * - Mobile (<500px): display:inline-flex via CSS
  * This ensures consistent rendering between SSR and hydration.
+ *
+ * SEO/ACCESSIBILITY:
+ * - Uses real letters in DOM (Google reads correctly)
+ * - Copy/paste gives real letters
+ * - Font's ss01 stylistic set renders alternate glyphs visually
  */
 export function TaglineCounterSuffix() {
   const { hasMounted, isCounterDesktop } = useViewport();
 
   // Optimized text-shadow with drop-shadow for glow (GPU accelerated)
+  // Matches Tagline component exactly
   const textShadow = `
     0 0 0.01em #fff,
     0 0 0.02em #fff,
@@ -161,8 +159,18 @@ export function TaglineCounterSuffix() {
         <span>+ </span>
       </span>
 
-      {/* "Agents)" text - with glow, alt glyphs */}
-      <span style={{ textShadow, filter: filter.trim() }}>{convertToAltGlyphs('Agents)')}</span>
+      {/* "Agents)" text - inherits glow from parent Tagline component */}
+      <span
+        style={{
+          color: '#bfbdb0',
+          fontFamily: 'var(--font-taskor), sans-serif',
+          fontFeatureSettings: '"ss01" 1',
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em',
+        }}
+      >
+        AGENTS)
+      </span>
     </span>
   );
 }

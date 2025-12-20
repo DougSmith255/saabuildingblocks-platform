@@ -204,9 +204,9 @@ export default async function RootLayout({
 
         {/*
           Font Preloading Note:
-          Fonts are automatically preloaded by Next.js localFont() with preload: true.
-          No manual <link rel="preload"> tags needed - they cause duplicate downloads.
-          See font configurations above (lines 55-88).
+          Next.js localFont() with preload: true adds preload links automatically
+          for most pages. The 404 page may have slight FOUC but that's acceptable
+          since it's a rare error case. Manual preloads caused duplicate downloads.
         */}
 
         {/* Favicon and app icons */}

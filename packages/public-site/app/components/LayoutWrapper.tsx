@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Header from '@/components/shared/Header';
@@ -33,8 +33,19 @@ import { ViewportProvider } from '@/contexts/ViewportContext';
  *
  * @see /home/claude-flow/📘-PAGE-BUILDER-GUIDE.md for full documentation
  */
+// Check for 404 page BEFORE component mounts (synchronous, no flash)
+// This runs once at module load time on the client
+const getInitialIs404 = (): boolean => {
+  if (typeof document === 'undefined') return false;
+  return document.querySelector('main[data-is-404="true"]') !== null;
+};
+
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+
+  // Use a ref to check 404 status synchronously before first render
+  // This prevents the header from ever being added to the DOM on 404 pages
+  const is404PageRef = useRef(getInitialIs404());
 
   // List of routes where header/footer should NOT render at all
   const noHeaderFooterRoutes = useMemo(() => [
@@ -44,7 +55,6 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/activate-account',
     '/reset-password',
     '/sign-up',
-    '/_not-found', // 404 page
   ], []);
 
   // Routes where header/footer should be hidden, but NOT sub-routes
@@ -59,10 +69,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
   // Check if current path matches any no-header-footer route (SSR-safe)
   const shouldHideHeaderFooter = useMemo(() => {
-    // Check for is-404-page class first (set synchronously by not-found.tsx)
-    if (typeof document !== 'undefined' && document.body.classList.contains('is-404-page')) {
-      return true;
-    }
+    // 404 pages detected via data attribute (checked synchronously before render)
+    if (is404PageRef.current) return true;
 
     // If pathname is null/undefined, don't hide (let it render normally)
     if (!pathname) return false;

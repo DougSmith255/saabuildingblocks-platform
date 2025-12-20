@@ -16,7 +16,7 @@ export default function Header() {
   const [scrollAnchor, setScrollAnchor] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [isPortalClicked, setIsPortalClicked] = useState(false);
-  const [is404Page, setIs404Page] = useState(false);
+  // Note: 404 pages hide the entire header via CSS :has() selector, so no is404Page state needed
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
   // Track if slide-in animation has played (persists across client-side nav)
@@ -61,24 +61,6 @@ export default function Header() {
     setFontsLoaded(true);
   }, []);
 
-  // Detect 404 page
-  useEffect(() => {
-    const check404 = () => {
-      setIs404Page(document.body.classList.contains('is-404-page'));
-    };
-
-    // Check initially
-    check404();
-
-    // Set up observer for body class changes
-    const observer = new MutationObserver(check404);
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // Handle scroll for header hide/show (500px down to hide, 250px up to show)
   // Throttled to 100ms to reduce CPU usage (was running every frame at 60fps)
@@ -219,19 +201,18 @@ export default function Header() {
             className="header-container"
             style={{
               width: '100%',
-              maxWidth: is404Page ? 'min(400px, 95%)' : '100%',
-              margin: is404Page ? '0 auto' : '0',
+              maxWidth: '100%',
+              margin: '0',
               padding: '8px 32px',
               boxSizing: 'border-box',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: is404Page ? 'center' : 'space-between',
+              justifyContent: 'space-between',
               height: '85px', // Fixed height for desktop
               transition: 'justify-content 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
-            {/* Logo - Hidden on 404, fades when mobile menu opens */}
-            {!is404Page && (
+            {/* Logo - Fades when mobile menu opens */}
             <Link
               href="/"
               className={`logo-container ${hasMounted ? 'transition-opacity duration-300' : ''}`}
@@ -268,58 +249,46 @@ export default function Header() {
                 </g>
               </svg>
             </Link>
-            )}
 
             {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1450px (xlg breakpoint) */}
-            {!is404Page && (
-              <div className="hidden xlg:block">
-                <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} is404Page={is404Page} />
-              </div>
-            )}
-
-          {/* Go Home Button - Only on 404 */}
-          {is404Page && (
-            <CTAButton href="/">
-              GO HOME
-            </CTAButton>
-          )}
+            <div className="hidden xlg:block">
+              <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
+            </div>
 
             {/* Hamburger Menu Button - Inside header container so it animates with header */}
-            {!is404Page && (
-              <button
-                className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
-                onClick={handleHamburgerClick}
-                style={{ marginTop: '10px' }}
-                aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
-                aria-expanded={isMobileMenuOpen}
-                aria-controls="mobile-menu"
-              >
-                <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
-                  <path
-                    className="line line-top-bottom"
-                    d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
-                    stroke="none"
-                    fill="none"
-                  />
-                  <path
-                    className="line"
-                    d="M7 16 27 16"
-                    stroke="none"
-                    fill="none"
-                  />
-                </svg>
-              </button>
-            )}
+            <button
+              className={`hamburger xlg:hidden cursor-pointer z-[10030] flex items-center justify-center ${isMobileMenuOpen ? 'menu-open' : ''}`}
+              onClick={handleHamburgerClick}
+              style={{ marginTop: '10px' }}
+              aria-label={isMobileMenuOpen ? 'Close mobile menu' : 'Open mobile menu'}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+            >
+              <svg viewBox="0 0 32 32" className="hamburger-svg" aria-hidden="true" focusable="false">
+                <path
+                  className="line line-top-bottom"
+                  d="M27 10 13 10C10.8 10 9 8.2 9 6 9 3.5 10.8 2 13 2 15.2 2 17 3.8 17 6L17 26C17 28.2 18.8 30 21 30 23.2 30 25 28.2 25 26 25 23.8 23.2 22 21 22L7 22"
+                  stroke="none"
+                  fill="none"
+                />
+                <path
+                  className="line"
+                  d="M7 16 27 16"
+                  stroke="none"
+                  fill="none"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </header>
 
       {/* Mobile Menu Component - Only loaded when hamburger is clicked */}
-      {!is404Page && shouldLoadMobileMenu && (
+      {/* Note: 404 pages hide header entirely via CSS :has() selector, so this won't render on 404 */}
+      {shouldLoadMobileMenu && (
         <MobileMenu
           isPortalClicked={isPortalClicked}
           handlePortalClick={handlePortalClick}
-          is404Page={is404Page}
           isMobileMenuOpen={isMobileMenuOpen}
           setIsMobileMenuOpen={setIsMobileMenuOpen}
         />
@@ -327,6 +296,17 @@ export default function Header() {
 
       {/* Custom CSS for animations matching WordPress exactly */}
       <style jsx global>{`
+        /* Disable tap highlight on mobile - prevents grey flash on touch */
+        .mobile-menu-overlay,
+        .mobile-menu-overlay *,
+        .header-bg-container,
+        .header-bg-container *,
+        header,
+        header * {
+          -webkit-tap-highlight-color: transparent;
+          -webkit-touch-callout: none;
+        }
+
         /* Mobile menu slide animations - GPU accelerated with translate3d */
         @keyframes slideDown {
           from {

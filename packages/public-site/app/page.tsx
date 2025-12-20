@@ -142,13 +142,16 @@ export default function Home() {
               >
                 SMART AGENT ALLIANCE
               </H1>
-              <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
-                For Agents Who Want More
+              <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />} style={{ fontSize: 'clamp(18px, calc(16px + 1.4vw), 32px)' }}>
+                For Agents Who Want More, without giving up independence
               </Tagline>
+              <p className="text-body text-sm md:text-base opacity-80 mx-auto mt-2" style={{ maxWidth: '950px' }}>
+                We are a sponsor-aligned support platform inside eXp Realty, providing systems, training, and a community designed to help agents grow. No commission splits, team fees, or loss of control.
+              </p>
             </div>
 
             {/* CTA Button Group */}
-            <div className="flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center mt-6">
+            <div className="hero-cta-buttons flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center mt-6">
               <CTAButton href="/join-exp-sponsor-team/">
                 JOIN THE ALLIANCE
               </CTAButton>

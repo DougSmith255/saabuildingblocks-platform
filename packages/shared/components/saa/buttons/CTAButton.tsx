@@ -68,7 +68,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
               relative flex justify-center items-center
               ${isFullWidth ? 'w-full' : ''}
               px-5 py-2
-              bg-[rgb(45,45,45)] backdrop-blur-[15px]
+              bg-[rgb(45,45,45)]
               rounded-xl border-t border-b border-white/10
               uppercase tracking-wide
               z-10
@@ -97,7 +97,7 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
               relative flex justify-center items-center
               ${isFullWidth ? 'w-full' : ''}
               px-5 py-2
-              bg-[rgb(45,45,45)] backdrop-blur-[15px]
+              bg-[rgb(45,45,45)]
               rounded-xl border-t border-b border-white/10
               uppercase tracking-wide
               z-10

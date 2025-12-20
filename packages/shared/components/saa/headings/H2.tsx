@@ -8,19 +8,6 @@ export interface HeadingProps {
 }
 
 /**
- * Convert text to use alt glyphs for N, E, M characters
- */
-function convertToAltGlyphs(text: string): string {
-  return text.split('').map(char => {
-    const upper = char.toUpperCase();
-    if (upper === 'N') return '\uf015';
-    if (upper === 'E') return '\uf011';
-    if (upper === 'M') return '\uf016';
-    return char;
-  }).join('');
-}
-
-/**
  * H2 Component - Optimized for Performance
  *
  * PERFORMANCE OPTIMIZATIONS:
@@ -33,8 +20,13 @@ function convertToAltGlyphs(text: string): string {
  * - Neon glow using text-shadow (matches Tagline style)
  * - 3D transform with rotateX
  * - Metal backing plate per word
- * - Alt glyphs for N, E, M characters
+ * - Alt glyphs for N, E, M via font-feature-settings "ss01"
  * - Body text color (#bfbdb0)
+ *
+ * SEO/ACCESSIBILITY:
+ * - Uses real letters in DOM (Google reads correctly)
+ * - Copy/paste gives real letters
+ * - Font's ss01 stylistic set renders alternate glyphs visually
  *
  * @example
  * ```tsx
@@ -106,7 +98,6 @@ export default function H2({
 
       <h2
         className={`text-h2 ${className}`}
-        aria-label={plainText}
         style={{
           display: 'flex',
           justifyContent: 'center',
@@ -116,12 +107,13 @@ export default function H2({
           position: 'relative',
           paddingLeft: '0.35em',
           paddingRight: '0.35em',
+          fontFeatureSettings: '"ss01" 1',
+          maxWidth: '1400px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
           ...style
         }}
       >
-        {/* SEO-friendly hidden text for search engines and screen readers */}
-        <span className="sr-only">{plainText}</span>
-
         {words.map((word, wordIndex) => (
           <span
             key={wordIndex}
@@ -133,7 +125,7 @@ export default function H2({
               textShadow,
             }}
           >
-            {convertToAltGlyphs(word)}
+            {word}
           </span>
         ))}
       </h2>
