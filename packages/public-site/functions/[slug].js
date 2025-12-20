@@ -953,7 +953,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       color: #bfbdb0;
       line-height: 1.1;
       letter-spacing: 0em;
-      margin-bottom: 2rem;
+      margin-bottom: 0.5rem;
       font-weight: 400;
       /* Alt glyphs for N, E, M via font ss01 stylistic set */
       font-feature-settings: "ss01" 1;
@@ -966,6 +966,16 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         0 0 0.03em rgba(255,255,255,0.8);
       /* GPU-accelerated glow via filter */
       filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
+    }
+    .hero-body-text {
+      font-family: var(--font-synonym), sans-serif;
+      font-size: clamp(14px, calc(12px + 0.5vw), 18px);
+      color: #bfbdb0;
+      opacity: 0.8;
+      line-height: 1.5;
+      max-width: 600px;
+      margin: 0 auto 1.5rem auto;
+      text-align: center;
     }
     /* Tagline Counter Suffix - inline "(3700+ Agents)" */
     .tagline-counter-suffix {
@@ -1831,7 +1841,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         <div class="hero-text-content">
           <h1 class="headline">SMART AGENT ALLIANCE</h1>
           <p class="tagline text-tagline">Join ${escapeHTML(firstName)}'s Team <span class="tagline-counter-suffix"><span class="counter-numbers-mobile">(<span class="counter-digit">3</span><span class="counter-digit">7</span><span class="counter-digit">0</span><span class="counter-digit">0</span>+ </span>Agents)</span></p>
-          ${socialLinks.length > 0 ? `<div class="social-row">${socialLinksHTML}</div>` : ''}
+          <p class="hero-body-text">Join eXp under sponsors who invest in your success. Elite systems, training, and community — no splits, no fees, no catch.</p>
           <div class="cta-row">
             <button class="btn-primary text-button" onclick="openJoinModal()">Join My Team</button>
             <a href="#webinar" class="btn-secondary text-button">See How It Works</a>
