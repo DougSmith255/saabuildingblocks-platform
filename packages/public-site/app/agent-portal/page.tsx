@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
+import { SketchPicker, ColorResult } from 'react-color';
 
 // Shake animation styles
 const shakeKeyframes = `
@@ -16,17 +17,6 @@ const shakeKeyframes = `
   80% { transform: translateX(2px); }
 }
 `;
-
-// Inject shake keyframes into document
-if (typeof document !== 'undefined') {
-  const styleId = 'portal-shake-animation';
-  if (!document.getElementById(styleId)) {
-    const style = document.createElement('style');
-    style.id = styleId;
-    style.textContent = shakeKeyframes;
-    document.head.appendChild(style);
-  }
-}
 
 // User type from stored session
 interface UserData {
@@ -103,6 +93,12 @@ export default function AgentPortal() {
   const [previewContrastLevel, setPreviewContrastLevel] = useState(130);
   const imageEditorRef = useRef<HTMLDivElement>(null);
 
+  // Two-step image editor state
+  const [imageEditorStep, setImageEditorStep] = useState<1 | 2>(1);
+  const [hasVisitedStep2, setHasVisitedStep2] = useState(false);
+  const [colorContrastLevel, setColorContrastLevel] = useState(100); // Color version contrast (default 100%)
+  const [bwContrastLevel, setBwContrastLevel] = useState(130); // B&W version contrast (default 130%)
+
   // Track which source triggered the image upload (for showing notifications in correct location)
   const [uploadSource, setUploadSource] = useState<'dashboard' | 'agent-pages' | null>(null);
 
@@ -157,6 +153,17 @@ export default function AgentPortal() {
       document.body.style.overflow = '';
     };
   }, [isAnyPopupOpen]);
+
+  // Inject shake animation keyframes on mount
+  useEffect(() => {
+    const styleId = 'portal-shake-animation';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = shakeKeyframes;
+      document.head.appendChild(style);
+    }
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('agent_portal_user');
@@ -332,6 +339,39 @@ export default function AgentPortal() {
     });
   };
 
+  // Apply color contrast filter (no grayscale, just contrast adjustment)
+  const applyColorContrastFilter = async (imageSource: File | Blob, contrast: number): Promise<Blob> => {
+    const img = new Image();
+    const imageUrl = URL.createObjectURL(imageSource);
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => resolve();
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
+
+    const canvas = document.createElement('canvas');
+    canvas.width = img.width;
+    canvas.height = img.height;
+    const ctx = canvas.getContext('2d');
+
+    if (!ctx) {
+      URL.revokeObjectURL(imageUrl);
+      throw new Error('Could not get canvas context');
+    }
+
+    ctx.filter = `contrast(${contrast}%)`;
+    ctx.drawImage(img, 0, 0);
+    URL.revokeObjectURL(imageUrl);
+
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('Failed to create blob'));
+      }, 'image/png');
+    });
+  };
+
   // Open image editor modal when user selects a file
   const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -492,9 +532,9 @@ export default function AgentPortal() {
     setError(null);
     setStatus(null);
 
-    // Store original file and contrast level
+    // Store original file and contrast level (use B&W contrast for the dashboard image)
     setOriginalImageFile(pendingImageFile);
-    setContrastLevel(previewContrastLevel);
+    setContrastLevel(bwContrastLevel);
 
     try {
       const token = localStorage.getItem('agent_portal_token');
@@ -516,9 +556,13 @@ export default function AgentPortal() {
         },
       });
 
-      // Step 3: Apply B&W + contrast to the cutout
-      setStatus('Applying filters...');
-      const processedBlob = await applyBWContrastFilter(bgRemovedBlob, previewContrastLevel);
+      // Step 3: Apply B&W + contrast to the cutout (using bwContrastLevel from step 2)
+      setStatus('Applying B&W filter...');
+      const processedBlob = await applyBWContrastFilter(bgRemovedBlob, bwContrastLevel);
+
+      // Step 3b: Apply color contrast to the cutout (using colorContrastLevel from step 1)
+      setStatus('Applying color contrast...');
+      const colorProcessedBlob = await applyColorContrastFilter(bgRemovedBlob, colorContrastLevel);
 
       // Step 4: Upload to dashboard
       setStatus('Uploading...');
@@ -542,7 +586,7 @@ export default function AgentPortal() {
       setUser(updatedUser);
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
-      // Step 5: Upload same to attraction page
+      // Step 5: Upload same to attraction page (B&W version)
       setStatus('Syncing to attraction page...');
       const pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
@@ -551,6 +595,7 @@ export default function AgentPortal() {
       if (pageResponse.ok) {
         const currentPageData = await pageResponse.json();
         if (currentPageData.page?.id) {
+          // Upload B&W version
           const attractionFormData = new FormData();
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', currentPageData.page.id);
@@ -571,6 +616,18 @@ export default function AgentPortal() {
               }));
             }
           }
+
+          // Step 6: Also upload COLOR version (for Linktree color option) - with color contrast applied
+          setStatus('Uploading color version...');
+          const colorFormData = new FormData();
+          colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
+          colorFormData.append('pageId', currentPageData.page.id);
+
+          await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: colorFormData,
+          });
         }
       }
 
@@ -602,6 +659,11 @@ export default function AgentPortal() {
     setPendingBgRemovedUrl(null);
     setIsRemovingBackground(false);
     setBgRemovalProgress(0);
+    // Reset two-step state
+    setImageEditorStep(1);
+    setHasVisitedStep2(false);
+    setColorContrastLevel(100);
+    setBwContrastLevel(130);
   };
 
   // Re-process existing images with new contrast level
@@ -732,15 +794,15 @@ export default function AgentPortal() {
             <div className={glassStyles['shimmerGradient']} />
           </div>
 
-          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10" style={{ height: '85px' }}>
+          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 md:h-[85px]">
             {/* Logo - Same as main site */}
             <Link
               href="/"
               aria-label="Smart Agent Alliance Home"
               className="hover:scale-110 transition-transform duration-300"
-              style={{ width: '126px', height: '45px' }}
+              style={{ width: '100px', height: '36px' }}
             >
-              <svg width="126px" height="45px" viewBox="0 0 201.96256 75.736626" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <svg width="100%" height="100%" viewBox="0 0 201.96256 75.736626" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <defs>
                   <linearGradient id="portalLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" style={{stopColor: '#fff3b0', stopOpacity: 1}} />
@@ -754,25 +816,41 @@ export default function AgentPortal() {
               </svg>
             </Link>
 
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all"
-            >
-              <span>Logout</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-            </button>
+            {/* Mobile: Section Title / Desktop: Logout Button */}
+            <div className="flex items-center gap-3">
+              {/* Mobile: Current section title */}
+              <span className="md:hidden text-[#ffd700] font-semibold text-sm">
+                {activeSection === 'dashboard' && 'Home'}
+                {activeSection === 'agent-pages' && 'My Pages'}
+                {activeSection === 'calls' && 'Team Calls'}
+                {activeSection === 'courses' && 'Courses'}
+                {activeSection === 'start-here' && 'Start Here'}
+                {activeSection === 'templates' && 'Templates'}
+                {activeSection === 'production' && 'Production'}
+                {activeSection === 'revshare' && 'RevShare'}
+                {activeSection === 'exp-links' && 'eXp Links'}
+                {activeSection === 'new-agents' && 'New Agents'}
+              </span>
+              {/* Desktop: Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all"
+              >
+                <span>Logout</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Hero Header */}
+      {/* Hero Header - Hidden on mobile for app-like experience */}
       <section
-        className="relative px-4 sm:px-8 md:px-12 pt-32 pb-12 flex items-center justify-center"
+        className="hidden md:flex relative px-4 sm:px-8 md:px-12 pt-32 pb-12 items-center justify-center"
       >
         <div className="max-w-[2500px] mx-auto w-full text-center">
           <H1>AGENT PORTAL</H1>
@@ -791,26 +869,125 @@ export default function AgentPortal() {
         />
       </section>
 
-      {/* Main Dashboard Layout */}
-      <div className="max-w-[2500px] mx-auto px-4 sm:px-8 md:px-12 pb-20">
-        <div className="flex flex-col lg:flex-row gap-6">
-
-          {/* Mobile Menu Toggle */}
+      {/* Mobile Bottom Navigation - App-like experience */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-[#ffd700]/20 pb-safe">
+        <div className="flex justify-around items-center h-16">
+          {[
+            { id: 'dashboard' as SectionId, label: 'Home', icon: '⬡' },
+            { id: 'agent-pages' as SectionId, label: 'Pages', icon: '◇' },
+            { id: 'calls' as SectionId, label: 'Calls', icon: '◉' },
+            { id: 'courses' as SectionId, label: 'Courses', icon: '◬' },
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                setActiveSection(item.id);
+                setSidebarOpen(false);
+              }}
+              className={`flex flex-col items-center justify-center flex-1 h-full pt-1 transition-colors ${
+                activeSection === item.id
+                  ? 'text-[#ffd700]'
+                  : 'text-[#e5e4dd]/50'
+              }`}
+            >
+              <span className="text-xl mb-0.5">{item.icon}</span>
+              <span className="text-[10px] font-medium">{item.label}</span>
+            </button>
+          ))}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-lg border border-[#ffd700]/30 bg-black/30 backdrop-blur-sm text-body mb-4"
+            className={`flex flex-col items-center justify-center flex-1 h-full pt-1 transition-colors ${
+              sidebarOpen ? 'text-[#ffd700]' : 'text-[#e5e4dd]/50'
+            }`}
           >
-            <span className="text-[#ffd700]">☰</span>
-            <span>Menu</span>
+            <span className="text-xl mb-0.5">☰</span>
+            <span className="text-[10px] font-medium">More</span>
           </button>
+        </div>
+      </nav>
 
-          {/* Sidebar Navigation */}
-          <aside
-            className={`
-              ${sidebarOpen ? 'block' : 'hidden'} lg:block
-              w-full lg:w-64 flex-shrink-0
-            `}
-          >
+      {/* Mobile More Menu Overlay */}
+      {sidebarOpen && (
+        <div className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-xl overflow-y-auto pb-20">
+          <div className="p-4 pt-20">
+            {/* User Profile Card */}
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-[#ffd700]/20 mb-6">
+              <button
+                onClick={() => { handleProfilePictureClick(); setSidebarOpen(false); }}
+                className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#ffd700]/30 flex-shrink-0"
+              >
+                {user.profilePictureUrl ? (
+                  <img
+                    src={user.profilePictureUrl}
+                    alt={user.fullName}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
+                    <span className="text-2xl text-[#ffd700]">{user.firstName?.charAt(0) || '?'}</span>
+                  </div>
+                )}
+              </button>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-[#ffd700] font-semibold truncate">{user.firstName} {user.lastName}</h3>
+                <p className="text-[#e5e4dd]/60 text-sm truncate">{user.email}</p>
+              </div>
+              <button
+                onClick={() => { handleOpenEditProfile(); setSidebarOpen(false); }}
+                className="p-2 rounded-lg bg-white/5 text-[#e5e4dd]/60"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Navigation Grid */}
+            <div className="grid grid-cols-2 gap-3">
+              {navItems.filter(item => !['dashboard', 'agent-pages', 'calls', 'courses'].includes(item.id)).map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveSection(item.id);
+                    setSidebarOpen(false);
+                  }}
+                  className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all ${
+                    activeSection === item.id
+                      ? 'bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700]'
+                      : 'bg-white/5 border border-white/10 text-[#e5e4dd]/70'
+                  }`}
+                >
+                  <span className="text-2xl mb-2">{item.icon}</span>
+                  <span className="text-sm font-medium text-center">{item.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="w-full mt-6 flex items-center justify-center gap-2 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400"
+            >
+              <span>Logout</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Dashboard Layout */}
+      <div className="max-w-[2500px] mx-auto px-4 sm:px-8 md:px-12 pb-24 md:pb-20 pt-20 md:pt-0">
+        <div className="flex flex-col lg:flex-row gap-6">
+
+          {/* Sidebar Navigation - Desktop only */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
               <div className="rounded-xl p-4 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15">
@@ -836,6 +1013,9 @@ export default function AgentPortal() {
                         src={user.profilePictureUrl}
                         alt={user.fullName}
                         className="w-full h-full object-cover"
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
                       />
                     ) : (
                       <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
@@ -984,15 +1164,16 @@ export default function AgentPortal() {
           onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
 
           {/* Modal */}
           <div
-            className="relative w-full max-w-md my-auto bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl"
+            className="relative w-full max-w-md my-auto bg-[#151517] rounded-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#1a1a1a] rounded-t-2xl">
+            <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#151517] rounded-t-2xl">
               <h2 className="text-xl font-semibold text-[#ffd700]">Edit Profile</h2>
               <button
                 onClick={handleCloseEditProfile}
@@ -1018,6 +1199,9 @@ export default function AgentPortal() {
                       src={user.profilePictureUrl}
                       alt={user.fullName}
                       className="w-full h-full object-cover"
+                      loading="eager"
+                      decoding="async"
+                      fetchPriority="high"
                     />
                   ) : (
                     <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
@@ -1229,16 +1413,26 @@ export default function AgentPortal() {
           onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
 
           {/* Modal */}
           <div
-            className="relative w-full max-w-lg my-auto bg-[#1a1a1a] rounded-2xl border border-[#ffd700]/20 shadow-2xl"
+            className="relative w-full max-w-lg my-auto bg-[#151517] rounded-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#1a1a1a] rounded-t-2xl">
-              <h2 className="text-lg font-semibold text-[#ffd700]">Edit Profile Picture</h2>
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-[#151517] rounded-t-2xl">
+              <div>
+                <h2 className="text-lg font-semibold text-[#ffd700]">
+                  Step {imageEditorStep}: {imageEditorStep === 1 ? 'Color Version' : 'B&W Version'}
+                </h2>
+                <p className="text-xs text-[#e5e4dd]/50 mt-0.5">
+                  {imageEditorStep === 1
+                    ? '(Used for Linktree when Color Photo is enabled)'
+                    : '(Used for Agent Page and Linktree default)'}
+                </p>
+              </div>
               <button
                 onClick={handleCancelImageEdit}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
@@ -1249,13 +1443,19 @@ export default function AgentPortal() {
               </button>
             </div>
 
+            {/* Step indicators */}
+            <div className="flex justify-center gap-2 pt-3 px-4">
+              <div className={`w-2 h-2 rounded-full transition-colors ${imageEditorStep === 1 ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
+              <div className={`w-2 h-2 rounded-full transition-colors ${imageEditorStep === 2 ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
+            </div>
+
             {/* Image Preview with Crop */}
             <div className="p-4">
               {/* Background removal progress indicator */}
               {isRemovingBackground && (
                 <div className="mb-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                  <span>Removing background... {bgRemovalProgress}%</span>
+                  <span>Removing background...</span>
                 </div>
               )}
 
@@ -1272,13 +1472,15 @@ export default function AgentPortal() {
                   touchAction: 'none', // Prevent scroll while dragging on mobile
                 }}
               >
-                {/* Image with B&W + contrast preview - show bg removed version when available */}
+                {/* Image with filter based on step: Color (step 1) or B&W (step 2) */}
                 <img
                   src={pendingBgRemovedUrl || pendingImageUrl}
                   alt="Preview"
                   className="w-full h-full object-cover"
                   style={{
-                    filter: `grayscale(100%) contrast(${previewContrastLevel}%)`,
+                    filter: imageEditorStep === 1
+                      ? `contrast(${colorContrastLevel}%)`
+                      : `grayscale(100%) contrast(${bwContrastLevel}%)`,
                   }}
                   draggable={false}
                 />
@@ -1296,9 +1498,9 @@ export default function AgentPortal() {
                   }}
                 />
 
-                {/* Draggable crop border indicator - square for agent page display */}
+                {/* Draggable crop border - only interactive in Step 1 */}
                 <div
-                  className="absolute border-2 border-[#ffd700] cursor-move"
+                  className={`absolute border-2 ${imageEditorStep === 1 ? 'border-[#ffd700] cursor-move' : 'border-[#e5e4dd]/30 cursor-not-allowed'}`}
                   style={{
                     left: `${cropArea.x}%`,
                     top: `${cropArea.y}%`,
@@ -1306,6 +1508,7 @@ export default function AgentPortal() {
                     height: `${cropArea.size}%`,
                   }}
                   onMouseDown={(e) => {
+                    if (imageEditorStep !== 1) return; // Locked in step 2
                     e.preventDefault();
                     const containerRect = imageEditorRef.current?.getBoundingClientRect();
                     if (!containerRect) return;
@@ -1336,6 +1539,7 @@ export default function AgentPortal() {
                     document.addEventListener('mouseup', handleMouseUp);
                   }}
                   onTouchStart={(e) => {
+                    if (imageEditorStep !== 1) return; // Locked in step 2
                     const touch = e.touches[0];
                     const containerRect = imageEditorRef.current?.getBoundingClientRect();
                     if (!containerRect || !touch) return;
@@ -1369,80 +1573,116 @@ export default function AgentPortal() {
                     document.addEventListener('touchend', handleTouchEnd);
                   }}
                 >
-                  {/* Drag handle indicator in center */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/50 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                      </svg>
+                  {/* Drag handle indicator in center - only show in step 1 */}
+                  {imageEditorStep === 1 ? (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/50 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <div className="w-8 h-8 rounded-full bg-white/5 border border-white/20 flex items-center justify-center">
+                        <svg className="w-4 h-4 text-[#e5e4dd]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <p className="text-xs text-[#e5e4dd]/50 mt-3 text-center">
-                Drag the crop area to reposition • Background removed automatically
+                {imageEditorStep === 1
+                  ? 'Drag the crop area to reposition • Background removed automatically'
+                  : 'Crop position locked from Step 1 • Adjust B&W contrast below'}
               </p>
 
-              {/* Crop Size Slider */}
-              <div className="mt-4">
-                <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                  Zoom: {cropArea.size}%
-                  {minCropSizePercent < 100 && (
-                    <span className="text-xs text-[#e5e4dd]/50 ml-2">(min {minCropSizePercent}% for 900px)</span>
-                  )}
-                </label>
-                <input
-                  type="range"
-                  min={minCropSizePercent}
-                  max="100"
-                  value={cropArea.size}
-                  onChange={(e) => {
-                    const newSize = Number(e.target.value);
-                    // Adjust position to keep crop within bounds
-                    const maxPos = 100 - newSize;
-                    setCropArea({
-                      x: Math.min(cropArea.x, maxPos),
-                      y: Math.min(cropArea.y, maxPos),
-                      size: newSize,
-                    });
-                  }}
-                  className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
-                />
-              </div>
+              {/* Crop Size Slider - only in Step 1 */}
+              {imageEditorStep === 1 && (
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                    Zoom: {cropArea.size}%
+                    {minCropSizePercent < 100 && (
+                      <span className="text-xs text-[#e5e4dd]/50 ml-2">(min {minCropSizePercent}% for 900px)</span>
+                    )}
+                  </label>
+                  <input
+                    type="range"
+                    min={minCropSizePercent}
+                    max="100"
+                    value={cropArea.size}
+                    onChange={(e) => {
+                      const newSize = Number(e.target.value);
+                      // Adjust position to keep crop within bounds
+                      const maxPos = 100 - newSize;
+                      setCropArea({
+                        x: Math.min(cropArea.x, maxPos),
+                        y: Math.min(cropArea.y, maxPos),
+                        size: newSize,
+                      });
+                    }}
+                    className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
+                  />
+                </div>
+              )}
 
-              {/* Contrast Slider */}
-              <div className="mt-4 pt-4 border-t border-white/10">
+              {/* Contrast Slider - different for each step */}
+              <div className={`mt-4 ${imageEditorStep === 1 ? 'pt-4 border-t border-white/10' : ''}`}>
                 <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
-                  Contrast: {previewContrastLevel}%
+                  {imageEditorStep === 1 ? 'Color Contrast' : 'B&W Contrast'}: {imageEditorStep === 1 ? colorContrastLevel : bwContrastLevel}%
                 </label>
                 <input
                   type="range"
                   min="80"
                   max="200"
-                  value={previewContrastLevel}
-                  onChange={(e) => setPreviewContrastLevel(Number(e.target.value))}
+                  value={imageEditorStep === 1 ? colorContrastLevel : bwContrastLevel}
+                  onChange={(e) => {
+                    if (imageEditorStep === 1) {
+                      setColorContrastLevel(Number(e.target.value));
+                    } else {
+                      setBwContrastLevel(Number(e.target.value));
+                    }
+                  }}
                   className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
                 />
               </div>
             </div>
 
-            {/* Actions */}
+            {/* Actions - Three buttons: Cancel | Next/Back | Upload */}
             <div className="flex gap-3 p-4 border-t border-white/10">
               <button
                 type="button"
                 onClick={handleCancelImageEdit}
-                className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+                className="px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={handleConfirmImageEdit}
-                className="flex-1 px-4 py-3 rounded-lg text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] transition-colors"
+                onClick={() => {
+                  if (imageEditorStep === 1) {
+                    setImageEditorStep(2);
+                    setHasVisitedStep2(true);
+                  } else {
+                    setImageEditorStep(1);
+                  }
+                }}
+                className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd] bg-white/10 hover:bg-white/20 border border-white/10 transition-colors"
               >
-                Confirm & Upload
+                {imageEditorStep === 1 ? 'Next →' : '← Back'}
               </button>
+              {(imageEditorStep === 2 || hasVisitedStep2) && (
+                <button
+                  type="button"
+                  onClick={handleConfirmImageEdit}
+                  className="px-6 py-3 rounded-lg text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] transition-all animate-in fade-in duration-300"
+                >
+                  Upload
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -1538,7 +1778,7 @@ Simply offering an MLS automatic search isn't enough these days. Instead, focus 
   ];
 
   return (
-    <SectionWrapper title="Start Here">
+    <SectionWrapper>
       <FAQ items={faqItems} allowMultiple defaultOpenIndex={0} />
     </SectionWrapper>
   );
@@ -1549,7 +1789,7 @@ Simply offering an MLS automatic search isn't enough these days. Instead, focus 
 // ============================================================================
 function TeamCallsSection() {
   return (
-    <SectionWrapper title="Team Calls & More">
+    <SectionWrapper>
       <div className="space-y-8">
         <h3 className="text-h3 text-center mb-6">Mastermind Calls</h3>
 
@@ -1603,7 +1843,7 @@ function TeamCallsSection() {
 // ============================================================================
 function TemplatesSection() {
   return (
-    <SectionWrapper title="Customizable Canva Assets">
+    <SectionWrapper>
       <div className="space-y-8">
         <GenericCard padding="lg">
           <div className="space-y-6">
@@ -1643,7 +1883,7 @@ function TemplatesSection() {
 // ============================================================================
 function CoursesSection() {
   return (
-    <SectionWrapper title="Elite Courses">
+    <SectionWrapper>
       <p className="text-center text-body mb-8">Refer to Wolf Pack emails to find login details</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1712,7 +1952,7 @@ Referral Networks to consider:
   ];
 
   return (
-    <SectionWrapper title="Quickstart Production">
+    <SectionWrapper>
       <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <GenericCard padding="md">
@@ -1772,7 +2012,7 @@ Tips for getting started:
   ];
 
   return (
-    <SectionWrapper title="Quickstart RevShare">
+    <SectionWrapper>
       <div className="space-y-6">
         <GenericCard padding="lg" centered>
           <div className="text-center space-y-4 py-4">
@@ -1794,7 +2034,7 @@ Tips for getting started:
 // ============================================================================
 function ExpLinksSection() {
   return (
-    <SectionWrapper title="eXp Links & Questions">
+    <SectionWrapper>
       <div className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <GenericCard padding="md">
@@ -1882,7 +2122,7 @@ function ExpLinksSection() {
 // ============================================================================
 function NewAgentsSection() {
   return (
-    <SectionWrapper title="New Agents">
+    <SectionWrapper>
       <div className="space-y-6">
         <GenericCard padding="lg">
           <div className="space-y-6">
@@ -1972,6 +2212,7 @@ interface LinksSettings {
   iconStyle: 'light' | 'dark';
   font: 'synonym' | 'taskor';
   bio: string;
+  showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
 }
 
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
@@ -1979,6 +2220,7 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   iconStyle: 'light',
   font: 'synonym',
   bio: '',
+  showColorPhoto: false, // B&W by default
 };
 
 interface CustomLink {
@@ -2094,6 +2336,54 @@ function AgentPagesSection({
 
   // Links page global settings state
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(DEFAULT_LINKS_SETTINGS);
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [showStylesModal, setShowStylesModal] = useState(false);
+
+  // Tab navigation state for new UI
+  type TabId = 'profile' | 'linktree' | 'links';
+  const [activeTab, setActiveTab] = useState<TabId>('profile');
+
+  // Accordion expanded state
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    socialLinks: false,
+    phoneSettings: true,
+  });
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
+  };
+
+  // Count filled social links
+  const filledSocialLinks = [
+    formData.facebook_url,
+    formData.instagram_url,
+    formData.twitter_url,
+    formData.youtube_url,
+    formData.tiktok_url,
+    formData.linkedin_url,
+  ].filter(Boolean).length;
+
+  // Helper to get color version URL from B&W URL
+  // B&W: .../profiles/agent-page-xxx.png -> Color: .../profiles/agent-page-xxx-color.png
+  const getColorImageUrl = (bwUrl: string | null | undefined): string | null => {
+    if (!bwUrl) return null;
+    // Insert '-color' before the file extension
+    const match = bwUrl.match(/^(.+)\.(\w+)$/);
+    if (match) {
+      return `${match[1]}-color.${match[2]}`;
+    }
+    return bwUrl;
+  };
+
+  // Get the appropriate profile image URL based on color setting
+  const getProfileImageUrl = (): string | null => {
+    const baseUrl = pageData?.profile_image_url || user?.profilePictureUrl || null;
+    if (!baseUrl) return null;
+    if (linksSettings.showColorPhoto) {
+      return getColorImageUrl(baseUrl);
+    }
+    return baseUrl;
+  };
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -2425,7 +2715,7 @@ function AgentPagesSection({
 
   if (isLoading) {
     return (
-      <SectionWrapper title="Agent Attraction Page">
+      <SectionWrapper>
         <div className="flex items-center justify-center py-12">
           <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
         </div>
@@ -2433,17 +2723,83 @@ function AgentPagesSection({
     );
   }
 
+  // Create page handler
+  const handleCreatePage = async () => {
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+      const response = await fetch('https://saabuildingblocks.com/api/agent-pages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.page) {
+        setPageData(data.page);
+        // Update form data with new page values
+        setFormData({
+          display_first_name: data.page.display_first_name || '',
+          display_last_name: data.page.display_last_name || '',
+          phone: data.page.phone || '',
+          show_phone: data.page.show_phone || false,
+          phone_text_only: data.page.phone_text_only || false,
+          facebook_url: data.page.facebook_url || '',
+          instagram_url: data.page.instagram_url || '',
+          twitter_url: data.page.twitter_url || '',
+          youtube_url: data.page.youtube_url || '',
+          tiktok_url: data.page.tiktok_url || '',
+          linkedin_url: data.page.linkedin_url || '',
+        });
+        setCustomLinks(data.page.custom_links || []);
+        setLinksSettings(data.page.links_settings || {
+          accentColor: '#ffd700',
+          iconStyle: 'light',
+          font: 'synonym',
+          bio: '',
+          showColorPhoto: false,
+        });
+        setSuccessMessage('Your page has been created! Start customizing it below.');
+      } else if (response.status === 409) {
+        // Page already exists - refresh to get it
+        window.location.reload();
+      } else {
+        setError(data.error || 'Failed to create page');
+      }
+    } catch (err) {
+      console.error('Error creating page:', err);
+      setError('Failed to create page. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (!pageData) {
     return (
-      <SectionWrapper title="Agent Attraction Page">
+      <SectionWrapper>
         <GenericCard padding="lg" centered>
           <div className="text-center space-y-4 py-8">
             <span className="text-6xl">🚀</span>
-            <h3 className="text-h3 text-[#ffd700]">Coming Soon!</h3>
+            <h3 className="text-h3 text-[#ffd700]">Create Your Pages</h3>
             <p className="text-body max-w-md mx-auto">
-              Your personalized Agent Attraction Page will be available once you&apos;ve been added to the active downline.
-              Contact your sponsor if you believe this is an error.
+              Get started with your personalized Agent Attraction Page and Links page.
+              Click below to create your pages and start customizing!
             </p>
+            {error && (
+              <p className="text-red-400 text-sm">{error}</p>
+            )}
+            <button
+              onClick={handleCreatePage}
+              disabled={isSaving}
+              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSaving ? 'Creating...' : 'Create My Pages'}
+            </button>
           </div>
         </GenericCard>
       </SectionWrapper>
@@ -2452,764 +2808,943 @@ function AgentPagesSection({
 
   // TODO: Change to smartagentalliance.com when domain migration is complete
   const pageUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}`;
+  const linktreeUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}-links`;
 
   return (
-    <SectionWrapper title="Agent Attraction Page">
-      <div className="space-y-8">
-        {/* Status Banner */}
-        <div className={`p-4 rounded-lg border ${pageData.activated
-          ? 'bg-green-500/10 border-green-500/30'
-          : 'bg-yellow-500/10 border-yellow-500/30'
-        }`}>
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center gap-3">
-              <span className={`w-3 h-3 rounded-full ${pageData.activated ? 'bg-green-500' : 'bg-yellow-500'}`} />
-              <span className={pageData.activated ? 'text-green-400' : 'text-yellow-400'}>
-                {pageData.activated ? 'Your page is live!' : 'Your page is not yet active'}
-              </span>
-            </div>
-            {pageData.activated && (
-              <a
-                href={pageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#ffd700] hover:underline"
-              >
-                View your page →
-              </a>
-            )}
-          </div>
-        </div>
-
+    <SectionWrapper>
+      <div className="space-y-6">
         {/* Error/Success Messages */}
         {error && (
-          <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400">
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
             {error}
           </div>
         )}
         {successMessage && (
-          <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400">
+          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
             {successMessage}
           </div>
         )}
 
-        {/* Page URL Preview */}
-        <GenericCard padding="md">
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-[#e5e4dd]/80">Your Page URL</label>
-            <p className="text-caption mb-2">This is automatically generated from your display name.</p>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-black/30 border border-white/10">
-              <span className="text-[#e5e4dd]/60">saabuildingblocks.pages.dev/</span>
-              <span className="text-[#ffd700]">{generatedSlug || 'firstname-lastname'}</span>
-            </div>
-          </div>
-        </GenericCard>
+        {/* Two-Column Layout: Preview (Left) + Settings (Right) */}
+        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
 
-        {/* Profile Image */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Profile Image <span className="text-red-400">*</span></h3>
-          <p className="text-caption mb-4">
-            Upload a professional photo. The background will be automatically removed and the image converted to black & white.
-          </p>
-          <div className="flex flex-col sm:flex-row items-start gap-6">
-            {/* Image Preview - clickable to upload */}
-            <label
-              htmlFor="attraction-profile-image-upload"
-              className="relative w-32 h-32 rounded-full overflow-hidden border-3 border-[#ffd700] bg-black/30 flex-shrink-0 cursor-pointer group"
-            >
-              {(pageData.profile_image_url || user.profilePictureUrl) ? (
-                <img
-                  src={pageData.profile_image_url || user.profilePictureUrl || ''}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                  style={{ filter: `contrast(${contrastLevel / 130})` }}
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
-                  <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                  </svg>
+          {/* LEFT COLUMN: Live Preview (Sticky on Desktop) */}
+          <div className="lg:sticky lg:top-6 lg:self-start order-2 lg:order-1">
+            <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
+              {/* Preview Header */}
+              <div className="px-4 py-3 border-b border-white/10 bg-black/30">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
+                  <span className={`text-xs ${activeTab === 'profile' ? 'text-[#ffd700]' : 'text-[#4ecdc4]'}`}>
+                    {activeTab === 'profile' ? 'Attraction Page' : 'Linktree'}
+                  </span>
                 </div>
-              )}
-              {isUploadingImage && (
-                <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                  <div className="w-8 h-8 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
-                </div>
-              )}
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="24" height="24" className="text-white">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
               </div>
-            </label>
-            {/* Upload Button */}
-            <div className="flex-1">
-              <input
-                ref={attractionFileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={handleImageUpload}
-                onClick={(e) => {
-                  // Reset value to allow selecting the same file again
-                  (e.target as HTMLInputElement).value = '';
-                }}
-                className="hidden"
-                id="attraction-profile-image-upload"
-              />
-              <label
-                htmlFor="attraction-profile-image-upload"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors cursor-pointer"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="17 8 12 3 7 8" />
-                  <line x1="12" y1="3" x2="12" y2="15" />
-                </svg>
-                {pageData.profile_image_url ? 'Change Photo' : 'Upload Photo'}
-              </label>
-              <p className="text-[#e5e4dd]/50 text-sm mt-2">JPG, PNG, or WebP. Min 900x900px. Max 5MB.</p>
-              {!pageData.profile_image_url && !user.profilePictureUrl && !pageData.activated && (
-                <p className="text-yellow-400 text-sm mt-2">A profile image is required to activate your page.</p>
-              )}
 
-              {/* Image Upload Status Messages - visible on mobile */}
-              {attractionUploadStatus && (
-                <div className="mt-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                  {attractionUploadStatus}
-                </div>
-              )}
-              {attractionUploadError && (
-                <div className="mt-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-                  {attractionUploadError}
-                </div>
-              )}
+              {/* Preview Content - Switches based on active tab */}
+              <div className="p-0">
+                {activeTab === 'profile' ? (
+                  /* Attraction Page Preview - Live iframe of actual page */
+                  <div className="relative w-full overflow-hidden rounded-b-xl" style={{ height: '500px' }}>
+                    {pageData.activated && (generatedSlug || pageData.slug) ? (
+                      <iframe
+                        src={pageUrl}
+                        className="border-0"
+                        style={{
+                          transform: 'scale(0.5)',
+                          transformOrigin: 'top left',
+                          width: '200%',
+                          height: '200%',
+                          pointerEvents: 'none',
+                        }}
+                        title="Attraction Page Preview"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full text-[#e5e4dd]/50 text-sm">
+                        Activate your page to see preview
+                      </div>
+                    )}
+                    {/* Overlay to prevent interaction */}
+                    <div className="absolute inset-0 bg-transparent" />
+                  </div>
+                ) : (
+                  /* Linktree Preview */
+                  <div className="flex flex-col items-center gap-4 max-w-[260px] mx-auto">
+                    {/* Profile Photo */}
+                    <div
+                      className="w-24 h-24 rounded-full border-2 flex items-center justify-center overflow-hidden"
+                      style={{ borderColor: linksSettings.accentColor, backgroundColor: 'rgba(0,0,0,0.5)' }}
+                    >
+                      {getProfileImageUrl() ? (
+                        <img
+                          src={getProfileImageUrl() || ''}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-4xl">👤</span>
+                      )}
+                    </div>
+
+                    {/* Name with Neon Effect */}
+                    <span
+                      className="font-bold text-xl text-center"
+                      style={{
+                        color: linksSettings.accentColor,
+                        fontFamily: 'var(--font-taskor, sans-serif)',
+                        textShadow: `
+                          0 0 0.01em #fff,
+                          0 0 0.02em #fff,
+                          0 0 0.03em rgba(255,255,255,0.8),
+                          0 0 0.07em ${linksSettings.accentColor},
+                          0 0 0.11em ${linksSettings.accentColor}e6,
+                          0 0 0.16em ${linksSettings.accentColor}b3,
+                          0 0 0.22em ${linksSettings.accentColor}80
+                        `,
+                        filter: `drop-shadow(0 0 0.1em ${linksSettings.accentColor}4d)`,
+                      }}
+                    >
+                      {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
+                    </span>
+
+                    {/* Bio */}
+                    {linksSettings.bio && (
+                      <p className="text-xs text-center text-[#e5e4dd]/70" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
+                        {linksSettings.bio.slice(0, 80)}{linksSettings.bio.length > 80 ? '...' : ''}
+                      </p>
+                    )}
+
+                    {/* Social Icons */}
+                    {filledSocialLinks > 0 && (
+                      <div className="flex gap-2 flex-wrap justify-center">
+                        {formData.facebook_url && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
+                          </div>
+                        )}
+                        {formData.instagram_url && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
+                          </div>
+                        )}
+                        {formData.twitter_url && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                          </div>
+                        )}
+                        {formData.youtube_url && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
+                          </div>
+                        )}
+                        {formData.tiktok_url && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
+                          </div>
+                        )}
+                        {formData.linkedin_url && (
+                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Phone Number */}
+                    {formData.show_phone && formData.phone && (
+                      <div className="flex items-center gap-1.5 text-xs text-[#e5e4dd]/80">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        <span>{formData.phone}</span>
+                        {formData.phone_text_only && (
+                          <span className="text-[#e5e4dd]/50">(Text Only)</span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Sample Buttons */}
+                    <div className="w-full space-y-2">
+                      <div
+                        className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
+                        style={{
+                          backgroundColor: linksSettings.accentColor,
+                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                        }}
+                      >
+                        <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx="9" cy="7" r="4" />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span className="block text-center text-xs">Join My Team</span>
+                      </div>
+                      {/* Learn About SAA default button */}
+                      <div
+                        className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
+                        style={{
+                          backgroundColor: linksSettings.accentColor,
+                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                        }}
+                      >
+                        <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 16v-4" />
+                          <path d="M12 8h.01" />
+                        </svg>
+                        <span className="block text-center text-xs">Learn About SAA</span>
+                      </div>
+                      {/* Show ALL custom links with their icons */}
+                      {customLinks.map((link) => {
+                        const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
+                        return (
+                          <div
+                            key={link.id}
+                            className="w-full py-2 px-4 rounded-lg text-xs font-medium relative"
+                            style={{
+                              backgroundColor: linksSettings.accentColor,
+                              color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                              fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                            }}
+                          >
+                            {iconPath && (
+                              <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={iconPath} />
+                              </svg>
+                            )}
+                            <span className="block text-center">{link.label}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-        </GenericCard>
-
-        {/* Display Name */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Display Name</h3>
-          <p className="text-caption mb-4">This is how your name will appear on your attraction page. You can use a different name than your legal name if preferred.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">First Name</label>
-              <input
-                type="text"
-                value={formData.display_first_name}
-                onChange={(e) => handleInputChange('display_first_name', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Last Name</label>
-              <input
-                type="text"
-                value={formData.display_last_name}
-                onChange={(e) => handleInputChange('display_last_name', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-              />
-            </div>
-          </div>
-        </GenericCard>
-
-        {/* Phone Settings */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Phone Settings</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Phone Number</label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="(555) 123-4567"
-              />
-            </div>
-            <div className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="show_phone"
-                checked={formData.show_phone}
-                onChange={(e) => handleInputChange('show_phone', e.target.checked)}
-                className="w-5 h-5 rounded border-white/20 bg-black/30 focus:ring-[#ffd700]/30 accent-[#ffd700]"
-              />
-              <label htmlFor="show_phone" className="text-[#e5e4dd] cursor-pointer">
-                Display phone number on my attraction page
-              </label>
-            </div>
-            {formData.show_phone && (
-              <div className="flex items-center gap-3 ml-8">
-                <input
-                  type="checkbox"
-                  id="phone_text_only"
-                  checked={formData.phone_text_only}
-                  onChange={(e) => handleInputChange('phone_text_only', e.target.checked)}
-                  className="w-5 h-5 rounded border-white/20 bg-black/30 focus:ring-[#ffd700]/30 accent-[#ffd700]"
-                />
-                <label htmlFor="phone_text_only" className="text-[#e5e4dd] cursor-pointer">
-                  Show &quot;text only&quot; indicator
-                </label>
+          {/* RIGHT COLUMN: Settings with Tabs */}
+          <div className="order-1 lg:order-2">
+            {/* Page Links Section - Above Tabs */}
+            {pageData.activated && (
+              <div className="mb-6 pb-4 border-b border-white/10">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-green-500" />
+                  <span className="text-sm text-green-400">Your pages are live</span>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <a
+                    href={pageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                    View Attraction Page
+                  </a>
+                  <a
+                    href={linktreeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 text-[#4ecdc4] hover:bg-[#4ecdc4]/20 transition-colors text-sm font-medium"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                    View Linktree
+                  </a>
+                </div>
               </div>
             )}
-          </div>
-        </GenericCard>
 
-        {/* Social Links */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Social Links</h3>
-          <p className="text-caption mb-4">Add your social media profiles. Only filled links will be displayed on your page.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Facebook</label>
-              <input
-                type="url"
-                value={formData.facebook_url}
-                onChange={(e) => handleInputChange('facebook_url', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="https://facebook.com/yourprofile"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Instagram</label>
-              <input
-                type="url"
-                value={formData.instagram_url}
-                onChange={(e) => handleInputChange('instagram_url', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="https://instagram.com/yourprofile"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">X (Twitter)</label>
-              <input
-                type="url"
-                value={formData.twitter_url}
-                onChange={(e) => handleInputChange('twitter_url', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="https://x.com/yourprofile"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">YouTube</label>
-              <input
-                type="url"
-                value={formData.youtube_url}
-                onChange={(e) => handleInputChange('youtube_url', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="https://youtube.com/@yourchannel"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">TikTok</label>
-              <input
-                type="url"
-                value={formData.tiktok_url}
-                onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="https://tiktok.com/@yourprofile"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">LinkedIn</label>
-              <input
-                type="url"
-                value={formData.linkedin_url}
-                onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
-                placeholder="https://linkedin.com/in/yourprofile"
-              />
-            </div>
-          </div>
-        </GenericCard>
-
-        {/* Links Page Customization */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Links Page Style</h3>
-          <p className="text-caption mb-4">
-            Customize the appearance of your links page (/{generatedSlug}-links).
-          </p>
-
-          <div className="space-y-6">
-            {/* Bio */}
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Bio</label>
-              <p className="text-caption mb-2">A short description about yourself (appears below your name).</p>
-              <div className="relative">
-                <textarea
-                  value={linksSettings.bio}
-                  onChange={(e) => {
-                    if (e.target.value.length <= 150) {
-                      setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
-                      setHasUnsavedChanges(true);
-                    }
-                  }}
-                  className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors resize-none"
-                  rows={3}
-                  placeholder="Real estate agent helping families find their dream homes..."
-                />
-                <span className={`absolute bottom-2 right-2 text-sm ${
-                  linksSettings.bio.length >= 150 ? 'text-red-400' :
-                  linksSettings.bio.length >= 130 ? 'text-yellow-400' :
-                  'text-[#e5e4dd]/40'
-                }`}>
-                  {linksSettings.bio.length}/150
-                </span>
-              </div>
-            </div>
-
-            {/* Accent Color */}
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Accent Color</label>
-              <p className="text-caption mb-2">Applied to buttons, profile frame, social icons, and your name.</p>
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="relative">
-                  <input
-                    type="color"
-                    value={linksSettings.accentColor}
-                    onChange={(e) => {
-                      setLinksSettings(prev => ({ ...prev, accentColor: e.target.value }));
-                      setHasUnsavedChanges(true);
-                    }}
-                    className="w-12 h-12 rounded-lg cursor-pointer border-2 border-white/20 bg-transparent"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {/* Preset colors */}
-                  {['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81'].map(color => (
-                    <button
-                      key={color}
-                      type="button"
-                      onClick={() => {
-                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                        setHasUnsavedChanges(true);
-                      }}
-                      className={`w-8 h-8 rounded-full border-2 transition-all ${
-                        linksSettings.accentColor === color
-                          ? 'border-white scale-110'
-                          : 'border-transparent hover:scale-105'
-                      }`}
-                      style={{ backgroundColor: color }}
-                      title={color}
-                    />
-                  ))}
-                </div>
-                <span className="text-[#e5e4dd]/50 text-sm ml-2">{linksSettings.accentColor}</span>
-              </div>
-            </div>
-
-            {/* Icon Style */}
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Icon Style</label>
-              <p className="text-caption mb-2">Color of icons on buttons and social links.</p>
-              <div className="flex gap-3">
+            {/* Tab Navigation - Mobile-first with horizontal scroll */}
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+              <div className="flex border-b border-white/10 mb-6 min-w-max sm:min-w-0">
                 <button
-                  type="button"
-                  onClick={() => {
-                    setLinksSettings(prev => ({ ...prev, iconStyle: 'light' }));
-                    setHasUnsavedChanges(true);
-                  }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                    linksSettings.iconStyle === 'light'
-                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
+                  onClick={() => setActiveTab('profile')}
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                    activeTab === 'profile'
+                      ? 'text-[#ffd700]'
+                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
-                  <span className="w-4 h-4 rounded-full bg-white border border-gray-300" />
-                  Light (White)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' }));
-                    setHasUnsavedChanges(true);
-                  }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
-                    linksSettings.iconStyle === 'dark'
-                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
-                  }`}
-                >
-                  <span className="w-4 h-4 rounded-full bg-[#1a1a1a] border border-gray-600" />
-                  Dark (Near-black)
-                </button>
-              </div>
-            </div>
-
-            {/* Font Choice */}
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Font Style</label>
-              <p className="text-caption mb-2">Font for button text and bio (name always uses Taskor for neon effect).</p>
-              <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLinksSettings(prev => ({ ...prev, font: 'synonym' }));
-                    setHasUnsavedChanges(true);
-                  }}
-                  className={`px-4 py-2 rounded-lg border transition-colors ${
-                    linksSettings.font === 'synonym'
-                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
-                  }`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-                >
-                  Synonym (Modern)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setLinksSettings(prev => ({ ...prev, font: 'taskor' }));
-                    setHasUnsavedChanges(true);
-                  }}
-                  className={`px-4 py-2 rounded-lg border transition-colors ${
-                    linksSettings.font === 'taskor'
-                      ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                      : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/30'
-                  }`}
-                  style={{ fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 'bold' }}
-                >
-                  Taskor (Bold)
-                </button>
-              </div>
-            </div>
-
-            {/* Preview */}
-            <div>
-              <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">Preview</label>
-              <div className="p-4 rounded-lg bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] border border-white/10">
-                <div className="flex flex-col items-center gap-3 max-w-[200px] mx-auto">
-                  {/* Mini profile preview */}
-                  <div
-                    className="w-16 h-16 rounded-full border-2 flex items-center justify-center"
-                    style={{ borderColor: linksSettings.accentColor, backgroundColor: 'rgba(0,0,0,0.5)' }}
-                  >
-                    <span className="text-2xl">👤</span>
-                  </div>
-                  {/* Name preview */}
-                  <span
-                    className="font-bold text-lg"
-                    style={{
-                      color: linksSettings.accentColor,
-                      fontFamily: 'var(--font-taskor, sans-serif)',
-                      textShadow: `0 0 10px ${linksSettings.accentColor}40`
-                    }}
-                  >
-                    {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
-                  </span>
-                  {/* Bio preview */}
-                  {linksSettings.bio && (
-                    <p
-                      className="text-xs text-center text-[#e5e4dd]/70"
-                      style={{ fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)' }}
-                    >
-                      {linksSettings.bio.slice(0, 50)}{linksSettings.bio.length > 50 ? '...' : ''}
-                    </p>
+                  Profile
+                  <span className="hidden sm:inline ml-1.5 text-xs text-[#e5e4dd]/40">(Attraction + Links)</span>
+                  {activeTab === 'profile' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ffd700]" />
                   )}
-                  {/* Button preview */}
-                  <div
-                    className="w-full py-2 px-3 rounded-lg text-center text-sm font-medium flex items-center justify-center gap-2"
-                    style={{
-                      backgroundColor: linksSettings.accentColor,
-                      color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                      fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                    }}
-                  >
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10" />
-                    </svg>
-                    Sample Button
-                  </div>
-                </div>
+                </button>
+                <button
+                  onClick={() => setActiveTab('linktree')}
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                    activeTab === 'linktree'
+                      ? 'text-[#4ecdc4]'
+                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
+                  }`}
+                >
+                  Style
+                  <span className="hidden sm:inline ml-1 text-xs text-[#e5e4dd]/40">(Links)</span>
+                  {activeTab === 'linktree' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('links')}
+                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                    activeTab === 'links'
+                      ? 'text-[#4ecdc4]'
+                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
+                  }`}
+                >
+                  Links
+                  <span className="hidden sm:inline ml-1 text-xs text-[#e5e4dd]/40">(Links)</span>
+                  {customLinks.length > 0 && (
+                    <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-[#4ecdc4]/20 text-[#4ecdc4]">
+                      {customLinks.length}
+                    </span>
+                  )}
+                  {activeTab === 'links' && (
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                  )}
+                </button>
               </div>
             </div>
-          </div>
-        </GenericCard>
 
-        {/* Custom Link Buttons (for Links Page) */}
-        <GenericCard padding="md">
-          <h3 className="text-h5 text-[#ffd700] mb-4">Custom Link Buttons</h3>
-          <p className="text-caption mb-4">
-            Add custom buttons to your links page (/{generatedSlug}-links). These appear alongside the default &quot;Join My Team&quot; and &quot;Learn About SAA&quot; buttons.
-          </p>
+            {/* Tab Content */}
+            <div className="space-y-4">
+              {/* PROFILE TAB */}
+              {activeTab === 'profile' && (
+                <>
+                  {/* Profile Image - Compact */}
+                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                    <div className="flex items-start gap-4">
+                      <label
+                        htmlFor="attraction-profile-image-upload"
+                        className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700] bg-black/30 flex-shrink-0 cursor-pointer group"
+                      >
+                        {(pageData.profile_image_url || user.profilePictureUrl) ? (
+                          <img
+                            src={pageData.profile_image_url || user.profilePictureUrl || ''}
+                            alt="Profile"
+                            className="w-full h-full object-cover"
+                            style={{ filter: `contrast(${contrastLevel / 130})` }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                          </div>
+                        )}
+                        {isUploadingImage && (
+                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                            <div className="w-6 h-6 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" className="text-white">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                          </svg>
+                        </div>
+                      </label>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-medium text-[#ffd700] mb-1">Profile Image <span className="text-red-400">*</span></h4>
+                        <p className="text-xs text-[#e5e4dd]/50 mb-2">Background removed, B&W applied</p>
+                        <input
+                          ref={attractionFileInputRef}
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={handleImageUpload}
+                          onClick={(e) => { (e.target as HTMLInputElement).value = ''; }}
+                          className="hidden"
+                          id="attraction-profile-image-upload"
+                        />
+                        <label
+                          htmlFor="attraction-profile-image-upload"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors cursor-pointer"
+                        >
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                            <polyline points="17 8 12 3 7 8" />
+                            <line x1="12" y1="3" x2="12" y2="15" />
+                          </svg>
+                          {pageData.profile_image_url ? 'Change' : 'Upload'}
+                        </label>
+                        {attractionUploadStatus && (
+                          <div className="mt-2 text-xs text-blue-400 flex items-center gap-1.5">
+                            <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
+                            {attractionUploadStatus}
+                          </div>
+                        )}
+                        {attractionUploadError && (
+                          <div className="mt-2 text-xs text-red-400">{attractionUploadError}</div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-          {/* Existing custom links */}
-          {customLinks.length > 0 && (
-            <div className="space-y-3 mb-4">
-              {customLinks.map((link, index) => (
-                <div key={link.id} className="flex items-center gap-3 p-3 rounded-lg bg-black/20 border border-white/10 group">
-                  {/* Drag handle */}
-                  <div className="flex flex-col gap-1 cursor-move opacity-40 group-hover:opacity-100 transition-opacity">
+                  {/* Display Name - Compact */}
+                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                    <h4 className="text-sm font-medium text-[#ffd700] mb-3">Display Name</h4>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">First Name</label>
+                        <input
+                          type="text"
+                          value={formData.display_first_name}
+                          onChange={(e) => handleInputChange('display_first_name', e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">Last Name</label>
+                        <input
+                          type="text"
+                          value={formData.display_last_name}
+                          onChange={(e) => handleInputChange('display_last_name', e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Phone Settings - Collapsible */}
+                  <div className="rounded-lg bg-black/20 border border-white/10 overflow-hidden">
                     <button
                       type="button"
-                      onClick={() => {
-                        if (index > 0) {
-                          const newLinks = [...customLinks];
-                          [newLinks[index - 1], newLinks[index]] = [newLinks[index], newLinks[index - 1]];
-                          // Update order values
-                          newLinks.forEach((l, i) => l.order = i);
-                          setCustomLinks(newLinks);
-                          setHasUnsavedChanges(true);
-                        }
-                      }}
-                      disabled={index === 0}
-                      className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="Move up"
+                      onClick={() => toggleSection('phoneSettings')}
+                      className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
                     >
-                      <svg className="w-4 h-4 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (index < customLinks.length - 1) {
-                          const newLinks = [...customLinks];
-                          [newLinks[index], newLinks[index + 1]] = [newLinks[index + 1], newLinks[index]];
-                          // Update order values
-                          newLinks.forEach((l, i) => l.order = i);
-                          setCustomLinks(newLinks);
-                          setHasUnsavedChanges(true);
-                        }
-                      }}
-                      disabled={index === customLinks.length - 1}
-                      className="p-1 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
-                      title="Move down"
-                    >
-                      <svg className="w-4 h-4 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <h4 className="text-sm font-medium text-[#ffd700]">Phone Settings</h4>
+                      <svg
+                        className={`w-4 h-4 text-[#e5e4dd]/40 transition-transform ${expandedSections.phoneSettings ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </button>
+                    {expandedSections.phoneSettings && (
+                      <div className="px-4 pb-4 space-y-3">
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Phone Number</label>
+                          <input
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => handleInputChange('phone', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="(555) 123-4567"
+                          />
+                        </div>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={formData.show_phone}
+                            onChange={(e) => handleInputChange('show_phone', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
+                          />
+                          <span className="text-xs text-[#e5e4dd]">Show on pages</span>
+                        </label>
+                        {formData.show_phone && (
+                          <label className="flex items-center gap-2 cursor-pointer ml-6">
+                            <input
+                              type="checkbox"
+                              checked={formData.phone_text_only}
+                              onChange={(e) => handleInputChange('phone_text_only', e.target.checked)}
+                              className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
+                            />
+                            <span className="text-xs text-[#e5e4dd]">Text only</span>
+                          </label>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  {/* Icon display */}
-                  {link.icon && (
-                    <div className="w-8 h-8 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d={LINK_ICONS.find(i => i.name === link.icon)?.path || ''} />
+
+                  {/* Social Links - Collapsible */}
+                  <div className="rounded-lg bg-black/20 border border-white/10 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => toggleSection('socialLinks')}
+                      className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                    >
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-sm font-medium text-[#ffd700]">Social Links</h4>
+                        <span className="text-xs text-[#e5e4dd]/40">{filledSocialLinks} of 6</span>
+                      </div>
+                      <svg
+                        className={`w-4 h-4 text-[#e5e4dd]/40 transition-transform ${expandedSections.socialLinks ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
+                    </button>
+                    {expandedSections.socialLinks && (
+                      <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Facebook</label>
+                          <input
+                            type="url"
+                            value={formData.facebook_url}
+                            onChange={(e) => handleInputChange('facebook_url', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="https://facebook.com/..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Instagram</label>
+                          <input
+                            type="url"
+                            value={formData.instagram_url}
+                            onChange={(e) => handleInputChange('instagram_url', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="https://instagram.com/..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">X (Twitter)</label>
+                          <input
+                            type="url"
+                            value={formData.twitter_url}
+                            onChange={(e) => handleInputChange('twitter_url', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="https://x.com/..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">YouTube</label>
+                          <input
+                            type="url"
+                            value={formData.youtube_url}
+                            onChange={(e) => handleInputChange('youtube_url', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="https://youtube.com/@..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">TikTok</label>
+                          <input
+                            type="url"
+                            value={formData.tiktok_url}
+                            onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="https://tiktok.com/@..."
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">LinkedIn</label>
+                          <input
+                            type="url"
+                            value={formData.linkedin_url}
+                            onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                            placeholder="https://linkedin.com/in/..."
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* LINKTREE TAB */}
+              {activeTab === 'linktree' && (
+                <>
+                  {/* Bio */}
+                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                    <h4 className="text-sm font-medium text-[#4ecdc4] mb-2">Bio</h4>
+                    <p className="text-xs text-[#e5e4dd]/50 mb-2">Short description below your name</p>
+                    <div className="relative">
+                      <textarea
+                        value={linksSettings.bio}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 80) {
+                            setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                            setHasUnsavedChanges(true);
+                          }
+                        }}
+                        className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#4ecdc4]/50 focus:outline-none transition-colors resize-none"
+                        rows={2}
+                        placeholder="Real estate agent helping families find their dream homes..."
+                      />
+                      <span className={`absolute bottom-2 right-2 text-xs ${
+                        linksSettings.bio.length >= 80 ? 'text-red-400' :
+                        linksSettings.bio.length >= 60 ? 'text-yellow-400' :
+                        'text-[#e5e4dd]/30'
+                      }`}>
+                        {linksSettings.bio.length}/80
+                      </span>
                     </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-[#e5e4dd] font-medium truncate">{link.label}</div>
-                    <div className="text-[#e5e4dd]/50 text-sm truncate">{link.url}</div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCustomLinks(prev => prev.filter(l => l.id !== link.id));
-                      setHasUnsavedChanges(true);
-                    }}
-                    className="p-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors"
-                    title="Remove link"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
 
-          {/* Add new link form */}
-          <div className="space-y-3 p-4 rounded-lg bg-black/20 border border-white/10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm text-[#e5e4dd]/60 mb-1">Button Label</label>
-                <input
-                  type="text"
-                  value={newLinkLabel}
-                  onChange={(e) => setNewLinkLabel(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none text-sm"
-                  placeholder="e.g., Book a Call"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-[#e5e4dd]/60 mb-1">URL</label>
-                <input
-                  type="url"
-                  value={newLinkUrl}
-                  onChange={(e) => setNewLinkUrl(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none text-sm"
-                  placeholder="https://calendly.com/yourlink"
-                />
-              </div>
-            </div>
-
-            {/* Icon Picker */}
-            <div>
-              <label className="block text-sm text-[#e5e4dd]/60 mb-1">Button Icon (optional)</label>
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => setShowIconPicker(!showIconPicker)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] hover:border-[#ffd700]/30 transition-colors text-sm"
-                >
-                  {newLinkIcon ? (
-                    <>
-                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
-                      </svg>
-                      <span>{LINK_ICONS.find(i => i.name === newLinkIcon)?.label}</span>
-                    </>
-                  ) : (
-                    <span className="text-[#e5e4dd]/50">Select an icon...</span>
-                  )}
-                  <svg className="w-4 h-4 ml-auto text-[#e5e4dd]/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {newLinkIcon && (
-                  <button
-                    type="button"
-                    onClick={() => setNewLinkIcon(null)}
-                    className="absolute right-10 top-1/2 -translate-y-1/2 p-1 rounded hover:bg-white/10 text-[#e5e4dd]/40 hover:text-[#e5e4dd]"
-                    title="Clear icon"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-
-                {/* Icon picker dropdown */}
-                {showIconPicker && (
-                  <div className="absolute z-10 mt-2 w-full max-h-60 overflow-y-auto rounded-lg bg-[#1a1a1a] border border-white/20 shadow-xl">
-                    <div className="grid grid-cols-5 gap-1 p-2">
-                      {LINK_ICONS.map(icon => (
+                  {/* Accent Color */}
+                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                    <h4 className="text-sm font-medium text-[#4ecdc4] mb-2">Accent Color</h4>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="relative">
                         <button
-                          key={icon.name}
                           type="button"
-                          onClick={() => {
-                            setNewLinkIcon(icon.name);
-                            setShowIconPicker(false);
-                          }}
-                          className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-colors ${
-                            newLinkIcon === icon.name
-                              ? 'bg-[#ffd700]/20 text-[#ffd700]'
-                              : 'hover:bg-white/10 text-[#e5e4dd]/70'
-                          }`}
-                          title={icon.label}
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path d={icon.path} />
-                          </svg>
-                          <span className="text-[10px] truncate max-w-full">{icon.label}</span>
-                        </button>
+                          onClick={() => setShowColorPicker(!showColorPicker)}
+                          className="w-10 h-10 rounded-lg cursor-pointer border-2 border-white/20 transition-all hover:border-white/40"
+                          style={{ backgroundColor: linksSettings.accentColor }}
+                        />
+                        {showColorPicker && (
+                          <div className="absolute z-50 mt-2 left-0">
+                            <div className="fixed inset-0" onClick={() => setShowColorPicker(false)} />
+                            <div className="relative">
+                              <SketchPicker
+                                color={linksSettings.accentColor}
+                                onChange={(color: ColorResult) => {
+                                  setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
+                                  setHasUnsavedChanges(true);
+                                }}
+                                presetColors={['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81']}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81'].map(color => (
+                          <button
+                            key={color}
+                            type="button"
+                            onClick={() => {
+                              setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                              setHasUnsavedChanges(true);
+                            }}
+                            className={`w-6 h-6 rounded-full border-2 transition-all ${
+                              linksSettings.accentColor === color ? 'border-white scale-110' : 'border-transparent hover:scale-105'
+                            }`}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs text-[#e5e4dd]/40">{linksSettings.accentColor}</span>
+                    </div>
+                  </div>
+
+                  {/* Style Options - Compact Grid */}
+                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                    <h4 className="text-sm font-medium text-[#4ecdc4] mb-3">Style Options</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      {/* Icon Style */}
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-2">Button Icons</label>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
+                              linksSettings.iconStyle === 'light'
+                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                            }`}
+                          >
+                            <span className="w-3 h-3 rounded-full bg-white" />
+                            Light
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
+                              linksSettings.iconStyle === 'dark'
+                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                            }`}
+                          >
+                            <span className="w-3 h-3 rounded-full bg-[#1a1a1a] border border-gray-600" />
+                            Dark
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Photo Style */}
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-2">Profile Photo</label>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
+                              !linksSettings.showColorPhoto
+                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                            }`}
+                          >
+                            B&W
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
+                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
+                              linksSettings.showColorPhoto
+                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                            }`}
+                          >
+                            Color
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Button Font */}
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-2">Button Font</label>
+                        <div className="flex gap-2">
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                            className={`flex-1 px-2 py-1.5 rounded text-xs border transition-colors ${
+                              linksSettings.font === 'synonym'
+                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                            }`}
+                            style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                          >
+                            Synonym
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                            className={`flex-1 px-2 py-1.5 rounded text-xs border transition-colors ${
+                              linksSettings.font === 'taskor'
+                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                            }`}
+                            style={{ fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 'bold' }}
+                          >
+                            Taskor
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* LINKS TAB */}
+              {activeTab === 'links' && (
+                <>
+                  {/* Existing Custom Links */}
+                  {customLinks.length > 0 && (
+                    <div className="space-y-2">
+                      {customLinks.map((link, index) => (
+                        <div key={link.id} className="flex items-center gap-2 p-3 rounded-lg bg-black/20 border border-white/10 group">
+                          <div className="flex flex-col gap-0.5">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (index > 0) {
+                                  const newLinks = [...customLinks];
+                                  [newLinks[index - 1], newLinks[index]] = [newLinks[index], newLinks[index - 1]];
+                                  newLinks.forEach((l, i) => l.order = i);
+                                  setCustomLinks(newLinks);
+                                  setHasUnsavedChanges(true);
+                                }
+                              }}
+                              disabled={index === 0}
+                              className="p-0.5 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (index < customLinks.length - 1) {
+                                  const newLinks = [...customLinks];
+                                  [newLinks[index], newLinks[index + 1]] = [newLinks[index + 1], newLinks[index]];
+                                  newLinks.forEach((l, i) => l.order = i);
+                                  setCustomLinks(newLinks);
+                                  setHasUnsavedChanges(true);
+                                }
+                              }}
+                              disabled={index === customLinks.length - 1}
+                              className="p-0.5 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          </div>
+                          {link.icon && (
+                            <div className="w-7 h-7 rounded bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 flex items-center justify-center flex-shrink-0">
+                              <svg className="w-3.5 h-3.5 text-[#4ecdc4]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={LINK_ICONS.find(i => i.name === link.icon)?.path || ''} />
+                              </svg>
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm text-[#e5e4dd] truncate">{link.label}</div>
+                            <div className="text-xs text-[#e5e4dd]/40 truncate">{link.url}</div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setCustomLinks(prev => prev.filter(l => l.id !== link.id));
+                              setHasUnsavedChanges(true);
+                            }}
+                            className="p-1.5 rounded text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
                       ))}
                     </div>
+                  )}
+
+                  {/* Add New Link */}
+                  <div className="p-4 rounded-lg bg-black/20 border border-white/10 space-y-3">
+                    <h4 className="text-sm font-medium text-[#4ecdc4]">Add Custom Button</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">Label</label>
+                        <input
+                          type="text"
+                          value={newLinkLabel}
+                          onChange={(e) => setNewLinkLabel(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#4ecdc4]/50 focus:outline-none"
+                          placeholder="e.g., Book a Call"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">URL</label>
+                        <input
+                          type="url"
+                          value={newLinkUrl}
+                          onChange={(e) => setNewLinkUrl(e.target.value)}
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#4ecdc4]/50 focus:outline-none"
+                          placeholder="https://..."
+                        />
+                      </div>
+                    </div>
+
+                    {/* Icon Picker */}
+                    <div>
+                      <label className="block text-xs text-[#e5e4dd]/60 mb-1">Icon (optional)</label>
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => setShowIconPicker(!showIconPicker)}
+                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm hover:border-[#4ecdc4]/30 transition-colors"
+                        >
+                          {newLinkIcon ? (
+                            <>
+                              <svg className="w-4 h-4 text-[#4ecdc4]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
+                              </svg>
+                              <span>{LINK_ICONS.find(i => i.name === newLinkIcon)?.label}</span>
+                            </>
+                          ) : (
+                            <span className="text-[#e5e4dd]/50">Select icon...</span>
+                          )}
+                        </button>
+                        {showIconPicker && (
+                          <div className="absolute z-10 mt-2 w-full max-h-48 overflow-y-auto rounded-lg bg-[#1a1a1a] border border-white/20 shadow-xl">
+                            <div className="grid grid-cols-5 gap-1 p-2">
+                              {LINK_ICONS.map(icon => (
+                                <button
+                                  key={icon.name}
+                                  type="button"
+                                  onClick={() => { setNewLinkIcon(icon.name); setShowIconPicker(false); }}
+                                  className={`flex flex-col items-center gap-1 p-2 rounded transition-colors ${
+                                    newLinkIcon === icon.name ? 'bg-[#4ecdc4]/20 text-[#4ecdc4]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
+                                  }`}
+                                  title={icon.label}
+                                >
+                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d={icon.path} />
+                                  </svg>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (newLinkLabel.trim() && newLinkUrl.trim()) {
+                          const newLink: CustomLink = {
+                            id: `link-${Date.now()}`,
+                            label: newLinkLabel.trim(),
+                            url: newLinkUrl.trim(),
+                            icon: newLinkIcon || undefined,
+                            order: customLinks.length,
+                          };
+                          setCustomLinks(prev => [...prev, newLink]);
+                          setNewLinkLabel('');
+                          setNewLinkUrl('');
+                          setNewLinkIcon(null);
+                          setHasUnsavedChanges(true);
+                        }
+                      }}
+                      disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
+                      className="w-full px-4 py-2 rounded-lg text-sm font-medium bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 text-[#4ecdc4] hover:bg-[#4ecdc4]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      + Add Button
+                    </button>
                   </div>
-                )}
-              </div>
+
+                  {/* Default Buttons Info */}
+                  <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                    <p className="text-xs text-blue-300">
+                      <strong>Default buttons:</strong> &quot;Join My Team at eXp Realty&quot; and &quot;Learn About SAA&quot; are always shown.
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
 
-            {/* Preview of new button */}
-            {(newLinkLabel || newLinkIcon) && (
-              <div className="pt-2 border-t border-white/10">
-                <label className="block text-sm text-[#e5e4dd]/60 mb-2">Preview</label>
-                <div
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium"
-                  style={{
-                    backgroundColor: linksSettings.accentColor,
-                    color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                    fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                  }}
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3 justify-end mt-6 pt-4 border-t border-white/10">
+              {hasUnsavedChanges && (
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving}
+                  className="px-5 py-2.5 rounded-lg font-medium bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {newLinkIcon && (
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
-                    </svg>
-                  )}
-                  {newLinkLabel || 'Button Label'}
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={() => {
-                if (newLinkLabel.trim() && newLinkUrl.trim()) {
-                  const newLink: CustomLink = {
-                    id: `link-${Date.now()}`,
-                    label: newLinkLabel.trim(),
-                    url: newLinkUrl.trim(),
-                    icon: newLinkIcon || undefined,
-                    order: customLinks.length,
-                  };
-                  setCustomLinks(prev => [...prev, newLink]);
-                  setNewLinkLabel('');
-                  setNewLinkUrl('');
-                  setNewLinkIcon(null);
-                  setHasUnsavedChanges(true);
-                }
-              }}
-              disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
-              className="w-full px-4 py-2 rounded-lg text-sm font-medium bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              + Add Button
-            </button>
+                  {isSaving ? 'Saving...' : 'Save Changes'}
+                </button>
+              )}
+              {!pageData.activated && (
+                <button
+                  onClick={handleActivate}
+                  disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
+                  className="px-5 py-2.5 rounded-lg font-medium bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  title={
+                    hasUnsavedChanges
+                      ? 'Save changes first'
+                      : (!pageData.profile_image_url && !user.profilePictureUrl)
+                        ? 'Upload a profile image first'
+                        : 'Activate your page'
+                  }
+                >
+                  Activate Pages
+                </button>
+              )}
+            </div>
           </div>
-
-          {/* Default buttons info */}
-          <div className="mt-4 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-            <p className="text-sm text-blue-300">
-              <strong>Default buttons (always shown):</strong>
-            </p>
-            <ul className="text-sm text-blue-300/80 mt-1 ml-4 list-disc">
-              <li>&quot;Join My Team at eXp Realty&quot; - Opens signup form</li>
-              <li>&quot;Learn About Smart Agent Alliance&quot; - Links to your attraction page</li>
-            </ul>
-          </div>
-        </GenericCard>
-
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-4 justify-end">
-          {hasUnsavedChanges && (
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </button>
-          )}
-
-          {pageData.activated ? (
-            <button
-              onClick={handleSave}
-              disabled={isSaving || !hasUnsavedChanges}
-              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isSaving ? 'Updating...' : 'Update Page'}
-            </button>
-          ) : (
-            <button
-              onClick={handleActivate}
-              disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
-              className="px-6 py-3 rounded-lg font-semibold bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              title={
-                hasUnsavedChanges
-                  ? 'Save changes first'
-                  : (!pageData.profile_image_url && !user.profilePictureUrl)
-                    ? 'Upload a profile image first'
-                    : 'Activate your page'
-              }
-            >
-              Activate Page
-            </button>
-          )}
         </div>
       </div>
     </SectionWrapper>
@@ -3219,13 +3754,35 @@ function AgentPagesSection({
 // ============================================================================
 // Section Wrapper Component
 // ============================================================================
-function SectionWrapper({ title, children }: { title: string; children: React.ReactNode }) {
+function SectionWrapper({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl p-6 sm:p-8 bg-black/30 backdrop-blur-sm border border-[#ffd700]/10">
-      <div className="mb-[50px]">
-        <H2>{title}</H2>
-      </div>
+      {title && (
+        <div className="mb-[50px]">
+          <H2>{title}</H2>
+        </div>
+      )}
       {children}
+    </div>
+  );
+}
+
+// ============================================================================
+// Page Badges Component - indicates which pages a setting applies to
+// ============================================================================
+function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
+  return (
+    <div className="flex gap-2 mb-3">
+      {pages.includes('agent') && (
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/20">
+          Agent Page
+        </span>
+      )}
+      {pages.includes('linktree') && (
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#4ecdc4]/10 text-[#4ecdc4] border border-[#4ecdc4]/20">
+          Linktree
+        </span>
+      )}
     </div>
   );
 }
