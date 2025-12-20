@@ -64,16 +64,25 @@ const dashboardCards = [
   { id: 'new-agents' as SectionId, title: 'New Agents', description: 'Information tailored for you', icon: '🏃' },
 ];
 
+// Rewrite asset URLs to use CDN for edge caching
+// This transforms assets.saabuildingblocks.com -> cdn.saabuildingblocks.com
+function toCdnUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  return url.replace('assets.saabuildingblocks.com', 'cdn.saabuildingblocks.com');
+}
+
 // Helper to get initial user from localStorage (runs only on client)
-// Also starts preloading the profile image immediately
+// Also starts preloading the profile image immediately via CDN
 function getInitialUser(): UserData | null {
   if (typeof window === 'undefined') return null;
   try {
     const stored = localStorage.getItem('agent_portal_user');
     if (stored) {
       const user = JSON.parse(stored);
-      // Start preloading profile image immediately
+      // Rewrite URL to use CDN
       if (user.profilePictureUrl) {
+        user.profilePictureUrl = toCdnUrl(user.profilePictureUrl);
+        // Start preloading profile image immediately via CDN
         const img = new Image();
         img.src = user.profilePictureUrl;
       }

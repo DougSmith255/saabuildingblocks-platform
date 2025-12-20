@@ -219,10 +219,10 @@ export default function AgentPortalLogin() {
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                    Initializing...
+                    Logging in...
                   </span>
                 ) : (
-                  'Initialize Uplink'
+                  'Login'
                 )}
               </button>
 
