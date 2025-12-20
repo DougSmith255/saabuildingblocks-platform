@@ -10,7 +10,8 @@ const R2_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || 'a1ae4bb5913a89fea988
 const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
 const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
 const R2_BUCKET_NAME = 'saabuildingblocks-assets';
-const R2_PUBLIC_URL = 'https://assets.saabuildingblocks.com';
+// Use CDN URL which goes through the edge caching Worker for fast global delivery
+const R2_PUBLIC_URL = 'https://cdn.saabuildingblocks.com';
 
 // S3-compatible client for R2
 const r2Client = new S3Client({

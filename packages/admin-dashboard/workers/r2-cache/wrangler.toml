@@ -1,0 +1,26 @@
+name = "saa-r2-cache"
+main = "src/index.ts"
+compatibility_date = "2024-12-01"
+
+# This worker sits in front of R2 to provide edge caching
+# Route: assets.saabuildingblocks.com/*
+
+[vars]
+R2_BUCKET_URL = "https://a1ae4bb5913a89fea98821d7ba1ac304.r2.cloudflarestorage.com"
+BUCKET_NAME = "saabuildingblocks-assets"
+
+# R2 bucket binding (for direct access without going through public URL)
+[[r2_buckets]]
+binding = "ASSETS_BUCKET"
+bucket_name = "saabuildingblocks-assets"
+
+# Custom domain routes for cached asset delivery
+routes = [
+  { pattern = "cdn.saabuildingblocks.com/*", zone_name = "saabuildingblocks.com" }
+]
+
+# Performance settings
+[placement]
+mode = "smart"
+
+# Cache settings via caches API are handled in the worker code
