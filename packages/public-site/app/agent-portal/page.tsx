@@ -3747,8 +3747,8 @@ function AgentPagesSection({
                           <span className="text-[#4ecdc4] font-bold">1</span>
                         </div>
                         <div>
-                          <p className="font-medium text-[#e5e4dd] mb-1">Linktree Page</p>
-                          <p className="text-[#e5e4dd]/60">Your quick-access contact hub with phone, social links, and custom buttons. Perfect for social media bios and email signatures.</p>
+                          <p className="font-medium text-[#e5e4dd] mb-1">Share Your Linktree Everywhere</p>
+                          <p className="text-[#e5e4dd]/60">Your Linktree is your <strong className="text-[#4ecdc4]">one link for everything</strong> - social media bios, email signatures, business cards. It works for both production and attraction simultaneously.</p>
                         </div>
                       </div>
 
@@ -3757,8 +3757,8 @@ function AgentPagesSection({
                           <span className="text-[#ffd700] font-bold">2</span>
                         </div>
                         <div>
-                          <p className="font-medium text-[#e5e4dd] mb-1">Agent Attraction Page</p>
-                          <p className="text-[#e5e4dd]/60">Your full value proposition page. Shows prospects why they should join eXp under your sponsorship with detailed info about SAA benefits.</p>
+                          <p className="font-medium text-[#e5e4dd] mb-1">Built-In Agent Attraction</p>
+                          <p className="text-[#e5e4dd]/60">Your Attraction Page is linked directly from your Linktree. When competitors scope out your profiles, they see your SAA-branded page, get curious, and land on your attraction funnel.</p>
                         </div>
                       </div>
 
@@ -3769,8 +3769,8 @@ function AgentPagesSection({
                           </svg>
                         </div>
                         <div>
-                          <p className="font-medium text-[#e5e4dd] mb-1">The Funnel</p>
-                          <p className="text-[#e5e4dd]/60">Your Linktree links to your Attraction Page, creating a natural flow: quick contact → full pitch → conversion.</p>
+                          <p className="font-medium text-[#e5e4dd] mb-1">Passive Agent Funnel</p>
+                          <p className="text-[#e5e4dd]/60">Your custom accent color and SAA branding create intrigue. The funnel works in the background - no extra effort from you. Just share your Linktree and let it do both jobs.</p>
                         </div>
                       </div>
                     </div>
@@ -3788,7 +3788,7 @@ function AgentPagesSection({
                           </svg>
                           <div>
                             <p className="font-medium text-[#e5e4dd] mb-1">When someone books a call</p>
-                            <p className="text-[#e5e4dd]/60">The call is booked directly with <strong className="text-[#ffd700]">you</strong>, not SAA. You handle the conversation and close the deal.</p>
+                            <p className="text-[#e5e4dd]/60">You receive an invite to the meeting. <strong className="text-[#ffd700]">SAA handles the closing</strong> with the prospect. Joining the call is optional - you can attend or let SAA handle it entirely.</p>
                           </div>
                         </div>
                       </div>
