@@ -30,7 +30,11 @@ export interface UploadResult {
 
 /**
  * Upload profile picture to R2
- * Also creates a 150x150 Linktree variant
+ * Creates multiple optimized variants:
+ * - 400x400 B&W dashboard variant (for agent portal dashboard, ~30KB)
+ * - 150x150 B&W Linktree variant (for linktree pages default, ~10KB)
+ *
+ * Dashboard always uses B&W. Linktree can optionally use color variant.
  */
 export async function uploadProfilePicture(
   userId: string,
@@ -49,47 +53,60 @@ export async function uploadProfilePicture(
       return { success: false, error: 'File size exceeds 5MB limit.' };
     }
 
-    // Generate file path
-    const extension = mimeType.split('/')[1];
-    const key = `profiles/${userId}.${extension}`;
+    // Generate file path - always save as webp for better compression
+    const key = `profiles/${userId}.webp`;
 
-    // Upload original to R2
+    // Create optimized 400x400 B&W dashboard variant (main image used in portal)
+    // Dashboard ALWAYS uses black & white
+    const dashboardBuffer = await sharp(fileBuffer)
+      .resize(400, 400, {
+        fit: 'cover',
+        position: 'center',
+      })
+      .grayscale() // Always B&W for dashboard
+      .webp({ quality: 85 }) // Good quality, small size (~30KB)
+      .toBuffer();
+
+    // Upload dashboard variant as the main image
     const command = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
       Key: key,
-      Body: fileBuffer,
-      ContentType: mimeType,
+      Body: dashboardBuffer,
+      ContentType: 'image/webp',
       CacheControl: 'public, max-age=31536000', // 1 year cache
     });
 
     await r2Client.send(command);
+    console.log(`[R2] Uploaded B&W dashboard variant: ${key} (${Math.round(dashboardBuffer.length / 1024)}KB)`);
 
-    // Create and upload 150x150 Linktree variant
+    // Create and upload 150x150 B&W Linktree variant (default for linktree)
     try {
       const linktreeBuffer = await sharp(fileBuffer)
         .resize(150, 150, {
           fit: 'cover',
           position: 'center',
         })
+        .grayscale() // B&W by default
+        .webp({ quality: 80 })
         .toBuffer();
 
-      const linktreeKey = `profiles/${userId}-linktree.${extension}`;
+      const linktreeKey = `profiles/${userId}-linktree.webp`;
       const linktreeCommand = new PutObjectCommand({
         Bucket: R2_BUCKET_NAME,
         Key: linktreeKey,
         Body: linktreeBuffer,
-        ContentType: mimeType,
+        ContentType: 'image/webp',
         CacheControl: 'public, max-age=31536000',
       });
 
       await r2Client.send(linktreeCommand);
-      console.log(`[R2] Created Linktree variant: ${linktreeKey}`);
+      console.log(`[R2] Created B&W Linktree variant: ${linktreeKey} (${Math.round(linktreeBuffer.length / 1024)}KB)`);
     } catch (resizeError) {
       // Log but don't fail the upload if Linktree variant fails
       console.error('[R2] Failed to create Linktree variant:', resizeError);
     }
 
-    // Return public URL
+    // Return public URL (dashboard variant)
     const publicUrl = `${R2_PUBLIC_URL}/${key}`;
     return { success: true, url: publicUrl };
   } catch (error) {
@@ -103,13 +120,13 @@ export async function uploadProfilePicture(
 
 /**
  * Delete profile picture from R2
- * Also deletes the Linktree variant
+ * Also deletes the Linktree and color variants
  */
 export async function deleteProfilePicture(userId: string): Promise<{ success: boolean; error?: string }> {
   try {
-    // Try both jpg and png extensions for both original and linktree variants
-    for (const ext of ['jpg', 'png']) {
-      // Delete original
+    // Try all extensions (webp is new, jpg/png are legacy)
+    for (const ext of ['webp', 'jpg', 'png']) {
+      // Delete original/dashboard variant
       const key = `profiles/${userId}.${ext}`;
       try {
         const command = new DeleteObjectCommand({
@@ -160,8 +177,9 @@ export async function deleteProfilePicture(userId: string): Promise<{ success: b
 }
 
 /**
- * Upload color profile picture to R2 (for Linktree)
- * Stores as {userId}-color.{ext}
+ * Upload color profile picture to R2 (for Linktree only)
+ * Creates optimized 400x400 color variant for linktree pages
+ * Dashboard always uses B&W from the main upload
  */
 export async function uploadColorProfilePicture(
   userId: string,
@@ -180,21 +198,29 @@ export async function uploadColorProfilePicture(
       return { success: false, error: 'File size exceeds 5MB limit.' };
     }
 
-    // Generate file path for color variant
-    const extension = mimeType.split('/')[1];
-    const key = `profiles/${userId}-color.${extension}`;
+    // Generate file path for color variant - always webp
+    const key = `profiles/${userId}-color.webp`;
+
+    // Create optimized 400x400 color variant (for linktree pages)
+    const colorBuffer = await sharp(fileBuffer)
+      .resize(400, 400, {
+        fit: 'cover',
+        position: 'center',
+      })
+      .webp({ quality: 85 })
+      .toBuffer();
 
     // Upload to R2
     const command = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
       Key: key,
-      Body: fileBuffer,
-      ContentType: mimeType,
+      Body: colorBuffer,
+      ContentType: 'image/webp',
       CacheControl: 'public, max-age=31536000', // 1 year cache
     });
 
     await r2Client.send(command);
-    console.log(`[R2] Uploaded color profile: ${key}`);
+    console.log(`[R2] Uploaded color profile: ${key} (${Math.round(colorBuffer.length / 1024)}KB)`);
 
     // Return public URL
     const publicUrl = `${R2_PUBLIC_URL}/${key}`;
