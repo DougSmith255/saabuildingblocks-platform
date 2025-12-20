@@ -65,11 +65,20 @@ const dashboardCards = [
 ];
 
 // Helper to get initial user from localStorage (runs only on client)
+// Also starts preloading the profile image immediately
 function getInitialUser(): UserData | null {
   if (typeof window === 'undefined') return null;
   try {
     const stored = localStorage.getItem('agent_portal_user');
-    if (stored) return JSON.parse(stored);
+    if (stored) {
+      const user = JSON.parse(stored);
+      // Start preloading profile image immediately
+      if (user.profilePictureUrl) {
+        const img = new Image();
+        img.src = user.profilePictureUrl;
+      }
+      return user;
+    }
   } catch {
     // Invalid JSON, clear it
     localStorage.removeItem('agent_portal_user');
@@ -148,6 +157,14 @@ export default function AgentPortal() {
       router.push('/agent-portal/login');
     }
   }, [user, router]);
+
+  // Preload profile image for faster display
+  useEffect(() => {
+    if (user?.profilePictureUrl) {
+      const img = new Image();
+      img.src = user.profilePictureUrl;
+    }
+  }, [user?.profilePictureUrl]);
 
   // Disable body scroll when modal is open
   useEffect(() => {
