@@ -142,9 +142,8 @@ export default function Home() {
               >
                 SMART AGENT ALLIANCE
               </H1>
-              <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />} style={{ fontSize: 'clamp(18px, calc(16px + 1.4vw), 32px)' }}>
-                <span className="hidden sm:inline">For Agents Who Want More, without giving up independence</span>
-                <span className="sm:hidden">For Agents Who Want More</span>
+              <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
+                For Agents Who Want More
               </Tagline>
               <p className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px' }}>
                 Join eXp under sponsors who invest in your success. Elite systems, training, and community — no splits, no fees, no catch.
