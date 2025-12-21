@@ -17,6 +17,7 @@ import {
   hashToken,
   logAuthEvent,
   checkRateLimit,
+  incrementRateLimit,
 } from '@/lib/auth/jwt';
 import { loginSchema, formatZodErrors } from '@/lib/auth/schemas';
 
@@ -78,9 +79,10 @@ export async function POST(request: NextRequest) {
     // Determine if identifier is email or username
     const isEmail = identifier.includes('@');
 
-    // Rate limiting check (5 attempts per 15 minutes per IP)
+    // Rate limiting check (5 FAILED attempts per 15 minutes per IP)
+    // Only check, don't increment - we increment only on failed attempts
     const rateLimitKey = `login:${ipAddress}`;
-    const rateLimit = checkRateLimit(rateLimitKey, RATE_LIMIT_MAX_ATTEMPTS, RATE_LIMIT_WINDOW_MS);
+    const rateLimit = checkRateLimit(rateLimitKey, RATE_LIMIT_MAX_ATTEMPTS, RATE_LIMIT_WINDOW_MS, false);
 
     if (!rateLimit.allowed) {
       await logAuthEvent({
@@ -111,6 +113,9 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (userError || !user) {
+      // Increment rate limit counter on failed attempt
+      incrementRateLimit(rateLimitKey, RATE_LIMIT_WINDOW_MS);
+
       await logAuthEvent({
         eventType: 'failed_login',
         success: false,
@@ -150,7 +155,10 @@ export async function POST(request: NextRequest) {
     const passwordValid = await bcrypt.compare(password, user.password_hash);
 
     if (!passwordValid) {
-      // Increment failed login attempts
+      // Increment rate limit counter on failed attempt
+      incrementRateLimit(rateLimitKey, RATE_LIMIT_WINDOW_MS);
+
+      // Increment failed login attempts in DB
       const newFailedAttempts = (user.failed_login_attempts || 0) + 1;
       const shouldLock = newFailedAttempts >= MAX_FAILED_ATTEMPTS;
 

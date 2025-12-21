@@ -26,6 +26,9 @@ export default function AgentPortalLogin() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Tunnel transition state
+  const [showTransition, setShowTransition] = useState(false);
+
   // Password reset state
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStep, setResetStep] = useState<ResetStep>('email');
@@ -82,8 +85,17 @@ export default function AgentPortalLogin() {
       localStorage.setItem('agent_portal_user', JSON.stringify(userData));
       localStorage.setItem('agent_portal_token', data.data.accessToken);
 
-      // Redirect to agent portal
-      router.push('/agent-portal');
+      // Prefetch the dashboard immediately so it's ready when we navigate
+      router.prefetch('/agent-portal');
+
+      // Start the transition (fades content, triggers tunnel effect)
+      setShowTransition(true);
+
+      // Navigate after the tunnel animation completes
+      // The login page stays visible with the tunnel effect until we navigate
+      setTimeout(() => {
+        router.push('/agent-portal');
+      }, 1500);
     } catch (err) {
       console.error('Login error:', err);
       setError('Network error. Please check your connection and try again.');
@@ -157,14 +169,21 @@ export default function AgentPortalLogin() {
     <main id="main-content">
       <StickyHeroWrapper>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          {/* Data Stream Effect - Green (matches test page) */}
-          <DataStreamEffect />
+          {/* Data Stream Effect - Green background, does tunnel animation with content */}
+          <DataStreamEffect tunnelMode={showTransition} />
 
-          {/* Login Content - centered */}
-          <div className="relative z-10 flex flex-col items-center w-full max-w-md">
+          {/* Login Content - centered, fades out during transition */}
+          <div
+            className="relative z-10 flex flex-col items-center w-full max-w-md transition-all ease-out"
+            style={{
+              opacity: showTransition ? 0 : 1,
+              transform: showTransition ? 'scale(0.9) translateY(-20px)' : 'scale(1) translateY(0)',
+              transitionDuration: '800ms',
+            }}
+          >
         {/* Heading */}
         <div className="text-center mb-8 whitespace-nowrap">
-          <H1 className="mb-2">ALLIANCE HQ</H1>
+          <H1 className="mb-2">ACCESS PORTAL</H1>
           <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
         </div>
 
@@ -197,7 +216,7 @@ export default function AgentPortalLogin() {
               {/* Password Field */}
               <div className="space-y-2">
                 <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                  Access Code
+                  Password
                 </label>
                 <input
                   type="password"
@@ -206,7 +225,7 @@ export default function AgentPortalLogin() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                  placeholder="Enter access code"
+                  placeholder="Enter password"
                 />
               </div>
 
@@ -215,6 +234,7 @@ export default function AgentPortalLogin() {
                 type="submit"
                 disabled={isLoading}
                 className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ fontSize: 'clamp(14px, calc(13.31px + 0.23vw), 18px)' }}
               >
                 {isLoading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -233,7 +253,7 @@ export default function AgentPortalLogin() {
                   onClick={openResetModal}
                   className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors cursor-pointer bg-transparent border-none"
                 >
-                  Forgot access code?
+                  Forgot password?
                 </button>
           </div>
           </form>
@@ -264,7 +284,7 @@ export default function AgentPortalLogin() {
 
               {resetStep === 'email' ? (
                 <>
-                  <h2 className="text-h3 text-center mb-2">Reset Access Code</h2>
+                  <h2 className="text-h3 text-center mb-2">Reset Password</h2>
                   <p className="text-body text-center text-[#e5e4dd]/70 mb-6">
                     Enter your email and we&apos;ll send you a reset link.
                   </p>
@@ -359,10 +379,47 @@ export default function AgentPortalLogin() {
  * 2. Transition: Gradually slows down to idle speed (smooth blend)
  * 3. Idle: Continuous slow animation that never stops
  * 4. Scroll: Speeds up when user scrolls
+ * 5. Tunnel Mode: Intensifies and creates zoom effect on login success
  */
-function DataStreamEffect() {
+function DataStreamEffect({ tunnelMode = false }: { tunnelMode?: boolean }) {
   const [progress, setProgress] = useState(INITIAL_PROGRESS_START);
+  const [tunnelProgress, setTunnelProgress] = useState(0);
+  const tunnelStartRef = useRef<number | null>(null);
   const currentRef = useRef(INITIAL_PROGRESS_START);
+
+  // Handle tunnel mode animation
+  useEffect(() => {
+    if (!tunnelMode) {
+      tunnelStartRef.current = null;
+      setTunnelProgress(0);
+      return;
+    }
+
+    const TUNNEL_DURATION = 1500;
+    let rafId: number;
+
+    const animateTunnel = (timestamp: number) => {
+      if (tunnelStartRef.current === null) {
+        tunnelStartRef.current = timestamp;
+      }
+
+      const elapsed = timestamp - tunnelStartRef.current;
+      const progress = Math.min(elapsed / TUNNEL_DURATION, 1);
+      // Ease out cubic for smooth deceleration
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setTunnelProgress(eased);
+
+      if (progress < 1) {
+        rafId = requestAnimationFrame(animateTunnel);
+      }
+    };
+
+    rafId = requestAnimationFrame(animateTunnel);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, [tunnelMode]);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
   const introStartTimeRef = useRef<number | null>(null);
@@ -457,11 +514,31 @@ function DataStreamEffect() {
     chars: [...Array(22)].map(() => String.fromCharCode(0x30A0 + Math.random() * 96)),
   }));
 
+  // Calculate tunnel effects
+  const tunnelScale = 1 + tunnelProgress * 2; // Scale from 1 to 3
+  const tunnelSpeedMultiplier = 1 + tunnelProgress * 15; // Speed up significantly
+  // Brightness increases first, then fades out in the last 40%
+  const fadeOutStart = 0.6;
+  const tunnelBrightness = tunnelProgress < fadeOutStart
+    ? 1 + tunnelProgress * 0.8 // Get brighter initially
+    : (1 + fadeOutStart * 0.8) * (1 - (tunnelProgress - fadeOutStart) / (1 - fadeOutStart)); // Then fade out
+  const tunnelOpacity = tunnelProgress < fadeOutStart ? 1 : 1 - (tunnelProgress - fadeOutStart) / (1 - fadeOutStart);
+
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" lang="en" translate="no">
+    <div
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      lang="en"
+      translate="no"
+      style={{
+        transform: tunnelMode ? `scale(${tunnelScale})` : 'none',
+        opacity: tunnelMode ? tunnelOpacity : 1,
+        transition: 'transform 0.1s linear',
+      }}
+    >
       {/* Green data columns (matches test page) */}
       {columns.map((col, i) => {
-        const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);
+        // Apply tunnel speed multiplier to column progress
+        const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2 * tunnelSpeedMultiplier);
         const yOffset = colProgress * 100;
 
         return (
@@ -482,7 +559,7 @@ function DataStreamEffect() {
             {col.chars.map((char, j) => {
               const charY = ((j * 5 + yOffset) % 105);
               const isHead = j === Math.floor(colProgress * col.chars.length) % col.chars.length;
-              const brightness = isHead ? 1 : Math.max(0, 1 - j * 0.06);
+              const brightness = (isHead ? 1 : Math.max(0, 1 - j * 0.06)) * tunnelBrightness;
               const fadeAtBottom = charY > 70 ? Math.max(0, 1 - (charY - 70) / 30) : 1;
 
               return (
@@ -493,13 +570,13 @@ function DataStreamEffect() {
                     top: 0,
                     // Use transform instead of top for CLS optimization
                     transform: `translateY(${charY}vh)`,
-                    // Green colors matching test page
+                    // Green colors matching test page - intensify during tunnel
                     color: isHead
-                      ? `rgba(255,255,255,${0.95 * fadeAtBottom})`
-                      : `rgba(100,255,100,${brightness * 0.7 * fadeAtBottom})`,
+                      ? `rgba(255,255,255,${Math.min(0.95 * fadeAtBottom * tunnelBrightness, 1)})`
+                      : `rgba(100,255,100,${Math.min(brightness * 0.7 * fadeAtBottom, 1)})`,
                     textShadow: isHead
-                      ? `0 0 15px rgba(100,255,100,${0.8 * fadeAtBottom})`
-                      : `0 0 5px rgba(100,255,100,${brightness * 0.3 * fadeAtBottom})`,
+                      ? `0 0 ${15 + tunnelProgress * 20}px rgba(100,255,100,${Math.min(0.8 * fadeAtBottom * tunnelBrightness, 1)})`
+                      : `0 0 ${5 + tunnelProgress * 10}px rgba(100,255,100,${Math.min(brightness * 0.3 * fadeAtBottom, 1)})`,
                   }}
                 >
                   {char}
@@ -510,13 +587,16 @@ function DataStreamEffect() {
         );
       })}
 
-      {/* Gradient overlay for depth */}
+      {/* Gradient overlay for depth - intensifies during tunnel */}
       <div
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
+          background: tunnelMode
+            ? `radial-gradient(ellipse ${60 - tunnelProgress * 40}% ${40 - tunnelProgress * 30}% at 50% 50%, transparent 0%, rgba(0,0,0,${0.6 + tunnelProgress * 0.3}) 100%)`
+            : 'radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%)',
         }}
       />
+
     </div>
   );
 }

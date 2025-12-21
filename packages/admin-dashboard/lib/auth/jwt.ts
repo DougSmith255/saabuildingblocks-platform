@@ -263,7 +263,8 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 export function checkRateLimit(
   identifier: string,
   maxAttempts: number,
-  windowMs: number
+  windowMs: number,
+  incrementCount: boolean = true
 ): { allowed: boolean; remaining: number; resetAt: number } {
   const now = Date.now();
   const record = rateLimitMap.get(identifier);
@@ -271,8 +272,13 @@ export function checkRateLimit(
   // Reset if window expired
   if (!record || record.resetAt < now) {
     const resetAt = now + windowMs;
-    rateLimitMap.set(identifier, { count: 1, resetAt });
-    return { allowed: true, remaining: maxAttempts - 1, resetAt };
+    // Only set count if we're incrementing, otherwise just check
+    if (incrementCount) {
+      rateLimitMap.set(identifier, { count: 1, resetAt });
+      return { allowed: true, remaining: maxAttempts - 1, resetAt };
+    } else {
+      return { allowed: true, remaining: maxAttempts, resetAt };
+    }
   }
 
   // Check if limit exceeded
@@ -280,13 +286,33 @@ export function checkRateLimit(
     return { allowed: false, remaining: 0, resetAt: record.resetAt };
   }
 
-  // Increment count
-  record.count++;
+  // Only increment count if specified
+  if (incrementCount) {
+    record.count++;
+  }
   return {
     allowed: true,
     remaining: maxAttempts - record.count,
     resetAt: record.resetAt,
   };
+}
+
+/**
+ * Increment rate limit counter (call after failed attempt)
+ */
+export function incrementRateLimit(
+  identifier: string,
+  windowMs: number
+): void {
+  const now = Date.now();
+  const record = rateLimitMap.get(identifier);
+
+  if (!record || record.resetAt < now) {
+    const resetAt = now + windowMs;
+    rateLimitMap.set(identifier, { count: 1, resetAt });
+  } else {
+    record.count++;
+  }
 }
 
 /**

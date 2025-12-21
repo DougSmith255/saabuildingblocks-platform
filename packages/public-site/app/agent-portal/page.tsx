@@ -137,6 +137,7 @@ export default function AgentPortal() {
   // Check if any popup is open (for header slide animation)
   const isAnyPopupOpen = showEditProfile || showImageEditor;
 
+
   // Calculate minimum crop size percentage based on 900px minimum
   const MIN_CROP_PX = 900;
   const minCropSizePercent = pendingImageDimensions.width > 0 && pendingImageDimensions.height > 0
@@ -796,13 +797,15 @@ export default function AgentPortal() {
   return (
     <main id="main-content" className="min-h-screen">
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
-      {/* Slides up off screen when any popup is open */}
+      {/* Slides up off screen when any popup is open, slides down on entry from login */}
       <header
-        className="fixed left-0 right-0 z-[10010] transition-transform duration-300 ease-in-out"
+        className="fixed left-0 right-0 z-[10010] transition-transform duration-500 ease-out"
         style={{
           background: 'transparent',
           overflow: 'visible',
-          transform: isAnyPopupOpen ? 'translateY(-100%)' : 'translateY(0)',
+          transform: isAnyPopupOpen
+            ? 'translateY(-100%)'
+            : 'translateY(0)',
           top: 0,
         }}
       >
@@ -1715,6 +1718,7 @@ export default function AgentPortal() {
           </div>
         </div>
       )}
+
     </main>
   );
 }
