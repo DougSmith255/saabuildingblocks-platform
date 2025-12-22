@@ -2821,13 +2821,14 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         }
 
         function calculateTimeFromPosition(clientX) {
-          if (!scrubberContainer || !player) return 0;
+          if (!scrubberContainer || !player || player.duration <= 0) return 0;
           const rect = scrubberContainer.getBoundingClientRect();
           const x = clientX - rect.left;
           const percentage = Math.max(0, Math.min(1, x / rect.width));
-          // Can only scrub between 0 and maxWatchedTime (can't skip ahead)
+          // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip ahead)
+          const requestedTime = percentage * player.duration;
           const maxAllowedTime = Math.max(maxWatchedTime, player.currentTime);
-          return percentage * maxAllowedTime;
+          return Math.min(requestedTime, maxAllowedTime);
         }
 
         if (videoWrapper && scrubberContainer) {
