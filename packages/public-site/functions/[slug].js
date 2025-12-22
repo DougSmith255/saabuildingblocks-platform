@@ -3024,22 +3024,86 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     // Form submissions
-    function submitJoinForm(e) {
+    async function submitJoinForm(e) {
       e.preventDefault();
-      const data = { fname: document.getElementById('join-fname').value, lname: document.getElementById('join-lname').value, email: document.getElementById('join-email').value, country: document.getElementById('join-country').value, agent: AGENT.slug };
-      localStorage.setItem('agent_lead_' + AGENT.slug, JSON.stringify(data));
-      document.getElementById('join-msg').className = 'form-msg success';
-      document.getElementById('join-msg').textContent = 'Thank you! We will be in touch soon.';
-      setTimeout(() => { closeJoinModal(); e.target.reset(); document.getElementById('join-msg').className = 'form-msg'; }, 2000);
+      const fname = document.getElementById('join-fname').value;
+      const lname = document.getElementById('join-lname').value;
+      const email = document.getElementById('join-email').value;
+      const country = document.getElementById('join-country').value;
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const msgDiv = document.getElementById('join-msg');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const response = await fetch('/api/join-team', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: fname,
+            lastName: lname,
+            email: email,
+            country: country,
+            sponsorName: AGENT.firstName + ' ' + AGENT.lastName
+          })
+        });
+
+        if (response.ok) {
+          msgDiv.className = 'form-msg success';
+          msgDiv.textContent = 'Thank you! We will be in touch soon.';
+          setTimeout(() => { closeJoinModal(); e.target.reset(); msgDiv.className = 'form-msg'; submitBtn.disabled = false; submitBtn.textContent = 'Join Now'; }, 2000);
+        } else {
+          throw new Error('Failed to submit');
+        }
+      } catch (err) {
+        msgDiv.className = 'form-msg error';
+        msgDiv.textContent = 'Something went wrong. Please try again.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Join Now';
+      }
     }
-    function submitBookingForm(e) {
+    async function submitBookingForm(e) {
       e.preventDefault();
+      const fname = document.getElementById('book-fname').value;
+      const lname = document.getElementById('book-lname').value;
+      const email = document.getElementById('book-email').value;
+      const phone = document.getElementById('book-phone').value;
+      const country = document.getElementById('book-country').value;
+      const state = document.getElementById('book-state').value;
       const plans = Array.from(document.querySelectorAll('input[name="plan"]:checked')).map(c => c.value);
-      const data = { fname: document.getElementById('book-fname').value, lname: document.getElementById('book-lname').value, email: document.getElementById('book-email').value, phone: document.getElementById('book-phone').value, country: document.getElementById('book-country').value, state: document.getElementById('book-state').value, exp: document.querySelector('input[name="exp"]:checked')?.value, plans: plans, agent: AGENT.slug };
-      localStorage.setItem('agent_lead_' + AGENT.slug, JSON.stringify(data));
-      document.getElementById('booking-msg').className = 'form-msg success';
-      document.getElementById('booking-msg').textContent = 'Booking submitted! We will send you confirmation shortly.';
-      setTimeout(() => { closeBookingModal(); e.target.reset(); document.getElementById('booking-msg').className = 'form-msg'; }, 3000);
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const msgDiv = document.getElementById('booking-msg');
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      try {
+        const response = await fetch('/api/join-team', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: fname,
+            lastName: lname,
+            email: email,
+            country: country,
+            sponsorName: AGENT.firstName + ' ' + AGENT.lastName
+          })
+        });
+
+        if (response.ok) {
+          msgDiv.className = 'form-msg success';
+          msgDiv.textContent = 'Booking submitted! We will send you confirmation shortly.';
+          setTimeout(() => { closeBookingModal(); e.target.reset(); msgDiv.className = 'form-msg'; submitBtn.disabled = false; submitBtn.textContent = 'Book Your Call'; }, 3000);
+        } else {
+          throw new Error('Failed to submit');
+        }
+      } catch (err) {
+        msgDiv.className = 'form-msg error';
+        msgDiv.textContent = 'Something went wrong. Please try again.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Book Your Call';
+      }
     }
 
     // FAQ accordion
@@ -3917,14 +3981,14 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       submitBtn.textContent = 'Sending...';
 
       try {
-        // Send to GoHighLevel webhook (to be configured)
-        const response = await fetch('https://saabuildingblocks.com/api/join-team', {
+        // Send to GoHighLevel via join-team API
+        const response = await fetch('/api/join-team', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            name,
+            firstName: name.split(' ')[0],
+            lastName: name.split(' ').slice(1).join(' ') || '',
             email,
-            sponsorSlug: agentSlug,
             sponsorName: agentName,
             source: 'links-page'
           })
