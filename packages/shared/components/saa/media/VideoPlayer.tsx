@@ -92,6 +92,8 @@ export function VideoPlayer({
 
   // Track the saved position to restore on load
   const savedPositionRef = useRef<number>(0);
+  // Track maxWatchedTime in a ref for stable access in callbacks
+  const maxWatchedTimeRef = useRef<number>(0);
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -100,6 +102,7 @@ export function VideoPlayer({
     const savedPosition = parseFloat(localStorage.getItem(`${storageKey}_position`) || '0');
     setProgress(savedProgress);
     setMaxWatchedTime(savedMaxTime);
+    maxWatchedTimeRef.current = savedMaxTime; // Keep ref in sync
     savedPositionRef.current = savedPosition;
     if (savedProgress >= unlockThreshold) {
       setThresholdReached(true);
@@ -168,6 +171,7 @@ export function VideoPlayer({
         if (time > maxWatchedTime) {
           const newMaxTime = time;
           setMaxWatchedTime(newMaxTime);
+          maxWatchedTimeRef.current = newMaxTime; // Keep ref in sync
           localStorage.setItem(`${storageKey}_maxTime`, newMaxTime.toString());
 
           // Update progress percentage (only increases, never decreases)
@@ -229,9 +233,10 @@ export function VideoPlayer({
     const x = clientX - rect.left;
     const percentage = Math.max(0, Math.min(1, x / rect.width));
     // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip past what you've watched)
+    // Use ref for stable access - state value can be stale in callback closures
     const requestedTime = percentage * duration;
-    return Math.min(requestedTime, maxWatchedTime);
-  }, [maxWatchedTime, duration]);
+    return Math.min(requestedTime, maxWatchedTimeRef.current);
+  }, [duration]);
 
   const handleScrubberMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
