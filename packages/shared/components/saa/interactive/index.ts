@@ -12,3 +12,9 @@ export type { ShareButtonsProps } from './ShareButtons';
 
 export { FAQ } from './FAQ';
 export type { FAQProps, FAQItem } from './FAQ';
+
+export { JoinModal } from './JoinModal';
+export type { JoinModalProps, JoinFormData } from './JoinModal';
+
+export { InstructionsModal } from './InstructionsModal';
+export type { InstructionsModalProps } from './InstructionsModal';

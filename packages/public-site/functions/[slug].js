@@ -1250,13 +1250,18 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      background: #1a1a1a;
+      /* Metal frame styling - matching VideoPlayer component */
+      padding: 4px;
+      background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+      border: 1px solid rgba(150,150,150,0.4);
     }
     .video-wrapper {
       position: relative;
       padding-top: 56.25%;
       background: #1a1a1a;
       cursor: pointer;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
     }
     .video-wrapper iframe {
       position: absolute;
@@ -1314,61 +1319,129 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     .video-overlay.is-playing:hover .overlay-play-btn {
       opacity: 1;
     }
-    /* Custom Video Controls */
+    /* Custom Video Controls - matching VideoPlayer component */
     .video-controls {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      padding: 1rem;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
       background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(20,20,20,0.95) 100%);
       border-top: 1px solid rgba(255,215,0,0.2);
+      border-radius: 0 0 8px 8px;
     }
-    .video-btn {
+    .control-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
+      position: relative;
+      width: 36px;
+      height: 36px;
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       border-radius: 8px;
       color: #fff;
-      font-family: var(--font-amulya);
-      font-size: 0.95rem;
-      font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
+      flex-shrink: 0;
     }
-    .video-btn:hover {
+    .control-btn:hover {
       background: rgba(255,215,0,0.2);
       border-color: rgba(255,215,0,0.4);
       color: #ffd700;
     }
-    .video-btn:active {
-      transform: scale(0.98);
+    .control-btn:active {
+      transform: scale(0.95);
     }
-    .video-btn svg {
+    .control-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    .control-btn--play {
+      background: linear-gradient(135deg, #ffd700 0%, #e6c200 100%);
+      border-color: #ffd700;
+      color: #1a1a1a;
+      width: 40px;
+      height: 40px;
+    }
+    .control-btn--play:hover {
+      background: linear-gradient(135deg, #ffe033 0%, #ffd700 100%);
+      color: #1a1a1a;
+    }
+    .control-btn--play svg {
       width: 20px;
       height: 20px;
+      fill: #1a1a1a;
+      stroke: #1a1a1a;
     }
-    .video-btn--play {
-      background: linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-600) 100%);
-      border-color: var(--color-gold-500);
-      color: #1a1a1a;
-      padding: 0.75rem 2rem;
-      box-shadow: 0 2px 10px rgba(255,215,0,0.35);
-      transition: all 0.3s ease;
-    }
-    .video-btn--play:hover {
-      box-shadow: 0 4px 15px rgba(255,215,0,0.5);
+    .rewind-text {
+      position: absolute;
+      font-size: 8px;
+      font-weight: 700;
+      bottom: 4px;
+      right: 4px;
     }
     .video-time {
       font-family: var(--font-synonym), monospace;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #bfbdb0;
-      min-width: 100px;
-      text-align: center;
+      margin: 0 0.5rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .volume-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+    .volume-slider {
+      width: 80px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      background: #ffd700;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .volume-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+    .volume-slider::-moz-range-thumb {
+      width: 14px;
+      height: 14px;
+      background: #ffd700;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+    }
+    @media (max-width: 600px) {
+      .video-controls {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        padding: 0.5rem;
+      }
+      .video-time {
+        order: 10;
+        width: 100%;
+        text-align: center;
+        margin: 0.25rem 0 0;
+      }
+      .volume-controls {
+        margin-left: 0;
+      }
+      .volume-slider {
+        width: 60px;
+      }
     }
     .progress-area { text-align: center; margin-top: 2rem; }
     .progress-bar {
@@ -2051,6 +2124,61 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
             </div>
           </div>
         </div>
+        <!-- Video Controls Bar -->
+        <div class="video-controls">
+          <!-- Play/Pause Button -->
+          <button class="control-btn control-btn--play" id="play-btn" aria-label="Play">
+            <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            <svg id="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+              <rect x="6" y="4" width="4" height="16"/>
+              <rect x="14" y="4" width="4" height="16"/>
+            </svg>
+          </button>
+
+          <!-- Rewind 15s Button -->
+          <button class="control-btn" id="rewind-btn" aria-label="Rewind 15 seconds" title="Rewind 15s">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 4v6h6"/>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            <span class="rewind-text">15</span>
+          </button>
+
+          <!-- Restart Button -->
+          <button class="control-btn" id="restart-btn" aria-label="Restart video" title="Restart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 2v6h6"/>
+              <path d="M21 12A9 9 0 0 0 6 5.3L3 8"/>
+              <path d="M21 22v-6h-6"/>
+              <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/>
+            </svg>
+          </button>
+
+          <!-- Time Display -->
+          <div class="video-time" id="video-time">0:00 / 0:00</div>
+
+          <!-- Volume Controls -->
+          <div class="volume-controls">
+            <button class="control-btn" id="mute-btn" aria-label="Mute">
+              <svg id="volume-high-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+              <svg id="volume-low-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+              </svg>
+              <svg id="volume-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <line x1="23" y1="9" x2="17" y2="15"/>
+                <line x1="17" y1="9" x2="23" y2="15"/>
+              </svg>
+            </button>
+            <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volume-slider" aria-label="Volume">
+          </div>
+        </div>
       </div>
       <div class="progress-area">
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
@@ -2500,30 +2628,55 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     function updatePlayButton() {
       const playIcon = document.getElementById('play-icon');
       const pauseIcon = document.getElementById('pause-icon');
-      const playBtnText = document.getElementById('play-btn-text');
       const overlayPlayIcon = document.getElementById('overlay-play-icon');
       const overlayPauseIcon = document.getElementById('overlay-pause-icon');
       const videoOverlay = document.getElementById('video-overlay');
       const overlayBtn = document.getElementById('overlay-play-btn');
 
       if (isPlaying) {
-        playIcon.style.display = 'none';
-        pauseIcon.style.display = 'block';
-        playBtnText.textContent = 'Pause';
+        if (playIcon) playIcon.style.display = 'none';
+        if (pauseIcon) pauseIcon.style.display = 'block';
         // Update overlay
-        overlayPlayIcon.style.display = 'none';
-        overlayPauseIcon.style.display = 'block';
-        videoOverlay.classList.add('is-playing');
-        overlayBtn.classList.add('is-playing');
+        if (overlayPlayIcon) overlayPlayIcon.style.display = 'none';
+        if (overlayPauseIcon) overlayPauseIcon.style.display = 'block';
+        if (videoOverlay) videoOverlay.classList.add('is-playing');
+        if (overlayBtn) overlayBtn.classList.add('is-playing');
       } else {
-        playIcon.style.display = 'block';
-        pauseIcon.style.display = 'none';
-        playBtnText.textContent = 'Play';
+        if (playIcon) playIcon.style.display = 'block';
+        if (pauseIcon) pauseIcon.style.display = 'none';
         // Update overlay
-        overlayPlayIcon.style.display = 'block';
-        overlayPauseIcon.style.display = 'none';
-        videoOverlay.classList.remove('is-playing');
-        overlayBtn.classList.remove('is-playing');
+        if (overlayPlayIcon) overlayPlayIcon.style.display = 'block';
+        if (overlayPauseIcon) overlayPauseIcon.style.display = 'none';
+        if (videoOverlay) videoOverlay.classList.remove('is-playing');
+        if (overlayBtn) overlayBtn.classList.remove('is-playing');
+      }
+    }
+
+    // Update volume icon based on volume level
+    function updateVolumeIcon() {
+      const volumeHighIcon = document.getElementById('volume-high-icon');
+      const volumeLowIcon = document.getElementById('volume-low-icon');
+      const volumeMuteIcon = document.getElementById('volume-mute-icon');
+      const volumeSlider = document.getElementById('volume-slider');
+
+      if (!volumeHighIcon || !volumeLowIcon || !volumeMuteIcon) return;
+
+      const vol = player ? player.volume : 1;
+      const muted = player ? player.muted : false;
+
+      volumeHighIcon.style.display = 'none';
+      volumeLowIcon.style.display = 'none';
+      volumeMuteIcon.style.display = 'none';
+
+      if (muted || vol === 0) {
+        volumeMuteIcon.style.display = 'block';
+        if (volumeSlider) volumeSlider.value = 0;
+      } else if (vol < 0.5) {
+        volumeLowIcon.style.display = 'block';
+        if (volumeSlider) volumeSlider.value = vol;
+      } else {
+        volumeHighIcon.style.display = 'block';
+        if (volumeSlider) volumeSlider.value = vol;
       }
     }
 
@@ -2551,10 +2704,34 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
           updateTimeDisplay();
         });
 
-        // Rewind button - go back 10 seconds (but not before 0)
+        // Rewind button - go back 15 seconds (but not before 0)
         rewindBtn.addEventListener('click', function() {
-          const newTime = Math.max(0, player.currentTime - 10);
+          const newTime = Math.max(0, player.currentTime - 15);
           player.currentTime = newTime;
+        });
+
+        // Volume controls
+        const muteBtn = document.getElementById('mute-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+
+        if (muteBtn) {
+          muteBtn.addEventListener('click', function() {
+            player.muted = !player.muted;
+            updateVolumeIcon();
+          });
+        }
+
+        if (volumeSlider) {
+          volumeSlider.addEventListener('input', function() {
+            player.volume = parseFloat(this.value);
+            player.muted = this.value === '0';
+            updateVolumeIcon();
+          });
+        }
+
+        // Listen for volume changes from player
+        player.addEventListener('volumechange', function() {
+          updateVolumeIcon();
         });
 
         // Click on video overlay to play/pause
