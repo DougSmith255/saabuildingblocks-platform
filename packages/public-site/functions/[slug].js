@@ -2597,6 +2597,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
 
     let maxWatchedTime = parseFloat(localStorage.getItem('agent_' + AGENT.slug + '_maxTime') || '0');
     let videoProgress = parseFloat(localStorage.getItem('agent_' + AGENT.slug + '_progress') || '0');
+    let savedPosition = parseFloat(localStorage.getItem('agent_' + AGENT.slug + '_position') || '0');
     let isPlaying = false;
     let player = null;
     updateProgressUI();
@@ -2766,6 +2767,9 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         player.addEventListener('timeupdate', function() {
           updateTimeDisplay();
 
+          // Save current position for resume on refresh/return
+          localStorage.setItem('agent_' + AGENT.slug + '_position', player.currentTime.toString());
+
           if (player.duration > 0) {
             // Update max watched time (only increases, never decreases)
             if (player.currentTime > maxWatchedTime) {
@@ -2783,9 +2787,16 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
           }
         });
 
-        // Update duration when loaded
+        // Update duration when loaded and restore saved position
         player.addEventListener('loadedmetadata', function() {
           updateTimeDisplay();
+          // Restore saved position when video loads
+          if (savedPosition > 0 && player.duration > 0) {
+            const targetTime = Math.min(savedPosition, player.duration - 1);
+            if (targetTime > 0) {
+              player.currentTime = targetTime;
+            }
+          }
         });
       }
     });
@@ -2811,8 +2822,10 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     function resetVideoProgress() {
       localStorage.removeItem('agent_' + AGENT.slug + '_maxTime');
       localStorage.removeItem('agent_' + AGENT.slug + '_progress');
+      localStorage.removeItem('agent_' + AGENT.slug + '_position');
       maxWatchedTime = 0;
       videoProgress = 0;
+      savedPosition = 0;
       updateProgressUI();
       updateTimeDisplay();
       // Also reset the video player position

@@ -85,12 +85,17 @@ export function VideoPlayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  // Track the saved position to restore on load
+  const savedPositionRef = useRef<number>(0);
+
   // Load progress from localStorage on mount
   useEffect(() => {
     const savedProgress = parseFloat(localStorage.getItem(`${storageKey}_progress`) || '0');
     const savedMaxTime = parseFloat(localStorage.getItem(`${storageKey}_maxTime`) || '0');
+    const savedPosition = parseFloat(localStorage.getItem(`${storageKey}_position`) || '0');
     setProgress(savedProgress);
     setMaxWatchedTime(savedMaxTime);
+    savedPositionRef.current = savedPosition;
     if (savedProgress >= unlockThreshold) {
       setThresholdReached(true);
     }
@@ -126,6 +131,14 @@ export function VideoPlayer({
 
     player.addEventListener('loadedmetadata', () => {
       setDuration(player.duration || 0);
+      // Restore saved position when video loads
+      if (savedPositionRef.current > 0 && player.duration > 0) {
+        // Make sure we don't seek past the end
+        const targetTime = Math.min(savedPositionRef.current, player.duration - 1);
+        if (targetTime > 0) {
+          player.currentTime = targetTime;
+        }
+      }
     });
 
     player.addEventListener('volumechange', () => {
@@ -136,6 +149,9 @@ export function VideoPlayer({
     player.addEventListener('timeupdate', () => {
       setCurrentTime(player.currentTime || 0);
       setDuration(player.duration || 0);
+
+      // Save current position for resume on refresh/return
+      localStorage.setItem(`${storageKey}_position`, player.currentTime.toString());
 
       if (player.duration > 0) {
         // Update max watched time (only increases)
