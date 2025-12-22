@@ -298,7 +298,7 @@ export function VideoPlayer({
   // Progress message based on percentage
   const getProgressMessage = () => {
     if (progress >= unlockThreshold) {
-      return "You're ready! Book a call with us to get started.";
+      return "You're ready to join! Still have questions? Book a call with us.";
     }
     return `Watch at least ${unlockThreshold}% to unlock booking a call with us.`;
   };
