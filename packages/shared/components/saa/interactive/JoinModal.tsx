@@ -104,13 +104,24 @@ const styles: Record<string, React.CSSProperties> = {
   select: {
     width: '100%',
     padding: '0.75rem 1rem',
-    background: 'rgba(255, 255, 255, 0.05)',
+    background: '#1a1a1c',
     border: '1px solid rgba(255, 255, 255, 0.15)',
     borderRadius: '8px',
     color: '#fff',
     fontFamily: 'var(--font-synonym, system-ui), sans-serif',
     fontSize: '1rem',
     boxSizing: 'border-box' as const,
+    WebkitAppearance: 'none' as const,
+    MozAppearance: 'none' as const,
+    appearance: 'none' as const,
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 1rem center',
+    paddingRight: '2.5rem',
+  },
+  option: {
+    background: '#1a1a1c',
+    color: '#fff',
   },
   submit: {
     width: '100%',
@@ -310,12 +321,12 @@ export function JoinModal({
               onChange={handleInputChange}
               required
             >
-              <option value="">Select country</option>
-              <option value="US">United States</option>
-              <option value="CA">Canada</option>
-              <option value="UK">United Kingdom</option>
-              <option value="AU">Australia</option>
-              <option value="other">Other</option>
+              <option value="" style={styles.option}>Select country</option>
+              <option value="US" style={styles.option}>United States</option>
+              <option value="CA" style={styles.option}>Canada</option>
+              <option value="UK" style={styles.option}>United Kingdom</option>
+              <option value="AU" style={styles.option}>Australia</option>
+              <option value="other" style={styles.option}>Other</option>
             </select>
           </div>
 

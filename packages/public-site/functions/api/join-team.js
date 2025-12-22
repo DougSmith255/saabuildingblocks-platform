@@ -52,7 +52,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
           <!-- Instructions -->
           <tr>
             <td style="padding: 20px 40px 40px;">
-              <h2 style="color: #ffd700; font-size: 18px; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 0.05em;">Next Steps</h2>
+              <h2 style="color: #ffd700; font-size: 18px; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 0.05em;">How to Join eXp Realty</h2>
 
               <!-- Step 1 -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
@@ -61,9 +61,9 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
                     <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">1</div>
                   </td>
                   <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Expect a Call</strong>
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Go to expjointeam.com</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      A team member from ${sponsorDisplay} will reach out to schedule your strategy call within 24-48 hours.
+                      Visit <a href="https://expjointeam.com" style="color: #ffd700; text-decoration: none;">expjointeam.com</a> to start your application with eXp Realty.
                     </p>
                   </td>
                 </tr>
@@ -76,24 +76,39 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
                     <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">2</div>
                   </td>
                   <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Join Our Community</strong>
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Search for Your Sponsor</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Get access to our private Facebook group and start connecting with other agents who are building their dream careers.
+                      Enter <strong style="color: #ffffff;">doug.smart@expreferral.com</strong> and click Search. Select <strong style="color: #ffffff;">Sheldon Douglas Smart</strong> as your sponsor.
                     </p>
                   </td>
                 </tr>
               </table>
 
               <!-- Step 3 -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
                     <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">3</div>
                   </td>
                   <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Prepare Your Questions</strong>
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Complete Your Application</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Think about what you want to achieve in your real estate career. We'll help you create a plan to get there.
+                      Fill out the application form and submit. You'll receive a confirmation email from eXp.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Step 4 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td width="40" valign="top">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">4</div>
+                  </td>
+                  <td style="padding-left: 12px;">
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">We'll Be in Touch</strong>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
+                      Once approved, we'll reach out with your Smart Agent Alliance onboarding materials and resources.
                     </p>
                   </td>
                 </tr>
@@ -103,9 +118,9 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <a href="https://calendly.com/smartagentalliance/exp-realty-overview"
+                    <a href="https://expjointeam.com"
                        style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #ffd700, #e6c200); color: #2a2a2a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
-                      Book a Call Now
+                      Go to expjointeam.com
                     </a>
                   </td>
                 </tr>

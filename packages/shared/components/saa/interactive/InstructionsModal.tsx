@@ -199,37 +199,50 @@ export function InstructionsModal({
         </div>
 
         <h3 style={styles.title}>Welcome, {userName}!</h3>
-        <p style={styles.subtitle}>You're on your way to joining Smart Agent Alliance at eXp Realty.</p>
+        <p style={styles.subtitle}>Follow these steps to join Smart Agent Alliance at eXp Realty.</p>
 
         <div style={styles.instructionsList}>
           <div style={styles.instructionItem}>
             <div style={styles.instructionNumber}>1</div>
             <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Check Your Email</strong>
-              <p style={styles.instructionText}>We've sent you a welcome email with important next steps and resources.</p>
+              <strong style={styles.instructionTitle}>Go to expjointeam.com</strong>
+              <p style={styles.instructionText}>Visit <a href="https://expjointeam.com" target="_blank" rel="noopener noreferrer" style={{color: '#ffd700'}}>expjointeam.com</a> to start your application with eXp Realty.</p>
             </div>
           </div>
 
           <div style={styles.instructionItem}>
             <div style={styles.instructionNumber}>2</div>
             <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Schedule Your Call</strong>
-              <p style={styles.instructionText}>A team member will reach out to schedule your strategy call within 24-48 hours.</p>
+              <strong style={styles.instructionTitle}>Search for Your Sponsor</strong>
+              <p style={styles.instructionText}>Enter <strong style={{color: '#fff'}}>doug.smart@expreferral.com</strong> and click Search. Select <strong style={{color: '#fff'}}>Sheldon Douglas Smart</strong> as your sponsor.</p>
+            </div>
+          </div>
+
+          <div style={styles.instructionItem}>
+            <div style={styles.instructionNumber}>3</div>
+            <div style={styles.instructionContent}>
+              <strong style={styles.instructionTitle}>Complete Your Application</strong>
+              <p style={styles.instructionText}>Fill out the application form and submit. You'll receive a confirmation email from eXp.</p>
             </div>
           </div>
 
           <div style={{...styles.instructionItem, marginBottom: 0}}>
-            <div style={styles.instructionNumber}>3</div>
+            <div style={styles.instructionNumber}>4</div>
             <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Join Our Community</strong>
-              <p style={styles.instructionText}>Get access to our private Facebook group and start connecting with other agents.</p>
+              <strong style={styles.instructionTitle}>We'll Be in Touch</strong>
+              <p style={styles.instructionText}>Once approved, we'll reach out with your Smart Agent Alliance onboarding materials and resources.</p>
             </div>
           </div>
         </div>
 
-        <button style={styles.cta} onClick={onClose}>
-          Got It!
-        </button>
+        <a
+          href="https://expjointeam.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{...styles.cta, display: 'block', textDecoration: 'none', textAlign: 'center'}}
+        >
+          Go to expjointeam.com
+        </a>
 
         <p style={styles.footer}>
           Questions? Email us at <a style={styles.footerLink} href="mailto:support@smartagentalliance.com">support@smartagentalliance.com</a>
