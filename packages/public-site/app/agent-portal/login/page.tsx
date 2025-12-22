@@ -88,6 +88,9 @@ export default function AgentPortalLogin() {
       // Prefetch the dashboard immediately so it's ready when we navigate
       router.prefetch('/agent-portal');
 
+      // Dispatch event to slide header out
+      window.dispatchEvent(new CustomEvent('agent-portal-login-success'));
+
       // Start the transition (fades content, triggers tunnel effect)
       setShowTransition(true);
 
@@ -174,21 +177,21 @@ export default function AgentPortalLogin() {
 
           {/* Login Content - centered, fades out during transition */}
           <div
-            className="relative z-10 flex flex-col items-center w-full max-w-md transition-all ease-out"
+            className="relative z-10 flex flex-col items-center w-full transition-all ease-out"
             style={{
               opacity: showTransition ? 0 : 1,
               transform: showTransition ? 'scale(0.9) translateY(-20px)' : 'scale(1) translateY(0)',
               transitionDuration: '800ms',
             }}
           >
-        {/* Heading */}
-        <div className="text-center mb-8 whitespace-nowrap">
+        {/* Heading - full width */}
+        <div className="text-center mb-8">
           <H1 className="mb-2">ACCESS PORTAL</H1>
           <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
         </div>
 
-        {/* Login Form - CyberCard */}
-        <CyberCard padding="lg" centered={false} className="w-full">
+        {/* Login Form - CyberCard - constrained width */}
+        <CyberCard padding="lg" centered={false} className="w-full max-w-md">
           <form onSubmit={handleSubmit} className="space-y-6">
               {/* Error Message */}
               {error && (

@@ -16,6 +16,7 @@ export default function Header() {
   const [scrollAnchor, setScrollAnchor] = useState(0);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [isPortalClicked, setIsPortalClicked] = useState(false);
+  const [isLoginSlideOut, setIsLoginSlideOut] = useState(false);
   // Note: 404 pages hide the entire header via CSS :has() selector, so no is404Page state needed
   const [hasMounted, setHasMounted] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -59,6 +60,16 @@ export default function Header() {
   // Font loading handled by page-level settling mask
   useEffect(() => {
     setFontsLoaded(true);
+  }, []);
+
+  // Listen for login success event to slide header out
+  useEffect(() => {
+    const handleLoginSuccess = () => {
+      setIsLoginSlideOut(true);
+    };
+
+    window.addEventListener('agent-portal-login-success', handleLoginSuccess);
+    return () => window.removeEventListener('agent-portal-login-success', handleLoginSuccess);
   }, []);
 
 
@@ -180,10 +191,10 @@ export default function Header() {
             boxShadow: isMobileMenuOpen ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.3)',
             willChange: 'transform',
             contain: 'layout style',
-            // Start off-screen, slide down when hasSlideIn is true; after that, hide on scroll down
+            // Start off-screen, slide down when hasSlideIn is true; after that, hide on scroll down or login success
             transform: !hasSlideIn
               ? 'translateY(-100%) translateZ(0)'
-              : (isHidden ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
+              : ((isHidden || isLoginSlideOut) ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
           }}
         >
           {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
@@ -572,8 +583,10 @@ export default function Header() {
           background-color: transparent !important;
           /* Relative positioning within header-container flex */
           position: relative;
-          /* Move down 10px for better vertical alignment */
-          top: 10px;
+          /* Move down 2px for better vertical alignment */
+          top: 2px;
+          /* Negative margin to pull closer to edge - matches logo spacing on left */
+          margin-right: -17px;
           width: 65px;
           height: 65px;
           flex-shrink: 0;
