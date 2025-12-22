@@ -2825,10 +2825,9 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
           const rect = scrubberContainer.getBoundingClientRect();
           const x = clientX - rect.left;
           const percentage = Math.max(0, Math.min(1, x / rect.width));
-          // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip ahead)
+          // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip past what you've watched)
           const requestedTime = percentage * player.duration;
-          const maxAllowedTime = Math.max(maxWatchedTime, player.currentTime);
-          return Math.min(requestedTime, maxAllowedTime);
+          return Math.min(requestedTime, maxWatchedTime);
         }
 
         if (videoWrapper && scrubberContainer) {

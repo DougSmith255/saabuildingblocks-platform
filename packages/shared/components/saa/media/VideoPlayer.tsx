@@ -221,11 +221,10 @@ export function VideoPlayer({
     const rect = scrubberRef.current.getBoundingClientRect();
     const x = clientX - rect.left;
     const percentage = Math.max(0, Math.min(1, x / rect.width));
-    // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip ahead)
+    // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip past what you've watched)
     const requestedTime = percentage * duration;
-    const maxAllowedTime = Math.max(maxWatchedTime, currentTime);
-    return Math.min(requestedTime, maxAllowedTime);
-  }, [maxWatchedTime, currentTime, duration]);
+    return Math.min(requestedTime, maxWatchedTime);
+  }, [maxWatchedTime, duration]);
 
   const handleScrubberMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
