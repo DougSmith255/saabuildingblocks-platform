@@ -87,6 +87,8 @@ export function VideoPlayer({
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  // Visual scrubber position (updates immediately on drag, separate from video currentTime)
+  const [scrubberPosition, setScrubberPosition] = useState(0);
 
   // Track the saved position to restore on load
   const savedPositionRef = useRef<number>(0);
@@ -150,20 +152,25 @@ export function VideoPlayer({
     });
 
     player.addEventListener('timeupdate', () => {
-      setCurrentTime(player.currentTime || 0);
+      const time = player.currentTime || 0;
+      setCurrentTime(time);
       setDuration(player.duration || 0);
+      // Update scrubber position when not dragging
+      if (!isDragging) {
+        setScrubberPosition(time);
+      }
 
       // Save current position for resume on refresh/return
-      localStorage.setItem(`${storageKey}_position`, player.currentTime.toString());
+      localStorage.setItem(`${storageKey}_position`, time.toString());
 
       if (player.duration > 0) {
-        // Update max watched time (only increases)
-        if (player.currentTime > maxWatchedTime) {
-          const newMaxTime = player.currentTime;
+        // Update max watched time (only increases, never decreases)
+        if (time > maxWatchedTime) {
+          const newMaxTime = time;
           setMaxWatchedTime(newMaxTime);
           localStorage.setItem(`${storageKey}_maxTime`, newMaxTime.toString());
 
-          // Update progress percentage
+          // Update progress percentage (only increases, never decreases)
           const pct = (newMaxTime / player.duration) * 100;
           if (pct > progress) {
             setProgress(pct);
@@ -178,7 +185,7 @@ export function VideoPlayer({
         }
       }
     });
-  }, [maxWatchedTime, progress, storageKey, unlockThreshold, thresholdReached, onThresholdReached]);
+  }, [maxWatchedTime, progress, storageKey, unlockThreshold, thresholdReached, onThresholdReached, isDragging]);
 
   const togglePlayPause = useCallback(() => {
     if (!playerRef.current) return;
@@ -231,6 +238,8 @@ export function VideoPlayer({
     e.stopPropagation();
     setIsDragging(true);
     const newTime = calculateTimeFromPosition(e.clientX);
+    // Immediately update visual scrubber position
+    setScrubberPosition(newTime);
     if (playerRef.current) {
       playerRef.current.currentTime = newTime;
     }
@@ -239,6 +248,8 @@ export function VideoPlayer({
   const handleScrubberMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging) return;
     const newTime = calculateTimeFromPosition(e.clientX);
+    // Immediately update visual scrubber position
+    setScrubberPosition(newTime);
     if (playerRef.current) {
       playerRef.current.currentTime = newTime;
     }
@@ -329,12 +340,12 @@ export function VideoPlayer({
             {/* Current position indicator */}
             <div
               className="scrubber-current"
-              style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
+              style={{ width: duration > 0 ? `${(scrubberPosition / duration) * 100}%` : '0%' }}
             />
             {/* Scrubber thumb/dot */}
             <div
               className="scrubber-thumb"
-              style={{ left: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
+              style={{ left: duration > 0 ? `${(scrubberPosition / duration) * 100}%` : '0%' }}
             />
           </div>
         </div>
@@ -438,7 +449,13 @@ export function VideoPlayer({
           <div className="progress-bar">
             <div
               className="progress-fill"
-              style={{ width: `${Math.min(progress, 100)}%` }}
+              style={{
+                // Once threshold is reached, show as complete (100%)
+                // Otherwise show progress as percentage of threshold (e.g., 25% watched = 50% of bar if threshold is 50%)
+                width: thresholdReached
+                  ? '100%'
+                  : `${Math.min((progress / unlockThreshold) * 100, 100)}%`
+              }}
             />
           </div>
           <p className="progress-text text-body">{getProgressMessage()}</p>
