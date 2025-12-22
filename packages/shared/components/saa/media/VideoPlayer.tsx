@@ -442,7 +442,7 @@ export function VideoPlayer({
               style={{ width: `${Math.min(progress, 100)}%` }}
             />
           </div>
-          <p className="progress-text">{getProgressMessage()}</p>
+          <p className="progress-text text-body">{getProgressMessage()}</p>
         </div>
       )}
 
@@ -736,8 +736,6 @@ export function VideoPlayer({
         }
 
         .progress-text {
-          color: #bfbdb0;
-          font-size: 0.9rem;
           margin: 0;
         }
 
