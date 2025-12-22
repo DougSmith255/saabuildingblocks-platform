@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
+import { RotatingText } from './components/RotatingText';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
 
@@ -31,6 +32,11 @@ const WhoWeAre = dynamic(
 
 const PathSelectorWithContent = dynamic(
   () => import('./components/sections/PathSelectorWithContent').then(mod => ({ default: mod.PathSelectorWithContent })),
+  { ssr: false }
+);
+
+const WatchAndDecide = dynamic(
+  () => import('./components/sections/WatchAndDecide').then(mod => ({ default: mod.WatchAndDecide })),
   { ssr: false }
 );
 
@@ -145,18 +151,22 @@ export default function Home() {
               <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
                 For Agents Who Want More
               </Tagline>
-              <p className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px' }}>
-                Smart Agent Alliance is a sponsor team inside eXp Realty. Elite systems, world-class training, real community — no splits, no fees, no catch.
-              </p>
+              <div className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px' }}>
+                <RotatingText
+                  texts={[
+                    'Smart Agent Alliance (SAA), also referred to as "The Alliance," is a sponsor support team built inside eXp Realty.',
+                    'Not a production team. No splits. No fees.',
+                    'Elite systems. Proven training. Real community.',
+                  ]}
+                  interval={5000}
+                />
+              </div>
             </div>
 
-            {/* CTA Button Group */}
-            <div className="hero-cta-buttons flex flex-col sm:flex-row gap-0 sm:gap-3 justify-center items-center mt-6">
-              <CTAButton href="/join-exp-sponsor-team/">
-                JOIN THE ALLIANCE
-              </CTAButton>
-              <CTAButton href="/exp-realty-sponsor/">
-                LEARN MORE
+            {/* CTA Button */}
+            <div className="hero-cta-buttons flex justify-center items-center mt-6">
+              <CTAButton href="#watch-and-decide">
+                WATCH & DECIDE
               </CTAButton>
             </div>
           </div>
@@ -173,6 +183,7 @@ export default function Home() {
       <WhyExpRealty />
       <WhoWeAre />
       <PathSelectorWithContent />
+      <WatchAndDecide />
 
     </main>
   );
