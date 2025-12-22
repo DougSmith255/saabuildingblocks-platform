@@ -94,6 +94,10 @@ export function VideoPlayer({
   const savedPositionRef = useRef<number>(0);
   // Track maxWatchedTime in a ref for stable access in callbacks
   const maxWatchedTimeRef = useRef<number>(0);
+  // Track progress in a ref for stable access in timeupdate handler
+  const progressRef = useRef<number>(0);
+  // Track threshold reached in a ref
+  const thresholdReachedRef = useRef<boolean>(false);
 
   // Load progress from localStorage on mount
   useEffect(() => {
@@ -101,11 +105,13 @@ export function VideoPlayer({
     const savedMaxTime = parseFloat(localStorage.getItem(`${storageKey}_maxTime`) || '0');
     const savedPosition = parseFloat(localStorage.getItem(`${storageKey}_position`) || '0');
     setProgress(savedProgress);
+    progressRef.current = savedProgress; // Keep ref in sync
     setMaxWatchedTime(savedMaxTime);
     maxWatchedTimeRef.current = savedMaxTime; // Keep ref in sync
     savedPositionRef.current = savedPosition;
     if (savedProgress >= unlockThreshold) {
       setThresholdReached(true);
+      thresholdReachedRef.current = true;
     }
   }, [storageKey, unlockThreshold]);
 
@@ -158,17 +164,16 @@ export function VideoPlayer({
       const time = player.currentTime || 0;
       setCurrentTime(time);
       setDuration(player.duration || 0);
-      // Update scrubber position when not dragging
-      if (!isDragging) {
-        setScrubberPosition(time);
-      }
+      // Update scrubber position when not dragging (check ref for stable value)
+      setScrubberPosition(time);
 
       // Save current position for resume on refresh/return
       localStorage.setItem(`${storageKey}_position`, time.toString());
 
       if (player.duration > 0) {
         // Update max watched time (only increases, never decreases)
-        if (time > maxWatchedTime) {
+        // Use refs for stable comparison values
+        if (time > maxWatchedTimeRef.current) {
           const newMaxTime = time;
           setMaxWatchedTime(newMaxTime);
           maxWatchedTimeRef.current = newMaxTime; // Keep ref in sync
@@ -176,20 +181,22 @@ export function VideoPlayer({
 
           // Update progress percentage (only increases, never decreases)
           const pct = (newMaxTime / player.duration) * 100;
-          if (pct > progress) {
+          if (pct > progressRef.current) {
             setProgress(pct);
+            progressRef.current = pct; // Keep ref in sync
             localStorage.setItem(`${storageKey}_progress`, pct.toString());
 
             // Check threshold
-            if (pct >= unlockThreshold && !thresholdReached) {
+            if (pct >= unlockThreshold && !thresholdReachedRef.current) {
               setThresholdReached(true);
+              thresholdReachedRef.current = true;
               onThresholdReached?.();
             }
           }
         }
       }
     });
-  }, [maxWatchedTime, progress, storageKey, unlockThreshold, thresholdReached, onThresholdReached, isDragging]);
+  }, [storageKey, unlockThreshold, onThresholdReached]);
 
   const togglePlayPause = useCallback(() => {
     if (!playerRef.current) return;
