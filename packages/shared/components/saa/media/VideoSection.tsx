@@ -148,12 +148,12 @@ export function VideoSection({
               {joinButtonText}
             </CTAButton>
 
-            {/* Book A Call - appears after threshold */}
+            {/* Book A Call - greyed out until threshold, then unlocks */}
             <div
               className="transition-all duration-500"
               style={{
-                opacity: showBookCall ? 1 : 0,
-                transform: showBookCall ? 'translateY(0)' : 'translateY(20px)',
+                opacity: showBookCall ? 1 : 0.4,
+                filter: showBookCall ? 'none' : 'blur(1px) grayscale(0.8)',
                 pointerEvents: showBookCall ? 'auto' : 'none',
               }}
             >
@@ -161,7 +161,9 @@ export function VideoSection({
                 href={bookCallUrl}
                 onClick={(e) => {
                   e.preventDefault();
-                  window.open(bookCallUrl, '_blank', 'noopener,noreferrer');
+                  if (showBookCall) {
+                    window.open(bookCallUrl, '_blank', 'noopener,noreferrer');
+                  }
                 }}
               >
                 {bookCallButtonText}
