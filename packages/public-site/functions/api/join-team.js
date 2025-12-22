@@ -3,6 +3,7 @@
  *
  * Receives lead form submissions from agent attraction and linktree pages,
  * creates/updates contact in GoHighLevel with referral tag.
+ * Also sends welcome email with instructions via Resend.
  *
  * POST /api/join-team
  * Body: { firstName, lastName, email, sponsorName }
@@ -11,6 +12,167 @@
 // GoHighLevel API configuration
 const GHL_API_BASE = 'https://services.leadconnectorhq.com';
 const GHL_API_VERSION = '2021-07-28';
+
+// Resend API configuration
+const RESEND_API_BASE = 'https://api.resend.com';
+
+/**
+ * Send welcome/instructions email via Resend
+ */
+async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
+  const fromEmail = 'Smart Agent Alliance <noreply@smartagentalliance.com>';
+  const sponsorDisplay = sponsorName || 'the Smart Agent Alliance team';
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Smart Agent Alliance</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #0a0a0c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0c; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" style="max-width: 600px; background-color: #151517; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="padding: 40px 40px 20px; text-align: center;">
+              <div style="width: 60px; height: 60px; margin: 0 auto 20px; background: rgba(0, 255, 136, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <span style="font-size: 30px;">✓</span>
+              </div>
+              <h1 style="color: #ffffff; font-size: 28px; margin: 0 0 10px; font-weight: 700;">Welcome, ${firstName}!</h1>
+              <p style="color: rgba(255,255,255,0.7); font-size: 16px; margin: 0; line-height: 1.5;">
+                You're on your way to joining Smart Agent Alliance at eXp Realty.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Instructions -->
+          <tr>
+            <td style="padding: 20px 40px 40px;">
+              <h2 style="color: #ffd700; font-size: 18px; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 0.05em;">Next Steps</h2>
+
+              <!-- Step 1 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td width="40" valign="top">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">1</div>
+                  </td>
+                  <td style="padding-left: 12px;">
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Expect a Call</strong>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
+                      A team member from ${sponsorDisplay} will reach out to schedule your strategy call within 24-48 hours.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Step 2 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td width="40" valign="top">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">2</div>
+                  </td>
+                  <td style="padding-left: 12px;">
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Join Our Community</strong>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
+                      Get access to our private Facebook group and start connecting with other agents who are building their dream careers.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Step 3 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td width="40" valign="top">
+                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">3</div>
+                  </td>
+                  <td style="padding-left: 12px;">
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Prepare Your Questions</strong>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
+                      Think about what you want to achieve in your real estate career. We'll help you create a plan to get there.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center">
+                    <a href="https://calendly.com/smartagentalliance/exp-realty-overview"
+                       style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #ffd700, #e6c200); color: #2a2a2a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
+                      Book a Call Now
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 20px 40px 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+              <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0; line-height: 1.5;">
+                Questions? Reply to this email or contact us at<br>
+                <a href="mailto:support@smartagentalliance.com" style="color: #ffd700; text-decoration: none;">support@smartagentalliance.com</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Legal Footer -->
+        <table width="100%" style="max-width: 600px; margin-top: 20px;">
+          <tr>
+            <td style="text-align: center;">
+              <p style="color: rgba(255,255,255,0.3); font-size: 11px; margin: 0;">
+                © ${new Date().getFullYear()} Smart Agent Alliance. All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `.trim();
+
+  try {
+    const response = await fetch(`${RESEND_API_BASE}/emails`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${resendApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to: [email],
+        subject: `Welcome to Smart Agent Alliance, ${firstName}!`,
+        html: htmlContent,
+        tags: [
+          { name: 'category', value: 'welcome-instructions' },
+        ],
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      console.error('[join-team] Resend email error:', result);
+      return { success: false, error: result.message || 'Failed to send email' };
+    }
+
+    console.log('[join-team] Welcome email sent:', { messageId: result.id, email });
+    return { success: true, messageId: result.id };
+  } catch (error) {
+    console.error('[join-team] Email send exception:', error);
+    return { success: false, error: error.message };
+  }
+}
 
 /**
  * Handle POST request to create/update contact in GoHighLevel
@@ -132,6 +294,13 @@ export async function onRequestPost(context) {
         }
       }
 
+      // Send welcome email for existing contact
+      const resendApiKey = env.RESEND_API_KEY;
+      if (resendApiKey) {
+        const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
+        console.log('[join-team] Email result (existing contact):', emailResult);
+      }
+
       return new Response(
         JSON.stringify({
           success: true,
@@ -200,6 +369,13 @@ export async function onRequestPost(context) {
             );
 
             if (updateResponse.ok) {
+              // Send welcome email
+              const resendApiKey = env.RESEND_API_KEY;
+              if (resendApiKey) {
+                const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
+                console.log('[join-team] Email result (duplicate contact update):', emailResult);
+              }
+
               return new Response(
                 JSON.stringify({
                   success: true,
@@ -210,7 +386,13 @@ export async function onRequestPost(context) {
               );
             }
           } else {
-            // Tag already exists
+            // Tag already exists - still send welcome email
+            const resendApiKey = env.RESEND_API_KEY;
+            if (resendApiKey) {
+              const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
+              console.log('[join-team] Email result (tag already exists):', emailResult);
+            }
+
             return new Response(
               JSON.stringify({
                 success: true,
@@ -234,6 +416,15 @@ export async function onRequestPost(context) {
     }
 
     const createData = await createResponse.json();
+
+    // Send welcome email
+    const resendApiKey = env.RESEND_API_KEY;
+    if (resendApiKey) {
+      const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
+      console.log('[join-team] Email result:', emailResult);
+    } else {
+      console.warn('[join-team] RESEND_API_KEY not configured, skipping welcome email');
+    }
 
     return new Response(
       JSON.stringify({

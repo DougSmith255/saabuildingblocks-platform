@@ -22,27 +22,137 @@ export interface JoinFormData {
   country: string;
 }
 
+// Inline styles (styled-jsx doesn't work from shared packages)
+const styles: Record<string, React.CSSProperties> = {
+  overlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(0, 0, 0, 0.9)',
+    backdropFilter: 'blur(8px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 9999,
+    padding: '1rem',
+    overflowY: 'auto',
+  },
+  modal: {
+    background: '#151517',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '16px',
+    padding: '2rem',
+    maxWidth: '500px',
+    width: '100%',
+    maxHeight: '90vh',
+    overflowY: 'auto',
+    position: 'relative',
+  },
+  closeBtn: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+    width: '32px',
+    height: '32px',
+    background: 'rgba(255, 255, 255, 0.1)',
+    border: 'none',
+    borderRadius: '50%',
+    color: '#fff',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontFamily: 'var(--font-amulya, system-ui), sans-serif',
+    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+    fontWeight: 700,
+    color: '#fff',
+    marginBottom: '0.5rem',
+  },
+  subtitle: {
+    fontFamily: 'var(--font-synonym, system-ui), sans-serif',
+    fontSize: '0.95rem',
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginBottom: '1.5rem',
+  },
+  formRow: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: '1rem',
+  },
+  formGroup: {
+    marginBottom: '1rem',
+  },
+  label: {
+    display: 'block',
+    fontFamily: 'var(--font-synonym, system-ui), sans-serif',
+    fontSize: '0.875rem',
+    color: '#fff',
+    marginBottom: '0.5rem',
+  },
+  input: {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '8px',
+    color: '#fff',
+    fontFamily: 'var(--font-synonym, system-ui), sans-serif',
+    fontSize: '1rem',
+    boxSizing: 'border-box' as const,
+  },
+  select: {
+    width: '100%',
+    padding: '0.75rem 1rem',
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.15)',
+    borderRadius: '8px',
+    color: '#fff',
+    fontFamily: 'var(--font-synonym, system-ui), sans-serif',
+    fontSize: '1rem',
+    boxSizing: 'border-box' as const,
+  },
+  submit: {
+    width: '100%',
+    marginTop: '1.5rem',
+    padding: '1rem',
+    background: 'linear-gradient(135deg, #ffd700, #e6c200)',
+    color: '#2a2a2a',
+    fontFamily: 'var(--font-taskor, system-ui), sans-serif',
+    fontWeight: 600,
+    fontSize: '1rem',
+    letterSpacing: '0.05em',
+    textTransform: 'uppercase' as const,
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+  },
+  submitDisabled: {
+    opacity: 0.7,
+    cursor: 'not-allowed',
+  },
+  msgSuccess: {
+    marginTop: '1rem',
+    padding: '0.75rem',
+    borderRadius: '8px',
+    textAlign: 'center' as const,
+    fontSize: '0.9rem',
+    background: 'rgba(0, 255, 136, 0.1)',
+    color: '#00ff88',
+  },
+  msgError: {
+    marginTop: '1rem',
+    padding: '0.75rem',
+    borderRadius: '8px',
+    textAlign: 'center' as const,
+    fontSize: '0.9rem',
+    background: 'rgba(255, 68, 68, 0.1)',
+    color: '#ff4444',
+  },
+};
+
 /**
  * JoinModal - Modal form for joining Smart Agent Alliance
- *
- * MASTER CONTROLLER COMPONENT
- * Location: @saa/shared/components/saa/interactive/JoinModal
- *
- * Features:
- * - Form with firstName, lastName, email, country
- * - Submits to GoHighLevel via API endpoint
- * - Shows success/error messages
- * - Closes automatically after success
- * - Prevents body scroll when open
- *
- * @example
- * ```tsx
- * <JoinModal
- *   isOpen={showJoinModal}
- *   onClose={() => setShowJoinModal(false)}
- *   onSuccess={(data) => console.log('Joined:', data)}
- * />
- * ```
  */
 export function JoinModal({
   isOpen,
@@ -137,254 +247,97 @@ export function JoinModal({
   if (!isOpen) return null;
 
   return (
-    <>
-      <div className="modal-overlay" onClick={handleOverlayClick}>
-        <div className="modal" onClick={e => e.stopPropagation()}>
-          <button className="modal-close" onClick={onClose} aria-label="Close modal">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
+    <div style={styles.overlay} onClick={handleOverlayClick}>
+      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+        <button style={styles.closeBtn} onClick={onClose} aria-label="Close modal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
 
-          <h3 className="modal-title">Join Smart Agent Alliance</h3>
-          <p className="modal-subtitle">Take the first step towards building your dream career at eXp Realty.</p>
+        <h3 style={styles.title}>Join Smart Agent Alliance</h3>
+        <p style={styles.subtitle}>Take the first step towards building your dream career at eXp Realty.</p>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label className="form-label" htmlFor="firstName">First Name *</label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  className="form-input"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label" htmlFor="lastName">Last Name *</label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  className="form-input"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="email">Email *</label>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.formRow}>
+            <div style={styles.formGroup}>
+              <label style={styles.label} htmlFor="firstName">First Name *</label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                className="form-input"
-                value={formData.email}
+                type="text"
+                id="firstName"
+                name="firstName"
+                style={styles.input}
+                value={formData.firstName}
                 onChange={handleInputChange}
                 required
               />
             </div>
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="country">Country *</label>
-              <select
-                id="country"
-                name="country"
-                className="form-select"
-                value={formData.country}
+            <div style={styles.formGroup}>
+              <label style={styles.label} htmlFor="lastName">Last Name *</label>
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                style={styles.input}
+                value={formData.lastName}
                 onChange={handleInputChange}
                 required
-              >
-                <option value="">Select country</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="UK">United Kingdom</option>
-                <option value="AU">Australia</option>
-                <option value="other">Other</option>
-              </select>
+              />
             </div>
+          </div>
 
-            <button type="submit" className="form-submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Submitting...' : 'Get Started'}
-            </button>
+          <div style={styles.formGroup}>
+            <label style={styles.label} htmlFor="email">Email *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              style={styles.input}
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-            {message && (
-              <div className={`form-msg ${message.type}`}>
-                {message.text}
-              </div>
-            )}
-          </form>
-        </div>
+          <div style={styles.formGroup}>
+            <label style={styles.label} htmlFor="country">Country *</label>
+            <select
+              id="country"
+              name="country"
+              style={styles.select}
+              value={formData.country}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="UK">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              ...styles.submit,
+              ...(isSubmitting ? styles.submitDisabled : {}),
+            }}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Submitting...' : 'Get Started'}
+          </button>
+
+          {message && (
+            <div style={message.type === 'success' ? styles.msgSuccess : styles.msgError}>
+              {message.text}
+            </div>
+          )}
+        </form>
       </div>
-
-      <style jsx>{`
-        .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background: rgba(0, 0, 0, 0.9);
-          backdrop-filter: blur(8px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          padding: 1rem;
-          overflow-y: auto;
-          overscroll-behavior: contain;
-        }
-
-        .modal {
-          background: #151517;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 16px;
-          padding: 2rem;
-          max-width: 500px;
-          width: 100%;
-          max-height: 90vh;
-          overflow-y: auto;
-          overscroll-behavior: contain;
-          position: relative;
-        }
-
-        .modal-close {
-          position: absolute;
-          top: 1rem;
-          right: 1rem;
-          width: 32px;
-          height: 32px;
-          background: rgba(255, 255, 255, 0.1);
-          border: none;
-          border-radius: 50%;
-          color: #fff;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: background 0.2s ease;
-        }
-
-        .modal-close:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
-
-        .modal-title {
-          font-family: var(--font-amulya, system-ui), sans-serif;
-          font-size: clamp(1.5rem, 3vw, 2rem);
-          font-weight: 700;
-          color: #fff;
-          margin-bottom: 0.5rem;
-        }
-
-        .modal-subtitle {
-          font-family: var(--font-synonym, system-ui), sans-serif;
-          font-size: 0.95rem;
-          color: rgba(255, 255, 255, 0.7);
-          margin-bottom: 1.5rem;
-        }
-
-        .form-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-
-        @media (max-width: 480px) {
-          .form-row {
-            grid-template-columns: 1fr;
-          }
-        }
-
-        .form-group {
-          margin-bottom: 1rem;
-        }
-
-        .form-label {
-          display: block;
-          font-family: var(--font-synonym, system-ui), sans-serif;
-          font-size: 0.875rem;
-          color: #fff;
-          margin-bottom: 0.5rem;
-        }
-
-        .form-input,
-        .form-select {
-          width: 100%;
-          padding: 0.75rem 1rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          border-radius: 8px;
-          color: #fff;
-          font-family: var(--font-synonym, system-ui), sans-serif;
-          font-size: 1rem;
-          transition: border-color 0.2s ease;
-        }
-
-        .form-input:focus,
-        .form-select:focus {
-          outline: none;
-          border-color: #ffd700;
-        }
-
-        .form-input::placeholder {
-          color: rgba(255, 255, 255, 0.4);
-        }
-
-        .form-select option {
-          background: #151517;
-          color: #fff;
-        }
-
-        .form-submit {
-          width: 100%;
-          margin-top: 1.5rem;
-          padding: 1rem;
-          background: linear-gradient(135deg, #ffd700, #e6c200);
-          color: #2a2a2a;
-          font-family: var(--font-taskor, system-ui), sans-serif;
-          font-weight: 600;
-          font-size: 1rem;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .form-submit:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .form-submit:disabled {
-          opacity: 0.7;
-          cursor: not-allowed;
-        }
-
-        .form-msg {
-          margin-top: 1rem;
-          padding: 0.75rem;
-          border-radius: 8px;
-          text-align: center;
-          font-size: 0.9rem;
-        }
-
-        .form-msg.success {
-          background: rgba(0, 255, 136, 0.1);
-          color: #00ff88;
-        }
-
-        .form-msg.error {
-          background: rgba(255, 68, 68, 0.1);
-          color: #ff4444;
-        }
-      `}</style>
-    </>
+    </div>
   );
 }
 
