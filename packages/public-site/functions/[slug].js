@@ -1319,6 +1319,56 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     .video-overlay.is-playing:hover .overlay-play-btn {
       opacity: 1;
     }
+    /* Scrubber Bar */
+    .scrubber-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      padding: 8px 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+      cursor: pointer;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .scrubber-container.visible {
+      opacity: 1;
+    }
+    .scrubber-watched {
+      position: absolute;
+      bottom: 8px;
+      left: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+    .scrubber-current {
+      position: absolute;
+      bottom: 8px;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #ffd700, #ffcc00);
+      border-radius: 2px;
+      z-index: 1;
+    }
+    .scrubber-thumb {
+      position: absolute;
+      bottom: 4px;
+      width: 14px;
+      height: 14px;
+      background: #ffd700;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      z-index: 2;
+      transition: transform 0.1s ease;
+    }
+    .scrubber-container:hover .scrubber-thumb,
+    .scrubber-container:active .scrubber-thumb {
+      transform: translateX(-50%) scale(1.3);
+    }
     /* Custom Video Controls - matching VideoPlayer component */
     .video-controls {
       display: flex;
@@ -2123,6 +2173,12 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
               </svg>
             </div>
           </div>
+          <!-- Scrubber Bar - appears on hover -->
+          <div class="scrubber-container" id="scrubber-container">
+            <div class="scrubber-watched" id="scrubber-watched"></div>
+            <div class="scrubber-current" id="scrubber-current"></div>
+            <div class="scrubber-thumb" id="scrubber-thumb"></div>
+          </div>
         </div>
         <!-- Video Controls Bar -->
         <div class="video-controls">
@@ -2747,6 +2803,72 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
           });
         }
 
+        // Scrubber functionality
+        const videoWrapper = document.querySelector('.video-wrapper');
+        const scrubberContainer = document.getElementById('scrubber-container');
+        const scrubberWatched = document.getElementById('scrubber-watched');
+        const scrubberCurrent = document.getElementById('scrubber-current');
+        const scrubberThumb = document.getElementById('scrubber-thumb');
+        let isDragging = false;
+
+        function updateScrubberUI() {
+          if (!player || player.duration <= 0) return;
+          const watchedPct = (maxWatchedTime / player.duration) * 100;
+          const currentPct = (player.currentTime / player.duration) * 100;
+          if (scrubberWatched) scrubberWatched.style.width = watchedPct + '%';
+          if (scrubberCurrent) scrubberCurrent.style.width = currentPct + '%';
+          if (scrubberThumb) scrubberThumb.style.left = currentPct + '%';
+        }
+
+        function calculateTimeFromPosition(clientX) {
+          if (!scrubberContainer || !player) return 0;
+          const rect = scrubberContainer.getBoundingClientRect();
+          const x = clientX - rect.left;
+          const percentage = Math.max(0, Math.min(1, x / rect.width));
+          // Can only scrub between 0 and maxWatchedTime (can't skip ahead)
+          const maxAllowedTime = Math.max(maxWatchedTime, player.currentTime);
+          return percentage * maxAllowedTime;
+        }
+
+        if (videoWrapper && scrubberContainer) {
+          videoWrapper.addEventListener('mouseenter', function() {
+            scrubberContainer.classList.add('visible');
+          });
+          videoWrapper.addEventListener('mouseleave', function() {
+            if (!isDragging) {
+              scrubberContainer.classList.remove('visible');
+            }
+          });
+
+          scrubberContainer.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            isDragging = true;
+            const newTime = calculateTimeFromPosition(e.clientX);
+            player.currentTime = newTime;
+            updateScrubberUI();
+          });
+
+          window.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            const newTime = calculateTimeFromPosition(e.clientX);
+            player.currentTime = newTime;
+            updateScrubberUI();
+          });
+
+          window.addEventListener('mouseup', function() {
+            if (isDragging) {
+              isDragging = false;
+              // Hide scrubber if mouse is not over video
+              const rect = videoWrapper.getBoundingClientRect();
+              if (event.clientX < rect.left || event.clientX > rect.right ||
+                  event.clientY < rect.top || event.clientY > rect.bottom) {
+                scrubberContainer.classList.remove('visible');
+              }
+            }
+          });
+        }
+
         // Track play state
         player.addEventListener('play', function() {
           isPlaying = true;
@@ -2766,6 +2888,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
         // Track progress and update time display
         player.addEventListener('timeupdate', function() {
           updateTimeDisplay();
+          updateScrubberUI();
 
           // Save current position for resume on refresh/return
           localStorage.setItem('agent_' + AGENT.slug + '_position', player.currentTime.toString());

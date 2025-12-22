@@ -74,8 +74,11 @@ export function VideoPlayer({
 }: VideoPlayerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const playerRef = useRef<StreamPlayer | null>(null);
+  const scrubberRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isHoveringVideo, setIsHoveringVideo] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [progress, setProgress] = useState(0);
   const [maxWatchedTime, setMaxWatchedTime] = useState(0);
   const [thresholdReached, setThresholdReached] = useState(false);
@@ -212,6 +215,51 @@ export function VideoPlayer({
     setIsMuted(!isMuted);
   }, [isMuted]);
 
+  // Scrubber: Calculate time from click/drag position
+  const calculateTimeFromPosition = useCallback((clientX: number): number => {
+    if (!scrubberRef.current || !playerRef.current) return 0;
+    const rect = scrubberRef.current.getBoundingClientRect();
+    const x = clientX - rect.left;
+    const percentage = Math.max(0, Math.min(1, x / rect.width));
+    // Can only scrub between 0 and maxWatchedTime (can't skip ahead)
+    const maxAllowedTime = Math.max(maxWatchedTime, currentTime);
+    return percentage * maxAllowedTime;
+  }, [maxWatchedTime, currentTime]);
+
+  const handleScrubberMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+    const newTime = calculateTimeFromPosition(e.clientX);
+    if (playerRef.current) {
+      playerRef.current.currentTime = newTime;
+    }
+  }, [calculateTimeFromPosition]);
+
+  const handleScrubberMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
+    const newTime = calculateTimeFromPosition(e.clientX);
+    if (playerRef.current) {
+      playerRef.current.currentTime = newTime;
+    }
+  }, [isDragging, calculateTimeFromPosition]);
+
+  const handleScrubberMouseUp = useCallback(() => {
+    setIsDragging(false);
+  }, []);
+
+  // Add/remove mouse move/up listeners for dragging
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleScrubberMouseMove);
+      window.addEventListener('mouseup', handleScrubberMouseUp);
+      return () => {
+        window.removeEventListener('mousemove', handleScrubberMouseMove);
+        window.removeEventListener('mouseup', handleScrubberMouseUp);
+      };
+    }
+  }, [isDragging, handleScrubberMouseMove, handleScrubberMouseUp]);
+
   // Format time as M:SS
   const formatTime = (seconds: number) => {
     if (isNaN(seconds) || seconds < 0) return '0:00';
@@ -236,7 +284,11 @@ export function VideoPlayer({
     <div className={`video-player-container ${className}`}>
       {/* Video Container with CyberFrame-style styling */}
       <div className="video-frame">
-        <div className="video-wrapper">
+        <div
+          className="video-wrapper"
+          onMouseEnter={() => setIsHoveringVideo(true)}
+          onMouseLeave={() => !isDragging && setIsHoveringVideo(false)}
+        >
           <iframe
             ref={iframeRef}
             src={iframeSrc}
@@ -261,6 +313,29 @@ export function VideoPlayer({
                 </svg>
               )}
             </div>
+          </div>
+
+          {/* Scrubber Bar - appears on hover */}
+          <div
+            className={`scrubber-container ${isHoveringVideo || isDragging ? 'visible' : ''}`}
+            ref={scrubberRef}
+            onMouseDown={handleScrubberMouseDown}
+          >
+            {/* Watched area (where you can scrub) */}
+            <div
+              className="scrubber-watched"
+              style={{ width: duration > 0 ? `${(maxWatchedTime / duration) * 100}%` : '0%' }}
+            />
+            {/* Current position indicator */}
+            <div
+              className="scrubber-current"
+              style={{ width: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
+            />
+            {/* Scrubber thumb/dot */}
+            <div
+              className="scrubber-thumb"
+              style={{ left: duration > 0 ? `${(currentTime / duration) * 100}%` : '0%' }}
+            />
           </div>
         </div>
 
@@ -458,6 +533,62 @@ export function VideoPlayer({
 
         .video-overlay.is-playing:hover .overlay-play-btn {
           opacity: 1;
+        }
+
+        /* Scrubber Bar */
+        .scrubber-container {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 20px;
+          padding: 8px 0;
+          background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%);
+          cursor: pointer;
+          z-index: 10;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+        }
+
+        .scrubber-container.visible {
+          opacity: 1;
+        }
+
+        .scrubber-watched {
+          position: absolute;
+          bottom: 8px;
+          left: 0;
+          height: 4px;
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 2px;
+        }
+
+        .scrubber-current {
+          position: absolute;
+          bottom: 8px;
+          left: 0;
+          height: 4px;
+          background: linear-gradient(90deg, #ffd700, #ffcc00);
+          border-radius: 2px;
+          z-index: 1;
+        }
+
+        .scrubber-thumb {
+          position: absolute;
+          bottom: 4px;
+          width: 14px;
+          height: 14px;
+          background: #ffd700;
+          border-radius: 50%;
+          transform: translateX(-50%);
+          box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+          z-index: 2;
+          transition: transform 0.1s ease;
+        }
+
+        .scrubber-container:hover .scrubber-thumb,
+        .scrubber-container:active .scrubber-thumb {
+          transform: translateX(-50%) scale(1.3);
         }
 
         /* Video Controls Bar */
