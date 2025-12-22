@@ -49,7 +49,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   const buttonClasses = `
     relative flex justify-center items-center
     h-[56px] px-5 py-2
-    bg-[rgb(45,45,45)] backdrop-blur-[15px]
+    bg-[rgb(45,45,45)]
     rounded-xl border-t border-b border-white/10
     text-button uppercase tracking-wide
     z-10
@@ -85,7 +85,6 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     paddingBottom: '0.5rem',
     // Visual
     backgroundColor: 'rgb(45,45,45)',
-    backdropFilter: 'blur(15px)',
     borderRadius: '0.75rem',
     boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
     overflow: 'hidden',
