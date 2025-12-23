@@ -166,16 +166,34 @@ export function InstructionsModal({
   // Prevent body scroll when modal is open and notify header to hide
   useEffect(() => {
     if (isOpen) {
+      // Store current scroll position
+      const scrollY = window.scrollY;
+      // Lock scroll on both html and body for cross-browser/mobile support
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
       // Dispatch event to hide header
       window.dispatchEvent(new CustomEvent('saa-modal-open'));
     } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top;
+      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
       // Dispatch event to show header
       window.dispatchEvent(new CustomEvent('saa-modal-close'));
     }
     return () => {
+      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
     };
   }, [isOpen]);
 
