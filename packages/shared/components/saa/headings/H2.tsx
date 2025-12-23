@@ -115,18 +115,20 @@ export default function H2({
         }}
       >
         {words.map((word, wordIndex) => (
-          <span
-            key={wordIndex}
-            className="h2-word"
-            style={{
-              display: 'inline-block',
-              position: 'relative',
-              color: '#bfbdb0',
-              textShadow,
-            }}
-          >
-            {word}
-          </span>
+          <React.Fragment key={wordIndex}>
+            {wordIndex > 0 && ' '}
+            <span
+              className="h2-word"
+              style={{
+                display: 'inline-block',
+                position: 'relative',
+                color: '#bfbdb0',
+                textShadow,
+              }}
+            >
+              {word}
+            </span>
+          </React.Fragment>
         ))}
       </h2>
     </>
