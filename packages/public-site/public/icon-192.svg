@@ -6,8 +6,7 @@
       <stop offset="100%" style="stop-color:#e6ac00;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <!-- Simple dark square background -->
-  <rect width="512" height="512" fill="#0a0a0a"/>
+  <!-- Transparent background - no rect element -->
   <!-- SAA Logo - the stylized text mark, centered -->
   <svg x="30" y="180" width="452" height="152" viewBox="0 0 201.96256 75.736626">
     <g transform="translate(-5.5133704,-105.97189)">
