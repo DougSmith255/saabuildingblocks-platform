@@ -181,21 +181,71 @@ export function MediaLogos() {
           {[...logos, ...logos].map((logo, index) => (
             <div
               key={`${logo.id}-${index}`}
-              className="flex-shrink-0 flex items-center justify-center"
+              className="flex-shrink-0 flex items-center justify-center logo-container"
               style={{
                 // Mobile: 48px, Desktop: 64px
                 height: 'clamp(48px, 5vw, 64px)',
                 minWidth: 'clamp(120px, 12vw, 180px)',
+                position: 'relative',
               }}
             >
+              {/* Brushed metal background plate */}
+              <div
+                className="absolute inset-0 rounded-lg"
+                style={{
+                  background: `
+                    linear-gradient(135deg,
+                      rgba(60,60,60,0.9) 0%,
+                      rgba(45,45,45,0.9) 25%,
+                      rgba(55,55,55,0.9) 50%,
+                      rgba(40,40,40,0.9) 75%,
+                      rgba(50,50,50,0.9) 100%
+                    )
+                  `,
+                  // Brushed metal texture using repeating gradients
+                  backgroundImage: `
+                    linear-gradient(135deg,
+                      rgba(60,60,60,0.95) 0%,
+                      rgba(45,45,45,0.95) 25%,
+                      rgba(55,55,55,0.95) 50%,
+                      rgba(40,40,40,0.95) 75%,
+                      rgba(50,50,50,0.95) 100%
+                    ),
+                    repeating-linear-gradient(
+                      90deg,
+                      transparent 0px,
+                      rgba(255,255,255,0.03) 1px,
+                      transparent 2px,
+                      transparent 4px
+                    )
+                  `,
+                  border: '1px solid rgba(80,80,80,0.5)',
+                  borderTop: '1px solid rgba(120,120,120,0.4)',
+                  borderBottom: '1px solid rgba(30,30,30,0.6)',
+                  boxShadow: `
+                    inset 0 1px 0 rgba(255,255,255,0.1),
+                    inset 0 -1px 0 rgba(0,0,0,0.2),
+                    0 2px 8px rgba(0,0,0,0.3)
+                  `,
+                  padding: '12px 20px',
+                }}
+              />
+              {/* Shine highlight overlay */}
+              <div
+                className="absolute inset-0 rounded-lg pointer-events-none"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%, rgba(255,255,255,0.03) 100%)',
+                }}
+              />
               <img
                 src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
                 alt={logo.alt}
                 loading="lazy"
-                className="h-full w-auto object-contain opacity-70 hover:opacity-100 transition-opacity duration-300"
+                className="h-full w-auto object-contain relative z-10"
                 style={{
                   maxWidth: 'clamp(150px, 15vw, 220px)',
-                  filter: 'brightness(1.1)',
+                  filter: 'brightness(1.15) contrast(1.05)',
+                  padding: '8px 16px',
                 }}
               />
             </div>
