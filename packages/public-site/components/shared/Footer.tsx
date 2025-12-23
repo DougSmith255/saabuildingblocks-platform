@@ -48,8 +48,26 @@ export default function Footer() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [wasAtBottom, setWasAtBottom] = useState(false);
   const [animatingIcons, setAnimatingIcons] = useState<Set<number>>(new Set());
+  const [isHidden, setIsHidden] = useState(false);
   const footerRef = useRef<HTMLElement>(null);
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Listen for modal open/close events to hide/show footer
+  useEffect(() => {
+    const handleModalOpen = () => {
+      setIsHidden(true);
+    };
+    const handleModalClose = () => {
+      setIsHidden(false);
+    };
+
+    window.addEventListener('saa-modal-open', handleModalOpen);
+    window.addEventListener('saa-modal-close', handleModalClose);
+    return () => {
+      window.removeEventListener('saa-modal-open', handleModalOpen);
+      window.removeEventListener('saa-modal-close', handleModalClose);
+    };
+  }, []);
 
   // Scroll-to-bottom wave animation trigger - triggers EVERY time user scrolls to bottom
   useEffect(() => {
@@ -131,7 +149,7 @@ export default function Footer() {
   };
 
   return (
-    <footer ref={footerRef} role="contentinfo" className="footer-wrapper">
+    <footer ref={footerRef} role="contentinfo" className={`footer-wrapper ${isHidden ? 'footer-hidden' : ''}`}>
       {/* Glassmorphism Background - Same as Header but with top rounded corners only */}
       <div className={`${styles['glassContainer']} footer-glass-container`}>
         <div className={`${styles['glassBase']} footer-glass-base`} />
@@ -215,6 +233,13 @@ export default function Footer() {
           border-top: 2px solid rgba(60, 60, 60, 0.8);
           box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
           overflow: hidden;
+          transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+        }
+
+        .footer-hidden {
+          transform: translateY(100%);
+          opacity: 0;
+          pointer-events: none;
         }
 
         /* Override glassmorphism module styles for footer - TOP corners only */

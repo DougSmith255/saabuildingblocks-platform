@@ -79,7 +79,7 @@ export function VideoSection({
   hideTitle = false,
   joinButtonText = 'JOIN THE ALLIANCE',
   bookCallButtonText = 'BOOK A CALL',
-  bookCallUrl = 'https://calendly.com/smartagentalliance/exp-realty-overview',
+  bookCallUrl = 'https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7',
 }: VideoSectionProps) {
   const [showBookCall, setShowBookCall] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
