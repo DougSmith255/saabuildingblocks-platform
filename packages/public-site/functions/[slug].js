@@ -3456,47 +3456,47 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       color: ${accentColor};
     }
 
-    /* Neon Sign H1 Effect - slightly reduced glow for linktree */
+    /* Neon Sign H1 Effect - uses agent's accent color */
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
       font-size: clamp(1.75rem, 5vw, 2.5rem);
       font-weight: 400;
       letter-spacing: 0em;
-      color: #ffd700;
+      color: ${accentColor};
       line-height: 1.1;
       margin-bottom: 0.5rem;
       /* Enable stylistic set 01 for alternate N, E, M glyphs */
       font-feature-settings: "ss01" 1;
       /* 3D perspective for neon sign depth effect */
       transform: perspective(800px) rotateX(12deg);
-      /* Multi-layer text-shadow - slightly reduced glow */
+      /* Multi-layer text-shadow - uses accent color for glow */
       text-shadow:
         /* WHITE CORE (3) */
         0 0 0.01em #fff,
         0 0 0.02em #fff,
         0 0 0.03em rgba(255,255,255,0.8),
-        /* GOLD GLOW (4) - slightly reduced */
-        0 0 0.05em #ffd700,
-        0 0 0.09em rgba(255, 215, 0, 0.8),
-        0 0 0.13em rgba(255, 215, 0, 0.55),
-        0 0 0.18em rgba(255, 179, 71, 0.35),
+        /* ACCENT COLOR GLOW (4) */
+        0 0 0.05em ${accentColor},
+        0 0 0.09em rgba(${rgbString}, 0.8),
+        0 0 0.13em rgba(${rgbString}, 0.55),
+        0 0 0.18em rgba(${rgbString}, 0.35),
         /* METAL BACKING (4) */
         0.03em 0.03em 0 #2a2a2a,
         0.045em 0.045em 0 #1a1a1a,
         0.06em 0.06em 0 #0f0f0f,
         0.075em 0.075em 0 #080808;
-      /* GPU-accelerated depth shadow - slightly reduced */
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
+      /* GPU-accelerated depth shadow - uses accent color */
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25));
       /* Glow Breathe animation - slow dramatic pulse */
       animation: h1GlowBreathe 4s ease-in-out infinite;
     }
 
     @keyframes h1GlowBreathe {
       0%, 100% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
+        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25));
       }
       50% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
+        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(${rgbString}, 0.45));
       }
     }
 
