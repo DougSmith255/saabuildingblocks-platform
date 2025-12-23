@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { H2 } from '@saa/shared/components/saa';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -38,7 +39,6 @@ export function MediaLogos() {
   const positionRef = useRef(0);
   const velocityRef = useRef(0.5); // Base velocity (px per frame)
   const lastScrollY = useRef(0);
-  const isPaused = useRef(false);
   const [isVisible, setIsVisible] = useState(false);
 
   // Intersection Observer for entrance animation
@@ -71,23 +71,21 @@ export function MediaLogos() {
     const singleSetWidth = track.scrollWidth / 2;
 
     const animate = () => {
-      if (!isPaused.current) {
-        // Apply velocity with decay
-        positionRef.current += velocityRef.current;
+      // Apply velocity with decay
+      positionRef.current += velocityRef.current;
 
-        // Decay velocity back to base
-        if (velocityRef.current > 0.5) {
-          velocityRef.current *= 0.98;
-          if (velocityRef.current < 0.5) velocityRef.current = 0.5;
-        }
-
-        // Reset position for seamless loop
-        if (positionRef.current >= singleSetWidth) {
-          positionRef.current = 0;
-        }
-
-        track.style.transform = `translateX(-${positionRef.current}px)`;
+      // Decay velocity back to base
+      if (velocityRef.current > 0.5) {
+        velocityRef.current *= 0.98;
+        if (velocityRef.current < 0.5) velocityRef.current = 0.5;
       }
+
+      // Reset position for seamless loop
+      if (positionRef.current >= singleSetWidth) {
+        positionRef.current = 0;
+      }
+
+      track.style.transform = `translateX(-${positionRef.current}px)`;
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -115,37 +113,31 @@ export function MediaLogos() {
     };
   }, []);
 
-  const handleMouseEnter = () => {
-    isPaused.current = true;
-  };
-
-  const handleMouseLeave = () => {
-    isPaused.current = false;
-  };
+  // Removed hover pause - carousel now scrolls continuously
 
   return (
     <section
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
-      {/* SVG filter for frosted/textured glass effect on logos */}
+      {/* SVG filter for subtle frosted/textured glass effect on logos */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <defs>
           <filter id="frosted-texture" x="-20%" y="-20%" width="140%" height="140%">
-            {/* Noise texture */}
-            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" />
-            {/* Displacement for roughness */}
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            {/* Subtle noise texture - reduced frequency and octaves */}
+            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
+            {/* Reduced displacement for lighter roughness */}
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
             {/* Slight blur for frosted look */}
-            <feGaussianBlur in="displaced" stdDeviation="0.3" result="blurred" />
-            {/* Enhance contrast */}
+            <feGaussianBlur in="displaced" stdDeviation="0.2" result="blurred" />
+            {/* Enhance contrast slightly */}
             <feComponentTransfer in="blurred" result="enhanced">
-              <feFuncR type="linear" slope="1.1" intercept="0.05" />
-              <feFuncG type="linear" slope="1.1" intercept="0.05" />
-              <feFuncB type="linear" slope="1.1" intercept="0.05" />
+              <feFuncR type="linear" slope="1.05" intercept="0.03" />
+              <feFuncG type="linear" slope="1.05" intercept="0.03" />
+              <feFuncB type="linear" slope="1.05" intercept="0.03" />
             </feComponentTransfer>
-            {/* Add specular lighting for shine */}
-            <feSpecularLighting in="noise" surfaceScale="2" specularConstant="0.8" specularExponent="20" lightingColor="#ffffff" result="specular">
+            {/* Subtle specular lighting for shine */}
+            <feSpecularLighting in="noise" surfaceScale="1.5" specularConstant="0.6" specularExponent="25" lightingColor="#ffffff" result="specular">
               <fePointLight x="-100" y="-100" z="200" />
             </feSpecularLighting>
             {/* Composite specular with image */}
@@ -155,15 +147,14 @@ export function MediaLogos() {
         </defs>
       </svg>
 
-      {/* Heading - flat, no 3D transform */}
+      {/* Heading - uses master controller H2 component */}
       <div
         className={`text-center mb-8 md:mb-12 px-4 transition-all duration-700 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
+        style={{ perspective: '1000px' }}
       >
-        <h2 className="text-h2 text-display" style={{ color: '#bfbdb0' }}>
-          eXp Realty in the News
-        </h2>
+        <H2>eXp Realty in the News</H2>
         <p
           className={`text-body mt-4 max-w-3xl mx-auto opacity-80 transition-all duration-700 delay-150 ease-out ${
             isVisible ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-6'
@@ -179,20 +170,18 @@ export function MediaLogos() {
         className={`relative transition-all duration-700 delay-300 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
-        {/* Fade edges - seamless blend into background */}
+        {/* Fade edges - seamless blend into background using actual bg color */}
         <div
           className="absolute left-0 top-0 bottom-0 w-32 md:w-48 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to right, var(--background, #0a0a0a) 0%, var(--background, #0a0a0a) 20%, transparent 100%)',
+            background: 'linear-gradient(to right, #0a0a0a 0%, #0a0a0a 15%, transparent 100%)',
           }}
         />
         <div
           className="absolute right-0 top-0 bottom-0 w-32 md:w-48 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to left, var(--background, #0a0a0a) 0%, var(--background, #0a0a0a) 20%, transparent 100%)',
+            background: 'linear-gradient(to left, #0a0a0a 0%, #0a0a0a 15%, transparent 100%)',
           }}
         />
 
