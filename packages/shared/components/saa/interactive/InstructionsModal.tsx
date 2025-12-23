@@ -166,34 +166,20 @@ export function InstructionsModal({
   // Prevent body scroll when modal is open and notify header to hide
   useEffect(() => {
     if (isOpen) {
-      // Store current scroll position
-      const scrollY = window.scrollY;
-      // Lock scroll on both html and body for cross-browser/mobile support
+      // Simple overflow hidden - no position:fixed to avoid scroll jump
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = '100%';
       // Dispatch event to hide header
       window.dispatchEvent(new CustomEvent('saa-modal-open'));
     } else {
-      // Restore scroll position
-      const scrollY = document.body.style.top;
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
       // Dispatch event to show header
       window.dispatchEvent(new CustomEvent('saa-modal-close'));
     }
     return () => {
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
     };
   }, [isOpen]);
 
@@ -214,6 +200,12 @@ export function InstructionsModal({
     }
   };
 
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -231,7 +223,7 @@ export function InstructionsModal({
         onClick={e => e.stopPropagation()}
         onWheel={(e) => e.stopPropagation()}
       >
-        <button style={styles.closeBtn} onClick={(e) => { e.stopPropagation(); onClose(); }} aria-label="Close modal">
+        <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
