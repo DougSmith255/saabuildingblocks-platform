@@ -3285,26 +3285,72 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   // Custom links from agent data (with fallback to empty array)
   const customLinks = agent.custom_links || [];
-  // Sort by order if available
-  const sortedLinks = [...customLinks].sort((a, b) => (a.order || 0) - (b.order || 0));
-  
-  const customLinksHTML = sortedLinks.map(link => {
-    const iconPath = link.icon && LINK_ICONS[link.icon] ? LINK_ICONS[link.icon] : null;
-    const iconHTML = iconPath ? `
-      <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-        <path d="${iconPath}"/>
-      </svg>
-    ` : '';
-    return `
-    <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="link-button custom">
-      ${iconHTML}
-      <span>${escapeHTML(link.label)}</span>
-    </a>
-  `;
-  }).join('');
 
   // Default buttons - always shown
   const attractionPageUrl = `${siteUrl}/${escapeHTML(agent.slug)}/`;
+
+  // Link ordering from settings (default: join-team first, then learn-about, then custom links)
+  const linkOrder = agent.links_settings?.linkOrder || ['join-team', 'learn-about'];
+
+  // Function to generate all links HTML in the correct order
+  function generateLinksHTML(agent, customLinks, accentColor, iconColor, attractionPageUrl) {
+    // Build a map of all links
+    const allLinks = {};
+
+    // Default buttons
+    allLinks['join-team'] = {
+      type: 'default',
+      id: 'join-team',
+      html: `<button onclick="openJoinModal()" class="link-button primary">Join my Team</button>`
+    };
+    allLinks['learn-about'] = {
+      type: 'default',
+      id: 'learn-about',
+      html: `<a href="${attractionPageUrl}" class="link-button secondary">Learn About my Team</a>`
+    };
+
+    // Custom links
+    customLinks.forEach(link => {
+      const iconPath = link.icon && LINK_ICONS[link.icon] ? LINK_ICONS[link.icon] : null;
+      const iconHTML = iconPath ? `
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+          <path d="${iconPath}"/>
+        </svg>
+      ` : '';
+      allLinks[link.id] = {
+        type: 'custom',
+        id: link.id,
+        order: link.order,
+        html: `
+          <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="link-button custom">
+            ${iconHTML}
+            <span>${escapeHTML(link.label)}</span>
+          </a>
+        `
+      };
+    });
+
+    // Build ordered list: first items from linkOrder, then remaining custom links by order
+    const orderedIds = [...linkOrder];
+
+    // Add any custom links not in linkOrder, sorted by their order property
+    const customLinksSorted = [...customLinks].sort((a, b) => (a.order || 0) - (b.order || 0));
+    customLinksSorted.forEach(link => {
+      if (!orderedIds.includes(link.id)) {
+        orderedIds.push(link.id);
+      }
+    });
+
+    // Also ensure default buttons are included if not in linkOrder
+    if (!orderedIds.includes('join-team')) orderedIds.push('join-team');
+    if (!orderedIds.includes('learn-about')) orderedIds.push('learn-about');
+
+    // Generate HTML
+    return orderedIds
+      .filter(id => allLinks[id])
+      .map(id => allLinks[id].html)
+      .join('');
+  }
 
   // Font family CSS
   const fontFamily = fontChoice === 'taskor' 
@@ -3805,16 +3851,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     ${phoneHTML}
 
     <div class="links-section">
-      <!-- Default buttons -->
-      <button onclick="openJoinModal()" class="link-button primary">
-        Join My Team at eXp Realty
-      </button>
-      <a href="${attractionPageUrl}" class="link-button secondary">
-        Learn About Smart Agent Alliance
-      </a>
-
-      <!-- Custom links -->
-      ${customLinksHTML}
+      ${generateLinksHTML(agent, customLinks, accentColor, iconColor, attractionPageUrl)}
     </div>
 
     <footer class="footer">
@@ -3847,7 +3884,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     <div class="modal">
       <button class="modal-close" onclick="closeJoinModal()">&times;</button>
       <div id="modalContent">
-        <h2>Join My Team at eXp Realty</h2>
+        <h2>Join my Team</h2>
         <p>Enter your information below and I'll reach out to discuss how we can work together!</p>
         <form id="joinForm" onsubmit="handleJoinSubmit(event)">
           <div class="form-group">
