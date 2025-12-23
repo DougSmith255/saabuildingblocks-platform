@@ -40,6 +40,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     maxHeight: '90vh',
     margin: 'auto',
+    paddingTop: '60px', // Space for close button
   },
   modal: {
     position: 'relative',
@@ -48,7 +49,7 @@ const styles: Record<string, React.CSSProperties> = {
     borderRadius: '16px',
     padding: '2rem',
     width: '100%',
-    maxHeight: '90vh',
+    maxHeight: 'calc(90vh - 60px)', // Account for wrapper padding
     overflowY: 'auto',
     // @ts-ignore - overscrollBehavior is valid CSS
     overscrollBehavior: 'contain',
@@ -57,8 +58,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   closeBtn: {
     position: 'absolute',
-    top: '1rem',
-    right: '1rem',
+    top: '0',
+    right: '0',
     width: '44px',
     height: '44px',
     minWidth: '44px',
