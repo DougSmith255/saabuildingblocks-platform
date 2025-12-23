@@ -120,29 +120,23 @@ export function MediaLogos() {
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
-      {/* SVG filter for subtle frosted/textured glass effect on logos */}
+      {/* SVG filter for very subtle frosted effect on logos */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <defs>
-          <filter id="frosted-texture" x="-20%" y="-20%" width="140%" height="140%">
-            {/* Subtle noise texture - reduced frequency and octaves */}
-            <feTurbulence type="fractalNoise" baseFrequency="0.6" numOctaves="3" result="noise" />
-            {/* Reduced displacement for lighter roughness */}
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            {/* Slight blur for frosted look */}
-            <feGaussianBlur in="displaced" stdDeviation="0.2" result="blurred" />
-            {/* Enhance contrast slightly */}
-            <feComponentTransfer in="blurred" result="enhanced">
-              <feFuncR type="linear" slope="1.05" intercept="0.03" />
-              <feFuncG type="linear" slope="1.05" intercept="0.03" />
-              <feFuncB type="linear" slope="1.05" intercept="0.03" />
-            </feComponentTransfer>
-            {/* Subtle specular lighting for shine */}
-            <feSpecularLighting in="noise" surfaceScale="1.5" specularConstant="0.6" specularExponent="25" lightingColor="#ffffff" result="specular">
+          <filter id="frosted-texture" x="-10%" y="-10%" width="120%" height="120%">
+            {/* Very subtle noise - minimal frequency */}
+            <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="2" result="noise" />
+            {/* Minimal displacement for slight texture */}
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.3" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            {/* Tiny blur for smoothness */}
+            <feGaussianBlur in="displaced" stdDeviation="0.1" result="blurred" />
+            {/* Very subtle specular for slight shine */}
+            <feSpecularLighting in="noise" surfaceScale="1" specularConstant="0.4" specularExponent="30" lightingColor="#ffffff" result="specular">
               <fePointLight x="-100" y="-100" z="200" />
             </feSpecularLighting>
             {/* Composite specular with image */}
             <feComposite in="specular" in2="SourceGraphic" operator="in" result="specularMask" />
-            <feBlend in="enhanced" in2="specularMask" mode="screen" result="final" />
+            <feBlend in="blurred" in2="specularMask" mode="screen" result="final" />
           </filter>
         </defs>
       </svg>
@@ -171,17 +165,17 @@ export function MediaLogos() {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Fade edges - seamless blend into background using actual bg color */}
+        {/* Fade edges - wide gradient that seamlessly blends into background */}
         <div
-          className="absolute left-0 top-0 bottom-0 w-32 md:w-48 z-10 pointer-events-none"
+          className="absolute left-0 top-0 bottom-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to right, #0a0a0a 0%, #0a0a0a 15%, transparent 100%)',
+            background: 'linear-gradient(to right, #0a0a0a 0%, rgba(10,10,10,0.95) 30%, rgba(10,10,10,0.7) 50%, rgba(10,10,10,0.3) 70%, transparent 100%)',
           }}
         />
         <div
-          className="absolute right-0 top-0 bottom-0 w-32 md:w-48 z-10 pointer-events-none"
+          className="absolute right-0 top-0 bottom-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to left, #0a0a0a 0%, #0a0a0a 15%, transparent 100%)',
+            background: 'linear-gradient(to left, #0a0a0a 0%, rgba(10,10,10,0.95) 30%, rgba(10,10,10,0.7) 50%, rgba(10,10,10,0.3) 70%, transparent 100%)',
           }}
         />
 
