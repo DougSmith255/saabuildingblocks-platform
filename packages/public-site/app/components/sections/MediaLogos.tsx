@@ -128,6 +128,33 @@ export function MediaLogos() {
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
+      {/* SVG filter for frosted/textured glass effect on logos */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <filter id="frosted-texture" x="-20%" y="-20%" width="140%" height="140%">
+            {/* Noise texture */}
+            <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" result="noise" />
+            {/* Displacement for roughness */}
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            {/* Slight blur for frosted look */}
+            <feGaussianBlur in="displaced" stdDeviation="0.3" result="blurred" />
+            {/* Enhance contrast */}
+            <feComponentTransfer in="blurred" result="enhanced">
+              <feFuncR type="linear" slope="1.1" intercept="0.05" />
+              <feFuncG type="linear" slope="1.1" intercept="0.05" />
+              <feFuncB type="linear" slope="1.1" intercept="0.05" />
+            </feComponentTransfer>
+            {/* Add specular lighting for shine */}
+            <feSpecularLighting in="noise" surfaceScale="2" specularConstant="0.8" specularExponent="20" lightingColor="#ffffff" result="specular">
+              <fePointLight x="-100" y="-100" z="200" />
+            </feSpecularLighting>
+            {/* Composite specular with image */}
+            <feComposite in="specular" in2="SourceGraphic" operator="in" result="specularMask" />
+            <feBlend in="enhanced" in2="specularMask" mode="screen" result="final" />
+          </filter>
+        </defs>
+      </svg>
+
       {/* Heading - flat, no 3D transform */}
       <div
         className={`text-center mb-8 md:mb-12 px-4 transition-all duration-700 ease-out ${
@@ -155,24 +182,24 @@ export function MediaLogos() {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Fade edges - transparent fade */}
+        {/* Fade edges - seamless blend into background */}
         <div
-          className="absolute left-0 top-0 bottom-0 w-24 md:w-40 z-10 pointer-events-none"
+          className="absolute left-0 top-0 bottom-0 w-32 md:w-48 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to right, rgba(10,10,10,1) 0%, transparent 100%)',
+            background: 'linear-gradient(to right, var(--background, #0a0a0a) 0%, var(--background, #0a0a0a) 20%, transparent 100%)',
           }}
         />
         <div
-          className="absolute right-0 top-0 bottom-0 w-24 md:w-40 z-10 pointer-events-none"
+          className="absolute right-0 top-0 bottom-0 w-32 md:w-48 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to left, rgba(10,10,10,1) 0%, transparent 100%)',
+            background: 'linear-gradient(to left, var(--background, #0a0a0a) 0%, var(--background, #0a0a0a) 20%, transparent 100%)',
           }}
         />
 
         {/* Scrolling Track */}
         <div
           ref={trackRef}
-          className="flex items-center gap-12 md:gap-20 py-8"
+          className="flex items-center gap-8 md:gap-16 py-8"
           style={{
             willChange: 'transform',
           }}
@@ -181,71 +208,22 @@ export function MediaLogos() {
           {[...logos, ...logos].map((logo, index) => (
             <div
               key={`${logo.id}-${index}`}
-              className="flex-shrink-0 flex items-center justify-center logo-container"
+              className="flex-shrink-0 flex items-center justify-center"
               style={{
-                // Mobile: 48px, Desktop: 64px
-                height: 'clamp(48px, 5vw, 64px)',
-                minWidth: 'clamp(120px, 12vw, 180px)',
-                position: 'relative',
+                // Mobile: 80px (doubled from 40), Desktop: 56px
+                height: 'clamp(80px, 6vw, 56px)',
+                minWidth: 'clamp(180px, 15vw, 200px)',
               }}
             >
-              {/* Brushed metal background plate */}
-              <div
-                className="absolute inset-0 rounded-lg"
-                style={{
-                  background: `
-                    linear-gradient(135deg,
-                      rgba(60,60,60,0.9) 0%,
-                      rgba(45,45,45,0.9) 25%,
-                      rgba(55,55,55,0.9) 50%,
-                      rgba(40,40,40,0.9) 75%,
-                      rgba(50,50,50,0.9) 100%
-                    )
-                  `,
-                  // Brushed metal texture using repeating gradients
-                  backgroundImage: `
-                    linear-gradient(135deg,
-                      rgba(60,60,60,0.95) 0%,
-                      rgba(45,45,45,0.95) 25%,
-                      rgba(55,55,55,0.95) 50%,
-                      rgba(40,40,40,0.95) 75%,
-                      rgba(50,50,50,0.95) 100%
-                    ),
-                    repeating-linear-gradient(
-                      90deg,
-                      transparent 0px,
-                      rgba(255,255,255,0.03) 1px,
-                      transparent 2px,
-                      transparent 4px
-                    )
-                  `,
-                  border: '1px solid rgba(80,80,80,0.5)',
-                  borderTop: '1px solid rgba(120,120,120,0.4)',
-                  borderBottom: '1px solid rgba(30,30,30,0.6)',
-                  boxShadow: `
-                    inset 0 1px 0 rgba(255,255,255,0.1),
-                    inset 0 -1px 0 rgba(0,0,0,0.2),
-                    0 2px 8px rgba(0,0,0,0.3)
-                  `,
-                  padding: '12px 20px',
-                }}
-              />
-              {/* Shine highlight overlay */}
-              <div
-                className="absolute inset-0 rounded-lg pointer-events-none"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 50%, rgba(255,255,255,0.03) 100%)',
-                }}
-              />
               <img
                 src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
                 alt={logo.alt}
                 loading="lazy"
-                className="h-full w-auto object-contain relative z-10"
+                className="h-full w-auto object-contain"
                 style={{
-                  maxWidth: 'clamp(150px, 15vw, 220px)',
-                  filter: 'brightness(1.15) contrast(1.05)',
-                  padding: '8px 16px',
+                  maxWidth: 'clamp(200px, 18vw, 240px)',
+                  filter: 'url(#frosted-texture) brightness(1.2) contrast(1.1)',
+                  opacity: 0.85,
                 }}
               />
             </div>
