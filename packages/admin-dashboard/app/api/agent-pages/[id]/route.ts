@@ -228,21 +228,18 @@ export async function PATCH(
     };
 
     // Sync to Cloudflare KV for edge delivery
-    // This runs async - we don't wait for it to complete
-    syncAgentPageToKV(kvData, previousSlug || undefined)
-      .then(result => {
-        if (!result.success) {
-          console.error('KV sync failed:', result.error);
-        }
-      })
-      .catch(err => {
-        console.error('KV sync error:', err);
-      });
+    // IMPORTANT: We await this to ensure linktree shows updated data immediately
+    const kvSyncResult = await syncAgentPageToKV(kvData, previousSlug || undefined);
+    if (!kvSyncResult.success) {
+      console.error('KV sync failed:', kvSyncResult.error);
+      // Don't fail the request - DB update succeeded, KV will eventually be consistent
+    }
 
     return NextResponse.json({
       success: true,
       page: updatedPage,
       message: 'Agent page updated successfully',
+      kvSynced: kvSyncResult.success,
     }, { headers: CORS_HEADERS });
   } catch (error) {
     console.error('Error in PATCH /api/agent-pages/[id]:', error);

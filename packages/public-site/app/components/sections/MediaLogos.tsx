@@ -121,6 +121,24 @@ export function MediaLogos() {
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
+      {/* SVG filter for subtle crosshatch/sandpaper texture on logos */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <defs>
+          <filter id="crosshatch-texture" x="-5%" y="-5%" width="110%" height="110%">
+            {/* Create fine diagonal lines pattern */}
+            <feTurbulence type="fractalNoise" baseFrequency="0.8 0.8" numOctaves="1" seed="5" result="noise" />
+            {/* Very subtle displacement for texture feel */}
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.4" xChannelSelector="R" yChannelSelector="G" result="textured" />
+            {/* Subtle top highlight for engraved look */}
+            <feSpecularLighting in="noise" surfaceScale="0.8" specularConstant="0.3" specularExponent="35" lightingColor="#ffffff" result="highlight">
+              <feDistantLight azimuth="225" elevation="45" />
+            </feSpecularLighting>
+            {/* Blend highlight with textured image */}
+            <feComposite in="highlight" in2="SourceGraphic" operator="in" result="highlightMask" />
+            <feBlend in="textured" in2="highlightMask" mode="screen" result="final" />
+          </filter>
+        </defs>
+      </svg>
 
       {/* Heading - uses master controller H2 component */}
       <div
@@ -146,6 +164,7 @@ export function MediaLogos() {
         }`}
       >
         {/* Fade edges - wide gradient that seamlessly blends into background */}
+        {/* Left edge */}
         <div
           className="absolute left-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
@@ -154,12 +173,27 @@ export function MediaLogos() {
             background: 'linear-gradient(to right, #111111 0%, rgba(17,17,17,0.95) 30%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0.3) 70%, transparent 100%)',
           }}
         />
+        {/* Right edge */}
         <div
           className="absolute right-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
             top: '-50%',
             bottom: '-50%',
             background: 'linear-gradient(to left, #111111 0%, rgba(17,17,17,0.95) 30%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0.3) 70%, transparent 100%)',
+          }}
+        />
+        {/* Top edge */}
+        <div
+          className="absolute top-0 left-0 right-0 h-16 md:h-24 z-10 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to bottom, #111111 0%, rgba(17,17,17,0.8) 40%, rgba(17,17,17,0.4) 70%, transparent 100%)',
+          }}
+        />
+        {/* Bottom edge */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-16 md:h-24 z-10 pointer-events-none"
+          style={{
+            background: 'linear-gradient(to top, #111111 0%, rgba(17,17,17,0.8) 40%, rgba(17,17,17,0.4) 70%, transparent 100%)',
           }}
         />
 
@@ -185,11 +219,11 @@ export function MediaLogos() {
               <img
                 src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
                 alt={logo.alt}
-                loading="lazy"
+                loading={index < 10 ? 'eager' : 'lazy'}
                 className="h-full w-auto object-contain"
                 style={{
                   maxWidth: 'clamp(200px, 18vw, 240px)',
-                  filter: 'brightness(1.15) contrast(1.05)',
+                  filter: 'url(#crosshatch-texture) brightness(1.1) contrast(1.05)',
                   opacity: 0.9,
                 }}
               />
