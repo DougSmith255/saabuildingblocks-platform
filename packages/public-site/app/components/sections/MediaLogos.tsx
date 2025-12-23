@@ -126,7 +126,6 @@ export function MediaLogos() {
         className={`text-center mb-8 md:mb-12 px-4 transition-all duration-700 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
-        style={{ perspective: '1000px' }}
       >
         <H2>eXp Realty in the News</H2>
         <p

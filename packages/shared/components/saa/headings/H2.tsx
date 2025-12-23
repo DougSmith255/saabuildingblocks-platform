@@ -103,7 +103,6 @@ export default function H2({
           justifyContent: 'center',
           gap: '0.5em',
           flexWrap: 'wrap',
-          transform: 'rotateX(15deg)',
           position: 'relative',
           paddingLeft: '0.35em',
           paddingRight: '0.35em',
