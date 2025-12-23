@@ -20,6 +20,7 @@ const logos = [
   { id: 'washington-post-logo', alt: 'The Washington Post' },
   { id: 'nasdaq-logo', alt: 'Nasdaq' },
   { id: 'barrons-logo', alt: "Barron's" },
+  { id: 'new-york-post-logo', alt: 'New York Post' },
 ];
 
 /**
