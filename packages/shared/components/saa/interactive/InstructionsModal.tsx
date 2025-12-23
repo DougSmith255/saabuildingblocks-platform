@@ -12,20 +12,30 @@ export interface InstructionsModalProps {
 }
 
 // Inline styles (styled-jsx doesn't work from shared packages)
+// CRITICAL: Header is z-[10010] and hamburger is z-[10030], so we need higher
 const styles: Record<string, React.CSSProperties> = {
-  overlay: {
+  container: {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(0, 0, 0, 0.9)',
-    backdropFilter: 'blur(8px)',
+    zIndex: 100000, // Much higher than header (z-index: 10010) and hamburger (10030)
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 9999,
     padding: '1rem',
     overflowY: 'auto',
+    // @ts-ignore - overscrollBehavior is valid CSS
+    overscrollBehavior: 'contain',
+  },
+  backdrop: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 100000, // Same high z-index to cover header/footer
+    background: 'rgba(0, 0, 0, 0.9)',
+    backdropFilter: 'blur(8px)',
   },
   modal: {
+    position: 'relative',
+    zIndex: 100001, // Above backdrop
     background: '#151517',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '16px',
@@ -34,7 +44,9 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     maxHeight: '90vh',
     overflowY: 'auto',
-    position: 'relative',
+    // @ts-ignore - overscrollBehavior is valid CSS
+    overscrollBehavior: 'contain',
+    margin: 'auto',
     textAlign: 'center',
   },
   closeBtn: {
@@ -51,6 +63,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 10, // Ensure it's above other modal content
   },
   successIcon: {
     width: '64px',
@@ -150,12 +163,16 @@ export function InstructionsModal({
   onClose,
   userName = 'Agent',
 }: InstructionsModalProps) {
-  // Prevent body scroll when modal is open
+  // Prevent body scroll when modal is open and notify header to hide
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Dispatch event to hide header
+      window.dispatchEvent(new CustomEvent('saa-modal-open'));
     } else {
       document.body.style.overflow = '';
+      // Dispatch event to show header
+      window.dispatchEvent(new CustomEvent('saa-modal-close'));
     }
     return () => {
       document.body.style.overflow = '';
@@ -182,8 +199,20 @@ export function InstructionsModal({
   if (!isOpen) return null;
 
   return (
-    <div style={styles.overlay} onClick={handleOverlayClick}>
-      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+    <div
+      style={styles.container}
+      onClick={handleOverlayClick}
+      onWheel={(e) => e.stopPropagation()}
+    >
+      {/* Separate backdrop */}
+      <div style={styles.backdrop} />
+
+      {/* Modal */}
+      <div
+        style={styles.modal}
+        onClick={e => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
+      >
         <button style={styles.closeBtn} onClick={onClose} aria-label="Close modal">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -205,8 +234,8 @@ export function InstructionsModal({
           <div style={styles.instructionItem}>
             <div style={styles.instructionNumber}>1</div>
             <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Go to expjointeam.com</strong>
-              <p style={styles.instructionText}>Visit <a href="https://expjointeam.com" target="_blank" rel="noopener noreferrer" style={{color: '#ffd700'}}>expjointeam.com</a> to start your application with eXp Realty.</p>
+              <strong style={styles.instructionTitle}>Start Your Application</strong>
+              <p style={styles.instructionText}>Visit <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer" style={{color: '#ffd700'}}>joinapp.exprealty.com</a> to begin your eXp Realty application.</p>
             </div>
           </div>
 
@@ -226,26 +255,34 @@ export function InstructionsModal({
             </div>
           </div>
 
-          <div style={{...styles.instructionItem, marginBottom: 0}}>
+          <div style={styles.instructionItem}>
             <div style={styles.instructionNumber}>4</div>
             <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>We'll Be in Touch</strong>
-              <p style={styles.instructionText}>Once approved, we'll reach out with your Smart Agent Alliance onboarding materials and resources.</p>
+              <strong style={styles.instructionTitle}>Activate Your Agent Portal</strong>
+              <p style={styles.instructionText}>Once your license transfers, you'll receive an email to activate your Smart Agent Alliance portal with all your onboarding materials and resources.</p>
+            </div>
+          </div>
+
+          <div style={{...styles.instructionItem, marginBottom: 0}}>
+            <div style={styles.instructionNumber}>5</div>
+            <div style={styles.instructionContent}>
+              <strong style={styles.instructionTitle}>eXp Realty Support</strong>
+              <p style={styles.instructionText}>For application issues, call <strong style={{color: '#fff'}}>833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style={{color: '#ffd700'}}>expertcare@exprealty.com</a>.</p>
             </div>
           </div>
         </div>
 
         <a
-          href="https://expjointeam.com"
+          href="https://joinapp.exprealty.com/"
           target="_blank"
           rel="noopener noreferrer"
           style={{...styles.cta, display: 'block', textDecoration: 'none', textAlign: 'center'}}
         >
-          Go to expjointeam.com
+          Join eXp with SAA
         </a>
 
         <p style={styles.footer}>
-          Questions? Email us at <a style={styles.footerLink} href="mailto:support@smartagentalliance.com">support@smartagentalliance.com</a>
+          Questions? Email us at <a style={styles.footerLink} href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>
         </p>
       </div>
     </div>

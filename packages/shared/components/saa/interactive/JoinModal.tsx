@@ -23,20 +23,30 @@ export interface JoinFormData {
 }
 
 // Inline styles (styled-jsx doesn't work from shared packages)
+// CRITICAL: Header is z-[10010] and hamburger is z-[10030], so we need higher
 const styles: Record<string, React.CSSProperties> = {
-  overlay: {
+  container: {
     position: 'fixed',
     inset: 0,
-    background: 'rgba(0, 0, 0, 0.9)',
-    backdropFilter: 'blur(8px)',
+    zIndex: 100000, // Much higher than header (z-index: 10010) and hamburger (10030)
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 9999,
     padding: '1rem',
     overflowY: 'auto',
+    // @ts-ignore - overscrollBehavior is valid CSS
+    overscrollBehavior: 'contain',
+  },
+  backdrop: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 100000, // Same high z-index to cover header/footer
+    background: 'rgba(0, 0, 0, 0.9)',
+    backdropFilter: 'blur(8px)',
   },
   modal: {
+    position: 'relative',
+    zIndex: 100001, // Above backdrop
     background: '#151517',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '16px',
@@ -45,7 +55,9 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     maxHeight: '90vh',
     overflowY: 'auto',
-    position: 'relative',
+    // @ts-ignore - overscrollBehavior is valid CSS
+    overscrollBehavior: 'contain',
+    margin: 'auto',
   },
   closeBtn: {
     position: 'absolute',
@@ -162,8 +174,14 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
+// localStorage key for storing submitted user data
+const STORAGE_KEY = 'saa_join_submitted';
+
 /**
  * JoinModal - Modal form for joining Smart Agent Alliance
+ *
+ * If user has already submitted, calling onSuccess immediately skips the form
+ * and shows the instructions modal instead.
  */
 export function JoinModal({
   isOpen,
@@ -180,13 +198,40 @@ export function JoinModal({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [hasCheckedStorage, setHasCheckedStorage] = useState(false);
 
-  // Prevent body scroll when modal is open
+  // Check if user has already submitted - if so, skip form and show instructions
+  useEffect(() => {
+    if (isOpen && !hasCheckedStorage) {
+      setHasCheckedStorage(true);
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          const savedData = JSON.parse(stored) as JoinFormData;
+          // User already submitted - skip form and go directly to instructions
+          onClose();
+          onSuccess?.(savedData);
+        }
+      } catch {
+        // Invalid JSON, ignore
+      }
+    }
+    // Reset check when modal closes
+    if (!isOpen) {
+      setHasCheckedStorage(false);
+    }
+  }, [isOpen, hasCheckedStorage, onClose, onSuccess]);
+
+  // Prevent body scroll when modal is open and notify header to hide
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Dispatch event to hide header
+      window.dispatchEvent(new CustomEvent('saa-modal-open'));
     } else {
       document.body.style.overflow = '';
+      // Dispatch event to show header
+      window.dispatchEvent(new CustomEvent('saa-modal-close'));
     }
     return () => {
       document.body.style.overflow = '';
@@ -230,6 +275,13 @@ export function JoinModal({
       const result = await response.json();
 
       if (result.success) {
+        // Save to localStorage so returning users skip the form
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        } catch {
+          // localStorage not available, continue anyway
+        }
+
         setMessage({ type: 'success', text: 'Thank you! We will be in touch soon.' });
         onSuccess?.(formData);
 
@@ -258,8 +310,20 @@ export function JoinModal({
   if (!isOpen) return null;
 
   return (
-    <div style={styles.overlay} onClick={handleOverlayClick}>
-      <div style={styles.modal} onClick={e => e.stopPropagation()}>
+    <div
+      style={styles.container}
+      onClick={handleOverlayClick}
+      onWheel={(e) => e.stopPropagation()}
+    >
+      {/* Separate backdrop */}
+      <div style={styles.backdrop} />
+
+      {/* Modal */}
+      <div
+        style={styles.modal}
+        onClick={e => e.stopPropagation()}
+        onWheel={(e) => e.stopPropagation()}
+      >
         <button style={styles.closeBtn} onClick={onClose} aria-label="Close modal">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <line x1="18" y1="6" x2="6" y2="18"/>

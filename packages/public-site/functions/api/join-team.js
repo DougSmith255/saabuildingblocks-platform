@@ -39,9 +39,11 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
           <!-- Header -->
           <tr>
             <td style="padding: 40px 40px 20px; text-align: center;">
-              <div style="width: 60px; height: 60px; margin: 0 auto 20px; background: rgba(0, 255, 136, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 30px;">✓</span>
-              </div>
+              <table width="60" height="60" cellpadding="0" cellspacing="0" style="margin: 0 auto 20px; background: rgba(0, 255, 136, 0.1); border-radius: 50%;">
+                <tr>
+                  <td align="center" valign="middle" style="color: #00ff88; font-size: 30px; line-height: 60px;">✓</td>
+                </tr>
+              </table>
               <h1 style="color: #ffffff; font-size: 28px; margin: 0 0 10px; font-weight: 700;">Welcome, ${firstName}!</h1>
               <p style="color: rgba(255,255,255,0.7); font-size: 16px; margin: 0; line-height: 1.5;">
                 You're on your way to joining Smart Agent Alliance at eXp Realty.
@@ -58,12 +60,16 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">1</div>
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                      <tr>
+                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">1</td>
+                      </tr>
+                    </table>
                   </td>
                   <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Go to expjointeam.com</strong>
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Start Your Application</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Visit <a href="https://expjointeam.com" style="color: #ffd700; text-decoration: none;">expjointeam.com</a> to start your application with eXp Realty.
+                      Visit <a href="https://joinapp.exprealty.com/" style="color: #f9d200; text-decoration: none;">joinapp.exprealty.com</a> to begin your eXp Realty application.
                     </p>
                   </td>
                 </tr>
@@ -73,7 +79,11 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">2</div>
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                      <tr>
+                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">2</td>
+                      </tr>
+                    </table>
                   </td>
                   <td style="padding-left: 12px;">
                     <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Search for Your Sponsor</strong>
@@ -88,7 +98,11 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">3</div>
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                      <tr>
+                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">3</td>
+                      </tr>
+                    </table>
                   </td>
                   <td style="padding-left: 12px;">
                     <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Complete Your Application</strong>
@@ -100,15 +114,38 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               </table>
 
               <!-- Step 4 -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td width="40" valign="top">
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                      <tr>
+                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">4</td>
+                      </tr>
+                    </table>
+                  </td>
+                  <td style="padding-left: 12px;">
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Activate Your Agent Portal</strong>
+                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
+                      Once your license transfers, you'll receive an email to activate your Smart Agent Alliance portal with all your onboarding materials and resources.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Step 5 -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td width="40" valign="top">
-                    <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #ffd700, #e6c200); border-radius: 50%; text-align: center; line-height: 32px; color: #2a2a2a; font-weight: 700;">4</div>
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                      <tr>
+                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">5</td>
+                      </tr>
+                    </table>
                   </td>
                   <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">We'll Be in Touch</strong>
+                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">eXp Realty Support</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Once approved, we'll reach out with your Smart Agent Alliance onboarding materials and resources.
+                      For application issues, call <strong style="color: #ffffff;">833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style="color: #f9d200; text-decoration: none;">expertcare@exprealty.com</a>.
                     </p>
                   </td>
                 </tr>
@@ -118,9 +155,9 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <a href="https://expjointeam.com"
-                       style="display: inline-block; padding: 16px 32px; background: linear-gradient(135deg, #ffd700, #e6c200); color: #2a2a2a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
-                      Go to expjointeam.com
+                    <a href="https://joinapp.exprealty.com/"
+                       style="display: inline-block; padding: 16px 32px; background-color: #f9d200; color: #2a2a2a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
+                      Join eXp with SAA
                     </a>
                   </td>
                 </tr>
@@ -133,7 +170,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
             <td style="padding: 20px 40px 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
               <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0; line-height: 1.5;">
                 Questions? Reply to this email or contact us at<br>
-                <a href="mailto:support@smartagentalliance.com" style="color: #ffd700; text-decoration: none;">support@smartagentalliance.com</a>
+                <a href="mailto:team@smartagentalliance.com" style="color: #ffd700; text-decoration: none;">team@smartagentalliance.com</a>
               </p>
             </td>
           </tr>
@@ -185,6 +222,35 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
     return { success: true, messageId: result.id };
   } catch (error) {
     console.error('[join-team] Email send exception:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Add a note to a contact in GoHighLevel
+ */
+async function addContactNote(contactId, noteBody, ghlHeaders) {
+  try {
+    const response = await fetch(
+      `${GHL_API_BASE}/contacts/${contactId}/notes`,
+      {
+        method: 'POST',
+        headers: ghlHeaders,
+        body: JSON.stringify({ body: noteBody }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('[join-team] Failed to add note:', errorData);
+      return { success: false, error: errorData };
+    }
+
+    const result = await response.json();
+    console.log('[join-team] Note added successfully:', { contactId, noteId: result.note?.id });
+    return { success: true, noteId: result.note?.id };
+  } catch (error) {
+    console.error('[join-team] Note exception:', error);
     return { success: false, error: error.message };
   }
 }
@@ -254,8 +320,8 @@ export async function onRequestPost(context) {
       );
     }
 
-    // Build the referral tag
-    const referralTag = sponsorName ? `Referred by ${sponsorName}` : 'Website Lead';
+    // Build the referral tag - "Agent Referred" for agent pages, "Website Lead" for main site
+    const referralTag = sponsorName ? 'Agent Referred' : 'Website Lead';
 
     // Headers for GHL API
     const ghlHeaders = {
@@ -307,6 +373,12 @@ export async function onRequestPost(context) {
             { status: 500, headers: corsHeaders }
           );
         }
+      }
+
+      // Add note with referring agent's name (only for agent attraction pages)
+      if (sponsorName) {
+        const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
+        await addContactNote(contactId, noteBody, ghlHeaders);
       }
 
       // Send welcome email for existing contact
@@ -384,6 +456,12 @@ export async function onRequestPost(context) {
             );
 
             if (updateResponse.ok) {
+              // Add note with referring agent's name (only for agent attraction pages)
+              if (sponsorName) {
+                const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
+                await addContactNote(existingContactId, noteBody, ghlHeaders);
+              }
+
               // Send welcome email
               const resendApiKey = env.RESEND_API_KEY;
               if (resendApiKey) {
@@ -401,7 +479,12 @@ export async function onRequestPost(context) {
               );
             }
           } else {
-            // Tag already exists - still send welcome email
+            // Tag already exists - still add note if from agent page and send welcome email
+            if (sponsorName) {
+              const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
+              await addContactNote(existingContactId, noteBody, ghlHeaders);
+            }
+
             const resendApiKey = env.RESEND_API_KEY;
             if (resendApiKey) {
               const emailResult = await sendWelcomeEmail(firstName, email, sponsorName, resendApiKey);
@@ -431,6 +514,13 @@ export async function onRequestPost(context) {
     }
 
     const createData = await createResponse.json();
+    const newContactId = createData.contact?.id;
+
+    // Add note with referring agent's name (only for agent attraction pages)
+    if (sponsorName && newContactId) {
+      const noteBody = `Lead referred by agent: ${sponsorName}\nSubmitted via agent attraction page.`;
+      await addContactNote(newContactId, noteBody, ghlHeaders);
+    }
 
     // Send welcome email
     const resendApiKey = env.RESEND_API_KEY;

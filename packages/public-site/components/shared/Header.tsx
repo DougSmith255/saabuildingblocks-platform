@@ -72,6 +72,23 @@ export default function Header() {
     return () => window.removeEventListener('agent-portal-login-success', handleLoginSuccess);
   }, []);
 
+  // Listen for modal open/close events to hide/show header
+  useEffect(() => {
+    const handleModalOpen = () => {
+      setIsHidden(true);
+    };
+    const handleModalClose = () => {
+      setIsHidden(false);
+    };
+
+    window.addEventListener('saa-modal-open', handleModalOpen);
+    window.addEventListener('saa-modal-close', handleModalClose);
+    return () => {
+      window.removeEventListener('saa-modal-open', handleModalOpen);
+      window.removeEventListener('saa-modal-close', handleModalClose);
+    };
+  }, []);
+
 
   // Handle scroll for header hide/show (500px down to hide, 250px up to show)
   // Throttled to 100ms to reduce CPU usage (was running every frame at 60fps)
