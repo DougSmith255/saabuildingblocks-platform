@@ -63,17 +63,20 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'absolute',
     top: '1rem',
     right: '1rem',
-    width: '32px',
-    height: '32px',
-    background: 'rgba(255, 255, 255, 0.1)',
-    border: 'none',
+    width: '44px',
+    height: '44px',
+    minWidth: '44px',
+    minHeight: '44px',
+    background: 'rgba(255, 255, 255, 0.15)',
+    border: '2px solid rgba(255, 255, 255, 0.3)',
     borderRadius: '50%',
     color: '#fff',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 10,
+    zIndex: 100002,
+    touchAction: 'manipulation',
   },
   title: {
     fontFamily: 'var(--font-amulya, system-ui), sans-serif',
@@ -336,7 +339,7 @@ export function JoinModal({
         onWheel={(e) => e.stopPropagation()}
       >
         <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none'}}>
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
