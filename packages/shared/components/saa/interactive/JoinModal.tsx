@@ -51,16 +51,15 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     maxHeight: '90vh',
     margin: 'auto',
-    paddingTop: '60px', // Space for close button
   },
   modal: {
     position: 'relative',
     background: '#151517',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '16px',
-    padding: '2rem',
+    padding: '2.5rem 2rem 2rem 2rem',
     width: '100%',
-    maxHeight: 'calc(90vh - 60px)', // Account for wrapper padding
+    maxHeight: '90vh',
     overflowY: 'auto',
     // @ts-ignore - overscrollBehavior is valid CSS
     overscrollBehavior: 'contain',
@@ -68,8 +67,8 @@ const styles: Record<string, React.CSSProperties> = {
   },
   closeBtn: {
     position: 'absolute',
-    top: '0',
-    right: '0',
+    top: '12px',
+    right: '12px',
     width: '44px',
     height: '44px',
     minWidth: '44px',
@@ -344,12 +343,17 @@ export function JoinModal({
       {/* Separate backdrop */}
       <div style={styles.backdrop} />
 
-      {/* Modal Wrapper - button is outside scrollable area */}
+      {/* Modal Wrapper */}
       <div
         style={styles.modalWrapper}
         onClick={e => e.stopPropagation()}
       >
-        {/* Close button - positioned on wrapper, not inside scrollable modal */}
+        {/* Modal with scrollable content */}
+        <div
+          style={styles.modal}
+          onWheel={(e) => e.stopPropagation()}
+        >
+        {/* Close button - inside modal at top right */}
         <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -357,11 +361,6 @@ export function JoinModal({
           </svg>
         </button>
 
-        {/* Scrollable modal content */}
-        <div
-          style={styles.modal}
-          onWheel={(e) => e.stopPropagation()}
-        >
         <h3 style={styles.title}>Join Smart Agent Alliance</h3>
         <p style={styles.subtitle}>Take the first step towards building your dream career at eXp Realty.</p>
 

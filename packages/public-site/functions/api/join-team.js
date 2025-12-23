@@ -32,14 +32,14 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
   <title>Welcome to Smart Agent Alliance</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #0a0a0c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0c; padding: 40px 20px;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0c; padding: 40px 16px;">
     <tr>
       <td align="center">
-        <table width="100%" style="max-width: 600px; background-color: #151517; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #151517; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
           <!-- Header -->
           <tr>
-            <td style="padding: 40px 40px 20px; text-align: center;">
-              <table width="60" height="60" cellpadding="0" cellspacing="0" style="margin: 0 auto 20px; background: rgba(0, 255, 136, 0.1); border-radius: 50%;">
+            <td style="padding: 40px 24px 20px; text-align: center;">
+              <table width="60" height="60" cellpadding="0" cellspacing="0" style="margin: 0 auto 20px; background: rgba(0, 255, 136, 0.25); border-radius: 50%;">
                 <tr>
                   <td align="center" valign="middle" style="color: #00ff88; font-size: 30px; line-height: 60px;">✓</td>
                 </tr>
@@ -53,23 +53,23 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
 
           <!-- Instructions -->
           <tr>
-            <td style="padding: 20px 40px 40px;">
+            <td style="padding: 20px 24px 40px;">
               <h2 style="color: #ffd700; font-size: 18px; margin: 0 0 20px; text-transform: uppercase; letter-spacing: 0.05em;">How to Join eXp Realty</h2>
 
               <!-- Step 1 -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">1</td>
+                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">1</td>
                       </tr>
                     </table>
                   </td>
                   <td style="padding-left: 12px;">
                     <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Start Your Application</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Visit <a href="https://joinapp.exprealty.com/" style="color: #f9d200; text-decoration: none;">joinapp.exprealty.com</a> to begin your eXp Realty application.
+                      Visit <a href="https://joinapp.exprealty.com/" style="color: #ffd700; text-decoration: none;">joinapp.exprealty.com</a> to begin your eXp Realty application.
                     </p>
                   </td>
                 </tr>
@@ -79,9 +79,9 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">2</td>
+                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">2</td>
                       </tr>
                     </table>
                   </td>
@@ -98,9 +98,9 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">3</td>
+                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">3</td>
                       </tr>
                     </table>
                   </td>
@@ -117,9 +117,9 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">4</td>
+                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">4</td>
                       </tr>
                     </table>
                   </td>
@@ -136,16 +136,16 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #f9d200; border-radius: 50%;">
+                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #2a2a2a; font-size: 14px; font-weight: 700; line-height: 32px;">5</td>
+                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">5</td>
                       </tr>
                     </table>
                   </td>
                   <td style="padding-left: 12px;">
                     <strong style="color: #ffffff; display: block; margin-bottom: 4px;">eXp Realty Support</strong>
                     <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      For application issues, call <strong style="color: #ffffff;">833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style="color: #f9d200; text-decoration: none;">expertcare@exprealty.com</a>.
+                      For application issues, call <strong style="color: #ffffff;">833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style="color: #ffd700; text-decoration: none;">expertcare@exprealty.com</a>.
                     </p>
                   </td>
                 </tr>
@@ -156,7 +156,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
                 <tr>
                   <td align="center">
                     <a href="https://joinapp.exprealty.com/"
-                       style="display: inline-block; padding: 16px 32px; background-color: #f9d200; color: #2a2a2a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
+                       style="display: inline-block; padding: 16px 32px; background-color: #ffd700; color: #1a1a1a; text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase; border-radius: 8px;">
                       Join eXp with SAA
                     </a>
                   </td>
@@ -167,7 +167,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
 
           <!-- Footer -->
           <tr>
-            <td style="padding: 20px 40px 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+            <td style="padding: 20px 24px 30px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
               <p style="color: rgba(255,255,255,0.5); font-size: 13px; margin: 0; line-height: 1.5;">
                 Questions? Reply to this email or contact us at<br>
                 <a href="mailto:team@smartagentalliance.com" style="color: #ffd700; text-decoration: none;">team@smartagentalliance.com</a>
