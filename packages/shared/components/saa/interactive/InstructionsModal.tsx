@@ -33,21 +33,27 @@ const styles: Record<string, React.CSSProperties> = {
     background: 'rgba(0, 0, 0, 0.9)',
     backdropFilter: 'blur(8px)',
   },
+  modalWrapper: {
+    position: 'relative',
+    zIndex: 100001,
+    maxWidth: '520px',
+    width: '100%',
+    maxHeight: '90vh',
+    margin: 'auto',
+  },
   modal: {
     position: 'relative',
-    zIndex: 100001, // Above backdrop
     background: '#151517',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     borderRadius: '16px',
     padding: '2rem',
-    maxWidth: '520px',
     width: '100%',
     maxHeight: '90vh',
     overflowY: 'auto',
     // @ts-ignore - overscrollBehavior is valid CSS
     overscrollBehavior: 'contain',
-    margin: 'auto',
     textAlign: 'center',
+    boxSizing: 'border-box' as const,
   },
   closeBtn: {
     position: 'absolute',
@@ -225,12 +231,12 @@ export function InstructionsModal({
       {/* Separate backdrop */}
       <div style={styles.backdrop} />
 
-      {/* Modal */}
+      {/* Modal Wrapper - button is outside scrollable area */}
       <div
-        style={styles.modal}
+        style={styles.modalWrapper}
         onClick={e => e.stopPropagation()}
-        onWheel={(e) => e.stopPropagation()}
       >
+        {/* Close button - positioned on wrapper, not inside scrollable modal */}
         <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
             <line x1="18" y1="6" x2="6" y2="18"/>
@@ -238,6 +244,11 @@ export function InstructionsModal({
           </svg>
         </button>
 
+        {/* Scrollable modal content */}
+        <div
+          style={styles.modal}
+          onWheel={(e) => e.stopPropagation()}
+        >
         <div style={styles.successIcon}>
           <svg style={styles.successSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
@@ -302,6 +313,7 @@ export function InstructionsModal({
         <p style={styles.footer}>
           Questions? Email us at <a style={styles.footerLink} href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>
         </p>
+        </div>
       </div>
     </div>
   );
