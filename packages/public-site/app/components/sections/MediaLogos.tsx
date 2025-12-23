@@ -120,26 +120,6 @@ export function MediaLogos() {
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
-      {/* SVG filter for very subtle frosted effect on logos */}
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <filter id="frosted-texture" x="-10%" y="-10%" width="120%" height="120%">
-            {/* Very subtle noise - minimal frequency */}
-            <feTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="2" result="noise" />
-            {/* Minimal displacement for slight texture */}
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="0.3" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-            {/* Tiny blur for smoothness */}
-            <feGaussianBlur in="displaced" stdDeviation="0.1" result="blurred" />
-            {/* Very subtle specular for slight shine */}
-            <feSpecularLighting in="noise" surfaceScale="1" specularConstant="0.4" specularExponent="30" lightingColor="#ffffff" result="specular">
-              <fePointLight x="-100" y="-100" z="200" />
-            </feSpecularLighting>
-            {/* Composite specular with image */}
-            <feComposite in="specular" in2="SourceGraphic" operator="in" result="specularMask" />
-            <feBlend in="blurred" in2="specularMask" mode="screen" result="final" />
-          </filter>
-        </defs>
-      </svg>
 
       {/* Heading - uses master controller H2 component */}
       <div
@@ -167,15 +147,19 @@ export function MediaLogos() {
       >
         {/* Fade edges - wide gradient that seamlessly blends into background */}
         <div
-          className="absolute left-0 top-0 bottom-0 w-40 md:w-64 z-10 pointer-events-none"
+          className="absolute left-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to right, #0a0a0a 0%, rgba(10,10,10,0.95) 30%, rgba(10,10,10,0.7) 50%, rgba(10,10,10,0.3) 70%, transparent 100%)',
+            top: '-50%',
+            bottom: '-50%',
+            background: 'linear-gradient(to right, #111111 0%, rgba(17,17,17,0.95) 30%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0.3) 70%, transparent 100%)',
           }}
         />
         <div
-          className="absolute right-0 top-0 bottom-0 w-40 md:w-64 z-10 pointer-events-none"
+          className="absolute right-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
-            background: 'linear-gradient(to left, #0a0a0a 0%, rgba(10,10,10,0.95) 30%, rgba(10,10,10,0.7) 50%, rgba(10,10,10,0.3) 70%, transparent 100%)',
+            top: '-50%',
+            bottom: '-50%',
+            background: 'linear-gradient(to left, #111111 0%, rgba(17,17,17,0.95) 30%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0.3) 70%, transparent 100%)',
           }}
         />
 
@@ -205,8 +189,8 @@ export function MediaLogos() {
                 className="h-full w-auto object-contain"
                 style={{
                   maxWidth: 'clamp(200px, 18vw, 240px)',
-                  filter: 'url(#frosted-texture) brightness(1.2) contrast(1.1)',
-                  opacity: 0.85,
+                  filter: 'brightness(1.15) contrast(1.05)',
+                  opacity: 0.9,
                 }}
               />
             </div>
