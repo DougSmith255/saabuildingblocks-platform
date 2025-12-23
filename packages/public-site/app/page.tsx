@@ -10,28 +10,8 @@ import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 // ssr: false + loading: null prevents ANY rendering during SSR (no height = no CLS)
 // Sections load client-side only when JS hydrates
-const ValueStack = dynamic(
-  () => import('./components/sections/ValueStack').then(mod => ({ default: mod.ValueStack })),
-  { ssr: false }
-);
-
-const SocialProof = dynamic(
-  () => import('./components/sections/SocialProof').then(mod => ({ default: mod.SocialProof })),
-  { ssr: false }
-);
-
-const WhyExpRealty = dynamic(
-  () => import('./components/sections/WhyExpRealty').then(mod => ({ default: mod.WhyExpRealty })),
-  { ssr: false }
-);
-
-const WhoWeAre = dynamic(
-  () => import('./components/sections/WhoWeAre').then(mod => ({ default: mod.WhoWeAre })),
-  { ssr: false }
-);
-
-const PathSelectorWithContent = dynamic(
-  () => import('./components/sections/PathSelectorWithContent').then(mod => ({ default: mod.PathSelectorWithContent })),
+const MediaLogos = dynamic(
+  () => import('./components/sections/MediaLogos').then(mod => ({ default: mod.MediaLogos })),
   { ssr: false }
 );
 
@@ -178,11 +158,7 @@ export default function Home() {
       </FixedHeroWrapper>
 
       {/* Homepage Sections */}
-      <ValueStack />
-      <SocialProof />
-      <WhyExpRealty />
-      <WhoWeAre />
-      <PathSelectorWithContent />
+      <MediaLogos />
       <WatchAndDecide />
 
     </main>
