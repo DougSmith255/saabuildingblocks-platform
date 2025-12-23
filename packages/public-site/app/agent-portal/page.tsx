@@ -3018,60 +3018,93 @@ function AgentPagesSection({
 
                     {/* Sample Buttons */}
                     <div className="w-full space-y-2">
-                      <div
-                        className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
-                        style={{
-                          backgroundColor: linksSettings.accentColor,
-                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                        }}
-                      >
-                        <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                          <circle cx="9" cy="7" r="4" />
-                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                        <span className="block text-center text-xs">Join My Team</span>
-                      </div>
-                      {/* Learn About SAA default button */}
-                      <div
-                        className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
-                        style={{
-                          backgroundColor: linksSettings.accentColor,
-                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                        }}
-                      >
-                        <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="10" />
-                          <path d="M12 16v-4" />
-                          <path d="M12 8h.01" />
-                        </svg>
-                        <span className="block text-center text-xs">Learn About SAA</span>
-                      </div>
-                      {/* Show ALL custom links with their icons */}
-                      {customLinks.map((link) => {
-                        const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
-                        return (
-                          <div
-                            key={link.id}
-                            className="w-full py-2 px-4 rounded-lg text-xs font-medium relative"
-                            style={{
-                              backgroundColor: linksSettings.accentColor,
-                              color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                              fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                            }}
-                          >
-                            {iconPath && (
-                              <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d={iconPath} />
-                              </svg>
-                            )}
-                            <span className="block text-center">{link.label}</span>
-                          </div>
-                        );
-                      })}
+                      {/* Render buttons in linkOrder */}
+                      {(() => {
+                        const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
+                        const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
+
+                        // Build ordered array with all links
+                        const allLinkIds = [...linkOrder];
+                        customLinks.forEach(link => {
+                          if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
+                        });
+                        if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+                        if (!allLinkIds.includes('learn-about')) {
+                          const joinIndex = allLinkIds.indexOf('join-team');
+                          allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+                        }
+
+                        return allLinkIds.map(linkId => {
+                          const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                          const customLink = customLinkMap.get(linkId);
+
+                          if (!isDefault && !customLink) return null;
+
+                          if (linkId === 'join-team') {
+                            return (
+                              <div
+                                key="join-team"
+                                className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
+                                style={{
+                                  backgroundColor: linksSettings.accentColor,
+                                  color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                                  fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                                }}
+                              >
+                                <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                  <circle cx="9" cy="7" r="4" />
+                                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span className="block text-center text-xs">Join my Team</span>
+                              </div>
+                            );
+                          }
+
+                          if (linkId === 'learn-about') {
+                            return (
+                              <div
+                                key="learn-about"
+                                className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
+                                style={{
+                                  backgroundColor: linksSettings.accentColor,
+                                  color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                                  fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                                }}
+                              >
+                                <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <circle cx="12" cy="12" r="10" />
+                                  <path d="M12 16v-4" />
+                                  <path d="M12 8h.01" />
+                                </svg>
+                                <span className="block text-center text-xs">Learn About my Team</span>
+                              </div>
+                            );
+                          }
+
+                          // Custom link
+                          const iconPath = LINK_ICONS.find(i => i.name === customLink?.icon)?.path;
+                          return (
+                            <div
+                              key={linkId}
+                              className="w-full py-2 px-4 rounded-lg text-xs font-medium relative"
+                              style={{
+                                backgroundColor: linksSettings.accentColor,
+                                color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                                fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                              }}
+                            >
+                              {iconPath && (
+                                <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path d={iconPath} />
+                                </svg>
+                              )}
+                              <span className="block text-center">{customLink?.label}</span>
+                            </div>
+                          );
+                        });
+                      })()}
                     </div>
                   </div>
                 </div>
