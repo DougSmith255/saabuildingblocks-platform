@@ -3675,7 +3675,7 @@ function AgentPagesSection({
                               key={linkId}
                               className={`flex items-center gap-2 p-3 rounded-lg group ${
                                 isDefault
-                                  ? 'bg-yellow-500/10 border border-yellow-500/30'
+                                  ? 'bg-[#4ecdc4]/10 border border-[#4ecdc4]/30'
                                   : 'bg-black/20 border border-white/10'
                               }`}
                             >
@@ -3719,8 +3719,8 @@ function AgentPagesSection({
 
                               {/* Icon for default or custom */}
                               {isDefault ? (
-                                <div className="w-7 h-7 rounded bg-yellow-500/20 border border-yellow-500/40 flex items-center justify-center flex-shrink-0">
-                                  <svg className="w-3.5 h-3.5 text-yellow-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <div className="w-7 h-7 rounded bg-[#4ecdc4]/20 border border-[#4ecdc4]/40 flex items-center justify-center flex-shrink-0">
+                                  <svg className="w-3.5 h-3.5 text-[#4ecdc4]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d={linkId === 'join-team' ? 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'} />
                                   </svg>
                                 </div>
@@ -3734,9 +3734,9 @@ function AgentPagesSection({
 
                               {/* Label and description */}
                               <div className="flex-1 min-w-0">
-                                <div className={`text-sm truncate ${isDefault ? 'text-yellow-300' : 'text-[#e5e4dd]'}`}>
+                                <div className={`text-sm truncate ${isDefault ? 'text-[#4ecdc4]' : 'text-[#e5e4dd]'}`}>
                                   {label}
-                                  {isDefault && <span className="ml-2 text-xs text-yellow-400/60">(default)</span>}
+                                  {isDefault && <span className="ml-2 text-xs text-[#4ecdc4]/60">(default)</span>}
                                 </div>
                                 <div className="text-xs text-[#e5e4dd]/40 truncate">{url}</div>
                               </div>
