@@ -164,36 +164,65 @@ export function MediaLogos() {
         }`}
       >
         {/* Fade edges - wide gradient that seamlessly blends into background */}
-        {/* Left edge */}
+        {/* Left edge - horizontal fade only in the middle section */}
         <div
           className="absolute left-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
-            top: '-50%',
-            bottom: '-50%',
+            top: '0',
+            bottom: '0',
             background: 'linear-gradient(to right, #111111 0%, rgba(17,17,17,0.95) 30%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0.3) 70%, transparent 100%)',
           }}
         />
-        {/* Right edge */}
+        {/* Right edge - horizontal fade only in the middle section */}
         <div
           className="absolute right-0 w-40 md:w-64 z-10 pointer-events-none"
           style={{
-            top: '-50%',
-            bottom: '-50%',
+            top: '0',
+            bottom: '0',
             background: 'linear-gradient(to left, #111111 0%, rgba(17,17,17,0.95) 30%, rgba(17,17,17,0.7) 50%, rgba(17,17,17,0.3) 70%, transparent 100%)',
           }}
         />
-        {/* Top edge */}
+        {/* Top edge - full width */}
         <div
           className="absolute top-0 left-0 right-0 h-16 md:h-24 z-10 pointer-events-none"
           style={{
             background: 'linear-gradient(to bottom, #111111 0%, rgba(17,17,17,0.8) 40%, rgba(17,17,17,0.4) 70%, transparent 100%)',
           }}
         />
-        {/* Bottom edge */}
+        {/* Bottom edge - full width */}
         <div
           className="absolute bottom-0 left-0 right-0 h-16 md:h-24 z-10 pointer-events-none"
           style={{
             background: 'linear-gradient(to top, #111111 0%, rgba(17,17,17,0.8) 40%, rgba(17,17,17,0.4) 70%, transparent 100%)',
+          }}
+        />
+        {/* Corner overlays - these create diagonal fades at corners */}
+        {/* Top-left corner */}
+        <div
+          className="absolute top-0 left-0 w-40 md:w-64 h-16 md:h-24 z-20 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at top left, #111111 0%, #111111 30%, rgba(17,17,17,0.8) 50%, transparent 80%)',
+          }}
+        />
+        {/* Top-right corner */}
+        <div
+          className="absolute top-0 right-0 w-40 md:w-64 h-16 md:h-24 z-20 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at top right, #111111 0%, #111111 30%, rgba(17,17,17,0.8) 50%, transparent 80%)',
+          }}
+        />
+        {/* Bottom-left corner */}
+        <div
+          className="absolute bottom-0 left-0 w-40 md:w-64 h-16 md:h-24 z-20 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at bottom left, #111111 0%, #111111 30%, rgba(17,17,17,0.8) 50%, transparent 80%)',
+          }}
+        />
+        {/* Bottom-right corner */}
+        <div
+          className="absolute bottom-0 right-0 w-40 md:w-64 h-16 md:h-24 z-20 pointer-events-none"
+          style={{
+            background: 'radial-gradient(ellipse at bottom right, #111111 0%, #111111 30%, rgba(17,17,17,0.8) 50%, transparent 80%)',
           }}
         />
 
