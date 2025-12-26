@@ -20,6 +20,11 @@ const WatchAndDecide = dynamic(
   { ssr: false }
 );
 
+const WhySAA = dynamic(
+  () => import('./components/sections/WhySAA').then(mod => ({ default: mod.WhySAA })),
+  { ssr: false }
+);
+
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -159,6 +164,7 @@ export default function Home() {
 
       {/* Homepage Sections */}
       <MediaLogos />
+      <WhySAA />
       <WatchAndDecide />
 
     </main>
