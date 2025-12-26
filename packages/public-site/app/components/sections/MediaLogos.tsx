@@ -164,7 +164,7 @@ export function MediaLogos() {
         }`}
       >
         {/* Two unified gradient masks - left and right */}
-        {/* Left mask: solid at left edge, fades on top, right (toward center), and bottom */}
+        {/* Left mask: fades from left screen edge toward center, and fades top/bottom */}
         <div
           className="absolute left-0 w-48 md:w-72 z-10 pointer-events-none"
           style={{
@@ -172,18 +172,18 @@ export function MediaLogos() {
             bottom: '-20%',
             background: '#111111',
             maskImage: `
-              linear-gradient(to right, black 0%, black 60%, transparent 100%),
+              linear-gradient(to right, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
             `,
             maskComposite: 'intersect',
             WebkitMaskImage: `
-              linear-gradient(to right, black 0%, black 60%, transparent 100%),
+              linear-gradient(to right, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
             `,
             WebkitMaskComposite: 'source-in',
           }}
         />
-        {/* Right mask: solid at right edge, fades on top, left (toward center), and bottom */}
+        {/* Right mask: fades from right screen edge toward center, and fades top/bottom */}
         <div
           className="absolute right-0 w-48 md:w-72 z-10 pointer-events-none"
           style={{
@@ -191,12 +191,12 @@ export function MediaLogos() {
             bottom: '-20%',
             background: '#111111',
             maskImage: `
-              linear-gradient(to left, black 0%, black 60%, transparent 100%),
+              linear-gradient(to left, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
             `,
             maskComposite: 'intersect',
             WebkitMaskImage: `
-              linear-gradient(to left, black 0%, black 60%, transparent 100%),
+              linear-gradient(to left, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
             `,
             WebkitMaskComposite: 'source-in',
