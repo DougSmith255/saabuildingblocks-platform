@@ -186,7 +186,7 @@ export function ProvenAtScale() {
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
             <RevealFromLeft>
-              <H2 className="text-left" style={{ marginBottom: '25px', justifyContent: 'flex-start' }}>{HEADLINE}</H2>
+              <H2 className="text-center md:text-left" style={{ marginBottom: '25px', justifyContent: 'center' }}>{HEADLINE}</H2>
             </RevealFromLeft>
 
             <div className="space-y-4 mb-8">
@@ -209,7 +209,9 @@ export function ProvenAtScale() {
             </div>
 
             <RevealFromLeft delay={0.5}>
-              <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+              <div className="text-center md:text-left">
+                <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+              </div>
             </RevealFromLeft>
           </div>
 

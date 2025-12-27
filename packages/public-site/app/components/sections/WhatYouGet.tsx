@@ -90,7 +90,7 @@ export function WhatYouGet() {
   const [activeTab, setActiveTab] = useState(0);
   const [userInteracted, setUserInteracted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const { ref: sectionRef, isVisible } = useScrollReveal(0.3);
+  const { ref: sectionRef, isVisible } = useScrollReveal(0.6);
 
   const activeBenefit = BENEFITS[activeTab];
   const Icon = activeBenefit.icon;

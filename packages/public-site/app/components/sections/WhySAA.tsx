@@ -185,7 +185,7 @@ export function WhySAA() {
               </div>
 
               {/* Benefits Grid with 3D Checkmarks */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {BENEFITS.map((benefit, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <Check3D />
