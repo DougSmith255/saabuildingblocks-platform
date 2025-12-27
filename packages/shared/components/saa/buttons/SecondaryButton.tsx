@@ -48,7 +48,7 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
 
   const buttonClasses = `
     relative flex justify-center items-center
-    h-[56px] px-5 py-2
+    px-5 py-2
     bg-[rgb(45,45,45)]
     rounded-xl border-t border-b border-white/10
     text-button uppercase tracking-wide
@@ -78,7 +78,8 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '56px',
+    // Responsive height matching CTAButton - scales with viewport
+    height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
     paddingLeft: '1.25rem',
     paddingRight: '1.25rem',
     paddingTop: '0.5rem',
