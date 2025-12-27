@@ -260,7 +260,7 @@ function ActivatePageContent() {
           <div className="text-center mb-8 px-4">
             <H1 className="mb-2">WELCOME TO THE ALLIANCE</H1>
             <p className="text-body text-[#ffd700]/80">
-              {userName ? `Hello ${userName}! ` : ''}Set your access code to get started
+              {userName ? `Hello ${userName}! ` : ''}Set your password to get started
             </p>
           </div>
 
@@ -288,7 +288,7 @@ function ActivatePageContent() {
                 {/* Password Field */}
                 <div className="space-y-2">
                   <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                    Create Access Code
+                    Create Password
                   </label>
                   <div className="relative">
                     <input
@@ -299,7 +299,7 @@ function ActivatePageContent() {
                       required
                       minLength={8}
                       className="w-full px-4 py-3 pr-12 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                      placeholder="Enter access code"
+                      placeholder="Enter password"
                     />
                     <button
                       type="button"
@@ -342,7 +342,7 @@ function ActivatePageContent() {
                 {/* Confirm Password Field */}
                 <div className="space-y-2">
                   <label htmlFor="confirmPassword" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                    Confirm Access Code
+                    Confirm Password
                   </label>
                   <div className="relative">
                     <input
@@ -353,7 +353,7 @@ function ActivatePageContent() {
                       required
                       minLength={8}
                       className="w-full px-4 py-3 pr-12 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                      placeholder="Re-enter access code"
+                      placeholder="Re-enter password"
                     />
                     <button
                       type="button"

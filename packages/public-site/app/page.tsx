@@ -25,6 +25,11 @@ const WhySAA = dynamic(
   { ssr: false }
 );
 
+const WhyOnlyAtExp = dynamic(
+  () => import('./components/sections/WhyOnlyAtExp').then(mod => ({ default: mod.WhyOnlyAtExp })),
+  { ssr: false }
+);
+
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -165,6 +170,7 @@ export default function Home() {
       {/* Homepage Sections */}
       <MediaLogos />
       <WhySAA />
+      <WhyOnlyAtExp />
       <WatchAndDecide />
 
     </main>

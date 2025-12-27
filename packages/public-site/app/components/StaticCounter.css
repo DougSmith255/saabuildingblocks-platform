@@ -16,15 +16,16 @@
    TAGLINE COUNTER SUFFIX - Hidden on desktop via CSS media query
    This prevents CLS by ensuring the element doesn't take space on desktop
    from the initial SSR render (before JS hydrates)
+   Breakpoint: 1500px - counter in tagline below, in corner above
    ========================================================================== */
 .tagline-counter-suffix {
-  /* Hidden on desktop by default (>= 500px breakpoint) */
+  /* Hidden on desktop by default (>= 1500px breakpoint) */
   display: none !important;
 }
 
-@media (max-width: 499px) {
+@media (max-width: 1499px) {
   .tagline-counter-suffix {
-    /* Show on mobile - inline-flex for proper alignment */
+    /* Show on mobile/tablet - inline-flex for proper alignment */
     display: inline-flex !important;
   }
 }
