@@ -163,17 +163,12 @@ export function CyberCard({
           transform: translateZ(0);
         }
 
-        /* Neon yellow glow for headings inside CyberCard */
+        /* Yellow color for headings inside CyberCard (no glow) */
         .cyber-card-content h3,
         .cyber-card-content h4,
         .cyber-card-content h5,
         .cyber-card-content h6 {
           color: #ffd700;
-          text-shadow:
-            0 0 5px rgba(255, 215, 0, 0.6),
-            0 0 10px rgba(255, 215, 0, 0.4),
-            0 0 20px rgba(255, 215, 0, 0.25),
-            0 0 40px rgba(255, 215, 0, 0.1);
         }
       `}</style>
 

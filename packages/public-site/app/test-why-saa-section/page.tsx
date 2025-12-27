@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2, Icon3D } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCard, CyberCardGold } from '@saa/shared/components/saa/cards';
 import { Users, DollarSign, Bot, GraduationCap, Globe, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -169,42 +169,52 @@ function Version1() {
 // VERSION 2: TABS (Horizontal navigation with auto-rotation)
 // ============================================================================
 
-// V2-specific content with updated descriptions
+// V2-specific content with updated descriptions and background images
 const V2_BENEFITS = [
   {
     icon: Users,
     title: "Connected Leadership",
     tabLabel: "Connected",
     description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
-    autoAdvanceTime: 6000, // 6 seconds (longer text)
+    autoAdvanceTime: 6000,
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public',
+    bgAlt: 'Connected Leadership - Real estate team collaboration and support',
   },
   {
     icon: DollarSign,
     title: "Passive Income Infrastructure",
     tabLabel: "Passive",
     description: "We handle the structure so you can build long-term income without relying solely on transactions.",
-    autoAdvanceTime: 5000, // 5 seconds
+    autoAdvanceTime: 5000,
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public',
+    bgAlt: 'Passive Income Infrastructure - Revenue share and wealth building',
   },
   {
     icon: Bot,
     title: "Done-For-You Production Systems",
     tabLabel: "Done-For-You",
     description: "Curated systems designed to save time, not create tech overload.",
-    autoAdvanceTime: 4000, // 4 seconds (short text)
+    autoAdvanceTime: 4000,
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public',
+    bgAlt: 'Done-For-You Production Systems - AI tools and automation',
   },
   {
     icon: GraduationCap,
     title: "Elite Training Libraries",
     tabLabel: "Elite",
     description: "AI, social media, investing, and modern production systems, available when you need them.",
-    autoAdvanceTime: 5000, // 5 seconds
+    autoAdvanceTime: 5000,
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public',
+    bgAlt: 'Elite Training Libraries - World-class real estate education',
   },
   {
     icon: Globe,
     title: "Private Referrals & Global Collaboration",
     tabLabel: "Private",
     description: "Warm introductions and deal flow inside a global agent network.",
-    autoAdvanceTime: 4000, // 4 seconds (short text)
+    autoAdvanceTime: 4000,
+    bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public',
+    bgAlt: 'Private Referrals - Global agent network and collaboration',
   },
 ];
 
@@ -243,19 +253,20 @@ function Version2() {
       <div className="mx-auto" style={{ maxWidth: '1000px' }}>
         {/* Header with reveal animation */}
         <div
-          className="text-center mb-10 transition-all duration-700"
+          className="text-center transition-all duration-700"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            marginBottom: '50px',
           }}
         >
-          <H2>What You Get with SAA (At a Glance)</H2>
-          <p className="text-body opacity-60 mt-2">Everything below is explained in detail on our Team Value page.</p>
+          <H2>What You Get with SAA</H2>
+          <p className="text-body opacity-60 mt-4">Everything below is explained in detail on our Team Value page.</p>
         </div>
 
-        {/* Tab buttons with staggered reveal */}
+        {/* Tab buttons with staggered reveal - centered */}
         <div
-          className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide transition-all duration-700"
+          className="flex justify-center gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide transition-all duration-700"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -276,38 +287,68 @@ function Version2() {
                   border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
                 }}
               >
-                <TabIcon className="w-4 h-4" />
+                {isActive ? (
+                  <TabIcon className="w-4 h-4" />
+                ) : (
+                  <Icon3D><TabIcon className="w-4 h-4" /></Icon3D>
+                )}
                 <span className="font-heading font-medium text-sm">{benefit.tabLabel}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Active content card with reveal animation */}
+        {/* Active content card with reveal animation - FIXED HEIGHT with background image */}
+        <style>{`
+          @keyframes tabFadeIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+          }
+          .tab-content-animate {
+            animation: tabFadeIn 0.3s ease-out forwards;
+          }
+        `}</style>
         <div
-          className="transition-all duration-700"
+          className="transition-all duration-700 mb-10 rounded-2xl border border-white/10 overflow-hidden relative"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
             transitionDelay: '0.3s',
+            height: '160px',
           }}
         >
-          <CyberCard padding="xl" className="mb-10">
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div
-                className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: 'rgba(255, 215, 0, 0.15)' }}
-              >
-                <Icon className="w-10 h-10" style={{ color: BRAND_YELLOW }} />
-              </div>
-              <div className="text-center md:text-left">
-                <h3 className="font-heading text-2xl font-bold mb-3" style={{ color: BRAND_YELLOW }}>
-                  {activeBenefit.title}
-                </h3>
-                <p className="text-body text-lg">{activeBenefit.description}</p>
-              </div>
+          {/* Background image */}
+          <div
+            key={`bg-${activeTab}`}
+            className="absolute inset-0 tab-content-animate"
+            style={{
+              backgroundImage: `url(${activeBenefit.bgImage})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          />
+          {/* Gradient overlay */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.5) 100%)',
+            }}
+          />
+          {/* Content */}
+          <div key={activeTab} className="tab-content-animate relative z-10 flex flex-row items-center gap-6 h-full p-8">
+            <div
+              className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)', backdropFilter: 'blur(4px)' }}
+            >
+              <Icon3D><Icon className="w-8 h-8" /></Icon3D>
             </div>
-          </CyberCard>
+            <div className="text-left flex-1">
+              <h3 className="font-heading text-xl font-bold mb-2" style={{ color: BRAND_YELLOW }}>
+                {activeBenefit.title}
+              </h3>
+              <p className="text-body text-base">{activeBenefit.description}</p>
+            </div>
+          </div>
         </div>
 
         {/* Progress indicators with reveal */}

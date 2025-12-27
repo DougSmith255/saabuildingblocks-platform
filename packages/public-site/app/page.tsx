@@ -35,6 +35,11 @@ const ProvenAtScale = dynamic(
   { ssr: false }
 );
 
+const WhatYouGet = dynamic(
+  () => import('./components/sections/WhatYouGet').then(mod => ({ default: mod.WhatYouGet })),
+  { ssr: false }
+);
+
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -177,6 +182,7 @@ export default function Home() {
       <WhySAA />
       <WhyOnlyAtExp />
       <ProvenAtScale />
+      <WhatYouGet />
       <WatchAndDecide />
 
     </main>
