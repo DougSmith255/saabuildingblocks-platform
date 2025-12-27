@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
+import { Check } from 'lucide-react';
 
 // Shared content
 const HEADLINE = "Why Smart Agent Alliance";
@@ -15,7 +16,6 @@ const BENEFITS = [
   "No required recruiting",
   "No required meetings",
 ];
-const TAGLINE = "Just aligned incentives and real support.";
 const CTA_TEXT = "See How It Works";
 const DISCLAIMER = "Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.";
 
@@ -47,9 +47,13 @@ function useInView(threshold = 0.15) {
   return { ref, isVisible };
 }
 
-// 3D Number Component
-function Number3D({ num }: { num: number }) {
-  return <span className="number-3d">{num}</span>;
+// 3D Checkmark Component
+function Check3D() {
+  return (
+    <span className="check-3d">
+      <Check className="w-6 h-6" strokeWidth={3} />
+    </span>
+  );
 }
 
 export function WhySAA() {
@@ -71,20 +75,18 @@ export function WhySAA() {
         .bento-card:hover .bento-image {
           transform: scale(1.05);
         }
-        .number-3d {
+        .check-3d {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-width: 40px;
-          height: 40px;
-          font-weight: 700;
-          font-size: 28px;
+          min-width: 32px;
+          height: 32px;
           color: #c4a94d;
           filter:
             drop-shadow(-1px -1px 0 #ffe680)
             drop-shadow(1px 1px 0 #8a7a3d)
-            drop-shadow(3px 3px 0 #2a2a1d)
-            drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+            drop-shadow(2px 2px 0 #2a2a1d)
+            drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
           transform: perspective(500px) rotateX(8deg);
           flex-shrink: 0;
         }
@@ -100,29 +102,35 @@ export function WhySAA() {
             className={`bento-card md:col-span-7 relative rounded-2xl overflow-hidden bg-gradient-to-br from-white/8 to-white/3 border border-white/10 p-8 md:p-10 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
             style={{ transitionDelay: '200ms' }}
           >
-            <p className="text-body text-lg md:text-xl opacity-70">{INTRO}</p>
-            <p className="text-body text-2xl md:text-3xl font-semibold mt-4" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
-            <p className="text-body text-lg mt-6 leading-relaxed">{DESCRIPTION}</p>
-            <div className="w-24 h-1 rounded-full mt-8 mb-8" style={{ backgroundColor: BRAND_YELLOW }} />
-            <div className="space-y-4">
-              <p className="text-body text-sm uppercase tracking-wider opacity-50">There is:</p>
+            {/* The Problem */}
+            <div className="mb-8">
+              <span className="text-body text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-red-500/20 text-red-400">The Problem</span>
+              <p className="text-body text-lg mt-3 opacity-70">{INTRO}</p>
+            </div>
+
+            {/* Our Solution */}
+            <div className="mb-8">
+              <span className="text-body text-xs uppercase tracking-wider px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)', color: BRAND_YELLOW }}>Our Solution</span>
+              <p className="font-heading text-2xl md:text-3xl font-bold mt-3" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
+              <p className="text-body text-lg mt-4 leading-relaxed">{DESCRIPTION}</p>
+            </div>
+
+            {/* Benefits Grid with 3D Checkmarks */}
+            <div className="grid grid-cols-2 gap-4">
               {BENEFITS.map((benefit, i) => (
                 <div
                   key={i}
                   className={`flex items-center gap-3 transition-all duration-500 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
                   style={{ transitionDelay: `${400 + i * 100}ms` }}
                 >
-                  <Number3D num={i + 1} />
-                  <span className="text-body font-bold">{benefit}</span>
+                  <Check3D />
+                  <span className="text-body text-sm font-medium">{benefit}</span>
                 </div>
               ))}
             </div>
-            <p className={`text-body text-xl md:text-2xl italic mt-8 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ color: BRAND_YELLOW, transitionDelay: '800ms' }}>
-              {TAGLINE}
-            </p>
           </div>
 
-          {/* Right column - 5 columns */}
+          {/* Right column - 5 columns (UNCHANGED) */}
           <div className="md:col-span-5 flex flex-col gap-4 md:gap-6">
             <div
               className={`bento-card relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex-1 min-h-[200px] transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
@@ -137,7 +145,7 @@ export function WhySAA() {
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-5">
-                <p className="text-body text-sm font-medium" style={{ color: BRAND_YELLOW }}>Aligned Incentives</p>
+                <p className="text-body text-sm font-bold" style={{ color: BRAND_YELLOW }}>Aligned Incentives</p>
                 <p className="text-body text-xs opacity-70 mt-1">When you succeed, we succeed</p>
               </div>
             </div>
