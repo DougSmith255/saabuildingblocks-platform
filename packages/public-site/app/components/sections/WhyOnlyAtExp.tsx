@@ -26,7 +26,7 @@ const CTA_TEXT = "See Our Systems";
 const BRAND_YELLOW = '#ffd700';
 
 // Images
-const ENTREPRENEURIAL_SPONSOR_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-sponsor-systems-dark/desktop';
+const ENTREPRENEURIAL_SPONSOR_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop';
 const ENTREPRENEURIAL_SPONSOR_ALT = 'eXp Realty sponsor delivering entrepreneurial systems to real estate agents';
 const ENTREPRENEURIAL_SPONSOR_TITLE = 'eXp Realty Entrepreneurial Sponsor Systems';
 
@@ -154,7 +154,7 @@ export function WhyOnlyAtExp() {
   return (
     <section className="py-16 md:py-24 px-6">
       <div className="mx-auto" style={{ maxWidth: '1300px' }}>
-        <div className="text-center mb-10">
+        <div className="text-center mb-10 relative z-20">
           <H2>{HEADLINE}</H2>
         </div>
 

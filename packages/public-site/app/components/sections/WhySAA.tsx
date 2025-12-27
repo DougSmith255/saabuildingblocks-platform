@@ -26,7 +26,8 @@ const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDx
 const BRAND_YELLOW = '#ffd700';
 
 // Custom hook for intersection observer
-function useInView(threshold = 0.15) {
+// threshold 0.4 = animation triggers when 40% of element is visible
+function useInView(threshold = 0.4) {
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
 
