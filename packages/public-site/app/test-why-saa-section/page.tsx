@@ -1,8 +1,135 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { H2, Icon3D, CTAButton } from '@saa/shared/components/saa';
-import { Cloud, Bot, Smartphone, TrendingUp } from 'lucide-react';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { H2, CTAButton } from '@saa/shared/components/saa';
+
+// ============================================================================
+// GRAYSCALE DATA STREAM EFFECT (Modified from hero DataStreamEffect)
+// ============================================================================
+function GrayscaleDataStream() {
+  const [time, setTime] = useState(0);
+  const timeRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const scrollSpeedRef = useRef(1);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const BASE_SPEED = 0.0004; // Balanced speed
+    let lastTimestamp = 0;
+
+    // Track scroll velocity for speed boost
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const scrollDelta = Math.abs(currentY - lastScrollY.current);
+      lastScrollY.current = currentY;
+      // Boost speed based on scroll velocity (up to 4x)
+      scrollSpeedRef.current = 1 + Math.min(scrollDelta * 0.05, 3);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    const animate = (timestamp: number) => {
+      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+      lastTimestamp = timestamp;
+      // Apply scroll speed multiplier
+      timeRef.current += BASE_SPEED * deltaTime * scrollSpeedRef.current;
+      setTime(timeRef.current);
+      // Decay scroll boost back to 1
+      scrollSpeedRef.current = Math.max(1, scrollSpeedRef.current * 0.95);
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    rafRef.current = requestAnimationFrame(animate);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const columnConfigs = useMemo(() => [...Array(20)].map((_, i) => ({
+    x: i * 5,
+    speed: 0.8 + (i % 4) * 0.4,
+    offset: (i * 17) % 100,
+  })), []);
+
+  const getChar = (colIndex: number, charIndex: number) => {
+    const flipRate = 0.6 + (colIndex % 3) * 0.3;
+    const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
+    return String.fromCharCode(0x30A0 + (charSeed % 96));
+  };
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
+      {/* Top fade overlay */}
+      <div
+        className="absolute top-0 left-0 right-0 h-20 z-10"
+        style={{ background: 'linear-gradient(to bottom, #111111 0%, transparent 100%)' }}
+      />
+      {/* Bottom fade overlay */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-20 z-10"
+        style={{ background: 'linear-gradient(to top, #111111 0%, transparent 100%)' }}
+      />
+
+      {/* Grayscale data columns */}
+      {columnConfigs.map((col, i) => {
+        const columnOffset = (time * col.speed * 80 + col.offset) % 110;
+        const numChars = 22;
+
+        return (
+          <div
+            key={i}
+            className="absolute"
+            style={{
+              left: `${col.x}%`,
+              top: 0,
+              width: '4%',
+              height: '100%',
+              overflow: 'hidden',
+              fontFamily: 'monospace',
+              fontSize: '14px',
+              lineHeight: '1.4',
+            }}
+          >
+            {[...Array(numChars)].map((_, j) => {
+              const baseY = j * 5;
+              const charY = (baseY + columnOffset) % 110 - 10;
+              const headPosition = (columnOffset / 5) % numChars;
+              const distanceFromHead = (j - headPosition + numChars) % numChars;
+              const isHead = distanceFromHead === 0;
+              const trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
+
+              // Stronger edge fade for top/bottom
+              const edgeFade = charY < 12 ? Math.max(0, charY / 12) :
+                               charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
+
+              // Brighter grayscale colors
+              const headColor = `rgba(220,220,220,${0.9 * edgeFade})`;
+              const trailColor = `rgba(160,160,160,${trailBrightness * 0.6 * edgeFade})`;
+
+              return (
+                <div
+                  key={j}
+                  style={{
+                    position: 'absolute',
+                    top: `${charY}%`,
+                    color: isHead ? headColor : trailColor,
+                    textShadow: isHead
+                      ? `0 0 12px rgba(200,200,200,${0.7 * edgeFade})`
+                      : `0 0 4px rgba(150,150,150,${0.2 * edgeFade})`,
+                    opacity: edgeFade,
+                  }}
+                >
+                  {getChar(i, j)}
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 /**
  * Test page for two new sections:
@@ -44,10 +171,34 @@ const FUTURE_HEADLINE = "Built for Where Real Estate Is Going";
 const FUTURE_SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA is already there.";
 
 const FUTURE_POINTS = [
-  { icon: Cloud, text: "Cloud-first brokerage model" },
-  { icon: Bot, text: "AI-powered tools and training" },
-  { icon: Smartphone, text: "Mobile-first workflows" },
-  { icon: TrendingUp, text: "Sustainable income paths beyond transactions" },
+  {
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public',
+    text: "Cloud-first brokerage model",
+    imgClass: "w-full h-full object-contain",
+    imgStyle: {},
+    bgColor: 'rgba(17,17,17,0.5)'
+  },
+  {
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public',
+    text: "AI-powered tools and training",
+    imgClass: "w-full h-full object-cover",
+    imgStyle: { transform: 'scale(1.25) translate(10px, 18px)' },
+    bgColor: 'rgba(17,17,17,0.5)'
+  },
+  {
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public',
+    text: "Mobile-first workflows",
+    imgClass: "w-full h-full object-cover",
+    imgStyle: { transform: 'scale(0.95) translate(3px, 10px)' },
+    bgColor: 'rgba(17,17,17,0.5)'
+  },
+  {
+    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public',
+    text: "Sustainable income paths beyond transactions",
+    imgClass: "w-full h-full object-cover",
+    imgStyle: { transform: 'scale(1.15) translateX(7px)' },
+    bgColor: '#111'
+  },
 ];
 
 // ============================================================================
@@ -83,7 +234,10 @@ function Future1B() {
   const getTextDelay = (index: number) => 0.5 + (index * 0.25) + 0.15; // Text slightly after icon
 
   return (
-    <section ref={ref} className="py-16 md:py-24 px-6 overflow-hidden">
+    <section ref={ref} className="py-16 md:py-24 px-6 overflow-hidden relative">
+      {/* Grayscale Data Stream Background */}
+      <GrayscaleDataStream />
+
       <style>{`
         @keyframes drawLine {
           from { width: 0; }
@@ -94,7 +248,7 @@ function Future1B() {
           animation-delay: 0.5s;
         }
       `}</style>
-      <div className="mx-auto text-center" style={{ maxWidth: '900px' }}>
+      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '900px' }}>
         <div
           className="transition-all duration-700 mb-5"
           style={{
@@ -116,7 +270,7 @@ function Future1B() {
 
         <div className="relative mb-12">
           {/* Connecting line */}
-          <div className="absolute top-6 left-0 right-0 h-px bg-white/10 hidden md:block">
+          <div className="absolute top-[60px] left-0 right-0 h-px bg-white/10 hidden md:block">
             {isVisible && (
               <div className="future1b-line h-full w-0" style={{ background: `linear-gradient(90deg, transparent, ${BRAND_YELLOW}, transparent)` }} />
             )}
@@ -124,25 +278,29 @@ function Future1B() {
 
           <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-4">
             {FUTURE_POINTS.map((point, i) => {
-              const Icon = point.icon;
               return (
                 <div
                   key={i}
                   className="flex-1 relative z-10 flex flex-col items-center"
                 >
-                  {/* Icon circle - reveals when line reaches it */}
+                  {/* Image circle - reveals when line reaches it */}
                   <div
-                    className="w-12 h-12 rounded-full mb-4 flex items-center justify-center transition-all duration-500"
+                    className="w-[120px] h-[120px] rounded-full mb-4 flex items-center justify-center transition-all duration-500 overflow-hidden"
                     style={{
-                      backgroundColor: '#111',
-                      border: `2px solid ${BRAND_YELLOW}`,
-                      boxShadow: isVisible ? `0 0 20px rgba(255,215,0,0.3)` : 'none',
+                      backgroundColor: point.bgColor,
+                      border: `3px solid ${BRAND_YELLOW}`,
+                      boxShadow: isVisible ? `0 0 30px rgba(255,215,0,0.4)` : 'none',
                       opacity: isVisible ? 1 : 0,
                       transform: isVisible ? 'scale(1)' : 'scale(0.5)',
                       transitionDelay: `${getIconDelay(i)}s`,
                     }}
                   >
-                    <Icon3D><Icon className="w-5 h-5" /></Icon3D>
+                    <img
+                      src={point.image}
+                      alt={point.text}
+                      className={point.imgClass}
+                      style={point.imgStyle}
+                    />
                   </div>
                   {/* Text - fades in and down after icon reveals */}
                   <p
@@ -161,15 +319,6 @@ function Future1B() {
           </div>
         </div>
 
-        <div
-          className="transition-all duration-700"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '1.6s',
-          }}
-        >
-          <CTAButton href="/about-exp-realty">Learn About eXp Realty</CTAButton>
-        </div>
       </div>
     </section>
   );
@@ -190,35 +339,39 @@ function Future1E() {
           animation: rotateBadge 30s linear infinite;
         }
       `}</style>
-      <div className="mx-auto text-center" style={{ maxWidth: '600px' }}>
+      <div className="mx-auto text-center" style={{ maxWidth: '700px' }}>
         {/* Rotating outer ring */}
-        <div className="relative w-64 h-64 mx-auto mb-8">
+        <div className="relative w-[360px] h-[360px] mx-auto mb-8">
           <div
             className={`absolute inset-0 rounded-full border-2 border-dashed ${isVisible ? 'future5-rotate' : ''}`}
             style={{ borderColor: 'rgba(255,215,0,0.3)' }}
           />
-          {/* Icon positions */}
+          {/* Image positions */}
           {FUTURE_POINTS.map((point, i) => {
-            const Icon = point.icon;
             const angle = (i * 90) * (Math.PI / 180);
-            const radius = 100;
+            const radius = 140; // Increased radius for larger circles
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
             return (
               <div
                 key={i}
-                className="absolute w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500"
+                className="absolute w-[80px] h-[80px] rounded-full flex items-center justify-center transition-all duration-500 overflow-hidden"
                 style={{
-                  backgroundColor: '#111',
-                  border: `2px solid ${BRAND_YELLOW}`,
-                  left: `calc(50% + ${x}px - 24px)`,
-                  top: `calc(50% + ${y}px - 24px)`,
+                  backgroundColor: point.bgColor,
+                  border: `3px solid ${BRAND_YELLOW}`,
+                  left: `calc(50% + ${x}px - 40px)`,
+                  top: `calc(50% + ${y}px - 40px)`,
                   opacity: isVisible ? 1 : 0,
                   transform: isVisible ? 'scale(1)' : 'scale(0)',
                   transitionDelay: `${0.3 + i * 0.15}s`,
                 }}
               >
-                <Icon className="w-5 h-5" style={{ color: BRAND_YELLOW }} />
+                <img
+                  src={point.image}
+                  alt={point.text}
+                  className={point.imgClass}
+                  style={point.imgStyle}
+                />
               </div>
             );
           })}

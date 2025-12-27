@@ -40,6 +40,11 @@ const WhatYouGet = dynamic(
   { ssr: false }
 );
 
+const BuiltForFuture = dynamic(
+  () => import('./components/sections/BuiltForFuture').then(mod => ({ default: mod.BuiltForFuture })),
+  { ssr: false }
+);
+
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -183,6 +188,7 @@ export default function Home() {
       <WhyOnlyAtExp />
       <ProvenAtScale />
       <WhatYouGet />
+      <BuiltForFuture />
       <WatchAndDecide />
 
     </main>
