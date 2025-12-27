@@ -4,6 +4,7 @@
 
 ### 1. Update Headline
 - [x] Change H2 from "What You Get with Smart Agent Alliance" to "What You Get with SAA (At a Glance)"
+- [x] Revised: Remove "(At a Glance)" from H2, add as separate gold line above body text
 
 ### 2. Update Subheadline
 - [x] Change "At a Glance" to "Everything below is explained in detail on our Team Value page."
@@ -32,8 +33,14 @@
   - Private Referrals (short text): 4 seconds
 - [x] Reset timer when user manually clicks a tab
 
+### 7. Additional Refinements
+- [x] Add 10px more space below H2 (marginBottom: 50px)
+- [x] Equalize card heights with minHeight: 180px
+- [x] Use Icon3D component for icons (tab buttons and content card)
+- [x] "At a Glance" shown as gold text above body text
+
 ---
 
 ## ALL CHANGES COMPLETE!
 
-Preview at: (deploy URL will be here after build)
+Preview at: https://saabuildingblocks.pages.dev/test-why-saa-section#v2
