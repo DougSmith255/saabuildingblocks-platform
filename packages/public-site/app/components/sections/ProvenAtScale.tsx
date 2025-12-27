@@ -186,7 +186,7 @@ export function ProvenAtScale() {
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
             <RevealFromLeft>
-              <H2 className="text-left" style={{ marginBottom: '25px' }}>{HEADLINE}</H2>
+              <H2 className="text-left" style={{ marginBottom: '25px', justifyContent: 'flex-start' }}>{HEADLINE}</H2>
             </RevealFromLeft>
 
             <div className="space-y-4 mb-8">
