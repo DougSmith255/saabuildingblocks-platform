@@ -127,6 +127,7 @@ export function WhyOnlyAtExp() {
   const [activeCard, setActiveCard] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const hasStartedRef = useRef(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   const startTimer = useCallback(() => {
@@ -138,21 +139,25 @@ export function WhyOnlyAtExp() {
 
   // Only start timer when section becomes visible
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !isVisible) {
+        if (entry.isIntersecting && !hasStartedRef.current) {
+          hasStartedRef.current = true;
           setIsVisible(true);
           startTimer();
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
+    observer.observe(section);
     return () => {
       observer.disconnect();
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [startTimer, isVisible]);
+  }, [startTimer]);
 
   const handleCardClick = () => {
     setActiveCard(prev => (prev + 1) % 4);
@@ -167,13 +172,27 @@ export function WhyOnlyAtExp() {
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
       <div className="mx-auto" style={{ maxWidth: '1300px' }}>
-        <div className="text-center mb-10 relative z-20">
+        <div
+          className="text-center mb-10 relative z-20 transition-all duration-700"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+          }}
+        >
           <H2>{HEADLINE}</H2>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Deck of cards */}
-          <div className="relative h-[340px]" style={{ perspective: '1000px' }}>
+          <div
+            className="relative h-[340px] transition-all duration-700"
+            style={{
+              perspective: '1000px',
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(-40px)',
+              transitionDelay: '0.15s',
+            }}
+          >
             {STEPS.map((step, i) => {
               const isActive = i === activeCard;
               const isPast = i < activeCard;
@@ -266,8 +285,13 @@ export function WhyOnlyAtExp() {
 
           {/* Key message card with background image + circuit board overlay */}
           <figure
-            className="relative rounded-2xl overflow-hidden border border-white/10"
-            style={{ minHeight: '340px' }}
+            className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-700"
+            style={{
+              minHeight: '340px',
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
+              transitionDelay: '0.3s',
+            }}
             itemScope
             itemType="https://schema.org/ImageObject"
           >
