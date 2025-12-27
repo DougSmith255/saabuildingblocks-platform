@@ -88,30 +88,34 @@ function useScrollReveal(threshold = 0.1) {
 
 export function WhatYouGet() {
   const [activeTab, setActiveTab] = useState(0);
+  const [userInteracted, setUserInteracted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const { ref: sectionRef, isVisible } = useScrollReveal(0.3);
 
   const activeBenefit = BENEFITS[activeTab];
   const Icon = activeBenefit.icon;
 
-  // Auto-advance tabs with variable timing
+  // Auto-advance tabs with variable timing (only if user hasn't interacted)
   const startTimer = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
+    if (userInteracted) return; // Stop auto-advance after user clicks
     timerRef.current = setTimeout(() => {
       setActiveTab(prev => (prev + 1) % BENEFITS.length);
     }, BENEFITS[activeTab].autoAdvanceTime);
   };
 
   useEffect(() => {
-    if (isVisible) {
+    if (isVisible && !userInteracted) {
       startTimer();
     }
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
-  }, [activeTab, isVisible]);
+  }, [activeTab, isVisible, userInteracted]);
 
   const handleTabClick = (index: number) => {
+    setUserInteracted(true); // Permanently disable auto-advance
+    if (timerRef.current) clearTimeout(timerRef.current);
     setActiveTab(index);
   };
 
@@ -140,9 +144,9 @@ export function WhatYouGet() {
           <p className="text-body opacity-60 mt-4">Everything below is explained in detail on our Team Value page.</p>
         </div>
 
-        {/* Tab buttons - centered */}
+        {/* Tab buttons - centered, wrap on mobile */}
         <div
-          className="flex justify-center gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide transition-all duration-700"
+          className="flex flex-wrap justify-center gap-2 pb-2 mb-6 transition-all duration-700"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -181,7 +185,7 @@ export function WhatYouGet() {
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
             transitionDelay: '0.3s',
-            height: '160px',
+            height: '190px',
           }}
         >
           {/* Background image */}
