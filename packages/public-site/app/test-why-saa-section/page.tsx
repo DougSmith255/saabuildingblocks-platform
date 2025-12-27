@@ -89,6 +89,39 @@ function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; d
   );
 }
 
+// Animated counter component
+function AnimatedCounter({ target, suffix = '', duration = 2000 }: { target: number; suffix?: string; duration?: number }) {
+  const [count, setCount] = useState(0);
+  const { ref, isVisible } = useScrollReveal(0.1);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (isVisible && !hasAnimated.current) {
+      hasAnimated.current = true;
+      const startTime = Date.now();
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Easing function for smooth deceleration
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        setCount(Math.floor(easeOut * target));
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          setCount(target);
+        }
+      };
+      requestAnimationFrame(animate);
+    }
+  }, [isVisible, target, duration]);
+
+  return (
+    <span ref={ref}>
+      {count.toLocaleString()}{suffix}
+    </span>
+  );
+}
+
 // Shared content
 const HEADLINE = "Proven at Scale";
 const STATS = [
@@ -248,10 +281,10 @@ function Version4() {
 
       <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
         <div className="grid md:grid-cols-12 gap-8 items-center">
-          {/* Left - Content (7 columns) */}
-          <div className="md:col-span-7">
+          {/* Left - Content (8 columns) */}
+          <div className="md:col-span-8">
             <RevealFromLeft>
-              <H2 className="text-left mb-8">{HEADLINE}</H2>
+              <H2 className="text-left mb-12">{HEADLINE}</H2>
             </RevealFromLeft>
 
             <div className="space-y-4 mb-8">
@@ -278,15 +311,15 @@ function Version4() {
             </RevealFromLeft>
           </div>
 
-          {/* Right - Featured Cyber Card (5 columns) */}
-          <div className="md:col-span-5">
+          {/* Right - Featured Cyber Card (4 columns) */}
+          <div className="md:col-span-4">
             <RevealFromRight delay={0.2}>
-              <CyberCardGold padding="xl">
-                <Globe className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_YELLOW }} />
-                <p className="font-heading text-4xl md:text-5xl font-bold" style={{ color: BRAND_YELLOW }}>
-                  3,700+
+              <CyberCardGold padding="lg">
+                <Globe className="w-14 h-14 mx-auto mb-3" style={{ color: BRAND_YELLOW }} />
+                <p className="font-heading text-3xl md:text-4xl font-bold" style={{ color: BRAND_YELLOW }}>
+                  <AnimatedCounter target={3700} suffix="+" />
                 </p>
-                <p className="text-body text-lg mt-2">Agents Strong</p>
+                <p className="text-body text-base mt-2">Agents Strong</p>
               </CyberCardGold>
             </RevealFromRight>
           </div>

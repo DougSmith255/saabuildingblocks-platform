@@ -30,6 +30,11 @@ const WhyOnlyAtExp = dynamic(
   { ssr: false }
 );
 
+const ProvenAtScale = dynamic(
+  () => import('./components/sections/ProvenAtScale').then(mod => ({ default: mod.ProvenAtScale })),
+  { ssr: false }
+);
+
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -171,6 +176,7 @@ export default function Home() {
       <MediaLogos />
       <WhySAA />
       <WhyOnlyAtExp />
+      <ProvenAtScale />
       <WatchAndDecide />
 
     </main>
