@@ -81,15 +81,18 @@ function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; d
   );
 }
 
-// Animated counter component
-function AnimatedCounter({ target, suffix = '', duration = 2000 }: { target: number; suffix?: string; duration?: number }) {
+// Animated counter component - loops continuously
+function AnimatedCounter({ target, suffix = '', duration = 2000, pauseDuration = 3000 }: { target: number; suffix?: string; duration?: number; pauseDuration?: number }) {
   const [count, setCount] = useState(0);
   const { ref, isVisible } = useScrollReveal(0.1);
-  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (isVisible && !hasAnimated.current) {
-      hasAnimated.current = true;
+    if (!isVisible) return;
+
+    let animationId: number;
+    let timeoutId: NodeJS.Timeout;
+
+    const runAnimation = () => {
       const startTime = Date.now();
       const animate = () => {
         const elapsed = Date.now() - startTime;
@@ -98,14 +101,27 @@ function AnimatedCounter({ target, suffix = '', duration = 2000 }: { target: num
         const easeOut = 1 - Math.pow(1 - progress, 3);
         setCount(Math.floor(easeOut * target));
         if (progress < 1) {
-          requestAnimationFrame(animate);
+          animationId = requestAnimationFrame(animate);
         } else {
           setCount(target);
+          // Pause at target, then reset and loop
+          timeoutId = setTimeout(() => {
+            setCount(0);
+            // Small delay before starting next loop
+            timeoutId = setTimeout(runAnimation, 500);
+          }, pauseDuration);
         }
       };
-      requestAnimationFrame(animate);
-    }
-  }, [isVisible, target, duration]);
+      animationId = requestAnimationFrame(animate);
+    };
+
+    runAnimation();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      clearTimeout(timeoutId);
+    };
+  }, [isVisible, target, duration, pauseDuration]);
 
   return (
     <span ref={ref}>
@@ -139,13 +155,14 @@ export function ProvenAtScale() {
       </div>
 
       <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
+        {/* H2 above grid, left-aligned */}
+        <RevealFromLeft>
+          <H2 className="text-left mb-16">{HEADLINE}</H2>
+        </RevealFromLeft>
+
         <div className="grid md:grid-cols-12 gap-8 items-center">
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
-            <RevealFromLeft>
-              <H2 className="text-left mb-12">{HEADLINE}</H2>
-            </RevealFromLeft>
-
             <div className="space-y-4 mb-8">
               {STATS.map((stat, i) => {
                 const Icon = stat.icon;
