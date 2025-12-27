@@ -90,7 +90,7 @@ export function WhatYouGet() {
   const [activeTab, setActiveTab] = useState(0);
   const [userInteracted, setUserInteracted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const { ref: sectionRef, isVisible } = useScrollReveal(0.6);
+  const { ref: sectionRef, isVisible } = useScrollReveal(0.15);
 
   const activeBenefit = BENEFITS[activeTab];
   const Icon = activeBenefit.icon;
@@ -121,9 +121,6 @@ export function WhatYouGet() {
 
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-      {/* Section separator gradients */}
-      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }} />
-      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       <style>{`
         @keyframes whatYouGetFadeIn {
           from { opacity: 0; transform: translateX(10px); }

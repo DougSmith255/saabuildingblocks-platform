@@ -166,9 +166,6 @@ export function WhyOnlyAtExp() {
 
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-      {/* Section separator gradients */}
-      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }} />
-      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       <div className="mx-auto" style={{ maxWidth: '1300px' }}>
         <div className="text-center mb-10 relative z-20">
           <H2>{HEADLINE}</H2>
