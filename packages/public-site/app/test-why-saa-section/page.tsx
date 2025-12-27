@@ -493,59 +493,64 @@ function Founders2C() {
 
   return (
     <section ref={ref} className="py-16 md:py-24 px-6">
-      <div className="mx-auto text-center" style={{ maxWidth: '900px' }}>
-        <h2
-          className="font-heading text-2xl md:text-3xl font-bold mb-12 transition-all duration-700"
+      <div className="mx-auto text-center" style={{ maxWidth: '1100px' }}>
+        <div
+          className="transition-all duration-700 mb-12"
           style={{
-            color: BRAND_YELLOW,
             opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
           }}
         >
-          Meet the Founders
-        </h2>
+          <H2>Meet the Founders</H2>
+        </div>
 
-        <div className="relative mb-10">
-          {/* Center line */}
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent hidden md:block" />
+        <div className="relative mb-12">
+          {/* Center connecting line */}
+          <div
+            className="absolute top-1/2 left-[10%] right-[10%] h-[2px] hidden md:block"
+            style={{
+              background: `linear-gradient(90deg, transparent 0%, ${BRAND_YELLOW}40 20%, ${BRAND_YELLOW}40 80%, transparent 100%)`,
+            }}
+          />
 
-          <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-16">
+          <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-12">
             {FOUNDERS.map((founder, i) => (
               <div
                 key={i}
-                className="relative transition-all duration-700"
+                className="relative transition-all duration-700 flex-1"
                 style={{
                   opacity: isVisible ? 1 : 0,
                   transform: isVisible ? 'translateY(0)' : `translateY(${i === 0 ? -30 : 30}px)`,
                   transitionDelay: `${0.3 + i * 0.2}s`,
+                  maxWidth: '420px',
                 }}
               >
-                {/* Connector dot */}
+                {/* Connector dot on the line */}
                 <div
-                  className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full"
+                  className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full z-10"
                   style={{
                     backgroundColor: BRAND_YELLOW,
-                    top: i === 0 ? 'auto' : '-32px',
-                    bottom: i === 0 ? '-32px' : 'auto',
-                    boxShadow: `0 0 15px ${BRAND_YELLOW}`,
+                    top: i === 0 ? 'auto' : '-28px',
+                    bottom: i === 0 ? '-28px' : 'auto',
+                    boxShadow: `0 0 20px ${BRAND_YELLOW}`,
                   }}
                 />
                 <div
-                  className="p-5 rounded-xl border text-center"
+                  className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300"
                   style={{
-                    backgroundColor: 'rgba(25,25,25,0.95)',
+                    backgroundColor: 'rgba(20,20,20,0.95)',
                     borderColor: 'rgba(255,255,255,0.1)',
-                    maxWidth: '280px',
                   }}
                 >
                   <img
                     src={founder.image}
                     alt={founder.name}
-                    className="w-24 h-24 rounded-full object-cover mx-auto mb-3"
-                    style={{ border: `3px solid ${BRAND_YELLOW}` }}
+                    className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mx-auto mb-4"
+                    style={{ border: `3px solid ${BRAND_YELLOW}`, boxShadow: `0 0 25px rgba(255,215,0,0.3)` }}
                   />
-                  <h3 className="font-heading font-bold" style={{ color: BRAND_YELLOW }}>{founder.name}</h3>
-                  <p className="text-body text-xs opacity-60 mb-2">{founder.title}</p>
-                  <p className="text-body text-sm">{founder.bio}</p>
+                  <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{founder.name}</h3>
+                  <p className="text-body text-sm opacity-60 mb-3">{founder.title}</p>
+                  <p className="text-body text-sm md:text-base leading-relaxed">{founder.bio}</p>
                 </div>
               </div>
             ))}
