@@ -616,7 +616,8 @@ export default function AgentPortal() {
       }
 
       const dashboardData = await dashboardResponse.json();
-      const updatedUser = { ...user, profilePictureUrl: dashboardData.url };
+      // Apply toCdnUrl to use edge-cached CDN instead of origin
+      const updatedUser = { ...user, profilePictureUrl: toCdnUrl(dashboardData.url) };
       setUser(updatedUser);
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
@@ -745,7 +746,8 @@ export default function AgentPortal() {
 
       if (dashboardResponse.ok) {
         const dashboardData = await dashboardResponse.json();
-        const updatedUser = { ...user!, profilePictureUrl: dashboardData.url };
+        // Apply toCdnUrl to use edge-cached CDN instead of origin
+        const updatedUser = { ...user!, profilePictureUrl: toCdnUrl(dashboardData.url) };
         setUser(updatedUser);
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       }
@@ -2721,7 +2723,8 @@ function AgentPagesSection({
 
       if (dashboardResponse.ok) {
         const dashboardData = await dashboardResponse.json();
-        const updatedUser = { ...user, profilePictureUrl: dashboardData.url };
+        // Apply toCdnUrl to use edge-cached CDN instead of origin
+        const updatedUser = { ...user, profilePictureUrl: toCdnUrl(dashboardData.url) };
         setUser(updatedUser);
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       }
