@@ -153,7 +153,7 @@ export function WhyOnlyAtExp() {
 
   return (
     <section className="py-16 md:py-24 px-6">
-      <div className="mx-auto" style={{ maxWidth: '1100px' }}>
+      <div className="mx-auto" style={{ maxWidth: '1300px' }}>
         <div className="text-center mb-10">
           <H2>{HEADLINE}</H2>
         </div>
