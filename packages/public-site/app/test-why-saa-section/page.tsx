@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCard, CyberCardGold } from '@saa/shared/components/saa/cards';
@@ -9,6 +10,84 @@ import { Globe, Users, TrendingUp, MapPin, Check } from 'lucide-react';
  * Test page for "Proven at Scale" section designs
  * 5 alternative versions using CyberCard master controller components
  */
+
+// ============================================================================
+// SCROLL REVEAL HOOK & COMPONENTS
+// ============================================================================
+
+function useScrollReveal(threshold = 0.1) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, [threshold]);
+
+  return { ref, isVisible };
+}
+
+function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const { ref, isVisible } = useScrollReveal(0.1);
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(40px)',
+        transition: `opacity 0.8s ease-out ${delay}s, transform 0.8s ease-out ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function RevealFromLeft({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const { ref, isVisible } = useScrollReveal(0.1);
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateX(0)' : 'translateX(-40px)',
+        transition: `opacity 0.8s ease-out ${delay}s, transform 0.8s ease-out ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const { ref, isVisible } = useScrollReveal(0.1);
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
+        transition: `opacity 0.8s ease-out ${delay}s, transform 0.8s ease-out ${delay}s`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 // Shared content
 const HEADLINE = "Proven at Scale";
@@ -139,48 +218,78 @@ function Version3() {
 }
 
 // ============================================================================
-// VERSION 4: TWO-COLUMN LAYOUT
+// VERSION 4: TWO-COLUMN LAYOUT WITH WOLF PACK BACKGROUND
 // ============================================================================
+const WOLF_PACK_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop';
+
 function Version4() {
   return (
-    <section className="py-16 md:py-24 px-6">
-      <div className="mx-auto" style={{ maxWidth: '1100px' }}>
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Left - Content */}
-          <div>
-            <H2 className="text-left mb-8">{HEADLINE}</H2>
+    <section className="py-16 md:py-24 px-6 relative overflow-hidden">
+      {/* Wolf Pack Background Image with Ellipse Fade */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img
+          src={WOLF_PACK_IMAGE}
+          srcSet="
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+            https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+          "
+          sizes="100vw"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover"
+          style={{
+            objectPosition: 'center 55%',
+            maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+          }}
+        />
+      </div>
+
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
+        <div className="grid md:grid-cols-12 gap-8 items-center">
+          {/* Left - Content (7 columns) */}
+          <div className="md:col-span-7">
+            <RevealFromLeft>
+              <H2 className="text-left mb-8">{HEADLINE}</H2>
+            </RevealFromLeft>
 
             <div className="space-y-4 mb-8">
               {STATS.map((stat, i) => {
                 const Icon = stat.icon;
                 return (
-                  <div key={i} className="flex items-center gap-4">
-                    <Icon className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
-                    <p className="text-body">
-                      <span className="font-heading font-bold" style={{ color: BRAND_YELLOW }}>
-                        {stat.value}
-                      </span>
-                      {' — '}{stat.label}
-                    </p>
-                  </div>
+                  <RevealFromLeft key={i} delay={0.1 + i * 0.1}>
+                    <div className="flex items-center gap-4">
+                      <Icon className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
+                      <p className="text-body">
+                        <span className="font-heading font-bold" style={{ color: BRAND_YELLOW }}>
+                          {stat.value}
+                        </span>
+                        {' — '}{stat.label}
+                      </p>
+                    </div>
+                  </RevealFromLeft>
                 );
               })}
             </div>
 
-            <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+            <RevealFromLeft delay={0.5}>
+              <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+            </RevealFromLeft>
           </div>
 
-          {/* Right - Featured Cyber Card */}
-          <CyberCardGold padding="xl">
-            <Globe className="w-20 h-20 mx-auto mb-4" style={{ color: BRAND_YELLOW }} />
-            <p className="font-heading text-5xl font-bold" style={{ color: BRAND_YELLOW }}>
-              3,700+
-            </p>
-            <p className="text-body text-lg mt-2">Agents Strong</p>
-            <p className="text-body text-sm mt-4 opacity-70">
-              One of the fastest-growing sponsor-aligned organizations at eXp Realty
-            </p>
-          </CyberCardGold>
+          {/* Right - Featured Cyber Card (5 columns) */}
+          <div className="md:col-span-5">
+            <RevealFromRight delay={0.2}>
+              <CyberCardGold padding="xl">
+                <Globe className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_YELLOW }} />
+                <p className="font-heading text-4xl md:text-5xl font-bold" style={{ color: BRAND_YELLOW }}>
+                  3,700+
+                </p>
+                <p className="text-body text-lg mt-2">Agents Strong</p>
+              </CyberCardGold>
+            </RevealFromRight>
+          </div>
         </div>
       </div>
     </section>
