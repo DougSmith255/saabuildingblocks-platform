@@ -1,75 +1,53 @@
 'use client';
 
-import { useState } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
-import { X, Check } from 'lucide-react';
+import { CyberCard, CyberCardGold } from '@saa/shared/components/saa/cards';
+import { Globe, Users, TrendingUp, MapPin, Check } from 'lucide-react';
 
 /**
- * Test page for "Why Smart Agent Alliance" section redesigns
- * 5 alternative versions with better hierarchy and compactness
+ * Test page for "Proven at Scale" section designs
+ * 5 alternative versions using CyberCard master controller components
  */
 
 // Shared content
-const HEADLINE = "Why Smart Agent Alliance";
-const INTRO = "Most eXp sponsors offer little or no ongoing value.";
-const SUBHEAD = "SAA was built differently.";
-const DESCRIPTION = "We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.";
-const BENEFITS = [
-  "No production team structure",
-  "No commission splits", 
-  "No required recruiting",
-  "No required meetings",
+const HEADLINE = "Proven at Scale";
+const STATS = [
+  { value: "3,700+", label: "Agents supported globally", icon: Users },
+  { value: "#1", label: "Fastest-growing sponsor org at eXp", icon: TrendingUp },
+  { value: "Strong", label: "Consistently high agent retention", icon: Check },
+  { value: "Global", label: "U.S., Canada, Mexico, Australia & beyond", icon: Globe },
 ];
-const TAGLINE = "Just aligned incentives and real support.";
-const CTA_TEXT = "See How It Works";
-
+const CTA_TEXT = "See What Agents Say";
 const BRAND_YELLOW = '#ffd700';
-const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public';
 
 // ============================================================================
-// VERSION 1: TWO-COLUMN PROBLEM/SOLUTION
+// VERSION 1: FOUR CYBER CARDS GRID
 // ============================================================================
 function Version1() {
   return (
-    <section className="py-16 md:py-24 px-6 bg-[#111111]">
+    <section className="py-16 md:py-24 px-6">
       <div className="mx-auto" style={{ maxWidth: '1100px' }}>
         <div className="text-center mb-12">
           <H2>{HEADLINE}</H2>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Problem Column */}
-          <div className="rounded-2xl p-8 bg-red-950/20 border border-red-500/20">
-            <h3 className="font-heading text-lg uppercase tracking-wider text-red-400 mb-6">The Problem</h3>
-            <p className="text-body text-xl font-semibold mb-6">{INTRO}</p>
-            <div className="space-y-3">
-              {['Production team requirements', 'Commission splits', 'Mandatory recruiting', 'Required meetings'].map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-body opacity-70">
-                  <X className="w-5 h-5 text-red-400 flex-shrink-0" />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Solution Column */}
-          <div className="rounded-2xl p-8 border" style={{ backgroundColor: 'rgba(255, 215, 0, 0.08)', borderColor: 'rgba(255, 215, 0, 0.3)' }}>
-            <h3 className="font-heading text-lg uppercase tracking-wider mb-6" style={{ color: BRAND_YELLOW }}>SAA Built Different</h3>
-            <p className="text-body text-xl font-semibold mb-6" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
-            <div className="space-y-3">
-              {BENEFITS.map((item, i) => (
-                <div key={i} className="flex items-center gap-3 text-body">
-                  <Check className="w-5 h-5 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-            <p className="text-body text-lg italic mt-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
+          {STATS.map((stat, i) => {
+            const Icon = stat.icon;
+            return (
+              <CyberCard key={i} padding="lg">
+                <Icon className="w-8 h-8 mx-auto mb-3" style={{ color: BRAND_YELLOW }} />
+                <p className="font-heading text-2xl md:text-3xl font-bold" style={{ color: BRAND_YELLOW }}>
+                  {stat.value}
+                </p>
+                <p className="text-body text-sm mt-2 opacity-80">{stat.label}</p>
+              </CyberCard>
+            );
+          })}
         </div>
 
-        <div className="text-center mt-10">
+        <div className="text-center">
           <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
         </div>
       </div>
@@ -78,146 +56,131 @@ function Version1() {
 }
 
 // ============================================================================
-// VERSION 2: COMPACT CARD WITH CLEAR SECTIONS
+// VERSION 2: SINGLE CYBER CARD GOLD WITH LIST
 // ============================================================================
 function Version2() {
   return (
-    <section className="py-16 md:py-24 px-6 bg-[#111111]">
-      <div className="mx-auto" style={{ maxWidth: '900px' }}>
-        <div className="text-center mb-12">
-          <H2>{HEADLINE}</H2>
-        </div>
+    <section className="py-16 md:py-24 px-6">
+      <div className="mx-auto" style={{ maxWidth: '800px' }}>
+        <CyberCardGold padding="xl">
+          <H2 className="mb-8">{HEADLINE}</H2>
 
-        <div className="rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-white/8 to-white/3">
-          {/* Problem Section */}
-          <div className="p-8 border-b border-white/10">
-            <h3 className="font-heading text-sm uppercase tracking-wider opacity-50 mb-3">The Industry Problem</h3>
-            <p className="text-body text-2xl font-semibold">{INTRO}</p>
-          </div>
-
-          {/* Solution Section */}
-          <div className="p-8 border-b border-white/10" style={{ backgroundColor: 'rgba(255, 215, 0, 0.05)' }}>
-            <h3 className="font-heading text-sm uppercase tracking-wider mb-3" style={{ color: BRAND_YELLOW }}>Our Approach</h3>
-            <p className="text-body text-2xl font-semibold" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
-            <p className="text-body text-lg mt-4 opacity-80">{DESCRIPTION}</p>
-          </div>
-
-          {/* Benefits Grid */}
-          <div className="p-8">
-            <h3 className="font-heading text-sm uppercase tracking-wider opacity-50 mb-6">What This Means For You</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {BENEFITS.map((item, i) => (
-                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-white/5">
-                  <Check className="w-5 h-5 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
-                  <span className="text-body text-sm font-medium">{item}</span>
+          <div className="space-y-4 text-left mb-8">
+            {STATS.map((stat, i) => {
+              const Icon = stat.icon;
+              return (
+                <div key={i} className="flex items-center gap-4">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: 'rgba(255, 215, 0, 0.15)' }}
+                  >
+                    <Icon className="w-6 h-6" style={{ color: BRAND_YELLOW }} />
+                  </div>
+                  <div>
+                    <span className="font-heading text-xl font-bold" style={{ color: BRAND_YELLOW }}>
+                      {stat.value}
+                    </span>
+                    <span className="text-body ml-2">{stat.label}</span>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <div className="text-center mt-8">
-              <p className="text-body text-lg italic mb-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-              <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
-            </div>
+              );
+            })}
           </div>
-        </div>
+
+          <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+        </CyberCardGold>
       </div>
     </section>
   );
 }
 
 // ============================================================================
-// VERSION 3: HERO-STYLE WITH BADGES
+// VERSION 3: HERO STAT + CYBER CARDS
 // ============================================================================
 function Version3() {
   return (
-    <section className="py-16 md:py-24 px-6 bg-[#111111]">
-      <div className="mx-auto text-center" style={{ maxWidth: '900px' }}>
-        <H2>{HEADLINE}</H2>
-        
-        <div className="mt-8 mb-6">
-          <p className="text-body text-lg opacity-60 line-through">{INTRO}</p>
-        </div>
-
-        <p className="text-body text-3xl md:text-4xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>
-          {SUBHEAD}
-        </p>
-        
-        <p className="text-body text-xl opacity-80 mb-10 max-w-2xl mx-auto">
-          {DESCRIPTION}
-        </p>
-
-        {/* Benefit Badges */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {BENEFITS.map((item, i) => (
-            <div 
-              key={i} 
-              className="flex items-center gap-2 px-4 py-2 rounded-full border"
-              style={{ borderColor: 'rgba(255, 215, 0, 0.4)', backgroundColor: 'rgba(255, 215, 0, 0.1)' }}
-            >
-              <Check className="w-4 h-4" style={{ color: BRAND_YELLOW }} />
-              <span className="text-body text-sm font-medium">{item}</span>
-            </div>
-          ))}
-        </div>
-
-        <p className="text-body text-xl italic mb-8" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-        <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// VERSION 4: SIDE-BY-SIDE WITH IMAGE
-// ============================================================================
-function Version4() {
-  return (
-    <section className="py-16 md:py-24 px-6 bg-[#111111]">
+    <section className="py-16 md:py-24 px-6">
       <div className="mx-auto" style={{ maxWidth: '1100px' }}>
         <div className="text-center mb-12">
           <H2>{HEADLINE}</H2>
         </div>
 
+        <div className="grid md:grid-cols-3 gap-6 mb-10">
+          {/* Hero stat - large gold card */}
+          <CyberCardGold padding="xl" className="md:row-span-2">
+            <Users className="w-16 h-16 mx-auto mb-4" style={{ color: BRAND_YELLOW }} />
+            <p className="font-heading text-5xl md:text-6xl font-bold" style={{ color: BRAND_YELLOW }}>
+              3,700+
+            </p>
+            <p className="text-body text-lg mt-3">Agents supported globally</p>
+          </CyberCardGold>
+
+          {/* Smaller cyber cards */}
+          {STATS.slice(1).map((stat, i) => {
+            const Icon = stat.icon;
+            return (
+              <CyberCard key={i} padding="md">
+                <Icon className="w-6 h-6 mx-auto mb-2" style={{ color: BRAND_YELLOW }} />
+                <p className="font-heading text-xl font-bold" style={{ color: BRAND_YELLOW }}>
+                  {stat.value}
+                </p>
+                <p className="text-body text-sm mt-1 opacity-80">{stat.label}</p>
+              </CyberCard>
+            );
+          })}
+        </div>
+
+        <div className="text-center">
+          <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// VERSION 4: TWO-COLUMN LAYOUT
+// ============================================================================
+function Version4() {
+  return (
+    <section className="py-16 md:py-24 px-6">
+      <div className="mx-auto" style={{ maxWidth: '1100px' }}>
         <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Content */}
+          {/* Left - Content */}
           <div>
-            {/* The Problem - compact */}
-            <div className="mb-8">
-              <span className="text-body text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-red-500/20 text-red-400">The Problem</span>
-              <p className="text-body text-lg mt-3 opacity-70">{INTRO}</p>
-            </div>
+            <H2 className="text-left mb-8">{HEADLINE}</H2>
 
-            {/* The Solution */}
-            <div className="mb-8">
-              <span className="text-body text-xs uppercase tracking-wider px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)', color: BRAND_YELLOW }}>Our Solution</span>
-              <p className="font-heading text-2xl font-bold mt-3" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
-              <p className="text-body mt-3">{DESCRIPTION}</p>
-            </div>
-
-            {/* Quick Benefits */}
-            <div className="grid grid-cols-2 gap-3 mb-8">
-              {BENEFITS.map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <Check className="w-4 h-4 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
-                  <span className="text-body text-sm">{item}</span>
-                </div>
-              ))}
+            <div className="space-y-4 mb-8">
+              {STATS.map((stat, i) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={i} className="flex items-center gap-4">
+                    <Icon className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
+                    <p className="text-body">
+                      <span className="font-heading font-bold" style={{ color: BRAND_YELLOW }}>
+                        {stat.value}
+                      </span>
+                      {' — '}{stat.label}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
             <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
           </div>
 
-          {/* Image */}
-          <div className="relative rounded-2xl overflow-hidden border border-white/10" style={{ minHeight: '350px' }}>
-            <img
-              src={ALIGNED_INCENTIVES_IMAGE}
-              alt="Aligned incentives"
-              className="w-full h-full object-cover absolute inset-0"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <p className="text-body text-xl italic" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-            </div>
-          </div>
+          {/* Right - Featured Cyber Card */}
+          <CyberCardGold padding="xl">
+            <Globe className="w-20 h-20 mx-auto mb-4" style={{ color: BRAND_YELLOW }} />
+            <p className="font-heading text-5xl font-bold" style={{ color: BRAND_YELLOW }}>
+              3,700+
+            </p>
+            <p className="text-body text-lg mt-2">Agents Strong</p>
+            <p className="text-body text-sm mt-4 opacity-70">
+              One of the fastest-growing sponsor-aligned organizations at eXp Realty
+            </p>
+          </CyberCardGold>
         </div>
       </div>
     </section>
@@ -225,66 +188,58 @@ function Version4() {
 }
 
 // ============================================================================
-// VERSION 5: MINIMAL ACCORDION STYLE
+// VERSION 5: HORIZONTAL CARDS WITH MAP BACKGROUND
 // ============================================================================
 function Version5() {
-  const [expanded, setExpanded] = useState<number | null>(null);
-
-  const sections = [
-    {
-      title: "The Problem",
-      content: INTRO,
-      details: "Most sponsors treat sponsorship as a transaction, not a relationship. They get credit for bringing you in, but offer nothing after."
-    },
-    {
-      title: "Our Approach", 
-      content: SUBHEAD,
-      details: DESCRIPTION
-    },
-    {
-      title: "What You Get",
-      content: TAGLINE,
-      details: BENEFITS.join(" • ")
-    }
-  ];
-
   return (
-    <section className="py-16 md:py-24 px-6 bg-[#111111]">
-      <div className="mx-auto" style={{ maxWidth: '800px' }}>
+    <section className="py-16 md:py-24 px-6 relative">
+      {/* Subtle world map background */}
+      <div
+        className="absolute inset-0 opacity-5"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50'%3E%3Ccircle cx='20' cy='25' r='8' fill='%23ffd700'/%3E%3Ccircle cx='50' cy='20' r='10' fill='%23ffd700'/%3E%3Ccircle cx='75' cy='28' r='7' fill='%23ffd700'/%3E%3Ccircle cx='85' cy='35' r='5' fill='%23ffd700'/%3E%3C/svg%3E")`,
+          backgroundSize: '400px',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      <div className="mx-auto relative" style={{ maxWidth: '1100px' }}>
         <div className="text-center mb-12">
           <H2>{HEADLINE}</H2>
         </div>
 
-        <div className="space-y-4">
-          {sections.map((section, i) => (
-            <div 
-              key={i}
-              className="rounded-xl border border-white/10 overflow-hidden transition-all duration-300"
-              style={i === 1 ? { borderColor: 'rgba(255, 215, 0, 0.3)', backgroundColor: 'rgba(255, 215, 0, 0.05)' } : {}}
-            >
-              <button
-                onClick={() => setExpanded(expanded === i ? null : i)}
-                className="w-full p-6 text-left flex items-center justify-between"
-              >
-                <div>
-                  <p className="text-body text-xs uppercase tracking-wider opacity-50 mb-1">{section.title}</p>
-                  <p className="font-heading text-xl font-bold" style={i === 1 ? { color: BRAND_YELLOW } : {}}>
-                    {section.content}
-                  </p>
-                </div>
-                <span className="text-2xl opacity-50">{expanded === i ? '−' : '+'}</span>
-              </button>
-              {expanded === i && (
-                <div className="px-6 pb-6">
-                  <p className="text-body opacity-80">{section.details}</p>
-                </div>
-              )}
-            </div>
-          ))}
+        {/* Horizontal scrolling on mobile */}
+        <div className="flex gap-4 overflow-x-auto pb-4 md:grid md:grid-cols-4 md:overflow-visible mb-10">
+          {STATS.map((stat, i) => {
+            const Icon = stat.icon;
+            return (
+              <div key={i} className="flex-shrink-0 w-64 md:w-auto">
+                <CyberCard padding="md">
+                  <div className="flex items-center gap-3 md:flex-col md:text-center">
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
+                      style={{ backgroundColor: 'rgba(255, 215, 0, 0.15)' }}
+                    >
+                      <Icon className="w-6 h-6" style={{ color: BRAND_YELLOW }} />
+                    </div>
+                    <div className="md:mt-3">
+                      <p className="font-heading text-xl font-bold" style={{ color: BRAND_YELLOW }}>
+                        {stat.value}
+                      </p>
+                      <p className="text-body text-sm opacity-80">{stat.label}</p>
+                    </div>
+                  </div>
+                </CyberCard>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="text-center mt-10">
-          <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+        <div className="text-center">
+          <CyberCardGold padding="lg" className="inline-block">
+            <p className="text-body text-lg mb-4">Ready to join the fastest-growing sponsor team?</p>
+            <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+          </CyberCardGold>
         </div>
       </div>
     </section>
@@ -300,50 +255,50 @@ export default function TestWhySAASectionPage() {
       {/* Navigation */}
       <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-sm border-b border-white/10 px-6 py-3">
         <div className="max-w-6xl mx-auto flex flex-wrap gap-4 justify-center text-sm">
-          <a href="#v1" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V1: Two-Column</a>
-          <a href="#v2" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V2: Stacked</a>
-          <a href="#v3" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V3: Hero+Badges</a>
-          <a href="#v4" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V4: Side-by-Side</a>
-          <a href="#v5" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V5: Accordion</a>
+          <a href="#v1" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V1: 4-Card Grid</a>
+          <a href="#v2" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V2: Gold Card List</a>
+          <a href="#v3" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V3: Hero + Cards</a>
+          <a href="#v4" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V4: Two-Column</a>
+          <a href="#v5" className="hover:underline font-medium" style={{ color: BRAND_YELLOW }}>V5: Horizontal</a>
         </div>
       </div>
 
       <div id="v1" className="border-b border-white/10">
         <div className="text-center py-6 bg-white/5">
-          <h3 className="text-body text-lg font-medium">V1: Two-Column Problem/Solution</h3>
-          <p className="text-body text-sm opacity-50">Clear visual split with red/gold contrast</p>
+          <h3 className="text-body text-lg font-medium">V1: Four CyberCards Grid</h3>
+          <p className="text-body text-sm opacity-50">Clean grid with icons and stats</p>
         </div>
         <Version1 />
       </div>
 
       <div id="v2" className="border-b border-white/10">
         <div className="text-center py-6 bg-white/5">
-          <h3 className="text-body text-lg font-medium">V2: Stacked Sections</h3>
-          <p className="text-body text-sm opacity-50">Single card with clear section dividers</p>
+          <h3 className="text-body text-lg font-medium">V2: Single CyberCardGold with List</h3>
+          <p className="text-body text-sm opacity-50">Premium gold border with icon list</p>
         </div>
         <Version2 />
       </div>
 
       <div id="v3" className="border-b border-white/10">
         <div className="text-center py-6 bg-white/5">
-          <h3 className="text-body text-lg font-medium">V3: Hero-Style + Badges</h3>
-          <p className="text-body text-sm opacity-50">Centered bold statement with badge benefits</p>
+          <h3 className="text-body text-lg font-medium">V3: Hero Stat + Smaller Cards</h3>
+          <p className="text-body text-sm opacity-50">Large featured stat with supporting cards</p>
         </div>
         <Version3 />
       </div>
 
       <div id="v4" className="border-b border-white/10">
         <div className="text-center py-6 bg-white/5">
-          <h3 className="text-body text-lg font-medium">V4: Side-by-Side with Image</h3>
-          <p className="text-body text-sm opacity-50">Compact text + image with tag labels</p>
+          <h3 className="text-body text-lg font-medium">V4: Two-Column Layout</h3>
+          <p className="text-body text-sm opacity-50">Content left, featured card right</p>
         </div>
         <Version4 />
       </div>
 
       <div id="v5">
         <div className="text-center py-6 bg-white/5">
-          <h3 className="text-body text-lg font-medium">V5: Minimal Accordion</h3>
-          <p className="text-body text-sm opacity-50">Super compact with expandable details</p>
+          <h3 className="text-body text-lg font-medium">V5: Horizontal Cards</h3>
+          <p className="text-body text-sm opacity-50">Mobile-friendly scrolling cards</p>
         </div>
         <Version5 />
       </div>
