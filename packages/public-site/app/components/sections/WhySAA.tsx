@@ -99,7 +99,7 @@ export function WhySAA() {
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
           {/* Main content card - 7 columns */}
           <div
-            className={`bento-card md:col-span-7 relative rounded-2xl overflow-hidden bg-gradient-to-br from-white/8 to-white/3 border border-white/10 p-8 md:p-10 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            className={`bento-card md:col-span-7 relative rounded-2xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 border border-white/10 p-8 md:p-10 transition-all duration-700 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
             style={{ transitionDelay: '200ms' }}
           >
             {/* The Problem */}
@@ -143,9 +143,9 @@ export function WhySAA() {
                   className="bento-image w-full h-full object-cover object-center"
                 />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-5">
-                <p className="text-body text-sm font-bold" style={{ color: BRAND_YELLOW }}>Aligned Incentives</p>
+                <p className="font-heading text-lg font-bold" style={{ color: BRAND_YELLOW }}>Aligned Incentives</p>
                 <p className="text-body text-xs opacity-70 mt-1">When you succeed, we succeed</p>
               </div>
             </div>
