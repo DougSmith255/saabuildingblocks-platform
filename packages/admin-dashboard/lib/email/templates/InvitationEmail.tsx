@@ -79,7 +79,7 @@ export function InvitationEmail({
           Click the "Accept Invitation" button above
         </li>
         <li style={{ marginBottom: '8px' }}>
-          Set up your secure access code
+          Set up your secure password
         </li>
         <li style={{ marginBottom: '8px' }}>
           {role === 'admin' ? 'Access the admin dashboard and configure settings' :
