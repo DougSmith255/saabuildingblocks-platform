@@ -81,51 +81,78 @@ function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; d
   );
 }
 
-// Animated counter component - loops continuously
-function AnimatedCounter({ target, suffix = '', duration = 2000, pauseDuration = 3000 }: { target: number; suffix?: string; duration?: number; pauseDuration?: number }) {
-  const [count, setCount] = useState(0);
+// Scramble counter animation - matches hero counter style, loops every 5 seconds
+function ScrambleCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [digits, setDigits] = useState(['3', '7', '0', '0']);
   const { ref, isVisible } = useScrollReveal(0.1);
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (!isVisible) return;
 
-    let animationId: number;
-    let timeoutId: NodeJS.Timeout;
+    const duration = 2000; // 2 seconds scramble
+    const loopInterval = 5000; // Loop every 5 seconds
 
-    const runAnimation = () => {
-      const startTime = Date.now();
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
+    const animateScramble = () => {
+      const startTime = performance.now();
+
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+
+      const animate = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        // Easing function for smooth deceleration
-        const easeOut = 1 - Math.pow(1 - progress, 3);
-        setCount(Math.floor(easeOut * target));
-        if (progress < 1) {
-          animationId = requestAnimationFrame(animate);
+
+        if (progress >= 1) {
+          // End animation - show final value
+          setDigits(['3', '7', '0', '0']);
+          animationRef.current = null;
         } else {
-          setCount(target);
-          // Pause at target, then reset and loop
-          timeoutId = setTimeout(() => {
-            setCount(0);
-            // Small delay before starting next loop
-            timeoutId = setTimeout(runAnimation, 500);
-          }, pauseDuration);
+          // Scramble effect - show random numbers that gradually approach target
+          const currentValue = Math.floor(target * progress);
+          const scrambleIntensity = 1 - progress;
+
+          const targetDigits = currentValue.toString().padStart(4, '0').split('');
+          const scrambled = targetDigits.map((digit, index) => {
+            if (Math.random() < scrambleIntensity * 0.3) {
+              // First digit stays 3 to keep 3xxx range
+              if (index === 0) return '3';
+              return (Math.floor(Math.random() * 8) + 2).toString(); // 2-9
+            }
+            return digit;
+          });
+
+          setDigits(scrambled);
+          animationRef.current = requestAnimationFrame(animate);
         }
       };
-      animationId = requestAnimationFrame(animate);
+
+      animationRef.current = requestAnimationFrame(animate);
     };
 
-    runAnimation();
+    // Start first animation after a small delay
+    const initTimeout = setTimeout(() => {
+      animateScramble();
+    }, 200);
+
+    // Loop animation every 5 seconds
+    const intervalId = setInterval(() => {
+      animateScramble();
+    }, loopInterval);
 
     return () => {
-      cancelAnimationFrame(animationId);
-      clearTimeout(timeoutId);
+      clearTimeout(initTimeout);
+      clearInterval(intervalId);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
-  }, [isVisible, target, duration, pauseDuration]);
+  }, [isVisible, target]);
 
   return (
     <span ref={ref}>
-      {count.toLocaleString()}{suffix}
+      {digits.join('')}{suffix}
     </span>
   );
 }
@@ -155,14 +182,13 @@ export function ProvenAtScale() {
       </div>
 
       <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
-        {/* H2 above grid, left-aligned */}
-        <RevealFromLeft>
-          <H2 className="text-left mb-16">{HEADLINE}</H2>
-        </RevealFromLeft>
-
         <div className="grid md:grid-cols-12 gap-8 items-center">
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
+            <RevealFromLeft>
+              <H2 className="text-left" style={{ marginBottom: '25px' }}>{HEADLINE}</H2>
+            </RevealFromLeft>
+
             <div className="space-y-4 mb-8">
               {STATS.map((stat, i) => {
                 const Icon = stat.icon;
@@ -193,7 +219,7 @@ export function ProvenAtScale() {
               <CyberCardGold padding="lg">
                 <Globe className="w-14 h-14 mx-auto mb-3" style={{ color: BRAND_YELLOW }} />
                 <p className="font-heading text-3xl md:text-4xl font-bold" style={{ color: BRAND_YELLOW }}>
-                  <AnimatedCounter target={3700} suffix="+" />
+                  <ScrambleCounter target={3700} suffix="+" />
                 </p>
                 <p className="text-body text-base mt-2">Agents Strong</p>
               </CyberCardGold>
