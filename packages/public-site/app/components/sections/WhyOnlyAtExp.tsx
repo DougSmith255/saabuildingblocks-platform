@@ -125,7 +125,9 @@ function CircuitBoardBackground() {
 
 export function WhyOnlyAtExp() {
   const [activeCard, setActiveCard] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const startTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -134,12 +136,23 @@ export function WhyOnlyAtExp() {
     }, 5000);
   }, []);
 
+  // Only start timer when section becomes visible
   useEffect(() => {
-    startTimer();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+          startTimer();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
     return () => {
+      observer.disconnect();
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [startTimer]);
+  }, [startTimer, isVisible]);
 
   const handleCardClick = () => {
     setActiveCard(prev => (prev + 1) % 4);
@@ -152,7 +165,10 @@ export function WhyOnlyAtExp() {
   };
 
   return (
-    <section className="py-16 md:py-24 px-6">
+    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
+      {/* Section separator gradients */}
+      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       <div className="mx-auto" style={{ maxWidth: '1300px' }}>
         <div className="text-center mb-10 relative z-20">
           <H2>{HEADLINE}</H2>

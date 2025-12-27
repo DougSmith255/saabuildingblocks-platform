@@ -55,8 +55,8 @@ function GrayscaleDataStream() {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      <div className="absolute top-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to bottom, #111111 0%, transparent 100%)' }} />
-      <div className="absolute bottom-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to top, #111111 0%, transparent 100%)' }} />
+      <div className="absolute top-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       {columnConfigs.map((col, i) => {
         const columnOffset = (time * col.speed * 80 + col.offset) % 110;
         const numChars = 22;
@@ -113,7 +113,7 @@ const FUTURE_POINTS = [
   { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public', text: "Cloud-first brokerage model", imgClass: "w-full h-full object-contain", imgStyle: {}, bgColor: 'rgba(17,17,17,0.5)' },
   { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public', text: "AI-powered tools and training", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.25) translate(10px, 18px)' }, bgColor: 'rgba(17,17,17,0.5)' },
   { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public', text: "Mobile-first workflows", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(0.95) translate(3px, 10px)' }, bgColor: 'rgba(17,17,17,0.5)' },
-  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public', text: "Sustainable income paths beyond transactions", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.15) translateX(7px)' }, bgColor: '#111' },
+  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public', text: "Sustainable income paths beyond transactions", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.15) translateX(5px)' }, bgColor: '#111' },
 ];
 
 export function BuiltForFuture() {
@@ -123,12 +123,15 @@ export function BuiltForFuture() {
 
   return (
     <section ref={ref} className="py-16 md:py-24 px-6 overflow-hidden relative">
+      {/* Section separator gradients */}
+      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-20" style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       <GrayscaleDataStream />
       <style>{`
         @keyframes drawLine { from { width: 0; } to { width: 100%; } }
         .future-line { animation: drawLine 1s ease-out forwards; animation-delay: 0.5s; }
       `}</style>
-      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '900px' }}>
+      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '1300px' }}>
         <div className="transition-all duration-700 mb-5" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(20px)' }}>
           <H2>{FUTURE_HEADLINE}</H2>
         </div>

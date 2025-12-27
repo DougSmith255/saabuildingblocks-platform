@@ -160,6 +160,9 @@ function ScrambleCounter({ target, suffix = '' }: { target: number; suffix?: str
 export function ProvenAtScale() {
   return (
     <section className="py-16 md:py-24 px-6 relative overflow-hidden">
+      {/* Section separator gradients */}
+      <div className="absolute top-0 left-0 right-0 h-16 pointer-events-none z-20" style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       {/* Wolf Pack Background Image with Ellipse Fade */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img

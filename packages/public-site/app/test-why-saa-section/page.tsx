@@ -63,12 +63,12 @@ function GrayscaleDataStream() {
       {/* Top fade overlay */}
       <div
         className="absolute top-0 left-0 right-0 h-20 z-10"
-        style={{ background: 'linear-gradient(to bottom, #111111 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }}
       />
       {/* Bottom fade overlay */}
       <div
         className="absolute bottom-0 left-0 right-0 h-20 z-10"
-        style={{ background: 'linear-gradient(to top, #111111 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }}
       />
 
       {/* Grayscale data columns */}
@@ -196,7 +196,7 @@ const FUTURE_POINTS = [
     image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public',
     text: "Sustainable income paths beyond transactions",
     imgClass: "w-full h-full object-cover",
-    imgStyle: { transform: 'scale(1.15) translateX(7px)' },
+    imgStyle: { transform: 'scale(1.15) translateX(5px)' },
     bgColor: '#111'
   },
 ];

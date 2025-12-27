@@ -121,6 +121,8 @@ export function MediaLogos() {
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
+      {/* Section separator gradient - bottom only */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none z-20" style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }} />
       {/* SVG filter for subtle crosshatch/sandpaper texture on logos */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <defs>
