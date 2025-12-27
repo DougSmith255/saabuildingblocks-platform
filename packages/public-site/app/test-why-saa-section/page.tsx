@@ -166,30 +166,109 @@ function Version1() {
 }
 
 // ============================================================================
-// VERSION 2: TABS (Horizontal navigation)
+// VERSION 2: TABS (Horizontal navigation with auto-rotation)
 // ============================================================================
+
+// V2-specific content with updated descriptions
+const V2_BENEFITS = [
+  {
+    icon: Users,
+    title: "Connected Leadership",
+    tabLabel: "Connected",
+    description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
+    autoAdvanceTime: 6000, // 6 seconds (longer text)
+  },
+  {
+    icon: DollarSign,
+    title: "Passive Income Infrastructure",
+    tabLabel: "Passive",
+    description: "We handle the structure so you can build long-term income without relying solely on transactions.",
+    autoAdvanceTime: 5000, // 5 seconds
+  },
+  {
+    icon: Bot,
+    title: "Done-For-You Production Systems",
+    tabLabel: "Done-For-You",
+    description: "Curated systems designed to save time, not create tech overload.",
+    autoAdvanceTime: 4000, // 4 seconds (short text)
+  },
+  {
+    icon: GraduationCap,
+    title: "Elite Training Libraries",
+    tabLabel: "Elite",
+    description: "AI, social media, investing, and modern production systems, available when you need them.",
+    autoAdvanceTime: 5000, // 5 seconds
+  },
+  {
+    icon: Globe,
+    title: "Private Referrals & Global Collaboration",
+    tabLabel: "Private",
+    description: "Warm introductions and deal flow inside a global agent network.",
+    autoAdvanceTime: 4000, // 4 seconds (short text)
+  },
+];
+
 function Version2() {
   const [activeTab, setActiveTab] = useState(0);
-  const activeBenefit = BENEFITS[activeTab];
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { ref: sectionRef, isVisible } = useScrollReveal(0.3);
+
+  const activeBenefit = V2_BENEFITS[activeTab];
   const Icon = activeBenefit.icon;
 
+  // Auto-advance tabs with variable timing
+  const startTimer = () => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setActiveTab(prev => (prev + 1) % V2_BENEFITS.length);
+    }, V2_BENEFITS[activeTab].autoAdvanceTime);
+  };
+
+  useEffect(() => {
+    if (isVisible) {
+      startTimer();
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [activeTab, isVisible]);
+
+  const handleTabClick = (index: number) => {
+    setActiveTab(index);
+    // Timer will restart via the useEffect when activeTab changes
+  };
+
   return (
-    <section className="py-16 md:py-24 px-6">
+    <section ref={sectionRef} className="py-16 md:py-24 px-6">
       <div className="mx-auto" style={{ maxWidth: '1000px' }}>
-        <div className="text-center mb-10">
-          <H2>{HEADLINE}</H2>
-          <p className="text-body opacity-60 mt-2">{SUBHEADLINE}</p>
+        {/* Header with reveal animation */}
+        <div
+          className="text-center mb-10 transition-all duration-700"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+          }}
+        >
+          <H2>What You Get with SAA (At a Glance)</H2>
+          <p className="text-body opacity-60 mt-2">Everything below is explained in detail on our Team Value page.</p>
         </div>
 
-        {/* Tab buttons - scrollable on mobile */}
-        <div className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide">
-          {BENEFITS.map((benefit, i) => {
+        {/* Tab buttons with staggered reveal */}
+        <div
+          className="flex gap-2 overflow-x-auto pb-2 mb-6 scrollbar-hide transition-all duration-700"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transitionDelay: '0.15s',
+          }}
+        >
+          {V2_BENEFITS.map((benefit, i) => {
             const TabIcon = benefit.icon;
             const isActive = activeTab === i;
             return (
               <button
                 key={i}
-                onClick={() => setActiveTab(i)}
+                onClick={() => handleTabClick(i)}
                 className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0"
                 style={{
                   backgroundColor: isActive ? BRAND_YELLOW : 'rgba(255,255,255,0.05)',
@@ -198,36 +277,51 @@ function Version2() {
                 }}
               >
                 <TabIcon className="w-4 h-4" />
-                <span className="font-heading font-medium text-sm">{benefit.title.split(' ')[0]}</span>
+                <span className="font-heading font-medium text-sm">{benefit.tabLabel}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Active content card */}
-        <CyberCardGold padding="xl" className="mb-10">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: 'rgba(255, 215, 0, 0.15)' }}
-            >
-              <Icon className="w-10 h-10" style={{ color: BRAND_YELLOW }} />
+        {/* Active content card with reveal animation */}
+        <div
+          className="transition-all duration-700"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transitionDelay: '0.3s',
+          }}
+        >
+          <CyberCard padding="xl" className="mb-10">
+            <div className="flex flex-col md:flex-row items-center gap-6">
+              <div
+                className="w-20 h-20 rounded-2xl flex items-center justify-center flex-shrink-0"
+                style={{ backgroundColor: 'rgba(255, 215, 0, 0.15)' }}
+              >
+                <Icon className="w-10 h-10" style={{ color: BRAND_YELLOW }} />
+              </div>
+              <div className="text-center md:text-left">
+                <h3 className="font-heading text-2xl font-bold mb-3" style={{ color: BRAND_YELLOW }}>
+                  {activeBenefit.title}
+                </h3>
+                <p className="text-body text-lg">{activeBenefit.description}</p>
+              </div>
             </div>
-            <div className="text-center md:text-left">
-              <h3 className="font-heading text-2xl font-bold mb-3" style={{ color: BRAND_YELLOW }}>
-                {activeBenefit.title}
-              </h3>
-              <p className="text-body text-lg">{activeBenefit.description}</p>
-            </div>
-          </div>
-        </CyberCardGold>
+          </CyberCard>
+        </div>
 
-        {/* Progress indicators */}
-        <div className="flex justify-center gap-2 mb-8">
-          {BENEFITS.map((_, i) => (
+        {/* Progress indicators with reveal */}
+        <div
+          className="flex justify-center gap-2 mb-8 transition-all duration-700"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transitionDelay: '0.45s',
+          }}
+        >
+          {V2_BENEFITS.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveTab(i)}
+              onClick={() => handleTabClick(i)}
               className="w-2 h-2 rounded-full transition-all duration-300"
               style={{
                 backgroundColor: i === activeTab ? BRAND_YELLOW : 'rgba(255,255,255,0.2)',
@@ -237,7 +331,15 @@ function Version2() {
           ))}
         </div>
 
-        <div className="text-center">
+        {/* CTA with reveal */}
+        <div
+          className="text-center transition-all duration-700"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
+            transitionDelay: '0.6s',
+          }}
+        >
           <CTAButton href={CTA_HREF}>{CTA_TEXT}</CTAButton>
         </div>
       </div>
