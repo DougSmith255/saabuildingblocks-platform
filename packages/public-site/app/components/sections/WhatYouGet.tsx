@@ -134,16 +134,16 @@ export function WhatYouGet() {
       <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
       <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
 
-      {/* 3D Glass Plate Background */}
+      {/* 3D Glass Plate Background - Warm gold tint */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
         style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.25) 100%)',
-          borderTop: '1px solid rgba(255,255,255,0.15)',
+          background: 'linear-gradient(180deg, rgba(255,200,0,0.03) 0%, rgba(255,215,0,0.04) 50%, rgba(255,200,0,0.03) 100%)',
+          borderTop: '1px solid rgba(255,200,0,0.10)',
           borderBottom: '2px solid rgba(0,0,0,0.6)',
           boxShadow: `
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset 0 2px 4px rgba(255,255,255,0.05),
+            inset 0 1px 0 rgba(255,200,0,0.06),
+            inset 0 2px 4px rgba(255,190,0,0.025),
             inset 0 -2px 0 rgba(0,0,0,0.4),
             inset 0 -4px 8px rgba(0,0,0,0.2),
             0 4px 12px rgba(0,0,0,0.3)

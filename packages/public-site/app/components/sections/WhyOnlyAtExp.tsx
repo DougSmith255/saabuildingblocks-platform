@@ -191,16 +191,16 @@ export function WhyOnlyAtExp() {
           animation: glassShimmerWhy 30s linear infinite;
         }
       `}</style>
-      {/* 3D Glass Plate Background */}
+      {/* 3D Glass Plate Background - Amber tint */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
         style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.25) 100%)',
-          borderTop: '1px solid rgba(255,255,255,0.15)',
+          background: 'linear-gradient(180deg, rgba(255,170,0,0.035) 0%, rgba(255,140,0,0.045) 50%, rgba(255,170,0,0.035) 100%)',
+          borderTop: '1px solid rgba(255,180,0,0.12)',
           borderBottom: '2px solid rgba(0,0,0,0.6)',
           boxShadow: `
-            inset 0 1px 0 rgba(255,255,255,0.12),
-            inset 0 2px 4px rgba(255,255,255,0.05),
+            inset 0 1px 0 rgba(255,180,0,0.08),
+            inset 0 2px 4px rgba(255,160,0,0.03),
             inset 0 -2px 0 rgba(0,0,0,0.4),
             inset 0 -4px 8px rgba(0,0,0,0.2),
             0 4px 12px rgba(0,0,0,0.3)
