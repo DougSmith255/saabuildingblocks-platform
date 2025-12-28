@@ -2,14 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { H2, CTAButton } from '@saa/shared/components/saa';
+import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 
 const BRAND_YELLOW = '#ffd700';
 
 const FOUNDERS = [
   {
     name: "Doug Smart",
-    title: "Co-Founder & Full-Stack Architect",
-    bio: "Top 0.1% eXp team builder. Designed and built SAA's core technology—from the agent portal and automation systems to the production and attraction tools that give our agents an unfair advantage.",
+    title: "Co-Founder & Full-Stack Developer",
+    bio: "Top 0.1% eXp team builder. Designed and built SAA's core technology—from the agent portal and automations to the production and attraction tools that give our agents an unfair advantage.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
   },
   {
@@ -47,20 +48,13 @@ export function MeetTheFounders() {
 
   return (
     <section ref={ref} className="py-16 md:py-24 px-6 relative" style={{ backgroundColor: '#080808' }}>
-      {/* 3D Glass Plate Background */}
+      {/* 3D Glass Plate Background - lighter variant */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
         style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.25) 100%)',
-          borderTop: '1px solid rgba(255,255,255,0.12)',
-          borderBottom: '2px solid rgba(0,0,0,0.5)',
-          boxShadow: `
-            inset 0 1px 0 rgba(255,255,255,0.1),
-            inset 0 -2px 0 rgba(0,0,0,0.4),
-            inset 0 -4px 8px rgba(0,0,0,0.2),
-            0 8px 32px rgba(0,0,0,0.4),
-            0 2px 8px rgba(0,0,0,0.3)
-          `,
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.02) 100%)',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderBottom: '1px solid rgba(255,255,255,0.04)',
           backdropFilter: 'blur(2px)',
         }}
       >
@@ -93,9 +87,9 @@ export function MeetTheFounders() {
         }
       `}</style>
 
-      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '1100px' }}>
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         <div
-          className="transition-all duration-700 mb-12"
+          className="text-center transition-all duration-700 mb-12"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
@@ -104,67 +98,77 @@ export function MeetTheFounders() {
           <H2>Meet the Founders</H2>
         </div>
 
-        <div className="relative mb-12">
-          {/* Center connecting line */}
+        {/* Two column layout - Doug left, Karrie + CTA right */}
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* Left column - Doug */}
           <div
-            className="absolute top-1/2 left-[10%] right-[10%] h-[2px] hidden md:block"
+            className="transition-all duration-700"
             style={{
-              background: `linear-gradient(90deg, transparent 0%, ${BRAND_YELLOW}40 20%, ${BRAND_YELLOW}40 80%, transparent 100%)`,
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
+              transitionDelay: '0.3s',
             }}
-          />
-
-          <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-12">
-            {FOUNDERS.map((founder, i) => (
-              <div
-                key={i}
-                className="relative transition-all duration-700 flex-1"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : `translateY(${i === 0 ? -30 : 30}px)`,
-                  transitionDelay: `${0.3 + i * 0.2}s`,
-                  maxWidth: '420px',
-                }}
-              >
-                {/* Connector dot on the line */}
-                <div
-                  className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full z-10"
-                  style={{
-                    backgroundColor: BRAND_YELLOW,
-                    top: i === 0 ? 'auto' : '-28px',
-                    bottom: i === 0 ? '-28px' : 'auto',
-                    boxShadow: `0 0 20px ${BRAND_YELLOW}`,
-                  }}
+          >
+            <div
+              className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 h-full flex flex-col"
+              style={{
+                backgroundColor: 'rgba(20,20,20,0.95)',
+                borderColor: 'rgba(255,255,255,0.1)',
+              }}
+            >
+              <ProfileCyberFrame size="lg" index={0}>
+                <img
+                  src={FOUNDERS[0].image}
+                  alt={FOUNDERS[0].name}
+                  className="w-full h-full object-cover"
                 />
-                <div
-                  className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300"
-                  style={{
-                    backgroundColor: 'rgba(20,20,20,0.95)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <img
-                    src={founder.image}
-                    alt={founder.name}
-                    className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mx-auto mb-4"
-                    style={{ border: `3px solid ${BRAND_YELLOW}`, boxShadow: `0 0 25px rgba(255,215,0,0.3)` }}
-                  />
-                  <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{founder.name}</h3>
-                  <p className="text-body text-sm opacity-60 mb-3">{founder.title}</p>
-                  <p className="text-body text-sm md:text-base leading-relaxed">{founder.bio}</p>
-                </div>
-              </div>
-            ))}
+              </ProfileCyberFrame>
+              <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{FOUNDERS[0].name}</h3>
+              <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[0].title}</p>
+              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[0].bio}</p>
+            </div>
           </div>
-        </div>
 
-        <div
-          className="transition-all duration-700"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '0.7s',
-          }}
-        >
-          <CTAButton href="/our-exp-team">Meet the Full Team</CTAButton>
+          {/* Right column - Karrie + CTA */}
+          <div
+            className="transition-all duration-700 flex flex-col gap-6"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
+              transitionDelay: '0.5s',
+            }}
+          >
+            <div
+              className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 flex-1 flex flex-col"
+              style={{
+                backgroundColor: 'rgba(20,20,20,0.95)',
+                borderColor: 'rgba(255,255,255,0.1)',
+              }}
+            >
+              <ProfileCyberFrame size="lg" index={1}>
+                <img
+                  src={FOUNDERS[1].image}
+                  alt={FOUNDERS[1].name}
+                  className="w-full h-full object-cover"
+                />
+              </ProfileCyberFrame>
+              <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{FOUNDERS[1].name}</h3>
+              <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[1].title}</p>
+              <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[1].bio}</p>
+            </div>
+
+            {/* CTA inside right column */}
+            <div
+              className="p-6 rounded-2xl border text-center"
+              style={{
+                backgroundColor: 'rgba(255,215,0,0.08)',
+                borderColor: 'rgba(255,215,0,0.2)',
+              }}
+            >
+              <p className="text-body text-sm mb-4 opacity-70">Want to meet the rest of our leadership team?</p>
+              <CTAButton href="/our-exp-team">Meet the Full Team</CTAButton>
+            </div>
+          </div>
         </div>
       </div>
     </section>
