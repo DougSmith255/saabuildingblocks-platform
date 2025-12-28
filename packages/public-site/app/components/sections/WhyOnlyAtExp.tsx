@@ -17,7 +17,7 @@ const STEPS = [
   { num: 3, label: "eXp Model", title: "Entrepreneurial Freedom", desc: "eXp allows sponsors to build and deliver their own systems.", highlight: true },
   { num: 4, label: "SAA Choice", title: "We Invested In You", desc: "Smart Agent Alliance chose to build real infrastructure.", highlight: true },
 ];
-const DIFFERENTIATOR = "eXp Realty is different.";
+const DIFFERENTIATOR = "eXp Realty Sponsorship is Different.";
 const KEY_POINT = "eXp is the only brokerage that allows sponsors to operate entrepreneurially — to build, fund, and deliver additional systems directly to agents.";
 const TAGLINE = "When you succeed, we succeed.";
 const CTA_TEXT = "See Our Systems";
