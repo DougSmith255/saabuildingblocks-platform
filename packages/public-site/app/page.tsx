@@ -162,7 +162,7 @@ export default function Home() {
               <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
                 For Agents Who Want More
               </Tagline>
-              <div className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px', marginTop: '3px', minHeight: '48px' }}>
+              <div className="text-body text-sm md:text-base opacity-80 mx-auto hero-rotating-text-container" style={{ maxWidth: '950px', marginTop: '3px' }}>
                 <RotatingText
                   texts={[
                     'Smart Agent Alliance (SAA), also referred to as "The Alliance," is a sponsor support team built inside eXp Realty.',
@@ -170,7 +170,6 @@ export default function Home() {
                     'Elite systems. Proven training. Real community.',
                   ]}
                   interval={5000}
-                  minHeight="48px"
                 />
               </div>
             </div>

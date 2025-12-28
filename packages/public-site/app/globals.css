@@ -3077,6 +3077,20 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 }
 
 /* ========================================
+   HERO ROTATING TEXT - Fixed height to prevent layout shift
+   Mobile: taller to accommodate text wrapping
+   ======================================== */
+.hero-rotating-text-container {
+  min-height: 72px; /* Mobile: ~3 lines for longest text */
+}
+
+@media (min-width: 768px) {
+  .hero-rotating-text-container {
+    min-height: 48px; /* Desktop: ~2 lines */
+  }
+}
+
+/* ========================================
    3D TRANSFORMS - DESKTOP ONLY (fixes mobile scroll jumping)
    ======================================== */
 .hero-3d-backdrop {
