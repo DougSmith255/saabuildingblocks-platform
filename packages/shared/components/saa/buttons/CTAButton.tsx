@@ -53,12 +53,12 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
   return (
     <div
       className={`
-        group relative py-2
+        relative py-2
         ${className}
       `}
     >
       {/* Button wrapper - inline container with relative positioning for light bars */}
-      <div className={`relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
+      <div className={`group relative ${isFullWidth ? 'w-full' : 'inline-block'}`}>
         {/* Use Next.js Link for internal links (client-side navigation), regular anchor for external */}
         {useNextLink ? (
           <Link
