@@ -73,10 +73,10 @@ function getTextureStyle(texture: string, opacity: number, frequency: number): R
     case 'crosshatch':
       return {
         backgroundImage: `
-          repeating-linear-gradient(45deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent 3px),
-          repeating-linear-gradient(-45deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent 3px)
+          repeating-linear-gradient(45deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent 6px),
+          repeating-linear-gradient(-45deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent 6px)
         `,
-        backgroundSize: '8px 8px',
+        backgroundSize: '16px 16px',
       };
     case 'dots':
       return {
