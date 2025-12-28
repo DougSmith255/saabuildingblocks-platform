@@ -7,7 +7,7 @@ import { Check } from 'lucide-react';
 
 // Shared content
 const HEADLINE = "Why Smart Agent Alliance?";
-const INTRO = "Most eXp sponsors offer little or no ongoing value.";
+const INTRO = "Unlike most brokerages, eXp offers sponsor support. But most eXp sponsors still provide little or no ongoing value.";
 const SUBHEAD = "SAA was built differently.";
 const DESCRIPTION = "We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.";
 const BENEFITS = [
