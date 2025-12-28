@@ -183,8 +183,7 @@ export function MediaLogos() {
             isVisible ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          eXp, the largest independent brokerage in the world, is a S&P 600 SmallCap company
-          and the first cloud-based brokerage that has been featured in major national and global media outlets.
+          Smart Agent Alliance operates within eXp Realty, a publicly traded brokerage that has been featured in major national and global media outlets.
         </p>
       </div>
 
