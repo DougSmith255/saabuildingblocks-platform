@@ -126,16 +126,18 @@ function CircuitBoardBackground() {
 export function WhyOnlyAtExp() {
   const [activeCard, setActiveCard] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [userInteracted, setUserInteracted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const hasStartedRef = useRef(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   const startTimer = useCallback(() => {
+    if (userInteracted) return; // Stop auto-advance after user clicks
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setActiveCard(prev => (prev + 1) % 4);
     }, 5000);
-  }, []);
+  }, [userInteracted]);
 
   // Only start timer when section becomes visible
   useEffect(() => {
@@ -160,13 +162,15 @@ export function WhyOnlyAtExp() {
   }, [startTimer]);
 
   const handleCardClick = () => {
+    setUserInteracted(true); // Permanently disable auto-advance
+    if (timerRef.current) clearInterval(timerRef.current);
     setActiveCard(prev => (prev + 1) % 4);
-    startTimer();
   };
 
   const handleDotClick = (index: number) => {
+    setUserInteracted(true); // Permanently disable auto-advance
+    if (timerRef.current) clearInterval(timerRef.current);
     setActiveCard(index);
-    startTimer();
   };
 
   return (
