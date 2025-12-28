@@ -139,9 +139,16 @@ export function MediaLogos() {
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
         style={{
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.02) 100%)',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
-          borderBottom: '1px solid rgba(255,255,255,0.04)',
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.08) 100%)',
+          borderTop: '1px solid rgba(255,255,255,0.15)',
+          borderBottom: '2px solid rgba(0,0,0,0.6)',
+          boxShadow: `
+            inset 0 1px 0 rgba(255,255,255,0.12),
+            inset 0 2px 4px rgba(255,255,255,0.05),
+            inset 0 -2px 0 rgba(0,0,0,0.4),
+            inset 0 -4px 8px rgba(0,0,0,0.2),
+            0 4px 12px rgba(0,0,0,0.3)
+          `,
           backdropFilter: 'blur(2px)',
         }}
       >
