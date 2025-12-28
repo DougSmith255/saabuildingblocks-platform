@@ -361,8 +361,6 @@ export function WhyOnlyAtExp() {
               />
             </div>
 
-            <CircuitBoardBackground />
-
             <figcaption className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
               <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>{DIFFERENTIATOR}</p>
               <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{KEY_POINT}</p>
