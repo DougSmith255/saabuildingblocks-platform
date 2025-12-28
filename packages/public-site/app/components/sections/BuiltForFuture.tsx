@@ -63,7 +63,7 @@ function GrayscaleDataStream() {
   const getChar = (colIndex: number, charIndex: number) => {
     const flipRate = 0.6 + (colIndex % 3) * 0.3;
     const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
-    return String.fromCharCode(0x30A0 + (charSeed % 96));
+    return charSeed % 2 === 0 ? '0' : '1';
   };
 
   return (
