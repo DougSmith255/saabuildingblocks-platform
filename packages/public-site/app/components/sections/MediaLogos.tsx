@@ -132,7 +132,7 @@ export function MediaLogos() {
           100% { background-position: -300% 0; }
         }
         .glass-shimmer-media {
-          animation: glassShimmerMedia 20s ease-in-out infinite;
+          animation: glassShimmerMedia 30s linear infinite;
         }
       `}</style>
       {/* 3D Glass Plate Background */}
@@ -152,12 +152,12 @@ export function MediaLogos() {
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Animated shimmer wave - smooth gradient for mobile */}
+        {/* Animated shimmer wave - subtle gradient */}
         <div
           className="absolute inset-0 glass-shimmer-media"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 15%, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 70%, transparent 85%, transparent 100%)',
-            backgroundSize: '400% 100%',
+            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.015) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 65%, transparent 80%, transparent 100%)',
+            backgroundSize: '300% 100%',
           }}
         />
         {/* Noise texture overlay */}
@@ -191,7 +191,7 @@ export function MediaLogos() {
 
       {/* Heading - uses master controller H2 component */}
       <div
-        className={`text-center px-4 transition-all duration-700 ease-out ${
+        className={`text-center px-4 transition-all duration-700 ease-out relative z-10 ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
@@ -208,7 +208,7 @@ export function MediaLogos() {
 
       {/* Carousel Container */}
       <div
-        className={`relative transition-all duration-700 delay-300 ease-out ${
+        className={`relative z-10 transition-all duration-700 delay-300 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >

@@ -146,12 +146,12 @@ export function WhatYouGet() {
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Animated shimmer wave - smooth gradient for mobile */}
+        {/* Animated shimmer wave - subtle gradient */}
         <div
           className="absolute inset-0 glass-shimmer"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 15%, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 70%, transparent 85%, transparent 100%)',
-            backgroundSize: '400% 100%',
+            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.015) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 65%, transparent 80%, transparent 100%)',
+            backgroundSize: '300% 100%',
           }}
         />
         {/* Noise texture overlay */}
@@ -177,10 +177,10 @@ export function WhatYouGet() {
           100% { background-position: -300% 0; }
         }
         .glass-shimmer {
-          animation: glassShimmer 20s ease-in-out infinite;
+          animation: glassShimmer 30s linear infinite;
         }
       `}</style>
-      <div className="mx-auto" style={{ maxWidth: '1300px' }}>
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         {/* Header */}
         <div
           className="text-center transition-all duration-700"

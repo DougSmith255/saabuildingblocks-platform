@@ -71,12 +71,12 @@ export function MeetTheFounders() {
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Animated shimmer wave - smooth gradient for mobile */}
+        {/* Animated shimmer wave - subtle gradient */}
         <div
           className="absolute inset-0 founders-glass-shimmer"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 15%, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 70%, transparent 85%, transparent 100%)',
-            backgroundSize: '400% 100%',
+            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.015) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 65%, transparent 80%, transparent 100%)',
+            backgroundSize: '300% 100%',
           }}
         />
         {/* Noise texture overlay */}
@@ -96,7 +96,7 @@ export function MeetTheFounders() {
           100% { background-position: -300% 0; }
         }
         .founders-glass-shimmer {
-          animation: foundersGlassShimmer 20s ease-in-out infinite;
+          animation: foundersGlassShimmer 30s linear infinite;
         }
       `}</style>
 
