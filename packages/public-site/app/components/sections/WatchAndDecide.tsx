@@ -20,15 +20,19 @@ const POSTER_URL = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-
  */
 export function WatchAndDecide() {
   return (
-    <VideoSection
-      id="watch-and-decide"
-      title="The Only Video You Need"
-      subtitle="Everything about eXp, our team, and the opportunity - explained in full. No follow-up research required."
-      videoId={VIDEO_ID}
-      posterUrl={POSTER_URL}
-      storageKey="homepage_video"
-      unlockThreshold={50}
-      sponsorName={null} // Joins under Doug directly (Website Lead)
-    />
+    <div className="relative">
+      {/* Top gradient fade */}
+      <div className="absolute top-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
+      <VideoSection
+        id="watch-and-decide"
+        title="The Only Video You Need"
+        subtitle="Everything about eXp, our team, and the opportunity - explained in full. No follow-up research required."
+        videoId={VIDEO_ID}
+        posterUrl={POSTER_URL}
+        storageKey="homepage_video"
+        unlockThreshold={50}
+        sponsorName={null} // Joins under Doug directly (Website Lead)
+      />
+    </div>
   );
 }

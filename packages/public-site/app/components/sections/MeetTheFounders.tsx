@@ -46,7 +46,7 @@ export function MeetTheFounders() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <section ref={ref} className="py-16 md:py-24 px-6 relative">
+    <section ref={ref} className="py-16 md:py-24 px-6 relative" style={{ backgroundColor: '#080808' }}>
       {/* 3D Glass Plate Background */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"

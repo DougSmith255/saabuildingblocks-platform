@@ -53,61 +53,12 @@ function GrayscaleDataStream() {
     return String.fromCharCode(0x30A0 + (charSeed % 96));
   };
 
-  // Corner radius to match glass cards (rounded-3xl = 24px)
-  const cornerSize = 48; // Slightly larger than corner radius for smooth blend
-
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
       {/* Top edge gradient */}
       <div className="absolute top-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
       {/* Bottom edge gradient */}
       <div className="absolute bottom-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
-
-      {/* Corner gradients to match rounded glass cards */}
-      {/* Top-left corner */}
-      <div
-        className="absolute z-10"
-        style={{
-          top: 0,
-          left: 0,
-          width: cornerSize,
-          height: cornerSize,
-          background: 'radial-gradient(circle at 0% 0%, #080808 0%, #080808 50%, transparent 70%)',
-        }}
-      />
-      {/* Top-right corner */}
-      <div
-        className="absolute z-10"
-        style={{
-          top: 0,
-          right: 0,
-          width: cornerSize,
-          height: cornerSize,
-          background: 'radial-gradient(circle at 100% 0%, #080808 0%, #080808 50%, transparent 70%)',
-        }}
-      />
-      {/* Bottom-left corner */}
-      <div
-        className="absolute z-10"
-        style={{
-          bottom: 0,
-          left: 0,
-          width: cornerSize,
-          height: cornerSize,
-          background: 'radial-gradient(circle at 0% 100%, #080808 0%, #080808 50%, transparent 70%)',
-        }}
-      />
-      {/* Bottom-right corner */}
-      <div
-        className="absolute z-10"
-        style={{
-          bottom: 0,
-          right: 0,
-          width: cornerSize,
-          height: cornerSize,
-          background: 'radial-gradient(circle at 100% 100%, #080808 0%, #080808 50%, transparent 70%)',
-        }}
-      />
 
       {columnConfigs.map((col, i) => {
         const columnOffset = (time * col.speed * 80 + col.offset) % 110;
