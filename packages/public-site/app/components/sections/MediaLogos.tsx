@@ -125,16 +125,6 @@ export function MediaLogos() {
       <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
       <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
 
-      {/* Glass shimmer animation */}
-      <style>{`
-        @keyframes glassShimmerMedia {
-          0% { background-position: 300% 0; }
-          100% { background-position: -300% 0; }
-        }
-        .glass-shimmer-media {
-          animation: glassShimmerMedia 30s linear infinite;
-        }
-      `}</style>
       {/* 3D Glass Plate Background */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
@@ -152,14 +142,6 @@ export function MediaLogos() {
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Animated shimmer wave - subtle gradient */}
-        <div
-          className="absolute inset-0 glass-shimmer-media"
-          style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.025) 35%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.025) 65%, transparent 80%, transparent 100%)',
-            backgroundSize: '300% 100%',
-          }}
-        />
         {/* Noise texture overlay */}
         <div
           className="absolute inset-0"
