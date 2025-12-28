@@ -90,8 +90,13 @@ export function WhatYouGet() {
   const [activeTab, setActiveTab] = useState(0);
   const [userInteracted, setUserInteracted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const { ref: sectionRef, isVisible } = useScrollReveal(0.15);
-  const { ref: cardRef, isVisible: isCardVisible } = useScrollReveal(0.5); // Higher threshold for card
+
+  // Individual scroll reveal for each element
+  const { ref: headerRef, isVisible: isHeaderVisible } = useScrollReveal(0.5);
+  const { ref: tabsRef, isVisible: isTabsVisible } = useScrollReveal(0.5);
+  const { ref: cardRef, isVisible: isCardVisible } = useScrollReveal(0.3);
+  const { ref: dotsRef, isVisible: isDotsVisible } = useScrollReveal(0.5);
+  const { ref: ctaRef, isVisible: isCtaVisible } = useScrollReveal(0.5);
 
   const activeBenefit = BENEFITS[activeTab];
   const Icon = activeBenefit.icon;
@@ -122,7 +127,7 @@ export function WhatYouGet() {
   };
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
+    <section className="py-16 md:py-24 px-6 relative">
       {/* Corner fill gradients - fills the rounded corners where glass doesn't cover (z-0 = behind glass) */}
       <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at top left, #080808 0%, transparent 70%)' }} />
       <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at top right, #080808 0%, transparent 70%)' }} />
@@ -183,10 +188,11 @@ export function WhatYouGet() {
       <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         {/* Header */}
         <div
+          ref={headerRef}
           className="text-center transition-all duration-700"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            opacity: isHeaderVisible ? 1 : 0,
+            transform: isHeaderVisible ? 'translateY(0)' : 'translateY(30px)',
           }}
         >
           <H2>What You Get with SAA</H2>
@@ -195,11 +201,11 @@ export function WhatYouGet() {
 
         {/* Tab buttons - centered, wrap on mobile */}
         <div
+          ref={tabsRef}
           className="flex flex-wrap justify-center gap-2 pb-2 mb-6 transition-all duration-700"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transitionDelay: '0.15s',
+            opacity: isTabsVisible ? 1 : 0,
+            transform: isTabsVisible ? 'translateY(0)' : 'translateY(20px)',
           }}
         >
           {BENEFITS.map((benefit, i) => {
@@ -232,9 +238,8 @@ export function WhatYouGet() {
           ref={cardRef}
           className="transition-all duration-700 mb-10 rounded-2xl border border-white/10 overflow-hidden relative h-[210px] md:h-[190px]"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transitionDelay: '0.3s',
+            opacity: isCardVisible ? 1 : 0,
+            transform: isCardVisible ? 'translateY(0)' : 'translateY(20px)',
           }}
         >
           {/* Background image */}
@@ -273,10 +278,10 @@ export function WhatYouGet() {
 
         {/* Progress indicators */}
         <div
+          ref={dotsRef}
           className="flex justify-center gap-2 mb-8 transition-all duration-700"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '0.45s',
+            opacity: isDotsVisible ? 1 : 0,
           }}
         >
           {BENEFITS.map((_, i) => (
@@ -294,11 +299,11 @@ export function WhatYouGet() {
 
         {/* CTA */}
         <div
+          ref={ctaRef}
           className="text-center transition-all duration-700"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-            transitionDelay: '0.6s',
+            opacity: isCtaVisible ? 1 : 0,
+            transform: isCtaVisible ? 'translateY(0)' : 'translateY(20px)',
           }}
         >
           <CTAButton href="/exp-realty-sponsor">See the Full Value Stack</CTAButton>
