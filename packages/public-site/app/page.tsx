@@ -149,11 +149,12 @@ export default function Home() {
             }}
           >
             {/* Headline Group */}
-            <div className="flex flex-col items-center" style={{ perspective: '1000px', gap: 'clamp(3px, 0.5vw, 7px)' }}>
+            <div style={{ perspective: '1000px' }}>
               <H1
                 id="hero-heading"
                 style={{
                   fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
+                  marginBottom: '3px',
                 }}
               >
                 SMART AGENT ALLIANCE
@@ -161,7 +162,7 @@ export default function Home() {
               <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
                 For Agents Who Want More
               </Tagline>
-              <div className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px' }}>
+              <div className="text-body text-sm md:text-base opacity-80 mx-auto" style={{ maxWidth: '950px', marginTop: '3px', minHeight: '48px' }}>
                 <RotatingText
                   texts={[
                     'Smart Agent Alliance (SAA), also referred to as "The Alliance," is a sponsor support team built inside eXp Realty.',
@@ -169,12 +170,13 @@ export default function Home() {
                     'Elite systems. Proven training. Real community.',
                   ]}
                   interval={5000}
+                  minHeight="48px"
                 />
               </div>
             </div>
 
             {/* CTA Button */}
-            <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '19px' }}>
+            <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '14px' }}>
               <CTAButton href="#watch-and-decide">
                 WATCH & DECIDE
               </CTAButton>
