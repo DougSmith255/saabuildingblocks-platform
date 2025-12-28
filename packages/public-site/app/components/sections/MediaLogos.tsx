@@ -121,9 +121,9 @@ export function MediaLogos() {
       ref={sectionRef}
       className="relative py-16 md:py-24 overflow-hidden"
     >
-      {/* Corner fill gradients - only bottom corners (hero is above) */}
-      <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
-      <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
+      {/* Corner fill gradients - only bottom corners (hero is above), z-0 = behind glass */}
+      <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
 
       {/* Glass shimmer animation */}
       <style>{`
@@ -137,7 +137,7 @@ export function MediaLogos() {
       `}</style>
       {/* 3D Glass Plate Background */}
       <div
-        className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
+        className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
         style={{
           background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.25) 100%)',
           borderTop: '1px solid rgba(255,255,255,0.15)',
