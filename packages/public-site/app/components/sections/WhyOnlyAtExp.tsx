@@ -228,7 +228,7 @@ export function WhyOnlyAtExp() {
       </div>
       <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         <div
-          className="text-center transition-all duration-700"
+          className="text-center transition-all duration-700 relative z-20"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
@@ -240,7 +240,7 @@ export function WhyOnlyAtExp() {
         <div className="grid md:grid-cols-2 gap-8 items-center">
           {/* Deck of cards */}
           <div
-            className="relative h-[340px] transition-all duration-700"
+            className="relative h-[260px] md:h-[340px] transition-all duration-700"
             style={{
               perspective: '1000px',
               opacity: isVisible ? 1 : 0,
@@ -283,7 +283,7 @@ export function WhyOnlyAtExp() {
               return (
                 <div
                   key={i}
-                  className="absolute inset-0 rounded-2xl p-6 border-2 cursor-pointer transition-all duration-500"
+                  className="absolute inset-0 rounded-2xl p-4 md:p-6 border-2 cursor-pointer transition-all duration-500"
                   style={{
                     backgroundColor: step.highlight ? 'rgba(40, 35, 10, 0.98)' : 'rgba(25, 25, 25, 0.98)',
                     borderColor: step.highlight ? 'rgba(255, 215, 0, 0.5)' : 'rgba(255,255,255,0.15)',
@@ -296,26 +296,26 @@ export function WhyOnlyAtExp() {
                   }}
                   onClick={handleCardClick}
                 >
-                  <div className="flex items-center gap-5 mb-5">
+                  <div className="flex items-center gap-3 md:gap-5 mb-3 md:mb-5">
                     {step.highlight ? (
                       <div
-                        className="rounded-full flex items-center justify-center"
-                        style={{ backgroundColor: BRAND_YELLOW, width: '56px', height: '56px' }}
+                        className="rounded-full flex items-center justify-center w-10 h-10 md:w-14 md:h-14"
+                        style={{ backgroundColor: BRAND_YELLOW }}
                       >
-                        <Number3D num={step.num} size="medium" dark />
+                        <Number3D num={step.num} size="small" dark />
                       </div>
                     ) : (
-                      <div className="rounded-full flex items-center justify-center bg-white/10 border-2 border-white/20" style={{ width: '56px', height: '56px' }}>
-                        <Number3D num={step.num} size="medium" />
+                      <div className="rounded-full flex items-center justify-center bg-white/10 border-2 border-white/20 w-10 h-10 md:w-14 md:h-14">
+                        <Number3D num={step.num} size="small" />
                       </div>
                     )}
                     <div>
                       <p className="text-body text-xs uppercase tracking-wider opacity-60">{step.label}</p>
-                      <p className="font-heading text-xl font-bold" style={step.highlight ? { color: BRAND_YELLOW } : undefined}>{step.title}</p>
+                      <p className="font-heading text-lg md:text-xl font-bold" style={step.highlight ? { color: BRAND_YELLOW } : undefined}>{step.title}</p>
                     </div>
                   </div>
-                  <p className="text-body text-base opacity-90 leading-relaxed">{step.desc}</p>
-                  <p className="text-body text-xs opacity-40 mt-4">Click to advance</p>
+                  <p className="text-body text-sm md:text-base opacity-90 leading-relaxed">{step.desc}</p>
+                  <p className="text-body text-xs opacity-40 mt-2 md:mt-4">Click to advance</p>
                 </div>
               );
             })}
