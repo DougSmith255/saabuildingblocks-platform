@@ -149,7 +149,7 @@ export default function Home() {
             }}
           >
             {/* Headline Group */}
-            <div className="space-y-2 sm:space-y-3" style={{ perspective: '1000px' }}>
+            <div className="flex flex-col items-center" style={{ perspective: '1000px', gap: 'clamp(3px, 0.5vw, 7px)' }}>
               <H1
                 id="hero-heading"
                 style={{
@@ -174,7 +174,7 @@ export default function Home() {
             </div>
 
             {/* CTA Button */}
-            <div className="hero-cta-buttons flex justify-center items-center mt-6">
+            <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '19px' }}>
               <CTAButton href="#watch-and-decide">
                 WATCH & DECIDE
               </CTAButton>
