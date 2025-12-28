@@ -7,10 +7,19 @@ const BRAND_YELLOW = '#ffd700';
 
 function GrayscaleDataStream() {
   const [time, setTime] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
   const scrollSpeedRef = useRef(1);
   const lastScrollY = useRef(0);
+
+  // Detect mobile screen size
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const BASE_SPEED = 0.0004;
@@ -41,11 +50,15 @@ function GrayscaleDataStream() {
     };
   }, []);
 
-  const columnConfigs = useMemo(() => [...Array(20)].map((_, i) => ({
-    x: i * 5,
+  // Use fewer columns on mobile (8 vs 20)
+  const columnCount = isMobile ? 8 : 20;
+  const columnWidth = 100 / columnCount;
+
+  const columnConfigs = useMemo(() => [...Array(columnCount)].map((_, i) => ({
+    x: i * columnWidth,
     speed: 0.8 + (i % 4) * 0.4,
     offset: (i * 17) % 100,
-  })), []);
+  })), [columnCount, columnWidth]);
 
   const getChar = (colIndex: number, charIndex: number) => {
     const flipRate = 0.6 + (colIndex % 3) * 0.3;
@@ -64,7 +77,7 @@ function GrayscaleDataStream() {
         const columnOffset = (time * col.speed * 80 + col.offset) % 110;
         const numChars = 22;
         return (
-          <div key={i} className="absolute" style={{ left: col.x + '%', top: 0, width: '4%', height: '100%', overflow: 'hidden', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.4' }}>
+          <div key={i} className="absolute" style={{ left: col.x + '%', top: 0, width: columnWidth + '%', height: '100%', overflow: 'hidden', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.4' }}>
             {[...Array(numChars)].map((_, j) => {
               const baseY = j * 5;
               const charY = (baseY + columnOffset) % 110 - 10;

@@ -536,11 +536,11 @@ export function VideoPlayer({
           width: 80px;
           height: 80px;
           border-radius: 50%;
-          background: rgba(255, 215, 0, 0.9);
+          background: rgba(255, 215, 0, 0.6);
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.3);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2);
           transition: transform 0.2s ease, opacity 0.2s ease;
         }
 

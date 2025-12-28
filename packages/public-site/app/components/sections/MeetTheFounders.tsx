@@ -54,11 +54,11 @@ export function MeetTheFounders() {
       <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
       <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
 
-      {/* 3D Glass Plate Background - lighter variant */}
+      {/* 3D Glass Plate Background */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
         style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0.08) 100%)',
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.25) 100%)',
           borderTop: '1px solid rgba(255,255,255,0.15)',
           borderBottom: '2px solid rgba(0,0,0,0.6)',
           boxShadow: `
@@ -71,12 +71,12 @@ export function MeetTheFounders() {
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Animated shimmer wave */}
+        {/* Animated shimmer wave - smooth gradient for mobile */}
         <div
           className="absolute inset-0 founders-glass-shimmer"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.01) 20%, rgba(255,255,255,0.025) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.025) 65%, rgba(255,255,255,0.01) 80%, transparent 100%)',
-            backgroundSize: '300% 100%',
+            background: 'linear-gradient(105deg, transparent 0%, transparent 15%, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 70%, transparent 85%, transparent 100%)',
+            backgroundSize: '400% 100%',
           }}
         />
         {/* Noise texture overlay */}
