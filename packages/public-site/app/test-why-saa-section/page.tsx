@@ -1,635 +1,329 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo } from 'react';
-import { H2, CTAButton } from '@saa/shared/components/saa';
-
-// ============================================================================
-// GRAYSCALE DATA STREAM EFFECT (Modified from hero DataStreamEffect)
-// ============================================================================
-function GrayscaleDataStream() {
-  const [time, setTime] = useState(0);
-  const timeRef = useRef(0);
-  const rafRef = useRef<number>(0);
-  const scrollSpeedRef = useRef(1);
-  const lastScrollY = useRef(0);
-
-  useEffect(() => {
-    const BASE_SPEED = 0.0004; // Balanced speed
-    let lastTimestamp = 0;
-
-    // Track scroll velocity for speed boost
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      const scrollDelta = Math.abs(currentY - lastScrollY.current);
-      lastScrollY.current = currentY;
-      // Boost speed based on scroll velocity (up to 4x)
-      scrollSpeedRef.current = 1 + Math.min(scrollDelta * 0.05, 3);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    const animate = (timestamp: number) => {
-      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
-      lastTimestamp = timestamp;
-      // Apply scroll speed multiplier
-      timeRef.current += BASE_SPEED * deltaTime * scrollSpeedRef.current;
-      setTime(timeRef.current);
-      // Decay scroll boost back to 1
-      scrollSpeedRef.current = Math.max(1, scrollSpeedRef.current * 0.95);
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    rafRef.current = requestAnimationFrame(animate);
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const columnConfigs = useMemo(() => [...Array(20)].map((_, i) => ({
-    x: i * 5,
-    speed: 0.8 + (i % 4) * 0.4,
-    offset: (i * 17) % 100,
-  })), []);
-
-  const getChar = (colIndex: number, charIndex: number) => {
-    const flipRate = 0.6 + (colIndex % 3) * 0.3;
-    const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
-    return String.fromCharCode(0x30A0 + (charSeed % 96));
-  };
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      {/* Top fade overlay */}
-      <div
-        className="absolute top-0 left-0 right-0 h-20 z-10"
-        style={{ background: 'linear-gradient(to bottom, #1c1c1c 0%, transparent 100%)' }}
-      />
-      {/* Bottom fade overlay */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-20 z-10"
-        style={{ background: 'linear-gradient(to top, #1c1c1c 0%, transparent 100%)' }}
-      />
-
-      {/* Grayscale data columns */}
-      {columnConfigs.map((col, i) => {
-        const columnOffset = (time * col.speed * 80 + col.offset) % 110;
-        const numChars = 22;
-
-        return (
-          <div
-            key={i}
-            className="absolute"
-            style={{
-              left: `${col.x}%`,
-              top: 0,
-              width: '4%',
-              height: '100%',
-              overflow: 'hidden',
-              fontFamily: 'monospace',
-              fontSize: '14px',
-              lineHeight: '1.4',
-            }}
-          >
-            {[...Array(numChars)].map((_, j) => {
-              const baseY = j * 5;
-              const charY = (baseY + columnOffset) % 110 - 10;
-              const headPosition = (columnOffset / 5) % numChars;
-              const distanceFromHead = (j - headPosition + numChars) % numChars;
-              const isHead = distanceFromHead === 0;
-              const trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
-
-              // Stronger edge fade for top/bottom
-              const edgeFade = charY < 12 ? Math.max(0, charY / 12) :
-                               charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
-
-              // Brighter grayscale colors
-              const headColor = `rgba(220,220,220,${0.9 * edgeFade})`;
-              const trailColor = `rgba(160,160,160,${trailBrightness * 0.6 * edgeFade})`;
-
-              return (
-                <div
-                  key={j}
-                  style={{
-                    position: 'absolute',
-                    top: `${charY}%`,
-                    color: isHead ? headColor : trailColor,
-                    textShadow: isHead
-                      ? `0 0 12px rgba(200,200,200,${0.7 * edgeFade})`
-                      : `0 0 4px rgba(150,150,150,${0.2 * edgeFade})`,
-                    opacity: edgeFade,
-                  }}
-                >
-                  {getChar(i, j)}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 /**
- * Test page for two new sections:
- * 1. "Built for Where Real Estate Is Going" - 2 versions (1B, 1E)
- * 2. "Meet the Founders" - 2 versions (2A, 2C)
+ * Glass Tint & Texture Test Page
+ * 15 variations with different brand colors and internal textures
  */
 
 const BRAND_YELLOW = '#ffd700';
 
-// ============================================================================
-// SCROLL REVEAL HOOK
-// ============================================================================
-function useScrollReveal(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
-}
-
-// ============================================================================
-// BUILT FOR THE FUTURE - CONTENT
-// ============================================================================
-const FUTURE_HEADLINE = "Built for Where Real Estate Is Going";
-const FUTURE_SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA is already there.";
-
-const FUTURE_POINTS = [
+// 15 different color + texture combinations
+const GLASS_VARIATIONS = [
   {
-    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public',
-    text: "Cloud-first brokerage model",
-    imgClass: "w-full h-full object-contain",
-    imgStyle: {},
-    bgColor: 'rgba(17,17,17,0.5)'
+    id: 1,
+    name: 'Pure Gold',
+    color: { r: 255, g: 215, b: 0 },
+    colorOpacity: 0.04,
+    borderOpacity: 0.12,
+    texture: 'noise',
+    textureOpacity: 0.03,
+    noiseFrequency: 0.9,
   },
   {
-    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public',
-    text: "AI-powered tools and training",
-    imgClass: "w-full h-full object-cover",
-    imgStyle: { transform: 'scale(1.25) translate(10px, 18px)' },
-    bgColor: 'rgba(17,17,17,0.5)'
+    id: 2,
+    name: 'Warm Amber',
+    color: { r: 255, g: 170, b: 0 },
+    colorOpacity: 0.045,
+    borderOpacity: 0.12,
+    texture: 'noise',
+    textureOpacity: 0.05,
+    noiseFrequency: 0.7,
   },
   {
-    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public',
-    text: "Mobile-first workflows",
-    imgClass: "w-full h-full object-cover",
-    imgStyle: { transform: 'scale(0.95) translate(3px, 10px)' },
-    bgColor: 'rgba(17,17,17,0.5)'
+    id: 3,
+    name: 'Deep Orange',
+    color: { r: 255, g: 140, b: 0 },
+    colorOpacity: 0.05,
+    borderOpacity: 0.12,
+    texture: 'noise',
+    textureOpacity: 0.02,
+    noiseFrequency: 1.2,
   },
   {
-    image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public',
-    text: "Sustainable income paths beyond transactions",
-    imgClass: "w-full h-full object-cover",
-    imgStyle: { transform: 'scale(1.15) translateX(5px)' },
-    bgColor: '#111'
+    id: 4,
+    name: 'Copper Bronze',
+    color: { r: 205, g: 150, b: 80 },
+    colorOpacity: 0.05,
+    borderOpacity: 0.15,
+    texture: 'noise',
+    textureOpacity: 0.04,
+    noiseFrequency: 0.5,
+  },
+  {
+    id: 5,
+    name: 'Honey Gold',
+    color: { r: 255, g: 200, b: 50 },
+    colorOpacity: 0.035,
+    borderOpacity: 0.10,
+    texture: 'crosshatch',
+    textureOpacity: 0.03,
+    noiseFrequency: 0.8,
+  },
+  {
+    id: 6,
+    name: 'Sunset Orange',
+    color: { r: 255, g: 120, b: 30 },
+    colorOpacity: 0.04,
+    borderOpacity: 0.14,
+    texture: 'noise',
+    textureOpacity: 0.06,
+    noiseFrequency: 0.4,
+  },
+  {
+    id: 7,
+    name: 'Champagne',
+    color: { r: 247, g: 231, b: 206 },
+    colorOpacity: 0.06,
+    borderOpacity: 0.08,
+    texture: 'dots',
+    textureOpacity: 0.04,
+    noiseFrequency: 1.5,
+  },
+  {
+    id: 8,
+    name: 'Antique Gold',
+    color: { r: 180, g: 140, b: 40 },
+    colorOpacity: 0.055,
+    borderOpacity: 0.15,
+    texture: 'noise',
+    textureOpacity: 0.07,
+    noiseFrequency: 0.3,
+  },
+  {
+    id: 9,
+    name: 'Light Gold',
+    color: { r: 255, g: 230, b: 100 },
+    colorOpacity: 0.03,
+    borderOpacity: 0.08,
+    texture: 'lines',
+    textureOpacity: 0.025,
+    noiseFrequency: 2.0,
+  },
+  {
+    id: 10,
+    name: 'Burnt Sienna',
+    color: { r: 200, g: 100, b: 30 },
+    colorOpacity: 0.045,
+    borderOpacity: 0.12,
+    texture: 'noise',
+    textureOpacity: 0.035,
+    noiseFrequency: 0.6,
+  },
+  {
+    id: 11,
+    name: 'Peach Gold',
+    color: { r: 255, g: 180, b: 100 },
+    colorOpacity: 0.04,
+    borderOpacity: 0.10,
+    texture: 'grain',
+    textureOpacity: 0.08,
+    noiseFrequency: 1.0,
+  },
+  {
+    id: 12,
+    name: 'Marigold',
+    color: { r: 255, g: 190, b: 0 },
+    colorOpacity: 0.038,
+    borderOpacity: 0.11,
+    texture: 'noise',
+    textureOpacity: 0.015,
+    noiseFrequency: 1.8,
+  },
+  {
+    id: 13,
+    name: 'Warm Bronze',
+    color: { r: 180, g: 120, b: 60 },
+    colorOpacity: 0.06,
+    borderOpacity: 0.14,
+    texture: 'sandpaper',
+    textureOpacity: 0.05,
+    noiseFrequency: 0.35,
+  },
+  {
+    id: 14,
+    name: 'Cream Gold',
+    color: { r: 255, g: 235, b: 180 },
+    colorOpacity: 0.05,
+    borderOpacity: 0.06,
+    texture: 'noise',
+    textureOpacity: 0.01,
+    noiseFrequency: 2.5,
+  },
+  {
+    id: 15,
+    name: 'Rose Gold',
+    color: { r: 230, g: 150, b: 120 },
+    colorOpacity: 0.045,
+    borderOpacity: 0.12,
+    texture: 'canvas',
+    textureOpacity: 0.04,
+    noiseFrequency: 0.55,
   },
 ];
 
-// ============================================================================
-// MEET THE FOUNDERS - CONTENT
-// ============================================================================
-const FOUNDERS = [
-  {
-    name: "Doug Smart",
-    title: "Co-Founder & Full-Stack Architect",
-    bio: "Top 0.1% eXp team builder. Built everything you see here — this site, the agent portal, automations, and the production & attraction tools that give our agents an unfair advantage.",
-    image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
-  },
-  {
-    name: "Karrie Hill, JD",
-    title: "Co-Founder & eXp Certified Mentor",
-    bio: "UC Berkeley Law (top 5%). Built a six-figure real estate business without cold calling or door knocking, now helping agents do the same.",
-    image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public",
-  },
-];
+// Different texture patterns
+function getTextureStyle(texture: string, opacity: number, frequency: number) {
+  switch (texture) {
+    case 'crosshatch':
+      return {
+        backgroundImage: `
+          repeating-linear-gradient(45deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent 3px),
+          repeating-linear-gradient(-45deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent 3px)
+        `,
+        backgroundSize: '8px 8px',
+      };
+    case 'dots':
+      return {
+        backgroundImage: `radial-gradient(circle, rgba(255,255,255,${opacity * 2}) 1px, transparent 1px)`,
+        backgroundSize: `${Math.round(12 / frequency)}px ${Math.round(12 / frequency)}px`,
+      };
+    case 'lines':
+      return {
+        backgroundImage: `repeating-linear-gradient(90deg, rgba(255,255,255,${opacity}) 0px, transparent 1px, transparent ${Math.round(6 / frequency)}px)`,
+      };
+    case 'grain':
+      return {
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${frequency * 1.5}' numOctaves='6' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        opacity: opacity,
+        mixBlendMode: 'overlay' as const,
+      };
+    case 'sandpaper':
+      return {
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='turbulence' baseFrequency='${frequency}' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        opacity: opacity * 1.5,
+        mixBlendMode: 'overlay' as const,
+      };
+    case 'canvas':
+      return {
+        backgroundImage: `
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${frequency}' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E"),
+          repeating-linear-gradient(0deg, rgba(255,255,255,${opacity * 0.3}) 0px, transparent 1px, transparent 4px)
+        `,
+        opacity: opacity,
+        mixBlendMode: 'overlay' as const,
+      };
+    case 'noise':
+    default:
+      return {
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${frequency}' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        opacity: opacity,
+        mixBlendMode: 'overlay' as const,
+      };
+  }
+}
 
-// ============================================================================
-// SECTION 1: BUILT FOR THE FUTURE - VERSION 1B
-// ============================================================================
-
-// Version 1B: Horizontal Icons with Animated Line
-function Future1B() {
-  const { ref, isVisible } = useScrollReveal();
-
-  // Line animation takes 1s with 0.5s delay = completes at 1.5s
-  // Each icon should reveal when line reaches it (at 25%, 50%, 75%, 100% of line)
-  // Line duration is 1s, so icons reveal at: 0.5s + 0.25s, 0.5s + 0.5s, 0.5s + 0.75s, 0.5s + 1s
-  const getIconDelay = (index: number) => 0.5 + (index * 0.25);
-  const getTextDelay = (index: number) => 0.5 + (index * 0.25) + 0.15; // Text slightly after icon
+function GlassPanel({ variation }: { variation: typeof GLASS_VARIATIONS[0] }) {
+  const { r, g, b } = variation.color;
+  const textureStyle = getTextureStyle(variation.texture, variation.textureOpacity, variation.noiseFrequency);
 
   return (
-    <section ref={ref} className="py-16 md:py-24 px-6 overflow-hidden relative">
-      {/* Grayscale Data Stream Background */}
-      <GrayscaleDataStream />
+    <div className="relative rounded-3xl overflow-hidden" style={{ minHeight: '200px' }}>
+      {/* Corner fill gradients */}
+      <div className="absolute top-0 left-0 w-12 h-12 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at top left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute top-0 right-0 w-12 h-12 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at top right, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 left-0 w-12 h-12 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 right-0 w-12 h-12 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
 
-      <style>{`
-        @keyframes drawLine {
-          from { width: 0; }
-          to { width: 100%; }
-        }
-        .future1b-line {
-          animation: drawLine 1s ease-out forwards;
-          animation-delay: 0.5s;
-        }
-      `}</style>
-      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '900px' }}>
+      {/* Glass plate */}
+      <div
+        className="absolute inset-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
+        style={{
+          background: `linear-gradient(180deg, rgba(${r},${g},${b},${variation.colorOpacity * 0.8}) 0%, rgba(${r},${g},${b},${variation.colorOpacity}) 50%, rgba(${r},${g},${b},${variation.colorOpacity * 0.8}) 100%)`,
+          borderTop: `1px solid rgba(${r},${g},${b},${variation.borderOpacity})`,
+          borderBottom: '2px solid rgba(0,0,0,0.6)',
+          boxShadow: `
+            inset 0 1px 0 rgba(${r},${g},${b},${variation.borderOpacity * 0.7}),
+            inset 0 2px 4px rgba(${r},${g},${b},${variation.colorOpacity * 0.8}),
+            inset 0 -2px 0 rgba(0,0,0,0.4),
+            inset 0 -4px 8px rgba(0,0,0,0.2),
+            0 4px 12px rgba(0,0,0,0.3)
+          `,
+          backdropFilter: 'blur(2px)',
+        }}
+      >
+        {/* Texture overlay */}
         <div
-          className="transition-all duration-700 mb-5"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
+          className="absolute inset-0"
+          style={textureStyle}
+        />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 p-6 text-center">
+        <div
+          className="inline-block px-3 py-1 rounded-full text-xs font-bold mb-3"
+          style={{ backgroundColor: `rgba(${r},${g},${b},0.3)`, color: `rgb(${Math.min(r + 30, 255)},${Math.min(g + 30, 255)},${Math.min(b + 30, 255)})` }}
         >
-          <H2>{FUTURE_HEADLINE}</H2>
+          #{variation.id}
         </div>
-        <p
-          className="text-body opacity-70 mb-12 transition-all duration-700"
-          style={{
-            opacity: isVisible ? 0.7 : 0,
-            transitionDelay: '0.15s',
-          }}
-        >
-          {FUTURE_SUBLINE}
+        <h3 className="font-heading text-xl font-bold mb-2" style={{ color: `rgb(${r},${g},${b})` }}>
+          {variation.name}
+        </h3>
+        <div className="text-body text-xs space-y-1 opacity-70">
+          <p>Color: rgb({r},{g},{b}) @ {(variation.colorOpacity * 100).toFixed(1)}%</p>
+          <p>Border: {(variation.borderOpacity * 100).toFixed(0)}% opacity</p>
+          <p>Texture: {variation.texture}</p>
+          <p>Texture opacity: {(variation.textureOpacity * 100).toFixed(1)}%</p>
+          <p>Noise frequency: {variation.noiseFrequency}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function GlassTestPage() {
+  return (
+    <main className="min-h-screen bg-[#080808] py-12 px-4">
+      {/* Header */}
+      <div className="max-w-6xl mx-auto text-center mb-12">
+        <h1 className="font-heading text-3xl md:text-4xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>
+          Glass Tint & Texture Test
+        </h1>
+        <p className="text-body opacity-70 max-w-2xl mx-auto">
+          15 variations with different brand-aligned colors and internal textures. Each panel shows a unique combination of tint color, opacity levels, and texture patterns.
         </p>
+      </div>
 
-        <div className="relative mb-12">
-          {/* Connecting line */}
-          <div className="absolute top-[60px] left-0 right-0 h-px bg-white/10 hidden md:block">
-            {isVisible && (
-              <div className="future1b-line h-full w-0" style={{ background: `linear-gradient(90deg, transparent, ${BRAND_YELLOW}, transparent)` }} />
-            )}
+      {/* Grid of variations */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {GLASS_VARIATIONS.map((variation) => (
+          <GlassPanel key={variation.id} variation={variation} />
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div className="max-w-4xl mx-auto mt-12 p-6 rounded-2xl" style={{ backgroundColor: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <h2 className="font-heading text-lg font-bold mb-4" style={{ color: BRAND_YELLOW }}>Texture Types</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-body text-sm">
+          <div>
+            <span className="font-bold text-white/80">noise</span>
+            <p className="opacity-60">Standard fractal noise grain</p>
           </div>
-
-          <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-4">
-            {FUTURE_POINTS.map((point, i) => {
-              return (
-                <div
-                  key={i}
-                  className="flex-1 relative z-10 flex flex-col items-center"
-                >
-                  {/* Image circle - reveals when line reaches it */}
-                  <div
-                    className="w-[120px] h-[120px] rounded-full mb-4 flex items-center justify-center transition-all duration-500 overflow-hidden"
-                    style={{
-                      backgroundColor: point.bgColor,
-                      border: `3px solid ${BRAND_YELLOW}`,
-                      boxShadow: isVisible ? `0 0 30px rgba(255,215,0,0.4)` : 'none',
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'scale(1)' : 'scale(0.5)',
-                      transitionDelay: `${getIconDelay(i)}s`,
-                    }}
-                  >
-                    <img
-                      src={point.image}
-                      alt={point.text}
-                      className={point.imgClass}
-                      style={point.imgStyle}
-                    />
-                  </div>
-                  {/* Text - fades in and down after icon reveals */}
-                  <p
-                    className="text-body text-sm transition-all duration-500"
-                    style={{
-                      opacity: isVisible ? 1 : 0,
-                      transform: isVisible ? 'translateY(0)' : 'translateY(-10px)',
-                      transitionDelay: `${getTextDelay(i)}s`,
-                    }}
-                  >
-                    {point.text}
-                  </p>
-                </div>
-              );
-            })}
+          <div>
+            <span className="font-bold text-white/80">crosshatch</span>
+            <p className="opacity-60">45° crossed lines</p>
+          </div>
+          <div>
+            <span className="font-bold text-white/80">dots</span>
+            <p className="opacity-60">Repeating dot pattern</p>
+          </div>
+          <div>
+            <span className="font-bold text-white/80">lines</span>
+            <p className="opacity-60">Vertical scan lines</p>
+          </div>
+          <div>
+            <span className="font-bold text-white/80">grain</span>
+            <p className="opacity-60">Heavy film grain</p>
+          </div>
+          <div>
+            <span className="font-bold text-white/80">sandpaper</span>
+            <p className="opacity-60">Coarse turbulence</p>
+          </div>
+          <div>
+            <span className="font-bold text-white/80">canvas</span>
+            <p className="opacity-60">Fabric-like texture</p>
           </div>
         </div>
-
-      </div>
-    </section>
-  );
-}
-
-// Version 1E: Rotating Badge/Circle
-function Future1E() {
-  const { ref, isVisible } = useScrollReveal();
-
-  return (
-    <section ref={ref} className="py-16 md:py-24 px-6">
-      <style>{`
-        @keyframes rotateBadge {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .future5-rotate {
-          animation: rotateBadge 30s linear infinite;
-        }
-      `}</style>
-      <div className="mx-auto text-center" style={{ maxWidth: '700px' }}>
-        {/* Rotating outer ring */}
-        <div className="relative w-[360px] h-[360px] mx-auto mb-8">
-          <div
-            className={`absolute inset-0 rounded-full border-2 border-dashed ${isVisible ? 'future5-rotate' : ''}`}
-            style={{ borderColor: 'rgba(255,215,0,0.3)' }}
-          />
-          {/* Image positions */}
-          {FUTURE_POINTS.map((point, i) => {
-            const angle = (i * 90) * (Math.PI / 180);
-            const radius = 140; // Increased radius for larger circles
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-            return (
-              <div
-                key={i}
-                className="absolute w-[80px] h-[80px] rounded-full flex items-center justify-center transition-all duration-500 overflow-hidden"
-                style={{
-                  backgroundColor: point.bgColor,
-                  border: `3px solid ${BRAND_YELLOW}`,
-                  left: `calc(50% + ${x}px - 40px)`,
-                  top: `calc(50% + ${y}px - 40px)`,
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'scale(1)' : 'scale(0)',
-                  transitionDelay: `${0.3 + i * 0.15}s`,
-                }}
-              >
-                <img
-                  src={point.image}
-                  alt={point.text}
-                  className={point.imgClass}
-                  style={point.imgStyle}
-                />
-              </div>
-            );
-          })}
-          {/* Center text */}
-          <div
-            className="absolute inset-0 flex items-center justify-center transition-all duration-700"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transitionDelay: '0.8s',
-            }}
-          >
-            <span className="font-heading font-bold text-lg" style={{ color: BRAND_YELLOW }}>SAA</span>
-          </div>
-        </div>
-
-        <h2
-          className="font-heading text-xl md:text-2xl font-bold mb-3 transition-all duration-700"
-          style={{
-            color: BRAND_YELLOW,
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '0.2s',
-          }}
-        >
-          {FUTURE_HEADLINE}
-        </h2>
-        <p
-          className="text-body opacity-70 mb-6 transition-all duration-700"
-          style={{
-            opacity: isVisible ? 0.7 : 0,
-            transitionDelay: '0.3s',
-          }}
-        >
-          {FUTURE_SUBLINE}
-        </p>
-
-        <div
-          className="transition-all duration-700"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '0.5s',
-          }}
-        >
-          <CTAButton href="/about-exp-realty">Learn About eXp Realty</CTAButton>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// SECTION 2: MEET THE FOUNDERS - VERSION 2A and 2C
-// ============================================================================
-
-// Version 2A: Side-by-Side Cards
-function Founders2A() {
-  const { ref, isVisible } = useScrollReveal();
-
-  return (
-    <section ref={ref} className="py-16 md:py-24 px-6">
-      <div className="mx-auto" style={{ maxWidth: '900px' }}>
-        <h2
-          className="font-heading text-2xl md:text-3xl font-bold text-center mb-10 transition-all duration-700"
-          style={{
-            color: BRAND_YELLOW,
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
-        >
-          Meet the Founders
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-6 mb-10">
-          {FOUNDERS.map((founder, i) => (
-            <div
-              key={i}
-              className="rounded-2xl border p-6 transition-all duration-500 hover:border-yellow-500/50"
-              style={{
-                backgroundColor: 'rgba(25,25,25,0.95)',
-                borderColor: 'rgba(255,255,255,0.1)',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                transitionDelay: `${0.2 + i * 0.15}s`,
-              }}
-            >
-              <div className="flex items-start gap-4">
-                <img
-                  src={founder.image}
-                  alt={founder.name}
-                  className="w-20 h-20 rounded-xl object-cover"
-                  style={{ border: `2px solid ${BRAND_YELLOW}` }}
-                />
-                <div>
-                  <h3 className="font-heading font-bold text-lg" style={{ color: BRAND_YELLOW }}>{founder.name}</h3>
-                  <p className="text-body text-sm opacity-60 mb-2">{founder.title}</p>
-                  <p className="text-body text-sm">{founder.bio}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div
-          className="text-center transition-all duration-700"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '0.5s',
-          }}
-        >
-          <CTAButton href="/our-exp-team">Meet the Full Team</CTAButton>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// Version 2C: Horizontal Timeline
-function Founders2C() {
-  const { ref, isVisible } = useScrollReveal();
-
-  return (
-    <section ref={ref} className="py-16 md:py-24 px-6">
-      <div className="mx-auto text-center" style={{ maxWidth: '1100px' }}>
-        <div
-          className="transition-all duration-700 mb-12"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
-        >
-          <H2>Meet the Founders</H2>
-        </div>
-
-        <div className="relative mb-12">
-          {/* Center connecting line */}
-          <div
-            className="absolute top-1/2 left-[10%] right-[10%] h-[2px] hidden md:block"
-            style={{
-              background: `linear-gradient(90deg, transparent 0%, ${BRAND_YELLOW}40 20%, ${BRAND_YELLOW}40 80%, transparent 100%)`,
-            }}
-          />
-
-          <div className="flex flex-col md:flex-row justify-center gap-8 md:gap-12">
-            {FOUNDERS.map((founder, i) => (
-              <div
-                key={i}
-                className="relative transition-all duration-700 flex-1"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : `translateY(${i === 0 ? -30 : 30}px)`,
-                  transitionDelay: `${0.3 + i * 0.2}s`,
-                  maxWidth: '420px',
-                }}
-              >
-                {/* Connector dot on the line */}
-                <div
-                  className="hidden md:block absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full z-10"
-                  style={{
-                    backgroundColor: BRAND_YELLOW,
-                    top: i === 0 ? 'auto' : '-28px',
-                    bottom: i === 0 ? '-28px' : 'auto',
-                    boxShadow: `0 0 20px ${BRAND_YELLOW}`,
-                  }}
-                />
-                <div
-                  className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300"
-                  style={{
-                    backgroundColor: 'rgba(20,20,20,0.95)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                  }}
-                >
-                  <img
-                    src={founder.image}
-                    alt={founder.name}
-                    className="w-28 h-28 md:w-32 md:h-32 rounded-full object-cover mx-auto mb-4"
-                    style={{ border: `3px solid ${BRAND_YELLOW}`, boxShadow: `0 0 25px rgba(255,215,0,0.3)` }}
-                  />
-                  <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{founder.name}</h3>
-                  <p className="text-body text-sm opacity-60 mb-3">{founder.title}</p>
-                  <p className="text-body text-sm md:text-base leading-relaxed">{founder.bio}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div
-          className="transition-all duration-700"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transitionDelay: '0.7s',
-          }}
-        >
-          <CTAButton href="/our-exp-team">Meet the Full Team</CTAButton>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ============================================================================
-// MAIN PAGE
-// ============================================================================
-export default function TestSectionsPage() {
-  return (
-    <main className="min-h-screen bg-[#111111]">
-      {/* Navigation */}
-      <div className="sticky top-0 z-50 bg-black/90 backdrop-blur-sm border-b border-white/10 px-6 py-3">
-        <div className="max-w-6xl mx-auto flex flex-wrap gap-3 justify-center text-xs">
-          <span className="opacity-50 mr-2">FUTURE:</span>
-          <a href="#f1b" className="hover:underline" style={{ color: BRAND_YELLOW }}>1B</a>
-          <a href="#f1e" className="hover:underline" style={{ color: BRAND_YELLOW }}>1E</a>
-          <span className="opacity-30 mx-2">|</span>
-          <span className="opacity-50 mr-2">FOUNDERS:</span>
-          <a href="#m2a" className="hover:underline" style={{ color: BRAND_YELLOW }}>2A</a>
-          <a href="#m2c" className="hover:underline" style={{ color: BRAND_YELLOW }}>2C</a>
-        </div>
-      </div>
-
-      {/* Future Section Versions */}
-      <div className="border-b border-white/10">
-        <div className="text-center py-4 bg-yellow-500/10">
-          <h3 className="font-heading text-lg font-bold" style={{ color: BRAND_YELLOW }}>Section 1: Built for Where Real Estate Is Going</h3>
-        </div>
-      </div>
-
-      <div id="f1b" className="border-b border-white/10">
-        <div className="text-center py-3 bg-white/5">
-          <span className="text-body text-sm opacity-70">1B: Horizontal Icons with Animated Line</span>
-        </div>
-        <Future1B />
-      </div>
-
-      <div id="f1e" className="border-b border-white/10">
-        <div className="text-center py-3 bg-white/5">
-          <span className="text-body text-sm opacity-70">1E: Rotating Badge Circle</span>
-        </div>
-        <Future1E />
-      </div>
-
-      {/* Founders Section Versions */}
-      <div className="border-b border-white/10">
-        <div className="text-center py-4 bg-yellow-500/10">
-          <h3 className="font-heading text-lg font-bold" style={{ color: BRAND_YELLOW }}>Section 2: Meet the Founders</h3>
-        </div>
-      </div>
-
-      <div id="m2a" className="border-b border-white/10">
-        <div className="text-center py-3 bg-white/5">
-          <span className="text-body text-sm opacity-70">2A: Side-by-Side Cards</span>
-        </div>
-        <Founders2A />
-      </div>
-
-      <div id="m2c">
-        <div className="text-center py-3 bg-white/5">
-          <span className="text-body text-sm opacity-70">2C: Horizontal Timeline</span>
-        </div>
-        <Founders2C />
       </div>
     </main>
   );
