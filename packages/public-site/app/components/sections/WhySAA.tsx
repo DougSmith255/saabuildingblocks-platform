@@ -7,13 +7,14 @@ import { Check } from 'lucide-react';
 
 // Shared content
 const HEADLINE = "Why Smart Agent Alliance?";
-const INTRO = "Unlike most brokerages, eXp offers sponsor support. But most eXp sponsors still provide little or no ongoing value.";
-const SUBHEAD = "SAA was built differently.";
+const TAGLINE = "Elite systems. Proven training. Real community.";
+const INTRO = "Most eXp sponsors offer little or no ongoing value.";
+const SUBHEAD = "Smart Agent Alliance was built differently.";
 const DESCRIPTION = "We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.";
 const BENEFITS = [
-  "No production team structure",
+  "Not a production team",
   "No commission splits",
-  "No required recruiting",
+  "No sponsor team fees",
   "No required meetings",
 ];
 const CTA_TEXT = "See How It Works";
@@ -176,16 +177,11 @@ export function WhySAA() {
           <div className="md:col-span-7">
             <RevealFromLeft>
               <div className="bento-card relative rounded-2xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 border border-white/10 p-8 md:p-10 h-full">
-              {/* The Problem */}
+              {/* Tagline and content */}
               <div className="mb-8">
-                <span className="text-body text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-red-500/20 text-red-400">The Problem</span>
-                <p className="text-body text-lg mt-3 opacity-70">{INTRO}</p>
-              </div>
-
-              {/* Our Solution */}
-              <div className="mb-8">
-                <span className="text-body text-xs uppercase tracking-wider px-3 py-1 rounded-full" style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)', color: BRAND_YELLOW }}>Our Solution</span>
-                <p className="font-heading text-2xl md:text-3xl font-bold mt-3" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
+                <p className="font-heading text-2xl md:text-3xl font-bold" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
+                <p className="text-body text-lg mt-4 opacity-70">{INTRO}</p>
+                <p className="font-heading text-xl md:text-2xl font-bold mt-6" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
                 <p className="text-body text-lg mt-4 leading-relaxed">{DESCRIPTION}</p>
               </div>
 

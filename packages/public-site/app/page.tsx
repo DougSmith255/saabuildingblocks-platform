@@ -165,9 +165,9 @@ export default function Home() {
               <div className="text-body text-sm md:text-base opacity-80 mx-auto hero-rotating-text-container" style={{ maxWidth: '950px', marginTop: '3px' }}>
                 <RotatingText
                   texts={[
-                    'Smart Agent Alliance (SAA), also referred to as "The Alliance," is a sponsor support team built inside eXp Realty.',
-                    'Not a production team. No splits. No fees.',
-                    'Elite systems. Proven training. Real community.',
+                    'Inside eXp Realty, the most successful global independent brokerage.',
+                    'Smart Agent Alliance, free sponsor support built for agents.',
+                    'Together, we deliver an ecosystem for exponential growth.',
                   ]}
                   interval={5000}
                 />
@@ -191,9 +191,9 @@ export default function Home() {
       {/* Homepage Sections */}
       <MediaLogos />
       <WhySAA />
-      <WhyOnlyAtExp />
       <ProvenAtScale />
       <WhatYouGet />
+      <WhyOnlyAtExp />
       <BuiltForFuture />
       <MeetTheFounders />
       <WatchAndDecide />

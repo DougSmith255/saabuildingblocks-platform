@@ -177,13 +177,13 @@ export function MediaLogos() {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
-        <H2>eXp Realty in the News</H2>
+        <H2>Why eXp Realty?</H2>
         <p
           className={`text-body max-w-3xl mx-auto opacity-80 mb-8 transition-all duration-700 delay-150 ease-out ${
             isVisible ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          Smart Agent Alliance operates within eXp Realty, a publicly traded brokerage that has been featured in major national and global media outlets.
+          The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
         </p>
       </div>
 
