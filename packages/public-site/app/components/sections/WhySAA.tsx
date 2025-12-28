@@ -161,7 +161,7 @@ export function WhySAA() {
       <div className="mx-auto" style={{ maxWidth: '1300px' }}>
         {/* H2 with its own reveal */}
         <Reveal>
-          <div className="text-center mb-12 md:mb-16">
+          <div className="text-center">
             <H2>{HEADLINE}</H2>
           </div>
         </Reveal>
@@ -200,7 +200,7 @@ export function WhySAA() {
           {/* Right column - 5 columns */}
           <div className="md:col-span-5 flex flex-col gap-4 md:gap-6">
             <RevealFromRight>
-              <div className="bento-card relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex-1 min-h-[200px]">
+              <div className="bento-card relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex-1 min-h-[280px]">
                 <div className="absolute inset-0 overflow-hidden">
                   <img
                     src={ALIGNED_INCENTIVES_IMAGE}
@@ -210,7 +210,7 @@ export function WhySAA() {
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-5">
-                  <p className="font-heading text-lg font-bold" style={{ color: BRAND_YELLOW }}>Aligned Incentives</p>
+                  <p className="font-heading font-bold" style={{ color: BRAND_YELLOW, fontSize: '23px' }}>Aligned Incentives</p>
                   <p className="text-body text-xs opacity-70 mt-1">When you succeed, we succeed</p>
                 </div>
               </div>

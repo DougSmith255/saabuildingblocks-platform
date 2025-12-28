@@ -171,9 +171,54 @@ export function WhyOnlyAtExp() {
 
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
+      {/* Glass shimmer animation */}
+      <style>{`
+        @keyframes glassShimmerWhy {
+          0% { background-position: 300% 0; }
+          100% { background-position: -300% 0; }
+        }
+        .glass-shimmer-why {
+          animation: glassShimmerWhy 20s ease-in-out infinite;
+        }
+      `}</style>
+      {/* 3D Glass Plate Background - edge to edge with visible corners */}
+      <div
+        className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
+        style={{
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.25) 100%)',
+          borderTop: '1px solid rgba(255,255,255,0.12)',
+          borderBottom: '2px solid rgba(0,0,0,0.5)',
+          boxShadow: `
+            inset 0 1px 0 rgba(255,255,255,0.1),
+            inset 0 -2px 0 rgba(0,0,0,0.4),
+            inset 0 -4px 8px rgba(0,0,0,0.2),
+            0 8px 32px rgba(0,0,0,0.4),
+            0 2px 8px rgba(0,0,0,0.3)
+          `,
+          backdropFilter: 'blur(2px)',
+        }}
+      >
+        {/* Animated shimmer wave - wide gentle gradient */}
+        <div
+          className="absolute inset-0 glass-shimmer-why"
+          style={{
+            background: 'linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.01) 20%, rgba(255,255,255,0.025) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.025) 65%, rgba(255,255,255,0.01) 80%, transparent 100%)',
+            backgroundSize: '300% 100%',
+          }}
+        />
+        {/* Noise texture overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            opacity: 0.03,
+            mixBlendMode: 'overlay',
+          }}
+        />
+      </div>
       <div className="mx-auto" style={{ maxWidth: '1300px' }}>
         <div
-          className="text-center mb-10 relative z-20 transition-all duration-700"
+          className="text-center relative z-20 transition-all duration-700"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? 'translateY(0)' : 'translateY(30px)',

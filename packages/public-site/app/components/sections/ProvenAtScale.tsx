@@ -151,8 +151,13 @@ function ScrambleCounter({ target, suffix = '' }: { target: number; suffix?: str
   }, [isVisible, target]);
 
   return (
-    <span ref={ref}>
-      {digits.join('')}{suffix}
+    <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>
+      {digits.map((digit, i) => (
+        <span key={i} style={{ display: 'inline-block', width: '0.6em', textAlign: 'center' }}>
+          {digit}
+        </span>
+      ))}
+      {suffix}
     </span>
   );
 }
@@ -186,7 +191,7 @@ export function ProvenAtScale() {
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
             <RevealFromLeft>
-              <H2 className="text-center md:text-left" style={{ marginBottom: '25px', justifyContent: 'center' }}>{HEADLINE}</H2>
+              <H2 className="text-center md:text-left" style={{ justifyContent: 'flex-start' }}>{HEADLINE}</H2>
             </RevealFromLeft>
 
             <div className="space-y-4 mb-8">

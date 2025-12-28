@@ -110,6 +110,7 @@ export default function H2({
           maxWidth: '1400px',
           marginLeft: 'auto',
           marginRight: 'auto',
+          marginBottom: '2.5rem', // 40px consistent spacing
           ...style
         }}
       >

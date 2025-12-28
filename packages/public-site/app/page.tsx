@@ -45,6 +45,11 @@ const BuiltForFuture = dynamic(
   { ssr: false }
 );
 
+const MeetTheFounders = dynamic(
+  () => import('./components/sections/MeetTheFounders').then(mod => ({ default: mod.MeetTheFounders })),
+  { ssr: false }
+);
+
 // Counter animation (scramble effect) - loads after initial paint
 const CounterAnimation = dynamic(
   () => import('./components/CounterAnimation').then(mod => ({ default: mod.CounterAnimation }))
@@ -189,6 +194,7 @@ export default function Home() {
       <ProvenAtScale />
       <WhatYouGet />
       <BuiltForFuture />
+      <MeetTheFounders />
       <WatchAndDecide />
 
     </main>
