@@ -833,7 +833,7 @@ function ProvenAtScale() {
 // SECTION: MeetTheFounders
 // =============================================================================
 const FOUNDERS = [
-  { name: "Doug Smart", title: "Co-Founder & Full-Stack Developer", bio: "Top 0.1% eXp team builder. Designed and built SAA's core technology, from the agent portal and automations to the production and attraction tools that give our agents an unfair advantage.", image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public" },
+  { name: "Doug Smart", title: "Co-Founder & Full-Stack Developer", bio: "Top 0.1% eXp team builder. Built everything you see here — this site, the agent portal, automations, and the production & attraction tools that give our agents an unfair advantage.", image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public" },
   { name: "Karrie Hill, JD", title: "Co-Founder & eXp Certified Mentor", bio: "UC Berkeley Law (top 5%). Built a six-figure real estate business without cold calling or door knocking, now helping agents do the same.", image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" },
 ];
 
