@@ -125,7 +125,7 @@ export function MeetTheFounders() {
             <div
               className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 h-full flex flex-col"
               style={{
-                backgroundColor: 'rgba(20,20,20,0.95)',
+                backgroundColor: 'rgba(20,20,20,0.75)',
                 borderColor: 'rgba(255,255,255,0.1)',
               }}
             >
@@ -154,7 +154,7 @@ export function MeetTheFounders() {
             <div
               className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 flex-1 flex flex-col"
               style={{
-                backgroundColor: 'rgba(20,20,20,0.95)',
+                backgroundColor: 'rgba(20,20,20,0.75)',
                 borderColor: 'rgba(255,255,255,0.1)',
               }}
             >

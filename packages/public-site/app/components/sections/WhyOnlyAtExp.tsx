@@ -321,17 +321,15 @@ export function WhyOnlyAtExp() {
             })}
 
             {/* Progress dots */}
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
-              {STEPS.map((step, i) => (
+            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
+              {STEPS.map((_, i) => (
                 <button
                   key={i}
                   onClick={() => handleDotClick(i)}
-                  className="w-3 h-3 rounded-full transition-all duration-300"
+                  className="w-2 h-2 rounded-full transition-all duration-300"
                   style={{
-                    backgroundColor: i === activeCard
-                      ? (step.highlight ? BRAND_YELLOW : 'rgba(255,255,255,0.8)')
-                      : 'rgba(255,255,255,0.2)',
-                    transform: i === activeCard ? 'scale(1.3)' : 'scale(1)',
+                    backgroundColor: i === activeCard ? BRAND_YELLOW : 'rgba(255,255,255,0.2)',
+                    transform: i === activeCard ? 'scale(1.5)' : 'scale(1)',
                   }}
                 />
               ))}
