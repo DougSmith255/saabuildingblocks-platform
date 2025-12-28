@@ -42,3 +42,6 @@ export * from './effects';
 
 // Loaders
 export * from './loaders';
+
+// Backgrounds (glass panels, section overlays)
+export * from './backgrounds';
