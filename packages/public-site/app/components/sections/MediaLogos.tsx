@@ -219,7 +219,7 @@ export function MediaLogos() {
           style={{
             top: '-20%',
             bottom: '-20%',
-            background: '#111111',
+            background: '#080808',
             maskImage: `
               linear-gradient(to right, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
@@ -238,7 +238,7 @@ export function MediaLogos() {
           style={{
             top: '-20%',
             bottom: '-20%',
-            background: '#111111',
+            background: '#080808',
             maskImage: `
               linear-gradient(to left, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
