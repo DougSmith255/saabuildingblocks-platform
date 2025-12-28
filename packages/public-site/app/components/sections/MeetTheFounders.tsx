@@ -75,7 +75,7 @@ export function MeetTheFounders() {
         <div
           className="absolute inset-0 founders-glass-shimmer"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.015) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 65%, transparent 80%, transparent 100%)',
+            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.025) 35%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.025) 65%, transparent 80%, transparent 100%)',
             backgroundSize: '300% 100%',
           }}
         />

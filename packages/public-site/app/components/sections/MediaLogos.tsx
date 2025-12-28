@@ -156,7 +156,7 @@ export function MediaLogos() {
         <div
           className="absolute inset-0 glass-shimmer-media"
           style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.015) 35%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.015) 65%, transparent 80%, transparent 100%)',
+            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.025) 35%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.025) 65%, transparent 80%, transparent 100%)',
             backgroundSize: '300% 100%',
           }}
         />
@@ -219,7 +219,7 @@ export function MediaLogos() {
           style={{
             top: '-20%',
             bottom: '-20%',
-            background: '#151515',
+            background: '#0b0a0a',
             maskImage: `
               linear-gradient(to right, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
@@ -238,7 +238,7 @@ export function MediaLogos() {
           style={{
             top: '-20%',
             bottom: '-20%',
-            background: '#151515',
+            background: '#0b0a0a',
             maskImage: `
               linear-gradient(to left, black 0%, transparent 100%),
               linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
