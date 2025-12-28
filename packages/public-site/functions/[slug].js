@@ -25,6 +25,7 @@ export const STATIC_SLUGS = new Set([
   'about-doug-smart',
   'about-exp-realty',
   'about-karrie-hill',
+  'agent-attraction-template',
   'agent-portal',
   'awards',
   'best-real-estate-brokerage',
