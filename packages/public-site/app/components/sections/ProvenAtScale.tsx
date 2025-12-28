@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2, Icon3D } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCardGold } from '@saa/shared/components/saa/cards';
 import { Globe, Users, TrendingUp, Check } from 'lucide-react';
@@ -204,7 +204,7 @@ export function ProvenAtScale() {
                 return (
                   <RevealFromLeft key={i} delay={0.1 + i * 0.1}>
                     <div className="flex items-center gap-4">
-                      <Icon className="w-6 h-6 flex-shrink-0" style={{ color: BRAND_YELLOW }} />
+                      <Icon3D><Icon className="w-6 h-6 flex-shrink-0" /></Icon3D>
                       <p className="text-body">
                         <span className="font-heading font-bold" style={{ color: BRAND_YELLOW }}>
                           {stat.value}
@@ -228,7 +228,7 @@ export function ProvenAtScale() {
           <div className="md:col-span-4">
             <RevealFromRight delay={0.2}>
               <CyberCardGold padding="lg">
-                <Globe className="w-14 h-14 mx-auto mb-3" style={{ color: BRAND_YELLOW }} />
+                <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
                 <p className="font-heading text-3xl md:text-4xl font-bold" style={{ color: BRAND_YELLOW }}>
                   <ScrambleCounter target={3700} suffix="+" />
                 </p>

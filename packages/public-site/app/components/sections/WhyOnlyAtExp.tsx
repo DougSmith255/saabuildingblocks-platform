@@ -175,6 +175,12 @@ export function WhyOnlyAtExp() {
 
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
+      {/* Corner fill gradients - fills the rounded corners where glass doesn't cover */}
+      <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at top left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at top right, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
+
       {/* Glass shimmer animation */}
       <style>{`
         @keyframes glassShimmerWhy {
@@ -185,20 +191,13 @@ export function WhyOnlyAtExp() {
           animation: glassShimmerWhy 20s ease-in-out infinite;
         }
       `}</style>
-      {/* 3D Glass Plate Background - edge to edge with visible corners */}
+      {/* 3D Glass Plate Background - lighter variant */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
         style={{
-          background: 'linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.25) 100%)',
-          borderTop: '1px solid rgba(255,255,255,0.12)',
-          borderBottom: '2px solid rgba(0,0,0,0.5)',
-          boxShadow: `
-            inset 0 1px 0 rgba(255,255,255,0.1),
-            inset 0 -2px 0 rgba(0,0,0,0.4),
-            inset 0 -4px 8px rgba(0,0,0,0.2),
-            0 8px 32px rgba(0,0,0,0.4),
-            0 2px 8px rgba(0,0,0,0.3)
-          `,
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.02) 100%)',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderBottom: '1px solid rgba(255,255,255,0.04)',
           backdropFilter: 'blur(2px)',
         }}
       >

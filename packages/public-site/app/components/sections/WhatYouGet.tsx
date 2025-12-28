@@ -120,7 +120,13 @@ export function WhatYouGet() {
   };
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative" style={{ backgroundColor: '#080808' }}>
+    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
+      {/* Corner fill gradients - fills the rounded corners where glass doesn't cover */}
+      <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at top left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at top right, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
+      <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
+
       {/* 3D Glass Plate Background - lighter variant */}
       <div
         className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden"
