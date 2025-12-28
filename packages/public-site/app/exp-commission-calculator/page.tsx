@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { H1, Tagline, CyberCard } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CyberCard, SecondaryButton } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { CalculatorDataStreamEffect } from './CalculatorDataStreamEffect';
@@ -205,22 +205,16 @@ export default function ExpCommissionCalculator() {
             </CyberCard>
 
             {/* CTA Section */}
-            <h2 className="text-2xl font-bold text-[#ffd700] text-center mt-12 mb-6">
-              Commission & Fees Fully Explained
-            </h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <a
-                href="/blog/about-exp/commission"
-                className="px-6 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-semibold text-center hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all"
-              >
+            <div className="mt-16 text-center">
+              <H2>Commission & Fees Fully Explained</H2>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 mb-12">
+              <SecondaryButton href="/blog/about-exp/commission">
                 eXp Commission
-              </a>
-              <a
-                href="/blog/about-exp/fees"
-                className="px-6 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-semibold text-center hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.3)] transition-all"
-              >
+              </SecondaryButton>
+              <SecondaryButton href="/blog/about-exp/fees">
                 eXp Fees
-              </a>
+              </SecondaryButton>
             </div>
           </LazySection>
         </div>

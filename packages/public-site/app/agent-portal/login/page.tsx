@@ -506,15 +506,25 @@ function DataStreamEffect({ tunnelMode = false }: { tunnelMode?: boolean }) {
     };
   }, []);
 
-  // Generate data columns - fewer columns with more spacing for mobile
-  // Desktop: 20 columns at 5% width each = full coverage
-  // Mobile: same columns but with gap between them
-  const columns = [...Array(20)].map((_, i) => ({
-    x: i * 5, // 5% spacing between columns (was 4%)
+  // Detect mobile for reduced columns
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Generate data columns - half on mobile for performance
+  const columnCount = isMobile ? 10 : 20;
+  const columnWidth = 100 / columnCount;
+  const columns = [...Array(columnCount)].map((_, i) => ({
+    x: i * columnWidth,
     speed: 0.5 + (i % 4) * 0.3,
     length: 5 + (i % 6),
     delay: (i * 0.02) % 0.4,
-    chars: [...Array(22)].map(() => String.fromCharCode(0x30A0 + Math.random() * 96)),
+    // Binary characters instead of Katakana
+    chars: [...Array(22)].map(() => Math.random() > 0.5 ? '1' : '0'),
   }));
 
   // Calculate tunnel effects
