@@ -150,40 +150,76 @@ export function GlassPanel({
         className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}
         style={{
           background: `linear-gradient(180deg, rgba(${r},${g},${b},${config.colorOpacity * 0.8}) 0%, rgba(${r},${g},${b},${config.colorOpacity}) 50%, rgba(${r},${g},${b},${config.colorOpacity * 0.8}) 100%)`,
-          borderTop: `2px solid rgba(${r},${g},${b},${config.borderOpacity * 1.5})`,
-          borderBottom: '3px solid rgba(0,0,0,0.7)',
           boxShadow: `
-            /* Top edge - strong highlight for pop-out effect */
-            inset 0 2px 0 rgba(255,255,255,0.15),
-            inset 0 4px 8px rgba(${r},${g},${b},${config.colorOpacity * 1.5}),
-            inset 0 8px 16px rgba(${r},${g},${b},${config.colorOpacity}),
-            /* Bottom edge - deep shadow for recessed look */
-            inset 0 -3px 0 rgba(0,0,0,0.5),
-            inset 0 -6px 12px rgba(0,0,0,0.3),
-            inset 0 -12px 24px rgba(0,0,0,0.15),
-            /* External shadow */
-            0 6px 20px rgba(0,0,0,0.4),
-            0 2px 6px rgba(0,0,0,0.2)
+            /* External shadow for depth */
+            0 8px 32px rgba(0,0,0,0.4),
+            0 4px 12px rgba(0,0,0,0.25)
           `,
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Top highlight bar - bright edge */}
+        {/* Top curved gradient highlight - 3D pop-out effect */}
         <div
-          className="absolute top-0 left-0 right-0 h-[3px] pointer-events-none"
+          className="absolute top-0 left-0 right-0 h-[24px] pointer-events-none"
           style={{
-            background: `linear-gradient(90deg, transparent 5%, rgba(${r},${g},${b},0.4) 20%, rgba(255,255,255,0.25) 50%, rgba(${r},${g},${b},0.4) 80%, transparent 95%)`,
+            background: `linear-gradient(180deg,
+              rgba(255,255,255,0.2) 0%,
+              rgba(${r},${g},${b},0.15) 30%,
+              rgba(${r},${g},${b},0.08) 60%,
+              transparent 100%
+            )`,
             borderRadius: 'inherit',
+            maskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
           }}
         />
-        {/* Bottom shadow bar - dark edge */}
+        {/* Top edge glow line */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[4px] pointer-events-none"
+          className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
           style={{
-            background: `linear-gradient(90deg, transparent 5%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.4) 80%, transparent 95%)`,
+            background: `linear-gradient(90deg,
+              transparent 5%,
+              rgba(${r},${g},${b},0.3) 15%,
+              rgba(255,255,255,0.35) 50%,
+              rgba(${r},${g},${b},0.3) 85%,
+              transparent 95%
+            )`,
             borderRadius: 'inherit',
+            filter: 'blur(0.5px)',
           }}
         />
+
+        {/* Bottom curved gradient shadow - 3D depth effect */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[32px] pointer-events-none"
+          style={{
+            background: `linear-gradient(0deg,
+              rgba(0,0,0,0.35) 0%,
+              rgba(0,0,0,0.2) 25%,
+              rgba(0,0,0,0.1) 50%,
+              transparent 100%
+            )`,
+            borderRadius: 'inherit',
+            maskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
+          }}
+        />
+        {/* Bottom edge shadow line */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[3px] pointer-events-none"
+          style={{
+            background: `linear-gradient(90deg,
+              transparent 5%,
+              rgba(0,0,0,0.4) 15%,
+              rgba(0,0,0,0.5) 50%,
+              rgba(0,0,0,0.4) 85%,
+              transparent 95%
+            )`,
+            borderRadius: 'inherit',
+            filter: 'blur(1px)',
+          }}
+        />
+
         {/* Texture overlay */}
         <div className="absolute inset-0" style={textureStyle} />
       </div>

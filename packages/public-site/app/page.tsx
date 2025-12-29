@@ -180,18 +180,19 @@ export default function Home() {
         {/* Counter Animation - Hydrates after initial render */}
         <CounterAnimation />
 
-        {/* Scroll Indicator - Bottom right arrow */}
-        <ScrollIndicator />
       </section>
       </FixedHeroWrapper>
 
+      {/* Scroll Indicator - Fixed to viewport, outside FixedHeroWrapper for correct positioning */}
+      <ScrollIndicator />
+
       {/* Homepage Sections */}
-      {/* ValuePillarsTab wraps around top of MediaLogos with higher z-index */}
-      <div style={{ position: 'relative', zIndex: 2 }}>
+      {/* ValuePillarsTab extends down behind MediaLogos */}
+      <div style={{ position: 'relative', zIndex: 1 }}>
         <ValuePillarsTab />
       </div>
-      {/* MediaLogos tucks under ValuePillarsTab's bottom edge */}
-      <div style={{ marginTop: '-2.5rem', position: 'relative', zIndex: 1 }}>
+      {/* MediaLogos sits on top of ValuePillarsTab's bottom edge */}
+      <div style={{ marginTop: '-2.5rem', position: 'relative', zIndex: 2 }}>
         <MediaLogos />
       </div>
       <WhySAA />
