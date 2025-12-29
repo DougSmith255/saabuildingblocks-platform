@@ -1,15 +1,19 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { CTAButton, Tagline, H1, Icon3D } from '@saa/shared/components/saa';
+import { CTAButton, Tagline, H1, ScrollIndicator } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
-import { Globe, Users, TrendingUp } from 'lucide-react';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
 
 // PERFORMANCE OPTIMIZATION: Lazy-load below-fold sections
 // ssr: false + loading: null prevents ANY rendering during SSR (no height = no CLS)
 // Sections load client-side only when JS hydrates
+const ValuePillarsTab = dynamic(
+  () => import('./components/sections/ValuePillarsTab').then(mod => ({ default: mod.ValuePillarsTab })),
+  { ssr: false }
+);
+
 const MediaLogos = dynamic(
   () => import('./components/sections/MediaLogos').then(mod => ({ default: mod.MediaLogos })),
   { ssr: false }
@@ -162,21 +166,6 @@ export default function Home() {
               <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
                 For Agents Who Want More
               </Tagline>
-              {/* Hero Bullet Points */}
-              <div className="flex flex-col gap-1 mt-2 mx-auto" style={{ maxWidth: '900px' }}>
-                <div className="flex items-center gap-3 justify-center">
-                  <Icon3D><Globe className="w-5 h-5" /></Icon3D>
-                  <span className="text-body text-sm md:text-base opacity-90">Inside eXp Realty, the most successful global independent brokerage.</span>
-                </div>
-                <div className="flex items-center gap-3 justify-center">
-                  <Icon3D><Users className="w-5 h-5" /></Icon3D>
-                  <span className="text-body text-sm md:text-base opacity-90">Smart Agent Alliance, free sponsor support built for agents.</span>
-                </div>
-                <div className="flex items-center gap-3 justify-center">
-                  <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
-                  <span className="text-body text-sm md:text-base opacity-90">Together, we deliver an ecosystem for exponential growth.</span>
-                </div>
-              </div>
             </div>
 
             {/* CTA Button */}
@@ -190,11 +179,18 @@ export default function Home() {
 
         {/* Counter Animation - Hydrates after initial render */}
         <CounterAnimation />
+
+        {/* Scroll Indicator - Bottom right arrow */}
+        <ScrollIndicator />
       </section>
       </FixedHeroWrapper>
 
       {/* Homepage Sections */}
-      <MediaLogos />
+      <ValuePillarsTab />
+      {/* MediaLogos overlaps on top of ValuePillarsTab with negative margin */}
+      <div style={{ marginTop: '-3rem', position: 'relative', zIndex: 2 }}>
+        <MediaLogos />
+      </div>
       <WhySAA />
       <ProvenAtScale />
       <WhatYouGet />

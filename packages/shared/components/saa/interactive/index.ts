@@ -18,3 +18,5 @@ export type { JoinModalProps, JoinFormData } from './JoinModal';
 
 export { InstructionsModal } from './InstructionsModal';
 export type { InstructionsModalProps } from './InstructionsModal';
+
+export { ScrollIndicator } from './ScrollIndicator';

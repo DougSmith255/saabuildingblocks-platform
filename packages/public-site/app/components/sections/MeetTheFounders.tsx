@@ -49,6 +49,17 @@ export function MeetTheFounders() {
 
   return (
     <GlassPanel variant="marigoldCrosshatch">
+      {/* H1-style glow animation for founder names */}
+      <style>{`
+        @keyframes h1GlowBreathe {
+          0%, 100% {
+            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
+          }
+          50% {
+            filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
+          }
+        }
+      `}</style>
       <section ref={ref} className="py-16 md:py-24 px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         <div
@@ -86,7 +97,31 @@ export function MeetTheFounders() {
                   className="w-full h-full object-cover"
                 />
               </ProfileCyberFrame>
-              <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{FOUNDERS[0].name}</h3>
+              <h3
+                className="font-heading font-bold text-lg md:text-xl mb-1"
+                style={{
+                  color: BRAND_YELLOW,
+                  transform: 'perspective(800px) rotateX(12deg)',
+                  fontFeatureSettings: '"ss01" 1',
+                  textShadow: `
+                    0 0 0.01em #fff,
+                    0 0 0.02em #fff,
+                    0 0 0.03em rgba(255,255,255,0.8),
+                    0 0 0.05em #ffd700,
+                    0 0 0.09em rgba(255, 215, 0, 0.8),
+                    0 0 0.13em rgba(255, 215, 0, 0.55),
+                    0 0 0.18em rgba(255, 179, 71, 0.35),
+                    0.03em 0.03em 0 #2a2a2a,
+                    0.045em 0.045em 0 #1a1a1a,
+                    0.06em 0.06em 0 #0f0f0f,
+                    0.075em 0.075em 0 #080808
+                  `,
+                  filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25))',
+                  animation: 'h1GlowBreathe 4s ease-in-out infinite',
+                }}
+              >
+                {FOUNDERS[0].name}
+              </h3>
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[0].title}</p>
               <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[0].bio}</p>
             </div>
@@ -115,7 +150,31 @@ export function MeetTheFounders() {
                   className="w-full h-full object-cover"
                 />
               </ProfileCyberFrame>
-              <h3 className="font-heading font-bold text-lg md:text-xl mb-1" style={{ color: BRAND_YELLOW }}>{FOUNDERS[1].name}</h3>
+              <h3
+                className="font-heading font-bold text-lg md:text-xl mb-1"
+                style={{
+                  color: BRAND_YELLOW,
+                  transform: 'perspective(800px) rotateX(12deg)',
+                  fontFeatureSettings: '"ss01" 1',
+                  textShadow: `
+                    0 0 0.01em #fff,
+                    0 0 0.02em #fff,
+                    0 0 0.03em rgba(255,255,255,0.8),
+                    0 0 0.05em #ffd700,
+                    0 0 0.09em rgba(255, 215, 0, 0.8),
+                    0 0 0.13em rgba(255, 215, 0, 0.55),
+                    0 0 0.18em rgba(255, 179, 71, 0.35),
+                    0.03em 0.03em 0 #2a2a2a,
+                    0.045em 0.045em 0 #1a1a1a,
+                    0.06em 0.06em 0 #0f0f0f,
+                    0.075em 0.075em 0 #080808
+                  `,
+                  filter: 'drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25))',
+                  animation: 'h1GlowBreathe 4s ease-in-out infinite',
+                }}
+              >
+                {FOUNDERS[1].name}
+              </h3>
               <p className="text-body text-sm opacity-60 mb-3">{FOUNDERS[1].title}</p>
               <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[1].bio}</p>
             </div>

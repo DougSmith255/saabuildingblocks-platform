@@ -181,8 +181,8 @@ export function ProvenAtScale() {
           className="w-full h-full object-cover"
           style={{
             objectPosition: 'center 55%',
-            maskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 55% 50% at center 55%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.3) 45%, rgba(0,0,0,0.15) 65%, transparent 85%)',
+            maskImage: 'radial-gradient(ellipse 90% 85% at center 50%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.15) 80%, transparent 95%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 90% 85% at center 50%, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0.15) 80%, transparent 95%)',
           }}
         />
       </div>
