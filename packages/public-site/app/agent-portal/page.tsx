@@ -117,6 +117,7 @@ export default function AgentPortal() {
   const [showImageEditor, setShowImageEditor] = useState(false);
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null);
+  const [profileImageError, setProfileImageError] = useState(false); // Track if profile image failed to load
   const [pendingBgRemovedUrl, setPendingBgRemovedUrl] = useState<string | null>(null);
   const [isRemovingBackground, setIsRemovingBackground] = useState(false);
   const [bgRemovalProgress, setBgRemovalProgress] = useState(0);
@@ -619,6 +620,7 @@ export default function AgentPortal() {
       // Apply toCdnUrl to use edge-cached CDN instead of origin
       const updatedUser = { ...user, profilePictureUrl: toCdnUrl(dashboardData.url) };
       setUser(updatedUser);
+      setProfileImageError(false); // Reset error state for new image
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
       // Step 5: Upload same to attraction page (B&W version)
@@ -749,6 +751,7 @@ export default function AgentPortal() {
         // Apply toCdnUrl to use edge-cached CDN instead of origin
         const updatedUser = { ...user!, profilePictureUrl: toCdnUrl(dashboardData.url) };
         setUser(updatedUser);
+        setProfileImageError(false); // Reset error state for new image
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       }
 
@@ -949,14 +952,15 @@ export default function AgentPortal() {
                 onClick={() => { handleProfilePictureClick(); setSidebarOpen(false); }}
                 className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#ffd700]/30 flex-shrink-0"
               >
-                {user.profilePictureUrl ? (
+                {user.profilePictureUrl && !profileImageError ? (
                   <img
                     src={user.profilePictureUrl}
-                    alt={user.fullName}
+                    alt=""
                     className="w-full h-full object-cover"
                     loading="eager"
                     decoding="async"
                     fetchPriority="high"
+                    onError={() => setProfileImageError(true)}
                   />
                 ) : (
                   <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
@@ -1041,14 +1045,15 @@ export default function AgentPortal() {
                     className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
                     title="Click to change profile picture"
                   >
-                    {user.profilePictureUrl ? (
+                    {user.profilePictureUrl && !profileImageError ? (
                       <img
                         src={user.profilePictureUrl}
-                        alt={user.fullName}
+                        alt=""
                         className="w-full h-full object-cover"
                         loading="eager"
                         decoding="async"
                         fetchPriority="high"
+                        onError={() => setProfileImageError(true)}
                       />
                     ) : (
                       <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
@@ -1227,14 +1232,15 @@ export default function AgentPortal() {
                   onClick={handleProfilePictureClick}
                   className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
                 >
-                  {user.profilePictureUrl ? (
+                  {user.profilePictureUrl && !profileImageError ? (
                     <img
                       src={user.profilePictureUrl}
-                      alt={user.fullName}
+                      alt=""
                       className="w-full h-full object-cover"
                       loading="eager"
                       decoding="async"
                       fetchPriority="high"
+                      onError={() => setProfileImageError(true)}
                     />
                   ) : (
                     <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
