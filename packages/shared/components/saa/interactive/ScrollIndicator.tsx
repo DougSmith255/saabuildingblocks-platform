@@ -98,11 +98,10 @@ export function ScrollIndicator() {
           border-bottom: 8px solid #ffd700;
           border-radius: 4px;
           transform: rotate(45deg) translateZ(1px);
-          /* White outline like H1 styling */
-          box-shadow:
-            0 0 2px #fff,
-            0 0 4px rgba(255,255,255,0.8),
-            inset 0 0 2px rgba(255,255,255,0.5);
+          /* White outline using drop-shadow which follows the L-shape */
+          filter:
+            drop-shadow(0 0 1px #fff)
+            drop-shadow(0 0 2px rgba(255,255,255,0.8));
         }
       `}</style>
 

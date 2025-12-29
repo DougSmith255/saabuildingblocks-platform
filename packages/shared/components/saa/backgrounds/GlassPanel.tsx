@@ -153,23 +153,28 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
 
+  // For bottomCutout, create a mask that shows side tabs but hides the center bottom
+  const maskStyle: React.CSSProperties | undefined = bottomCutout ? {
+    // Composite mask: show everything except bottom-center rectangle
+    // Left tab + Right tab + Top portion
+    maskImage: `
+      linear-gradient(to right, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
+      linear-gradient(to left, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
+      linear-gradient(to bottom, black calc(100% - ${bottomCutout.height}), transparent calc(100% - ${bottomCutout.height}))
+    `,
+    maskComposite: 'add',
+    WebkitMaskImage: `
+      linear-gradient(to right, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
+      linear-gradient(to left, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
+      linear-gradient(to bottom, black calc(100% - ${bottomCutout.height}), transparent calc(100% - ${bottomCutout.height}))
+    `,
+    WebkitMaskComposite: 'source-over',
+  } : undefined;
+
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
-      style={bottomCutout ? {
-        // CSS clip-path with polygon for wrap-around effect
-        // Shape: full rectangle with bottom-center cut upward to wrap around rounded corners below
-        clipPath: `polygon(
-          0% 0%,
-          100% 0%,
-          100% 100%,
-          calc(100% - 24px) 100%,
-          calc(100% - 24px) calc(100% - 2.5rem),
-          24px calc(100% - 2.5rem),
-          24px 100%,
-          0% 100%
-        )`,
-      } : undefined}
+      style={maskStyle}
     >
       {/* Glass plate with 3D curved edges using inset box-shadows */}
       <div
