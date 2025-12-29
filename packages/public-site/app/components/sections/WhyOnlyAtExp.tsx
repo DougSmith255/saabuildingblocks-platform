@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
+import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
 /**
  * "Why This Only Works at eXp Realty" Section
@@ -173,58 +174,8 @@ export function WhyOnlyAtExp() {
   };
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-      {/* Corner fill gradients - fills the rounded corners where glass doesn't cover (z-0 = behind glass) */}
-      <div className="absolute top-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at top left, #080808 0%, transparent 70%)' }} />
-      <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at top right, #080808 0%, transparent 70%)' }} />
-      <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
-      <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
-
-      {/* Glass shimmer animation */}
-      <style>{`
-        @keyframes glassShimmerWhy {
-          0% { background-position: 300% 0; }
-          100% { background-position: -300% 0; }
-        }
-        .glass-shimmer-why {
-          animation: glassShimmerWhy 30s linear infinite;
-        }
-      `}</style>
-      {/* 3D Glass Plate Background - Amber tint */}
-      <div
-        className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
-        style={{
-          background: 'linear-gradient(180deg, rgba(255,170,0,0.035) 0%, rgba(255,140,0,0.045) 50%, rgba(255,170,0,0.035) 100%)',
-          borderTop: '1px solid rgba(255,180,0,0.12)',
-          borderBottom: '2px solid rgba(0,0,0,0.6)',
-          boxShadow: `
-            inset 0 1px 0 rgba(255,180,0,0.08),
-            inset 0 2px 4px rgba(255,160,0,0.03),
-            inset 0 -2px 0 rgba(0,0,0,0.4),
-            inset 0 -4px 8px rgba(0,0,0,0.2),
-            0 4px 12px rgba(0,0,0,0.3)
-          `,
-          backdropFilter: 'blur(2px)',
-        }}
-      >
-        {/* Animated shimmer wave - subtle gradient */}
-        <div
-          className="absolute inset-0 glass-shimmer-why"
-          style={{
-            background: 'linear-gradient(105deg, transparent 0%, transparent 20%, rgba(255,255,255,0.025) 35%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.025) 65%, transparent 80%, transparent 100%)',
-            backgroundSize: '300% 100%',
-          }}
-        />
-        {/* Noise texture overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            opacity: 0.03,
-            mixBlendMode: 'overlay',
-          }}
-        />
-      </div>
+    <GlassPanel variant="marigoldCrosshatch">
+      <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
       <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         <div
           className="text-center transition-all duration-700 relative z-20"
@@ -369,6 +320,7 @@ export function WhyOnlyAtExp() {
           </figure>
         </div>
       </div>
-    </section>
+      </section>
+    </GlassPanel>
   );
 }

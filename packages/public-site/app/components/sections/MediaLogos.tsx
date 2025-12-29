@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { H2 } from '@saa/shared/components/saa';
+import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -117,41 +118,11 @@ export function MediaLogos() {
   // Removed hover pause - carousel now scrolls continuously
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative py-16 md:py-24 overflow-hidden"
-    >
-      {/* Corner fill gradients - only bottom corners (hero is above), z-0 = behind glass */}
-      <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom left, #080808 0%, transparent 70%)' }} />
-      <div className="absolute bottom-0 right-0 w-24 h-24 pointer-events-none z-0" style={{ background: 'radial-gradient(circle at bottom right, #080808 0%, transparent 70%)' }} />
-
-      {/* 3D Glass Plate Background - Golden tint */}
-      <div
-        className="absolute inset-x-0 inset-y-0 pointer-events-none rounded-3xl overflow-hidden z-[1]"
-        style={{
-          background: 'linear-gradient(180deg, rgba(255,215,0,0.03) 0%, rgba(255,180,0,0.04) 50%, rgba(255,215,0,0.03) 100%)',
-          borderTop: '1px solid rgba(255,215,0,0.12)',
-          borderBottom: '2px solid rgba(0,0,0,0.6)',
-          boxShadow: `
-            inset 0 1px 0 rgba(255,215,0,0.08),
-            inset 0 2px 4px rgba(255,200,0,0.03),
-            inset 0 -2px 0 rgba(0,0,0,0.4),
-            inset 0 -4px 8px rgba(0,0,0,0.2),
-            0 4px 12px rgba(0,0,0,0.3)
-          `,
-          backdropFilter: 'blur(2px)',
-        }}
+    <GlassPanel variant="marigoldNoise">
+      <section
+        ref={sectionRef}
+        className="relative py-16 md:py-24 overflow-hidden"
       >
-        {/* Noise texture overlay */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
-            opacity: 0.03,
-            mixBlendMode: 'overlay',
-          }}
-        />
-      </div>
       {/* SVG filter for subtle crosshatch/sandpaper texture on logos */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <defs>
@@ -267,7 +238,8 @@ export function MediaLogos() {
           ))}
         </div>
       </div>
-    </section>
+      </section>
+    </GlassPanel>
   );
 }
 

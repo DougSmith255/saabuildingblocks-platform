@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { H2, Icon3D } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCardGold } from '@saa/shared/components/saa/cards';
+import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { Globe, Users, TrendingUp, Check } from 'lucide-react';
 
 /**
@@ -164,7 +165,8 @@ function ScrambleCounter({ target, suffix = '' }: { target: number; suffix?: str
 
 export function ProvenAtScale() {
   return (
-    <section className="py-16 md:py-24 px-6 relative overflow-hidden">
+    <GlassPanel variant="champagne">
+      <section className="py-16 md:py-24 px-6 relative overflow-hidden">
       {/* Top gradient fade */}
       <div className="absolute top-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
       {/* Bottom gradient fade */}
@@ -233,6 +235,7 @@ export function ProvenAtScale() {
           </div>
         </div>
       </div>
-    </section>
+      </section>
+    </GlassPanel>
   );
 }
