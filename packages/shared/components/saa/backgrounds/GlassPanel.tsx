@@ -20,6 +20,15 @@ export interface GlassPanelProps {
   className?: string;
   /** Border radius - default is 'xl' (24px) */
   rounded?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
+  /** Add a rounded cutout at the bottom (for overlapping sections) */
+  bottomCutout?: {
+    /** Height of the cutout area */
+    height: string;
+    /** Horizontal inset from edges */
+    inset: string;
+    /** Border radius of the cutout corners */
+    radius: string;
+  };
 }
 
 // Variant configurations
@@ -137,14 +146,40 @@ export function GlassPanel({
   children,
   className = '',
   rounded = '3xl',
+  bottomCutout,
 }: GlassPanelProps) {
   const config = VARIANTS[variant];
   const { r, g, b } = config.color;
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
 
+  // Generate unique ID for SVG mask
+  const maskId = bottomCutout ? `glass-cutout-${variant}` : undefined;
+
   return (
     <div className={`relative overflow-hidden ${roundedClass} ${className}`}>
+      {/* SVG mask definition for bottom cutout */}
+      {bottomCutout && (
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <defs>
+            <mask id={maskId} maskUnits="objectBoundingBox" maskContentUnits="objectBoundingBox">
+              {/* White = visible, Black = hidden */}
+              <rect x="0" y="0" width="1" height="1" fill="white" />
+              {/* Black rounded rectangle cutout at bottom */}
+              <rect
+                x="0.02"
+                y="0.85"
+                width="0.96"
+                height="0.2"
+                rx="0.02"
+                ry="0.08"
+                fill="black"
+              />
+            </mask>
+          </defs>
+        </svg>
+      )}
+
       {/* Glass plate with 3D curved edges using inset box-shadows */}
       <div
         className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}
@@ -166,6 +201,7 @@ export function GlassPanel({
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
           backdropFilter: 'blur(2px)',
+          ...(bottomCutout && { mask: `url(#${maskId})`, WebkitMask: `url(#${maskId})` }),
         }}
       >
         {/* Texture overlay */}

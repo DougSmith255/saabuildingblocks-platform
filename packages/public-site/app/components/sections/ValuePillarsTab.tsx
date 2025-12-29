@@ -12,7 +12,14 @@ import { Globe, Users, TrendingUp } from 'lucide-react';
  */
 export function ValuePillarsTab() {
   return (
-    <GlassPanel variant="emerald">
+    <GlassPanel
+      variant="emerald"
+      bottomCutout={{
+        height: '2.5rem',
+        inset: '24px',
+        radius: '24px',
+      }}
+    >
       <section
         className="pt-12 md:pt-16 px-6"
         style={{
