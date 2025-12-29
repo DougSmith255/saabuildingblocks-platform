@@ -118,7 +118,7 @@ export function MediaLogos() {
   // Removed hover pause - carousel now scrolls continuously
 
   return (
-    <GlassPanel variant="marigoldNoise">
+    <GlassPanel variant="marigoldCrosshatch">
       <section
         ref={sectionRef}
         className="relative py-16 md:py-24 overflow-hidden"

@@ -174,7 +174,7 @@ export function WhyOnlyAtExp() {
   };
 
   return (
-    <GlassPanel variant="marigoldCrosshatch">
+    <GlassPanel variant="marigoldNoise">
       <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
       <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         <div

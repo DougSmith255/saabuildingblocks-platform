@@ -130,10 +130,6 @@ function Check3D() {
 export function WhySAA() {
   return (
     <section className="py-24 md:py-32 px-6 overflow-hidden relative">
-      {/* Top gradient fade */}
-      <div className="absolute top-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
       <style>{`
         .bento-card {
           transition: transform 0.5s ease, box-shadow 0.5s ease;

@@ -68,11 +68,6 @@ function GrayscaleDataStream() {
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      {/* Top edge gradient */}
-      <div className="absolute top-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
-      {/* Bottom edge gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 z-10" style={{ background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
-
       {columnConfigs.map((col, i) => {
         const columnOffset = (time * col.speed * 80 + col.offset) % 110;
         const numChars = 22;

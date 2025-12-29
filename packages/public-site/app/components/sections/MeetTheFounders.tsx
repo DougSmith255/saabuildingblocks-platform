@@ -48,7 +48,7 @@ export function MeetTheFounders() {
   const { ref, isVisible } = useScrollReveal();
 
   return (
-    <GlassPanel variant="marigoldNoise">
+    <GlassPanel variant="marigoldCrosshatch">
       <section ref={ref} className="py-16 md:py-24 px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
         <div

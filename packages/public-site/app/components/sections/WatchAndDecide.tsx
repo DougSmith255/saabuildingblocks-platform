@@ -21,8 +21,6 @@ const POSTER_URL = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-realty-
 export function WatchAndDecide() {
   return (
     <div className="relative">
-      {/* Top gradient fade */}
-      <div className="absolute top-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
       <VideoSection
         id="watch-and-decide"
         title="The Only Video You Need"

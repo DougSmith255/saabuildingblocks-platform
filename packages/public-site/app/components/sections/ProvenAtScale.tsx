@@ -167,10 +167,6 @@ export function ProvenAtScale() {
   return (
     <GlassPanel variant="champagne">
       <section className="py-16 md:py-24 px-6 relative overflow-hidden">
-      {/* Top gradient fade */}
-      <div className="absolute top-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to bottom, #080808 0%, transparent 100%)' }} />
-      {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 z-20 pointer-events-none" style={{ background: 'linear-gradient(to top, #080808 0%, transparent 100%)' }} />
       {/* Wolf Pack Background Image with Ellipse Fade */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <img
