@@ -59,11 +59,12 @@ const VARIANTS = {
   },
   emerald: {
     color: { r: 16, g: 185, b: 129 },
-    colorOpacity: 0.045,
-    borderOpacity: 0.12,
+    colorOpacity: 0.12, // Increased from 0.045 for less transparency
+    borderOpacity: 0.2,
     texture: 'hlines',
-    textureOpacity: 0.03,
+    textureOpacity: 0.04,
     noiseFrequency: 1.0,
+    blur: 16, // Stronger blur
   },
 } as const;
 
@@ -153,28 +154,9 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
 
-  // For bottomCutout, create a mask that shows side tabs but hides the center bottom
-  const maskStyle: React.CSSProperties | undefined = bottomCutout ? {
-    // Composite mask: show everything except bottom-center rectangle
-    // Left tab + Right tab + Top portion
-    maskImage: `
-      linear-gradient(to right, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
-      linear-gradient(to left, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
-      linear-gradient(to bottom, black calc(100% - ${bottomCutout.height}), transparent calc(100% - ${bottomCutout.height}))
-    `,
-    maskComposite: 'add',
-    WebkitMaskImage: `
-      linear-gradient(to right, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
-      linear-gradient(to left, black ${bottomCutout.inset}, transparent ${bottomCutout.inset}),
-      linear-gradient(to bottom, black calc(100% - ${bottomCutout.height}), transparent calc(100% - ${bottomCutout.height}))
-    `,
-    WebkitMaskComposite: 'source-over',
-  } : undefined;
-
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
-      style={maskStyle}
     >
       {/* Glass plate with 3D curved edges using inset box-shadows */}
       <div
@@ -196,7 +178,7 @@ export function GlassPanel({
             inset 0 -10px 25px -8px rgba(0,0,0,0.6),
             inset 0 -25px 50px -20px rgba(0,0,0,0.45)
           `,
-          backdropFilter: 'blur(2px)',
+          backdropFilter: `blur(${'blur' in config ? config.blur : 2}px)`,
         }}
       >
         {/* Texture overlay */}

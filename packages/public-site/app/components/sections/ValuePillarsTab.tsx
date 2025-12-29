@@ -12,21 +12,8 @@ import { Globe, Users, TrendingUp } from 'lucide-react';
  */
 export function ValuePillarsTab() {
   return (
-    <GlassPanel
-      variant="emerald"
-      bottomCutout={{
-        height: '2.5rem',
-        inset: '24px',
-        radius: '24px',
-      }}
-    >
-      <section
-        className="pt-12 md:pt-16 px-6"
-        style={{
-          // Extra bottom padding - overlaps MediaLogos's top to create "wrap around" effect
-          paddingBottom: 'calc(48px + 2.5rem)',
-        }}
-      >
+    <GlassPanel variant="emerald">
+      <section className="pt-12 md:pt-16 pb-12 px-6">
         <div className="mx-auto" style={{ maxWidth: '900px' }}>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3 justify-center">

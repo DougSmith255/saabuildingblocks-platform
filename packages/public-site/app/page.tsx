@@ -187,14 +187,8 @@ export default function Home() {
       <ScrollIndicator />
 
       {/* Homepage Sections */}
-      {/* ValuePillarsTab extends down behind MediaLogos */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <ValuePillarsTab />
-      </div>
-      {/* MediaLogos sits on top of ValuePillarsTab's bottom edge */}
-      <div style={{ marginTop: '-2.5rem', position: 'relative', zIndex: 2 }}>
-        <MediaLogos />
-      </div>
+      <ValuePillarsTab />
+      <MediaLogos />
       <WhySAA />
       <ProvenAtScale />
       <WhatYouGet />
