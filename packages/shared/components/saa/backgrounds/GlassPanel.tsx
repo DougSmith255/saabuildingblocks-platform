@@ -153,14 +153,42 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
 
+  // Generate unique ID for SVG clip-path
+  const clipId = bottomCutout ? `glass-wrap-${variant}-${Math.random().toString(36).substr(2, 9)}` : undefined;
+
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
       style={bottomCutout ? {
-        // Clip the bottom to create the cutout - stops at the cutout height
-        clipPath: `inset(0 0 ${bottomCutout.height} 0 round ${bottomCutout.radius})`,
+        // Use SVG clip-path for wrap-around effect
+        clipPath: `url(#${clipId})`,
       } : undefined}
     >
+      {/* SVG clip-path for wrap-around cutout */}
+      {bottomCutout && (
+        <svg width="0" height="0" style={{ position: 'absolute' }}>
+          <defs>
+            <clipPath id={clipId} clipPathUnits="objectBoundingBox">
+              {/* Path creates wrap-around shape:
+                  - Full width at top
+                  - Sides extend down fully
+                  - Bottom center curves up following the rounded corners of section below
+              */}
+              <path d={`
+                M 0,0
+                L 1,0
+                L 1,1
+                L 0.98,1
+                C 0.98,0.92 0.96,0.88 0.94,0.88
+                L 0.06,0.88
+                C 0.04,0.88 0.02,0.92 0.02,1
+                L 0,1
+                Z
+              `} />
+            </clipPath>
+          </defs>
+        </svg>
+      )}
       {/* Glass plate with 3D curved edges using inset box-shadows */}
       <div
         className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}

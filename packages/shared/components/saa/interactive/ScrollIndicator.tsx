@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
  */
 export function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,10 +29,14 @@ export function ScrollIndicator() {
 
       if (scrollY <= fadeStart) {
         setOpacity(1);
+        setScale(1);
       } else if (scrollY >= fadeEnd) {
         setOpacity(0);
+        setScale(0.5); // Compress to 50% as it fades into distance
       } else {
-        setOpacity(1 - (scrollY - fadeStart) / (fadeEnd - fadeStart));
+        const progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
+        setOpacity(1 - progress);
+        setScale(1 - progress * 0.5); // Scale from 1 to 0.5
       }
     };
 
@@ -91,6 +96,7 @@ export function ScrollIndicator() {
           height: 36px;
           border-right: 8px solid #ffd700;
           border-bottom: 8px solid #ffd700;
+          border-radius: 4px;
           transform: rotate(45deg) translateZ(1px);
         }
       `}</style>
@@ -101,8 +107,10 @@ export function ScrollIndicator() {
           bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
           right: '24px',
           opacity,
-          transition: 'opacity 0.3s ease-out',
-          zIndex: 1, // Low z-index so content scrolls over it
+          transform: `scale(${scale})`,
+          transformOrigin: 'center bottom',
+          transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
+          zIndex: 0, // Same level as hero, content scrolls over it
         }}
       >
         {/* Arrow container with glow */}
