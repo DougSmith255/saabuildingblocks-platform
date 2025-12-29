@@ -158,63 +158,77 @@ export function MediaLogos() {
         </p>
       </div>
 
-      {/* Carousel Container */}
+      {/* Carousel Container - clips logos at the portal edges */}
       <div
         className={`relative z-10 transition-all duration-700 delay-300 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
+        style={{
+          marginLeft: '24px',
+          marginRight: '24px',
+          overflow: 'hidden',
+          borderRadius: '16px',
+        }}
       >
-        {/* 3D Portal Edges - logos slide behind these raised glass edges */}
-        {/* Left portal edge */}
-        <div className="absolute left-0 z-10 pointer-events-none" style={{ top: 0, bottom: 0, width: '80px' }}>
-          {/* Solid background that covers logos */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(to right, #0b0a0a 0%, #0b0a0a 70%, transparent 100%)',
-            }}
-          />
-          {/* 3D raised edge line */}
-          <div
-            className="absolute top-0 bottom-0"
-            style={{
-              right: '8px',
-              width: '6px',
-              background: 'linear-gradient(to right, rgba(255,190,0,0.15), rgba(255,190,0,0.08))',
-              borderRight: '1px solid rgba(255,190,0,0.25)',
-              boxShadow: `
-                inset -2px 0 4px rgba(255,190,0,0.1),
-                2px 0 8px rgba(0,0,0,0.5),
-                4px 0 16px rgba(0,0,0,0.3)
-              `,
-            }}
-          />
-        </div>
-        {/* Right portal edge */}
-        <div className="absolute right-0 z-10 pointer-events-none" style={{ top: 0, bottom: 0, width: '80px' }}>
-          {/* Solid background that covers logos */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(to left, #0b0a0a 0%, #0b0a0a 70%, transparent 100%)',
-            }}
-          />
-          {/* 3D raised edge line */}
-          <div
-            className="absolute top-0 bottom-0"
-            style={{
-              left: '8px',
-              width: '6px',
-              background: 'linear-gradient(to left, rgba(255,190,0,0.15), rgba(255,190,0,0.08))',
-              borderLeft: '1px solid rgba(255,190,0,0.25)',
-              boxShadow: `
-                inset 2px 0 4px rgba(255,190,0,0.1),
-                -2px 0 8px rgba(0,0,0,0.5),
-                -4px 0 16px rgba(0,0,0,0.3)
-              `,
-            }}
-          />
-        </div>
+        {/* 3D Curved Portal Edges - raised bars that logos slide under */}
+        {/* Left curved bar */}
+        <div
+          className="absolute left-0 z-20 pointer-events-none"
+          style={{
+            top: '-8px',
+            bottom: '-8px',
+            width: '12px',
+            borderRadius: '0 12px 12px 0',
+            /* Convex gradient - center raised (brightest), edges recessed (darker) */
+            background: `
+              radial-gradient(ellipse 200% 50% at 0% 50%,
+                rgba(255,200,50,0.35) 0%,
+                rgba(255,180,0,0.2) 40%,
+                rgba(180,140,0,0.1) 70%,
+                rgba(100,80,0,0.05) 100%
+              )
+            `,
+            borderRight: '1px solid rgba(255,190,0,0.4)',
+            boxShadow: `
+              inset -3px 0 6px rgba(255,200,50,0.2),
+              inset -1px 0 2px rgba(255,220,100,0.3),
+              3px 0 12px rgba(0,0,0,0.6),
+              6px 0 24px rgba(0,0,0,0.3)
+            `,
+            /* Slight curve toward edge */
+            transform: 'perspective(500px) rotateY(-3deg)',
+            transformOrigin: 'right center',
+          }}
+        />
+        {/* Right curved bar */}
+        <div
+          className="absolute right-0 z-20 pointer-events-none"
+          style={{
+            top: '-8px',
+            bottom: '-8px',
+            width: '12px',
+            borderRadius: '12px 0 0 12px',
+            /* Convex gradient - center raised (brightest), edges recessed (darker) */
+            background: `
+              radial-gradient(ellipse 200% 50% at 100% 50%,
+                rgba(255,200,50,0.35) 0%,
+                rgba(255,180,0,0.2) 40%,
+                rgba(180,140,0,0.1) 70%,
+                rgba(100,80,0,0.05) 100%
+              )
+            `,
+            borderLeft: '1px solid rgba(255,190,0,0.4)',
+            boxShadow: `
+              inset 3px 0 6px rgba(255,200,50,0.2),
+              inset 1px 0 2px rgba(255,220,100,0.3),
+              -3px 0 12px rgba(0,0,0,0.6),
+              -6px 0 24px rgba(0,0,0,0.3)
+            `,
+            /* Slight curve toward edge */
+            transform: 'perspective(500px) rotateY(3deg)',
+            transformOrigin: 'left center',
+          }}
+        />
 
         {/* Scrolling Track */}
         <div
