@@ -46,7 +46,7 @@ const VARIANTS = {
     borderOpacity: 0.11,
     texture: 'noise',
     textureOpacity: 0.06,
-    noiseFrequency: 0.4,
+    noiseFrequency: 0.9,
   },
   emerald: {
     color: { r: 16, g: 185, b: 129 },
