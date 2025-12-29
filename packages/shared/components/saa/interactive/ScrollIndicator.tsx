@@ -19,7 +19,6 @@ import { useEffect, useState } from 'react';
  */
 export function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
-  const [translateY, setTranslateY] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,14 +28,10 @@ export function ScrollIndicator() {
 
       if (scrollY <= fadeStart) {
         setOpacity(1);
-        setTranslateY(0);
       } else if (scrollY >= fadeEnd) {
         setOpacity(0);
-        setTranslateY(60); // Slide down 60px (behind content)
       } else {
-        const progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
-        setOpacity(1 - progress);
-        setTranslateY(progress * 60); // Slide proportionally
+        setOpacity(1 - (scrollY - fadeStart) / (fadeEnd - fadeStart));
       }
     };
 
@@ -106,9 +101,8 @@ export function ScrollIndicator() {
           bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
           right: '24px',
           opacity,
-          transform: `translateY(${translateY}px)`,
-          transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
-          zIndex: 1, // Low z-index so it slides behind content sections
+          transition: 'opacity 0.3s ease-out',
+          zIndex: 1, // Low z-index so content scrolls over it
         }}
       >
         {/* Arrow container with glow */}
