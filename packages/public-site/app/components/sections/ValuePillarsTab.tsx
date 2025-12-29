@@ -7,8 +7,8 @@ import { Globe, Users, TrendingUp } from 'lucide-react';
 /**
  * ValuePillarsTab - Emerald "tab" section with value proposition bullets
  *
- * Designed to appear as a tab peeking out from behind the MediaLogos section.
- * Uses extra bottom padding so MediaLogos can overlap on top with negative margin.
+ * Designed to wrap around the top of MediaLogos section.
+ * Has extra bottom padding that overlaps MediaLogos's top corners.
  */
 export function ValuePillarsTab() {
   return (
@@ -16,8 +16,8 @@ export function ValuePillarsTab() {
       <section
         className="pt-12 md:pt-16 px-6"
         style={{
-          // Extra bottom padding for MediaLogos to overlap
-          paddingBottom: 'calc(48px + 3rem)',
+          // Extra bottom padding - overlaps MediaLogos's top to create "wrap around" effect
+          paddingBottom: 'calc(48px + 2.5rem)',
         }}
       >
         <div className="mx-auto" style={{ maxWidth: '900px' }}>

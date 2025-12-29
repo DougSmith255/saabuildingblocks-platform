@@ -186,9 +186,12 @@ export default function Home() {
       </FixedHeroWrapper>
 
       {/* Homepage Sections */}
-      <ValuePillarsTab />
-      {/* MediaLogos overlaps on top of ValuePillarsTab with negative margin */}
-      <div style={{ marginTop: '-3rem', position: 'relative', zIndex: 2 }}>
+      {/* ValuePillarsTab wraps around top of MediaLogos with higher z-index */}
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <ValuePillarsTab />
+      </div>
+      {/* MediaLogos tucks under ValuePillarsTab's bottom edge */}
+      <div style={{ marginTop: '-2.5rem', position: 'relative', zIndex: 1 }}>
         <MediaLogos />
       </div>
       <WhySAA />

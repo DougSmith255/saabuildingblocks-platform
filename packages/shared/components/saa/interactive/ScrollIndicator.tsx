@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 /**
@@ -13,12 +14,38 @@ import { ChevronDown } from 'lucide-react';
  * - CTA button-style pulsing light animation
  * - Positioned in bottom right corner of hero sections
  * - Bouncing animation to attract attention
+ * - Fades out as user scrolls down
  *
  * Usage:
  * Place inside a hero section with relative positioning.
  * The component positions itself absolutely in the bottom right.
  */
 export function ScrollIndicator() {
+  const [opacity, setOpacity] = useState(1);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Fade out over the first 200px of scroll
+      const scrollY = window.scrollY;
+      const fadeStart = 50;
+      const fadeEnd = 250;
+
+      if (scrollY <= fadeStart) {
+        setOpacity(1);
+      } else if (scrollY >= fadeEnd) {
+        setOpacity(0);
+      } else {
+        setOpacity(1 - (scrollY - fadeStart) / (fadeEnd - fadeStart));
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Don't render if fully faded
+  if (opacity === 0) return null;
+
   return (
     <>
       {/* Keyframes for bounce animation */}
@@ -45,6 +72,8 @@ export function ScrollIndicator() {
         className="absolute bottom-6 right-6 md:bottom-8 md:right-8 z-20 pointer-events-none"
         style={{
           animation: 'scrollIndicatorBounce 2s ease-in-out infinite',
+          opacity,
+          transition: 'opacity 0.15s ease-out',
         }}
       >
         {/* Arrow container with neon glow */}
