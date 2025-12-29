@@ -69,7 +69,7 @@ export function ScrollIndicator() {
       `}</style>
 
       <div
-        className="absolute bottom-6 right-6 md:bottom-8 md:right-8 z-20 pointer-events-none"
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-[100] pointer-events-none"
         style={{
           animation: 'scrollIndicatorBounce 2s ease-in-out infinite',
           opacity,
