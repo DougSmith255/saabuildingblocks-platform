@@ -1,9 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { CTAButton, Tagline, H1 } from '@saa/shared/components/saa';
+import { CTAButton, Tagline, H1, Icon3D } from '@saa/shared/components/saa';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
-import { RotatingText } from './components/RotatingText';
+import { Globe, Users, TrendingUp } from 'lucide-react';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
 
@@ -162,22 +162,27 @@ export default function Home() {
               <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
                 For Agents Who Want More
               </Tagline>
-              <div className="text-body text-sm md:text-base opacity-80 mx-auto hero-rotating-text-container" style={{ maxWidth: '950px', marginTop: '3px' }}>
-                <RotatingText
-                  texts={[
-                    'Inside eXp Realty, the most successful global independent brokerage.',
-                    'Smart Agent Alliance, free sponsor support built for agents.',
-                    'Together, we deliver an ecosystem for exponential growth.',
-                  ]}
-                  interval={5000}
-                />
+              {/* Hero Bullet Points */}
+              <div className="flex flex-col gap-1 mt-2 mx-auto" style={{ maxWidth: '900px' }}>
+                <div className="flex items-center gap-3 justify-center">
+                  <Icon3D><Globe className="w-5 h-5" /></Icon3D>
+                  <span className="text-body text-sm md:text-base opacity-90">Inside eXp Realty, the most successful global independent brokerage.</span>
+                </div>
+                <div className="flex items-center gap-3 justify-center">
+                  <Icon3D><Users className="w-5 h-5" /></Icon3D>
+                  <span className="text-body text-sm md:text-base opacity-90">Smart Agent Alliance, free sponsor support built for agents.</span>
+                </div>
+                <div className="flex items-center gap-3 justify-center">
+                  <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
+                  <span className="text-body text-sm md:text-base opacity-90">Together, we deliver an ecosystem for exponential growth.</span>
+                </div>
               </div>
             </div>
 
             {/* CTA Button */}
             <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '14px' }}>
-              <CTAButton href="#watch-and-decide">
-                WATCH & DECIDE
+              <CTAButton href="/exp-realty-sponsor">
+                VIEW TEAM VALUE
               </CTAButton>
             </div>
           </div>

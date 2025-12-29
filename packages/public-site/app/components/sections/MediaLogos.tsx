@@ -64,30 +64,34 @@ export function MediaLogos() {
     return () => observer.disconnect();
   }, []);
 
-  // Carousel animation
+  // Carousel animation - recalculates width each frame to handle image loading
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    // Get the width of one set of logos
-    const singleSetWidth = track.scrollWidth / 2;
-
     const animate = () => {
-      // Apply velocity with decay
-      positionRef.current += velocityRef.current;
+      // Recalculate width each frame to handle late-loading images
+      const singleSetWidth = track.scrollWidth / 2;
 
-      // Decay velocity back to base
-      if (velocityRef.current > 0.5) {
-        velocityRef.current *= 0.98;
-        if (velocityRef.current < 0.5) velocityRef.current = 0.5;
+      // Only animate if we have a valid width
+      if (singleSetWidth > 0) {
+        // Apply velocity with decay
+        positionRef.current += velocityRef.current;
+
+        // Decay velocity back to base
+        if (velocityRef.current > 0.5) {
+          velocityRef.current *= 0.98;
+          if (velocityRef.current < 0.5) velocityRef.current = 0.5;
+        }
+
+        // Reset position for seamless loop (with small buffer to prevent jumps)
+        if (positionRef.current >= singleSetWidth) {
+          positionRef.current = positionRef.current - singleSetWidth;
+        }
+
+        track.style.transform = `translateX(-${positionRef.current}px)`;
       }
 
-      // Reset position for seamless loop
-      if (positionRef.current >= singleSetWidth) {
-        positionRef.current = 0;
-      }
-
-      track.style.transform = `translateX(-${positionRef.current}px)`;
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -150,25 +154,20 @@ export function MediaLogos() {
       >
         <H2>Why eXp Realty?</H2>
         <p
-          className={`text-body max-w-3xl mx-auto opacity-80 mb-8 transition-all duration-700 delay-150 ease-out ${
+          className={`text-body mx-auto opacity-80 mb-8 transition-all duration-700 delay-150 ease-out ${
             isVisible ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
+          style={{ maxWidth: '900px' }}
         >
           The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
         </p>
       </div>
 
-      {/* Carousel Container - clips logos at the portal edges */}
+      {/* Carousel Container - portal edges at screen edges */}
       <div
         className={`relative z-10 transition-all duration-700 delay-300 ease-out ${
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
-        style={{
-          marginLeft: '24px',
-          marginRight: '24px',
-          overflow: 'hidden',
-          borderRadius: '16px',
-        }}
       >
         {/* 3D Curved Portal Edges - raised bars that logos slide under */}
         {/* Left curved bar */}
@@ -230,38 +229,65 @@ export function MediaLogos() {
           }}
         />
 
-        {/* Scrolling Track */}
+        {/* Inner clipping container - clips logos at inner edge of 3D bars */}
         <div
-          ref={trackRef}
-          className="flex items-center gap-8 md:gap-16 py-8"
+          className="relative"
           style={{
-            willChange: 'transform',
+            marginLeft: '12px',
+            marginRight: '12px',
+            overflow: 'hidden',
+            borderRadius: '12px',
           }}
         >
-          {/* Double the logos for seamless loop */}
-          {[...logos, ...logos].map((logo, index) => (
-            <div
-              key={`${logo.id}-${index}`}
-              className="flex-shrink-0 flex items-center justify-center"
-              style={{
-                // Mobile: 80px (doubled from 40), Desktop: 56px
-                height: 'clamp(80px, 6vw, 56px)',
-                minWidth: 'clamp(180px, 15vw, 200px)',
-              }}
-            >
-              <img
-                src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
-                alt={logo.alt}
-                loading={index < 10 ? 'eager' : 'lazy'}
-                className="h-full w-auto object-contain"
+          {/* Shadow overlays - these sit above logos to simulate bar shadow */}
+          <div
+            className="absolute left-0 top-0 bottom-0 z-10 pointer-events-none"
+            style={{
+              width: '30px',
+              background: 'radial-gradient(ellipse 100% 60% at 0% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 50%, transparent 100%)',
+            }}
+          />
+          <div
+            className="absolute right-0 top-0 bottom-0 z-10 pointer-events-none"
+            style={{
+              width: '30px',
+              background: 'radial-gradient(ellipse 100% 60% at 100% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 50%, transparent 100%)',
+            }}
+          />
+
+          {/* Scrolling Track */}
+          <div
+            ref={trackRef}
+            className="flex items-center gap-8 md:gap-16 py-8"
+            style={{
+              willChange: 'transform',
+            }}
+          >
+            {/* Double the logos for seamless loop */}
+            {[...logos, ...logos].map((logo, index) => (
+              <div
+                key={`${logo.id}-${index}`}
+                className="flex-shrink-0 flex items-center justify-center"
                 style={{
-                  maxWidth: 'clamp(200px, 18vw, 240px)',
-                  filter: 'url(#crosshatch-texture) brightness(1.1) contrast(1.05)',
-                  opacity: 0.9,
+                  // Mobile: 80px (doubled from 40), Desktop: 56px
+                  height: 'clamp(80px, 6vw, 56px)',
+                  minWidth: 'clamp(180px, 15vw, 200px)',
                 }}
-              />
-            </div>
-          ))}
+              >
+                <img
+                  src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
+                  alt={logo.alt}
+                  loading="eager"
+                  className="h-full w-auto object-contain"
+                  style={{
+                    maxWidth: 'clamp(200px, 18vw, 240px)',
+                    filter: 'url(#crosshatch-texture) brightness(1.1) contrast(1.05)',
+                    opacity: 0.9,
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       </section>
