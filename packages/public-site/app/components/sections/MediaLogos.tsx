@@ -164,45 +164,57 @@ export function MediaLogos() {
           isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
-        {/* Two unified gradient masks - left and right */}
-        {/* Left mask: fades from left screen edge toward center, and fades top/bottom */}
-        <div
-          className="absolute left-0 w-48 md:w-72 z-10 pointer-events-none"
-          style={{
-            top: '-20%',
-            bottom: '-20%',
-            background: '#0b0a0a',
-            maskImage: `
-              linear-gradient(to right, black 0%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
-            `,
-            maskComposite: 'intersect',
-            WebkitMaskImage: `
-              linear-gradient(to right, black 0%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
-            `,
-            WebkitMaskComposite: 'source-in',
-          }}
-        />
-        {/* Right mask: fades from right screen edge toward center, and fades top/bottom */}
-        <div
-          className="absolute right-0 w-48 md:w-72 z-10 pointer-events-none"
-          style={{
-            top: '-20%',
-            bottom: '-20%',
-            background: '#0b0a0a',
-            maskImage: `
-              linear-gradient(to left, black 0%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
-            `,
-            maskComposite: 'intersect',
-            WebkitMaskImage: `
-              linear-gradient(to left, black 0%, transparent 100%),
-              linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)
-            `,
-            WebkitMaskComposite: 'source-in',
-          }}
-        />
+        {/* 3D Portal Edges - logos slide behind these raised glass edges */}
+        {/* Left portal edge */}
+        <div className="absolute left-0 z-10 pointer-events-none" style={{ top: 0, bottom: 0, width: '80px' }}>
+          {/* Solid background that covers logos */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to right, #0b0a0a 0%, #0b0a0a 70%, transparent 100%)',
+            }}
+          />
+          {/* 3D raised edge line */}
+          <div
+            className="absolute top-0 bottom-0"
+            style={{
+              right: '8px',
+              width: '6px',
+              background: 'linear-gradient(to right, rgba(255,190,0,0.15), rgba(255,190,0,0.08))',
+              borderRight: '1px solid rgba(255,190,0,0.25)',
+              boxShadow: `
+                inset -2px 0 4px rgba(255,190,0,0.1),
+                2px 0 8px rgba(0,0,0,0.5),
+                4px 0 16px rgba(0,0,0,0.3)
+              `,
+            }}
+          />
+        </div>
+        {/* Right portal edge */}
+        <div className="absolute right-0 z-10 pointer-events-none" style={{ top: 0, bottom: 0, width: '80px' }}>
+          {/* Solid background that covers logos */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to left, #0b0a0a 0%, #0b0a0a 70%, transparent 100%)',
+            }}
+          />
+          {/* 3D raised edge line */}
+          <div
+            className="absolute top-0 bottom-0"
+            style={{
+              left: '8px',
+              width: '6px',
+              background: 'linear-gradient(to left, rgba(255,190,0,0.15), rgba(255,190,0,0.08))',
+              borderLeft: '1px solid rgba(255,190,0,0.25)',
+              boxShadow: `
+                inset 2px 0 4px rgba(255,190,0,0.1),
+                -2px 0 8px rgba(0,0,0,0.5),
+                -4px 0 16px rgba(0,0,0,0.3)
+              `,
+            }}
+          />
+        </div>
 
         {/* Scrolling Track */}
         <div

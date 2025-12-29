@@ -129,8 +129,8 @@ const FUTURE_POINTS = [
 
 export function BuiltForFuture() {
   const { ref, isVisible } = useScrollReveal();
-  const getIconDelay = (index: number) => 0.5 + (index * 0.25);
-  const getTextDelay = (index: number) => 0.5 + (index * 0.25) + 0.15;
+  const getIconDelay = (index: number) => 0.9 + (index * 0.25);
+  const getTextDelay = (index: number) => 0.9 + (index * 0.25) + 0.15;
 
   return (
     <section ref={ref} className="py-16 md:py-24 px-6 overflow-hidden relative">
