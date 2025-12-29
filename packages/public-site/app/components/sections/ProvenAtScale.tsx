@@ -5,7 +5,7 @@ import { H2, Icon3D } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCardGold } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
-import { Globe, Users, TrendingUp, Check } from 'lucide-react';
+import { Globe, TrendingUp, Check } from 'lucide-react';
 
 /**
  * Proven at Scale Section
@@ -17,7 +17,6 @@ const WOLF_PACK_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe
 
 const HEADLINE = "Proven at Scale";
 const STATS = [
-  { text: "3,700+ agents supported globally", icon: Users },
   { text: "One of the fastest-growing sponsor organizations at eXp Realty", icon: TrendingUp },
   { text: "Consistently strong agent retention", icon: Check },
   { text: "Active across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
@@ -222,7 +221,7 @@ export function ProvenAtScale() {
             <RevealFromRight delay={0.2}>
               <CyberCardGold padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
-                <p className="font-heading text-3xl md:text-4xl font-bold" style={{ color: BRAND_YELLOW }}>
+                <p className="font-heading text-3xl md:text-4xl font-bold text-heading">
                   <ScrambleCounter target={3700} suffix="+" />
                 </p>
                 <p className="text-body text-base mt-2">Agents Strong</p>
