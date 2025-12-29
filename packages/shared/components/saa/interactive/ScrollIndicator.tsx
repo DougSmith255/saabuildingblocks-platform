@@ -3,20 +3,19 @@
 import { useEffect, useState } from 'react';
 
 /**
- * ScrollIndicator - Animated scroll-down arrow
+ * ScrollIndicator - Double chevron scroll indicator
  *
  * MASTER CONTROLLER COMPONENT
  * Location: @saa/shared/components/saa/interactive/ScrollIndicator
  *
  * Features:
- * - Minimalist double-chevron design (inspired by popular CodePen patterns)
- * - Gold neon glow effect matching website theme
+ * - Two stacked chevron arrows with bounce animation
+ * - Opposing opacity fade effect on arrows
+ * - Gold color with neon glow effect matching website theme
  * - Fixed to bottom-right with safe area inset for mobile
- * - Smooth bouncing animation
  * - Fades out as user scrolls down
  *
- * Usage:
- * Place at root level of page (outside any fixed/absolute containers)
+ * Based on: https://codepen.io/ckschmieder/pen/MGGMQG
  */
 export function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
@@ -37,73 +36,88 @@ export function ScrollIndicator() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Don't render if fully faded
   if (opacity === 0) return null;
 
   return (
     <>
       <style>{`
-        @keyframes scrollArrowBounce {
-          0%, 20%, 50%, 80%, 100% {
-            transform: translateY(0);
-          }
-          40% {
-            transform: translateY(10px);
-          }
-          60% {
-            transform: translateY(5px);
-          }
+        @keyframes scrollBounce {
+          0% { transform: translateY(0); }
+          10% { transform: translateY(3px); }
+          20% { transform: translateY(6px); }
+          30% { transform: translateY(9px); }
+          40% { transform: translateY(12px); }
+          50% { transform: translateY(15px); }
+          60% { transform: translateY(18px); }
+          70% { transform: translateY(21px); }
+          80% { transform: translateY(24px); }
+          90% { transform: translateY(27px); }
+          100% { transform: translateY(30px); }
         }
-        @keyframes scrollArrowFade {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: 0.5;
-          }
+
+        @keyframes scrollOpacity {
+          0% { opacity: 0; }
+          10% { opacity: 0.1; }
+          20% { opacity: 0.2; }
+          30% { opacity: 0.3; }
+          40% { opacity: 0.4; }
+          50% { opacity: 0.5; }
+          60% { opacity: 0.6; }
+          70% { opacity: 0.7; }
+          80% { opacity: 0.8; }
+          90% { opacity: 0.9; }
+          100% { opacity: 1; }
         }
-        .scroll-arrow-chevron {
-          display: block;
-          width: 24px;
-          height: 24px;
-          border-right: 3px solid #ffd700;
-          border-bottom: 3px solid #ffd700;
-          transform: rotate(45deg);
-          animation: scrollArrowFade 2s ease-in-out infinite;
+
+        .scroll-prompt-arrow-container {
+          animation: scrollBounce 1.5s infinite;
         }
-        .scroll-arrow-chevron:nth-child(2) {
-          animation-delay: 0.2s;
+
+        .scroll-prompt-arrow {
+          animation: scrollOpacity 1.5s infinite;
+        }
+
+        .scroll-prompt-arrow:last-child {
+          animation-direction: reverse;
+          margin-top: -6px;
+        }
+
+        .scroll-prompt-arrow > div {
+          width: 36px;
+          height: 36px;
+          border-right: 8px solid #ffd700;
+          border-bottom: 8px solid #ffd700;
+          transform: rotate(45deg) translateZ(1px);
         }
       `}</style>
 
       <div
         className="fixed z-[100] pointer-events-none"
         style={{
-          // Position at bottom-right with safe area inset for mobile
-          bottom: 'max(24px, env(safe-area-inset-bottom, 24px))',
+          bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
           right: '24px',
           opacity,
           transition: 'opacity 0.3s ease-out',
-          animation: 'scrollArrowBounce 2s ease-in-out infinite',
         }}
       >
-        {/* Double chevron arrow */}
+        {/* Arrow container with glow */}
         <div
-          className="flex flex-col items-center gap-[-8px]"
           style={{
             filter: `
-              drop-shadow(0 0 4px rgba(255, 215, 0, 0.8))
-              drop-shadow(0 0 8px rgba(255, 215, 0, 0.5))
-              drop-shadow(0 0 16px rgba(255, 215, 0, 0.3))
+              drop-shadow(0 0 6px rgba(255, 215, 0, 0.6))
+              drop-shadow(0 0 12px rgba(255, 215, 0, 0.4))
+              drop-shadow(0 0 20px rgba(255, 215, 0, 0.2))
             `,
           }}
         >
-          <span className="scroll-arrow-chevron" style={{ marginBottom: '-12px' }} />
-          <span className="scroll-arrow-chevron" />
+          <div className="scroll-prompt-arrow-container">
+            <div className="scroll-prompt-arrow"><div></div></div>
+            <div className="scroll-prompt-arrow"><div></div></div>
+          </div>
         </div>
       </div>
     </>
