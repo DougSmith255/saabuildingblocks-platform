@@ -158,65 +158,52 @@ export function GlassPanel({
           backdropFilter: 'blur(2px)',
         }}
       >
-        {/* Top curved gradient highlight - 3D pop-out effect */}
+        {/* Top curved gradient highlight - 3D pop-out effect (full width) */}
         <div
-          className="absolute top-0 left-0 right-0 h-[24px] pointer-events-none"
+          className="absolute top-0 left-0 right-0 h-[28px] pointer-events-none"
           style={{
             background: `linear-gradient(180deg,
-              rgba(255,255,255,0.2) 0%,
-              rgba(${r},${g},${b},0.15) 30%,
-              rgba(${r},${g},${b},0.08) 60%,
+              rgba(255,255,255,0.25) 0%,
+              rgba(${r},${g},${b},0.18) 25%,
+              rgba(${r},${g},${b},0.1) 50%,
               transparent 100%
             )`,
             borderRadius: 'inherit',
-            maskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
           }}
         />
-        {/* Top edge glow line */}
+        {/* Top edge glow line (full width) */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] pointer-events-none"
           style={{
             background: `linear-gradient(90deg,
-              transparent 5%,
-              rgba(${r},${g},${b},0.3) 15%,
-              rgba(255,255,255,0.35) 50%,
-              rgba(${r},${g},${b},0.3) 85%,
-              transparent 95%
+              rgba(${r},${g},${b},0.2) 0%,
+              rgba(255,255,255,0.4) 50%,
+              rgba(${r},${g},${b},0.2) 100%
             )`,
             borderRadius: 'inherit',
-            filter: 'blur(0.5px)',
           }}
         />
 
-        {/* Bottom curved gradient shadow - 3D depth effect */}
+        {/* Bottom curved gradient shadow - 3D depth effect (full width) */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[32px] pointer-events-none"
+          className="absolute bottom-0 left-0 right-0 h-[36px] pointer-events-none"
           style={{
             background: `linear-gradient(0deg,
-              rgba(0,0,0,0.35) 0%,
-              rgba(0,0,0,0.2) 25%,
-              rgba(0,0,0,0.1) 50%,
+              rgba(0,0,0,0.5) 0%,
+              rgba(0,0,0,0.3) 25%,
+              rgba(0,0,0,0.15) 50%,
               transparent 100%
             )`,
             borderRadius: 'inherit',
-            maskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
           }}
         />
-        {/* Bottom edge shadow line */}
+        {/* Bottom edge shadow line - dark rounded edge (full width) */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-[3px] pointer-events-none"
+          className="absolute bottom-0 left-0 right-0 h-[4px] pointer-events-none"
           style={{
-            background: `linear-gradient(90deg,
-              transparent 5%,
-              rgba(0,0,0,0.4) 15%,
-              rgba(0,0,0,0.5) 50%,
-              rgba(0,0,0,0.4) 85%,
-              transparent 95%
-            )`,
+            background: 'rgba(0,0,0,0.6)',
             borderRadius: 'inherit',
-            filter: 'blur(1px)',
+            filter: 'blur(0.5px)',
           }}
         />
 
