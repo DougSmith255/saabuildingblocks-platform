@@ -153,42 +153,24 @@ export function GlassPanel({
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
 
-  // Generate unique ID for SVG clip-path
-  const clipId = bottomCutout ? `glass-wrap-${variant}-${Math.random().toString(36).substr(2, 9)}` : undefined;
-
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
       style={bottomCutout ? {
-        // Use SVG clip-path for wrap-around effect
-        clipPath: `url(#${clipId})`,
+        // CSS clip-path with polygon for wrap-around effect
+        // Shape: full rectangle with bottom-center cut upward to wrap around rounded corners below
+        clipPath: `polygon(
+          0% 0%,
+          100% 0%,
+          100% 100%,
+          calc(100% - 24px) 100%,
+          calc(100% - 24px) calc(100% - 2.5rem),
+          24px calc(100% - 2.5rem),
+          24px 100%,
+          0% 100%
+        )`,
       } : undefined}
     >
-      {/* SVG clip-path for wrap-around cutout */}
-      {bottomCutout && (
-        <svg width="0" height="0" style={{ position: 'absolute' }}>
-          <defs>
-            <clipPath id={clipId} clipPathUnits="objectBoundingBox">
-              {/* Path creates wrap-around shape:
-                  - Full width at top
-                  - Sides extend down fully
-                  - Bottom center curves up following the rounded corners of section below
-              */}
-              <path d={`
-                M 0,0
-                L 1,0
-                L 1,1
-                L 0.98,1
-                C 0.98,0.92 0.96,0.88 0.94,0.88
-                L 0.06,0.88
-                C 0.04,0.88 0.02,0.92 0.02,1
-                L 0,1
-                Z
-              `} />
-            </clipPath>
-          </defs>
-        </svg>
-      )}
       {/* Glass plate with 3D curved edges using inset box-shadows */}
       <div
         className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}
