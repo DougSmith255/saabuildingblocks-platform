@@ -12,13 +12,12 @@ import { CTAButton } from '@saa/shared/components/saa';
 // Content
 const HEADLINE = "Why This Only Works at eXp Realty";
 const STEPS = [
-  { num: 1, label: "Traditional", title: "Centralized Support", desc: "Most brokerages provide tools, training, and support centrally.", dim: true },
-  { num: 2, label: "Limited Sponsors", title: "Restricted Offerings", desc: "Sponsors can only offer what the brokerage provides.", dim: true },
-  { num: 3, label: "eXp Model", title: "Entrepreneurial Freedom", desc: "eXp allows sponsors to build and deliver their own systems.", highlight: true },
-  { num: 4, label: "SAA Choice", title: "We Invested In You", desc: "Smart Agent Alliance chose to build real infrastructure.", highlight: true },
+  { num: 1, text: "Most real estate brokerages provide tools, training, and support centrally.", highlight: false },
+  { num: 2, text: "Even when sponsorship exists, sponsors are limited to offering only what the brokerage provides.", highlight: false },
+  { num: 3, text: "eXp Realty sponsorship works differently.", highlight: true },
 ];
 const DIFFERENTIATOR = "eXp Realty Sponsorship is Different.";
-const KEY_POINT = "eXp is the only brokerage that allows sponsors to operate entrepreneurially — to build, fund, and deliver additional systems directly to agents.";
+const KEY_POINT = "It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.";
 const TAGLINE = "When you succeed, we succeed.";
 const CTA_TEXT = "See Our Systems";
 
@@ -135,7 +134,7 @@ export function WhyOnlyAtExp() {
     if (userInteracted) return; // Stop auto-advance after user clicks
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
-      setActiveCard(prev => (prev + 1) % 4);
+      setActiveCard(prev => (prev + 1) % 3);
     }, 5000);
   }, [userInteracted]);
 
@@ -164,7 +163,7 @@ export function WhyOnlyAtExp() {
   const handleCardClick = () => {
     setUserInteracted(true); // Permanently disable auto-advance
     if (timerRef.current) clearInterval(timerRef.current);
-    setActiveCard(prev => (prev + 1) % 4);
+    setActiveCard(prev => (prev + 1) % 3);
   };
 
   const handleDotClick = (index: number) => {
@@ -283,7 +282,7 @@ export function WhyOnlyAtExp() {
               return (
                 <div
                   key={i}
-                  className="absolute inset-0 rounded-2xl p-4 md:p-6 border-2 cursor-pointer transition-all duration-500"
+                  className="absolute inset-0 rounded-2xl p-4 md:p-6 border-2 cursor-pointer transition-all duration-500 flex flex-col items-center justify-center text-center"
                   style={{
                     backgroundColor: step.highlight ? 'rgba(40, 35, 10, 0.98)' : 'rgba(25, 25, 25, 0.98)',
                     borderColor: step.highlight ? 'rgba(255, 215, 0, 0.5)' : 'rgba(255,255,255,0.15)',
@@ -296,26 +295,20 @@ export function WhyOnlyAtExp() {
                   }}
                   onClick={handleCardClick}
                 >
-                  <div className="flex items-center gap-3 md:gap-5 mb-3 md:mb-5">
-                    {step.highlight ? (
-                      <div
-                        className="rounded-full flex items-center justify-center w-10 h-10 md:w-14 md:h-14"
-                        style={{ backgroundColor: BRAND_YELLOW }}
-                      >
-                        <Number3D num={step.num} size="small" dark />
-                      </div>
-                    ) : (
-                      <div className="rounded-full flex items-center justify-center bg-white/10 border-2 border-white/20 w-10 h-10 md:w-14 md:h-14">
-                        <Number3D num={step.num} size="small" />
-                      </div>
-                    )}
-                    <div>
-                      <p className="text-body text-xs uppercase tracking-wider opacity-60">{step.label}</p>
-                      <p className="font-heading text-lg md:text-xl font-bold" style={step.highlight ? { color: BRAND_YELLOW } : undefined}>{step.title}</p>
+                  {step.highlight ? (
+                    <div
+                      className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-4"
+                      style={{ backgroundColor: BRAND_YELLOW }}
+                    >
+                      <Number3D num={step.num} size="medium" dark />
                     </div>
-                  </div>
-                  <p className="text-body text-sm md:text-base opacity-90 leading-relaxed">{step.desc}</p>
-                  <p className="text-body text-xs opacity-40 mt-2 md:mt-4">Click to advance</p>
+                  ) : (
+                    <div className="rounded-full flex items-center justify-center bg-white/10 border-2 border-white/20 w-12 h-12 md:w-16 md:h-16 mb-4">
+                      <Number3D num={step.num} size="medium" />
+                    </div>
+                  )}
+                  <p className="font-heading text-lg md:text-2xl font-bold leading-relaxed px-4" style={step.highlight ? { color: BRAND_YELLOW } : undefined}>{step.text}</p>
+                  <p className="text-body text-xs opacity-40 mt-4">Click to advance</p>
                 </div>
               );
             })}

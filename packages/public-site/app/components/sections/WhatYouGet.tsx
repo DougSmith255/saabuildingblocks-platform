@@ -15,7 +15,7 @@ const BRAND_YELLOW = '#ffd700';
 const BENEFITS = [
   {
     icon: Users,
-    title: "Connected Leadership",
+    title: "Connected Leadership and Community",
     tabLabel: "Connected",
     description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
     autoAdvanceTime: 6000,
@@ -196,7 +196,7 @@ export function WhatYouGet() {
           }}
         >
           <H2>What You Get with SAA</H2>
-          <p className="text-body opacity-60 mb-8">Everything below is explained in detail on our Team Value page.</p>
+          <p className="text-body opacity-60 mb-8">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
         </div>
 
         {/* Tab buttons - centered, wrap on mobile */}

@@ -26,7 +26,7 @@ export function WatchAndDecide() {
       <VideoSection
         id="watch-and-decide"
         title="The Only Video You Need"
-        subtitle="Everything about eXp, our team, and the opportunity - explained in full. No follow-up research required."
+        subtitle="Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full."
         videoId={VIDEO_ID}
         posterUrl={POSTER_URL}
         storageKey="homepage_video"

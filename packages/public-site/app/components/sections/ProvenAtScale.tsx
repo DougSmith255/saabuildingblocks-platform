@@ -16,10 +16,10 @@ const WOLF_PACK_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe
 
 const HEADLINE = "Proven at Scale";
 const STATS = [
-  { value: "3,700+", label: "Agents supported globally", icon: Users },
-  { value: "#1", label: "Fastest-growing sponsor org at eXp", icon: TrendingUp },
-  { value: "Strong", label: "Consistently high agent retention", icon: Check },
-  { value: "Global", label: "U.S., Canada, Mexico, Australia & beyond", icon: Globe },
+  { text: "3,700+ agents supported globally", icon: Users },
+  { text: "One of the fastest-growing sponsor organizations at eXp Realty", icon: TrendingUp },
+  { text: "Consistently strong agent retention", icon: Check },
+  { text: "Active across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
 ];
 const CTA_TEXT = "See What Agents Say";
 
@@ -205,12 +205,7 @@ export function ProvenAtScale() {
                   <RevealFromLeft key={i} delay={0.1 + i * 0.1}>
                     <div className="flex items-center gap-4">
                       <Icon3D><Icon className="w-6 h-6 flex-shrink-0" /></Icon3D>
-                      <p className="text-body">
-                        <span className="font-heading font-bold" style={{ color: BRAND_YELLOW }}>
-                          {stat.value}
-                        </span>
-                        {' — '}{stat.label}
-                      </p>
+                      <p className="text-body">{stat.text}</p>
                     </div>
                   </RevealFromLeft>
                 );
