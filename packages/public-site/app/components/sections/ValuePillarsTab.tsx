@@ -13,7 +13,7 @@ import { Globe, Users, TrendingUp } from 'lucide-react';
 export function ValuePillarsTab() {
   return (
     <GlassPanel variant="emerald">
-      <section className="pt-12 md:pt-16 pb-12 px-6">
+      <section className="py-6 md:py-8 px-6">
         <div className="mx-auto" style={{ maxWidth: '900px' }}>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3 justify-center">
