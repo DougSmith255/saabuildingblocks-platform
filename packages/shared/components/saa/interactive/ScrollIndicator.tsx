@@ -98,6 +98,11 @@ export function ScrollIndicator() {
           border-bottom: 8px solid #ffd700;
           border-radius: 4px;
           transform: rotate(45deg) translateZ(1px);
+          /* White outline like H1 styling */
+          box-shadow:
+            0 0 2px #fff,
+            0 0 4px rgba(255,255,255,0.8),
+            inset 0 0 2px rgba(255,255,255,0.5);
         }
       `}</style>
 
@@ -110,7 +115,7 @@ export function ScrollIndicator() {
           transform: `scale(${scale})`,
           transformOrigin: 'center bottom',
           transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
-          zIndex: 0, // Same level as hero, content scrolls over it
+          zIndex: -1, // Behind all content, sections scroll over it
         }}
       >
         {/* Arrow container with glow */}
