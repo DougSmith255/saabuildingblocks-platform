@@ -153,11 +153,34 @@ export function GlassPanel({
   const { r, g, b } = config.color;
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
+  const isEmerald = variant === 'emerald';
 
   return (
     <div
       className={`relative overflow-hidden ${roundedClass} ${className}`}
     >
+      {/* Emerald: Vignette glow animation */}
+      {isEmerald && (
+        <>
+          <style>{`
+            @keyframes emeraldVignetteGlow {
+              0%, 100% {
+                box-shadow: inset 0 0 80px 30px rgba(16, 185, 129, 0.2);
+              }
+              50% {
+                box-shadow: inset 0 0 100px 40px rgba(16, 185, 129, 0.35);
+              }
+            }
+          `}</style>
+          <div
+            className={`absolute inset-0 pointer-events-none z-[3] ${roundedClass}`}
+            style={{
+              animation: 'emeraldVignetteGlow 4s ease-in-out infinite',
+            }}
+          />
+        </>
+      )}
+
       {/* Glass plate with 3D curved edges using inset box-shadows */}
       <div
         className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}
@@ -184,6 +207,19 @@ export function GlassPanel({
         {/* Texture overlay */}
         <div className="absolute inset-0" style={textureStyle} />
       </div>
+
+      {/* Emerald: 3D darker bottom edge gradient */}
+      {isEmerald && (
+        <div
+          className={`absolute bottom-0 left-0 right-0 pointer-events-none z-[2] ${roundedClass}`}
+          style={{
+            height: '80px',
+            background: 'linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.3) 30%, transparent 100%)',
+            borderBottomLeftRadius: 'inherit',
+            borderBottomRightRadius: 'inherit',
+          }}
+        />
+      )}
 
       {/* Content */}
       <div className="relative z-10">

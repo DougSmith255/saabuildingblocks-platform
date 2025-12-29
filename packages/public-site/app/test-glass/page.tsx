@@ -80,20 +80,20 @@ export default function TestGlassPage() {
           </div>
         </div>
 
-        {/* 4. Inner Ambient Glow - soft center glow */}
+        {/* 4. Vignette Glow - glow coming inward from all edges */}
         <div className="relative">
-          <h2 className="text-white mb-4 text-xl">4. Inner Ambient Glow</h2>
+          <h2 className="text-white mb-4 text-xl">4. Vignette Glow</h2>
           <div className="relative">
             <GlassPanel variant="emerald">
               <div className="p-8 relative">
                 <div
                   className="absolute inset-0 pointer-events-none rounded-3xl"
                   style={{
-                    background: 'radial-gradient(ellipse at center, rgba(16, 185, 129, 0.25) 0%, transparent 60%)',
-                    animation: 'ambientGlow 4s ease-in-out infinite',
+                    boxShadow: 'inset 0 0 60px 20px rgba(16, 185, 129, 0.3)',
+                    animation: 'vignetteGlow 4s ease-in-out infinite',
                   }}
                 />
-                <p className="text-white/80 relative z-10">Soft ambient inner glow</p>
+                <p className="text-white/80 relative z-10">Vignette glow from edges</p>
               </div>
             </GlassPanel>
           </div>
@@ -246,9 +246,13 @@ export default function TestGlassPage() {
           50% { opacity: 1; }
         }
 
-        @keyframes ambientGlow {
-          0%, 100% { opacity: 0.4; transform: scale(0.9); }
-          50% { opacity: 0.8; transform: scale(1.1); }
+        @keyframes vignetteGlow {
+          0%, 100% {
+            box-shadow: inset 0 0 60px 20px rgba(16, 185, 129, 0.25);
+          }
+          50% {
+            box-shadow: inset 0 0 80px 30px rgba(16, 185, 129, 0.45);
+          }
         }
 
         @keyframes borderTrace {
