@@ -300,7 +300,7 @@ export function VideoPlayer({
     if (progress >= unlockThreshold) {
       return "You're all set! Book a call if you'd like to talk before joining.";
     }
-    return "Have questions? Watch at least half the video to unlock booking a call with us.";
+    return "Most questions are answered here, once you've watched 50%, the option to book a call becomes available.";
   };
 
   return (

@@ -12,7 +12,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
-  { label: 'About eXp', href: '/about-exp-realty/' },
   {
     label: 'Our Team',
     dropdown: [
@@ -22,6 +21,7 @@ const navItems: NavItem[] = [
       { label: 'About Doug Smart', href: '/about-doug-smart/' },
     ],
   },
+  { label: 'About eXp', href: '/about-exp-realty/' },
   {
     label: 'Resources',
     dropdown: [

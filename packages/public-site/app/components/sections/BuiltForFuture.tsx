@@ -22,7 +22,7 @@ function GrayscaleDataStream() {
   }, []);
 
   useEffect(() => {
-    const BASE_SPEED = 0.0004;
+    const BASE_SPEED = 0.00028; // Slowed down from 0.0004
     let lastTimestamp = 0;
 
     const handleScroll = () => {
@@ -69,7 +69,7 @@ function GrayscaleDataStream() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
       {columnConfigs.map((col, i) => {
-        const columnOffset = (time * col.speed * 80 + col.offset) % 110;
+        const columnOffset = (time * col.speed * 60 + col.offset) % 110; // Slowed from 80
         const numChars = 22;
         return (
           <div key={i} className="absolute" style={{ left: col.x + '%', top: 0, width: columnWidth + '%', height: '100%', overflow: 'hidden', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.4' }}>
@@ -81,10 +81,10 @@ function GrayscaleDataStream() {
               const isHead = distanceFromHead === 0;
               const trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
               const edgeFade = charY < 12 ? Math.max(0, charY / 12) : charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
-              const headColor = 'rgba(220,220,220,' + (0.9 * edgeFade) + ')';
-              const trailColor = 'rgba(160,160,160,' + (trailBrightness * 0.6 * edgeFade) + ')';
+              const headColor = 'rgba(180,180,180,' + (0.4 * edgeFade) + ')';
+              const trailColor = 'rgba(120,120,120,' + (trailBrightness * 0.25 * edgeFade) + ')';
               return (
-                <div key={j} style={{ position: 'absolute', top: charY + '%', color: isHead ? headColor : trailColor, textShadow: isHead ? '0 0 12px rgba(200,200,200,' + (0.7 * edgeFade) + ')' : '0 0 4px rgba(150,150,150,' + (0.2 * edgeFade) + ')', opacity: edgeFade }}>
+                <div key={j} style={{ position: 'absolute', top: charY + '%', color: isHead ? headColor : trailColor, textShadow: isHead ? '0 0 6px rgba(150,150,150,' + (0.3 * edgeFade) + ')' : '0 0 2px rgba(100,100,100,' + (0.1 * edgeFade) + ')', opacity: edgeFade }}>
                   {getChar(i, j)}
                 </div>
               );

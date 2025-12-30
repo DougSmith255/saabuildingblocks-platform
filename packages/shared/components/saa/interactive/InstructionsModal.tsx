@@ -56,7 +56,7 @@ const styles: Record<string, React.CSSProperties> = {
     boxSizing: 'border-box' as const,
   },
   closeBtn: {
-    position: 'absolute',
+    position: 'absolute' as const,
     top: '12px',
     right: '12px',
     width: '44px',
@@ -73,11 +73,12 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100002,
+    zIndex: 10,
     touchAction: 'manipulation',
     WebkitTapHighlightColor: 'transparent',
     outline: 'none',
     boxSizing: 'border-box' as const,
+    pointerEvents: 'auto' as const,
   },
   successIcon: {
     width: '64px',

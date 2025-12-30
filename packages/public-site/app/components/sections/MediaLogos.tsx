@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { H2 } from '@saa/shared/components/saa';
-import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -122,11 +121,10 @@ export function MediaLogos() {
   // Removed hover pause - carousel now scrolls continuously
 
   return (
-    <GlassPanel variant="marigoldCrosshatch">
-      <section
-        ref={sectionRef}
-        className="relative py-16 md:py-24 overflow-hidden"
-      >
+    <section
+      ref={sectionRef}
+      className="relative py-16 md:py-24 overflow-hidden"
+    >
       {/* SVG filter for subtle crosshatch/sandpaper texture on logos */}
       <svg width="0" height="0" style={{ position: 'absolute' }}>
         <defs>
@@ -290,8 +288,7 @@ export function MediaLogos() {
           </div>
         </div>
       </div>
-      </section>
-    </GlassPanel>
+    </section>
   );
 }
 

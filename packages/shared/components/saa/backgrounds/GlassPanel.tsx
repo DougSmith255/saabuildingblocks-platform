@@ -165,10 +165,10 @@ export function GlassPanel({
           <style>{`
             @keyframes emeraldVignetteGlow {
               0%, 100% {
-                box-shadow: inset 0 0 80px 30px rgba(16, 185, 129, 0.2);
+                box-shadow: inset 0 0 40px 15px rgba(16, 185, 129, 0.25);
               }
               50% {
-                box-shadow: inset 0 0 100px 40px rgba(16, 185, 129, 0.35);
+                box-shadow: inset 0 0 60px 25px rgba(16, 185, 129, 0.4);
               }
             }
           `}</style>

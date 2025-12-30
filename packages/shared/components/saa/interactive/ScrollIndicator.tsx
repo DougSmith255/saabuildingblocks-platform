@@ -24,8 +24,8 @@ export function ScrollIndicator() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const fadeStart = 50;
-      const fadeEnd = 250;
+      const fadeStart = 20;
+      const fadeEnd = 100;
 
       if (scrollY <= fadeStart) {
         setOpacity(1);

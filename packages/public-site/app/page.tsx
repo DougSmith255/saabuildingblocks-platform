@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { CTAButton, Tagline, H1, ScrollIndicator } from '@saa/shared/components/saa';
+import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
 import { RevealMaskEffect } from '@/components/shared/RevealMaskEffect';
@@ -164,7 +165,7 @@ export default function Home() {
                 SMART AGENT ALLIANCE
               </H1>
               <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
-                For Agents Who Want More
+                For All Agents Who Want More
               </Tagline>
             </div>
 
@@ -188,14 +189,16 @@ export default function Home() {
 
       {/* Homepage Sections */}
       <ValuePillarsTab />
-      <MediaLogos />
       <WhySAA />
       <ProvenAtScale />
       <WhatYouGet />
       <WhyOnlyAtExp />
-      <BuiltForFuture />
+      <MediaLogos />
       <MeetTheFounders />
-      <WatchAndDecide />
+      <BuiltForFuture />
+      <GlassPanel variant="champagne">
+        <WatchAndDecide />
+      </GlassPanel>
 
     </main>
   );

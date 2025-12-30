@@ -227,7 +227,7 @@ export function WhySAA() {
 
         <Reveal delay={0.2}>
           <div className="text-center mt-12">
-            <p className="text-body text-sm opacity-40 max-w-xl mx-auto">{DISCLAIMER}</p>
+            <p className="text-sm max-w-xl mx-auto font-heading" style={{ color: '#bfbdb0' }}>{DISCLAIMER}</p>
           </div>
         </Reveal>
       </div>

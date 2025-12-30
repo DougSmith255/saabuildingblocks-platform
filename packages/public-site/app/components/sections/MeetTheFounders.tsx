@@ -11,7 +11,7 @@ const FOUNDERS = [
   {
     name: "Doug Smart",
     title: "Co-Founder & Full-Stack Developer",
-    bio: "Top 0.1% eXp team builder. Designs and builds the systems, automations, and infrastructure behind the agent portal, production workflows, and attraction tools used across the organization.",
+    bio: "Top 0.1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
   },
   {
@@ -69,7 +69,7 @@ export function MeetTheFounders() {
             transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
           }}
         >
-          <H2>Meet the Founders</H2>
+          <H2>Meet SAA's Founders</H2>
         </div>
 
         {/* Two column layout - Doug left, Karrie + CTA right */}
@@ -98,8 +98,11 @@ export function MeetTheFounders() {
                 />
               </ProfileCyberFrame>
               <h3
-                className="font-heading font-bold text-lg md:text-xl mb-1"
+                className="font-bold mb-1"
                 style={{
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)',
+                  lineHeight: 1.3,
                   color: BRAND_YELLOW,
                   transform: 'perspective(800px) rotateX(12deg)',
                   fontFeatureSettings: '"ss01" 1',
@@ -151,8 +154,11 @@ export function MeetTheFounders() {
                 />
               </ProfileCyberFrame>
               <h3
-                className="font-heading font-bold text-lg md:text-xl mb-1"
+                className="font-bold mb-1"
                 style={{
+                  fontFamily: 'var(--font-taskor), sans-serif',
+                  fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)',
+                  lineHeight: 1.3,
                   color: BRAND_YELLOW,
                   transform: 'perspective(800px) rotateX(12deg)',
                   fontFeatureSettings: '"ss01" 1',
