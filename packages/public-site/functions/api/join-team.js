@@ -23,6 +23,7 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
   const fromEmail = 'Smart Agent Alliance <noreply@smartagentalliance.com>';
   const sponsorDisplay = sponsorName || 'the Smart Agent Alliance team';
 
+  // Email template v2 - Yellow theme matching site modal (2025-12-30)
   const htmlContent = `
 <!DOCTYPE html>
 <html>
@@ -31,8 +32,8 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Smart Agent Alliance</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #0a0a0c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0c; padding: 40px 16px;">
+<body style="margin: 0; padding: 0; background-color: #0c0c0c; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #0c0c0c; padding: 40px 16px;">
     <tr>
       <td align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background-color: #151517; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
