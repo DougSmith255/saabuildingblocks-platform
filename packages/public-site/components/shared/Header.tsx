@@ -192,6 +192,9 @@ export default function Header() {
         style={{
           background: 'transparent',
           overflow: 'visible',
+          // CRITICAL: Disable pointer events on entire header when modal is open
+          // This allows clicks to pass through to modal elements (like X button)
+          pointerEvents: isHidden ? 'none' : 'auto',
         }}
       >
         {/* Sliding container for background and content */}
