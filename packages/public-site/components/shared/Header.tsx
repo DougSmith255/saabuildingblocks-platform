@@ -212,6 +212,8 @@ export default function Header() {
             transform: !hasSlideIn
               ? 'translateY(-100%) translateZ(0)'
               : ((isHidden || isLoginSlideOut) ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
+            // Disable pointer events when header is hidden (modal open) to allow clicks through to modal X button
+            pointerEvents: isHidden ? 'none' : 'auto',
           }}
         >
           {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
