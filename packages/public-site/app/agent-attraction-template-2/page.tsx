@@ -28,13 +28,16 @@ const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 // AGENT CUSTOMIZATION VARIABLES (replace these for each agent)
 // =============================================================================
 const AGENT_NAME = "SMART AGENT ALLIANCE";
+const AGENT_DISPLAY_NAME = "Doug & Karrie"; // Name shown in tagline (e.g., "Join Doug & Karrie's Team")
+const AGENT_FULL_NAME = "Sheldon Douglas Smart"; // Full legal name as it appears in eXp
+const AGENT_EXP_EMAIL = "doug.smart@expreferral.com"; // Agent's eXp email for sponsor search
 const AGENT_IMAGE = `${CLOUDFLARE_BASE}/doug-and-karrie-co-founders/desktop`;
 const AGENT_IMAGE_SRCSET = `
   ${CLOUDFLARE_BASE}/doug-and-karrie-co-founders/mobile 375w,
   ${CLOUDFLARE_BASE}/doug-and-karrie-co-founders/tablet 768w,
   ${CLOUDFLARE_BASE}/doug-and-karrie-co-founders/desktop 1280w
 `;
-const AGENT_TAGLINE = "For All Agents Who Want More";
+const AGENT_TAGLINE = `Join ${AGENT_DISPLAY_NAME}'s Team (3700+ Agents)`;
 const AGENT_CTA_HREF = "#watch-and-decide";
 const AGENT_CTA_TEXT = "WATCH & DECIDE";
 
@@ -1533,7 +1536,7 @@ const INSTRUCTIONS_MODAL_STYLES: Record<string, React.CSSProperties> = {
   footer: { marginTop: '1.5rem', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)' },
 };
 
-function InstructionsModal({ isOpen, onClose, userName = 'Agent' }: { isOpen: boolean; onClose: () => void; userName?: string; }) {
+function InstructionsModal({ isOpen, onClose, userName = 'Agent', sponsorEmail = AGENT_EXP_EMAIL, sponsorFullName = AGENT_FULL_NAME }: { isOpen: boolean; onClose: () => void; userName?: string; sponsorEmail?: string; sponsorFullName?: string; }) {
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -1572,7 +1575,7 @@ function InstructionsModal({ isOpen, onClose, userName = 'Agent' }: { isOpen: bo
           <p style={INSTRUCTIONS_MODAL_STYLES.subtitle}>Follow these steps to join Smart Agent Alliance at eXp Realty.</p>
           <div style={INSTRUCTIONS_MODAL_STYLES.instructionsList}>
             <div style={INSTRUCTIONS_MODAL_STYLES.instructionItem}><div style={INSTRUCTIONS_MODAL_STYLES.instructionNumber}>1</div><div style={INSTRUCTIONS_MODAL_STYLES.instructionContent}><strong style={INSTRUCTIONS_MODAL_STYLES.instructionTitle}>Start Your Application</strong><p style={INSTRUCTIONS_MODAL_STYLES.instructionText}>Visit <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer" style={{color: '#ffd700'}}>joinapp.exprealty.com</a> to begin your eXp Realty application.</p></div></div>
-            <div style={INSTRUCTIONS_MODAL_STYLES.instructionItem}><div style={INSTRUCTIONS_MODAL_STYLES.instructionNumber}>2</div><div style={INSTRUCTIONS_MODAL_STYLES.instructionContent}><strong style={INSTRUCTIONS_MODAL_STYLES.instructionTitle}>Search for Your Sponsor</strong><p style={INSTRUCTIONS_MODAL_STYLES.instructionText}>Enter <strong style={{color: '#fff'}}>doug.smart@expreferral.com</strong> and click Search. Select <strong style={{color: '#fff'}}>Sheldon Douglas Smart</strong> as your sponsor.</p></div></div>
+            <div style={INSTRUCTIONS_MODAL_STYLES.instructionItem}><div style={INSTRUCTIONS_MODAL_STYLES.instructionNumber}>2</div><div style={INSTRUCTIONS_MODAL_STYLES.instructionContent}><strong style={INSTRUCTIONS_MODAL_STYLES.instructionTitle}>Search for Your Sponsor</strong><p style={INSTRUCTIONS_MODAL_STYLES.instructionText}>Enter <strong style={{color: '#fff'}}>{sponsorEmail}</strong> and click Search. Select <strong style={{color: '#fff'}}>{sponsorFullName}</strong> as your sponsor.</p></div></div>
             <div style={INSTRUCTIONS_MODAL_STYLES.instructionItem}><div style={INSTRUCTIONS_MODAL_STYLES.instructionNumber}>3</div><div style={INSTRUCTIONS_MODAL_STYLES.instructionContent}><strong style={INSTRUCTIONS_MODAL_STYLES.instructionTitle}>Complete Your Application</strong><p style={INSTRUCTIONS_MODAL_STYLES.instructionText}>Fill out the application form and submit. You'll receive a confirmation email from eXp.</p></div></div>
             <div style={INSTRUCTIONS_MODAL_STYLES.instructionItem}><div style={INSTRUCTIONS_MODAL_STYLES.instructionNumber}>4</div><div style={INSTRUCTIONS_MODAL_STYLES.instructionContent}><strong style={INSTRUCTIONS_MODAL_STYLES.instructionTitle}>Activate Your Agent Portal</strong><p style={INSTRUCTIONS_MODAL_STYLES.instructionText}>Once your license transfers, you'll receive an email to activate your Smart Agent Alliance portal with all your onboarding materials and resources.</p></div></div>
             <div style={{...INSTRUCTIONS_MODAL_STYLES.instructionItem, marginBottom: 0}}><div style={INSTRUCTIONS_MODAL_STYLES.instructionNumber}>5</div><div style={INSTRUCTIONS_MODAL_STYLES.instructionContent}><strong style={INSTRUCTIONS_MODAL_STYLES.instructionTitle}>eXp Realty Support</strong><p style={INSTRUCTIONS_MODAL_STYLES.instructionText}>For application issues, call <strong style={{color: '#fff'}}>833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style={{color: '#ffd700'}}>expertcare@exprealty.com</a>.</p></div></div>
