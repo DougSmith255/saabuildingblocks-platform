@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export interface InstructionsModalProps {
   /** Whether the modal is open */
@@ -178,6 +178,8 @@ export function InstructionsModal({
   onClose,
   userName = 'Agent',
 }: InstructionsModalProps) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
   // Prevent body scroll when modal is open and notify header to hide
   useEffect(() => {
     if (isOpen) {
@@ -209,16 +211,27 @@ export function InstructionsModal({
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
+  // Native DOM event listener for close button - bypasses React synthetic events
+  useEffect(() => {
+    const btn = closeBtnRef.current;
+    if (!btn || !isOpen) return;
+    const handleClick = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onClose();
+    };
+    btn.addEventListener('click', handleClick);
+    btn.addEventListener('touchend', handleClick);
+    return () => {
+      btn.removeEventListener('click', handleClick);
+      btn.removeEventListener('touchend', handleClick);
+    };
+  }, [isOpen, onClose]);
+
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-  };
-
-  const handleCloseClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -233,12 +246,14 @@ export function InstructionsModal({
       <div style={styles.backdrop} />
 
       {/* Modal Wrapper */}
-      <div
-        style={styles.modalWrapper}
-        onClick={e => e.stopPropagation()}
-      >
+      <div style={styles.modalWrapper}>
         {/* Close button - OUTSIDE scrollable modal for reliable clicks */}
-        <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
+        <button
+          ref={closeBtnRef}
+          type="button"
+          style={styles.closeBtn}
+          aria-label="Close modal"
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>

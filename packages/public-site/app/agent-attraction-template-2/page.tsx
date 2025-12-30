@@ -1534,6 +1534,8 @@ const INSTRUCTIONS_MODAL_STYLES: Record<string, React.CSSProperties> = {
 };
 
 function InstructionsModal({ isOpen, onClose, userName = 'Agent' }: { isOpen: boolean; onClose: () => void; userName?: string; }) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     if (isOpen) { document.documentElement.style.overflow = 'hidden'; document.body.style.overflow = 'hidden'; window.dispatchEvent(new CustomEvent('saa-modal-open')); }
     else { document.documentElement.style.overflow = ''; document.body.style.overflow = ''; window.dispatchEvent(new CustomEvent('saa-modal-close')); }
@@ -1546,12 +1548,22 @@ function InstructionsModal({ isOpen, onClose, userName = 'Agent' }: { isOpen: bo
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
+  // Native DOM event listener for close button - bypasses React synthetic events
+  useEffect(() => {
+    const btn = closeBtnRef.current;
+    if (!btn || !isOpen) return;
+    const handleClick = (e: Event) => { e.preventDefault(); e.stopPropagation(); onClose(); };
+    btn.addEventListener('click', handleClick);
+    btn.addEventListener('touchend', handleClick);
+    return () => { btn.removeEventListener('click', handleClick); btn.removeEventListener('touchend', handleClick); };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
   return (
     <div style={INSTRUCTIONS_MODAL_STYLES.container} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} onWheel={(e) => e.stopPropagation()}>
       <div style={INSTRUCTIONS_MODAL_STYLES.backdrop} />
-      <div style={INSTRUCTIONS_MODAL_STYLES.modalWrapper} onClick={e => e.stopPropagation()}>
-        <button type="button" style={INSTRUCTIONS_MODAL_STYLES.closeBtn} onClick={(e) => { e.preventDefault(); e.stopPropagation(); onClose(); }} aria-label="Close modal">
+      <div style={INSTRUCTIONS_MODAL_STYLES.modalWrapper}>
+        <button ref={closeBtnRef} type="button" style={INSTRUCTIONS_MODAL_STYLES.closeBtn} aria-label="Close modal">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
         <div style={INSTRUCTIONS_MODAL_STYLES.modal} onWheel={(e) => e.stopPropagation()}>
