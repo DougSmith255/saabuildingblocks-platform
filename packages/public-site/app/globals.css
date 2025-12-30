@@ -259,10 +259,10 @@ main#main-content > section:not(:first-child) {
  */
 
 /* Star background support with radial gradient behind stars */
-/* CRITICAL: html background must match body to prevent white flash on overscroll */
+/* html must be transparent so star canvas shows through */
 html {
-  background: rgb(12, 12, 12) !important;
-  background-color: rgb(12, 12, 12) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   scroll-behavior: smooth;
   overscroll-behavior: none; /* Prevent rubber-banding on iOS/Chrome */
 }
