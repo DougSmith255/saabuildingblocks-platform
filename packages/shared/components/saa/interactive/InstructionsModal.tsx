@@ -57,15 +57,15 @@ const styles: Record<string, React.CSSProperties> = {
   },
   closeBtn: {
     position: 'absolute' as const,
-    top: '12px',
-    right: '12px',
+    top: '4px',
+    right: '4px',
     width: '44px',
     height: '44px',
     minWidth: '44px',
     minHeight: '44px',
     padding: 0,
     margin: 0,
-    background: 'rgba(255, 255, 255, 0.15)',
+    background: 'rgba(40, 40, 40, 0.95)',
     border: '2px solid rgba(255, 255, 255, 0.3)',
     borderRadius: '50%',
     color: '#fff',
@@ -73,7 +73,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 10,
+    zIndex: 100010,
     touchAction: 'manipulation',
     WebkitTapHighlightColor: 'transparent',
     outline: 'none',
@@ -237,18 +237,18 @@ export function InstructionsModal({
         style={styles.modalWrapper}
         onClick={e => e.stopPropagation()}
       >
-        {/* Modal with scrollable content */}
-        <div
-          style={styles.modal}
-          onWheel={(e) => e.stopPropagation()}
-        >
-        {/* Close button - inside modal at top right */}
+        {/* Close button - OUTSIDE scrollable modal for reliable clicks */}
         <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
+        {/* Modal with scrollable content */}
+        <div
+          style={styles.modal}
+          onWheel={(e) => e.stopPropagation()}
+        >
         <div style={styles.successIcon}>
           <svg style={styles.successSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
