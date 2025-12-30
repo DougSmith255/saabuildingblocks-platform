@@ -66,16 +66,16 @@ const styles: Record<string, React.CSSProperties> = {
     boxSizing: 'border-box' as const,
   },
   closeBtn: {
-    position: 'absolute',
-    top: '12px',
-    right: '12px',
+    position: 'fixed' as const,
+    top: '20px',
+    right: '20px',
     width: '44px',
     height: '44px',
     minWidth: '44px',
     minHeight: '44px',
     padding: 0,
     margin: 0,
-    background: 'rgba(255, 255, 255, 0.15)',
+    background: 'rgba(40, 40, 40, 0.95)',
     border: '2px solid rgba(255, 255, 255, 0.3)',
     borderRadius: '50%',
     color: '#fff',
@@ -83,7 +83,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100002,
+    zIndex: 100005,
     touchAction: 'manipulation',
     WebkitTapHighlightColor: 'transparent',
     outline: 'none',
@@ -343,6 +343,14 @@ export function JoinModal({
       {/* Separate backdrop */}
       <div style={styles.backdrop} />
 
+      {/* Close button - FIXED position, direct child of container for proper z-index */}
+      <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
       {/* Modal Wrapper */}
       <div
         style={styles.modalWrapper}
@@ -353,14 +361,6 @@ export function JoinModal({
           style={styles.modal}
           onWheel={(e) => e.stopPropagation()}
         >
-        {/* Close button - inside modal at top right */}
-        <button type="button" style={styles.closeBtn} onClick={handleCloseClick} aria-label="Close modal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-
         <h3 style={styles.title}>Join Smart Agent Alliance</h3>
         <p style={styles.subtitle}>Take the first step towards building your dream career at eXp Realty.</p>
 

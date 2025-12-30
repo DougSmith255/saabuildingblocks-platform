@@ -56,9 +56,9 @@ const styles: Record<string, React.CSSProperties> = {
     boxSizing: 'border-box' as const,
   },
   closeBtn: {
-    position: 'absolute' as const,
-    top: '4px',
-    right: '4px',
+    position: 'fixed' as const,
+    top: '20px',
+    right: '20px',
     width: '44px',
     height: '44px',
     minWidth: '44px',
@@ -73,7 +73,7 @@ const styles: Record<string, React.CSSProperties> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100010,
+    zIndex: 100005,
     touchAction: 'manipulation',
     WebkitTapHighlightColor: 'transparent',
     outline: 'none',
@@ -245,20 +245,21 @@ export function InstructionsModal({
       {/* Separate backdrop */}
       <div style={styles.backdrop} />
 
+      {/* Close button - FIXED position, direct child of container for proper z-index */}
+      <button
+        ref={closeBtnRef}
+        type="button"
+        style={styles.closeBtn}
+        aria-label="Close modal"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
       {/* Modal Wrapper */}
       <div style={styles.modalWrapper}>
-        {/* Close button - OUTSIDE scrollable modal for reliable clicks */}
-        <button
-          ref={closeBtnRef}
-          type="button"
-          style={styles.closeBtn}
-          aria-label="Close modal"
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}>
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
         {/* Modal with scrollable content */}
         <div
           style={styles.modal}

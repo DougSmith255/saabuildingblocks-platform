@@ -1519,7 +1519,7 @@ const INSTRUCTIONS_MODAL_STYLES: Record<string, React.CSSProperties> = {
   backdrop: { position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0, 0, 0, 0.9)', backdropFilter: 'blur(8px)' },
   modalWrapper: { position: 'relative', zIndex: 100001, maxWidth: '520px', width: '100%', maxHeight: '90vh', margin: 'auto' },
   modal: { position: 'relative', background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '2.5rem 2rem 2rem 2rem', width: '100%', maxHeight: '90vh', overflowY: 'auto', textAlign: 'center', boxSizing: 'border-box' as const },
-  closeBtn: { position: 'absolute' as const, top: '4px', right: '4px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', padding: 0, margin: 0, background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100010, pointerEvents: 'auto' as const },
+  closeBtn: { position: 'fixed' as const, top: '20px', right: '20px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', padding: 0, margin: 0, background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100005, pointerEvents: 'auto' as const },
   successIcon: { width: '64px', height: '64px', margin: '0 auto 1.5rem', background: 'rgba(0, 255, 136, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
   title: { fontFamily: 'var(--font-amulya, system-ui), sans-serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' },
   subtitle: { fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '1rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '2rem' },
@@ -1562,10 +1562,10 @@ function InstructionsModal({ isOpen, onClose, userName = 'Agent' }: { isOpen: bo
   return (
     <div style={INSTRUCTIONS_MODAL_STYLES.container} onClick={(e) => { if (e.target === e.currentTarget) onClose(); }} onWheel={(e) => e.stopPropagation()}>
       <div style={INSTRUCTIONS_MODAL_STYLES.backdrop} />
+      <button ref={closeBtnRef} type="button" style={INSTRUCTIONS_MODAL_STYLES.closeBtn} aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
       <div style={INSTRUCTIONS_MODAL_STYLES.modalWrapper}>
-        <button ref={closeBtnRef} type="button" style={INSTRUCTIONS_MODAL_STYLES.closeBtn} aria-label="Close modal">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{pointerEvents: 'none', display: 'block', flexShrink: 0}}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
         <div style={INSTRUCTIONS_MODAL_STYLES.modal} onWheel={(e) => e.stopPropagation()}>
           <div style={INSTRUCTIONS_MODAL_STYLES.successIcon}><svg style={{ width: '32px', height: '32px', stroke: '#00ff88' }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
           <h3 style={INSTRUCTIONS_MODAL_STYLES.title}>Welcome, {userName}!</h3>
