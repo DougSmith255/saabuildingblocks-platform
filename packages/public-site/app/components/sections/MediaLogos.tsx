@@ -157,7 +157,11 @@ export function MediaLogos() {
           }`}
           style={{ maxWidth: '900px' }}
         >
-          The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
+          <span className="block">The only cumulatively profitable public real estate company.</span>
+          <span className="block">S&P 600 SmallCap. First cloud-based brokerage.</span>
+          <span className="block">80/20 split until cap → 100% commission. Flat monthly fee.</span>
+          <span className="block">Stock awards + optional revenue share income.</span>
+          <span className="block">Choose your sponsor. Access real support.</span>
         </p>
       </div>
 

@@ -2900,7 +2900,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <span class="h2-word">Realty?</span>
         </h2>
         <p class="text-body mx-auto opacity-80 mb-8" style="max-width: 900px;">
-          The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
+          <span style="display: block;">The only cumulatively profitable public real estate company.</span>
+          <span style="display: block;">S&P 600 SmallCap. First cloud-based brokerage.</span>
+          <span style="display: block;">80/20 split until cap → 100% commission. Flat monthly fee.</span>
+          <span style="display: block;">Stock awards + optional revenue share income.</span>
+          <span style="display: block;">Choose your sponsor. Access real support.</span>
         </p>
       </div>
       <div class="media-logos-container">
