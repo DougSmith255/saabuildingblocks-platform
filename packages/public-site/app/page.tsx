@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { CTAButton, Tagline, H1, ScrollIndicator } from '@saa/shared/components/saa';
+import { CTAButton, Tagline, H1, ScrollIndicator, SecondaryButton } from '@saa/shared/components/saa';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
@@ -199,6 +199,16 @@ export default function Home() {
       <GlassPanel variant="champagne">
         <WatchAndDecide />
       </GlassPanel>
+
+      {/* Bottom CTA Section - Outside glass panel */}
+      <section className="py-16 md:py-20 px-6 text-center">
+        <p className="text-body mx-auto mb-8" style={{ maxWidth: '700px' }}>
+          If you want to understand exactly how sponsorship works, what you keep, and what you never give up, see how Smart Agent Alliance fits inside eXp Realty.
+        </p>
+        <SecondaryButton href="https://saabuildingblocks.pages.dev/exp-realty-sponsor/">
+          Our Team
+        </SecondaryButton>
+      </section>
 
     </main>
   );
