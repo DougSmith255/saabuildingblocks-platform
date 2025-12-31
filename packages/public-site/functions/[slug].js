@@ -2290,11 +2290,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Position number for leadership cards - 3D icon style (no circle) */
     .position-number {
       position: absolute;
-      top: -20px;
-      right: -10px;
+      top: -8px;
+      right: -5px;
       font-family: var(--font-taskor), 'Taskor', system-ui, sans-serif;
-      font-size: 64px;
-      font-weight: bold;
+      font-size: 28px;
+      font-weight: 700;
       z-index: 20;
       color: #c4a94d;
       filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
@@ -2302,7 +2302,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       line-height: 1;
     }
     @media (min-width: 768px) {
-      .position-number { font-size: 80px; top: -25px; right: -15px; }
+      .position-number { font-size: 36px; top: -10px; right: -8px; }
     }
     /* Bio dropdown/accordion - discreet text link style */
     .founder-bio-toggle {
