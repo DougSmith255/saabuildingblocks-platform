@@ -2290,19 +2290,16 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Position number for leadership cards - 3D icon style (no circle) */
     .position-number {
       position: absolute;
-      top: -8px;
-      right: -5px;
+      top: -15px;
+      right: -10px;
       font-family: var(--font-taskor), 'Taskor', system-ui, sans-serif;
-      font-size: 28px;
+      font-size: clamp(43px, calc(39px + 1.60vw), 87px);
       font-weight: 700;
       z-index: 20;
       color: #c4a94d;
       filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
       transform: perspective(500px) rotateX(8deg);
       line-height: 1;
-    }
-    @media (min-width: 768px) {
-      .position-number { font-size: 36px; top: -10px; right: -8px; }
     }
     /* Bio dropdown/accordion - discreet text link style */
     .founder-bio-toggle {
