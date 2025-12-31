@@ -878,6 +878,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%);
       -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%);
       filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+      /* Hide alt text while loading */
+      color: transparent;
+      font-size: 0;
     }
 
     .hero-text-wrapper {
@@ -2485,7 +2488,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="hero-3d-backdrop"></div>
               <img
                 src="${escapeHTML(agentImageUrl)}"
-                alt="${escapeHTML(displayName)} - Smart Agent Alliance"
+                alt=""
                 width="900"
                 height="500"
                 loading="eager"
