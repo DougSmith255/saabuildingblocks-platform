@@ -20,7 +20,7 @@ const HEADLINE = "Proven at Scale";
 const STATS = [
   { text: "One of the fastest-growing sponsor organizations at eXp Realty", icon: TrendingUp },
   { text: "Consistently strong agent retention", icon: Check },
-  { text: "Active across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
+  { text: "Supporting agents across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
 ];
 const CTA_TEXT = "See What Agents Say";
 
@@ -169,7 +169,7 @@ export function ProvenAtScale() {
                 <p className="font-heading text-3xl md:text-4xl font-bold text-heading">
                   <StaticCounterNeon value="3700" suffix="+" />
                 </p>
-                <p className="text-body text-base mt-2">Agents Strong</p>
+                <p className="text-body text-base mt-2">Agents in Sponsor Network</p>
               </CyberCardGold>
             </RevealFromRight>
           </div>
