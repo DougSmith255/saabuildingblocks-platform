@@ -3080,7 +3080,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Additional layers note -->
             <div class="scroll-reveal" style="text-align: center; margin-top: 2rem; transition: all 0.7s ease; transition-delay: 0.6s;">
-              <p class="text-body" style="opacity: 0.6; font-size: 14px;">+4 more layers of leadership support</p>
+              <p class="text-heading">+4 more layers of leadership support</p>
             </div>
           </div>
         </section>
