@@ -907,7 +907,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .reveal-glow {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 65% 45% at 50% 42%, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.12) 35%, rgba(255,150,0,0.06) 55%, transparent 80%);
+      background: radial-gradient(ellipse 61% 43% at 50% 42%, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.12) 35%, rgba(255,150,0,0.06) 55%, transparent 80%);
     }
 
     .reveal-ring {
@@ -919,14 +919,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     .reveal-ring-outer {
-      width: min(72vw, 630px);
-      height: min(72vw, 630px);
+      width: min(68vw, 595px);
+      height: min(68vw, 595px);
       transform: translate(-50%, -50%);
     }
 
     .reveal-ring-inner {
-      width: min(54vw, 468px);
-      height: min(54vw, 468px);
+      width: min(51vw, 442px);
+      height: min(51vw, 442px);
       border-color: rgba(255,215,0,0.18);
       border-radius: 50%;
       transform: translate(-50%, -50%);
@@ -3663,8 +3663,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
           const progress = 0.45 + combinedWave * 0.35;
 
-          // Animation values (slightly smaller for single person hero image - 90% of original)
-          const maskSize = 81 - progress * 36;
+          // Animation values (smaller for single person hero image - 85% of original)
+          const maskSize = 76.5 - progress * 34;
           const rotation = time * 90;
 
           // Update glow gradient
