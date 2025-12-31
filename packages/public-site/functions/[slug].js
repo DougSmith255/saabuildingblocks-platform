@@ -1025,6 +1025,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .glass-panel {
       position: relative;
       overflow: hidden;
+      border-radius: 24px;
+    }
+
+    /* Bottom glass panel - only round top corners */
+    .glass-panel-bottom {
+      border-radius: 24px 24px 0 0;
     }
 
     .glass-panel-bg {
@@ -1033,6 +1039,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: none;
       overflow: hidden;
       z-index: 1;
+      border-radius: inherit;
       background: linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%);
       box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25),
         inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2),
@@ -3010,7 +3017,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </section>
 
     <!-- Watch and Decide Section -->
-    <div class="glass-panel">
+    <div class="glass-panel glass-panel-bottom">
       <div class="glass-panel-bg">
         <div class="glass-panel-texture"></div>
       </div>
