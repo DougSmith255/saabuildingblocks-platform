@@ -3246,6 +3246,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         setupEventListeners();
         setupScrollEffects();
         setupScrollReveal();
+        setupCounterAnimation();
         setupLogoAnimation();
         setupRevealMaskAnimation();
         setupWhatYouGetTabs();
@@ -3585,6 +3586,69 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }, { threshold: 0.15 });
 
         document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+      }
+
+      // Counter scramble animation (matches homepage)
+      function setupCounterAnimation() {
+        const counterContainer = document.getElementById('agent-counter-desktop');
+        if (!counterContainer) return;
+
+        const digitElements = counterContainer.querySelectorAll('.counter-digit');
+        if (digitElements.length !== 4) return;
+
+        let animationId = null;
+
+        function animateScramble() {
+          const target = 3700;
+          const duration = 2000; // 2 seconds
+          const startTime = performance.now();
+
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+          }
+
+          function animate(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+
+            if (progress >= 1) {
+              // End animation - show final value
+              digitElements[0].textContent = '3';
+              digitElements[1].textContent = '7';
+              digitElements[2].textContent = '0';
+              digitElements[3].textContent = '0';
+              animationId = null;
+            } else {
+              // Scramble effect - show random numbers that gradually approach target
+              const currentValue = Math.floor(target * progress);
+              const scrambleIntensity = 1 - progress;
+
+              const digits = currentValue.toString().padStart(4, '0').split('');
+              const scrambled = digits.map(function(digit, index) {
+                if (Math.random() < scrambleIntensity * 0.3) {
+                  if (index === 0) return '3';
+                  return (Math.floor(Math.random() * 8) + 2).toString();
+                }
+                return digit;
+              });
+
+              scrambled.forEach(function(digit, index) {
+                digitElements[index].textContent = digit;
+              });
+
+              animationId = requestAnimationFrame(animate);
+            }
+          }
+
+          animationId = requestAnimationFrame(animate);
+        }
+
+        // Start first animation after a short delay
+        setTimeout(function() {
+          animateScramble();
+          // Loop every 5 seconds
+          setInterval(animateScramble, 5000);
+        }, 500);
       }
 
       // Logo animation
