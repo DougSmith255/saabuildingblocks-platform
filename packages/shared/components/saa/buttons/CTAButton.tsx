@@ -70,6 +70,8 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
               px-5 py-2
               bg-[rgb(45,45,45)]
               rounded-xl border-t border-b border-white/10
+              border-l border-r border-l-transparent border-r-transparent
+              hover:border-l-[#ffd700]/40 hover:border-r-[#ffd700]/40
               uppercase tracking-wide
               z-10
               transition-all duration-500
@@ -100,6 +102,8 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
               px-5 py-2
               bg-[rgb(45,45,45)]
               rounded-xl border-t border-b border-white/10
+              border-l border-r border-l-transparent border-r-transparent
+              hover:border-l-[#ffd700]/40 hover:border-r-[#ffd700]/40
               uppercase tracking-wide
               z-10
               transition-all duration-500
@@ -122,31 +126,31 @@ export function CTAButton({ href = '#', children, className = '', onClick }: CTA
           </a>
         )}
 
-      {/* Top light bar - positioned half behind top edge of button */}
+      {/* Top light bar - half (5px) sticks out above button, behind button face */}
       <div
         className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md transition-all duration-500 group-hover:w-4/5"
           style={{
             position: 'absolute',
-            top: '-5px',
+            top: '-5px', // Half of 10px height sticks out above button
             left: '50%',
             transform: 'translateX(-50%)',
             background: brandGold,
             animationDelay: lightPulseDelay,
-            zIndex: 5,
+            zIndex: 5, // Behind button face (z-10)
           }}
         />
 
-      {/* Bottom light bar - positioned half behind bottom edge of button */}
+      {/* Bottom light bar - half (5px) sticks out below button, half behind, BEHIND button face */}
       <div
         className="cta-light-bar cta-light-bar-pulse w-[30px] h-[10px] rounded-md transition-all duration-500 group-hover:w-4/5"
           style={{
             position: 'absolute',
-            bottom: '-5px',
+            bottom: '-5px', // Half of 10px height sticks out below button
             left: '50%',
             transform: 'translateX(-50%)',
             background: brandGold,
             animationDelay: lightPulseDelay,
-            zIndex: 5,
+            zIndex: 5, // Behind button face (z-10)
           }}
         />
       </div>

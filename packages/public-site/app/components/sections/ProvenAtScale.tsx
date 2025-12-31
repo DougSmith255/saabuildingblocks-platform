@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { H2, Icon3D } from '@saa/shared/components/saa';
+// Note: useState only needed for scroll reveal
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCardGold } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
@@ -81,83 +82,27 @@ function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; d
   );
 }
 
-// Scramble counter animation - matches hero counter style, loops every 5 seconds
-function ScrambleCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
-  const [digits, setDigits] = useState(['3', '7', '0', '0']);
-  const { ref, isVisible } = useScrollReveal(0.1);
-  const animationRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    const duration = 2000; // 2 seconds scramble
-    const loopInterval = 5000; // Loop every 5 seconds
-
-    const animateScramble = () => {
-      const startTime = performance.now();
-
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-
-      const animate = (currentTime: number) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-
-        if (progress >= 1) {
-          // End animation - show final value
-          setDigits(['3', '7', '0', '0']);
-          animationRef.current = null;
-        } else {
-          // Scramble effect - show random numbers that gradually approach target
-          const currentValue = Math.floor(target * progress);
-          const scrambleIntensity = 1 - progress;
-
-          const targetDigits = currentValue.toString().padStart(4, '0').split('');
-          const scrambled = targetDigits.map((digit, index) => {
-            if (Math.random() < scrambleIntensity * 0.3) {
-              // First digit stays 3 to keep 3xxx range
-              if (index === 0) return '3';
-              return (Math.floor(Math.random() * 8) + 2).toString(); // 2-9
-            }
-            return digit;
-          });
-
-          setDigits(scrambled);
-          animationRef.current = requestAnimationFrame(animate);
-        }
-      };
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    // Start first animation after a small delay
-    const initTimeout = setTimeout(() => {
-      animateScramble();
-    }, 200);
-
-    // Loop animation every 5 seconds
-    const intervalId = setInterval(() => {
-      animateScramble();
-    }, loopInterval);
-
-    return () => {
-      clearTimeout(initTimeout);
-      clearInterval(intervalId);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isVisible, target]);
+// Static counter with H2 neon text styling (no backing plate)
+function StaticCounterNeon({ value, suffix = '' }: { value: string; suffix?: string }) {
+  // H2-style white core glow text-shadow (no backing plate)
+  const textShadow = `
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgba(255,255,255,0.8),
+    0 0 8px rgba(255,255,255,0.4)
+  `;
 
   return (
-    <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>
-      {digits.map((digit, i) => (
-        <span key={i} style={{ display: 'inline-block', width: '0.6em', textAlign: 'center' }}>
-          {digit}
-        </span>
-      ))}
-      {suffix}
+    <span
+      style={{
+        fontVariantNumeric: 'tabular-nums',
+        color: '#bfbdb0',
+        textShadow: textShadow.trim(),
+        display: 'inline-block',
+        letterSpacing: '0.02em',
+      }}
+    >
+      {value}{suffix}
     </span>
   );
 }
@@ -222,7 +167,7 @@ export function ProvenAtScale() {
               <CyberCardGold padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
                 <p className="font-heading text-3xl md:text-4xl font-bold text-heading">
-                  <ScrambleCounter target={3700} suffix="+" />
+                  <StaticCounterNeon value="3700" suffix="+" />
                 </p>
                 <p className="text-body text-base mt-2">Agents Strong</p>
               </CyberCardGold>

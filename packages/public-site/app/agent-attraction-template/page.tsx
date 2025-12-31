@@ -727,16 +727,16 @@ function ValuePillarsTab() {
           <div className="mx-auto" style={{ maxWidth: '900px' }}>
             <div className="flex flex-col gap-3">
               <div className="flex items-center gap-3 justify-center">
-                <Icon3D><Users className="w-5 h-5" /></Icon3D>
-                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Smart Agent Alliance, free sponsor support built for agents.</span>
+                <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>01</span>
+                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Smart Agent Alliance, sponsor support built and provided at no cost to agents.</span>
               </div>
               <div className="flex items-center gap-3 justify-center">
-                <Icon3D><Globe className="w-5 h-5" /></Icon3D>
-                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Inside eXp Realty, the most successful global independent brokerage.</span>
+                <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>02</span>
+                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Inside eXp Realty, the largest independent real estate brokerage in the world.</span>
               </div>
               <div className="flex items-center gap-3 justify-center">
-                <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
-                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Together, we deliver an ecosystem for exponential growth.</span>
+                <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>03</span>
+                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Stronger Together, eXp infrastructure plus SAA systems drive higher agent success.</span>
               </div>
             </div>
           </div>
@@ -885,7 +885,7 @@ function WhySAA() {
       `}</style>
       <div ref={ref} className="mx-auto" style={{ maxWidth: '1300px' }}>
         <div className="text-center transition-all duration-700" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(30px)' }}>
-          <H2>Why Smart Agent Alliance?</H2>
+          <H2>Why Smart Agent Alliance (SAA)?</H2>
         </div>
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
           <div className="md:col-span-7">
@@ -917,7 +917,7 @@ function WhySAA() {
           </div>
         </div>
         <div className="text-center mt-12" style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.7s ease-out 0.3s' }}>
-          <p className="text-sm max-w-xl mx-auto font-heading" style={{ color: '#bfbdb0' }}>Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.</p>
+          <p className="text-body max-w-xl mx-auto" style={{ color: '#e5e4dd' }}>Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.</p>
         </div>
       </div>
     </section>
@@ -933,47 +933,27 @@ const PROVEN_STATS = [
   { text: "Active across the U.S., Canada, Mexico, Australia, and beyond", icon: Globe },
 ];
 
-function ScrambleCounter({ target }: { target: number }) {
-  const [digits, setDigits] = useState(['3', '7', '0', '0']);
-  const { ref, isVisible } = useScrollReveal(0.1);
-  const animationRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!isVisible) return;
-    const duration = 2000;
-    const loopInterval = 5000;
-
-    const animateScramble = () => {
-      const startTime = performance.now();
-      if (animationRef.current) cancelAnimationFrame(animationRef.current);
-
-      const animate = (currentTime: number) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        if (progress >= 1) { setDigits(['3', '7', '0', '0']); animationRef.current = null; }
-        else {
-          const currentValue = Math.floor(target * progress);
-          const scrambleIntensity = 1 - progress;
-          const targetDigits = currentValue.toString().padStart(4, '0').split('');
-          const scrambled = targetDigits.map((digit, index) => {
-            if (Math.random() < scrambleIntensity * 0.3) { if (index === 0) return '3'; return (Math.floor(Math.random() * 8) + 2).toString(); }
-            return digit;
-          });
-          setDigits(scrambled);
-          animationRef.current = requestAnimationFrame(animate);
-        }
-      };
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    const initTimeout = setTimeout(() => animateScramble(), 200);
-    const intervalId = setInterval(() => animateScramble(), loopInterval);
-    return () => { clearTimeout(initTimeout); clearInterval(intervalId); if (animationRef.current) cancelAnimationFrame(animationRef.current); };
-  }, [isVisible, target]);
+// Static counter with H2 neon text styling (no backing plate)
+function StaticCounterNeon({ value, suffix = '' }: { value: string; suffix?: string }) {
+  // H2-style white core glow text-shadow (no backing plate)
+  const textShadow = `
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgba(255,255,255,0.8),
+    0 0 8px rgba(255,255,255,0.4)
+  `;
 
   return (
-    <span ref={ref} style={{ fontVariantNumeric: 'tabular-nums' }}>
-      {digits.map((digit, i) => <span key={i} style={{ display: 'inline-block', width: '0.6em', textAlign: 'center' }}>{digit}</span>)}+
+    <span
+      style={{
+        fontVariantNumeric: 'tabular-nums',
+        color: '#bfbdb0',
+        textShadow: textShadow.trim(),
+        display: 'inline-block',
+        letterSpacing: '0.02em',
+      }}
+    >
+      {value}{suffix}
     </span>
   );
 }
@@ -1010,7 +990,7 @@ function ProvenAtScale() {
             <div className="md:col-span-4" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(40px)', transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s' }}>
               <CyberCardGold padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
-                <p className="font-heading text-3xl md:text-4xl font-bold text-heading"><ScrambleCounter target={3700} /></p>
+                <p className="font-heading text-3xl md:text-4xl font-bold text-heading"><StaticCounterNeon value="3700" suffix="+" /></p>
                 <p className="text-body text-base mt-2">Agents Strong</p>
               </CyberCardGold>
             </div>
@@ -1303,7 +1283,7 @@ function BuiltForFuture() {
 // SECTION: MeetTheFounders
 // =============================================================================
 const FOUNDERS = [
-  { name: "Doug Smart", title: "Co-Founder & Full-Stack Developer", bio: "Top 0.1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.", image: `${CLOUDFLARE_BASE}/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public` },
+  { name: "Doug Smart", title: "Co-Founder & Full-Stack Developer", bio: "Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.", image: `${CLOUDFLARE_BASE}/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public` },
   { name: "Karrie Hill, JD", title: "Co-Founder & eXp Certified Mentor", bio: "UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.", image: `${CLOUDFLARE_BASE}/4e2a3c105e488654-Karrie-Profile-Picture.png/public` },
 ];
 

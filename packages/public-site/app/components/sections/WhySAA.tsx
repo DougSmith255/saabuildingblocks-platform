@@ -6,7 +6,7 @@ import { CTAButton } from '@saa/shared/components/saa';
 import { Check } from 'lucide-react';
 
 // Shared content
-const HEADLINE = "Why Smart Agent Alliance?";
+const HEADLINE = "Why Smart Agent Alliance (SAA)?";
 const TAGLINE = "Elite systems. Proven training. Real community.";
 const INTRO = "Most eXp sponsors offer little or no ongoing value.";
 const SUBHEAD = "Smart Agent Alliance was built differently.";
@@ -227,7 +227,7 @@ export function WhySAA() {
 
         <Reveal delay={0.2}>
           <div className="text-center mt-12">
-            <p className="text-sm max-w-xl mx-auto font-heading" style={{ color: '#bfbdb0' }}>{DISCLAIMER}</p>
+            <p className="text-body max-w-xl mx-auto" style={{ color: '#e5e4dd' }}>{DISCLAIMER}</p>
           </div>
         </Reveal>
       </div>

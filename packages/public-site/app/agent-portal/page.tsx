@@ -852,6 +852,16 @@ export default function AgentPortal() {
               </svg>
             </Link>
 
+            {/* Desktop: AGENT PORTAL title - centered in header */}
+            <h1 className="hidden md:block absolute left-1/2 -translate-x-1/2 text-[#ffd700] font-semibold text-lg tracking-wider uppercase"
+              style={{
+                fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                textShadow: '0 0 10px rgba(255, 215, 0, 0.3)',
+              }}
+            >
+              AGENT PORTAL
+            </h1>
+
             {/* Mobile: Section Title / Desktop: Logout Button */}
             <div className="flex items-center gap-3">
               {/* Mobile: Current section title */}
@@ -884,26 +894,6 @@ export default function AgentPortal() {
         </div>
       </header>
 
-      {/* Hero Header - Hidden on mobile for app-like experience */}
-      <section
-        className="hidden md:flex relative px-4 sm:px-8 md:px-12 pt-32 pb-12 items-center justify-center"
-      >
-        <div className="max-w-[2500px] mx-auto w-full text-center">
-          <H1>AGENT PORTAL</H1>
-        </div>
-
-        {/* Decorative grid lines */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-10"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-          }}
-        />
-      </section>
 
       {/* Mobile Bottom Navigation - App-like experience */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-[#ffd700]/20 pb-safe">

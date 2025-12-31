@@ -6,10 +6,11 @@ import { Globe, Users, TrendingUp } from 'lucide-react';
 
 const PILLAR_GLOW_COLOR = '#bca24a';
 
-// Body text with neon glow and metal backing
-const pillarTextStyle: React.CSSProperties = {
+// Number style with neon glow and metal backing (same as old pillar text)
+const pillarNumberStyle: React.CSSProperties = {
   color: PILLAR_GLOW_COLOR,
-  fontWeight: 500,
+  fontWeight: 700,
+  minWidth: '1.5em',
   textShadow: `
     /* WHITE CORE */
     0 0 0.01em #fff,
@@ -27,6 +28,12 @@ const pillarTextStyle: React.CSSProperties = {
     0.075em 0.075em 0 #080808
   `,
   filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25))`,
+};
+
+// Body text - plain, no glow
+const pillarTextStyle: React.CSSProperties = {
+  color: '#e5e4dd', // Standard body text color
+  fontWeight: 500,
 };
 
 /**
@@ -89,7 +96,7 @@ export function ValuePillarsTab() {
             filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(188, 162, 74, 0.45));
           }
         }
-        .pillar-text {
+        .pillar-number {
           animation: pillarGlowBreathe 4s ease-in-out infinite;
         }
       `}</style>
@@ -104,16 +111,16 @@ export function ValuePillarsTab() {
         <div className="mx-auto" style={{ maxWidth: '900px' }}>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3 justify-center">
-              <Icon3D><Users className="w-5 h-5" /></Icon3D>
-              <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Smart Agent Alliance, free sponsor support built for agents.</span>
+              <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
+              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarNumberStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
-              <Icon3D><Globe className="w-5 h-5" /></Icon3D>
-              <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Inside eXp Realty, the most successful global independent brokerage.</span>
+              <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
+              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarNumberStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
-              <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
-              <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Together, we deliver an ecosystem for exponential growth.</span>
+              <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
+              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarNumberStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
             </div>
           </div>
         </div>

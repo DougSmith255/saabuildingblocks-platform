@@ -17,7 +17,7 @@ export default function AboutDougSmart() {
   const highlights = [
     { label: "Role", value: "Co-Founder, Smart Agent Alliance" },
     { label: "Specialty", value: "Digital Systems Architect" },
-    { label: "Ranking", value: "Top 0.1% eXp Team Builders" },
+    { label: "Ranking", value: "Top 1% eXp Team Builders" },
     { label: "Base", value: "Tiburon, California" }
   ];
 

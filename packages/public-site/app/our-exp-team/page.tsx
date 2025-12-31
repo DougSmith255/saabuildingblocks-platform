@@ -21,7 +21,7 @@ export default function OurExpTeam() {
       title: "Co-Founder, Smart Agent Alliance",
       image: DOUG_PROFILE_IMAGE,
       bio: [
-        "Top 0.1% eXp team builder and the architect behind Smart Agent Alliance's entire digital infrastructure. Doug built this website, the automation systems, agent webpages, and the technology stack that gives our agents an unfair advantage in their markets.",
+        "Top 1% eXp team builder and the architect behind Smart Agent Alliance's entire digital infrastructure. Doug built this website, the automation systems, agent webpages, and the technology stack that gives our agents an unfair advantage in their markets.",
         "With a Bachelor's degree in Industrial Design and a business minor, Doug spent four years building multi-million dollar homes during college—developing the work ethic and attention to detail he now applies to building systems for agents. He transforms complex technology into competitive advantages.",
         "Doug specializes in passive revenue systems, branding, and marketing automation. If it's digital and it helps agents win, he probably built it."
       ]

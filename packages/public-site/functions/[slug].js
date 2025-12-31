@@ -433,790 +433,215 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
 </html>`;
 }
 
+
 /**
- * Generate FULL Attraction Landing Page HTML
- * Standalone page with star background, hero, webinar, value stack, social proof, FAQ, etc.
- * This is the main conversion funnel page for recruiting agents.
+ * generateAttractionPageHTML - Creates the full agent attraction page
+ *
+ * This is a converted version of the React agent-attraction-template component
+ * rendered as static HTML with vanilla JavaScript for interactivity.
+ *
+ * @param agent - Agent data from KV store
+ * @param siteUrl - Base URL of the site
+ * @param escapeHTML - Function to escape HTML entities
+ * @param escapeJS - Function to escape JS strings
  */
-export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance.com') {
+function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance.com', escapeHTML, escapeJS) {
   const isActive = agent.activated ?? agent.is_active ?? false;
   if (!isActive) return null;
 
+  // Agent data extraction
   const fullName = `${agent.display_first_name} ${agent.display_last_name}`.trim();
   const firstName = agent.display_first_name || 'Agent';
-  const title = `Team ${firstName} | Smart Agent Alliance`;
+  const displayName = fullName || 'Smart Agent Alliance';
+  const title = `Join ${firstName}'s Team | Smart Agent Alliance`;
   const analyticsDomain = 'smartagentalliance.com';
 
-  // Use agent's profile image - no fallback to Doug & Karrie
-  const agentImageUrl = agent.profile_image_url || '';
+  // Agent-specific customization
+  const agentImageUrl = agent.profile_image_url || `${siteUrl}/images/default-profile.png`;
+  const agentExpEmail = agent.exp_email || 'doug.smart@expreferral.com';
+  const agentFullLegalName = agent.full_legal_name || fullName || 'Sheldon Douglas Smart';
+  const agentTagline = `Join ${displayName}'s Team (3700+ Agents)`;
 
-  // Build social links
-  const socialLinks = [];
-  if (agent.facebook_url) socialLinks.push({ platform: 'Facebook', url: agent.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' });
-  if (agent.instagram_url) socialLinks.push({ platform: 'Instagram', url: agent.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z' });
-  if (agent.twitter_url) socialLinks.push({ platform: 'X', url: agent.twitter_url, icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' });
-  if (agent.youtube_url) socialLinks.push({ platform: 'YouTube', url: agent.youtube_url, icon: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' });
-  if (agent.tiktok_url) socialLinks.push({ platform: 'TikTok', url: agent.tiktok_url, icon: 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z' });
-  if (agent.linkedin_url) socialLinks.push({ platform: 'LinkedIn', url: agent.linkedin_url, icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' });
+  // Cloudflare Images CDN
+  const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
-  const socialLinksHTML = socialLinks.map(link => `
-    <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer" class="social-icon" title="${link.platform}">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="${link.icon}"/></svg>
-    </a>
+  // Media logos for the scrolling section
+  const MEDIA_LOGOS = [
+    { id: 'wsj-logo', alt: 'The Wall Street Journal' },
+    { id: 'cnbc-logo', alt: 'CNBC' },
+    { id: 'fox-business-logo', alt: 'Fox Business' },
+    { id: 'bloomberg-logo', alt: 'Bloomberg' },
+    { id: 'yahoo-finance-logo', alt: 'Yahoo Finance' },
+    { id: 'forbes-logo', alt: 'Forbes' },
+    { id: 'business-insider-logo', alt: 'Business Insider' },
+    { id: 'market-watch-logo', alt: 'MarketWatch' },
+    { id: 'reuters-logo', alt: 'Reuters' },
+    { id: 'usa-today-logo', alt: 'USA Today' },
+    { id: 'la-times-logo', alt: 'Los Angeles Times' },
+    { id: 'washington-post-logo', alt: 'The Washington Post' },
+    { id: 'nasdaq-logo', alt: 'Nasdaq' },
+    { id: 'barrons-logo', alt: "Barron's" },
+    { id: 'new-york-post-logo', alt: 'New York Post' },
+  ];
+
+  const mediaLogosHTML = [...MEDIA_LOGOS, ...MEDIA_LOGOS].map((logo, index) => `
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="${CLOUDFLARE_BASE}/${logo.id}/public" alt="${escapeHTML(logo.alt)}" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;" />
+    </div>
   `).join('');
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>${escapeHTML(title)}</title>
-  <meta name="description" content="Join ${escapeHTML(fullName)}'s team at eXp Realty through Smart Agent Alliance. Discover why agents are choosing the fastest-growing real estate team."/>
+  <meta name="description" content="Join ${escapeHTML(displayName)}'s team at eXp Realty through Smart Agent Alliance. Access elite systems, proven training, and real community support."/>
   <meta name="robots" content="index, follow"/>
   <meta property="og:type" content="website"/>
   <meta property="og:title" content="${escapeHTML(title)}"/>
-  <meta property="og:description" content="Join Team ${escapeHTML(firstName)} at eXp Realty"/>
-  <meta property="og:image" content="${escapeHTML(agentImageUrl)}"/>
+  <meta property="og:description" content="Join ${escapeHTML(displayName)}'s team at eXp Realty"/>
+  ${agentImageUrl ? `<meta property="og:image" content="${escapeHTML(agentImageUrl)}"/>` : ''}
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="${escapeHTML(title)}"/>
   <link rel="icon" href="${siteUrl}/favicon.ico"/>
   <link rel="preconnect" href="${siteUrl}" crossorigin/>
+  <link rel="preconnect" href="https://imagedelivery.net" crossorigin/>
   <link rel="preload" href="${siteUrl}/_next/static/media/Amulya_Variable-s.6f10ee89.woff2" as="font" type="font/woff2" crossorigin/>
   <link rel="preload" href="${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin/>
   <link rel="preload" href="${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin/>
+
+  <!-- Plausible Analytics -->
+  <script defer data-domain="${analyticsDomain}" src="https://plausible.io/js/script.js"></script>
+
   <style>
-    /* Font Faces - matching main site */
+    /* Font Faces */
     @font-face { font-family: 'Taskor'; src: url('${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2') format('woff2'); font-display: swap; font-weight: 400; }
     @font-face { font-family: 'Amulya'; src: url('${siteUrl}/_next/static/media/Amulya_Variable-s.6f10ee89.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
     @font-face { font-family: 'Synonym'; src: url('${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
 
-    /* CSS Custom Properties - Master Controller values (inlined) */
+    /* CSS Custom Properties */
     :root {
-      /* Font Stacks */
       --font-taskor: 'Taskor', serif;
       --font-amulya: 'Amulya', system-ui, sans-serif;
       --font-synonym: 'Synonym', system-ui, sans-serif;
-
-      /* Brand Colors */
-      --color-accentGreen: #00ff88;
       --color-brandGold: #ffd700;
       --color-headingText: #e5e4dd;
       --color-bodyText: #bfbdb0;
-      --color-darkGray: #191818;
-      --color-mediumGray: #404040;
-      --color-gold-500: #ffd700;
-      --color-gold-600: #e6c200;
-      --color-gold-700: #b39700;
-
-      /* Typography - H1 */
       --font-size-h1: clamp(38px, calc(27.82px + 4.07vw), 150px);
-      --line-height-h1: 1.1;
-      --letter-spacing-h1: 0em;
-      --font-weight-h1: 400;
-      --font-family-h1: var(--font-taskor), sans-serif;
-      --text-color-h1: #ffd700;
-
-      /* Typography - H2 */
       --font-size-h2: clamp(28px, calc(24.00px + 1.60vw), 72px);
-      --line-height-h2: 1.1;
-      --letter-spacing-h2: -0.01em;
-      --font-weight-h2: 700;
-      --font-family-h2: var(--font-taskor), sans-serif;
-      --text-color-h2: #e5e4dd;
-
-      /* Typography - H3 */
-      --font-size-h3: clamp(27px, calc(25.36px + 0.65vw), 45px);
-      --line-height-h3: 1.3;
-      --letter-spacing-h3: 0em;
-      --font-weight-h3: 700;
-      --font-family-h3: var(--font-amulya), sans-serif;
-      --text-color-h3: #e5e4dd;
-
-      /* Typography - H4 */
-      --font-size-h4: clamp(24px, calc(22.55px + 0.58vw), 40px);
-      --line-height-h4: 1.3;
-      --letter-spacing-h4: 0em;
-      --font-weight-h4: 700;
-      --font-family-h4: var(--font-amulya), sans-serif;
-      --text-color-h4: #e5e4dd;
-
-      /* Typography - H5 */
-      --font-size-h5: clamp(22px, calc(20.82px + 0.47vw), 35px);
-      --line-height-h5: 1.3;
-      --letter-spacing-h5: 0em;
-      --font-weight-h5: 700;
-      --font-family-h5: var(--font-amulya), sans-serif;
-      --text-color-h5: #e5e4dd;
-
-      /* Typography - H6 */
-      --font-size-h6: clamp(18px, calc(16.91px + 0.44vw), 30px);
-      --line-height-h6: 1.3;
-      --letter-spacing-h6: 0em;
-      --font-weight-h6: 700;
-      --font-family-h6: var(--font-amulya), sans-serif;
-      --text-color-h6: #e5e4dd;
-
-      /* Typography - Body */
       --font-size-body: clamp(16px, calc(14.91px + 0.44vw), 28px);
-      --line-height-body: 1.4;
-      --letter-spacing-body: 0em;
-      --font-weight-body: 400;
-      --font-family-body: var(--font-synonym), sans-serif;
-      --text-color-body: #bfbdb0;
-
-      /* Typography - Tagline */
       --font-size-tagline: clamp(21px, calc(17.45px + 1.42vw), 60px);
-      --line-height-tagline: 1.1;
-      --letter-spacing-tagline: 0em;
-      --font-weight-tagline: 400;
-      --font-family-tagline: var(--font-taskor), sans-serif;
-      --text-color-tagline: #bfbdb0;
-
-      /* Typography - Button */
       --font-size-button: clamp(16px, calc(14.55px + 0.58vw), 32px);
-      --line-height-button: 1.2;
-      --letter-spacing-button: 0.05em;
-      --font-weight-button: 600;
-      --font-family-button: var(--font-taskor), sans-serif;
-      --text-color-button: #e5e4dd;
-
-      /* Typography - Caption */
-      --font-size-caption: clamp(12px, calc(11.64px + 0.15vw), 16px);
-      --line-height-caption: 1.4;
-      --letter-spacing-caption: 0em;
-      --font-weight-caption: 400;
-      --font-family-caption: var(--font-amulya), sans-serif;
-      --text-color-caption: #bfbdb0;
-
-      /* Spacing */
-      --spacing-container-padding: clamp(16px, calc(10.18px + 2.33vw), 80px);
-      --spacing-grid-gap: clamp(16px, calc(14.55px + 0.58vw), 32px);
-      --spacing-section-margin: clamp(32px, calc(24.00px + 3.20vw), 120px);
-      --grid-min-width: 300px;
+      --section-padding-y: clamp(4rem, calc(3rem + 2vw), 6rem);
     }
 
+    /* Reset */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { font-size: 16px; scroll-behavior: smooth; }
+
+    html {
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+      background: transparent;
+      overscroll-behavior: none;
+    }
+
     body {
-      font-family: var(--font-family-body);
-      font-size: var(--font-size-body);
-      line-height: var(--line-height-body);
-      color: var(--text-color-body);
+      font-family: var(--font-synonym), system-ui, -apple-system, sans-serif;
       background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
       background-color: rgb(12, 12, 12);
-      overflow-x: hidden;
-    }
-
-    /* Typography Classes - matching Master Controller */
-    .text-h2 {
-      color: var(--text-color-h2);
-      font-size: var(--font-size-h2);
-      line-height: var(--line-height-h2);
-      letter-spacing: var(--letter-spacing-h2);
-      font-weight: var(--font-weight-h2);
-      font-family: var(--font-family-h2);
-    }
-    .text-h3 {
-      color: var(--text-color-h3);
-      font-size: var(--font-size-h3);
-      line-height: var(--line-height-h3);
-      letter-spacing: var(--letter-spacing-h3);
-      font-weight: var(--font-weight-h3);
-      font-family: var(--font-family-h3);
-    }
-    .text-h4 {
-      color: var(--text-color-h4);
-      font-size: var(--font-size-h4);
-      line-height: var(--line-height-h4);
-      letter-spacing: var(--letter-spacing-h4);
-      font-weight: var(--font-weight-h4);
-      font-family: var(--font-family-h4);
-    }
-    .text-h5 {
-      color: var(--text-color-h5);
-      font-size: var(--font-size-h5);
-      line-height: var(--line-height-h5);
-      letter-spacing: var(--letter-spacing-h5);
-      font-weight: var(--font-weight-h5);
-      font-family: var(--font-family-h5);
-    }
-    .text-body {
-      color: var(--text-color-body);
-      font-size: var(--font-size-body);
-      line-height: var(--line-height-body);
-      letter-spacing: var(--letter-spacing-body);
-      font-weight: var(--font-weight-body);
-      font-family: var(--font-family-body);
-    }
-    .text-tagline {
-      color: var(--text-color-tagline);
-      font-size: var(--font-size-tagline);
-      line-height: var(--line-height-tagline);
-      letter-spacing: var(--letter-spacing-tagline);
-      font-weight: var(--font-weight-tagline);
-      font-family: var(--font-family-tagline);
-    }
-    .text-button {
-      color: var(--text-color-button);
-      font-size: var(--font-size-button);
-      line-height: var(--line-height-button);
-      letter-spacing: var(--letter-spacing-button);
-      font-weight: var(--font-weight-button);
-      font-family: var(--font-family-button);
-      text-transform: uppercase;
-    }
-    .text-caption {
-      color: var(--text-color-caption);
-      font-size: var(--font-size-caption);
-      line-height: var(--line-height-caption);
-      letter-spacing: var(--letter-spacing-caption);
-      font-weight: var(--font-weight-caption);
-      font-family: var(--font-family-caption);
-    }
-    /* Star Background - matching StarBackgroundCanvas.tsx */
-    #star-canvas {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 100lvh;
-      z-index: 0;
-      pointer-events: none;
-      background-color: transparent;
-    }
-    @media (min-width: 768px) {
-      #star-canvas {
-        top: 0;
-        bottom: 0;
-        height: auto;
-      }
-    }
-    /* Fixed Hero Wrapper - matching FixedHeroWrapper.tsx */
-    .fixed-hero-wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .fixed-hero-wrapper > * {
-      pointer-events: auto;
-    }
-    .hero-spacer {
-      /* Use vh for consistent height - scroll effects use initial viewport height for progress */
-      height: 100vh;
-    }
-    /* Hero Section */
-    .hero {
-      position: relative;
+      color: var(--color-bodyText);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      /* Center content vertically like home page - animation effects are positioned relative to viewport center */
-      justify-content: center;
-      padding: 1.5rem;
-      text-align: center;
-      z-index: 1;
+      line-height: 1.6;
+      overscroll-behavior: none;
     }
-    /* RevealMaskEffect - matching RevealMaskEffect.tsx */
-    .reveal-mask-effect {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 0;
-      /* Start hidden until JS initializes to prevent flash */
-      opacity: 0;
-      transition: opacity 0.3s ease-out;
-    }
-    .reveal-mask-effect.initialized {
-      opacity: 1;
-    }
-    .reveal-glow {
-      position: absolute;
-      inset: 0;
-    }
-    /* Effect positioning: 1/3 up from base of profile image
-       The profile image is centered in the hero. We need to position the effect
-       at the point that is 1/3 of the way up from the bottom of the visible image.
-       Account for: centered content, H1 overlap pulling text up, mobile content shift */
-    .reveal-border-outer {
-      position: absolute;
-      width: 80vw;
-      height: 80vw;
-      max-width: 700px;
-      max-height: 700px;
-      /* Center of effect at ~40% from top (slightly above center to account for image position) */
-      top: 40%;
-      left: 50%;
-      border: 2px solid rgba(255,215,0,0.25);
-      transform-origin: center center;
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    .reveal-border-inner {
-      position: absolute;
-      width: 60vw;
-      height: 60vw;
-      max-width: 520px;
-      max-height: 520px;
-      top: 40%;
-      left: 50%;
-      border: 1px solid rgba(255,215,0,0.18);
-      transform-origin: center center;
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    /* Small screens: shift effect up more to match content shift */
-    @media (max-width: 768px) {
-      .reveal-border-outer,
-      .reveal-border-inner {
-        top: 35%;
-      }
-    }
-    @media (max-width: 480px) {
-      .reveal-border-outer,
-      .reveal-border-inner {
-        top: 32%;
-      }
-    }
-    /* Hero Vignette - dark edge overlay that fades on scroll */
-    .hero-vignette {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      height: calc(100% + 100px);
-      background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%);
-      pointer-events: none;
-      z-index: 1;
-    }
-    /* Hero Content Wrapper - for scroll effects */
-    .hero-content-wrapper {
-      position: relative;
-      z-index: 2;
-      max-width: 3000px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      transform-origin: center center;
-      /* No padding - let flexbox center naturally for equal spacing above image and below buttons */
-    }
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      max-width: 3000px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      padding-top: 8%;
-    }
-    /* Profile Image Container - responsive sizing with aspect ratio to prevent layout shift */
-    .profile-wrapper {
-      position: relative;
-      /* Responsive width: smaller on mobile, larger on desktop */
-      width: clamp(280px, 45vw, 700px);
-      max-width: 85vw;
-      /* Reserve space with aspect ratio to prevent layout shift when image loads */
-      aspect-ratio: 1 / 1;
-      max-height: 45dvh;
-      pointer-events: none;
-      z-index: 1;
-    }
-    /* Large screens: bigger profile image */
-    @media (min-width: 1200px) {
-      .profile-wrapper {
-        width: clamp(500px, 40vw, 800px);
-        max-height: 50dvh;
-      }
-    }
-    /* Extra large screens */
-    @media (min-width: 1800px) {
-      .profile-wrapper {
-        width: clamp(600px, 35vw, 900px);
-      }
-    }
-    /* Small screens: smaller profile image */
-    @media (max-width: 600px) {
-      .profile-wrapper {
-        width: clamp(200px, 60vw, 320px);
-        max-height: 40dvh;
-      }
-    }
-    .profile-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      object-position: center bottom;
-      position: relative;
-      z-index: 1;
-      /* Gradient fade at bottom - matches homepage mask */
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%);
-      filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
-      /* Hide alt text while image loads - prevents flash of text */
-      color: transparent;
-      font-size: 0;
-    }
-    /* Text content wrapper - pulls up to overlap bottom 25% of image */
-    /* Uses image-relative margin (not viewport-relative) to maintain proper overlap at all screen sizes */
-    /* Formula: min(image_width / 4, max_height * 0.25) - overlap is 25% of image, capped by max-height */
-    .hero-text-content {
-      width: 100%;
-      padding: 0 1rem;
-      text-align: center;
-      pointer-events: auto;
-      z-index: 2;
-      position: relative;
-      max-width: 3000px;
-      /* Pull up to overlap with bottom 25% of image - scales with image size */
-      /* Image width: clamp(280px, 45vw, 700px), max-height: 45dvh */
-      /* Overlap = min(width/4, 45dvh*0.25) = min(width/4, 11.25dvh) */
-      margin-top: calc(min(clamp(280px, 45vw, 700px) / 4, 11.25dvh) * -1);
-    }
-    @media (min-width: 1200px) {
-      /* Large screens: Image width: clamp(500px, 40vw, 800px), max-height: 50dvh */
-      /* Overlap = min(width/4, 50dvh*0.25) = min(width/4, 12.5dvh) */
-      .hero-text-content {
-        margin-top: calc(min(clamp(500px, 40vw, 800px) / 4, 12.5dvh) * -1);
-      }
-    }
-    @media (max-width: 600px) {
-      /* Small screens: Image width: clamp(200px, 60vw, 320px), max-height: 40dvh */
-      /* Overlap = min(width/4, 40dvh*0.25) + 20px extra on mobile */
-      .hero-text-content {
-        margin-top: calc((min(clamp(200px, 60vw, 320px) / 4, 10dvh) + 20px) * -1);
-      }
-    }
-    /* H1 Glow Breathe animation - slightly reduced glow */
-    @keyframes h1GlowBreathe {
-      0%, 100% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      }
-      50% {
-        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
-      }
-    }
-    /* Screen-reader only - visually hidden but readable by bots/screen readers */
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    /* Headline (H1) - slightly reduced glow */
-    .headline {
-      font-family: var(--font-taskor);
-      font-size: clamp(38px, calc(27.82px + 4.07vw), 150px);
-      font-weight: 400;
-      letter-spacing: 0em;
-      color: #ffd700;
+
+    /* Typography */
+    .text-h1 {
+      font-family: var(--font-taskor), sans-serif;
+      font-size: var(--font-size-h1);
       line-height: 1.1;
-      /* Enable stylistic set 01 for alternate N, E, M glyphs */
-      font-feature-settings: "ss01" 1;
-      /* 3D perspective for neon sign depth effect */
-      transform: perspective(800px) rotateX(12deg);
-      /* Multi-layer text-shadow - slightly reduced glow */
-      text-shadow:
-        /* WHITE CORE (3) */
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        /* GOLD GLOW (4) - slightly reduced */
-        0 0 0.05em #ffd700,
-        0 0 0.09em rgba(255, 215, 0, 0.8),
-        0 0 0.13em rgba(255, 215, 0, 0.55),
-        0 0 0.18em rgba(255, 179, 71, 0.35),
-        /* METAL BACKING (4) */
-        0.03em 0.03em 0 #2a2a2a,
-        0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f,
-        0.075em 0.075em 0 #080808;
-      /* GPU-accelerated depth shadow - slightly reduced */
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      /* Glow Breathe animation - slow dramatic pulse */
-      animation: h1GlowBreathe 4s ease-in-out infinite;
-      margin-bottom: 0.5rem;
-    }
-    /* Tagline - matching Master Controller + Tagline.tsx glow effects */
-    .tagline {
-      font-family: var(--font-taskor);
-      font-size: clamp(21px, calc(17.45px + 1.42vw), 60px);
-      color: #bfbdb0;
-      line-height: 1.1;
-      letter-spacing: 0em;
-      margin-bottom: 0.5rem;
       font-weight: 400;
-      /* Alt glyphs for N, E, M via font ss01 stylistic set */
-      font-feature-settings: "ss01" 1;
-      /* 3D perspective matching main site */
-      transform: rotateX(15deg);
-      /* WHITE CORE glow (3) */
-      text-shadow:
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8);
-      /* GPU-accelerated glow via filter */
-      filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
-    }
-    .hero-body-text {
-      font-family: var(--font-synonym), sans-serif;
-      font-size: clamp(14px, calc(12px + 0.5vw), 18px);
-      color: #bfbdb0;
-      opacity: 0.8;
-      line-height: 1.5;
-      max-width: 600px;
-      margin: 0 auto 1.5rem auto;
-      text-align: center;
-    }
-    /* Tagline Counter Suffix - inline "(3700+ Agents)" */
-    .tagline-counter-suffix {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0;
-    }
-    .counter-numbers-mobile {
-      display: inline;
-      color: #bfbdb0;
-      font-family: var(--font-synonym), monospace;
-      font-weight: 300;
-      font-size: 1em;
-      text-shadow: none;
-    }
-    .counter-digit {
-      display: inline-block;
-      width: 0.6em;
-      text-align: center;
-      font-variant-numeric: tabular-nums;
-    }
-    /* Social Icons */
-    .social-row {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-      margin-bottom: 2.5rem;
-    }
-    .social-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #e5e4dd;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-    .social-icon:hover {
-      background: rgba(255,215,0,0.2);
-      color: #ffd700;
-      transform: translateY(-3px);
-    }
-    .social-icon svg { width: 20px; height: 20px; }
-    /* CTA Buttons - using Taskor for button text (matching main site) */
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 2rem;
-      background: linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-600) 100%);
-      color: #2a2a2a;
-      font-family: var(--font-taskor);
-      font-weight: 600;
-      font-size: clamp(16px, calc(14.55px + 0.58vw), 32px);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(255,215,0,0.3);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255,215,0,0.4);
-    }
-    .btn-secondary,
-    a.btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 2rem;
-      background: transparent;
-      color: #e5e4dd !important;
-      font-family: var(--font-taskor);
-      font-weight: 600;
-      font-size: clamp(16px, calc(14.55px + 0.58vw), 32px);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border: 1px solid rgba(255,255,255,0.3);
-      border-radius: 50px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .btn-secondary:hover,
-    a.btn-secondary:hover {
-      border-color: var(--color-gold-500);
-      color: var(--color-gold-500) !important;
-    }
-    /* Sections */
-    section {
-      position: relative;
-      z-index: 1;
-      padding: 5rem 1.5rem;
-    }
-    .section-container { max-width: 1900px; margin: 0 auto; }
-
-    /* Glassmorphism Section Panels - Base */
-    .glass-panel {
-      background: rgba(20, 20, 20, 0.35);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 24px;
-      padding: 3rem 2rem;
-      box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      color: var(--color-brandGold);
     }
 
-    /* Variant: Gold accent border (top glow) */
-    .glass-panel--gold {
-      border-top: 1px solid rgba(255, 215, 0, 0.3);
-      box-shadow:
-        0 -4px 20px rgba(255, 215, 0, 0.08),
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 215, 0, 0.1);
-    }
-
-    /* Variant: Subtle inner glow */
-    .glass-panel--glow {
-      background: rgba(25, 25, 25, 0.4);
-      box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 0 60px rgba(255, 215, 0, 0.03),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    /* Variant: Minimal/lighter for contrast */
-    .glass-panel--light {
-      background: rgba(40, 40, 40, 0.25);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-    }
-
-    /* Variant: Bordered with stronger edges */
-    .glass-panel--bordered {
-      background: rgba(15, 15, 15, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-left: 2px solid rgba(255, 215, 0, 0.2);
-    }
-
-    /* Gold Glow Section Divider */
-    .section-divider {
-      position: relative;
-      height: 1px;
-      max-width: 600px;
-      margin: 0 auto;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        rgba(255, 215, 0, 0.3) 20%,
-        rgba(255, 215, 0, 0.6) 50%,
-        rgba(255, 215, 0, 0.3) 80%,
-        transparent 100%
-      );
-      box-shadow:
-        0 0 10px rgba(255, 215, 0, 0.3),
-        0 0 20px rgba(255, 215, 0, 0.2),
-        0 0 40px rgba(255, 215, 0, 0.1);
-    }
-    .section-divider::before {
-      content: "";
-      position: absolute;
-      top: -2px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 8px;
-      height: 8px;
-      background: #ffd700;
-      border-radius: 50%;
-      box-shadow:
-        0 0 10px #ffd700,
-        0 0 20px rgba(255, 215, 0, 0.6);
-    }
-
-    /* Scroll Reveal Animation */
-    .reveal-section {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-    }
-    .reveal-section.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    /* Section Title (H2) - matching H2.tsx from main site */
-    .section-title {
-      font-family: var(--font-taskor);
-      font-size: clamp(2rem, 4vw, 3.5rem);
+    .text-h2 {
+      font-family: var(--font-taskor), sans-serif;
+      font-size: var(--font-size-h2);
+      line-height: 1.1;
       font-weight: 700;
-      color: #bfbdb0;
-      text-align: center;
-      line-height: 1;
-      margin-bottom: 3rem;
+      color: var(--color-headingText);
+    }
+
+    .text-tagline {
+      font-family: var(--font-taskor), sans-serif;
+      font-size: var(--font-size-tagline);
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
+    .text-body {
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: var(--font-size-body);
+      line-height: 1.6;
+      color: var(--color-bodyText);
+    }
+
+    .font-heading {
+      font-family: var(--font-taskor), system-ui, sans-serif;
+    }
+
+    /* H1 Neon Sign Effect */
+    .h1-neon {
+      color: #ffd700;
+      transform: perspective(800px) rotateX(12deg);
+      font-feature-settings: "ss01" 1;
+      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8),
+        0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35),
+        0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
+      animation: h1GlowBreathe 4s ease-in-out infinite;
+    }
+
+    @keyframes h1GlowBreathe {
+      0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25)); }
+      50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); }
+    }
+
+    /* H2 Metal Backing Effect */
+    .h2-container {
       display: flex;
       justify-content: center;
-      /* Horizontal gap between words, row-gap for wrapped lines */
-      /* Row gap of 0 makes metal plates touch between lines */
-      gap: 0 0.5em;
+      gap: 0.5em;
       flex-wrap: wrap;
-      transform: rotateX(15deg);
+      position: relative;
       padding-left: 0.35em;
       padding-right: 0.35em;
-      /* Alt glyphs for N, E, M via font ss01 stylistic set */
       font-feature-settings: "ss01" 1;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 2.5rem;
     }
-    /* H2 Word wrapper with metal backing plate */
+
     .h2-word {
       display: inline-block;
       position: relative;
       color: #bfbdb0;
-      /* Vertical padding only to account for metal plate */
-      padding: 0.2em 0;
-      /* White core glow */
-      text-shadow:
-        0 0 1px #fff,
-        0 0 2px #fff,
-        0 0 4px rgba(255,255,255,0.8),
-        0 0 8px rgba(255,255,255,0.4);
+      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4);
     }
-    /* Metal backing plate - 3D brushed gunmetal effect */
+
     .h2-word::before {
       content: "";
       position: absolute;
-      top: 0;
+      top: -0.25em;
       left: -0.3em;
       right: -0.3em;
-      bottom: 0;
+      bottom: -0.25em;
       background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
       border-radius: 0.15em;
       z-index: -1;
@@ -1224,17 +649,14 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       border-left: 1px solid rgba(130,130,130,0.35);
       border-right: 1px solid rgba(60,60,60,0.6);
       border-bottom: 2px solid rgba(0,0,0,0.7);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.12),
-        inset 0 -1px 2px rgba(0,0,0,0.25),
-        0 4px 8px rgba(0,0,0,0.5),
-        0 2px 4px rgba(0,0,0,0.3);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 2px rgba(0,0,0,0.25),
+        0 4px 8px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
     }
-    /* Glossy highlight overlay on metal plate */
+
     .h2-word::after {
       content: "";
       position: absolute;
-      top: 0;
+      top: -0.25em;
       left: -0.3em;
       right: -0.3em;
       height: 50%;
@@ -1243,40 +665,765 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       z-index: -1;
       pointer-events: none;
     }
-    /* Webinar Section */
-    #webinar { background: transparent; }
-    .video-container {
-      max-width: 900px;
-      margin: 0 auto 2rem;
+
+    /* Tagline */
+    .tagline {
+      text-align: center;
+      transform: rotateX(15deg);
+      position: relative;
+      color: #bfbdb0;
+      font-feature-settings: "ss01" 1;
+      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8);
+      filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
+    }
+
+    /* CTA Button */
+    .cta-button {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px;
+      height: clamp(45px, calc(43.182px + 0.7273vw), 65px);
+      min-width: 180px;
+      background: rgb(45,45,45);
+      border-radius: 12px;
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      border-left: none;
+      border-right: none;
+      color: var(--color-headingText);
+      font-family: var(--font-taskor), sans-serif;
+      font-size: var(--font-size-button);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      z-index: 10;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+      width: 50%;
+      transform: skewX(45deg);
+    }
+
+    .cta-button:hover {
+      /* No transform - button face stays stationary */
+    }
+
+    .cta-button-wrapper {
+      position: relative;
+      display: inline-block;
+      padding: 8px 0;
+    }
+
+    .cta-light-bar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 10px;
+      background: #ffd700;
+      border-radius: 6px;
+      transition: width 0.5s ease;
+      animation: ctaLightPulse 2s ease-in-out infinite;
+    }
+
+    .cta-light-bar-top { top: 3px; z-index: 5; } /* Half (5px) sticks out above button, behind button face */
+    .cta-light-bar-bottom { bottom: 3px; z-index: 5; } /* Half (5px) sticks out below button, behind button face */
+    .cta-button-wrapper:hover .cta-light-bar { width: 80%; }
+
+    @keyframes ctaLightPulse {
+      0%, 100% { opacity: 0.8; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
+      50% { opacity: 1; box-shadow: 0 0 20px rgba(255,215,0,0.8); }
+    }
+
+    /* Secondary Button - matches main site SecondaryButton.tsx */
+    .secondary-button-wrapper {
+      position: relative;
+      display: inline-block;
+      padding: 8px 0;
+    }
+
+    .secondary-button {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 20px;
+      height: clamp(45px, calc(43.182px + 0.7273vw), 65px);
+      min-width: 180px;
+      background: rgb(45,45,45);
+      border-radius: 12px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: var(--color-headingText);
+      font-family: var(--font-taskor), sans-serif;
+      font-size: var(--font-size-button);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .secondary-button::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
+      width: 50%;
+      transform: skewX(45deg);
+    }
+
+    .secondary-light-bar {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 10px;
+      height: 18px;
+      background: #ffd700;
+      border-radius: 6px;
+      transition: height 0.5s ease;
+      animation: ctaLightPulse 2s ease-in-out infinite;
+      z-index: 5;
+    }
+
+    .secondary-light-bar-left { left: 3px; }
+    .secondary-light-bar-right { right: 3px; }
+    .secondary-button-wrapper:hover .secondary-light-bar { height: 60%; }
+
+    /* Hero Section */
+    .hero-fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .hero-content { pointer-events: auto; }
+
+    .hero-spacer { height: 100svh; }
+
+    .hero-section {
+      min-height: 100dvh;
+      width: 100%;
+      max-width: 3000px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .hero-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 3000px;
+      padding-top: 8%;
+      transition: transform 0.1s linear, filter 0.1s linear, opacity 0.1s linear;
+    }
+
+    @media (min-width: 768px) {
+      .hero-content-wrapper { padding-top: 0; }
+    }
+
+    .hero-image-container {
+      position: relative;
+      pointer-events: none;
+      z-index: 1;
+      width: clamp(420px, 52vw, 1000px);
+      max-width: 95vw;
+      aspect-ratio: 900 / 500;
+      max-height: 55dvh;
+    }
+
+    .hero-3d-backdrop {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110%;
+      height: 110%;
+      top: 0;
+      background: radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%);
+      filter: blur(40px);
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 70%, rgba(0,0,0,0.9) 80%, rgba(0,0,0,0.6) 88%, rgba(0,0,0,0.3) 94%, transparent 100%);
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5));
+    }
+
+    .hero-text-wrapper {
+      width: 100%;
+      padding: 0 16px;
+      text-align: center;
+      pointer-events: auto;
+      z-index: 2;
+      max-width: 3000px;
+      margin-top: calc(min(clamp(400px, 47.37vw, 900px) / 7.2, 12.5dvh) * -1);
+    }
+
+    @media (min-width: 640px) { .hero-text-wrapper { padding: 0 32px; } }
+    @media (min-width: 768px) { .hero-text-wrapper { padding: 0 48px; } }
+
+    /* Reveal Mask Effect */
+    .reveal-mask-effect {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 0;
+    }
+
+    .reveal-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 45% at 50% 42%, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.12) 35%, rgba(255,150,0,0.06) 55%, transparent 80%);
+    }
+
+    .reveal-ring {
+      position: absolute;
+      border: 2px solid rgba(255,215,0,0.25);
+      border-radius: 35%;
+      left: 50%;
+      top: 42%;
+    }
+
+    .reveal-ring-outer {
+      width: min(72vw, 630px);
+      height: min(72vw, 630px);
+      transform: translate(-50%, -50%);
+    }
+
+    .reveal-ring-inner {
+      width: min(54vw, 468px);
+      height: min(54vw, 468px);
+      border-color: rgba(255,215,0,0.18);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 100% 100% at 50% 100%, transparent 0%, transparent 50%, rgba(0,0,0,0.5) 100%);
+      pointer-events: none;
+    }
+
+    /* Agent Counter */
+    .agent-counter {
+      position: absolute;
+      z-index: 50;
+      left: 8px;
+      top: 130px;
+    }
+
+    @media (min-width: 1024px) {
+      .agent-counter { left: auto; right: 32px; }
+    }
+
+    .counter-digit {
+      display: inline-block;
+      width: 0.6em;
+      text-align: center;
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: fixed;
+      bottom: max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px));
+      right: 24px;
+      pointer-events: none;
+      z-index: -1;
+      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.4)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.2));
+      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    }
+
+    @keyframes scrollBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(30px); }
+    }
+
+    @keyframes scrollOpacity {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    .scroll-arrow-container { animation: scrollBounce 1.5s infinite; }
+
+    .scroll-arrow {
+      animation: scrollOpacity 1.5s infinite;
+    }
+
+    .scroll-arrow:last-child {
+      animation-direction: reverse;
+      margin-top: -6px;
+    }
+
+    .scroll-arrow > div {
+      width: 36px;
+      height: 36px;
+      border-right: 8px solid #ffd700;
+      border-bottom: 8px solid #ffd700;
+      border-radius: 4px;
+      transform: rotate(45deg) translateZ(1px);
+      filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+    }
+
+    /* Glass Panel */
+    .glass-panel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .glass-panel-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(247,231,206,0.04) 0%, rgba(247,231,206,0.05) 50%, rgba(247,231,206,0.04) 100%);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.25),
+        inset 0 1px 0 0 rgba(255,255,255,0.35), inset 0 2px 4px 0 rgba(255,255,255,0.2),
+        inset 0 8px 20px -8px rgba(247,231,206,0.3), inset 0 20px 40px -20px rgba(255,255,255,0.15),
+        inset 0 -1px 0 0 rgba(0,0,0,0.7), inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+        inset 0 -10px 25px -8px rgba(0,0,0,0.6), inset 0 -25px 50px -20px rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
+    }
+
+    /* Champagne variant with dots texture */
+    .glass-panel-champagne::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 8px 8px;
+      pointer-events: none;
+    }
+
+    .glass-panel-texture {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 8px 8px;
+    }
+
+    .glass-panel-content { position: relative; z-index: 10; }
+
+    /* Value Pillars Tab */
+    .value-pillars-tab {
+      position: relative;
+      z-index: 10;
+      margin-bottom: -38px;
+    }
+
+    .value-pillars-shadow {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      bottom: -12px;
+      height: 35px;
+      background: radial-gradient(ellipse 60% 100% at center, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 80%);
+      filter: blur(12px);
+      z-index: -1;
+      border-radius: 50%;
+    }
+
+    .value-pillars-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(22, 22, 22, 0.94) 0%, rgba(15, 15, 15, 0.97) 100%);
+      pointer-events: none;
+    }
+
+    @keyframes whiteVignetteGlow {
+      0%, 100% { box-shadow: inset 0 20px 30px -15px rgba(255, 255, 255, 0.12), inset 0 -20px 30px -15px rgba(255, 255, 255, 0.12), inset 20px 0 30px -15px rgba(255, 255, 255, 0.12), inset -20px 0 30px -15px rgba(255, 255, 255, 0.12); }
+      50% { box-shadow: inset 0 35px 45px -20px rgba(255, 255, 255, 0.22), inset 0 -35px 45px -20px rgba(255, 255, 255, 0.22), inset 35px 0 45px -20px rgba(255, 255, 255, 0.22), inset -35px 0 45px -20px rgba(255, 255, 255, 0.22); }
+    }
+
+    .value-pillars-glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      border-radius: 24px;
+      animation: whiteVignetteGlow 4s ease-in-out infinite;
+    }
+
+    .pillar-number {
+      color: #bca24a;
+      font-weight: 700;
+      min-width: 1.5em;
+      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.05em #bca24a, 0 0 0.09em rgba(188, 162, 74, 0.8),
+        0 0 0.13em rgba(188, 162, 74, 0.55), 0 0 0.18em rgba(188, 162, 74, 0.35),
+        0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
+      animation: pillarGlowBreathe 4s ease-in-out infinite;
+    }
+
+    .pillar-text {
+      color: #e5e4dd;
+      font-weight: 500;
+    }
+
+    /* Pillar row responsive text sizing: text-sm on mobile, text-base on md+ */
+    .pillar-row { font-size: 0.875rem; } /* 14px - text-sm */
+    @media (min-width: 768px) { .pillar-row { font-size: 1rem; } } /* 16px - text-base */
+
+    @keyframes pillarGlowBreathe {
+      0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25)); }
+      50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(188, 162, 74, 0.45)); }
+    }
+
+    .icon-3d {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #c4a94d;
+      filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+      transform: perspective(500px) rotateX(8deg);
+    }
+
+    /* Sections */
+    .section { padding: 64px 24px; }
+    @media (min-width: 768px) { .section { padding: 96px 48px; } }
+
+    .section-content {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .section-center { text-align: center; }
+
+    /* Bento Cards */
+    .bento-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4));
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+
+    .bento-card-content { padding: 32px; }
+    @media (min-width: 768px) { .bento-card-content { padding: 40px; } }
+
+    .bento-image {
+      transition: transform 0.7s ease;
+    }
+
+    .bento-card:hover .bento-image { transform: scale(1.05); }
+
+    /* Check Icon 3D */
+    .check-3d {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 32px;
+      color: #c4a94d;
+      filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(2px 2px 0 #2a2a1d) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
+      transform: perspective(500px) rotateX(8deg);
+      flex-shrink: 0;
+    }
+
+    /* What You Get Tabbed Interface */
+    .wyg-tab {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      cursor: pointer;
+      font-family: var(--font-taskor), system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    .wyg-tab:hover { background: rgba(255,255,255,0.1); }
+    .wyg-tab-active {
+      background: #ffd700 !important;
+      color: #111 !important;
+      border: none !important;
+    }
+    .wyg-tab-active .icon-3d {
+      filter: none;
+      color: #111;
+    }
+    .wyg-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .wyg-bg-active { opacity: 1; }
+    .wyg-content {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: none;
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .wyg-content-active {
+      display: flex;
+      animation: wygFadeIn 0.3s ease-out forwards;
+    }
+    @keyframes wygFadeIn {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .wyg-icon-box {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: rgba(255, 215, 0, 0.2);
+      backdrop-filter: blur(4px);
+    }
+    .wyg-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+    .wyg-dot-active {
+      background: #ffd700;
+      transform: scale(1.5);
+    }
+    .wyg-tab-label {
+      font-family: var(--font-taskor), system-ui, sans-serif;
+      font-weight: 500;
+      font-size: 0.875rem;
+    }
+    .wyg-content-title {
+      font-family: var(--font-amulya), system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(18px, 2.5vw, 20px);
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Deck Stack (WhyOnlyAtExp) */
+    .deck-stack-container { position: relative; }
+    .deck-card {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      transition: all 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    @media (min-width: 768px) { .deck-card { padding: 1.5rem 2rem; } }
+    .deck-card-active { z-index: 10; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+    .deck-card-highlight.deck-card-active { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2); }
+    .deck-card-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 768px) { .deck-card-number { width: 64px; height: 64px; } }
+    .deck-dots {
+      position: absolute;
+      bottom: -40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    .deck-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+    }
+    .deck-dot-active {
+      background: #ffd700;
+      transform: scale(1.5);
+    }
+
+    /* Media Logos */
+    .media-logos-section { position: relative; padding: 64px 0; overflow: hidden; }
+    @media (min-width: 768px) { .media-logos-section { padding: 96px 0; } }
+
+    .media-logos-container { position: relative; z-index: 10; }
+
+    .portal-edge-left {
+      position: absolute;
+      left: 0;
+      z-index: 20;
+      pointer-events: none;
+      top: -8px;
+      bottom: -8px;
+      width: 12px;
+      border-radius: 0 12px 12px 0;
+      background: radial-gradient(ellipse 200% 50% at 0% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%);
+      border-right: 1px solid rgba(255,190,0,0.4);
+      box-shadow: inset -3px 0 6px rgba(255,200,50,0.2), inset -1px 0 2px rgba(255,220,100,0.3), 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3);
+      transform: perspective(500px) rotateY(-3deg);
+      transform-origin: right center;
+    }
+
+    .portal-edge-right {
+      position: absolute;
+      right: 0;
+      z-index: 20;
+      pointer-events: none;
+      top: -8px;
+      bottom: -8px;
+      width: 12px;
+      border-radius: 12px 0 0 12px;
+      background: radial-gradient(ellipse 200% 50% at 100% 50%, rgba(255,200,50,0.35) 0%, rgba(255,180,0,0.2) 40%, rgba(180,140,0,0.1) 70%, rgba(100,80,0,0.05) 100%);
+      border-left: 1px solid rgba(255,190,0,0.4);
+      box-shadow: inset 3px 0 6px rgba(255,200,50,0.2), inset 1px 0 2px rgba(255,220,100,0.3), -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3);
+      transform: perspective(500px) rotateY(3deg);
+      transform-origin: left center;
+    }
+
+    .logo-track-container {
+      position: relative;
+      margin-left: 12px;
+      margin-right: 12px;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+
+    .logo-track-shadow-left {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      pointer-events: none;
+      width: 30px;
+      background: radial-gradient(ellipse 100% 60% at 0% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+    }
+
+    .logo-track-shadow-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 10;
+      pointer-events: none;
+      width: 30px;
+      background: radial-gradient(ellipse 100% 60% at 100% 50%, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.15) 50%, transparent 100%);
+    }
+
+    .logo-track {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      padding: 32px 0;
+      will-change: transform;
+    }
+
+    @media (min-width: 768px) { .logo-track { gap: 64px; } }
+
+    /* Video Player */
+    .video-player-container { width: 100%; }
+
+    .video-frame {
+      position: relative;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-      /* Metal frame styling - matching VideoPlayer component */
-      padding: 4px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
       border: 1px solid rgba(150,150,150,0.4);
+      padding: 4px;
     }
+
     .video-wrapper {
       position: relative;
       padding-top: 56.25%;
       background: #1a1a1a;
-      cursor: pointer;
       border-radius: 8px 8px 0 0;
       overflow: hidden;
     }
+
     .video-wrapper iframe {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       border: none;
-      object-fit: cover;
-      pointer-events: none; /* Disable iframe click, use overlay instead */
+      pointer-events: none;
     }
-    /* Video Overlay - clickable area for play/pause */
+
     .video-overlay {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1285,42 +1432,33 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       background: transparent;
       transition: background 0.2s ease;
     }
-    .video-overlay:hover {
-      background: rgba(0,0,0,0.15);
-    }
-    .video-overlay:hover .overlay-play-btn {
-      transform: scale(1.1);
-    }
-    /* Large centered play/pause button overlay */
+
+    .video-overlay:hover { background: rgba(0, 0, 0, 0.15); }
+    .video-overlay:hover .overlay-play-btn { transform: scale(1.1); }
+
     .overlay-play-btn {
       width: 80px;
       height: 80px;
       border-radius: 50%;
-      background: rgba(255,215,0,0.9);
+      background: rgba(255, 215, 0, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4), 0 0 30px rgba(255,215,0,0.3);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2);
       transition: transform 0.2s ease, opacity 0.2s ease;
-      pointer-events: none;
     }
+
     .overlay-play-btn svg {
       width: 36px;
       height: 36px;
       fill: #1a1a1a;
-      margin-left: 4px; /* Optical centering for play triangle */
+      margin-left: 4px;
     }
-    .overlay-play-btn.is-playing svg {
-      margin-left: 0;
-    }
-    /* Hide overlay button when playing (show on hover) */
-    .video-overlay.is-playing .overlay-play-btn {
-      opacity: 0;
-    }
-    .video-overlay.is-playing:hover .overlay-play-btn {
-      opacity: 1;
-    }
-    /* Scrubber Bar */
+
+    .overlay-play-btn.is-playing svg { margin-left: 0; }
+    .video-overlay.is-playing .overlay-play-btn { opacity: 0; }
+    .video-overlay.is-playing:hover .overlay-play-btn { opacity: 1; }
+
     .scrubber-container {
       position: absolute;
       bottom: 0;
@@ -1334,9 +1472,9 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       opacity: 0;
       transition: opacity 0.2s ease;
     }
-    .scrubber-container.visible {
-      opacity: 1;
-    }
+
+    .scrubber-container.visible { opacity: 1; }
+
     .scrubber-watched {
       position: absolute;
       bottom: 8px;
@@ -1345,6 +1483,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       background: rgba(255, 255, 255, 0.3);
       border-radius: 2px;
     }
+
     .scrubber-current {
       position: absolute;
       bottom: 8px;
@@ -1354,6 +1493,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       border-radius: 2px;
       z-index: 1;
     }
+
     .scrubber-thumb {
       position: absolute;
       bottom: 4px;
@@ -1366,11 +1506,12 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       z-index: 2;
       transition: transform 0.1s ease;
     }
+
     .scrubber-container:hover .scrubber-thumb,
     .scrubber-container:active .scrubber-thumb {
       transform: translateX(-50%) scale(1.3);
     }
-    /* Custom Video Controls - matching VideoPlayer component */
+
     .video-controls {
       display: flex;
       align-items: center;
@@ -1380,6 +1521,7 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       border-top: 1px solid rgba(255,215,0,0.2);
       border-radius: 0 0 8px 8px;
     }
+
     .control-btn {
       display: flex;
       align-items: center;
@@ -1387,26 +1529,24 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       position: relative;
       width: 36px;
       height: 36px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 8px;
       color: #fff;
       cursor: pointer;
       transition: all 0.2s ease;
       flex-shrink: 0;
     }
+
     .control-btn:hover {
-      background: rgba(255,215,0,0.2);
-      border-color: rgba(255,215,0,0.4);
+      background: rgba(255, 215, 0, 0.2);
+      border-color: rgba(255, 215, 0, 0.4);
       color: #ffd700;
     }
-    .control-btn:active {
-      transform: scale(0.95);
-    }
-    .control-btn svg {
-      width: 18px;
-      height: 18px;
-    }
+
+    .control-btn:active { transform: scale(0.95); }
+    .control-btn svg { width: 18px; height: 18px; }
+
     .control-btn--play {
       background: linear-gradient(135deg, #ffd700 0%, #e6c200 100%);
       border-color: #ffd700;
@@ -1414,16 +1554,19 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       width: 40px;
       height: 40px;
     }
+
     .control-btn--play:hover {
       background: linear-gradient(135deg, #ffe033 0%, #ffd700 100%);
       color: #1a1a1a;
     }
+
     .control-btn--play svg {
       width: 20px;
       height: 20px;
       fill: #1a1a1a;
       stroke: #1a1a1a;
     }
+
     .rewind-text {
       position: absolute;
       font-size: 8px;
@@ -1431,7 +1574,8 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       bottom: 4px;
       right: 4px;
     }
-    .video-time {
+
+    .time-display {
       font-family: var(--font-synonym), monospace;
       font-size: 0.85rem;
       color: #bfbdb0;
@@ -1439,21 +1583,24 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       white-space: nowrap;
       flex-shrink: 0;
     }
+
     .volume-controls {
       display: flex;
       align-items: center;
       gap: 0.5rem;
       margin-left: auto;
     }
+
     .volume-slider {
       width: 80px;
       height: 4px;
       -webkit-appearance: none;
       appearance: none;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       border-radius: 2px;
       cursor: pointer;
     }
+
     .volume-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
@@ -1464,9 +1611,9 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       cursor: pointer;
       transition: transform 0.1s ease;
     }
-    .volume-slider::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
-    }
+
+    .volume-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
     .volume-slider::-moz-range-thumb {
       width: 14px;
       height: 14px;
@@ -1475,428 +1622,182 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       cursor: pointer;
       border: none;
     }
-    @media (max-width: 600px) {
-      .video-controls {
-        flex-wrap: wrap;
-        gap: 0.4rem;
-        padding: 0.5rem;
-      }
-      .video-time {
-        order: 10;
-        width: 100%;
-        text-align: center;
-        margin: 0.25rem 0 0;
-      }
-      .volume-controls {
-        margin-left: 0;
-      }
-      .volume-slider {
-        width: 60px;
-      }
-    }
-    .progress-area { text-align: center; margin-top: 2rem; }
+
+    .progress-area { text-align: center; margin-top: 1.5rem; }
+
     .progress-bar {
       width: 100%;
       max-width: 400px;
       height: 6px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 3px;
       margin: 0 auto 1rem;
       overflow: hidden;
     }
+
     .progress-fill {
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #ffd700, #00ff88);
       border-radius: 3px;
-      transition: width 0.3s;
+      transition: width 0.3s ease;
     }
-    .progress-text { color: #bfbdb0; margin-bottom: 1.5rem; }
-    .book-btn {
-      display: none;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 2rem;
-      background: linear-gradient(135deg, var(--color-gold-500) 0%, var(--color-gold-600) 100%);
-      color: #2a2a2a;
-      font-family: var(--font-taskor);
-      font-weight: 600;
-      font-size: clamp(16px, calc(14.55px + 0.58vw), 32px);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(255,215,0,0.3);
+
+    @media (max-width: 600px) {
+      .video-controls { flex-wrap: wrap; gap: 0.4rem; padding: 0.5rem; }
+      .time-display { order: 10; width: 100%; text-align: center; margin: 0.25rem 0 0; }
+      .volume-controls { margin-left: 0; }
+      .volume-slider { width: 60px; }
     }
-    .book-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255,215,0,0.4);
-    }
-    .book-btn.visible { display: inline-flex; }
-    /* Value Stack */
-    #value-stack { background: transparent; }
-    .value-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .value-grid .value-card {
-      flex: 0 1 400px;
-      max-width: 500px;
-    }
-    .value-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-    .value-card:hover {
-      background: rgba(255,215,0,0.05);
-      border-color: rgba(255,215,0,0.2);
-      transform: translateY(-5px);
-    }
-    .value-icon {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 1rem;
-      background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,215,0,0.05));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffd700;
-    }
-    .value-icon svg { width: 28px; height: 28px; }
-    /* Value Title (H3) - using master controller H3 size */
-    .value-title {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-h3);
-      font-weight: var(--font-weight-h3);
-      line-height: var(--line-height-h3);
-      margin-bottom: 0.5rem;
-      color: #fff;
-    }
-    .value-desc {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body-md);
-      color: rgba(255,255,255,0.7);
-      line-height: 1.7;
-    }
-    /* Social Proof (Proven Results) */
-    #social-proof { background: transparent; }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-      text-align: center;
-    }
-    /* CyberCard - 3D metal plate card */
-    .cyber-card {
-      perspective: 1000px;
-      display: block;
-      height: 100%;
-    }
-    .cyber-card-plate {
-      position: relative;
-      transform-style: preserve-3d;
-      transform: translateZ(0);
-      background: linear-gradient(180deg, #3d3d3d 0%, #2f2f2f 40%, #252525 100%);
-      border-radius: 12px;
-      border-top: 2px solid rgba(180,180,180,0.45);
-      border-left: 1px solid rgba(130,130,130,0.35);
-      border-right: 1px solid rgba(60,60,60,0.6);
-      border-bottom: 2px solid rgba(0,0,0,0.7);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.12),
-        inset 0 -1px 2px rgba(0,0,0,0.25),
-        0 6px 16px rgba(0,0,0,0.5),
-        0 2px 6px rgba(0,0,0,0.3);
-      padding: 1.5rem;
-      height: 100%;
-    }
-    /* Glossy highlight overlay */
-    .cyber-card-plate::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      height: 50%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
-      border-radius: 12px 12px 0 0;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .cyber-card-content {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    /* Icon circle */
-    .stat-icon {
-      width: 3.5rem;
-      height: 3.5rem;
-      border-radius: 50%;
-      background: rgba(255,215,0,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .stat-icon svg {
-      width: 1.75rem;
-      height: 1.75rem;
-      stroke: #ffd700;
-      fill: none;
-      stroke-width: 2;
-    }
-    /* Stat Numbers - gold with neon glow */
-    .stat-number {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-h3);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: #ffd700;
-      line-height: 1;
-      text-shadow:
-        0 0 5px rgba(255,215,0,0.6),
-        0 0 10px rgba(255,215,0,0.4),
-        0 0 20px rgba(255,215,0,0.25);
-    }
-    .stat-label {
-      font-family: var(--font-synonym);
-      font-size: var(--font-size-body-md);
-      color: #bfbdb0;
-      margin-top: 0;
-    }
-    /* Why eXp */
-    #why-exp { background: transparent; }
-    .features-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-      justify-content: center;
-    }
-    .features-grid .feature-card {
-      flex: 0 1 450px;
-      max-width: 550px;
-    }
-    .feature-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 12px;
-      padding: 1.5rem;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      transition: all 0.3s ease;
-    }
-    .feature-card:hover { border-color: rgba(255,215,0,0.3); }
-    .feature-icon {
-      width: 48px;
-      height: 48px;
-      flex-shrink: 0;
-      background: rgba(255,215,0,0.1);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #ffd700;
-    }
-    .feature-icon svg { width: 24px; height: 24px; }
-    /* Feature Title (H3) - using master controller H3 size */
-    .feature-title {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-h3);
-      font-weight: var(--font-weight-h3);
-      line-height: var(--line-height-h3);
-      color: #fff;
-      margin-bottom: 0.25rem;
-    }
-    .feature-desc {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body-sm);
-      color: rgba(255,255,255,0.7);
-      line-height: 1.75;
-    }
-    /* FAQ */
-    #faq { background: transparent; }
-    .faq-list { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
-    .faq-item {
-      background-color: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 0.75rem;
-      overflow: hidden;
-      transition: all 0.3s;
-    }
-    .faq-item:hover {
-      border-color: rgba(255,215,0,0.3);
-    }
-    .faq-question {
-      width: 100%;
-      padding: 1.25rem;
-      background: transparent;
-      border: none;
-      color: #fff;
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-h3);
-      line-height: var(--line-height-h3);
-      font-weight: var(--font-weight-h3);
-      text-align: left;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-    }
-    .faq-question:hover { color: var(--color-gold-500); }
-    .faq-icon {
-      transition: transform 0.3s ease;
-      color: var(--color-gold-500);
-      flex-shrink: 0;
-      width: 20px;
-      height: 20px;
-    }
-    .faq-item.open .faq-icon { transform: rotate(180deg); }
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
-      padding: 0 1.25rem;
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body);
-      color: #dcdbd5;
-      line-height: 1.7;
-    }
-    .faq-item.open .faq-answer {
-      max-height: 2000px;
-      opacity: 1;
-      padding: 0 1.25rem 1.5rem 1.25rem;
-    }
-    /* Final CTA - yellow gradient fading only at top */
-    #final-cta {
-      text-align: center;
-      background: transparent;
-      padding: 6rem 1.5rem;
-    }
-    /* Final Headline - matching .display-lg from main site */
-    .final-headline {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-display-lg);
-      font-weight: 700;
-      letter-spacing: -0.015em;
-      color: #fff;
-      line-height: 1.15;
-      margin-bottom: 1rem;
-    }
-    .final-subtext {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body-lg);
-      color: rgba(255,255,255,0.7);
-      line-height: 1.65;
-      margin-bottom: 2rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+
     /* Modals */
-    .modal-overlay {
+    .modal-container {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.9);
-      backdrop-filter: blur(8px);
+      z-index: 100000;
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 9999;
       padding: 1rem;
       overflow-y: auto;
-      overscroll-behavior: contain;
     }
-    .modal-overlay.active { display: flex; }
+
+    .modal-container.open { display: flex; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100000;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-wrapper {
+      position: relative;
+      z-index: 100001;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      margin: auto;
+    }
+
     .modal {
+      position: relative;
       background: #151517;
-      border: 1px solid rgba(255,255,255,0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
-      padding: 2rem;
-      max-width: 500px;
+      padding: 2.5rem 2rem 2rem 2rem;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      overscroll-behavior: contain;
-      position: relative;
+      box-sizing: border-box;
     }
-    .modal.wide { max-width: 600px; }
-    .modal-close {
+
+    .modal-close-btn {
       position: absolute;
-      top: 1rem; right: 1rem;
-      width: 32px; height: 32px;
-      background: rgba(255,255,255,0.1);
-      border: none;
+      top: -12px;
+      right: -12px;
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0;
+      margin: 0;
+      background: rgba(40, 40, 40, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       color: #fff;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 100005;
     }
-    .modal-close:hover { background: rgba(255,255,255,0.2); }
-    /* Modal Title - using master controller H3 size */
-    .modal-title {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-h3);
-      font-weight: var(--font-weight-h3);
-      letter-spacing: var(--letter-spacing-h3);
-      line-height: var(--line-height-h3);
+
+    .modal-close-btn:hover {
+      background: rgba(60, 60, 60, 0.95);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .modal-close-btn svg { pointer-events: none; display: block; flex-shrink: 0; }
+
+    /* Join Modal */
+    .join-modal-title {
+      font-family: var(--font-amulya), system-ui, sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
       color: #fff;
       margin-bottom: 0.5rem;
     }
-    .modal-subtitle {
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body-md);
-      color: rgba(255,255,255,0.7);
+
+    .join-modal-subtitle {
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.7);
       margin-bottom: 1.5rem;
     }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
     .form-group { margin-bottom: 1rem; }
+
     .form-label {
       display: block;
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body-sm);
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 0.875rem;
       color: #fff;
       margin-bottom: 0.5rem;
     }
-    .form-input, .form-select {
+
+    .form-input {
       width: 100%;
       padding: 0.75rem 1rem;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       color: #fff;
-      font-family: var(--font-amulya);
-      font-size: var(--font-size-body-md);
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
-    .form-input:focus, .form-select:focus { outline: none; border-color: var(--color-gold-500); }
-    .form-input::placeholder { color: rgba(255,255,255,0.4); }
-    .form-select option { background: #151517; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .checkbox-group { display: flex; flex-direction: column; gap: 0.5rem; }
-    .checkbox-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #e5e4dd; font-size: 0.95rem; }
-    .checkbox-label input { accent-color: #ffd700; }
+
+    .form-input:focus {
+      outline: none;
+      border-color: rgba(255, 215, 0, 0.5);
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #1a1a1c;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      color: #fff;
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 1rem;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+
+    .form-select option { background: #1a1a1c; color: #fff; }
+
     .form-submit {
       width: 100%;
       margin-top: 1.5rem;
       padding: 1rem;
       background: linear-gradient(135deg, #ffd700, #e6c200);
       color: #2a2a2a;
-      font-family: var(--font-taskor), sans-serif;
+      font-family: var(--font-taskor), system-ui, sans-serif;
       font-weight: 600;
       font-size: 1rem;
       letter-spacing: 0.05em;
@@ -1904,1259 +1805,2398 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      transition: opacity 0.2s ease;
     }
-    .form-msg { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; text-align: center; display: none; }
-    .form-msg.success { display: block; background: rgba(0,255,136,0.1); color: #00ff88; }
-    .form-msg.error { display: block; background: rgba(255,68,68,0.1); color: #ff4444; }
-    /* Responsive */
-    @media (max-width: 768px) {
-      .hero { padding: 1rem; }
-      /* Shift hero content up slightly so buttons aren't at the fold */
-      .hero-content-wrapper { margin-top: -5vh; }
-      /* Reduce section padding on mobile for better video fit */
-      .reveal-section { padding: 3rem 0.75rem; }
-      .glass-panel { padding: 2rem 1rem; border-radius: 16px; }
-      .video-container { border-radius: 8px; margin-bottom: 1.5rem; }
-      .form-row { grid-template-columns: 1fr; }
-      .cta-row { flex-direction: column; align-items: center; }
-      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+
+    .form-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+    .form-message {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.9rem;
     }
-    @media (max-width: 480px) {
-      /* Extra small screens - minimal side padding */
-      .reveal-section { padding: 2.5rem 0.5rem; }
-      .glass-panel { padding: 1.5rem 0.75rem; }
-      /* Shift content up more on very small screens */
-      .hero-content-wrapper { margin-top: -8vh; }
-      /* Make profile image larger to fill more vertical space */
-      .profile-wrapper {
-        width: clamp(220px, 65vw, 340px);
-        max-height: 42dvh;
+
+    .form-message.success { background: rgba(0, 255, 136, 0.1); color: #00ff88; }
+    .form-message.error { background: rgba(255, 68, 68, 0.1); color: #ff4444; }
+
+    /* Instructions Modal */
+    .instructions-modal { text-align: center; }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1.5rem;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-icon svg { width: 32px; height: 32px; stroke: #00ff88; }
+
+    .instructions-title {
+      font-family: var(--font-amulya), system-ui, sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .instructions-subtitle {
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 2rem;
+    }
+
+    .instructions-list { text-align: left; margin-bottom: 2rem; }
+
+    .instruction-item {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .instruction-item:last-child { margin-bottom: 0; }
+
+    .instruction-number {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #ffd700, #e6c200);
+      color: #2a2a2a;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .instruction-content { flex: 1; }
+
+    .instruction-title {
+      display: block;
+      color: #fff;
+      font-family: var(--font-amulya), system-ui, sans-serif;
+      font-size: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .instruction-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .instruction-text a { color: #ffd700; }
+    .instruction-text strong { color: #fff; }
+
+    .instructions-cta {
+      width: 100%;
+      padding: 1rem;
+      background: linear-gradient(135deg, #ffd700, #e6c200);
+      color: #2a2a2a;
+      font-family: var(--font-taskor), system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: block;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .instructions-footer {
+      margin-top: 1.5rem;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .instructions-footer a { color: #ffd700; text-decoration: none; }
+
+    /* Grid utilities */
+    .grid { display: grid; }
+    .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    @media (min-width: 768px) {
+      .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md\\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+      .md\\:col-span-5 { grid-column: span 5 / span 5; }
+      .md\\:col-span-7 { grid-column: span 7 / span 7; }
+      .md\\:col-span-8 { grid-column: span 8 / span 8; }
+    }
+
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    @media (min-width: 768px) {
+      .md\\:gap-6 { gap: 1.5rem; }
+    }
+
+    /* Flex utilities */
+    .flex { display: flex; }
+    .flex-col { flex-direction: column; }
+    .flex-row { flex-direction: row; }
+    .items-center { align-items: center; }
+    .justify-center { justify-content: center; }
+    .gap-3 { gap: 0.75rem; }
+
+    /* Spacing */
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mt-8 { margin-top: 2rem; }
+    .mt-12 { margin-top: 3rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mb-12 { margin-bottom: 3rem; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+    .px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+    .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+    @media (min-width: 768px) {
+      .md\\:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+      .md\\:py-32 { padding-top: 8rem; padding-bottom: 8rem; }
+    }
+
+    /* Text utilities */
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+    .text-sm { font-size: 0.875rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .font-bold { font-weight: 700; }
+    .font-medium { font-weight: 500; }
+    .opacity-70 { opacity: 0.7; }
+    .opacity-80 { opacity: 0.8; }
+
+    /* Width utilities */
+    .w-full { width: 100%; }
+    .max-w-xl { max-width: 36rem; }
+    .max-w-2xl { max-width: 42rem; }
+    .max-w-4xl { max-width: 56rem; }
+
+    /* Scroll reveal animation */
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+
+    .scroll-reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Cyber Card Gold */
+    .cyber-card-gold {
+      perspective: 1000px;
+      display: block;
+    }
+
+    .cyber-card-gold-frame {
+      position: relative;
+      transform-style: preserve-3d;
+      transform: translateZ(0);
+      border: 10px solid #ffd700;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 4px 1px rgba(255, 215, 0, 0.5), 0 0 8px 2px rgba(255, 215, 0, 0.35),
+        0 0 16px 4px rgba(255, 215, 0, 0.2), 0 0 24px 6px rgba(255, 215, 0, 0.1), 0 4px 12px rgba(0,0,0,0.3);
+      overflow: visible;
+    }
+
+    @keyframes cyberCardGoldOrganicPulse {
+      0% { opacity: 0.55; }
+      13% { opacity: 0.95; }
+      28% { opacity: 0.6; }
+      41% { opacity: 0.85; }
+      54% { opacity: 0.5; }
+      67% { opacity: 1; }
+      83% { opacity: 0.7; }
+      100% { opacity: 0.55; }
+    }
+
+    .cyber-card-gold-frame::after {
+      content: "";
+      position: absolute;
+      top: -12px;
+      left: -12px;
+      right: -12px;
+      bottom: -12px;
+      border-radius: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      box-shadow: 0 0 6px 2px rgba(255, 215, 0, 0.6), 0 0 12px 4px rgba(255, 215, 0, 0.4),
+        0 0 20px 6px rgba(255, 215, 0, 0.25), 0 0 32px 10px rgba(255, 215, 0, 0.12), 0 6px 16px rgba(0,0,0,0.35);
+      pointer-events: none;
+      z-index: -1;
+      animation: cyberCardGoldOrganicPulse 2.4s linear infinite;
+      will-change: opacity;
+    }
+
+    .cyber-card-gold-frame::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 6px;
+      border: 2px solid rgba(255,255,255,0.5);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .cyber-card-gold-content {
+      position: relative;
+      z-index: 2;
+      transform-style: preserve-3d;
+      transform: translateZ(0);
+      padding: 24px;
+      text-align: center;
+    }
+
+    /* Founder Card Styles */
+    .founder-card {
+      text-align: center;
+      padding: 1.5rem 2rem;
+      background-color: rgba(20,20,20,0.75);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    .founder-card:hover {
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    /* Profile Cyber Frame - circular image with 3D metal frame */
+    .profile-cyber-frame {
+      width: 192px;
+      height: 192px;
+      position: relative;
+      margin: 0 auto 24px auto;
+    }
+    /* 3D Metal Frame */
+    .profile-cyber-frame-metal {
+      position: absolute;
+      top: -6px;
+      left: -6px;
+      right: -6px;
+      bottom: -6px;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+      border: 1px solid rgba(150,150,150,0.4);
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 0 rgba(0,0,0,0.3),
+        0 0 15px rgba(255,215,0,0.15);
+      transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .profile-cyber-frame:hover .profile-cyber-frame-metal {
+      box-shadow:
+        0 4px 25px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.3),
+        0 0 25px rgba(255,215,0,0.3);
+      border-color: rgba(255,215,0,0.3);
+    }
+    /* Inner container */
+    .profile-cyber-frame-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 9999px;
+      overflow: hidden;
+      background-color: #0a0a0a;
+    }
+    /* Holographic sheen */
+    .profile-cyber-frame-inner::before {
+      content: "";
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      right: -100%;
+      bottom: -100%;
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: 10;
+      background: linear-gradient(
+        25deg,
+        transparent 0%,
+        transparent 35%,
+        rgba(255,255,255,0.08) 42%,
+        rgba(255,255,255,0.15) 50%,
+        rgba(255,255,255,0.08) 58%,
+        transparent 65%,
+        transparent 100%
+      );
+      transform: translateX(-20%);
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .profile-cyber-frame:hover .profile-cyber-frame-inner::before {
+      transform: translateX(60%);
+    }
+    /* Gold accent glow ring */
+    .profile-cyber-frame-ring {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 9999px;
+      pointer-events: none;
+      border: 2px solid rgba(255,215,0,0.4);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .profile-cyber-frame:hover .profile-cyber-frame-ring {
+      border-color: rgba(255,215,0,0.7);
+      box-shadow: 0 0 12px rgba(255,215,0,0.4);
+    }
+
+    @keyframes profileFramePulse {
+      0%, 100% {
+        box-shadow:
+          0 0 8px rgba(255, 215, 0, 0.5),
+          0 0 16px rgba(255, 215, 0, 0.3),
+          0 0 24px rgba(255, 215, 0, 0.2);
+      }
+      50% {
+        box-shadow:
+          0 0 12px rgba(255, 215, 0, 0.7),
+          0 0 24px rgba(255, 215, 0, 0.5),
+          0 0 36px rgba(255, 215, 0, 0.3);
       }
     }
+
+    .profile-cyber-frame-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #1a1a1a;
+    }
+
+    .profile-cyber-frame-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Founder Name - gold glow style */
+    /* Founder name - H1-style glow with H3 sizing */
+    .founder-name {
+      font-family: var(--font-taskor), sans-serif;
+      font-size: clamp(27px, calc(25.36px + 0.65vw), 45px);
+      line-height: 1.3;
+      font-weight: 700;
+      color: #ffd700;
+      transform: perspective(800px) rotateX(12deg);
+      font-feature-settings: "ss01" 1;
+      text-shadow:
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.05em #ffd700,
+        0 0 0.09em rgba(255, 215, 0, 0.8),
+        0 0 0.13em rgba(255, 215, 0, 0.55),
+        0 0 0.18em rgba(255, 179, 71, 0.35),
+        0.03em 0.03em 0 #2a2a2a,
+        0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f,
+        0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
+      animation: h1GlowBreathe 4s ease-in-out infinite;
+      margin-bottom: 0.25rem;
+      text-align: center;
+    }
+    .founder-title {
+      font-family: 'Synonym', system-ui, sans-serif;
+      font-size: var(--font-size-body);
+      color: #e5e4dd;
+      opacity: 0.6;
+      margin-bottom: 0.75rem;
+    }
+    .founder-bio {
+      font-family: 'Synonym', system-ui, sans-serif;
+      font-size: var(--font-size-body);
+      color: #e5e4dd;
+      line-height: 1.6;
+      flex: 1;
+    }
+    @keyframes h1GlowBreathe {
+      0%, 100% {
+        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
+      }
+      50% {
+        filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45));
+      }
+    }
+
+    /* BuiltForFuture Data Stream */
+    .data-stream-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .data-stream-column {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .data-stream-char {
+      position: absolute;
+    }
+    /* BuiltForFuture horizontal line animation */
+    @keyframes drawLine {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+    .future-line {
+      width: 0;
+    }
+    .future-line.animate {
+      animation: drawLine 1s ease-out forwards;
+      animation-delay: 0.5s;
+    }
+    /* Hide line on mobile */
+    @media (max-width: 767px) {
+      .future-line-container { display: none; }
+      .future-points-row {
+        flex-direction: column !important;
+        gap: 2rem !important;
+      }
+      /* Founders grid stacks on mobile */
+      .founders-grid {
+        grid-template-columns: 1fr !important;
+      }
+      /* Why eXp grid stacks on mobile */
+      .why-exp-grid {
+        grid-template-columns: 1fr !important;
+      }
+      /* Proven at Scale grid stacks on mobile */
+      .proven-scale-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+
+    /* FAQ Styles */
+    .faq-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .faq-item {
+      background: rgba(30, 30, 32, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .faq-item.active {
+      border-color: rgba(255, 215, 0, 0.5);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--color-headingText);
+      font-family: var(--font-amulya), system-ui, sans-serif;
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .faq-question:hover {
+      color: #ffd700;
+    }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      transition: transform 0.3s ease;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .faq-item.active .faq-chevron {
+      transform: rotate(180deg);
+      color: #ffd700;
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .faq-answer p {
+      padding: 0 1.5rem 1.25rem;
+      font-size: clamp(0.875rem, 2vw, 1rem);
+      line-height: 1.7;
+      color: var(--color-bodyText);
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+    }
+
+    /* Check icon 3D style */
+    .check-3d {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
+      border-radius: 50%;
+      color: #ffd700;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Glass panel marigold variant with crosshatch texture */
+    .glass-panel-marigold {
+      background:
+        /* Crosshatch texture overlay */
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.03) 0px, transparent 1px, transparent 6px),
+        /* Base marigold gradient */
+        linear-gradient(180deg,
+          rgba(255, 190, 0, 0.032) 0%,
+          rgba(255, 190, 0, 0.04) 50%,
+          rgba(255, 190, 0, 0.032) 100%);
+      background-size: 16px 16px, 16px 16px, 100% 100%;
+    }
+
+    /* Glass panel marigold variant with noise texture */
+    .glass-panel-marigold-noise {
+      background: linear-gradient(180deg,
+        rgba(255, 190, 0, 0.032) 0%,
+        rgba(255, 190, 0, 0.04) 50%,
+        rgba(255, 190, 0, 0.032) 100%);
+    }
+    .glass-panel-marigold-noise::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.06;
+      mix-blend-mode: overlay;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    /* Prevent body scroll when modal is open */
+    body.modal-open { overflow: hidden; }
+    html.modal-open { overflow: hidden; }
   </style>
 </head>
 <body>
-  <canvas id="star-canvas"></canvas>
+  <!-- Star Field Background -->
+  <canvas id="star-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background: transparent;"></canvas>
+  <div style="position: fixed; inset: 0; z-index: -2; background: radial-gradient(ellipse at bottom, #282828 0%, #0c0c0c 100%);"></div>
 
-  <!-- FIXED HERO WRAPPER - hero stays fixed, content scrolls over -->
-  <div class="fixed-hero-wrapper" id="fixed-hero-wrapper">
-    <!-- HERO SECTION -->
-    <section class="hero">
-      <!-- RevealMaskEffect - Golden glow with rotating borders -->
-      <div class="reveal-mask-effect hero-effect-layer" id="reveal-mask-effect">
-        <div class="reveal-glow" id="reveal-glow"></div>
-        <div class="reveal-border-outer" id="reveal-border-outer"></div>
-        <div class="reveal-border-inner" id="reveal-border-inner"></div>
+  <main id="main-content">
+    <!-- Hero Section - Fixed -->
+    <div class="hero-fixed">
+      <div class="hero-content">
+        <section class="hero-section" aria-label="Hero">
+          <!-- Agent Counter (Desktop) -->
+          <div class="agent-counter" id="agent-counter-desktop">
+            <span style="display: inline-flex; align-items: center; gap: 0.25em; font-size: clamp(1.75rem, 2.625vw, 2.1875rem);">
+              <span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: calc(1em + 10px);">
+                <span class="counter-digit">3</span><span class="counter-digit">7</span><span class="counter-digit">0</span><span class="counter-digit">0</span><span>+</span>
+              </span>
+              <span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8); filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));">AGENTS</span>
+            </span>
+          </div>
+
+          <!-- Reveal Mask Effect -->
+          <div class="reveal-mask-effect hero-effect-layer">
+            <div class="reveal-glow"></div>
+            <div class="reveal-ring reveal-ring-outer"></div>
+            <div class="reveal-ring reveal-ring-inner"></div>
+            <div class="hero-vignette"></div>
+          </div>
+
+          <!-- Hero Content -->
+          <div class="hero-content-wrapper" id="hero-content-wrapper">
+            <!-- Profile Image -->
+            <div class="hero-image-container">
+              <div class="hero-3d-backdrop"></div>
+              <img
+                src="${escapeHTML(agentImageUrl)}"
+                alt="${escapeHTML(displayName)} - Smart Agent Alliance"
+                width="900"
+                height="500"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                class="hero-image"
+              />
+            </div>
+
+            <!-- Hero Text -->
+            <div class="hero-text-wrapper" style="perspective: 1000px;">
+              <h1 id="hero-heading" class="text-h1 h1-neon" style="font-size: clamp(50px, calc(30px + 4vw + 0.3vh), 150px); margin-bottom: 3px;">
+                SMART AGENT ALLIANCE
+              </h1>
+              <p class="text-tagline tagline">
+                ${escapeHTML(agentTagline)}
+              </p>
+              <div class="flex justify-center items-center" style="margin-top: 14px;">
+                <div class="cta-button-wrapper">
+                  <div class="cta-light-bar cta-light-bar-top"></div>
+                  <a href="#watch-and-decide" class="cta-button">WATCH & DECIDE</a>
+                  <div class="cta-light-bar cta-light-bar-bottom"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
+    </div>
 
-      <!-- Hero Vignette - dark edge overlay -->
-      <div class="hero-vignette hero-effect-layer" id="hero-vignette"></div>
+    <!-- Hero Spacer -->
+    <div class="hero-spacer" aria-hidden="true"></div>
 
-      <!-- Hero Content Wrapper - for scroll fade/scale effects -->
-      <div class="hero-content-wrapper" id="hero-content-wrapper">
-        <!-- Profile Image Container - only shown if agent has a profile image -->
-        ${agentImageUrl ? `
-        <div class="profile-wrapper" id="profile-wrapper">
-          <img src="${escapeHTML(agentImageUrl)}" alt="${escapeHTML(fullName)}" class="profile-img" id="profile-img"/>
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scroll-indicator">
+      <div class="scroll-arrow-container">
+        <div class="scroll-arrow"><div></div></div>
+        <div class="scroll-arrow"><div></div></div>
+      </div>
+    </div>
+
+    <!-- Value Pillars Tab -->
+    <div class="value-pillars-tab">
+      <div class="value-pillars-shadow"></div>
+      <div class="value-pillars-bg"></div>
+      <div class="value-pillars-glow"></div>
+      <div class="glass-panel">
+        <div class="glass-panel-bg">
+          <div class="glass-panel-texture"></div>
         </div>
-        ` : ''}
+        <div class="glass-panel-content">
+          <section class="px-6" style="padding-top: calc(1.5rem + 15px); padding-bottom: calc(1.5rem + 15px);">
+            <div class="mx-auto" style="max-width: 900px;">
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-3 justify-center pillar-row">
+                  <span class="pillar-number text-body">01</span>
+                  <span class="pillar-text text-body"><span class="pillar-number">Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
+                </div>
+                <div class="flex items-center gap-3 justify-center pillar-row">
+                  <span class="pillar-number text-body">02</span>
+                  <span class="pillar-text text-body"><span class="pillar-number">Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
+                </div>
+                <div class="flex items-center gap-3 justify-center pillar-row">
+                  <span class="pillar-number text-body">03</span>
+                  <span class="pillar-text text-body"><span class="pillar-number">Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
 
-        <!-- Text Content - pulls up to overlap image bottom -->
-        <div class="hero-text-content">
-          <h1 class="headline">SMART AGENT ALLIANCE</h1>
-          <p class="tagline text-tagline">Join ${escapeHTML(firstName)}'s Team <span class="tagline-counter-suffix"><span class="counter-numbers-mobile">(<span class="counter-digit">3</span><span class="counter-digit">7</span><span class="counter-digit">0</span><span class="counter-digit">0</span>+ </span>Agents)</span></p>
-          <p class="hero-body-text">Smart Agent Alliance is a sponsor team inside eXp Realty. Elite systems, world-class training, real community — no splits, no fees, no catch.</p>
-          <div class="cta-row">
-            <button class="btn-primary text-button" onclick="openJoinModal()">Join My Team</button>
-            <a href="#webinar" class="btn-secondary text-button">See How It Works</a>
+    <!-- Why Smart Agent Alliance Section -->
+    <section class="section py-24 md:py-32 px-6 overflow-hidden relative">
+      <div class="section-content scroll-reveal" id="why-saa-section">
+        <div class="text-center mb-12">
+          <h2 class="text-h2 h2-container">
+            <span class="h2-word">Why</span>
+            <span class="h2-word">Smart</span>
+            <span class="h2-word">Agent</span>
+            <span class="h2-word">Alliance</span>
+            <span class="h2-word">(SAA)?</span>
+          </h2>
+        </div>
+        <div class="grid md:grid-cols-12 gap-4 md:gap-6">
+          <div style="grid-column: span 7 / span 7;">
+            <div class="bento-card" style="height: 100%;">
+              <div class="bento-card-content">
+                <div class="mb-8">
+                  <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: clamp(1.5rem, 3vw, 1.875rem);">Elite systems. Proven training. Real community.</p>
+                  <p class="text-body mt-4 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
+                  <p class="font-bold mt-6" style="font-family: var(--font-amulya); color: #ffd700; font-size: clamp(1.25rem, 2.5vw, 1.5rem);">Smart Agent Alliance was built differently.</p>
+                  <p class="text-body mt-4" style="line-height: 1.7;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span class="text-body font-medium">Not a production team</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span class="text-body font-medium">No commission splits</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span class="text-body font-medium">No sponsor team fees</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span class="text-body font-medium">No required meetings</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style="grid-column: span 5 / span 5;">
+            <div class="bento-card" style="position: relative; overflow: hidden; height: 100%; min-height: 300px;">
+              <div style="position: absolute; inset: 0; overflow: hidden;">
+                <img src="${CLOUDFLARE_BASE}/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
+              </div>
+              <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
+                <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
+                <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="text-center mt-12 scroll-reveal">
+          <p class="text-body max-w-xl mx-auto" style="color: #e5e4dd;">Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proven at Scale Section -->
+    <div class="glass-panel" style="margin-top: 32px;">
+      <div class="glass-panel-bg glass-panel-champagne"></div>
+      <div class="glass-panel-content">
+        <section style="padding: var(--section-padding-y) 1.5rem; position: relative; overflow: hidden;">
+          <!-- Wolf Pack Background -->
+          <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+            <img
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
+              srcset="
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
+                https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
+              "
+              sizes="100vw"
+              alt=""
+              aria-hidden="true"
+              style="width: 100%; height: 100%; object-fit: cover; object-position: center 55%; mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);"
+            />
+          </div>
+
+          <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+            <div class="proven-scale-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: center;">
+              <!-- Left Content -->
+              <div>
+                <div class="scroll-reveal">
+                  <h2 class="text-h2 h2-container" style="justify-content: flex-start; text-align: left;">
+                    <span class="h2-word">Proven</span>
+                    <span class="h2-word">at</span>
+                    <span class="h2-word">Scale</span>
+                  </h2>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                  <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                    <p class="text-body">One of the fastest-growing sponsor organizations at eXp Realty</p>
+                  </div>
+                  <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem; transition-delay: 0.1s;">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <p class="text-body">Consistently strong agent retention</p>
+                  </div>
+                  <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem; transition-delay: 0.2s;">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                    <p class="text-body">Active across the U.S., Canada, Mexico, Australia, and beyond</p>
+                  </div>
+                </div>
+
+                <div class="scroll-reveal" style="transition-delay: 0.3s;">
+                  <div class="cta-button-wrapper" style="display: inline-block;">
+                    <div class="cta-light-bar cta-light-bar-top"></div>
+                    <a href="${siteUrl}/exp-realty-sponsor/" class="cta-button">See What Agents Say</a>
+                    <div class="cta-light-bar cta-light-bar-bottom"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right - Counter Card -->
+              <div class="scroll-reveal" style="transition-delay: 0.2s;">
+                <div class="cyber-card-gold">
+                  <div class="cyber-card-gold-frame">
+                    <div class="cyber-card-gold-content">
+                      <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                      <p style="font-family: 'Amulya', var(--font-amulya), sans-serif; font-size: clamp(1.875rem, 4vw, 2.5rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: center; margin: 0;">3700+</p>
+                      <p class="text-body" style="text-align: center; margin-top: 0.25rem;">Agents Strong</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- What You Get Section -->
+    <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
+      <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+        <div class="text-center scroll-reveal">
+          <h2 class="text-h2 h2-container">
+            <span class="h2-word">What</span>
+            <span class="h2-word">You</span>
+            <span class="h2-word">Get</span>
+            <span class="h2-word">with</span>
+            <span class="h2-word">SAA</span>
+          </h2>
+          <p class="text-body" style="opacity: 0.6; margin-bottom: 2rem;">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
+        </div>
+
+        <!-- Tab Buttons -->
+        <div class="scroll-reveal" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding-bottom: 0.5rem; margin-bottom: 1.5rem;" id="wyg-tabs">
+          <button class="wyg-tab wyg-tab-active" data-tab="0">
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="wyg-tab-label">Connected</span>
+          </button>
+          <button class="wyg-tab" data-tab="1">
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+            <span class="wyg-tab-label">Passive</span>
+          </button>
+          <button class="wyg-tab" data-tab="2">
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <span class="wyg-tab-label">Done-For-You</span>
+          </button>
+          <button class="wyg-tab" data-tab="3">
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+            <span class="wyg-tab-label">Elite</span>
+          </button>
+          <button class="wyg-tab" data-tab="4">
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            <span class="wyg-tab-label">Private</span>
+          </button>
+        </div>
+
+        <!-- Content Card with Background Images -->
+        <div class="scroll-reveal" style="margin-bottom: 2.5rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative; height: 210px;" id="wyg-card">
+          <!-- Background Images (all present, only active one visible) -->
+          <div class="wyg-bg wyg-bg-active" data-bg="0" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
+          <div class="wyg-bg" data-bg="1" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
+          <div class="wyg-bg" data-bg="2" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
+          <div class="wyg-bg" data-bg="3" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
+          <div class="wyg-bg" data-bg="4" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
+          <!-- Gradient Overlay -->
+          <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.5) 100%); z-index: 1;"></div>
+          <!-- Content Panels -->
+          <div class="wyg-content wyg-content-active" data-content="0">
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+            <div style="text-align: left; flex: 1;">
+              <h3 class="wyg-content-title">Connected Leadership and Community</h3>
+              <p class="text-body">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
+            </div>
+          </div>
+          <div class="wyg-content" data-content="1">
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span></div>
+            <div style="text-align: left; flex: 1;">
+              <h3 class="wyg-content-title">Passive Income Infrastructure</h3>
+              <p class="text-body">We handle the structure so you can build long-term income without relying solely on transactions.</p>
+            </div>
+          </div>
+          <div class="wyg-content" data-content="2">
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+            <div style="text-align: left; flex: 1;">
+              <h3 class="wyg-content-title">Done-For-You Production Systems</h3>
+              <p class="text-body">Curated systems designed to save time, not create tech overload.</p>
+            </div>
+          </div>
+          <div class="wyg-content" data-content="3">
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span></div>
+            <div style="text-align: left; flex: 1;">
+              <h3 class="wyg-content-title">Elite Training Libraries</h3>
+              <p class="text-body">AI, social media, investing, and modern production systems, available when you need them.</p>
+            </div>
+          </div>
+          <div class="wyg-content" data-content="4">
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span></div>
+            <div style="text-align: left; flex: 1;">
+              <h3 class="wyg-content-title">Private Referrals & Global Collaboration</h3>
+              <p class="text-body">Warm introductions and deal flow inside a global agent network.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Dots -->
+        <div class="scroll-reveal" style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem;" id="wyg-dots">
+          <button class="wyg-dot wyg-dot-active" data-dot="0"></button>
+          <button class="wyg-dot" data-dot="1"></button>
+          <button class="wyg-dot" data-dot="2"></button>
+          <button class="wyg-dot" data-dot="3"></button>
+          <button class="wyg-dot" data-dot="4"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Only at eXp Section -->
+    <div class="glass-panel">
+      <div class="glass-panel-bg glass-panel-marigold-noise"></div>
+      <div class="glass-panel-content">
+        <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="why-exp-section">
+          <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+            <div class="text-center scroll-reveal" style="margin-bottom: 2rem;">
+              <h2 class="text-h2 h2-container">
+                <span class="h2-word">Why</span>
+                <span class="h2-word">This</span>
+                <span class="h2-word">Only</span>
+                <span class="h2-word">Works</span>
+                <span class="h2-word">at</span>
+                <span class="h2-word">eXp</span>
+                <span class="h2-word">Realty</span>
+              </h2>
+            </div>
+
+            <div class="why-exp-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+              <!-- Left - Deck Stack -->
+              <div class="scroll-reveal deck-stack-container" style="position: relative; height: 260px; perspective: 1000px;" id="deck-stack">
+                <!-- Card 1 -->
+                <div class="deck-card deck-card-active" data-card="0" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255,255,255,0.15);">
+                  <div class="deck-card-number" style="background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%); border: 2px solid rgba(255,255,255,0.2);">
+                    <span class="icon-3d" style="font-size: 32px; font-weight: bold;">1</span>
+                  </div>
+                  <p class="text-body" style="font-weight: bold;">Most real estate brokerages provide tools, training, and support centrally.</p>
+                  <p class="text-body opacity-40 mt-4">Click to advance</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="deck-card" data-card="1" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255,255,255,0.15);">
+                  <div class="deck-card-number" style="background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%); border: 2px solid rgba(255,255,255,0.2);">
+                    <span class="icon-3d" style="font-size: 32px; font-weight: bold;">2</span>
+                  </div>
+                  <p class="text-body" style="font-weight: bold;">Even when sponsorship exists, sponsors are limited to offering only what the brokerage provides.</p>
+                  <p class="text-body opacity-40 mt-4">Click to advance</p>
+                </div>
+                <!-- Card 3 (Highlighted) -->
+                <div class="deck-card deck-card-highlight" data-card="2" style="background: rgba(40, 35, 10, 0.98); border: 2px solid rgba(255, 215, 0, 0.5);">
+                  <div class="deck-card-number" style="background: #ffd700;">
+                    <span style="font-size: 32px; font-weight: bold; color: #111;">3</span>
+                  </div>
+                  <p class="text-body" style="font-weight: bold; color: #ffd700;">eXp Realty sponsorship works differently.</p>
+                  <p class="text-body opacity-40 mt-4">Click to advance</p>
+                </div>
+                <!-- Progress Dots -->
+                <div class="deck-dots">
+                  <button class="deck-dot deck-dot-active" data-dot="0"></button>
+                  <button class="deck-dot" data-dot="1"></button>
+                  <button class="deck-dot" data-dot="2"></button>
+                </div>
+              </div>
+
+              <!-- Right - Key Message -->
+              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.3s;">
+                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; min-height: 340px;">
+                  <div style="position: absolute; inset: 0;">
+                    <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%);"></div>
+                  </div>
+                  <figcaption style="position: relative; z-index: 10; padding: 1.5rem 2rem; height: 100%; display: flex; flex-direction: column; justify-content: center;">
+                    <p class="text-body" style="font-weight: bold; color: #ffd700; margin-bottom: 1rem;">eXp Realty Sponsorship is Different.</p>
+                    <p class="text-body" style="line-height: 1.6; margin-bottom: 1rem;">It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.</p>
+                    <p class="text-body" style="color: #ffd700; font-style: italic; font-size: clamp(18px, 2vw, 20px); margin-bottom: 1.5rem;">When you succeed, we succeed.</p>
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Media Logos Section (Why eXp Realty?) -->
+    <section class="media-logos-section scroll-reveal" id="media-logos-section">
+      <div class="text-center px-4 relative" style="z-index: 10;">
+        <h2 class="text-h2 h2-container">
+          <span class="h2-word">Why</span>
+          <span class="h2-word">eXp</span>
+          <span class="h2-word">Realty?</span>
+        </h2>
+        <p class="text-body mx-auto opacity-80 mb-8" style="max-width: 900px;">
+          The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
+        </p>
+      </div>
+      <div class="media-logos-container">
+        <div class="portal-edge-left"></div>
+        <div class="portal-edge-right"></div>
+        <div class="logo-track-container">
+          <div class="logo-track-shadow-left"></div>
+          <div class="logo-track-shadow-right"></div>
+          <div class="logo-track" id="logo-track">
+            ${mediaLogosHTML}
           </div>
         </div>
       </div>
     </section>
-  </div>
 
-  <!-- Spacer to maintain scroll height -->
-  <div class="hero-spacer" aria-hidden="true"></div>
+    <!-- Meet the Founders Section -->
+    <div class="glass-panel" style="margin-top: 32px;">
+      <div class="glass-panel-bg glass-panel-marigold"></div>
+      <div class="glass-panel-content">
+        <section style="padding: var(--section-padding-y) 1.5rem; position: relative;">
+          <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+            <!-- Header -->
+            <div class="scroll-reveal" style="text-align: center; margin-bottom: 3rem; transition: all 0.7s ease;">
+              <h2 class="text-h2 h2-container">
+                <span class="h2-word">Meet</span>
+                <span class="h2-word">SAA's</span>
+                <span class="h2-word">Founders</span>
+              </h2>
+            </div>
 
-  <!-- Gold Divider -->
-  <div class="section-divider" aria-hidden="true"></div>
-
-  <!-- VALUE STACK -->
-  <section id="value-stack" class="reveal-section">
-    <div class="section-container">
-      <div class="glass-panel glass-panel--gold">
-        <h2 class="section-title"><span class="h2-word">What</span> <span class="h2-word">You</span> <span class="h2-word">Get</span></h2>
-        <div class="value-grid">
-        <div class="value-card">
-          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div>
-          <h3 class="value-title">World-Class Training</h3>
-          <p class="value-desc">Access proven systems and daily coaching calls to accelerate your growth.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-          <h3 class="value-title">Elite Community</h3>
-          <p class="value-desc">Join a network of top-producing agents who lift each other up.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <h3 class="value-title">Revenue Share</h3>
-          <p class="value-desc">Build passive income through eXp's industry-leading compensation model.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
-          <h3 class="value-title">Tech & Tools</h3>
-          <p class="value-desc">Cutting-edge CRM, marketing tools, and AI-powered systems at your fingertips.</p>
-        </div>
-        <div class="value-card">
-          <div class="value-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <h3 class="value-title">Stock Awards</h3>
-          <p class="value-desc">Earn company stock and become an owner in a publicly traded brokerage.</p>
-        </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Gold Divider -->
-  <div class="section-divider" aria-hidden="true"></div>
-
-  <!-- SOCIAL PROOF -->
-  <section id="social-proof" class="reveal-section">
-    <div class="section-container">
-      <div class="glass-panel glass-panel--glow">
-        <h2 class="section-title"><span class="h2-word">Proven</span> <span class="h2-word">Results</span></h2>
-        <div class="stats-grid">
-        <div class="cyber-card">
-          <div class="cyber-card-plate">
-            <div class="cyber-card-content">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+            <!-- Two column layout - Doug left, Karrie right -->
+            <div class="founders-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <!-- Left column - Doug -->
+              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.3s;">
+                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
+                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto;">
+                    <div class="profile-cyber-frame-metal"></div>
+                    <div class="profile-cyber-frame-inner">
+                      <div style="position: relative; width: 100%; height: 100%;">
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public" alt="Doug Smart" style="width: 100%; height: 100%; object-fit: cover;" />
+                      </div>
+                    </div>
+                    <div class="profile-cyber-frame-ring"></div>
+                  </div>
+                  <h3 class="founder-name">Doug Smart</h3>
+                  <p class="founder-title">Co-Founder & Full-Stack Developer</p>
+                  <p class="founder-bio">Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.</p>
+                </div>
               </div>
-              <div class="stat-number">370+</div>
-              <div class="stat-label">Agents on Our Team</div>
-            </div>
-          </div>
-        </div>
-        <div class="cyber-card">
-          <div class="cyber-card-plate">
-            <div class="cyber-card-content">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+
+              <!-- Right column - Karrie -->
+              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.5s;">
+                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
+                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto;">
+                    <div class="profile-cyber-frame-metal"></div>
+                    <div class="profile-cyber-frame-inner">
+                      <div style="position: relative; width: 100%; height: 100%;">
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" alt="Karrie Hill, JD" style="width: 100%; height: 100%; object-fit: cover;" />
+                      </div>
+                    </div>
+                    <div class="profile-cyber-frame-ring"></div>
+                  </div>
+                  <h3 class="founder-name">Karrie Hill, JD</h3>
+                  <p class="founder-title">Co-Founder & eXp Certified Mentor</p>
+                  <p class="founder-bio">UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.</p>
+                </div>
               </div>
-              <div class="stat-number">98%</div>
-              <div class="stat-label">Retention Rate</div>
             </div>
           </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Built for Future Section -->
+    <section class="section" id="built-for-future" style="padding: var(--section-padding-y) 1.5rem; overflow: hidden; position: relative;">
+      <!-- GrayscaleDataStream Background -->
+      <div class="data-stream-container" id="data-stream"></div>
+
+      <div style="max-width: 1300px; margin: 0 auto; text-align: center; position: relative; z-index: 10;">
+        <div class="built-future-header" style="transition: all 0.7s ease;">
+          <h2 class="text-h2 h2-container">
+            <span class="h2-word">Built</span>
+            <span class="h2-word">for</span>
+            <span class="h2-word">Where</span>
+            <span class="h2-word">Real</span>
+            <span class="h2-word">Estate</span>
+            <span class="h2-word">Is</span>
+            <span class="h2-word">Going</span>
+          </h2>
         </div>
-        <div class="cyber-card">
-          <div class="cyber-card-plate">
-            <div class="cyber-card-content">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+        <p class="text-body built-future-subline" style="opacity: 0.7; margin-bottom: 3rem; transition: all 0.7s ease; transition-delay: 0.15s;">
+          The future of real estate is cloud-based, global, and technology-driven. SAA is already there.
+        </p>
+
+        <div style="position: relative; margin-bottom: 3rem;">
+          <!-- Horizontal line connecting circles (desktop only) -->
+          <div class="future-line-container" style="position: absolute; top: 60px; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.1);">
+            <div class="future-line" id="future-line" style="height: 100%; width: 0; background: linear-gradient(90deg, transparent, #ffd700, transparent);"></div>
+          </div>
+          <div class="future-points-row" style="display: flex; flex-direction: row; justify-content: space-between; gap: 1rem;">
+            <!-- Point 1: Cloud-first -->
+            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 0.9s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public" alt="Cloud-first brokerage model" style="width: 100%; height: 100%; object-fit: contain;" />
               </div>
-              <div class="stat-number">#1</div>
-              <div class="stat-label">Fastest Growing Team</div>
+              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.05s;">Cloud-first brokerage model</p>
             </div>
-          </div>
-        </div>
-        <div class="cyber-card">
-          <div class="cyber-card-plate">
-            <div class="cyber-card-content">
-              <div class="stat-icon">
-                <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <!-- Point 2: AI-powered -->
+            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.15s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public" alt="AI-powered tools and training" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.25) translate(10px, 18px);" />
               </div>
-              <div class="stat-number">$2B+</div>
-              <div class="stat-label">In Team Volume</div>
+              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.3s;">AI-powered tools and training</p>
+            </div>
+            <!-- Point 3: Mobile-first -->
+            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.4s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public" alt="Mobile-first workflows" style="width: 100%; height: 100%; object-fit: cover; transform: scale(0.95) translate(3px, 10px);" />
+              </div>
+              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.55s;">Mobile-first workflows</p>
+            </div>
+            <!-- Point 4: Sustainable income -->
+            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: #111; border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.65s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public" alt="Sustainable income paths beyond transactions" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35) translateX(5px);" />
+              </div>
+              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.8s;">Sustainable income paths beyond transactions</p>
             </div>
           </div>
         </div>
-        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Gold Divider -->
-  <div class="section-divider" aria-hidden="true"></div>
-
-  <!-- WHY EXP -->
-  <section id="why-exp" class="reveal-section">
-    <div class="section-container">
-      <div class="glass-panel glass-panel--light">
-        <h2 class="section-title"><span class="h2-word">Why</span> <span class="h2-word">eXp</span> <span class="h2-word">Realty?</span></h2>
-        <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
-          <div><div class="feature-title">Cloud-Based Brokerage</div><p class="feature-desc">Work from anywhere with no physical office overhead.</p></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg></div>
-          <div><div class="feature-title">80/20 Commission Split</div><p class="feature-desc">Industry-leading split with $16K cap, then 100%.</p></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg></div>
-          <div><div class="feature-title">Agent Attraction</div><p class="feature-desc">Earn revenue share by helping others join the team.</p></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
-          <div><div class="feature-title">eXp University</div><p class="feature-desc">80+ hours of live training every week, on demand.</p></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
-          <div><div class="feature-title">Healthcare Available</div><p class="feature-desc">Access to health insurance and retirement plans.</p></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
-          <div><div class="feature-title">Icon Agent Program</div><p class="feature-desc">Get your full cap back when you hit production goals.</p></div>
-        </div>
-        </div>
+    <!-- Watch and Decide Section -->
+    <div class="glass-panel">
+      <div class="glass-panel-bg">
+        <div class="glass-panel-texture"></div>
       </div>
-    </div>
-  </section>
+      <div class="glass-panel-content">
+        <section id="watch-and-decide" class="section py-16 md:py-24 px-4">
+          <div style="max-width: 1900px; margin: 0 auto;">
+            <div class="text-center mb-8 md:mb-12">
+              <h2 class="text-h2 h2-container">
+                <span class="h2-word">The</span>
+                <span class="h2-word">Only</span>
+                <span class="h2-word">Video</span>
+                <span class="h2-word">You</span>
+                <span class="h2-word">Need</span>
+              </h2>
+              <p class="text-body mt-4 max-w-2xl mx-auto opacity-80">Everything about eXp Realty, Smart Agent Alliance, and how the model works — explained in full.</p>
+            </div>
+            <div class="max-w-4xl mx-auto">
+              <!-- Video Player -->
+              <div class="video-player-container">
+                <div class="video-frame">
+                  <div class="video-wrapper" id="video-wrapper">
+                    <iframe
+                      id="video-iframe"
+                      src="https://customer-2twfsluc6inah5at.cloudflarestream.com/f8c3f1bd9c2db2409ed0e90f60fd4d5b/iframe?controls=false&poster=${encodeURIComponent(CLOUDFLARE_BASE + '/exp-realty-smart-agent-alliance-explained/desktop')}&letterboxColor=transparent"
+                      loading="lazy"
+                      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                      allowfullscreen
+                    ></iframe>
+                    <div class="video-overlay" id="video-overlay">
+                      <div class="overlay-play-btn" id="play-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      </div>
+                    </div>
+                    <div class="scrubber-container" id="scrubber-container">
+                      <div class="scrubber-watched" id="scrubber-watched"></div>
+                      <div class="scrubber-current" id="scrubber-current"></div>
+                      <div class="scrubber-thumb" id="scrubber-thumb"></div>
+                    </div>
+                  </div>
+                  <div class="video-controls">
+                    <button class="control-btn control-btn--play" id="btn-play" aria-label="Play">
+                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </button>
+                    <button class="control-btn" id="btn-rewind" aria-label="Rewind 15 seconds" title="Rewind 15s">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                      <span class="rewind-text">15</span>
+                    </button>
+                    <button class="control-btn" id="btn-restart" aria-label="Restart video" title="Restart">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>
+                    </button>
+                    <div class="time-display" id="time-display">0:00 / 0:00</div>
+                    <div class="volume-controls">
+                      <button class="control-btn" id="btn-mute" aria-label="Mute">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                      </button>
+                      <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volume-slider" aria-label="Volume" />
+                    </div>
+                  </div>
+                </div>
+                <div class="progress-area">
+                  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                  <p class="text-body" id="progress-message">Most questions are answered here, once you've watched 50%, the option to book a call becomes available.</p>
+                </div>
+              </div>
 
-  <!-- Gold Divider -->
-  <div class="section-divider" aria-hidden="true"></div>
-
-  <!-- FAQ -->
-  <section id="faq" class="reveal-section">
-    <div class="section-container">
-      <div class="glass-panel glass-panel--bordered">
-        <h2 class="section-title"><span class="h2-word">Frequently</span> <span class="h2-word">Asked</span> <span class="h2-word">Questions</span></h2>
-        <div class="faq-list">
-        <div class="faq-item">
-          <button class="faq-question">How much does it cost to join eXp Realty?<svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          <div class="faq-answer">There's a small monthly fee and a startup fee, but no franchise fees or desk fees. Most agents find the cost is significantly lower than traditional brokerages.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">Do I have to recruit to be successful?<svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          <div class="faq-answer">Absolutely not. You can focus 100% on selling real estate. Revenue share is an optional benefit for those who want to build additional income streams.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">What is the eXp World virtual campus?<svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          <div class="faq-answer">It's a virtual environment where agents can attend training, collaborate, and network. It's like having an office you can access from anywhere.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">How does revenue share work?<svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          <div class="faq-answer">When agents you've introduced to eXp close deals, you earn a portion of the company's revenue from their transactions. It's passive income that grows over time.</div>
-        </div>
-        <div class="faq-item">
-          <button class="faq-question">Can I keep my current team or assistants?<svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
-          <div class="faq-answer">Yes! eXp supports teams of all sizes. You can bring your existing team members and continue operating as you do now.</div>
-        </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Gold Divider -->
-  <div class="section-divider" aria-hidden="true"></div>
-
-  <!-- WEBINAR SECTION -->
-  <section id="webinar" class="reveal-section">
-    <div class="section-container">
-      <div class="glass-panel glass-panel--gold">
-        <h2 class="section-title"><span class="h2-word">See</span> <span class="h2-word">How</span> <span class="h2-word">It</span> <span class="h2-word">Works</span></h2>
-        <div class="video-container">
-        <div class="video-wrapper">
-          <iframe id="attraction-video"
-            src="https://customer-2twfsluc6inah5at.cloudflarestream.com/f8c3f1bd9c2db2409ed0e90f60fd4d5b/iframe?controls=false&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fexp-realty-smart-agent-alliance-explained%2Fdesktop&letterboxColor=transparent"
-            loading="lazy"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-            allowfullscreen></iframe>
-          <!-- Video Overlay - click to play/pause -->
-          <div class="video-overlay" id="video-overlay">
-            <div class="overlay-play-btn" id="overlay-play-btn">
-              <svg id="overlay-play-icon" viewBox="0 0 24 24">
-                <polygon points="5 3 19 12 5 21 5 3"/>
-              </svg>
-              <svg id="overlay-pause-icon" viewBox="0 0 24 24" style="display:none;">
-                <rect x="6" y="4" width="4" height="16"/>
-                <rect x="14" y="4" width="4" height="16"/>
-              </svg>
+              <!-- Action Buttons -->
+              <div id="join-the-alliance" class="flex flex-col items-center gap-4 mt-8" style="flex-direction: column;">
+                <div class="cta-button-wrapper">
+                  <div class="cta-light-bar cta-light-bar-top"></div>
+                  <button class="cta-button" id="btn-join-alliance">JOIN THE ALLIANCE</button>
+                  <div class="cta-light-bar cta-light-bar-bottom"></div>
+                </div>
+                <div id="book-call-wrapper" style="opacity: 0.4; filter: blur(1px) grayscale(0.8); pointer-events: none; transition: all 0.5s ease;">
+                  <div class="secondary-button-wrapper">
+                    <div class="secondary-light-bar secondary-light-bar-left"></div>
+                    <a href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7" target="_blank" rel="noopener noreferrer" class="secondary-button" id="btn-book-call">BOOK A CALL</a>
+                    <div class="secondary-light-bar secondary-light-bar-right"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Scrubber Bar - appears on hover -->
-          <div class="scrubber-container" id="scrubber-container">
-            <div class="scrubber-watched" id="scrubber-watched"></div>
-            <div class="scrubber-current" id="scrubber-current"></div>
-            <div class="scrubber-thumb" id="scrubber-thumb"></div>
-          </div>
-        </div>
-        <!-- Video Controls Bar -->
-        <div class="video-controls">
-          <!-- Play/Pause Button -->
-          <button class="control-btn control-btn--play" id="play-btn" aria-label="Play">
-            <svg id="play-icon" viewBox="0 0 24 24" fill="currentColor">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            <svg id="pause-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
-              <rect x="6" y="4" width="4" height="16"/>
-              <rect x="14" y="4" width="4" height="16"/>
-            </svg>
-          </button>
-
-          <!-- Rewind 15s Button -->
-          <button class="control-btn" id="rewind-btn" aria-label="Rewind 15 seconds" title="Rewind 15s">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 4v6h6"/>
-              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-            </svg>
-            <span class="rewind-text">15</span>
-          </button>
-
-          <!-- Restart Button -->
-          <button class="control-btn" id="restart-btn" aria-label="Restart video" title="Restart">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 2v6h6"/>
-              <path d="M21 12A9 9 0 0 0 6 5.3L3 8"/>
-              <path d="M21 22v-6h-6"/>
-              <path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/>
-            </svg>
-          </button>
-
-          <!-- Time Display -->
-          <div class="video-time" id="video-time">0:00 / 0:00</div>
-
-          <!-- Volume Controls -->
-          <div class="volume-controls">
-            <button class="control-btn" id="mute-btn" aria-label="Mute">
-              <svg id="volume-high-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-              </svg>
-              <svg id="volume-low-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-              </svg>
-              <svg id="volume-mute-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                <line x1="23" y1="9" x2="17" y2="15"/>
-                <line x1="17" y1="9" x2="23" y2="15"/>
-              </svg>
-            </button>
-            <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volume-slider" aria-label="Volume">
-          </div>
-        </div>
-      </div>
-      <div class="progress-area">
-        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <p class="progress-text" id="progress-text">Watch at least 50% to schedule your strategy call.</p>
-        <button class="book-btn" id="book-btn" onclick="openBookingModal()">Book Your Call</button>
-        <button class="reset-progress-btn" id="reset-progress-btn" onclick="resetVideoProgress()" style="display:none;margin-top:0.5rem;padding:0.25rem 0.5rem;font-size:0.7rem;background:#333;color:#999;border:1px solid #555;border-radius:4px;cursor:pointer;">Reset Progress (Testing)</button>
-        </div>
+        </section>
       </div>
     </div>
-  </section>
 
-  <!-- Gold Divider -->
-  <div class="section-divider" aria-hidden="true"></div>
+  </main>
 
-  <!-- FINAL CTA -->
-  <section id="final-cta" class="reveal-section">
-    <div class="glass-panel glass-panel--glow" style="max-width: 800px; margin: 0 auto;">
-      <h2 class="final-headline">Ready to Take the Next Step?</h2>
-      <p class="final-subtext">Join ${escapeHTML(firstName)} and hundreds of other agents who are building their dream careers at eXp Realty.</p>
-      <div class="cta-row" style="justify-content: center;">
-        <button class="btn-primary" onclick="openJoinModal()">Join My Team</button>
+  <!-- Join Modal -->
+  <div class="modal-container" id="join-modal">
+    <div class="modal-backdrop" id="join-modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <button class="modal-close-btn" id="join-modal-close" aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal">
+        <h3 class="join-modal-title">Join Smart Agent Alliance</h3>
+        <p class="join-modal-subtitle">Take the first step towards building your dream career at eXp Realty.</p>
+        <form id="join-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" class="form-input" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="lastName">Last Name *</label>
+              <input type="text" id="lastName" name="lastName" class="form-input" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="email">Email *</label>
+            <input type="email" id="email" name="email" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="country">Country *</label>
+            <select id="country" name="country" class="form-select" required>
+              <option value="">Select country</option>
+              <option value="US">United States</option>
+              <option value="CA">Canada</option>
+              <option value="UK">United Kingdom</option>
+              <option value="AU">Australia</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <button type="submit" class="form-submit" id="join-submit">Get Started</button>
+          <div class="form-message" id="join-message" style="display: none;"></div>
+        </form>
       </div>
-    </div>
-  </section>
-
-  <!-- JOIN MODAL -->
-  <div class="modal-overlay" id="join-modal" onwheel="event.stopPropagation()">
-    <div class="modal" onwheel="event.stopPropagation()">
-      <button class="modal-close" onclick="closeJoinModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      <h3 class="modal-title">Join Team ${escapeHTML(firstName)}</h3>
-      <p class="modal-subtitle">Take the first step towards building your dream career.</p>
-      <form id="join-form" onsubmit="submitJoinForm(event)">
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">First Name *</label><input type="text" id="join-fname" class="form-input" required></div>
-          <div class="form-group"><label class="form-label">Last Name *</label><input type="text" id="join-lname" class="form-input" required></div>
-        </div>
-        <div class="form-group"><label class="form-label">Email *</label><input type="email" id="join-email" class="form-input" required></div>
-        <div class="form-group"><label class="form-label">Country *</label><select id="join-country" class="form-select" required><option value="">Select country</option><option value="US">United States</option><option value="CA">Canada</option><option value="UK">United Kingdom</option><option value="AU">Australia</option><option value="other">Other</option></select></div>
-        <button type="submit" class="form-submit">Get Started</button>
-        <div id="join-msg" class="form-msg"></div>
-      </form>
     </div>
   </div>
 
-  <!-- BOOKING MODAL -->
-  <div class="modal-overlay" id="booking-modal" onwheel="event.stopPropagation()">
-    <div class="modal wide" onwheel="event.stopPropagation()">
-      <button class="modal-close" onclick="closeBookingModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      <h3 class="modal-title">Book Your Call</h3>
-      <p class="modal-subtitle">Let's discuss how eXp can work for you.</p>
-      <form id="booking-form" onsubmit="submitBookingForm(event)">
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">First Name *</label><input type="text" id="book-fname" class="form-input" required></div>
-          <div class="form-group"><label class="form-label">Last Name *</label><input type="text" id="book-lname" class="form-input" required></div>
+  <!-- Instructions Modal -->
+  <div class="modal-container" id="instructions-modal">
+    <div class="modal-backdrop" id="instructions-modal-backdrop"></div>
+    <div class="modal-wrapper">
+      <button class="modal-close-btn" id="instructions-modal-close" aria-label="Close modal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="modal instructions-modal">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
         </div>
-        <div class="form-group"><label class="form-label">Email *</label><input type="email" id="book-email" class="form-input" required></div>
-        <div class="form-group"><label class="form-label">Phone</label><input type="tel" id="book-phone" class="form-input"></div>
-        <div class="form-row">
-          <div class="form-group"><label class="form-label">Country *</label><select id="book-country" class="form-select" required onchange="updateStates()"><option value="">Select</option><option value="US">United States</option><option value="CA">Canada</option><option value="UK">United Kingdom</option><option value="AU">Australia</option><option value="other">Other</option></select></div>
-          <div class="form-group"><label class="form-label">State/Province *</label><select id="book-state" class="form-select" required><option value="">Select</option></select></div>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Experience Level *</label>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="radio" name="exp" value="0 Closings" required> 0 Closings</label>
-            <label class="checkbox-label"><input type="radio" name="exp" value="1-9 Closings"> 1-9 Closings</label>
-            <label class="checkbox-label"><input type="radio" name="exp" value="10+ Closings"> 10+ Closings</label>
-            <label class="checkbox-label"><input type="radio" name="exp" value="Team Leader"> Team Leader</label>
-            <label class="checkbox-label"><input type="radio" name="exp" value="Broker Owner"> Broker Owner</label>
+        <h3 class="instructions-title">Welcome, <span id="user-name-display">Agent</span>!</h3>
+        <p class="instructions-subtitle">Follow these steps to join Smart Agent Alliance at eXp Realty.</p>
+        <div class="instructions-list">
+          <div class="instruction-item">
+            <div class="instruction-number">1</div>
+            <div class="instruction-content">
+              <strong class="instruction-title">Start Your Application</strong>
+              <p class="instruction-text">Visit <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer">joinapp.exprealty.com</a> to begin your eXp Realty application.</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-number">2</div>
+            <div class="instruction-content">
+              <strong class="instruction-title">Search for Your Sponsor</strong>
+              <p class="instruction-text">Enter <strong>${escapeHTML(agentExpEmail)}</strong> and click Search. Select <strong>${escapeHTML(agentFullLegalName)}</strong> as your sponsor.</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-number">3</div>
+            <div class="instruction-content">
+              <strong class="instruction-title">Complete Your Application</strong>
+              <p class="instruction-text">Fill out the application form and submit. You'll receive a confirmation email from eXp.</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-number">4</div>
+            <div class="instruction-content">
+              <strong class="instruction-title">Activate Your Agent Portal</strong>
+              <p class="instruction-text">Once your license transfers, you'll receive an email to activate your Smart Agent Alliance portal with all your onboarding materials and resources.</p>
+            </div>
+          </div>
+          <div class="instruction-item">
+            <div class="instruction-number">5</div>
+            <div class="instruction-content">
+              <strong class="instruction-title">eXp Realty Support</strong>
+              <p class="instruction-text">For application issues, call <strong>833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com">expertcare@exprealty.com</a>.</p>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Career Plan * (select all that apply)</label>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Residential"> Residential</label>
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Commercial"> Commercial</label>
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Referral"> Referral</label>
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Luxury"> Luxury</label>
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Investing"> Investing</label>
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Part-Time"> Part-Time</label>
-            <label class="checkbox-label"><input type="checkbox" name="plan" value="Full-Time"> Full-Time</label>
-          </div>
-        </div>
-        <div class="form-group"><label class="checkbox-label"><input type="checkbox" name="terms" required> I agree to be contacted about joining eXp Realty.</label></div>
-        <button type="submit" class="form-submit">Book Your Call</button>
-        <div id="booking-msg" class="form-msg"></div>
-      </form>
+        <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer" class="instructions-cta">Join eXp with SAA</a>
+        <p class="instructions-footer">Questions? Email us at <a href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a></p>
+      </div>
     </div>
   </div>
 
-  <script src="https://embed.cloudflarestream.com/embed/sdk.latest.js"><\/script>
+  <script src="https://embed.cloudflarestream.com/embed/sdk.latest.js"></script>
   <script>
-    // Star background - matching StarBackgroundCanvas.tsx from main site
-    (function(){
-      const canvas = document.getElementById('star-canvas');
-      const ctx = canvas.getContext('2d');
-      let stars = [];
-      let lastTime = 0;
-      let initialHeight = 0;
-      let dimensions = { width: 0, height: 0 };
+    (function() {
+      // Constants
+      const STORAGE_KEY = 'agent_attraction_video';
+      const UNLOCK_THRESHOLD = 50;
+      const SPONSOR_NAME = ${JSON.stringify(displayName)};
 
-      function resize(forceRegenerate) {
-        const dpr = window.devicePixelRatio || 1;
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+      // Video Player State
+      let player = null;
+      let isPlaying = false;
+      let isDragging = false;
+      let duration = 0;
+      let maxWatchedTime = 0;
+      let progress = 0;
+      let thresholdReached = false;
 
-        // Capture initial height to prevent mobile address bar issues
-        if (initialHeight === 0) initialHeight = height;
-        const stableHeight = Math.max(height, initialHeight);
+      // DOM Elements
+      const videoIframe = document.getElementById('video-iframe');
+      const videoOverlay = document.getElementById('video-overlay');
+      const playBtn = document.getElementById('play-btn');
+      const btnPlay = document.getElementById('btn-play');
+      const btnRewind = document.getElementById('btn-rewind');
+      const btnRestart = document.getElementById('btn-restart');
+      const btnMute = document.getElementById('btn-mute');
+      const volumeSlider = document.getElementById('volume-slider');
+      const timeDisplay = document.getElementById('time-display');
+      const scrubberContainer = document.getElementById('scrubber-container');
+      const scrubberWatched = document.getElementById('scrubber-watched');
+      const scrubberCurrent = document.getElementById('scrubber-current');
+      const scrubberThumb = document.getElementById('scrubber-thumb');
+      const progressFill = document.getElementById('progress-fill');
+      const progressMessage = document.getElementById('progress-message');
+      const bookCallWrapper = document.getElementById('book-call-wrapper');
+      const videoWrapper = document.getElementById('video-wrapper');
 
-        dimensions = { width, height: stableHeight };
-        canvas.width = width * dpr;
-        canvas.height = stableHeight * dpr;
-        canvas.style.width = width + 'px';
-        canvas.style.height = stableHeight + 'px';
-        ctx.scale(dpr, dpr);
+      // Modal Elements
+      const joinModal = document.getElementById('join-modal');
+      const instructionsModal = document.getElementById('instructions-modal');
+      const joinForm = document.getElementById('join-form');
+      const joinSubmit = document.getElementById('join-submit');
+      const joinMessage = document.getElementById('join-message');
+      const userNameDisplay = document.getElementById('user-name-display');
 
-        if (forceRegenerate || stars.length === 0) {
-          initStars(width, stableHeight);
+      // Initialize
+      function init() {
+        // Load saved progress
+        const savedProgress = parseFloat(localStorage.getItem(STORAGE_KEY + '_progress') || '0');
+        const savedMaxTime = parseFloat(localStorage.getItem(STORAGE_KEY + '_maxTime') || '0');
+        const savedPosition = parseFloat(localStorage.getItem(STORAGE_KEY + '_position') || '0');
+
+        progress = savedProgress;
+        maxWatchedTime = savedMaxTime;
+
+        if (savedProgress >= UNLOCK_THRESHOLD) {
+          thresholdReached = true;
+          unlockBookCall();
+          updateProgressUI();
         }
+
+        // Initialize Cloudflare Stream player
+        if (window.Stream && videoIframe) {
+          initPlayer();
+        }
+
+        // Set up event listeners
+        setupEventListeners();
+        setupScrollEffects();
+        setupScrollReveal();
+        setupLogoAnimation();
+        setupRevealMaskAnimation();
+        setupWhatYouGetTabs();
+        setupDeckStack();
       }
 
-      function initStars(width, height) {
-        stars = [];
-        const isMobile = width < 768;
-        const count = isMobile ? 115 : 275;
-        const speeds = [0.08, 0.15, 0.25]; // 3 parallax layers
+      function initPlayer() {
+        player = window.Stream(videoIframe);
 
-        for (let i = 0; i < count; i++) {
-          const layer = i % 3;
-          stars.push({
-            x: Math.random() * width,
-            y: Math.random() * height,
-            size: Math.random() * (layer * 0.4 + 0.6) + 0.3, // 0.3-1.5px
-            speed: speeds[layer],
-            opacity: Math.random() * 0.4 + 0.4 // 0.4-0.8
-          });
-        }
-      }
-
-      function draw(timestamp) {
-        const deltaTime = lastTime ? (timestamp - lastTime) / 1000 : 0;
-        lastTime = timestamp;
-        const { width, height } = dimensions;
-
-        ctx.clearRect(0, 0, width, height);
-
-        // Update positions and draw
-        if (deltaTime > 0 && deltaTime < 0.1) {
-          stars.forEach(star => {
-            star.y -= star.speed * deltaTime * 60; // Drift upward
-            if (star.y < -star.size) {
-              star.y = height + star.size;
-              star.x = Math.random() * width;
-            }
-          });
-        }
-
-        stars.forEach(star => {
-          ctx.beginPath();
-          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,255,255,' + star.opacity + ')';
-          ctx.fill();
+        player.addEventListener('play', () => {
+          isPlaying = true;
+          updatePlayButton();
+          videoOverlay.classList.add('is-playing');
+          playBtn.classList.add('is-playing');
         });
 
-        requestAnimationFrame(draw);
+        player.addEventListener('pause', () => {
+          isPlaying = false;
+          updatePlayButton();
+          videoOverlay.classList.remove('is-playing');
+          playBtn.classList.remove('is-playing');
+        });
+
+        player.addEventListener('ended', () => {
+          isPlaying = false;
+          updatePlayButton();
+          videoOverlay.classList.remove('is-playing');
+          playBtn.classList.remove('is-playing');
+        });
+
+        player.addEventListener('loadedmetadata', () => {
+          duration = player.duration || 0;
+          const savedPosition = parseFloat(localStorage.getItem(STORAGE_KEY + '_position') || '0');
+          if (savedPosition > 0 && duration > 0) {
+            player.currentTime = Math.min(savedPosition, duration - 1);
+          }
+        });
+
+        player.addEventListener('volumechange', () => {
+          volumeSlider.value = player.muted ? 0 : player.volume;
+          updateMuteButton();
+        });
+
+        player.addEventListener('timeupdate', () => {
+          const time = player.currentTime || 0;
+          duration = player.duration || 0;
+
+          // Update UI
+          timeDisplay.textContent = formatTime(time) + ' / ' + formatTime(duration);
+
+          // Save position
+          localStorage.setItem(STORAGE_KEY + '_position', time.toString());
+
+          // Update scrubber
+          if (!isDragging && duration > 0) {
+            const pct = (time / duration) * 100;
+            scrubberCurrent.style.width = pct + '%';
+            scrubberThumb.style.left = pct + '%';
+          }
+
+          // Track progress
+          if (duration > 0 && time > maxWatchedTime) {
+            maxWatchedTime = time;
+            localStorage.setItem(STORAGE_KEY + '_maxTime', maxWatchedTime.toString());
+            scrubberWatched.style.width = (maxWatchedTime / duration) * 100 + '%';
+
+            const newProgress = (maxWatchedTime / duration) * 100;
+            if (newProgress > progress) {
+              progress = newProgress;
+              localStorage.setItem(STORAGE_KEY + '_progress', progress.toString());
+              updateProgressUI();
+
+              if (progress >= UNLOCK_THRESHOLD && !thresholdReached) {
+                thresholdReached = true;
+                unlockBookCall();
+              }
+            }
+          }
+        });
       }
 
-      window.addEventListener('resize', function() { resize(false); });
-      resize(true);
-      requestAnimationFrame(draw);
-    })();
+      function setupEventListeners() {
+        // Video controls
+        videoOverlay.addEventListener('click', togglePlayPause);
+        btnPlay.addEventListener('click', togglePlayPause);
+        btnRewind.addEventListener('click', () => { if (player) player.currentTime = Math.max(0, player.currentTime - 15); });
+        btnRestart.addEventListener('click', () => { if (player) player.currentTime = 0; });
+        btnMute.addEventListener('click', () => { if (player) { player.muted = !player.muted; updateMuteButton(); } });
+        volumeSlider.addEventListener('input', (e) => { if (player) { player.volume = e.target.value; player.muted = e.target.value == 0; } });
 
-    // RevealMaskEffect - Golden glow animation (matching RevealMaskEffect.tsx)
-    (function() {
-      const IDLE_SPEED = 0.000075;
-      const SCROLL_BOOST_MAX = 0.0006;
-      const SCROLL_BOOST_MULTIPLIER = 0.000024;
-      const SCROLL_DECAY = 0.92;
-      const INITIAL_MASK_SIZE = 72;
-      const INITIAL_PROGRESS = 0.45;
+        // Scrubber
+        videoWrapper.addEventListener('mouseenter', () => scrubberContainer.classList.add('visible'));
+        videoWrapper.addEventListener('mouseleave', () => { if (!isDragging) scrubberContainer.classList.remove('visible'); });
 
-      let time = 0;
-      let lastTimestamp = 0;
-      let lastScrollY = window.scrollY;
-      let scrollBoost = 0;
+        scrubberContainer.addEventListener('mousedown', (e) => {
+          isDragging = true;
+          seekToPosition(e);
+        });
 
-      const effectContainer = document.getElementById('reveal-mask-effect');
-      const glowEl = document.getElementById('reveal-glow');
-      const outerEl = document.getElementById('reveal-border-outer');
-      const innerEl = document.getElementById('reveal-border-inner');
+        document.addEventListener('mousemove', (e) => {
+          if (isDragging) seekToPosition(e);
+        });
 
-      // Mark as initialized after first frame to fade in smoothly
-      let hasInitialized = false;
+        document.addEventListener('mouseup', () => {
+          isDragging = false;
+        });
 
-      function handleScroll() {
-        const currentScrollY = window.scrollY;
-        const scrollDelta = Math.abs(currentScrollY - lastScrollY);
-        lastScrollY = currentScrollY;
-        if (scrollDelta > 0) {
-          const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
-          scrollBoost = Math.max(scrollBoost, boost);
+        // Modals
+        document.getElementById('btn-join-alliance').addEventListener('click', () => openModal('join'));
+        document.getElementById('join-modal-close').addEventListener('click', () => closeModal('join'));
+        document.getElementById('join-modal-backdrop').addEventListener('click', () => closeModal('join'));
+        document.getElementById('instructions-modal-close').addEventListener('click', () => closeModal('instructions'));
+        document.getElementById('instructions-modal-backdrop').addEventListener('click', () => closeModal('instructions'));
+
+        // Form submission
+        joinForm.addEventListener('submit', handleFormSubmit);
+
+        // Escape key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            if (joinModal.classList.contains('open')) closeModal('join');
+            if (instructionsModal.classList.contains('open')) closeModal('instructions');
+          }
+        });
+      }
+
+      function togglePlayPause() {
+        if (!player) return;
+        if (isPlaying) player.pause();
+        else player.play();
+      }
+
+      function updatePlayButton() {
+        const svg = isPlaying
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
+        btnPlay.innerHTML = svg;
+        playBtn.innerHTML = svg;
+      }
+
+      function updateMuteButton() {
+        const vol = player ? (player.muted ? 0 : player.volume) : 1;
+        let svg;
+        if (vol === 0) {
+          svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>';
+        } else if (vol < 0.5) {
+          svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+        } else {
+          svg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>';
+        }
+        btnMute.innerHTML = svg;
+      }
+
+      function seekToPosition(e) {
+        if (!player || duration <= 0) return;
+        const rect = scrubberContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const pct = Math.max(0, Math.min(1, x / rect.width));
+        const requestedTime = pct * duration;
+        const newTime = Math.min(requestedTime, maxWatchedTime);
+        player.currentTime = newTime;
+        scrubberCurrent.style.width = (newTime / duration) * 100 + '%';
+        scrubberThumb.style.left = (newTime / duration) * 100 + '%';
+      }
+
+      function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return '0:00';
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return m + ':' + String(s).padStart(2, '0');
+      }
+
+      function updateProgressUI() {
+        const fillPct = thresholdReached ? 100 : Math.min((progress / UNLOCK_THRESHOLD) * 100, 100);
+        progressFill.style.width = fillPct + '%';
+        progressMessage.textContent = progress >= UNLOCK_THRESHOLD
+          ? "You're all set! Book a call if you'd like to talk before joining."
+          : "Most questions are answered here, once you've watched 50%, the option to book a call becomes available.";
+      }
+
+      function unlockBookCall() {
+        bookCallWrapper.style.opacity = '1';
+        bookCallWrapper.style.filter = 'none';
+        bookCallWrapper.style.pointerEvents = 'auto';
+      }
+
+      // Modal functions
+      function openModal(type) {
+        const modal = type === 'join' ? joinModal : instructionsModal;
+        modal.classList.add('open');
+        document.body.classList.add('modal-open');
+        document.documentElement.classList.add('modal-open');
+      }
+
+      function closeModal(type) {
+        const modal = type === 'join' ? joinModal : instructionsModal;
+        modal.classList.remove('open');
+        document.body.classList.remove('modal-open');
+        document.documentElement.classList.remove('modal-open');
+      }
+
+      // Form submission
+      async function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const formData = {
+          firstName: document.getElementById('firstName').value,
+          lastName: document.getElementById('lastName').value,
+          email: document.getElementById('email').value,
+          country: document.getElementById('country').value,
+          sponsorName: SPONSOR_NAME
+        };
+
+        joinSubmit.disabled = true;
+        joinSubmit.textContent = 'Submitting...';
+        joinMessage.style.display = 'none';
+
+        try {
+          const response = await fetch('/api/join-team', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // Save to localStorage
+            localStorage.setItem('saa_join_submitted', JSON.stringify(formData));
+
+            // Show success
+            joinMessage.className = 'form-message success';
+            joinMessage.textContent = 'Thank you! We will be in touch soon.';
+            joinMessage.style.display = 'block';
+
+            // Close join modal and open instructions
+            setTimeout(() => {
+              closeModal('join');
+              userNameDisplay.textContent = formData.firstName;
+              setTimeout(() => openModal('instructions'), 300);
+
+              // Reset form
+              joinForm.reset();
+              joinMessage.style.display = 'none';
+            }, 1500);
+          } else {
+            joinMessage.className = 'form-message error';
+            joinMessage.textContent = result.error || 'Something went wrong. Please try again.';
+            joinMessage.style.display = 'block';
+          }
+        } catch (err) {
+          joinMessage.className = 'form-message error';
+          joinMessage.textContent = 'Network error. Please check your connection.';
+          joinMessage.style.display = 'block';
+        } finally {
+          joinSubmit.disabled = false;
+          joinSubmit.textContent = 'Get Started';
         }
       }
 
-      function animate(timestamp) {
-        const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
-        lastTimestamp = timestamp;
+      // Hero scroll effects
+      function setupScrollEffects() {
+        const heroContentWrapper = document.getElementById('hero-content-wrapper');
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        const heroEffectLayers = document.querySelectorAll('.hero-effect-layer');
+        const agentCounter = document.getElementById('agent-counter-desktop');
+        let lockedHeight = window.innerHeight;
 
-        const currentSpeed = IDLE_SPEED + scrollBoost;
-        time += currentSpeed * deltaTime;
-        scrollBoost *= SCROLL_DECAY;
+        function handleScroll() {
+          const scrollY = window.scrollY;
+          const viewportHeight = lockedHeight;
+          const scrollProgress = Math.min(scrollY / viewportHeight, 1);
 
-        // Sine waves for organic motion
-        const wave1 = Math.sin(time * Math.PI * 2);
-        const wave2 = Math.sin(time * Math.PI * 1.3 + 0.5);
-        const wave3 = Math.cos(time * Math.PI * 0.7);
-        const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
-        const progress = time === 0 ? INITIAL_PROGRESS : (0.45 + combinedWave * 0.35);
+          // Hero content fade/scale
+          const scale = 1 - scrollProgress * 0.4;
+          const blur = scrollProgress * 8;
+          const brightness = 1 - scrollProgress;
+          const opacity = 1 - scrollProgress;
+          const translateY = -scrollProgress * 50;
 
-        const maskSize = time === 0 ? INITIAL_MASK_SIZE : (90 - progress * 40);
-        const rotation = time * 90;
+          if (heroContentWrapper) {
+            heroContentWrapper.style.transformOrigin = 'center center';
+            heroContentWrapper.style.transform = 'scale(' + scale + ') translateY(' + translateY + 'px)';
+            heroContentWrapper.style.filter = 'blur(' + blur + 'px) brightness(' + brightness + ')';
+            heroContentWrapper.style.opacity = opacity;
+          }
 
-        // Update glow - use dynamic center position if available
-        if (glowEl) {
-          glowEl.style.background = 'radial-gradient(ellipse ' + maskSize + '% ' + (maskSize * 0.7) + '% at 50% 50%, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.12) 35%, rgba(255,150,0,0.06) 55%, transparent 80%)';
+          // Effect layers
+          heroEffectLayers.forEach(el => {
+            el.style.opacity = opacity;
+            el.style.visibility = scrollProgress >= 1 ? 'hidden' : 'visible';
+          });
+
+          // Agent counter
+          if (agentCounter) {
+            agentCounter.style.opacity = opacity;
+            agentCounter.style.filter = 'blur(' + blur + 'px) brightness(' + brightness + ')';
+          }
+
+          // Scroll indicator
+          if (scrollIndicator) {
+            const fadeStart = 20;
+            const fadeEnd = 100;
+            let indicatorOpacity = 1;
+            let indicatorScale = 1;
+
+            if (scrollY <= fadeStart) {
+              indicatorOpacity = 1;
+              indicatorScale = 1;
+            } else if (scrollY >= fadeEnd) {
+              indicatorOpacity = 0;
+              indicatorScale = 0.5;
+            } else {
+              const progress = (scrollY - fadeStart) / (fadeEnd - fadeStart);
+              indicatorOpacity = 1 - progress;
+              indicatorScale = 1 - progress * 0.5;
+            }
+
+            scrollIndicator.style.opacity = indicatorOpacity;
+            scrollIndicator.style.transform = 'scale(' + indicatorScale + ')';
+          }
         }
 
-        // Update outer border
-        if (outerEl) {
-          outerEl.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg)';
-          outerEl.style.borderRadius = (20 + progress * 30) + '%';
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+      }
+
+      // Scroll reveal
+      function setupScrollReveal() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+      }
+
+      // Logo animation
+      function setupLogoAnimation() {
+        const track = document.getElementById('logo-track');
+        if (!track) return;
+
+        let position = 0;
+        let velocity = 0.5;
+        let lastScrollY = window.scrollY;
+
+        function animate() {
+          const singleSetWidth = track.scrollWidth / 2;
+          if (singleSetWidth > 0) {
+            position += velocity;
+            if (velocity > 0.5) {
+              velocity *= 0.98;
+              if (velocity < 0.5) velocity = 0.5;
+            }
+            if (position >= singleSetWidth) position -= singleSetWidth;
+            track.style.transform = 'translateX(-' + position + 'px)';
+          }
+          requestAnimationFrame(animate);
         }
 
-        // Update inner border
-        if (innerEl) {
-          innerEl.style.transform = 'translate(-50%, -50%) rotate(' + (-rotation * 0.5) + 'deg)';
-          innerEl.style.borderRadius = Math.max(20, 50 - progress * 30) + '%';
+        function handleScroll() {
+          const currentScrollY = window.scrollY;
+          const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+          lastScrollY = currentScrollY;
+          const boost = Math.min(scrollDelta * 0.3, 8);
+          if (boost > 0.5) velocity = Math.max(velocity, boost);
         }
 
-        // Fade in after first frame renders correctly
-        if (!hasInitialized && effectContainer) {
-          hasInitialized = true;
-          effectContainer.classList.add('initialized');
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        requestAnimationFrame(animate);
+      }
+
+      // Reveal Mask Animation (Golden glow with rotating borders)
+      function setupRevealMaskAnimation() {
+        const revealGlow = document.querySelector('.reveal-glow');
+        const ringOuter = document.querySelector('.reveal-ring-outer');
+        const ringInner = document.querySelector('.reveal-ring-inner');
+
+        if (!revealGlow || !ringOuter || !ringInner) return;
+
+        // Animation state
+        let time = 0;
+        let lastTimestamp = 0;
+        let lastScrollY = window.scrollY;
+        let scrollBoost = 0;
+
+        // Speed settings (matching RevealMaskEffect.tsx)
+        const IDLE_SPEED = 0.000075;
+        const SCROLL_BOOST_MAX = 0.0006;
+        const SCROLL_BOOST_MULTIPLIER = 0.000024;
+        const SCROLL_DECAY = 0.92;
+
+        function handleScroll() {
+          const currentScrollY = window.scrollY;
+          const scrollDelta = Math.abs(currentScrollY - lastScrollY);
+          lastScrollY = currentScrollY;
+
+          if (scrollDelta > 0) {
+            const boost = Math.min(scrollDelta * SCROLL_BOOST_MULTIPLIER, SCROLL_BOOST_MAX);
+            scrollBoost = Math.max(scrollBoost, boost);
+          }
+        }
+
+        function animate(timestamp) {
+          const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+          lastTimestamp = timestamp;
+
+          // Calculate speed with scroll boost
+          const currentSpeed = IDLE_SPEED + scrollBoost;
+          time += currentSpeed * deltaTime;
+          scrollBoost *= SCROLL_DECAY;
+
+          // Sine waves for organic pulsing (matching RevealMaskEffect.tsx)
+          const wave1 = Math.sin(time * Math.PI * 2);
+          const wave2 = Math.sin(time * Math.PI * 1.3 + 0.5);
+          const wave3 = Math.cos(time * Math.PI * 0.7);
+
+          // Combined wave for progress
+          const combinedWave = (wave1 * 0.5 + wave2 * 0.3 + wave3 * 0.2);
+          const progress = 0.45 + combinedWave * 0.35;
+
+          // Animation values (slightly smaller for single person hero image - 90% of original)
+          const maskSize = 81 - progress * 36;
+          const rotation = time * 90;
+
+          // Update glow gradient
+          revealGlow.style.background = 'radial-gradient(ellipse ' + maskSize + '% ' + (maskSize * 0.7) + '% at 50% 42%, rgba(255,215,0,0.2) 0%, rgba(255,180,0,0.12) 35%, rgba(255,150,0,0.06) 55%, transparent 80%)';
+
+          // Update outer ring (rotates clockwise, morphs border-radius)
+          const outerRadius = 20 + progress * 30;
+          ringOuter.style.transform = 'translate(-50%, -50%) rotate(' + rotation + 'deg)';
+          ringOuter.style.borderRadius = outerRadius + '%';
+
+          // Update inner ring (rotates counter-clockwise at half speed, morphs inversely)
+          const innerRadius = Math.max(20, 50 - progress * 30);
+          ringInner.style.transform = 'translate(-50%, -50%) rotate(' + (-rotation * 0.5) + 'deg)';
+          ringInner.style.borderRadius = innerRadius + '%';
+
+          requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        requestAnimationFrame(animate);
+      }
+
+      // What You Get Tabbed Interface
+      function setupWhatYouGetTabs() {
+        const tabs = document.querySelectorAll('.wyg-tab');
+        const bgs = document.querySelectorAll('.wyg-bg');
+        const contents = document.querySelectorAll('.wyg-content');
+        const dots = document.querySelectorAll('.wyg-dot');
+
+        if (!tabs.length) return;
+
+        let currentTab = 0;
+        let autoAdvanceTimer = null;
+        let userInteracted = false;
+        const autoAdvanceTimes = [6000, 5000, 4000, 5000, 4000]; // Variable timing per tab
+
+        function setActiveTab(index) {
+          currentTab = index;
+
+          // Update tabs
+          tabs.forEach((tab, i) => {
+            if (i === index) {
+              tab.classList.add('wyg-tab-active');
+            } else {
+              tab.classList.remove('wyg-tab-active');
+            }
+          });
+
+          // Update backgrounds
+          bgs.forEach((bg, i) => {
+            if (i === index) {
+              bg.classList.add('wyg-bg-active');
+            } else {
+              bg.classList.remove('wyg-bg-active');
+            }
+          });
+
+          // Update content
+          contents.forEach((content, i) => {
+            if (i === index) {
+              content.classList.add('wyg-content-active');
+            } else {
+              content.classList.remove('wyg-content-active');
+            }
+          });
+
+          // Update dots
+          dots.forEach((dot, i) => {
+            if (i === index) {
+              dot.classList.add('wyg-dot-active');
+            } else {
+              dot.classList.remove('wyg-dot-active');
+            }
+          });
+
+          // Restart auto-advance if user hasn't interacted
+          if (!userInteracted) {
+            startAutoAdvance();
+          }
+        }
+
+        function startAutoAdvance() {
+          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+          if (userInteracted) return;
+          autoAdvanceTimer = setTimeout(function() {
+            setActiveTab((currentTab + 1) % tabs.length);
+          }, autoAdvanceTimes[currentTab]);
+        }
+
+        // Tab click handlers
+        tabs.forEach(function(tab) {
+          tab.addEventListener('click', function() {
+            userInteracted = true;
+            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+            const index = parseInt(tab.getAttribute('data-tab'));
+            setActiveTab(index);
+          });
+        });
+
+        // Dot click handlers
+        dots.forEach(function(dot) {
+          dot.addEventListener('click', function() {
+            userInteracted = true;
+            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
+            const index = parseInt(dot.getAttribute('data-dot'));
+            setActiveTab(index);
+          });
+        });
+
+        // Start auto-advance when section is visible
+        const section = document.getElementById('what-you-get-section');
+        if (section) {
+          const observer = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting && !userInteracted) {
+              startAutoAdvance();
+            }
+          }, { threshold: 0.3 });
+          observer.observe(section);
+        }
+      }
+
+      // Deck Stack (WhyOnlyAtExp) Animation
+      function setupDeckStack() {
+        const cards = document.querySelectorAll('.deck-card');
+        const dots = document.querySelectorAll('.deck-dot');
+
+        if (!cards.length) return;
+
+        let currentCard = 0;
+        let autoAdvanceTimer = null;
+        let userInteracted = false;
+
+        function setActiveCard(index) {
+          currentCard = index;
+
+          cards.forEach(function(card, i) {
+            const isActive = i === index;
+            const isPast = i < index;
+
+            let translateY = 0;
+            let translateX = 0;
+            let rotation = 0;
+            let scale = 1;
+            let opacity = 1;
+            let zIndex = 10;
+
+            if (isActive) {
+              translateY = 0;
+              rotation = 0;
+              scale = 1;
+              opacity = 1;
+              zIndex = 10;
+            } else if (isPast) {
+              translateY = (index - i) * -15;
+              translateX = (index - i) * -20;
+              rotation = (index - i) * -5;
+              scale = 1 - (index - i) * 0.05;
+              opacity = 0.3;
+              zIndex = 10 - (index - i);
+            } else {
+              translateY = (i - index) * 6;
+              rotation = 0;
+              scale = 1 - (i - index) * 0.02;
+              opacity = 1 - (i - index) * 0.2;
+              zIndex = 10 - (i - index);
+            }
+
+            card.style.transform = 'translateY(' + translateY + 'px) translateX(' + translateX + 'px) rotate(' + rotation + 'deg) scale(' + scale + ')';
+            card.style.opacity = opacity;
+            card.style.zIndex = zIndex;
+
+            if (isActive) {
+              card.classList.add('deck-card-active');
+            } else {
+              card.classList.remove('deck-card-active');
+            }
+          });
+
+          // Update dots
+          dots.forEach(function(dot, i) {
+            if (i === index) {
+              dot.classList.add('deck-dot-active');
+            } else {
+              dot.classList.remove('deck-dot-active');
+            }
+          });
+
+          // Restart auto-advance if user hasn't interacted
+          if (!userInteracted) {
+            startAutoAdvance();
+          }
+        }
+
+        function startAutoAdvance() {
+          if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
+          if (userInteracted) return;
+          autoAdvanceTimer = setInterval(function() {
+            setActiveCard((currentCard + 1) % cards.length);
+          }, 5000);
+        }
+
+        // Card click handlers
+        cards.forEach(function(card) {
+          card.addEventListener('click', function() {
+            userInteracted = true;
+            if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
+            setActiveCard((currentCard + 1) % cards.length);
+          });
+        });
+
+        // Dot click handlers
+        dots.forEach(function(dot) {
+          dot.addEventListener('click', function(e) {
+            e.stopPropagation();
+            userInteracted = true;
+            if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
+            const index = parseInt(dot.getAttribute('data-dot'));
+            setActiveCard(index);
+          });
+        });
+
+        // Initialize card positions
+        setActiveCard(0);
+
+        // Start auto-advance when section is visible
+        const section = document.getElementById('why-exp-section');
+        if (section) {
+          const observer = new IntersectionObserver(function(entries) {
+            if (entries[0].isIntersecting && !userInteracted) {
+              startAutoAdvance();
+            }
+          }, { threshold: 0.15 });
+          observer.observe(section);
+        }
+      }
+
+      // Check for previously submitted user
+      function checkPreviousSubmission() {
+        try {
+          const stored = localStorage.getItem('saa_join_submitted');
+          if (stored) {
+            const data = JSON.parse(stored);
+            // User already submitted - clicking join will show instructions directly
+            document.getElementById('btn-join-alliance').addEventListener('click', function(e) {
+              e.stopPropagation();
+              userNameDisplay.textContent = data.firstName;
+              openModal('instructions');
+            }, { once: true });
+          }
+        } catch (e) {}
+      }
+
+      // FAQ Toggle Function
+      function toggleFaq(btn) {
+        const faqItem = btn.closest('.faq-item');
+        if (!faqItem) return;
+
+        // Close other open items
+        document.querySelectorAll('.faq-item.active').forEach(function(item) {
+          if (item !== faqItem) {
+            item.classList.remove('active');
+          }
+        });
+
+        // Toggle current item
+        faqItem.classList.toggle('active');
+      }
+
+      // Make toggleFaq available globally
+      window.toggleFaq = toggleFaq;
+
+      // Wait for DOM and Stream SDK
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          init();
+          checkPreviousSubmission();
+          initStarField();
+          initDataStream();
+          initBuiltForFutureAnimations();
+        });
+      } else {
+        init();
+        checkPreviousSubmission();
+        initStarField();
+        initDataStream();
+        initBuiltForFutureAnimations();
+      }
+
+      // Star Field Animation - Canvas-based, matches linktree template exactly
+      // GrayscaleDataStream Animation for BuiltForFuture section
+      function initDataStream() {
+        const container = document.getElementById('data-stream');
+        if (!container) return;
+
+        const isMobile = window.innerWidth < 768;
+        const columnCount = isMobile ? 8 : 20;
+        const columnWidth = 100 / columnCount;
+
+        // Create columns
+        const columnConfigs = [];
+        for (let i = 0; i < columnCount; i++) {
+          columnConfigs.push({
+            x: i * columnWidth,
+            speed: 0.8 + (i % 4) * 0.4,
+            offset: (i * 17) % 100,
+          });
+        }
+
+        let time = 0;
+        const BASE_SPEED = 0.00028;
+        let lastTimestamp = 0;
+        let scrollSpeed = 1;
+        let lastScrollY = window.scrollY;
+
+        // Handle scroll speed boost
+        window.addEventListener('scroll', function() {
+          const currentY = window.scrollY;
+          const scrollDelta = Math.abs(currentY - lastScrollY);
+          lastScrollY = currentY;
+          scrollSpeed = 1 + Math.min(scrollDelta * 0.05, 3);
+        }, { passive: true });
+
+        // Create column elements
+        columnConfigs.forEach((col, i) => {
+          const colEl = document.createElement('div');
+          colEl.className = 'data-stream-column';
+          colEl.style.left = col.x + '%';
+          colEl.style.width = columnWidth + '%';
+          colEl.dataset.index = i;
+          colEl.dataset.speed = col.speed;
+          colEl.dataset.offset = col.offset;
+
+          // Create char elements
+          const numChars = 22;
+          for (let j = 0; j < numChars; j++) {
+            const charEl = document.createElement('div');
+            charEl.className = 'data-stream-char';
+            charEl.dataset.charIndex = j;
+            colEl.appendChild(charEl);
+          }
+          container.appendChild(colEl);
+        });
+
+        function getChar(colIndex, charIndex, time) {
+          const flipRate = 0.6 + (colIndex % 3) * 0.3;
+          const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
+          return charSeed % 2 === 0 ? '0' : '1';
+        }
+
+        function animate(timestamp) {
+          const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+          lastTimestamp = timestamp;
+          time += BASE_SPEED * deltaTime * scrollSpeed;
+          scrollSpeed = Math.max(1, scrollSpeed * 0.95);
+
+          const columns = container.querySelectorAll('.data-stream-column');
+          columns.forEach((colEl, i) => {
+            const speed = parseFloat(colEl.dataset.speed);
+            const offset = parseFloat(colEl.dataset.offset);
+            const columnOffset = (time * speed * 60 + offset) % 110;
+            const numChars = 22;
+            const headPosition = (columnOffset / 5) % numChars;
+
+            const chars = colEl.querySelectorAll('.data-stream-char');
+            chars.forEach((charEl, j) => {
+              const baseY = j * 5;
+              const charY = (baseY + columnOffset) % 110 - 10;
+              const distanceFromHead = (j - headPosition + numChars) % numChars;
+              const isHead = distanceFromHead === 0;
+              const trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
+              const edgeFade = charY < 12 ? Math.max(0, charY / 12) : charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
+
+              charEl.style.top = charY + '%';
+              charEl.style.color = isHead
+                ? 'rgba(180,180,180,' + (0.4 * edgeFade) + ')'
+                : 'rgba(120,120,120,' + (trailBrightness * 0.25 * edgeFade) + ')';
+              charEl.style.textShadow = isHead
+                ? '0 0 6px rgba(150,150,150,' + (0.3 * edgeFade) + ')'
+                : '0 0 2px rgba(100,100,100,' + (0.1 * edgeFade) + ')';
+              charEl.style.opacity = edgeFade;
+              charEl.textContent = getChar(i, j, time);
+            });
+          });
+
+          requestAnimationFrame(animate);
         }
 
         requestAnimationFrame(animate);
       }
 
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      requestAnimationFrame(animate);
-    })();
+      // Initialize BuiltForFuture circle animations
+      function initBuiltForFutureAnimations() {
+        const section = document.getElementById('built-for-future');
+        if (!section) return;
 
-    // FixedHeroWrapper - Scroll effects (matching FixedHeroWrapper.tsx)
-    (function() {
-      const heroSection = document.querySelector('.hero');
-      const contentWrapper = document.getElementById('hero-content-wrapper');
-      const effectLayer = document.getElementById('reveal-mask-effect');
-      const vignetteLayer = document.getElementById('hero-vignette');
+        const header = section.querySelector('.built-future-header');
+        const subline = section.querySelector('.built-future-subline');
+        const circles = section.querySelectorAll('.future-circle');
+        const texts = section.querySelectorAll('.future-text');
+        const line = document.getElementById('future-line');
 
-      // Use initial viewport height to prevent mobile browser UI changes from affecting scroll progress
-      // This ensures fade starts immediately on scroll, not after browser UI fully hides
-      const initialViewportHeight = window.innerHeight;
-
-      function handleScroll() {
-        if (!heroSection) return;
-
-        const scrollY = window.scrollY;
-        // Use initial viewport height for consistent progress calculation
-        const progress = Math.min(scrollY / initialViewportHeight, 1);
-
-        const scale = 1 - progress * 0.4; // Scale from 1 to 0.6
-        const blur = progress * 8; // Blur from 0 to 8px
-        const brightness = 1 - progress; // Dim from 1 to 0
-        const opacity = 1 - progress; // Fade from 1 to 0
-        const translateY = -progress * 50; // Move up as it shrinks
-
-        // Apply effects to content wrapper
-        if (contentWrapper) {
-          contentWrapper.style.transform = 'scale(' + scale + ') translateY(' + translateY + 'px)';
-          contentWrapper.style.filter = 'blur(' + blur + 'px) brightness(' + brightness + ')';
-          contentWrapper.style.opacity = opacity;
-        }
-
-        // Fade out effect layer (only fade, no blur/scale)
-        if (effectLayer) {
-          effectLayer.style.opacity = opacity;
-          effectLayer.style.visibility = progress >= 1 ? 'hidden' : 'visible';
-        }
-
-        // Fade out vignette layer (only fade, no blur/scale)
-        if (vignetteLayer) {
-          vignetteLayer.style.opacity = opacity;
-          vignetteLayer.style.visibility = progress >= 1 ? 'hidden' : 'visible';
-        }
-
-        // Hide section when fully scrolled
-        heroSection.style.visibility = progress >= 1 ? 'hidden' : 'visible';
-      }
-
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      handleScroll(); // Initial check
-    })();
-
-    // Scroll Reveal Animation - fade in sections as they enter viewport
-    (function() {
-      var revealSections = document.querySelectorAll('.reveal-section');
-
-      function checkReveal() {
-        var windowHeight = window.innerHeight;
-        var revealPoint = 150; // How many pixels from bottom before reveal
-
-        revealSections.forEach(function(section) {
-          var sectionTop = section.getBoundingClientRect().top;
-
-          if (sectionTop < windowHeight - revealPoint) {
-            section.classList.add('visible');
-          }
-        });
-      }
-
-      window.addEventListener('scroll', checkReveal, { passive: true });
-      checkReveal(); // Initial check
-    })();
-
-    // Counter Animation - Scramble effect (matching CounterAnimation.tsx)
-    (function() {
-      var animationRef = null;
-
-      function findDigitElements() {
-        var suffix = document.querySelector('.tagline-counter-suffix');
-        if (suffix) {
-          var counterEl = suffix.querySelector('.counter-numbers-mobile');
-          if (counterEl) {
-            var digits = counterEl.querySelectorAll('.counter-digit');
-            if (digits.length === 4) return digits;
-          }
-        }
-        return null;
-      }
-
-      function animateScramble() {
-        var digitElements = findDigitElements();
-        if (!digitElements) return;
-
-        var target = 3700;
-        var duration = 2000; // 2 seconds
-        var startTime = performance.now();
-
-        if (animationRef) {
-          cancelAnimationFrame(animationRef);
-        }
-
-        function animate(currentTime) {
-          var elapsed = currentTime - startTime;
-          var progress = Math.min(elapsed / duration, 1);
-
-          if (progress >= 1) {
-            // End animation - show final value
-            digitElements[0].textContent = '3';
-            digitElements[1].textContent = '7';
-            digitElements[2].textContent = '0';
-            digitElements[3].textContent = '0';
-            animationRef = null;
-          } else {
-            // Scramble effect - show random numbers that gradually approach target
-            var currentValue = Math.floor(target * progress);
-            var scrambleIntensity = 1 - progress;
-
-            var numStr = currentValue.toString();
-            while (numStr.length < 4) numStr = '0' + numStr;
-            var digits = numStr.split('');
-
-            for (var i = 0; i < digits.length; i++) {
-              if (Math.random() < scrambleIntensity * 0.3) {
-                // First digit stays 3 to keep 3xxx range
-                if (i === 0) {
-                  digitElements[i].textContent = '3';
-                } else {
-                  // Use 2-9 to avoid "1" width changes
-                  digitElements[i].textContent = (Math.floor(Math.random() * 8) + 2).toString();
-                }
-              } else {
-                digitElements[i].textContent = digits[i];
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Animate header
+              if (header) {
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
               }
-            }
-
-            animationRef = requestAnimationFrame(animate);
-          }
-        }
-
-        animationRef = requestAnimationFrame(animate);
-      }
-
-      // Start animation after a short delay, then loop every 5 seconds
-      setTimeout(function() {
-        animateScramble();
-        setInterval(animateScramble, 5000);
-      }, 500);
-    })();
-
-    // Agent data
-    const AGENT = { slug: '${escapeJS(agent.slug)}', firstName: '${escapeJS(firstName)}' };
-
-    // Video progress tracking with custom controls
-    // maxWatchedTime = furthest point user has legitimately watched to (in seconds)
-    // videoProgress = percentage for UI display
-
-    // Check for ?reset=1 URL parameter to clear progress (for testing)
-    if (new URLSearchParams(window.location.search).get('reset') === '1') {
-      localStorage.removeItem('agent_' + AGENT.slug + '_maxTime');
-      localStorage.removeItem('agent_' + AGENT.slug + '_progress');
-      // Remove the parameter from URL without reload
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-
-    let maxWatchedTime = parseFloat(localStorage.getItem('agent_' + AGENT.slug + '_maxTime') || '0');
-    let videoProgress = parseFloat(localStorage.getItem('agent_' + AGENT.slug + '_progress') || '0');
-    let savedPosition = parseFloat(localStorage.getItem('agent_' + AGENT.slug + '_position') || '0');
-    let isPlaying = false;
-    let player = null;
-    updateProgressUI();
-
-    // Format time as M:SS or H:MM:SS
-    function formatTime(seconds) {
-      if (isNaN(seconds) || seconds < 0) return '0:00';
-      const h = Math.floor(seconds / 3600);
-      const m = Math.floor((seconds % 3600) / 60);
-      const s = Math.floor(seconds % 60);
-      if (h > 0) {
-        return h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
-      }
-      return m + ':' + String(s).padStart(2, '0');
-    }
-
-    // Update time display
-    function updateTimeDisplay() {
-      if (!player) return;
-      const current = player.currentTime || 0;
-      const duration = player.duration || 0;
-      const timeEl = document.getElementById('video-time');
-      if (timeEl) {
-        timeEl.textContent = formatTime(current) + ' / ' + formatTime(duration);
-      }
-    }
-
-    // Update play/pause button state (both controls bar and overlay)
-    function updatePlayButton() {
-      const playIcon = document.getElementById('play-icon');
-      const pauseIcon = document.getElementById('pause-icon');
-      const overlayPlayIcon = document.getElementById('overlay-play-icon');
-      const overlayPauseIcon = document.getElementById('overlay-pause-icon');
-      const videoOverlay = document.getElementById('video-overlay');
-      const overlayBtn = document.getElementById('overlay-play-btn');
-
-      if (isPlaying) {
-        if (playIcon) playIcon.style.display = 'none';
-        if (pauseIcon) pauseIcon.style.display = 'block';
-        // Update overlay
-        if (overlayPlayIcon) overlayPlayIcon.style.display = 'none';
-        if (overlayPauseIcon) overlayPauseIcon.style.display = 'block';
-        if (videoOverlay) videoOverlay.classList.add('is-playing');
-        if (overlayBtn) overlayBtn.classList.add('is-playing');
-      } else {
-        if (playIcon) playIcon.style.display = 'block';
-        if (pauseIcon) pauseIcon.style.display = 'none';
-        // Update overlay
-        if (overlayPlayIcon) overlayPlayIcon.style.display = 'block';
-        if (overlayPauseIcon) overlayPauseIcon.style.display = 'none';
-        if (videoOverlay) videoOverlay.classList.remove('is-playing');
-        if (overlayBtn) overlayBtn.classList.remove('is-playing');
-      }
-    }
-
-    // Update volume icon based on volume level
-    function updateVolumeIcon() {
-      const volumeHighIcon = document.getElementById('volume-high-icon');
-      const volumeLowIcon = document.getElementById('volume-low-icon');
-      const volumeMuteIcon = document.getElementById('volume-mute-icon');
-      const volumeSlider = document.getElementById('volume-slider');
-
-      if (!volumeHighIcon || !volumeLowIcon || !volumeMuteIcon) return;
-
-      const vol = player ? player.volume : 1;
-      const muted = player ? player.muted : false;
-
-      volumeHighIcon.style.display = 'none';
-      volumeLowIcon.style.display = 'none';
-      volumeMuteIcon.style.display = 'none';
-
-      if (muted || vol === 0) {
-        volumeMuteIcon.style.display = 'block';
-        if (volumeSlider) volumeSlider.value = 0;
-      } else if (vol < 0.5) {
-        volumeLowIcon.style.display = 'block';
-        if (volumeSlider) volumeSlider.value = vol;
-      } else {
-        volumeHighIcon.style.display = 'block';
-        if (volumeSlider) volumeSlider.value = vol;
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const iframe = document.getElementById('attraction-video');
-      const playBtn = document.getElementById('play-btn');
-      const rewindBtn = document.getElementById('rewind-btn');
-      const restartBtn = document.getElementById('restart-btn');
-
-      if (iframe && typeof Stream !== 'undefined') {
-        player = Stream(iframe);
-
-        // Play/Pause button
-        playBtn.addEventListener('click', function() {
-          if (isPlaying) {
-            player.pause();
-          } else {
-            player.play();
-          }
-        });
-
-        // Restart button - go back to beginning
-        restartBtn.addEventListener('click', function() {
-          player.currentTime = 0;
-          updateTimeDisplay();
-        });
-
-        // Rewind button - go back 15 seconds (but not before 0)
-        rewindBtn.addEventListener('click', function() {
-          const newTime = Math.max(0, player.currentTime - 15);
-          player.currentTime = newTime;
-        });
-
-        // Volume controls
-        const muteBtn = document.getElementById('mute-btn');
-        const volumeSlider = document.getElementById('volume-slider');
-
-        if (muteBtn) {
-          muteBtn.addEventListener('click', function() {
-            player.muted = !player.muted;
-            updateVolumeIcon();
-          });
-        }
-
-        if (volumeSlider) {
-          volumeSlider.addEventListener('input', function() {
-            player.volume = parseFloat(this.value);
-            player.muted = this.value === '0';
-            updateVolumeIcon();
-          });
-        }
-
-        // Listen for volume changes from player
-        player.addEventListener('volumechange', function() {
-          updateVolumeIcon();
-        });
-
-        // Click on video overlay to play/pause
-        const videoOverlay = document.getElementById('video-overlay');
-        if (videoOverlay) {
-          videoOverlay.addEventListener('click', function() {
-            if (isPlaying) {
-              player.pause();
-            } else {
-              player.play();
-            }
-          });
-        }
-
-        // Scrubber functionality
-        const videoWrapper = document.querySelector('.video-wrapper');
-        const scrubberContainer = document.getElementById('scrubber-container');
-        const scrubberWatched = document.getElementById('scrubber-watched');
-        const scrubberCurrent = document.getElementById('scrubber-current');
-        const scrubberThumb = document.getElementById('scrubber-thumb');
-        let isDragging = false;
-
-        function updateScrubberUI() {
-          if (!player || player.duration <= 0) return;
-          const watchedPct = (maxWatchedTime / player.duration) * 100;
-          const currentPct = (player.currentTime / player.duration) * 100;
-          if (scrubberWatched) scrubberWatched.style.width = watchedPct + '%';
-          if (scrubberCurrent) scrubberCurrent.style.width = currentPct + '%';
-          if (scrubberThumb) scrubberThumb.style.left = currentPct + '%';
-        }
-
-        function calculateTimeFromPosition(clientX) {
-          if (!scrubberContainer || !player || player.duration <= 0) return 0;
-          const rect = scrubberContainer.getBoundingClientRect();
-          const x = clientX - rect.left;
-          const percentage = Math.max(0, Math.min(1, x / rect.width));
-          // Calculate time based on full duration, but clamp to maxWatchedTime (can't skip past what you've watched)
-          const requestedTime = percentage * player.duration;
-          return Math.min(requestedTime, maxWatchedTime);
-        }
-
-        if (videoWrapper && scrubberContainer) {
-          videoWrapper.addEventListener('mouseenter', function() {
-            scrubberContainer.classList.add('visible');
-          });
-          videoWrapper.addEventListener('mouseleave', function() {
-            if (!isDragging) {
-              scrubberContainer.classList.remove('visible');
-            }
-          });
-
-          scrubberContainer.addEventListener('mousedown', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            isDragging = true;
-            const newTime = calculateTimeFromPosition(e.clientX);
-            player.currentTime = newTime;
-            updateScrubberUI();
-          });
-
-          window.addEventListener('mousemove', function(e) {
-            if (!isDragging) return;
-            const newTime = calculateTimeFromPosition(e.clientX);
-            player.currentTime = newTime;
-            updateScrubberUI();
-          });
-
-          window.addEventListener('mouseup', function() {
-            if (isDragging) {
-              isDragging = false;
-              // Hide scrubber if mouse is not over video
-              const rect = videoWrapper.getBoundingClientRect();
-              if (event.clientX < rect.left || event.clientX > rect.right ||
-                  event.clientY < rect.top || event.clientY > rect.bottom) {
-                scrubberContainer.classList.remove('visible');
+              // Animate subline
+              if (subline) {
+                subline.style.opacity = '0.7';
               }
+              // Animate circles - set visible state with glow
+              circles.forEach(circle => {
+                circle.style.opacity = '1';
+                circle.style.transform = 'scale(1)';
+                circle.style.boxShadow = '0 0 30px rgba(255,215,0,0.4)';
+              });
+              // Animate texts
+              texts.forEach(text => {
+                text.style.opacity = '1';
+                text.style.transform = 'translateY(0)';
+              });
+              // Animate line
+              if (line) {
+                line.classList.add('animate');
+              }
+              observer.disconnect();
             }
           });
+        }, { threshold: 0.15 });
+
+        // Set initial hidden states
+        if (header) {
+          header.style.opacity = '0';
+          header.style.transform = 'translateY(20px)';
+        }
+        if (subline) {
+          subline.style.opacity = '0';
         }
 
-        // Track play state
-        player.addEventListener('play', function() {
-          isPlaying = true;
-          updatePlayButton();
-        });
+        observer.observe(section);
+      }
 
-        player.addEventListener('pause', function() {
-          isPlaying = false;
-          updatePlayButton();
-        });
+      function initStarField() {
+        const canvas = document.getElementById('star-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let stars = [];
+        let lastTime = 0;
+        let initialHeight = 0;
+        let dimensions = { width: 0, height: 0 };
 
-        player.addEventListener('ended', function() {
-          isPlaying = false;
-          updatePlayButton();
-        });
+        function resize(forceRegenerate) {
+          const dpr = window.devicePixelRatio || 1;
+          const width = window.innerWidth;
+          const height = window.innerHeight;
 
-        // Track progress and update time display
-        player.addEventListener('timeupdate', function() {
-          updateTimeDisplay();
-          updateScrubberUI();
+          // Capture initial height to prevent mobile address bar issues
+          if (initialHeight === 0) initialHeight = height;
+          const stableHeight = Math.max(height, initialHeight);
 
-          // Save current position for resume on refresh/return
-          localStorage.setItem('agent_' + AGENT.slug + '_position', player.currentTime.toString());
+          dimensions = { width, height: stableHeight };
+          canvas.width = width * dpr;
+          canvas.height = stableHeight * dpr;
+          canvas.style.width = width + 'px';
+          canvas.style.height = stableHeight + 'px';
+          ctx.scale(dpr, dpr);
 
-          if (player.duration > 0) {
-            // Update max watched time (only increases, never decreases)
-            if (player.currentTime > maxWatchedTime) {
-              maxWatchedTime = player.currentTime;
-              localStorage.setItem('agent_' + AGENT.slug + '_maxTime', maxWatchedTime.toString());
-            }
-
-            // Update progress percentage
-            const pct = (maxWatchedTime / player.duration) * 100;
-            if (pct > videoProgress) {
-              videoProgress = pct;
-              localStorage.setItem('agent_' + AGENT.slug + '_progress', videoProgress.toString());
-              updateProgressUI();
-            }
+          if (forceRegenerate || stars.length === 0) {
+            initStars(width, stableHeight);
           }
-        });
+        }
 
-        // Update duration when loaded and restore saved position
-        player.addEventListener('loadedmetadata', function() {
-          updateTimeDisplay();
-          // Restore saved position when video loads
-          if (savedPosition > 0 && player.duration > 0) {
-            const targetTime = Math.min(savedPosition, player.duration - 1);
-            if (targetTime > 0) {
-              player.currentTime = targetTime;
-            }
+        function initStars(width, height) {
+          stars = [];
+          const isMobile = width < 768;
+          const count = isMobile ? 115 : 275;
+          const speeds = [0.08, 0.15, 0.25]; // 3 parallax layers
+
+          for (let i = 0; i < count; i++) {
+            const layer = i % 3;
+            stars.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              size: Math.random() * (layer * 0.4 + 0.6) + 0.3, // 0.3-1.5px
+              speed: speeds[layer],
+              opacity: Math.random() * 0.3 + 0.25 // 0.25-0.55 (dimmer to match homepage)
+            });
           }
-        });
-      }
-    });
+        }
 
-    function updateProgressUI() {
-      const progressFill = document.getElementById('progress-fill');
-      const progressText = document.getElementById('progress-text');
-      const bookBtn = document.getElementById('book-btn');
+        function draw(timestamp) {
+          const deltaTime = lastTime ? (timestamp - lastTime) / 1000 : 0;
+          lastTime = timestamp;
+          const { width, height } = dimensions;
 
-      if (progressFill) {
-        progressFill.style.width = Math.min(videoProgress, 100) + '%';
-      }
-      if (videoProgress >= 50) {
-        if (progressText) progressText.textContent = "You're ready! Book your strategy call now.";
-        if (bookBtn) bookBtn.classList.add('visible');
-      } else {
-        if (progressText) progressText.textContent = "Watch at least 50% to schedule your strategy call.";
-        if (bookBtn) bookBtn.classList.remove('visible');
-      }
-    }
+          ctx.clearRect(0, 0, width, height);
 
-    // Reset video progress (for testing)
-    function resetVideoProgress() {
-      localStorage.removeItem('agent_' + AGENT.slug + '_maxTime');
-      localStorage.removeItem('agent_' + AGENT.slug + '_progress');
-      localStorage.removeItem('agent_' + AGENT.slug + '_position');
-      maxWatchedTime = 0;
-      videoProgress = 0;
-      savedPosition = 0;
-      updateProgressUI();
-      updateTimeDisplay();
-      // Also reset the video player position
-      if (player) {
-        player.currentTime = 0;
-      }
-      alert('Progress reset! Refresh the page to start fresh.');
-    }
-
-    // Triple-click on progress bar to reveal reset button (for testing)
-    (function() {
-      let clickCount = 0;
-      let clickTimer = null;
-      const progressBar = document.querySelector('.progress-bar');
-      if (progressBar) {
-        progressBar.addEventListener('click', function() {
-          clickCount++;
-          if (clickTimer) clearTimeout(clickTimer);
-          clickTimer = setTimeout(function() { clickCount = 0; }, 500);
-          if (clickCount >= 3) {
-            const resetBtn = document.getElementById('reset-progress-btn');
-            if (resetBtn) resetBtn.style.display = 'inline-block';
-            clickCount = 0;
+          // Update positions and draw
+          if (deltaTime > 0 && deltaTime < 0.1) {
+            stars.forEach(function(star) {
+              star.y -= star.speed * deltaTime * 60; // Drift upward
+              if (star.y < -star.size) {
+                star.y = height + star.size;
+                star.x = Math.random() * width;
+              }
+              ctx.beginPath();
+              ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(255, 255, 255, ' + star.opacity + ')';
+              ctx.fill();
+            });
+          } else {
+            // First frame or after tab switch - just draw without moving
+            stars.forEach(function(star) {
+              ctx.beginPath();
+              ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+              ctx.fillStyle = 'rgba(255, 255, 255, ' + star.opacity + ')';
+              ctx.fill();
+            });
           }
-        });
+
+          requestAnimationFrame(draw);
+        }
+
+        resize(true);
+        window.addEventListener('resize', function() { resize(false); });
+        requestAnimationFrame(draw);
       }
     })();
-
-    // Modals
-    function openJoinModal() {
-      document.getElementById('join-modal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-      prefillForm();
-    }
-    function closeJoinModal() {
-      document.getElementById('join-modal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-    function openBookingModal() {
-      if (videoProgress < 50) { alert('Please watch at least 50% of the video first.'); return; }
-      document.getElementById('booking-modal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-      prefillForm();
-      updateStates();
-    }
-    function closeBookingModal() {
-      document.getElementById('booking-modal').classList.remove('active');
-      document.body.style.overflow = '';
-    }
-
-    function prefillForm() {
-      const data = JSON.parse(localStorage.getItem('agent_lead_' + AGENT.slug) || '{}');
-      ['fname', 'lname', 'email', 'country'].forEach(f => {
-        const el = document.getElementById('join-' + f);
-        if (el && data[f]) el.value = data[f];
-        const el2 = document.getElementById('book-' + f);
-        if (el2 && data[f]) el2.value = data[f];
-      });
-    }
-
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeJoinModal(); closeBookingModal(); }});
-    document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target === o) { closeJoinModal(); closeBookingModal(); }}));
-
-    // States
-    const US_STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming'];
-    const CA_PROV = ['Alberta','British Columbia','Manitoba','New Brunswick','Newfoundland','Nova Scotia','Ontario','PEI','Quebec','Saskatchewan'];
-    function updateStates() {
-      const country = document.getElementById('book-country').value;
-      const sel = document.getElementById('book-state');
-      sel.innerHTML = '<option value="">Select</option>';
-      const opts = country === 'US' ? US_STATES : country === 'CA' ? CA_PROV : ['N/A'];
-      opts.forEach(o => { const opt = document.createElement('option'); opt.value = o; opt.textContent = o; sel.appendChild(opt); });
-    }
-
-    // Form submissions
-    async function submitJoinForm(e) {
-      e.preventDefault();
-      const fname = document.getElementById('join-fname').value;
-      const lname = document.getElementById('join-lname').value;
-      const email = document.getElementById('join-email').value;
-      const country = document.getElementById('join-country').value;
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const msgDiv = document.getElementById('join-msg');
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
-
-      try {
-        const response = await fetch('/api/join-team', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            firstName: fname,
-            lastName: lname,
-            email: email,
-            country: country,
-            sponsorName: AGENT.firstName + ' ' + AGENT.lastName
-          })
-        });
-
-        if (response.ok) {
-          msgDiv.className = 'form-msg success';
-          msgDiv.textContent = 'Thank you! We will be in touch soon.';
-          setTimeout(() => { closeJoinModal(); e.target.reset(); msgDiv.className = 'form-msg'; submitBtn.disabled = false; submitBtn.textContent = 'Join Now'; }, 2000);
-        } else {
-          throw new Error('Failed to submit');
-        }
-      } catch (err) {
-        msgDiv.className = 'form-msg error';
-        msgDiv.textContent = 'Something went wrong. Please try again.';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Join Now';
-      }
-    }
-    async function submitBookingForm(e) {
-      e.preventDefault();
-      const fname = document.getElementById('book-fname').value;
-      const lname = document.getElementById('book-lname').value;
-      const email = document.getElementById('book-email').value;
-      const phone = document.getElementById('book-phone').value;
-      const country = document.getElementById('book-country').value;
-      const state = document.getElementById('book-state').value;
-      const plans = Array.from(document.querySelectorAll('input[name="plan"]:checked')).map(c => c.value);
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const msgDiv = document.getElementById('booking-msg');
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Submitting...';
-
-      try {
-        const response = await fetch('/api/join-team', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            firstName: fname,
-            lastName: lname,
-            email: email,
-            country: country,
-            sponsorName: AGENT.firstName + ' ' + AGENT.lastName
-          })
-        });
-
-        if (response.ok) {
-          msgDiv.className = 'form-msg success';
-          msgDiv.textContent = 'Booking submitted! We will send you confirmation shortly.';
-          setTimeout(() => { closeBookingModal(); e.target.reset(); msgDiv.className = 'form-msg'; submitBtn.disabled = false; submitBtn.textContent = 'Book Your Call'; }, 3000);
-        } else {
-          throw new Error('Failed to submit');
-        }
-      } catch (err) {
-        msgDiv.className = 'form-msg error';
-        msgDiv.textContent = 'Something went wrong. Please try again.';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Book Your Call';
-      }
-    }
-
-    // FAQ accordion
-    document.querySelectorAll('.faq-question').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.parentElement;
-        const wasOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-        if (!wasOpen) item.classList.add('open');
-      });
-    });
-
-    // Lenis Smooth Scroll - Desktop only (matching SmoothScroll.tsx)
-    (function() {
-      // Skip on mobile/touch devices for native scroll performance
-      var hasTouchScreen = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-      var isNarrowScreen = window.innerWidth < 768;
-      if (hasTouchScreen && isNarrowScreen) return;
-
-      // Disable browser's automatic scroll restoration
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-      }
-      window.scrollTo(0, 0);
-
-      // Load Lenis from CDN
-      var script = document.createElement('script');
-      script.src = 'https://unpkg.com/lenis@1.1.13/dist/lenis.min.js';
-      script.onload = function() {
-        // Initialize Lenis with default settings
-        var lenis = new Lenis({
-          duration: 1.2,
-          easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-          orientation: 'vertical',
-          gestureOrientation: 'vertical',
-          smoothWheel: true,
-          wheelMultiplier: 1,
-          touchMultiplier: 1,
-          infinite: false,
-          lerp: 0.1
-        });
-
-        function raf(time) {
-          lenis.raf(time);
-          requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-      };
-      document.head.appendChild(script);
-    })();
-  <\/script>
-  <script defer data-domain="${analyticsDomain}" src="https://plausible.saabuildingblocks.com/js/script.js"><\/script>
+  </script>
 </body>
 </html>`;
 }
@@ -4151,7 +5191,7 @@ export async function onRequest(context) {
     // Links pages get the linktree-style page, attraction pages get the full landing page funnel
     const html = isLinksPage
       ? generateAgentLinksPageHTML(agentData, siteUrl)
-      : generateAttractionPageHTML(agentData, siteUrl);
+      : generateAttractionPageHTML(agentData, siteUrl, escapeHTML, escapeJS);
 
     // If page is not active, pass through to static Next.js 404 page
     if (!html) {

@@ -11,7 +11,7 @@ const FOUNDERS = [
   {
     name: "Doug Smart",
     title: "Co-Founder & Full-Stack Developer",
-    bio: "Top 0.1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.",
+    bio: "Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.",
     image: "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public",
   },
   {
