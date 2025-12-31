@@ -76,7 +76,7 @@ export default function AboutKarrieHill() {
                 {highlights.map((item, index) => (
                   <GenericCard key={index} padding="sm">
                     <p className="text-[#dcdbd5]/60" style={{ fontSize: 'var(--font-size-caption)' }}>{item.label}</p>
-                    <p className="text-body font-medium">{item.value}</p>
+                    <p className="text-[#e5e4dd] font-medium" style={{ fontSize: 'var(--font-size-body)' }}>{item.value}</p>
                   </GenericCard>
                 ))}
               </div>
