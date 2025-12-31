@@ -2646,7 +2646,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 <div class="scroll-reveal" style="transition-delay: 0.3s;">
                   <div class="cta-button-wrapper" style="display: inline-block;">
                     <div class="cta-light-bar cta-light-bar-top"></div>
-                    <a href="${siteUrl}/exp-realty-sponsor/" class="cta-button">See What Agents Say</a>
+                    <a href="#watch-and-decide" class="cta-button">Learn More About SAA</a>
                     <div class="cta-light-bar cta-light-bar-bottom"></div>
                   </div>
                 </div>
@@ -2851,6 +2851,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <p class="text-body mx-auto opacity-80 mb-8" style="max-width: 900px;">
           The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
         </p>
+        <div class="cta-button-wrapper" style="display: inline-block;">
+          <div class="cta-light-bar cta-light-bar-top"></div>
+          <a href="#watch-and-decide" class="cta-button">Learn More About eXp</a>
+          <div class="cta-light-bar cta-light-bar-bottom"></div>
+        </div>
       </div>
       <div class="media-logos-container">
         <div class="portal-edge-left"></div>
