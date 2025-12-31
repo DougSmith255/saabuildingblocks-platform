@@ -2287,6 +2287,88 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       line-height: 1.6;
       flex: 1;
     }
+    /* Position number badge for leadership cards */
+    .position-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-taskor), 'Taskor', system-ui, sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      z-index: 20;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    }
+    .position-badge-gold {
+      background: linear-gradient(180deg, #ffd700 0%, #c9a800 100%);
+      color: #1a1a1a;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+    .position-badge-silver {
+      background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
+      color: #ffd700;
+      border: 2px solid rgba(255,255,255,0.2);
+      text-shadow: 0 0 8px rgba(255,215,0,0.5);
+    }
+    @media (min-width: 768px) {
+      .position-badge { width: 48px; height: 48px; font-size: 24px; }
+    }
+    /* Bio dropdown/accordion */
+    .founder-bio-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      margin-top: 0.75rem;
+      background: rgba(255,215,0,0.1);
+      border: 1px solid rgba(255,215,0,0.2);
+      border-radius: 0.5rem;
+      color: #ffd700;
+      font-family: 'Synonym', system-ui, sans-serif;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .founder-bio-toggle:hover {
+      background: rgba(255,215,0,0.15);
+      border-color: rgba(255,215,0,0.3);
+    }
+    .founder-bio-toggle svg {
+      transition: transform 0.3s ease;
+    }
+    .founder-bio-toggle.open svg {
+      transform: rotate(180deg);
+    }
+    .founder-bio-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+      opacity: 0;
+      margin-top: 0;
+    }
+    .founder-bio-content.open {
+      max-height: 200px;
+      opacity: 1;
+      margin-top: 0.75rem;
+    }
+    /* Leadership grid - 3 columns */
+    .leadership-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .leadership-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2rem;
+      }
+    }
     @keyframes h1GlowBreathe {
       0%, 100% {
         filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
@@ -2927,7 +3009,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       </div>
     </section>
 
-    <!-- Meet the Founders Section -->
+    <!-- Leadership Behind Your Sponsor Section -->
     <div class="glass-panel" style="margin-top: 32px;">
       <div class="glass-panel-bg glass-panel-marigold"></div>
       <div class="glass-panel-content">
@@ -2936,18 +3018,38 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <!-- Header -->
             <div class="scroll-reveal" style="text-align: center; margin-bottom: 3rem; transition: all 0.7s ease;">
               <h2 class="text-h2 h2-container">
-                <span class="h2-word">Meet</span>
-                <span class="h2-word">SAA's</span>
-                <span class="h2-word">Founders</span>
+                <span class="h2-word">Leadership</span>
+                <span class="h2-word">Behind</span>
+                <span class="h2-word">Your</span>
+                <span class="h2-word">Sponsor</span>
               </h2>
             </div>
 
-            <!-- Two column layout - Doug left, Karrie right -->
-            <div class="founders-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-              <!-- Left column - Doug -->
-              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.3s;">
+            <!-- Three column layout - Agent, Doug, Karrie -->
+            <div class="leadership-grid">
+              <!-- Column 1 - Agent (Your Sponsor) -->
+              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.2s;">
+                <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,215,0,0.3); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
+                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
+                    <div class="position-badge position-badge-gold">1</div>
+                    <div class="profile-cyber-frame-metal"></div>
+                    <div class="profile-cyber-frame-inner">
+                      <div style="position: relative; width: 100%; height: 100%;">
+                        ${agent.profile_image_url ? `<img src="${escapeHTML(agent.profile_image_url)}" alt="${escapeHTML(fullName)}" style="width: 100%; height: 100%; object-fit: cover;" />` : `<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); display: flex; align-items: center; justify-content: center;"><span style="font-size: 48px; color: #ffd700;">${escapeHTML(agent.display_first_name?.charAt(0) || 'A')}</span></div>`}
+                      </div>
+                    </div>
+                    <div class="profile-cyber-frame-ring"></div>
+                  </div>
+                  <h3 class="founder-name">${escapeHTML(fullName)}</h3>
+                  <p class="founder-title">SAA Team Member</p>
+                </div>
+              </div>
+
+              <!-- Column 2 - Doug -->
+              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.35s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
-                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto;">
+                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
+                    <div class="position-badge position-badge-silver">2</div>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
@@ -2958,14 +3060,21 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   </div>
                   <h3 class="founder-name">Doug Smart</h3>
                   <p class="founder-title">Co-Founder & Full-Stack Developer</p>
-                  <p class="founder-bio">Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.</p>
+                  <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+                    <span>About Doug</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  <div class="founder-bio-content">
+                    <p class="founder-bio" style="margin: 0;">Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.</p>
+                  </div>
                 </div>
               </div>
 
-              <!-- Right column - Karrie -->
+              <!-- Column 3 - Karrie -->
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.5s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
-                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto;">
+                  <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
+                    <div class="position-badge position-badge-silver">3</div>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
@@ -2976,7 +3085,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   </div>
                   <h3 class="founder-name">Karrie Hill, JD</h3>
                   <p class="founder-title">Co-Founder & eXp Certified Mentor</p>
-                  <p class="founder-bio">UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.</p>
+                  <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
+                    <span>About Karrie</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                  </button>
+                  <div class="founder-bio-content">
+                    <p class="founder-bio" style="margin: 0;">UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.</p>
+                  </div>
                 </div>
               </div>
             </div>
