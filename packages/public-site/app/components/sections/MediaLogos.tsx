@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { H2 } from '@saa/shared/components/saa';
+import { H2, Icon3D } from '@saa/shared/components/saa';
+import { TrendingUp, Cloud, Percent, Award, Users } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
@@ -151,18 +152,18 @@ export function MediaLogos() {
         }`}
       >
         <H2>Why eXp Realty?</H2>
-        <p
-          className={`text-body mx-auto opacity-80 mb-8 transition-all duration-700 delay-150 ease-out ${
-            isVisible ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-6'
+        <div
+          className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out flex flex-col gap-2 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
           style={{ maxWidth: '900px' }}
         >
-          <span className="block">The only cumulatively profitable public real estate company.</span>
-          <span className="block">S&P 600 SmallCap. First cloud-based brokerage.</span>
-          <span className="block">80/20 split until cap → 100% commission. Flat monthly fee.</span>
-          <span className="block">Stock awards + optional revenue share income.</span>
-          <span className="block">Choose your sponsor. Access real support.</span>
-        </p>
+          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>The only cumulatively profitable public real estate company.</span>
+          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Cloud className="w-5 h-5" /></Icon3D>S&P 600 SmallCap. First cloud-based brokerage.</span>
+          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Percent className="w-5 h-5" /></Icon3D>80/20 split until cap → 100% commission. Flat monthly fee.</span>
+          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Award className="w-5 h-5" /></Icon3D>Stock awards + optional revenue share income.</span>
+          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Users className="w-5 h-5" /></Icon3D>Choose your sponsor. Access real support.</span>
+        </div>
       </div>
 
       {/* Carousel Container - portal edges at screen edges */}

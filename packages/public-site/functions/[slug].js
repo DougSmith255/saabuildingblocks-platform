@@ -2899,13 +2899,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <span class="h2-word">eXp</span>
           <span class="h2-word">Realty?</span>
         </h2>
-        <p class="text-body mx-auto opacity-80 mb-8" style="max-width: 900px;">
-          <span style="display: block;">The only cumulatively profitable public real estate company.</span>
-          <span style="display: block;">S&P 600 SmallCap. First cloud-based brokerage.</span>
-          <span style="display: block;">80/20 split until cap → 100% commission. Flat monthly fee.</span>
-          <span style="display: block;">Stock awards + optional revenue share income.</span>
-          <span style="display: block;">Choose your sponsor. Access real support.</span>
-        </p>
+        <div class="mx-auto mb-8 flex flex-col gap-2" style="max-width: 900px;">
+          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>The only cumulatively profitable public real estate company.</span>
+          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></span>S&P 600 SmallCap. First cloud-based brokerage.</span>
+          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>80/20 split until cap → 100% commission. Flat monthly fee.</span>
+          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>Stock awards + optional revenue share income.</span>
+          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Choose your sponsor. Access real support.</span>
+        </div>
       </div>
       <div class="media-logos-container">
         <div class="portal-edge-left"></div>
