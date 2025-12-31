@@ -1112,10 +1112,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       animation: whiteVignetteGlow 4s ease-in-out infinite;
     }
 
-    .pillar-number {
+    /* Pillar numbers (01, 02, 03) - 25% larger with gold glow */
+    .pillar-number-large {
       color: #bca24a;
       font-weight: 700;
       min-width: 1.5em;
+      font-size: 1.25em; /* 25% larger than text */
       text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
         0 0 0.05em #bca24a, 0 0 0.09em rgba(188, 162, 74, 0.8),
         0 0 0.13em rgba(188, 162, 74, 0.55), 0 0 0.18em rgba(188, 162, 74, 0.35),
@@ -1125,9 +1127,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       animation: pillarGlowBreathe 4s ease-in-out infinite;
     }
 
+    /* Pillar labels (Smart Agent Alliance, Inside eXp Realty, etc) - gold glow, same size as text */
+    .pillar-label {
+      color: #bca24a;
+      font-weight: 700;
+      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.05em #bca24a, 0 0 0.09em rgba(188, 162, 74, 0.8),
+        0 0 0.13em rgba(188, 162, 74, 0.55), 0 0 0.18em rgba(188, 162, 74, 0.35),
+        0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
+      animation: pillarGlowBreathe 4s ease-in-out infinite;
+    }
+
+    /* Pillar description text - body font, no glow */
+    .pillar-description {
+      color: #bfbdb0;
+      font-weight: 400;
+      font-family: var(--font-synonym), system-ui, sans-serif;
+    }
+
     .pillar-text {
-      color: #e5e4dd;
-      font-weight: 500;
+      color: #bfbdb0;
+      font-weight: 400;
     }
 
     /* Pillar row responsive text sizing: text-sm on mobile, text-base on md+ */
@@ -2541,19 +2563,19 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         </div>
         <div class="glass-panel-content">
           <section class="px-6" style="padding-top: calc(1.5rem + 15px); padding-bottom: calc(1.5rem + 15px);">
-            <div class="mx-auto" style="max-width: 900px;">
+            <div class="mx-auto" style="max-width: 1500px;">
               <div class="flex flex-col gap-3">
                 <div class="flex items-center gap-3 justify-center pillar-row">
-                  <span class="pillar-number text-body">01</span>
-                  <span class="pillar-text text-body"><span class="pillar-number">Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
+                  <span class="pillar-number-large text-body">01</span>
+                  <span class="pillar-text text-body"><span class="pillar-label">Smart Agent Alliance</span><span class="pillar-description">, sponsor support built and provided at no cost to agents.</span></span>
                 </div>
                 <div class="flex items-center gap-3 justify-center pillar-row">
-                  <span class="pillar-number text-body">02</span>
-                  <span class="pillar-text text-body"><span class="pillar-number">Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
+                  <span class="pillar-number-large text-body">02</span>
+                  <span class="pillar-text text-body"><span class="pillar-label">Inside eXp Realty</span><span class="pillar-description">, the largest independent real estate brokerage in the world.</span></span>
                 </div>
                 <div class="flex items-center gap-3 justify-center pillar-row">
-                  <span class="pillar-number text-body">03</span>
-                  <span class="pillar-text text-body"><span class="pillar-number">Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
+                  <span class="pillar-number-large text-body">03</span>
+                  <span class="pillar-text text-body"><span class="pillar-label">Stronger Together</span><span class="pillar-description">, eXp infrastructure plus SAA systems drive higher agent success.</span></span>
                 </div>
               </div>
             </div>

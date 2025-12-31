@@ -6,11 +6,35 @@ import { Globe, Users, TrendingUp } from 'lucide-react';
 
 const PILLAR_GLOW_COLOR = '#bca24a';
 
-// Number style with neon glow and metal backing (same as old pillar text)
+// Number style with neon glow and metal backing (25% larger than text)
 const pillarNumberStyle: React.CSSProperties = {
   color: PILLAR_GLOW_COLOR,
   fontWeight: 700,
   minWidth: '1.5em',
+  fontSize: '1.25em', // 25% larger
+  textShadow: `
+    /* WHITE CORE */
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8),
+    /* GOLD GLOW */
+    0 0 0.05em ${PILLAR_GLOW_COLOR},
+    0 0 0.09em rgba(188, 162, 74, 0.8),
+    0 0 0.13em rgba(188, 162, 74, 0.55),
+    0 0 0.18em rgba(188, 162, 74, 0.35),
+    /* METAL BACKING (4 layers) */
+    0.03em 0.03em 0 #2a2a2a,
+    0.045em 0.045em 0 #1a1a1a,
+    0.06em 0.06em 0 #0f0f0f,
+    0.075em 0.075em 0 #080808
+  `,
+  filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25))`,
+};
+
+// Label style (Smart Agent Alliance, Inside eXp Realty, Stronger Together) - gold glow, same size as text
+const pillarLabelStyle: React.CSSProperties = {
+  color: PILLAR_GLOW_COLOR,
+  fontWeight: 700,
   textShadow: `
     /* WHITE CORE */
     0 0 0.01em #fff,
@@ -32,8 +56,9 @@ const pillarNumberStyle: React.CSSProperties = {
 
 // Body text - plain, no glow
 const pillarTextStyle: React.CSSProperties = {
-  color: '#e5e4dd', // Standard body text color
-  fontWeight: 500,
+  color: '#bfbdb0', // Body text color
+  fontWeight: 400,
+  fontFamily: 'var(--font-synonym), system-ui, sans-serif',
 };
 
 /**
@@ -108,19 +133,19 @@ export function ValuePillarsTab() {
       />
       <GlassPanel variant="champagne">
         <section className="px-6" style={{ paddingTop: 'calc(1.5rem + 15px)', paddingBottom: 'calc(1.5rem + 15px)' }}>
-        <div className="mx-auto" style={{ maxWidth: '900px' }}>
+        <div className="mx-auto" style={{ maxWidth: '1500px' }}>
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3 justify-center">
               <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
-              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarNumberStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
+              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
               <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
-              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarNumberStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
+              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
             </div>
             <div className="flex items-center gap-3 justify-center">
               <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
-              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarNumberStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
+              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
             </div>
           </div>
         </div>
