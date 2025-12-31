@@ -2641,7 +2641,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
         </div>
         <div class="text-center mt-12 scroll-reveal">
-          <p class="text-body max-w-xl mx-auto" style="color: #e5e4dd;">Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.</p>
+          <p class="text-body max-w-xl mx-auto" style="color: #e5e4dd;">SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.</p>
         </div>
       </div>
     </section>

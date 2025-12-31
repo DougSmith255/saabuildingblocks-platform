@@ -18,7 +18,7 @@ const BENEFITS = [
   "No required meetings",
 ];
 const CTA_TEXT = "See How It Works";
-const DISCLAIMER = "Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.";
+const DISCLAIMER = "SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.";
 
 // Main image - Aligned Incentives
 const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public';
@@ -218,7 +218,7 @@ export function WhySAA() {
                 className="bento-card relative rounded-2xl overflow-hidden border p-6 md:p-8 text-center"
                 style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.3)' }}
               >
-                <p className="text-body text-lg mb-5">Ready to see the difference?</p>
+                <p className="text-body text-lg mb-5">SAA is designed for independent agents, not for those seeking a traditional team structure, commission oversight, or required production standards.</p>
                 <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
               </div>
             </RevealScale>
