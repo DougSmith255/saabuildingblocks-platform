@@ -1117,7 +1117,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       color: #bca24a;
       font-weight: 700;
       min-width: 1.5em;
-      font-size: 1.5em; /* 50% larger than text */
+      font-size: 1.75em; /* 75% larger than text */
       text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
         0 0 0.05em #bca24a, 0 0 0.09em rgba(188, 162, 74, 0.8),
         0 0 0.13em rgba(188, 162, 74, 0.55), 0 0 0.18em rgba(188, 162, 74, 0.35),
