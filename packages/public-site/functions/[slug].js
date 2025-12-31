@@ -3017,7 +3017,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        ${agent.profile_image_url ? `<img src="${escapeHTML(agent.profile_image_url)}" alt="${escapeHTML(fullName)}" style="width: 100%; height: 100%; object-fit: cover;" />` : `<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); display: flex; align-items: center; justify-content: center;"><span style="font-size: 48px; color: #ffd700;">${escapeHTML(agent.display_first_name?.charAt(0) || 'A')}</span></div>`}
+                        ${agent.profile_image_url ? `<img src="${escapeHTML(agent.profile_image_url)}" alt="${escapeHTML(fullName)}" style="width: 100%; height: 100%; object-fit: cover; background-color: #d8d8da;" />` : `<div style="width: 100%; height: 100%; background: #d8d8da; display: flex; align-items: center; justify-content: center;"><span style="font-size: 48px; color: #ffd700;">${escapeHTML(agent.display_first_name?.charAt(0) || 'A')}</span></div>`}
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
