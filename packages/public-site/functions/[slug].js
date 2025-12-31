@@ -2287,60 +2287,86 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       line-height: 1.6;
       flex: 1;
     }
-    /* Position number badge for leadership cards */
+    /* Position number badge for leadership cards - 3D icon style */
     .position-badge {
       position: absolute;
-      top: -8px;
-      right: -8px;
-      width: 40px;
-      height: 40px;
+      top: -12px;
+      right: -12px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-taskor), 'Taskor', system-ui, sans-serif;
-      font-size: 20px;
+      font-size: 28px;
       font-weight: bold;
       z-index: 20;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
     }
     .position-badge-gold {
-      background: linear-gradient(180deg, #ffd700 0%, #c9a800 100%);
-      color: #1a1a1a;
-      border: 2px solid rgba(255,255,255,0.3);
+      background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
+      border: 2px solid rgba(255,255,255,0.2);
+      color: #bca24a;
+      text-shadow:
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.05em #bca24a,
+        0 0 0.09em rgba(188, 162, 74, 0.8),
+        0 0 0.13em rgba(188, 162, 74, 0.55),
+        0 0 0.18em rgba(188, 162, 74, 0.35),
+        0.03em 0.03em 0 #2a2a2a,
+        0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f,
+        0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.3);
     }
     .position-badge-silver {
       background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
-      color: #ffd700;
       border: 2px solid rgba(255,255,255,0.2);
-      text-shadow: 0 0 8px rgba(255,215,0,0.5);
+      color: #bca24a;
+      text-shadow:
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.05em #bca24a,
+        0 0 0.09em rgba(188, 162, 74, 0.8),
+        0 0 0.13em rgba(188, 162, 74, 0.55),
+        0 0 0.18em rgba(188, 162, 74, 0.35),
+        0.03em 0.03em 0 #2a2a2a,
+        0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f,
+        0.075em 0.075em 0 #080808;
+      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.3);
     }
     @media (min-width: 768px) {
-      .position-badge { width: 48px; height: 48px; font-size: 24px; }
+      .position-badge { width: 64px; height: 64px; font-size: 32px; top: -14px; right: -14px; }
     }
-    /* Bio dropdown/accordion */
+    /* Bio dropdown/accordion - discreet text link style */
     .founder-bio-toggle {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.35rem;
       cursor: pointer;
-      padding: 0.5rem 1rem;
-      margin-top: 0.75rem;
-      background: rgba(255,215,0,0.1);
-      border: 1px solid rgba(255,215,0,0.2);
-      border-radius: 0.5rem;
-      color: #ffd700;
+      padding: 0;
+      margin-top: 0.5rem;
+      background: transparent;
+      border: none;
+      color: #e5e4dd;
+      opacity: 0.6;
       font-family: 'Synonym', system-ui, sans-serif;
-      font-size: 14px;
-      transition: all 0.3s ease;
+      font-size: 13px;
+      transition: opacity 0.3s ease;
     }
     .founder-bio-toggle:hover {
-      background: rgba(255,215,0,0.15);
-      border-color: rgba(255,215,0,0.3);
+      opacity: 0.8;
     }
     .founder-bio-toggle svg {
       transition: transform 0.3s ease;
+      opacity: 0.7;
     }
     .founder-bio-toggle.open svg {
       transform: rotate(180deg);
