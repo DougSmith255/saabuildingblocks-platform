@@ -11,7 +11,7 @@ const pillarNumberStyle: React.CSSProperties = {
   color: PILLAR_GLOW_COLOR,
   fontWeight: 700,
   minWidth: '1.5em',
-  fontSize: '1.25em', // 25% larger
+  fontSize: '1.5em', // 50% larger
   textShadow: `
     /* WHITE CORE */
     0 0 0.01em #fff,
