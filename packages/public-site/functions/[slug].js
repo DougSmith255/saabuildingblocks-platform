@@ -986,10 +986,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .scroll-indicator {
       position: fixed;
       bottom: max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px));
-      right: 24px;
+      right: 32px;
       pointer-events: none;
       z-index: -1;
-      filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.4)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.2));
+      filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
       transition: opacity 0.3s ease-out, transform 0.3s ease-out;
     }
 
@@ -1017,8 +1017,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .scroll-arrow > div {
       width: 36px;
       height: 36px;
-      border-right: 8px solid #ffd700;
-      border-bottom: 8px solid #ffd700;
+      border-right: 8px solid #bfbdb0;
+      border-bottom: 8px solid #bfbdb0;
       border-radius: 4px;
       transform: rotate(45deg) translateZ(1px);
       filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px rgba(255,255,255,0.8));
