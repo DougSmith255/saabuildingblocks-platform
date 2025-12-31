@@ -18,7 +18,7 @@ export default function OurExpTeam() {
     {
       tier: 1,
       name: "Doug Smart",
-      title: "Co-Founder, Smart Agent Alliance",
+      title: "Co-Founder & Full-Stack Developer",
       image: DOUG_PROFILE_IMAGE,
       bio: [
         "Top 1% eXp team builder and the architect behind Smart Agent Alliance's entire digital infrastructure. Doug built this website, the automation systems, agent webpages, and the technology stack that gives our agents an unfair advantage in their markets.",
@@ -29,7 +29,7 @@ export default function OurExpTeam() {
     {
       tier: 2,
       name: "Karrie Hill, JD",
-      title: "Co-Founder, Smart Agent Alliance",
+      title: "Co-Founder & eXp Certified Mentor",
       image: KARRIE_PROFILE_IMAGE,
       bio: [
         "UC Berkeley Law graduate (top 5% of her class), eXp Certified Mentor, and the strategic mind behind agent success at Smart Agent Alliance. Karrie built a six-figure real estate business in her first full year—no cold calls, no door knocking—using YouTube marketing strategies she now teaches to agents.",

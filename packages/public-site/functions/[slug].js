@@ -3060,13 +3060,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" alt="Karrie Hill, JD" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" alt="Karrie Hill" style="width: 100%; height: 100%; object-fit: cover;" />
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
-                  <h3 class="founder-name">Karrie Hill, JD</h3>
-                  <p class="founder-title">Co-Founder & eXp Certified Mentor</p>
+                  <h3 class="founder-name">Karrie Hill</h3>
+                  <p class="founder-title">Co-Founder & California Lawyer</p>
                   <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
                     <span>About Karrie</span>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>

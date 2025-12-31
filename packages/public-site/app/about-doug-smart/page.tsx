@@ -16,7 +16,7 @@ const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55d
 export default function AboutDougSmart() {
   const highlights = [
     { label: "Role", value: "Co-Founder, Smart Agent Alliance" },
-    { label: "Specialty", value: "Digital Systems Architect" },
+    { label: "Specialty", value: "Full-Stack Developer" },
     { label: "Ranking", value: "Top 1% eXp Team Builders" },
     { label: "Base", value: "Tiburon, California" }
   ];
