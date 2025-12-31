@@ -460,7 +460,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   const agentImageUrl = agent.profile_image_url || `${siteUrl}/images/default-profile.png`;
   const agentExpEmail = agent.exp_email || 'doug.smart@expreferral.com';
   const agentFullLegalName = agent.full_legal_name || fullName || 'Sheldon Douglas Smart';
-  const agentTagline = `Join ${displayName}'s Team (3700+ Agents)`;
+  const agentTagline = `Join ${displayName}'s Team`;
 
   // Cloudflare Images CDN
   const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
