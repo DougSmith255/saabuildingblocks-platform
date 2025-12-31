@@ -3636,21 +3636,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             // Save to localStorage
             localStorage.setItem('saa_join_submitted', JSON.stringify(formData));
 
-            // Show success
-            joinMessage.className = 'form-message success';
-            joinMessage.textContent = 'Thank you! We will be in touch soon.';
-            joinMessage.style.display = 'block';
+            // Close join modal and open instructions immediately
+            closeModal('join');
+            userNameDisplay.textContent = formData.firstName;
+            setTimeout(() => openModal('instructions'), 300);
 
-            // Close join modal and open instructions
-            setTimeout(() => {
-              closeModal('join');
-              userNameDisplay.textContent = formData.firstName;
-              setTimeout(() => openModal('instructions'), 300);
-
-              // Reset form
-              joinForm.reset();
-              joinMessage.style.display = 'none';
-            }, 1500);
+            // Reset form
+            joinForm.reset();
           } else {
             joinMessage.className = 'form-message error';
             joinMessage.textContent = result.error || 'Something went wrong. Please try again.';
