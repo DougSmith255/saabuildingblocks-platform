@@ -2535,7 +2535,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     <!-- Why Smart Agent Alliance Section -->
     <section class="section py-24 md:py-32 px-6 overflow-hidden relative">
-      <div class="section-content scroll-reveal" id="why-saa-section">
+      <div class="section-content scroll-reveal" id="why-saa-section" style="max-width: 1300px; margin: 0 auto;">
         <div class="text-center mb-12">
           <h2 class="text-h2 h2-container">
             <span class="h2-word">Why</span>
@@ -2549,11 +2549,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div style="grid-column: span 7 / span 7;">
             <div class="bento-card" style="height: 100%;">
               <div class="bento-card-content">
-                <div class="mb-8">
-                  <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: clamp(1.5rem, 3vw, 1.875rem);">Elite systems. Proven training. Real community.</p>
-                  <p class="text-body mt-4 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
-                  <p class="font-bold mt-6" style="font-family: var(--font-amulya); color: #ffd700; font-size: clamp(1.25rem, 2.5vw, 1.5rem);">Smart Agent Alliance was built differently.</p>
-                  <p class="text-body mt-4" style="line-height: 1.7;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
+                <div class="mb-6">
+                  <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
+                  <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
+                  <p class="font-bold mt-5" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.5rem;">Smart Agent Alliance was built differently.</p>
+                  <p class="text-body mt-3" style="line-height: 1.6;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div class="flex items-center gap-3">
