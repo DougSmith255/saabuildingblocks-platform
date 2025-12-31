@@ -2287,62 +2287,22 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       line-height: 1.6;
       flex: 1;
     }
-    /* Position number badge for leadership cards - 3D icon style */
-    .position-badge {
+    /* Position number for leadership cards - 3D icon style (no circle) */
+    .position-number {
       position: absolute;
-      top: -12px;
-      right: -12px;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: -20px;
+      right: -10px;
       font-family: var(--font-taskor), 'Taskor', system-ui, sans-serif;
-      font-size: 28px;
+      font-size: 64px;
       font-weight: bold;
       z-index: 20;
-    }
-    .position-badge-gold {
-      background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
-      border: 2px solid rgba(255,255,255,0.2);
-      color: #bca24a;
-      text-shadow:
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        0 0 0.05em #bca24a,
-        0 0 0.09em rgba(188, 162, 74, 0.8),
-        0 0 0.13em rgba(188, 162, 74, 0.55),
-        0 0 0.18em rgba(188, 162, 74, 0.35),
-        0.03em 0.03em 0 #2a2a2a,
-        0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f,
-        0.075em 0.075em 0 #080808;
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.3);
-    }
-    .position-badge-silver {
-      background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%);
-      border: 2px solid rgba(255,255,255,0.2);
-      color: #bca24a;
-      text-shadow:
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        0 0 0.05em #bca24a,
-        0 0 0.09em rgba(188, 162, 74, 0.8),
-        0 0 0.13em rgba(188, 162, 74, 0.55),
-        0 0 0.18em rgba(188, 162, 74, 0.35),
-        0.03em 0.03em 0 #2a2a2a,
-        0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f,
-        0.075em 0.075em 0 #080808;
-      filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(188, 162, 74, 0.25));
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.3);
+      color: #c4a94d;
+      filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+      transform: perspective(500px) rotateX(8deg);
+      line-height: 1;
     }
     @media (min-width: 768px) {
-      .position-badge { width: 64px; height: 64px; font-size: 32px; top: -14px; right: -14px; }
+      .position-number { font-size: 80px; top: -25px; right: -15px; }
     }
     /* Bio dropdown/accordion - discreet text link style */
     .founder-bio-toggle {
@@ -3056,7 +3016,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.2s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,215,0,0.3); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
-                    <div class="position-badge position-badge-gold">1</div>
+                    <span class="position-number">1</span>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
@@ -3074,7 +3034,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.35s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
-                    <div class="position-badge position-badge-silver">2</div>
+                    <span class="position-number">2</span>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
@@ -3099,7 +3059,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.5s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
-                    <div class="position-badge position-badge-silver">3</div>
+                    <span class="position-number">3</span>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
