@@ -934,8 +934,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     .hero-vignette {
       position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 100% 100% at 50% 100%, transparent 0%, transparent 50%, rgba(0,0,0,0.5) 100%);
+      left: 0;
+      right: 0;
+      top: 0;
+      height: calc(100% + 100px);
+      background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%);
       pointer-events: none;
     }
 
