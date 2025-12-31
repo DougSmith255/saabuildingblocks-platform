@@ -97,13 +97,14 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
   return (
     <div
       className={`
-        group relative py-2
+        relative py-2
         ${className}
       `}
     >
       {/* Button wrapper - inline container with relative positioning for light bars */}
       {/* This ensures light bars are positioned relative to button, not parent container */}
-      <div className="relative inline-block">
+      {/* group class is here so hover only triggers on button face, not padding */}
+      <div className="group relative inline-block">
         {as === 'button' ? (
           <button
             type="button"
