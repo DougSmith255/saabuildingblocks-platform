@@ -3035,7 +3035,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       </div>
     </section>
 
-    <!-- Leadership Behind Your Sponsor Section -->
+    <!-- Your Support Network Section -->
     <div class="glass-panel" style="margin-top: 32px;">
       <div class="glass-panel-bg glass-panel-marigold"></div>
       <div class="glass-panel-content">
@@ -3044,10 +3044,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <!-- Header -->
             <div class="scroll-reveal" style="text-align: center; margin-bottom: 3rem; transition: all 0.7s ease;">
               <h2 class="text-h2 h2-container">
-                <span class="h2-word">Leadership</span>
-                <span class="h2-word">Behind</span>
                 <span class="h2-word">Your</span>
-                <span class="h2-word">Sponsor</span>
+                <span class="h2-word">Support</span>
+                <span class="h2-word">Network</span>
               </h2>
             </div>
 
@@ -3120,6 +3119,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Additional layers note -->
+            <div class="scroll-reveal" style="text-align: center; margin-top: 2rem; transition: all 0.7s ease; transition-delay: 0.6s;">
+              <p class="text-body" style="opacity: 0.6; font-size: 14px;">+4 more layers of leadership support</p>
             </div>
           </div>
         </section>
