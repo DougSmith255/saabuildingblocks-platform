@@ -1,219 +1,883 @@
 'use client';
 
-import { useState } from 'react';
-import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
+import { useState, useEffect, useRef } from 'react';
+import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { GreenLaserGridEffect } from '@/components/shared/hero-effects/GreenLaserGridEffect';
 
 /**
- * eXp Realty Revenue Share Calculator
- * Interactive calculator for projecting revenue share earnings
+ * Revenue Share Tier Configuration
  */
-export default function RevenueShareCalculator() {
-  const [avgEarnings, setAvgEarnings] = useState(80000);
-  const [tiers, setTiers] = useState([0, 0, 0, 0, 0, 0, 0]);
+const TIER_CONFIG = {
+  1: { rate: 0.035, cap: 1400, minFLQAs: 0, name: 'Front Line (Your FLAs)', desc: 'Agents you personally sponsor. Your direct recruits earn you the most per person.' },
+  2: { rate: 0.04, cap: 1600, minFLQAs: 0, name: 'Second Line', desc: 'Agents sponsored by your Tier 1. Higher rate rewards team building.' },
+  3: { rate: 0.025, cap: 1000, minFLQAs: 0, name: 'Third Line', desc: 'Agents 2 levels deep. Network effects start compounding.' },
+  4: { rate: 0.015, cap: 600, minFLQAs: 5, name: 'Fourth Line', desc: 'Lower rate but larger potential volume.' },
+  5: { rate: 0.01, cap: 400, minFLQAs: 10, name: 'Fifth Line', desc: 'Building momentum in your organization.' },
+  6: { rate: 0.025, cap: 1000, minFLQAs: 15, name: 'Sixth Line', desc: 'Rate increases as organization grows.' },
+  7: { rate: 0.05, cap: 2000, minFLQAs: 30, name: 'Seventh Line', desc: 'Highest rate and cap rewards true builders.' },
+} as const;
 
-  // Tier configuration: rate, cap
-  const tierConfig = [
-    { tier: 1, rate: 0.035, cap: 1400, label: "Tier 1 (Direct)", bonusEligible: true },
-    { tier: 2, rate: 0.04, cap: 1600, label: "Tier 2", bonusEligible: true },
-    { tier: 3, rate: 0.025, cap: 1000, label: "Tier 3", bonusEligible: true },
-    { tier: 4, rate: 0.01, cap: 400, label: "Tier 4", bonusEligible: false },
-    { tier: 5, rate: 0.005, cap: 200, label: "Tier 5", bonusEligible: false },
-    { tier: 6, rate: 0.0025, cap: 100, label: "Tier 6", bonusEligible: false },
-    { tier: 7, rate: 0.001, cap: 50, label: "Tier 7", bonusEligible: false }
-  ];
+const TIER_COLORS = [
+  { primary: '#ffd700', secondary: '#ffed4a', glow: 'rgba(255,215,0,0.6)' },
+  { primary: '#ff9500', secondary: '#ffb347', glow: 'rgba(255,149,0,0.6)' },
+  { primary: '#ff6b6b', secondary: '#ff8e8e', glow: 'rgba(255,107,107,0.6)' },
+  { primary: '#c084fc', secondary: '#d4a5ff', glow: 'rgba(192,132,252,0.6)' },
+  { primary: '#60a5fa', secondary: '#93c5fd', glow: 'rgba(96,165,250,0.6)' },
+  { primary: '#34d399', secondary: '#6ee7b7', glow: 'rgba(52,211,153,0.6)' },
+  { primary: '#f472b6', secondary: '#f9a8d4', glow: 'rgba(244,114,182,0.6)' },
+];
 
-  const calculateRevShare = () => {
-    let yearlyTotal = 0;
-    let yearlyWithBonus = 0;
-    const bonusMultiplier = 1.30; // ~30% adjustment bonus for Tiers 1-3
+function calculateTierEarnings(tier: number, agentCount: number, avgGCI: number, frontLineAgents: number) {
+  const config = TIER_CONFIG[tier as keyof typeof TIER_CONFIG];
+  const isLocked = frontLineAgents < config.minFLQAs;
+  if (isLocked || agentCount === 0) return { earnings: 0, isLocked, perAgent: 0 };
+  const perAgent = Math.min(avgGCI * config.rate, config.cap);
+  return { earnings: perAgent * agentCount, isLocked, perAgent };
+}
 
-    tierConfig.forEach((config, index) => {
-      const agentsInTier = tiers[index];
-      const rawEarning = avgEarnings * config.rate;
-      const cappedEarning = Math.min(rawEarning, config.cap);
-      const tierTotal = cappedEarning * agentsInTier;
+const ADJUSTMENT_BONUS_RATE = 0.30;
 
-      yearlyTotal += tierTotal;
+function calculateTotalRevShare(tierCounts: number[], avgGCI: number) {
+  const frontLineAgents = tierCounts[0] || 0;
+  const tiers = tierCounts.map((count, index) => {
+    const tier = index + 1;
+    const result = calculateTierEarnings(tier, count, avgGCI, frontLineAgents);
+    return { tier, agents: count, ...result };
+  });
+  const subtotal = tiers.reduce((sum, t) => sum + t.earnings, 0);
+  const tier1to3Earnings = tiers.slice(0, 3).reduce((sum, t) => sum + t.earnings, 0);
+  const adjustmentBonus = tier1to3Earnings * ADJUSTMENT_BONUS_RATE;
+  return { tiers, subtotal, adjustmentBonus, total: subtotal + adjustmentBonus };
+}
 
-      if (config.bonusEligible) {
-        yearlyWithBonus += tierTotal * bonusMultiplier;
-      } else {
-        yearlyWithBonus += tierTotal;
+const pulseKeyframes = `
+@keyframes dataStream {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+@keyframes ringPulse {
+  0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+  25% { opacity: 0.7; transform: translate(-50%, -50%) scale(1.02); }
+  75% { opacity: 0.5; transform: translate(-50%, -50%) scale(1.01); }
+}
+@keyframes barGlow {
+  0% { box-shadow: 0 0 4px var(--glow-color), 0 0 8px var(--glow-color); }
+  30% { box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color), 0 0 35px var(--glow-color); }
+  70% { box-shadow: 0 0 8px var(--glow-color), 0 0 15px var(--glow-color); }
+  100% { box-shadow: 0 0 4px var(--glow-color), 0 0 8px var(--glow-color); }
+}
+`;
+
+function ScrambleNumber({ value, prefix = '', suffix = '' }: {
+  value: string;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const [displayValue, setDisplayValue] = useState(value);
+  const prevValueRef = useRef(value);
+
+  useEffect(() => {
+    if (value === prevValueRef.current) return;
+    prevValueRef.current = value;
+
+    const chars = '0123456789';
+    let iterations = 0;
+    const maxIterations = 8;
+
+    const interval = setInterval(() => {
+      iterations++;
+
+      if (iterations >= maxIterations) {
+        setDisplayValue(value);
+        clearInterval(interval);
+        return;
       }
-    });
 
-    return {
-      monthly: yearlyTotal / 12,
-      yearly: yearlyTotal,
-      withBonus: yearlyWithBonus
-    };
+      const scrambled = value.split('').map((char, i) => {
+        if (char === '.' || char === ',' || char === 'k' || char === 'M') return char;
+        if (i < (iterations / maxIterations) * value.length) return value[i];
+        return chars[Math.floor(Math.random() * chars.length)];
+      }).join('');
+
+      setDisplayValue(scrambled);
+    }, 40);
+
+    return () => clearInterval(interval);
+  }, [value]);
+
+  return (
+    <span style={{ fontVariantNumeric: 'tabular-nums', display: 'inline-block', minWidth: `${value.length + prefix.length + suffix.length}ch`, textAlign: 'center' }}>
+      {prefix}{displayValue}{suffix}
+    </span>
+  );
+}
+
+function Tooltip({ children, content, isVisible }: { children: React.ReactNode; content: React.ReactNode; isVisible: boolean }) {
+  return (
+    <div className="relative">
+      {children}
+      {/* Desktop: positioned tooltip above the bar */}
+      <div
+        className="hidden sm:block absolute z-50 pointer-events-none transition-all duration-300"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? 'translateY(-8px) scale(1)' : 'translateY(0) scale(0.95)',
+          bottom: '100%',
+          left: '50%',
+          marginLeft: '-140px',
+          width: '280px',
+          marginBottom: '8px',
+        }}
+      >
+        <div
+          className="p-4 rounded-xl text-sm"
+          style={{
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(30,30,30,0.95) 100%)',
+            border: '1px solid rgba(255,215,0,0.3)',
+            boxShadow: '0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          {content}
+          <div
+            className="absolute"
+            style={{
+              bottom: '-6px',
+              left: '50%',
+              marginLeft: '-6px',
+              width: '12px',
+              height: '12px',
+              background: 'rgba(30,30,30,0.95)',
+              border: '1px solid rgba(255,215,0,0.3)',
+              borderTop: 'none',
+              borderLeft: 'none',
+              transform: 'rotate(45deg)',
+            }}
+          />
+        </div>
+      </div>
+      {/* Mobile: fixed centered tooltip */}
+      <div
+        className="sm:hidden fixed z-50 pointer-events-none transition-all duration-300"
+        style={{
+          opacity: isVisible ? 1 : 0,
+          transform: isVisible ? 'scale(1)' : 'scale(0.95)',
+          top: '35%',
+          left: '50%',
+          marginLeft: '-140px',
+          width: '280px',
+        }}
+      >
+        <div
+          className="p-4 rounded-xl text-sm"
+          style={{
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(30,30,30,0.95) 100%)',
+            border: '1px solid rgba(255,215,0,0.3)',
+            boxShadow: '0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          {content}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const scenarios = [
+  { name: 'Starter', desc: 'First recruits, building foundation', tierCounts: [6, 3, 1, 1, 0, 0, 0], avgGCI: 80000 },
+  { name: 'Growing', desc: 'Team taking shape, tiers unlocking', tierCounts: [12, 18, 14, 6, 3, 0, 0], avgGCI: 90000 },
+  { name: 'Established', desc: 'Compounding kicks in across all tiers', tierCounts: [28, 45, 72, 85, 48, 22, 0], avgGCI: 100000 },
+  { name: 'Momentum', desc: 'Self-sustaining growth, network effect', tierCounts: [75, 140, 260, 380, 480, 520, 380], avgGCI: 100000 },
+  { name: 'Empire Builder', desc: 'Legacy organization, deep network', tierCounts: [150, 320, 680, 1400, 2600, 4200, 6800], avgGCI: 100000 },
+];
+
+function DisclaimerDropdown({ isRealistic }: { isRealistic: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="mt-6">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all"
+        style={{
+          background: 'rgba(255,255,255,0.03)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}
+      >
+        <span className="text-sm font-medium text-[#9a9890]">Important Disclaimer</span>
+        <svg
+          className={`w-5 h-5 text-[#9a9890] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      <div
+        className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
+      >
+        <div
+          className="px-4 py-4 mt-2 rounded-xl text-xs text-[#9a9890] space-y-3"
+          style={{
+            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid rgba(255,255,255,0.05)',
+          }}
+        >
+          {/* Primary eXp Compliance Disclaimer */}
+          <p className="text-[#bfbdb0] font-medium">
+            These figures are not a guarantee, representation or projection of earnings or profits you can or should expect. They also do not include expenses incurred by Agents in operating their businesses. eXp Realty makes no guarantee of financial success. Success with eXp Realty results only from successful sales efforts, which require hard work, diligence, skill, persistence, competence, and leadership. Your success will depend upon how well you exercise these qualities.
+          </p>
+
+          {/* Third-party site notice */}
+          <p>
+            <span className="text-[#bfbdb0]">Third-Party Disclosure:</span> Smart Agent Alliance is an independent organization and is not officially affiliated with eXp Realty. This calculator is provided for educational purposes only. For official eXp Realty income information, visit{' '}
+            <a
+              href="https://expincome.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#ffd700] hover:underline"
+            >
+              expincome.com
+            </a>.
+          </p>
+
+          {/* Calculator assumptions */}
+          <div>
+            <span className="text-[#bfbdb0]">Calculator Assumptions:</span>
+            <ul className="list-disc list-inside mt-1 space-y-1 ml-2">
+              <li>Currently showing {isRealistic ? '30%' : '100%'} of agents capping (contributing full $16,000 to company dollar)</li>
+              <li>All Front Line Agents (FLAs) are assumed to be Front Line Qualifying Agents (FLQAs)</li>
+              <li>FLQA status requires closing 2+ transactions or $5,000+ GCI within a rolling 6-month period</li>
+              <li>~20% adjustment bonus applied to T1-T3 earnings (actual bonus varies)</li>
+              <li>Revenue share rates and caps are subject to change by eXp Realty</li>
+            </ul>
+          </div>
+
+          {/* Geographic note */}
+          <p>
+            <span className="text-[#bfbdb0]">Geographic Scope:</span> This calculator reflects the revenue share structure for the United States and Canada. International rates and structures may vary.
+          </p>
+
+          {/* Tier unlock requirements */}
+          <p>
+            <span className="text-[#bfbdb0]">Tier Requirements:</span> Tiers 4-7 require maintaining qualifying FLQA counts (5, 10, 15, and 30 respectively). If FLQA count drops below threshold, those tiers become temporarily locked.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+
+      {/* Modal */}
+      <div
+        className="relative max-w-lg w-full max-h-[80vh] overflow-y-auto rounded-2xl p-6"
+        style={{
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(30,30,30,0.95) 100%)',
+          border: '1px solid rgba(255,215,0,0.3)',
+          boxShadow: '0 0 40px rgba(255,215,0,0.15), 0 20px 60px rgba(0,0,0,0.5)',
+        }}
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-[#9a9890] hover:text-white transition-colors text-xl"
+        >
+          ✕
+        </button>
+
+        <h3 className="text-xl font-bold text-[#ffd700] mb-4">How to Read This Chart</h3>
+
+        {/* Bar explanation */}
+        <div className="mb-5">
+          <div className="flex items-end gap-3 mb-3">
+            <div className="flex flex-col items-center">
+              <div className="text-sm text-[#ffd700] font-semibold mb-1">$8K</div>
+              <div className="w-10 h-12 rounded-t-lg flex items-center justify-center text-sm font-bold" style={{ background: 'linear-gradient(180deg, #ffed4a 0%, #ffd700 100%)', color: '#2a2a2a' }}>6</div>
+            </div>
+            <div className="flex-1 text-xs text-[#9a9890] space-y-1">
+              <p><span className="text-[#ffd700]">$8K</span> above bar = yearly earnings from this tier</p>
+              <p><span className="text-white">6</span> inside bar = number of agents in that tier</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Tier explanation */}
+        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Tier Labels (T1-T7)</div>
+          <div className="text-xs text-[#9a9890] space-y-1">
+            <p><span className="text-[#ffd700]">T1 (Front Line)</span> — Agents you personally sponsor (your FLAs)</p>
+            <p><span className="text-[#ff9500]">T2-T3</span> — Agents sponsored by your T1 and T2</p>
+            <p><span className="text-[#c084fc]">T4-T7</span> — Deeper tiers, unlock as you grow (require 5-30 FLQAs)</p>
+          </div>
+        </div>
+
+        {/* FLA/FLQA explanation */}
+        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Key Terms</div>
+          <div className="text-xs text-[#9a9890] space-y-1">
+            <p><span className="text-white">FLA</span> — Front Line Agent: an agent you personally sponsor</p>
+            <p><span className="text-white">FLQA</span> — Front Line Qualifying Agent: an FLA who has closed 2+ deals or $5K+ GCI in 6 months</p>
+          </div>
+        </div>
+
+        {/* Toggle explanation */}
+        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Capping Agents Toggle</div>
+          <div className="text-xs text-[#9a9890]">
+            <p className="mb-1"><span className="text-white">100%</span> — Assumes all agents cap (hit their $16k contribution limit)</p>
+            <p><span className="text-white">30%</span> — More realistic: ~30% of agents typically cap each year</p>
+          </div>
+        </div>
+
+        {/* Scenario explanation */}
+        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Scenario Tabs</div>
+          <div className="text-xs text-[#9a9890]">
+            <p>Each tab shows a different organization size — from <span className="text-white">Starter</span> (11 agents) to <span className="text-white">Empire Builder</span> (16,000+ agents). Watch how revenue share compounds as your network grows.</p>
+          </div>
+        </div>
+
+        {/* Tier Configuration Reference */}
+        <div className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Tier Configuration</div>
+          <div className="grid grid-cols-1 gap-1.5 text-xs text-[#9a9890]">
+            <p><span className="text-[#ffd700]">T1:</span> 3.5% of GCI, $1,400 cap per agent</p>
+            <p><span className="text-[#ff9500]">T2:</span> 4.0% of GCI, $1,600 cap per agent</p>
+            <p><span className="text-[#ff6b6b]">T3:</span> 2.5% of GCI, $1,000 cap per agent</p>
+            <p><span className="text-[#c084fc]">T4:</span> 1.5% of GCI, $600 cap (requires 5 FLQAs)</p>
+            <p><span className="text-[#60a5fa]">T5:</span> 1.0% of GCI, $400 cap (requires 10 FLQAs)</p>
+            <p><span className="text-[#34d399]">T6:</span> 2.5% of GCI, $1,000 cap (requires 15 FLQAs)</p>
+            <p><span className="text-[#f472b6]">T7:</span> 5.0% of GCI, $2,000 cap (requires 30 FLQAs)</p>
+            <p className="mt-2 text-[#bfbdb0]">+ ~20% adjustment bonus on T1-T3 earnings</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RevenueShareVisualization({
+  selectedScenario,
+  setSelectedScenario,
+  pulsingTier,
+  onHoverChange,
+  setIsAutoPlaying,
+  setIsPaused,
+  setPulsingTier,
+  isRealistic,
+  setIsRealistic
+}: {
+  selectedScenario: number;
+  setSelectedScenario: (i: number) => void;
+  pulsingTier: number;
+  onHoverChange: (hovering: boolean) => void;
+  setIsAutoPlaying: (v: boolean) => void;
+  setIsPaused: (v: boolean) => void;
+  setPulsingTier: (v: number) => void;
+  isRealistic: boolean;
+  setIsRealistic: (v: boolean) => void;
+}) {
+  const currentScenario = scenarios[selectedScenario];
+  // Apply 30% multiplier for realistic mode (30% of agents capping)
+  const cappingMultiplier = isRealistic ? 0.30 : 1.0;
+  const adjustedResults = calculateTotalRevShare(currentScenario.tierCounts, currentScenario.avgGCI);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const results = {
+    ...adjustedResults,
+    tiers: adjustedResults.tiers.map(t => ({
+      ...t,
+      earnings: t.earnings * cappingMultiplier,
+      perAgent: t.perAgent * cappingMultiplier,
+    })),
+    subtotal: adjustedResults.subtotal * cappingMultiplier,
+    adjustmentBonus: adjustedResults.adjustmentBonus * cappingMultiplier,
+    total: adjustedResults.total * cappingMultiplier,
+  };
+  // Use max from current scenario so bars scale nicely within each view
+  const maxEarnings = Math.max(...results.tiers.map(t => t.earnings), 1);
+  const [hoveredTier, setHoveredTier] = useState<number | null>(null);
+
+  const handleTierHover = (tierIndex: number | null) => {
+    setHoveredTier(tierIndex);
+    onHoverChange(tierIndex !== null);
   };
 
-  const results = calculateRevShare();
+  const handleScenarioClick = (index: number) => {
+    setIsAutoPlaying(false);
+    setSelectedScenario(index);
+    setPulsingTier(-1);
+    setIsPaused(true);
+    setTimeout(() => {
+      setIsPaused(false);
+      setPulsingTier(0);
+    }, 500);
+  };
 
-  const updateTier = (index: number, value: number) => {
-    const newTiers = [...tiers];
-    newTiers[index] = Math.max(0, Math.min(100, value));
-    setTiers(newTiers);
+  return (
+    <div
+      className="rounded-2xl overflow-hidden relative"
+      style={{
+        background: 'rgba(10,10,10,0.75)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255,215,0,0.2)',
+      }}
+    >
+      <style>{pulseKeyframes}</style>
+
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse 80% 60% at center 50%, transparent 0%, rgba(10,10,10,0.2) 30%, rgba(10,10,10,0.5) 60%, rgba(10,10,10,0.7) 100%)',
+          zIndex: 1,
+        }}
+      />
+
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <div className="relative" style={{ width: '600px', height: '600px' }}>
+          {/* Central glow - pulses with each tier */}
+          <div
+            key={pulsingTier >= 0 ? `glow-pulse-${pulsingTier}` : 'glow-static'}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            style={{
+              width: '300px',
+              height: '300px',
+              background: `radial-gradient(circle, ${pulsingTier >= 0 ? TIER_COLORS[pulsingTier]?.primary || '#ffd700' : '#ffd700'}${pulsingTier >= 0 ? '15' : '06'} 0%, transparent 70%)`,
+              animation: pulsingTier >= 0 ? 'ringPulse 1080ms ease-out forwards' : 'none',
+              transition: 'background 0.3s ease-out',
+            }}
+          />
+          {results.tiers.map((tier, i) => {
+            const color = TIER_COLORS[i];
+            const isPulsing = pulsingTier === i && !tier.isLocked;
+            // When T7 (index 6) pulses during animation, all unlocked rings pulse together
+            const allPulse = pulsingTier === 6 && !tier.isLocked && hoveredTier === null;
+            const shouldPulse = isPulsing || allPulse;
+            const isHovered = hoveredTier === i;
+            const isActive = isHovered || shouldPulse;
+            const size = 150 + i * 65;
+
+            return (
+              <div
+                key={shouldPulse ? `ring-pulse-${i}-${pulsingTier}` : `ring-${i}`}
+                className={`absolute top-1/2 left-1/2 rounded-full ${tier.isLocked ? 'opacity-10' : ''}`}
+                style={{
+                  width: size,
+                  height: size,
+                  transform: 'translate(-50%, -50%)',
+                  border: `1.5px solid ${isActive ? color.primary + '60' : color.primary + '15'}`,
+                  boxShadow: isActive ? `0 0 20px ${color.primary}40` : 'none',
+                  animation: shouldPulse ? 'ringPulse 1080ms ease-out forwards' : 'none',
+                  transition: isActive ? 'none' : 'border-color 0.3s, box-shadow 0.3s',
+                }}
+              />
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="relative z-10 p-4 sm:p-6">
+        {/* Heading with H3 size range and tagline styling (glow, rotateX) */}
+        <h2
+          className="text-center mb-2"
+          style={{
+            fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+            fontSize: 'clamp(24px, calc(21.818px + 0.8727vw), 48px)',
+            fontWeight: 600,
+            color: '#bfbdb0',
+            lineHeight: 1.1,
+            transform: 'rotateX(15deg)',
+            fontFeatureSettings: '"ss01" 1',
+            textShadow: '0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8)',
+            filter: 'drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6))',
+          }}
+        >
+          eXp Revenue Share Potential
+        </h2>
+        <p className="text-center text-sm sm:text-body text-[#9a9890] mb-6 max-w-2xl mx-auto">
+          Whether you treat it as a side hustle or go all-in, eXp's 7-tier revenue share compounds over time into real passive income.
+        </p>
+
+        {/* Mobile: 2-col grid with Empire Builder spanning both | Desktop: Flex row */}
+        <div className="grid grid-cols-2 gap-2 mb-2 sm:flex sm:flex-wrap sm:justify-center">
+          {scenarios.map((scenario, i) => (
+            <button
+              key={i}
+              onClick={() => handleScenarioClick(i)}
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition-all duration-300 text-sm text-center ${
+                i === 4 ? 'col-span-2' : ''
+              } ${
+                selectedScenario === i
+                  ? 'bg-gradient-to-r from-[#ffd700] to-[#ffed4a] text-black'
+                  : 'bg-white/5 hover:bg-white/10 border border-white/10'
+              }`}
+              style={selectedScenario === i ? { boxShadow: '0 0 12px rgba(255,215,0,0.4), 0 2px 6px rgba(255,215,0,0.3)' } : {}}
+            >
+              {scenario.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Fixed height container for description to prevent layout shift between tabs */}
+        <div className="text-center mb-4 h-12 flex items-center justify-center">
+          <p className="text-base text-[#9a9890]">
+            {currentScenario.desc} <br className="sm:hidden" /><span className="whitespace-nowrap">{currentScenario.tierCounts.reduce((a, b) => a + b, 0).toLocaleString()} agents</span>
+          </p>
+        </div>
+
+        {/* Bar chart container - fixed height to prevent layout shift between tabs */}
+        <div className="flex items-end justify-center gap-2 sm:gap-4 md:gap-6 mb-0 pt-6 sm:pt-6 relative h-44 sm:h-52">
+          {results.tiers.map((tier, i) => {
+            const config = TIER_CONFIG[(i + 1) as keyof typeof TIER_CONFIG];
+            const color = TIER_COLORS[i];
+            const isHovered = hoveredTier === i;
+            const isPulsing = pulsingTier === i && !tier.isLocked;
+            // Calculate bar height in pixels - max 160px on desktop, scales down on mobile
+            const maxBarPx = 160;
+            const minBarPx = 16;
+            const barHeightPx = Math.max((tier.earnings / maxEarnings) * maxBarPx, minBarPx);
+
+            return (
+              <Tooltip
+                key={i}
+                isVisible={isHovered}
+                content={
+                  <div>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-bold" style={{ color: color.primary }}>{config.name}</span>
+                      <span
+                        className="text-[10px] px-2 py-0.5 rounded"
+                        style={{
+                          background: tier.isLocked ? 'rgba(255,255,255,0.1)' : 'rgba(52,211,153,0.2)',
+                          color: tier.isLocked ? '#9a9890' : '#34d399',
+                        }}
+                      >
+                        {tier.isLocked ? `${config.minFLQAs} FLQAs to Unlock` : 'Unlocked'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-[#bfbdb0] mt-1">{config.desc}</p>
+                    <div className="mt-2 space-y-1 text-xs">
+                      <div>Rate: {(config.rate * 100).toFixed(1)}% | Cap: ${config.cap}</div>
+                      <div>{tier.agents.toLocaleString()} agents × ${tier.perAgent.toLocaleString()} = ${tier.earnings.toLocaleString()}</div>
+                    </div>
+                  </div>
+                }
+              >
+                <div
+                  className={`relative cursor-pointer ${tier.isLocked ? 'opacity-30' : ''}`}
+                  style={{
+                    width: 'clamp(36px, 10vw, 80px)',
+                    height: `${barHeightPx}px`,
+                    transformOrigin: 'bottom',
+                    transition: 'height 0.5s ease-out',
+                  }}
+                  onMouseEnter={() => handleTierHover(i)}
+                  onMouseLeave={() => handleTierHover(null)}
+                  onClick={() => handleTierHover(hoveredTier === i ? null : i)}
+                >
+                  <div
+                    className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap"
+                    style={{
+                      color: color.primary,
+                      fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                      fontSize: 'clamp(10px, 2.5vw, 14px)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <ScrambleNumber
+                      value={tier.earnings > 0 ? tier.earnings >= 1000000 ? (tier.earnings / 1000000).toFixed(1) + 'M' : (tier.earnings / 1000).toFixed(0) + 'k' : '0'}
+                      prefix="$"
+                    />
+                  </div>
+
+                  <div
+                    key={isPulsing ? `pulse-${pulsingTier}` : 'static'}
+                    className="absolute inset-0 rounded-t-lg overflow-hidden"
+                    style={{
+                      background: `linear-gradient(180deg, ${color.secondary} 0%, ${color.primary} 100%)`,
+                      boxShadow: isHovered ? `0 0 30px ${color.glow}` : `0 0 10px ${color.glow}`,
+                      '--glow-color': color.glow,
+                      animation: isPulsing ? 'barGlow 1080ms ease-out forwards' : 'none',
+                    } as React.CSSProperties}
+                  >
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: 'repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,255,255,0.15) 8px, rgba(255,255,255,0.15) 10px)',
+                        animation: isPulsing ? 'dataStream 1s linear infinite' : 'none',
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{
+                      color: '#2a2a2a',
+                      fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                      fontSize: 'clamp(11px, 2.5vw, 16px)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <ScrambleNumber
+                      value={tier.agents >= 1000 ? (tier.agents / 1000).toFixed(1) + 'k' : String(tier.agents)}
+                    />
+                  </div>
+
+                  {isPulsing && (
+                    <div
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-2 rounded-full"
+                      style={{ background: color.primary, animation: 'ripple 0.8s ease-out' }}
+                    />
+                  )}
+                </div>
+              </Tooltip>
+            );
+          })}
+        </div>
+
+        <div
+          style={{
+            height: '2px',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,215,0,0.5) 10%, rgba(255,215,0,0.7) 50%, rgba(255,215,0,0.5) 90%, transparent 100%)',
+            boxShadow: '0 0 8px rgba(255,215,0,0.3)',
+          }}
+        />
+
+        <div className="flex justify-center gap-2 sm:gap-4 md:gap-6 mt-2">
+          {results.tiers.map((tier, i) => {
+            const color = TIER_COLORS[i];
+            return (
+              <div
+                key={i}
+                style={{ width: 'clamp(36px, 10vw, 80px)' }}
+                className="text-center cursor-pointer"
+                onMouseEnter={() => handleTierHover(i)}
+                onMouseLeave={() => handleTierHover(null)}
+                onClick={() => handleTierHover(hoveredTier === i ? null : i)}
+              >
+                <div className="text-xs sm:text-sm font-bold" style={{ color: color.primary }}>T{tier.tier}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Info button and hint */}
+        <div className="flex items-center justify-center gap-2 mt-1 mb-3">
+          <p className="text-sm text-[#9a9890]">Tap or hover tiers for details</p>
+          <button
+            onClick={() => setShowInfoModal(true)}
+            className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all hover:scale-110"
+            style={{
+              background: 'rgba(255,215,0,0.15)',
+              border: '1px solid rgba(255,215,0,0.4)',
+              color: '#ffd700',
+            }}
+            title="How to read this chart"
+          >
+            ?
+          </button>
+        </div>
+
+        <InfoModal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} />
+
+        {/* Total earnings - with realistic toggle */}
+        <div className="flex items-center gap-3 sm:gap-6 py-3 px-4 rounded-xl" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)' }}>
+          {/* Toggle on far left */}
+          <button
+            onClick={() => setIsRealistic(!isRealistic)}
+            className="flex flex-col items-center gap-1 flex-shrink-0"
+          >
+            <div className="flex items-center gap-2">
+              <div
+                className="relative w-10 h-5 rounded-full transition-colors duration-300"
+                style={{
+                  background: isRealistic ? 'rgba(255,215,0,0.4)' : 'rgba(255,255,255,0.15)',
+                }}
+              >
+                <div
+                  className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300"
+                  style={{
+                    left: isRealistic ? '22px' : '2px',
+                    background: isRealistic ? '#ffd700' : '#9a9890',
+                  }}
+                />
+              </div>
+              <span className="text-[10px] text-[#9a9890] whitespace-nowrap">
+                {isRealistic ? '30%' : '100%'}
+              </span>
+            </div>
+            <span className="text-[9px] text-[#6a6860] whitespace-nowrap uppercase" style={{ fontFamily: 'var(--font-synonym), Synonym, system-ui, sans-serif' }}>Capping Agents</span>
+          </button>
+
+          {/* Total - centered */}
+          <div className="flex-1 text-center">
+            <span
+              className="text-[#ffd700]"
+              style={{
+                fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
+                fontSize: 'clamp(18px, 4vw, 36px)',
+                fontWeight: 600,
+              }}
+            >
+              <ScrambleNumber value={results.total.toLocaleString()} prefix="$" suffix="/yr" />
+            </span>
+            <div className="text-xs text-[#9a9890]">
+              incl. 20% bonus on T1-3
+            </div>
+          </div>
+
+          {/* Spacer to balance layout */}
+          <div className="w-16 flex-shrink-0 hidden sm:block" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * eXp Realty Revenue Share Calculator
+ * Interactive visualization for projecting revenue share earnings
+ */
+export default function RevenueShareCalculator() {
+  const [selectedScenario, setSelectedScenario] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [pulsingTier, setPulsingTier] = useState(-1);
+  const [isPaused, setIsPaused] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
+  const [isRealistic, setIsRealistic] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Start animation only when card is 50% visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !isVisible) {
+          setIsVisible(true);
+          // Start the animation after a brief delay once visible
+          setTimeout(() => {
+            setIsPaused(false);
+            setPulsingTier(0);
+          }, 500);
+        }
+      },
+      { threshold: 0.5 } // 50% visibility
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isVisible]);
+
+  useEffect(() => {
+    if (isPaused || isHovering) return;
+
+    const currentScenario = scenarios[selectedScenario];
+    // Find the last tier that has agents (for balanced timing on smaller scenarios)
+    const lastActiveTier = currentScenario.tierCounts.reduce((last, count, i) => count > 0 ? i : last, 0);
+
+    const interval = setInterval(() => {
+      setPulsingTier(prev => {
+        const nextTier = prev + 1;
+
+        // Switch scenarios after the last active tier pulses (not always after T7)
+        if (nextTier > lastActiveTier) {
+          if (isAutoPlaying) {
+            // Brief pause at end of cycle, then switch button
+            setIsPaused(true);
+            setTimeout(() => {
+              setSelectedScenario(s => (s + 1) % scenarios.length);
+              // Longer pause before starting next cycle to balance dead time
+              setTimeout(() => {
+                setIsPaused(false);
+                setPulsingTier(0);
+              }, 600);
+            }, 200);
+          } else {
+            // Manual tab click - stop after one playthrough
+            setIsPaused(true);
+          }
+          return -1;
+        }
+
+        return nextTier;
+      });
+    }, 1080);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, isPaused, isHovering, selectedScenario]);
+
+  const sharedProps = {
+    selectedScenario,
+    setSelectedScenario,
+    pulsingTier,
+    onHoverChange: setIsHovering,
+    setIsAutoPlaying,
+    setIsPaused,
+    setPulsingTier,
+    isRealistic,
+    setIsRealistic,
   };
 
   return (
     <main id="main-content">
       {/* Hero Section */}
-      <StickyHeroWrapper>
+      <StickyHeroWrapper fadeSpeed={1.5}>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>PASSIVE INCOME POTENTIAL</H1>
-            <Tagline className="mt-4">
-              What 7 tiers could mean for you
-            </Tagline>
+            <H1>7 TIERS OF OPPORTUNITY</H1>
+            {/* Tagline with dark vignette behind for readability over green lasers */}
+            <div className="relative mt-4">
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '200%',
+                  height: '150px',
+                  background: 'radial-gradient(ellipse 50% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+                }}
+              />
+              <Tagline>
+                How eXp's revenue share compounds into real wealth
+              </Tagline>
+            </div>
           </div>
         </section>
       </StickyHeroWrapper>
 
-      {/* Calculator Section */}
+      {/* Revenue Share Visualization Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1900px] mx-auto">
-          {/* Average Earnings Input */}
-          <div className="mb-12">
-            <label className="block text-[#e5e4dd] font-medium mb-4">
-              Average Agent Earnings Per Year
-            </label>
-            <div className="flex items-center gap-4">
-              <input
-                type="range"
-                min="20000"
-                max="200000"
-                step="5000"
-                value={avgEarnings}
-                onChange={(e) => setAvgEarnings(Number(e.target.value))}
-                className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
-              />
-              <div className="bg-white/10 rounded-lg px-4 py-2 min-w-[120px] text-center">
-                <span className="text-[#ffd700] font-bold">${avgEarnings.toLocaleString()}</span>
-              </div>
-            </div>
-          </div>
+        <div className="max-w-[1100px] mx-auto" ref={cardRef}>
+          <RevenueShareVisualization {...sharedProps} />
 
-          {/* Tier Inputs */}
-          <div className="space-y-6 mb-12">
-            <div className="text-center mb-12">
-              <H2>Agents by Tier</H2>
-            </div>
-
-            {tierConfig.map((config, index) => (
-              <GenericCard key={index} padding="sm">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="sm:w-1/3">
-                    <p className="text-[#e5e4dd] font-medium">{config.label}</p>
-                    <p className="text-caption" style={{ opacity: 0.6 }}>
-                      {(config.rate * 100).toFixed(1)}% rate, ${config.cap} cap
-                      {config.bonusEligible && <span className="text-[#ffd700]"> +bonus</span>}
-                    </p>
-                  </div>
-                  <div className="flex-1 flex items-center gap-4">
-                    <input
-                      type="range"
-                      min="0"
-                      max="50"
-                      value={tiers[index]}
-                      onChange={(e) => updateTier(index, Number(e.target.value))}
-                      className="flex-1 h-2 bg-white/20 rounded-lg appearance-none cursor-pointer accent-[#ffd700]"
-                    />
-                    <input
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={tiers[index]}
-                      onChange={(e) => updateTier(index, Number(e.target.value))}
-                      className="w-20 bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-[#e5e4dd] text-center"
-                    />
-                  </div>
-                </div>
-              </GenericCard>
-            ))}
-          </div>
-
-          {/* Results */}
-          <div className="grid md:grid-cols-3 gap-6">
-            <GenericCard padding="md" centered>
-              <p className="text-body mb-2" style={{ opacity: 0.8 }}>Monthly Minimum</p>
-              <p className="text-h3 text-[#e5e4dd]">
-                ${results.monthly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </p>
-            </GenericCard>
-
-            <GenericCard padding="md" centered>
-              <p className="text-body mb-2" style={{ opacity: 0.8 }}>Yearly Minimum</p>
-              <p className="text-h3 text-[#e5e4dd]">
-                ${results.yearly.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </p>
-            </GenericCard>
-
-            <GenericCard padding="md" centered>
-              <p className="text-body mb-2" style={{ opacity: 0.8 }}>With ~30% Bonus*</p>
-              <p className="text-h3 text-[#ffd700]">
-                ${results.withBonus.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </p>
-            </GenericCard>
-          </div>
-
-          <p className="text-caption text-center mt-6" style={{ opacity: 0.6 }}>
-            *~30% adjustment bonus applies to Tiers 1-3 (varies, not guaranteed)
-          </p>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <LazySection height={500}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="text-center mb-12">
-              <H2>The Mechanics</H2>
-              <p className="text-body mt-4 max-w-2xl mx-auto">
-                How eXp's revenue share creates passive income for agents who grow the company.
-              </p>
-            </div>
-
-            <div className="space-y-6 text-body">
-              <p>
-                eXp Realty's revenue share program allows agents to earn passive income by growing the company.
-                When you sponsor other agents, you earn a percentage of their gross commission income (GCI)
-                through a 7-tier system.
-              </p>
-
-              <GenericCard padding="md">
-                <h3 className="text-h5 mb-4">Tier Structure:</h3>
-                <ul className="space-y-2">
-                  <li><strong className="text-[#ffd700]">Tier 1:</strong> Direct recruits - 3.5% rate, $1,400 cap per agent</li>
-                  <li><strong className="text-[#ffd700]">Tier 2:</strong> Their recruits - 4% rate, $1,600 cap</li>
-                  <li><strong className="text-[#ffd700]">Tier 3:</strong> 2.5% rate, $1,000 cap</li>
-                  <li><strong className="text-[#ffd700]">Tiers 4-7:</strong> Decreasing rates (0.1%-1%) with caps</li>
-                </ul>
-              </GenericCard>
-
-              <p>
-                Higher tiers unlock as you recruit qualifying agents at lower tiers.
-                Revenue share income is paid monthly, typically on the 20th of each month.
-              </p>
-            </div>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* Disclaimer */}
-      <section className="relative py-8 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1900px] mx-auto">
-          <div className="bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-xl p-6">
-            <p className="text-caption text-center" style={{ color: '#ffd700' }}>
-              <strong>Important:</strong> Figures are illustrative only and do not represent actual or guaranteed income.
-              Results depend on many factors including agent production, retention, and eXp Realty policies.
-            </p>
-          </div>
+          {/* Disclaimer Dropdown */}
+          <DisclaimerDropdown isRealistic={isRealistic} />
         </div>
       </section>
 
@@ -223,7 +887,7 @@ export default function RevenueShareCalculator() {
           <div className="max-w-[1900px] mx-auto text-center">
             <H2>Ready to Build Your Income Stream?</H2>
             <p className="text-body mt-4 mb-8">
-              Join the Alliance and start building passive income that can outlast your career.
+              Join Smart Agent Alliance and start building passive income that can outlast your career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <CTAButton href="/join-exp-sponsor-team/">
@@ -236,26 +900,6 @@ export default function RevenueShareCalculator() {
           </div>
         </section>
       </LazySection>
-
-      <style jsx>{`
-        input[type="range"]::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #ffd700;
-          cursor: pointer;
-        }
-        input[type="range"]::-moz-range-thumb {
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: #ffd700;
-          cursor: pointer;
-          border: none;
-        }
-      `}</style>
     </main>
   );
 }

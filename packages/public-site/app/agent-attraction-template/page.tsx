@@ -725,18 +725,20 @@ function ValuePillarsTab() {
       <GlassPanel variant="champagne">
         <section className="px-6" style={{ paddingTop: 'calc(1.5rem + 15px)', paddingBottom: 'calc(1.5rem + 15px)' }}>
           <div className="mx-auto" style={{ maxWidth: '900px' }}>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3 justify-center">
-                <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>01</span>
-                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Smart Agent Alliance, sponsor support built and provided at no cost to agents.</span>
-              </div>
-              <div className="flex items-center gap-3 justify-center">
-                <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>02</span>
-                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Inside eXp Realty, the largest independent real estate brokerage in the world.</span>
-              </div>
-              <div className="flex items-center gap-3 justify-center">
-                <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>03</span>
-                <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Stronger Together, eXp infrastructure plus SAA systems drive higher agent success.</span>
+            <div className="flex flex-col gap-3 items-center">
+              <div className="flex flex-col gap-3 text-left">
+                <div className="flex items-center gap-3">
+                  <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>01</span>
+                  <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Smart Agent Alliance, sponsor support built and provided at no cost to agents.</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>02</span>
+                  <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Inside eXp Realty, the largest independent real estate brokerage in the world.</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="pillar-number text-body text-sm md:text-base font-bold" style={{ color: '#ffd700', minWidth: '1.5em' }}>03</span>
+                  <span className="pillar-text text-body text-sm md:text-base" style={pillarTextStyle}>Stronger Together, eXp infrastructure plus SAA systems drive higher agent success.</span>
+                </div>
               </div>
             </div>
           </div>

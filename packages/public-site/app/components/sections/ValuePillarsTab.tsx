@@ -134,18 +134,20 @@ export function ValuePillarsTab() {
       <GlassPanel variant="champagne">
         <section className="px-6" style={{ paddingTop: 'calc(1.5rem + 15px)', paddingBottom: 'calc(1.5rem + 15px)' }}>
         <div className="mx-auto" style={{ maxWidth: '1500px' }}>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-3 justify-center">
-              <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
-              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
-            </div>
-            <div className="flex items-center gap-3 justify-center">
-              <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
-              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
-            </div>
-            <div className="flex items-center gap-3 justify-center">
-              <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
-              <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
+          <div className="flex flex-col gap-3 items-center">
+            <div className="flex flex-col gap-3 text-left">
+              <div className="flex items-center gap-3">
+                <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>01</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Smart Agent Alliance</span>, sponsor support built and provided at no cost to agents.</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>02</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Inside eXp Realty</span>, the largest independent real estate brokerage in the world.</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="pillar-number text-body text-sm md:text-base" style={pillarNumberStyle}>03</span>
+                <span className="text-body text-sm md:text-base" style={pillarTextStyle}><span className="pillar-number" style={pillarLabelStyle}>Stronger Together</span>, eXp infrastructure plus SAA systems drive higher agent success.</span>
+              </div>
             </div>
           </div>
         </div>

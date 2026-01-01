@@ -73,9 +73,23 @@ export default function JoinExpSponsorTeam() {
           <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <H1>JOIN SMART AGENT ALLIANCE</H1>
-            <Tagline className="mt-4">
-              Your first step to more
-            </Tagline>
+            {/* Tagline with dark vignette behind for readability over green lasers */}
+            <div className="relative mt-4">
+              <div
+                className="absolute pointer-events-none"
+                style={{
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '200%',
+                  height: '150px',
+                  background: 'radial-gradient(ellipse 50% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+                }}
+              />
+              <Tagline>
+                Your first step to more
+              </Tagline>
+            </div>
           </div>
         </section>
       </StickyHeroWrapper>
