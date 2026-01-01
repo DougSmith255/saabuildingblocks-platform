@@ -202,13 +202,24 @@ function DisclaimerDropdown({ isRealistic }: { isRealistic: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mt-6">
+    <div
+      className="relative -mt-[1px]"
+      style={{
+        background: 'rgba(10,10,10,0.75)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderLeft: '1px solid rgba(255,215,0,0.2)',
+        borderRight: '1px solid rgba(255,215,0,0.2)',
+        borderBottom: '1px solid rgba(255,215,0,0.2)',
+        borderRadius: '0 0 1rem 1rem',
+      }}
+    >
+      {/* Disclaimer toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all"
+        className="w-full flex items-center justify-between px-4 sm:px-6 py-3 text-left transition-all hover:bg-white/[0.02]"
         style={{
-          background: 'rgba(255,255,255,0.03)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid rgba(255,215,0,0.1)',
         }}
       >
         <span className="text-sm font-medium text-[#9a9890]">Important Disclaimer</span>
@@ -222,14 +233,14 @@ function DisclaimerDropdown({ isRealistic }: { isRealistic: boolean }) {
         </svg>
       </button>
 
+      {/* Expandable content */}
       <div
         className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <div
-          className="px-4 py-4 mt-2 rounded-xl text-xs text-[#9a9890] space-y-3"
+          className="px-4 sm:px-6 py-4 text-xs text-[#9a9890] space-y-3"
           style={{
-            background: 'rgba(255,255,255,0.02)',
-            border: '1px solid rgba(255,255,255,0.05)',
+            borderTop: '1px solid rgba(255,215,0,0.1)',
           }}
         >
           {/* Primary eXp Compliance Disclaimer */}
@@ -436,12 +447,13 @@ function RevenueShareVisualization({
 
   return (
     <div
-      className="rounded-2xl overflow-hidden relative"
+      className="rounded-t-2xl overflow-hidden relative"
       style={{
         background: 'rgba(10,10,10,0.75)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
         border: '1px solid rgba(255,215,0,0.2)',
+        borderBottom: 'none',
       }}
     >
       <style>{pulseKeyframes}</style>
