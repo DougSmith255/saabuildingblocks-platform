@@ -10,10 +10,10 @@ export interface FormInputProps extends React.InputHTMLAttributes<HTMLInputEleme
 // Base input styles shared across variants
 const baseStyles: React.CSSProperties = {
   width: '100%',
-  padding: '0.75rem 1rem',
-  borderRadius: '8px',
+  padding: '0.5rem 0.75rem',
+  borderRadius: '6px',
   fontFamily: 'var(--font-synonym, system-ui), sans-serif',
-  fontSize: '1rem',
+  fontSize: '0.9rem',
   boxSizing: 'border-box',
   outline: 'none',
   transition: 'border-color 0.2s, box-shadow 0.2s',

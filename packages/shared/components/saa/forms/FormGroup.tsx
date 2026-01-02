@@ -20,23 +20,23 @@ const labelStyles: Record<string, React.CSSProperties> = {
   dark: {
     display: 'block',
     fontFamily: 'var(--font-synonym, system-ui), sans-serif',
-    fontSize: '0.875rem',
+    fontSize: '0.8rem',
     color: '#fff',
-    marginBottom: '0.5rem',
+    marginBottom: '0.35rem',
   },
   cyber: {
     display: 'block',
     fontFamily: 'var(--font-synonym, system-ui), sans-serif',
-    fontSize: '0.75rem',
+    fontSize: '0.7rem',
     color: '#ffd700',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
-    marginBottom: '0.5rem',
+    marginBottom: '0.35rem',
   },
 };
 
 const groupStyles: React.CSSProperties = {
-  marginBottom: '1rem',
+  marginBottom: '0.75rem',
 };
 
 /**

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Modal } from './Modal';
-import { FormInput, FormSelect, FormGroup, FormRow, FormButton, FormMessage } from '../forms';
+import { FormInput, FormSelect, FormGroup, FormRow, FormButton, FormMessage, ModalTitle } from '../forms';
 
 export interface JoinModalProps {
   /** Whether the modal is open */
@@ -24,22 +24,6 @@ export interface JoinFormData {
   country: string;
 }
 
-// Styles specific to JoinModal content
-const styles: Record<string, React.CSSProperties> = {
-  title: {
-    fontFamily: 'var(--font-amulya, system-ui), sans-serif',
-    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-    fontWeight: 700,
-    color: '#fff',
-    marginBottom: '0.5rem',
-  },
-  subtitle: {
-    fontFamily: 'var(--font-synonym, system-ui), sans-serif',
-    fontSize: '0.95rem',
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: '1.5rem',
-  },
-};
 
 // localStorage key for storing submitted user data
 const STORAGE_KEY = 'saa_join_submitted';
@@ -152,8 +136,9 @@ export function JoinModal({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <h3 style={styles.title}>Join Smart Agent Alliance</h3>
-      <p style={styles.subtitle}>Take the first step towards building your dream career at eXp Realty.</p>
+      <ModalTitle subtitle="Take the first step towards building your dream career at eXp Realty.">
+        Join Smart Agent Alliance
+      </ModalTitle>
 
       <form onSubmit={handleSubmit}>
         <FormRow>

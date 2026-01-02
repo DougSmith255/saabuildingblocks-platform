@@ -9,6 +9,7 @@ import {
   FormRow,
   FormButton,
   FormMessage,
+  ModalTitle,
   JoinModal,
   InstructionsModal,
   H1,
@@ -114,9 +115,7 @@ export default function TestComponentsPage() {
             className="p-6 rounded-2xl max-w-md"
             style={{ background: '#151517', border: '1px solid rgba(255,255,255,0.1)' }}
           >
-            <h3 style={{ color: '#fff', fontSize: '1.25rem', marginBottom: '1rem', fontFamily: 'var(--font-amulya)' }}>
-              Sample Form
-            </h3>
+            <ModalTitle>Sample Form</ModalTitle>
 
             <form onSubmit={(e) => { e.preventDefault(); setMessage({ type: 'success', text: 'Demo form - no submission' }); }}>
               <FormRow>
@@ -184,12 +183,9 @@ export default function TestComponentsPage() {
 
       {/* Basic Modal */}
       <Modal isOpen={showBasicModal} onClose={() => setShowBasicModal(false)} size="md">
-        <h2 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-amulya)' }}>
+        <ModalTitle subtitle="This is a basic modal using the new base Modal component.">
           Basic Modal
-        </h2>
-        <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
-          This is a basic modal using the new base Modal component.
-        </p>
+        </ModalTitle>
         <ul style={{ color: 'rgba(255,255,255,0.6)', paddingLeft: '1.25rem', marginBottom: '1.5rem' }}>
           <li>Close button positioned outside (top-right)</li>
           <li>Press Escape to close</li>
@@ -204,12 +200,9 @@ export default function TestComponentsPage() {
 
       {/* Form Modal */}
       <Modal isOpen={showFormModal} onClose={() => setShowFormModal(false)} size="md">
-        <h2 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-amulya)' }}>
+        <ModalTitle subtitle="Demonstrating form components inside a modal.">
           Form Modal Example
-        </h2>
-        <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1.5rem' }}>
-          Demonstrating form components inside a modal.
-        </p>
+        </ModalTitle>
 
         <form onSubmit={handleSubmit}>
           <FormRow>
@@ -277,15 +270,9 @@ export default function TestComponentsPage() {
 
       {/* Large Modal */}
       <Modal isOpen={showLargeModal} onClose={() => setShowLargeModal(false)} size="xl">
-        <h2 style={{ color: '#fff', fontSize: '1.5rem', marginBottom: '0.5rem', fontFamily: 'var(--font-amulya)' }}>
+        <ModalTitle subtitle="This modal uses the xl size variant (800px max-width). Perfect for calculators, data tables, or multi-step wizards.">
           Large Modal (xl size)
-        </h2>
-        <p style={{ color: 'rgba(255,255,255,0.7)', marginBottom: '1rem' }}>
-          This modal uses the <code style={{ color: '#ffd700' }}>xl</code> size variant (800px max-width).
-        </p>
-        <p style={{ color: 'rgba(255,255,255,0.6)', marginBottom: '1rem' }}>
-          Perfect for displaying more complex content like calculators, data tables, or multi-step wizards.
-        </p>
+        </ModalTitle>
         <div style={{
           background: 'rgba(255,255,255,0.05)',
           padding: '2rem',

@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Modal } from './Modal';
+import { ModalTitle } from '../forms';
 
 export interface InstructionsModalProps {
   /** Whether the modal is open */
@@ -31,19 +32,6 @@ const styles: Record<string, React.CSSProperties> = {
     width: '32px',
     height: '32px',
     stroke: '#00ff88',
-  },
-  title: {
-    fontFamily: 'var(--font-amulya, system-ui), sans-serif',
-    fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-    fontWeight: 700,
-    color: '#fff',
-    marginBottom: '0.5rem',
-  },
-  subtitle: {
-    fontFamily: 'var(--font-synonym, system-ui), sans-serif',
-    fontSize: '1rem',
-    color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: '2rem',
   },
   instructionsList: {
     textAlign: 'left',
@@ -131,8 +119,9 @@ export function InstructionsModal({
           </svg>
         </div>
 
-        <h3 style={styles.title}>Welcome, {userName}!</h3>
-        <p style={styles.subtitle}>Follow these steps to join Smart Agent Alliance at eXp Realty.</p>
+        <ModalTitle subtitle="Follow these steps to join Smart Agent Alliance at eXp Realty." centered>
+          Welcome, {userName}!
+        </ModalTitle>
 
         <div style={styles.instructionsList}>
           <div style={styles.instructionItem}>

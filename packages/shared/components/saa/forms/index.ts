@@ -4,3 +4,4 @@ export { FormButton, type FormButtonProps } from './FormButton';
 export { FormGroup, type FormGroupProps } from './FormGroup';
 export { FormRow, type FormRowProps } from './FormRow';
 export { FormMessage, type FormMessageProps } from './FormMessage';
+export { ModalTitle, type ModalTitleProps } from './ModalTitle';

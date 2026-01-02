@@ -19,20 +19,20 @@ export interface FormSelectProps extends Omit<React.SelectHTMLAttributes<HTMLSel
 // Base select styles
 const baseStyles: React.CSSProperties = {
   width: '100%',
-  padding: '0.75rem 1rem',
-  paddingRight: '2.5rem',
-  borderRadius: '8px',
+  padding: '0.5rem 0.75rem',
+  paddingRight: '2rem',
+  borderRadius: '6px',
   fontFamily: 'var(--font-synonym, system-ui), sans-serif',
-  fontSize: '1rem',
+  fontSize: '0.9rem',
   boxSizing: 'border-box',
   outline: 'none',
   transition: 'border-color 0.2s, box-shadow 0.2s',
   WebkitAppearance: 'none',
   MozAppearance: 'none',
   appearance: 'none',
-  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
+  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`,
   backgroundRepeat: 'no-repeat',
-  backgroundPosition: 'right 1rem center',
+  backgroundPosition: 'right 0.75rem center',
   cursor: 'pointer',
 };
 
