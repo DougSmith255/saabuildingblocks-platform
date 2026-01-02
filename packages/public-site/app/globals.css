@@ -3254,6 +3254,8 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 /* Apply pulse animation via pseudo-element for GPU acceleration */
 .cta-light-bar-pulse {
   position: relative;
+  /* Default glow color - can be overridden via inline style --glow-color */
+  --glow-color: 255, 215, 0; /* Gold RGB values */
 }
 
 /* Base glow layer (dimmer state) - always visible */
@@ -3264,8 +3266,8 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    0 0 6px 2px rgba(255, 215, 0, 0.45),
-    0 0 20px 8px rgba(255, 215, 0, 0.15);
+    0 0 6px 2px rgba(var(--glow-color), 0.45),
+    0 0 20px 8px rgba(var(--glow-color), 0.15);
   pointer-events: none;
 }
 
@@ -3277,8 +3279,8 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
   inset: 0;
   border-radius: inherit;
   box-shadow:
-    0 0 10px 4px rgba(255, 215, 0, 0.5),
-    0 0 35px 15px rgba(255, 215, 0, 0.2);
+    0 0 10px 4px rgba(var(--glow-color), 0.5),
+    0 0 35px 15px rgba(var(--glow-color), 0.2);
   pointer-events: none;
   animation: ctaLightPulseOpacity 2.4s linear infinite;
   animation-delay: inherit;

@@ -45,13 +45,13 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     setLightPulseDelay(`${randomDelay.toFixed(2)}s`);
   }, []);
 
-  // Color variants - darker for light bars, lighter (neon) for glow
+  // Color variants - bar color (hex) and glow color (RGB for CSS variable)
   const colorConfig = {
-    gold: { bar: '#ffd700', glow: '#ffd700' },
-    green: { bar: '#00cc66', glow: '#00ff88' },   // Darker bar, neon glow
-    purple: { bar: '#9933ff', glow: '#bf5fff' },  // Darker bar, neon glow
+    gold: { bar: '#ffd700', glowRgb: '255, 215, 0' },
+    green: { bar: '#00cc66', glowRgb: '0, 255, 136' },   // Neon green glow
+    purple: { bar: '#9933ff', glowRgb: '191, 95, 255' }, // Neon purple glow
   };
-  const { bar: lightBarColor, glow: glowColor } = colorConfig[variant];
+  const { bar: lightBarColor, glowRgb } = colorConfig[variant];
 
   const buttonClasses = `
     relative flex justify-center items-center
@@ -94,9 +94,8 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     // Visual
     backgroundColor: 'rgb(45,45,45)',
     borderRadius: '0.75rem',
-    boxShadow: variant !== 'gold'
-      ? `0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 20px ${glowColor}40, 0 0 40px ${glowColor}20`
-      : '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
+    // Same shadow for all variants - no colored glow around the button itself
+    boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
     overflow: 'hidden',
     zIndex: 10,
     // Prevent text from causing layout shift during font load
@@ -157,9 +156,8 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
-            // Override glow color for non-gold variants
-            '--glow-color': glowColor,
-            boxShadow: variant !== 'gold' ? `0 0 10px ${glowColor}, 0 0 20px ${glowColor}80, 0 0 30px ${glowColor}40` : undefined,
+            // Override glow color via CSS variable (RGB values for rgba())
+            '--glow-color': glowRgb,
           } as React.CSSProperties}
         />
 
@@ -177,9 +175,8 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
-            // Override glow color for non-gold variants
-            '--glow-color': glowColor,
-            boxShadow: variant !== 'gold' ? `0 0 10px ${glowColor}, 0 0 20px ${glowColor}80, 0 0 30px ${glowColor}40` : undefined,
+            // Override glow color via CSS variable (RGB values for rgba())
+            '--glow-color': glowRgb,
           } as React.CSSProperties}
         />
       </div>
