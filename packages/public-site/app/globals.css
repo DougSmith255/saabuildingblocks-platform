@@ -3226,6 +3226,73 @@ img:not(.profile-image):not(.hero-bg):not(.no-fade) {
 }
 
 /* ========================================
+   RANGE INPUT - Touch-friendly styling
+   Used by CommissionCalculator component
+   ======================================== */
+
+/* Base range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 24px; /* Larger touch target */
+}
+
+/* Track styling - WebKit (Chrome, Safari, Edge) */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 6px;
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* Thumb styling - WebKit */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: #ffd700;
+  border-radius: 50%;
+  margin-top: -11px; /* Center on track: (28 - 6) / 2 = 11 */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  /* Prevent touch delay on mobile */
+  touch-action: pan-x;
+}
+
+/* Track styling - Firefox */
+input[type="range"]::-moz-range-track {
+  height: 6px;
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* Thumb styling - Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: #ffd700;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  /* Prevent touch delay on mobile */
+  touch-action: pan-x;
+}
+
+/* Focus state */
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+/* ========================================
    CTA LIGHT BAR - Shared Component Support
    Used by @saa/shared CTAButton component
    ======================================== */
