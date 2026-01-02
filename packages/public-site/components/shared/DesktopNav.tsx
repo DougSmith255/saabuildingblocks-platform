@@ -27,7 +27,7 @@ const navItems: NavItem[] = [
     dropdown: [
       { label: 'Freebies', href: '/freebies/' },
       { label: 'Commission & Fees Calc', href: '/exp-commission-calculator/' },
-      { label: 'RevShare Calc', href: '/exp-realty-revenue-share-calculator/' },
+      { label: 'RevShare Visualized', href: '/exp-realty-revenue-share-calculator/' },
       { label: 'Compare Brokerages', href: '/best-real-estate-brokerage/' },
       { label: 'Agent Success Hub', href: '/blog/' },
       { label: 'eXp Locations', href: '/locations/' },

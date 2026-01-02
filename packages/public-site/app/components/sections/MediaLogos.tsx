@@ -152,17 +152,48 @@ export function MediaLogos() {
         }`}
       >
         <H2>Why eXp Realty?</H2>
+        {/* Two-column layout: bullet points left, buttons right */}
         <div
-          className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out flex flex-col gap-2 ${
+          className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
-          style={{ maxWidth: '900px' }}
+          style={{ maxWidth: '1100px' }}
         >
-          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>The only cumulatively profitable public real estate company.</span>
-          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Cloud className="w-5 h-5" /></Icon3D>S&P 600 SmallCap. First cloud-based brokerage.</span>
-          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Percent className="w-5 h-5" /></Icon3D>80/20 split until cap → 100% commission. Flat monthly fee.</span>
-          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Award className="w-5 h-5" /></Icon3D>Stock awards + optional revenue share income.</span>
-          <span className="flex items-center justify-center gap-3 text-body opacity-80"><Icon3D><Users className="w-5 h-5" /></Icon3D>Choose your sponsor. Access real support.</span>
+          {/* Left column: Bullet points - left aligned */}
+          <div className="flex flex-col gap-2 text-left">
+            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>The only cumulatively profitable public real estate company.</span>
+            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Cloud className="w-5 h-5" /></Icon3D>S&P 600 SmallCap. First cloud-based brokerage.</span>
+            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Percent className="w-5 h-5" /></Icon3D>80/20 split until cap → 100% commission. Flat monthly fee.</span>
+            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Award className="w-5 h-5" /></Icon3D>Stock awards + optional revenue share income.</span>
+            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Users className="w-5 h-5" /></Icon3D>Choose your sponsor. Access real support.</span>
+          </div>
+          {/* Right column: Action buttons */}
+          <div className="flex flex-col gap-3 items-center md:items-start">
+            <a
+              href="/exp-commission-calculator/"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,215,0,0.3)',
+                color: '#ffd700',
+              }}
+            >
+              <Percent className="w-4 h-4" />
+              See Commission Structure
+            </a>
+            <a
+              href="/exp-realty-revenue-share-calculator/"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,215,0,0.3)',
+                color: '#ffd700',
+              }}
+            >
+              <TrendingUp className="w-4 h-4" />
+              See Revenue Share Potential
+            </a>
+          </div>
         </div>
       </div>
 
