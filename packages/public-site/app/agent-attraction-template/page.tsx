@@ -16,7 +16,7 @@
 
 import React, { useEffect, useRef, useState, useMemo, ReactNode, createContext, useContext, useCallback } from 'react';
 import Link from 'next/link';
-import { Globe, Users, TrendingUp, Check, DollarSign, Bot, GraduationCap } from 'lucide-react';
+import { Globe, Users, TrendingUp, Check, DollarSign, Bot, GraduationCap, Cloud, Percent, Award, X } from 'lucide-react';
 
 // =============================================================================
 // BRAND CONSTANTS
@@ -54,6 +54,36 @@ function extractPlainText(children: React.ReactNode): string {
     return extractPlainText(props.children);
   }
   return String(children);
+}
+
+// =============================================================================
+// COMPONENT: Icon3D - 3D styled icon wrapper
+// =============================================================================
+function adjustColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + Math.round(255 * percent)));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + Math.round(255 * percent)));
+  const b = Math.min(255, Math.max(0, (num & 0x0000FF) + Math.round(255 * percent)));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
+function darkenColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const r = Math.max(0, Math.round((num >> 16) * (1 - percent)));
+  const g = Math.max(0, Math.round(((num >> 8) & 0x00FF) * (1 - percent)));
+  const b = Math.max(0, Math.round((num & 0x0000FF) * (1 - percent)));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
+function Icon3D({ children, color = '#c4a94d' }: { children: React.ReactNode; color?: string }) {
+  const highlight = adjustColor(color, 0.3);
+  const midShadow = darkenColor(color, 0.4);
+  const filter = `drop-shadow(-1px -1px 0 ${highlight}) drop-shadow(1px 1px 0 ${midShadow}) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))`;
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color, filter, transform: 'perspective(500px) rotateX(8deg)' }}>
+      {children}
+    </span>
+  );
 }
 
 // =============================================================================
@@ -377,27 +407,6 @@ function ScrollIndicator() {
         </div>
       </div>
     </>
-  );
-}
-
-// =============================================================================
-// SHARED COMPONENT: Icon3D
-// =============================================================================
-function Icon3D({ children, color = '#c4a94d', size, className = '', style = {} }: {
-  children: React.ReactNode; color?: string; size?: number; className?: string; style?: React.CSSProperties;
-}) {
-  const filter = `drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))`;
-  return (
-    <span
-      className={`icon-3d ${className}`}
-      style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        color, filter: filter.trim(), transform: 'perspective(500px) rotateX(8deg)',
-        ...(size && { width: size, height: size }), ...style,
-      }}
-    >
-      {children}
-    </span>
   );
 }
 
@@ -749,6 +758,153 @@ function ValuePillarsTab() {
 }
 
 // =============================================================================
+// COMPONENT: InlineCommissionCalculator - Calculator for modal popup
+// =============================================================================
+function useCalculator(transactions: number, avgCommission: number) {
+  const totalCommission = transactions * avgCommission;
+  const commissionPerDealToExp = 0.2 * avgCommission;
+  const potentialExpCommission = transactions * commissionPerDealToExp;
+  const expCommission = Math.min(potentialExpCommission, 16000);
+  const dealsAfterCap = Math.max((potentialExpCommission - 16000) / commissionPerDealToExp, 0);
+  const postCapFirstTier = Math.min(dealsAfterCap, 20);
+  const postCapSecondTier = Math.max(dealsAfterCap - 20, 0);
+  const postCap250 = postCapFirstTier * 250;
+  const postCap75 = postCapSecondTier * 75;
+  const eoFee = Math.min(transactions * 60, 750);
+  const brokerFee = transactions * 25;
+  const totalFees = expCommission + eoFee + brokerFee + postCap250 + postCap75;
+  const netCommission = totalCommission - totalFees;
+  return {
+    totalCommission: Math.round(totalCommission),
+    expSplit: Math.round(expCommission),
+    brokerFee: Math.round(brokerFee),
+    eoFee: Math.round(eoFee),
+    postCap250: Math.round(postCap250),
+    postCap75: Math.round(postCap75),
+    totalFees: Math.round(totalFees),
+    netCommission: Math.round(netCommission),
+    effectiveRate: totalCommission > 0 ? ((netCommission / totalCommission) * 100).toFixed(1) : '0',
+  };
+}
+
+function AnimatedNumber({ value, prefix = '$' }: { value: number; prefix?: string }) {
+  const [display, setDisplay] = useState(value);
+  const prevRef = useRef(value);
+  useEffect(() => {
+    if (value === prevRef.current) return;
+    const start = prevRef.current;
+    const diff = value - start;
+    const startTime = Date.now();
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / 500, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(start + diff * eased));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+    prevRef.current = value;
+  }, [value]);
+  return <span>{prefix}{display.toLocaleString()}</span>;
+}
+
+function InlineCommissionCalculator() {
+  const [transactions, setTransactions] = useState(12);
+  const [avgCommission, setAvgCommission] = useState(10000);
+  const isValidCommission = avgCommission >= 500;
+  const rawResults = useCalculator(transactions, avgCommission);
+  const results = isValidCommission ? rawResults : { totalCommission: 0, expSplit: 0, brokerFee: 0, eoFee: 0, postCap250: 0, postCap75: 0, totalFees: 0, netCommission: 0, effectiveRate: '0' };
+
+  const allSegments = [
+    { label: 'You Keep', value: results.netCommission, color: '#10b981' },
+    { label: 'eXp Split', value: results.expSplit, color: '#ffd700' },
+    { label: 'Broker Fee', value: results.brokerFee, color: '#ff9500' },
+    { label: 'E&O', value: results.eoFee, color: '#ff6b6b' },
+    { label: 'Post-Cap', value: results.postCap250 + results.postCap75, color: '#c084fc' },
+  ];
+  const chartSegments = allSegments.filter(s => s.value > 0);
+  const segments = allSegments.filter(s => s.label !== 'You Keep');
+  const total = chartSegments.reduce((sum, s) => sum + s.value, 0);
+  let currentAngle = 0;
+
+  return (
+    <div>
+      <h2 className="text-center mb-2" style={{ fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)', color: '#bfbdb0', fontFamily: 'var(--font-taskor)' }}>
+        Commission Calculator
+      </h2>
+      <p className="text-xs text-center mb-4" style={{ color: '#9a9890' }}>See exactly what you keep at eXp Realty</p>
+
+      <div className="flex flex-col sm:flex-row gap-3 mb-4 p-3 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)' }}>
+        <div className="w-full sm:w-28 sm:flex-shrink-0">
+          <label className="block text-xs mb-1" style={{ color: '#9a9890' }}>Avg Commission</label>
+          <div className="flex items-center">
+            <span className="text-sm" style={{ color: '#ffd700' }}>$</span>
+            <input type="text" inputMode="numeric" value={avgCommission} onChange={(e) => setAvgCommission(Number(e.target.value.replace(/\D/g, '')) || 0)}
+              className="w-full px-1 py-1 bg-transparent border-b text-white text-base font-mono focus:outline-none" style={{ borderColor: 'rgba(255,215,0,0.3)' }} />
+          </div>
+        </div>
+        <div className="flex-1">
+          <label className="block text-xs mb-1" style={{ color: '#9a9890' }}>Transactions: {transactions}</label>
+          <input type="range" min={1} max={100} value={transactions} onChange={(e) => setTransactions(Number(e.target.value))}
+            className="w-full accent-[#ffd700]" style={{ touchAction: 'none', minHeight: '44px' }} />
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+        <div className="flex-1 flex flex-col gap-2">
+          <div className="flex items-center gap-3 p-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
+            <span className="text-xs w-12 flex-shrink-0" style={{ color: '#9a9890' }}>GROSS</span>
+            <span className="text-lg font-bold text-white" style={{ fontFamily: 'var(--font-taskor)' }}><AnimatedNumber value={results.totalCommission} /></span>
+          </div>
+          <div className="flex items-center gap-3 p-2 rounded-xl" style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)' }}>
+            <span className="text-xs w-12 flex-shrink-0" style={{ color: '#10b981' }}>NET</span>
+            <span className="text-lg font-bold" style={{ color: '#10b981', fontFamily: 'var(--font-taskor)' }}><AnimatedNumber value={results.netCommission} /></span>
+          </div>
+        </div>
+        <div className="flex sm:flex-col items-center sm:justify-center gap-3 sm:gap-0 p-2 sm:p-4 rounded-xl sm:text-center sm:flex-shrink-0 sm:w-[130px]" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)' }}>
+          <span className="text-xs w-12 flex-shrink-0 sm:w-auto sm:mb-2" style={{ color: '#ffd700' }}>FEES</span>
+          <span className="text-lg font-bold" style={{ color: '#ffd700', fontFamily: 'var(--font-taskor)' }}><AnimatedNumber value={results.totalFees} /></span>
+        </div>
+      </div>
+
+      <div className="flex flex-col-reverse sm:flex-row gap-4 items-center">
+        <div className="relative flex-shrink-0" style={{ width: '180px', height: '180px' }}>
+          <svg viewBox="0 0 100 100" className="w-full transform -rotate-90">
+            {chartSegments.map((seg, i) => {
+              const angle = (seg.value / total) * 360;
+              const startAngle = currentAngle;
+              currentAngle += angle;
+              const largeArc = angle > 180 ? 1 : 0;
+              const startX = 50 + 40 * Math.cos((startAngle * Math.PI) / 180);
+              const startY = 50 + 40 * Math.sin((startAngle * Math.PI) / 180);
+              const endX = 50 + 40 * Math.cos(((startAngle + angle) * Math.PI) / 180);
+              const endY = 50 + 40 * Math.sin(((startAngle + angle) * Math.PI) / 180);
+              return <path key={i} d={`M 50 50 L ${startX} ${startY} A 40 40 0 ${largeArc} 1 ${endX} ${endY} Z`} fill={seg.color} stroke="rgba(10,10,10,0.85)" strokeWidth="1" />;
+            })}
+            <circle cx="50" cy="50" r="25" fill="rgba(10,10,10,0.95)" />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="text-2xl font-bold" style={{ color: '#10b981' }}>{results.effectiveRate}%</span>
+            <span className="text-[9px]" style={{ color: '#9a9890' }}>KEEP RATE</span>
+          </div>
+        </div>
+        <div className="w-full sm:flex-1 space-y-2">
+          {segments.map((seg, i) => (
+            <div key={i} className="flex items-center justify-between p-2 rounded" style={{ background: `${seg.color}08` }}>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded" style={{ background: seg.color }} />
+                <span className="text-sm" style={{ color: '#bfbdb0' }}>{seg.label}</span>
+              </div>
+              <span className="text-sm font-bold font-mono" style={{ color: seg.color }}>${seg.value.toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// =============================================================================
 // SECTION: MediaLogos
 // =============================================================================
 const MEDIA_LOGOS = [
@@ -767,6 +923,8 @@ function MediaLogos() {
   const velocityRef = useRef(0.5);
   const lastScrollY = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [showCommissionModal, setShowCommissionModal] = useState(false);
+  const [showRevShareModal, setShowRevShareModal] = useState(false);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -811,9 +969,75 @@ function MediaLogos() {
     <section ref={sectionRef} className="relative py-16 md:py-24 overflow-hidden">
       <div className={`text-center px-4 transition-all duration-700 ease-out relative z-10 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <H2>Why eXp Realty?</H2>
-        <p className={`text-body mx-auto opacity-80 mb-8 transition-all duration-700 delay-150 ease-out ${isVisible ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ maxWidth: '900px' }}>
-          The largest independent brokerage in the world and the only cumulatively profitable public company in real estate. As an S&P 600 SmallCap company and the first cloud-based brokerage, eXp is frequently featured in major national and global media outlets.
-        </p>
+        {/* Layout B: Unified card - bullets left, stacked buttons right */}
+        <div className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ maxWidth: '1200px' }}>
+          <div className="p-6 md:p-8 rounded-2xl" style={{ background: 'rgba(10,10,10,0.6)', border: '1px solid rgba(255,215,0,0.15)' }}>
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-6 md:gap-10 items-center">
+              {/* Left: All bullet points with 3D icons */}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">The only cumulatively profitable public real estate company.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon3D><Cloud className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">S&P 600 SmallCap. First cloud-based brokerage.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon3D><Users className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">Choose your sponsor. Access real support.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon3D color="#00cc66"><Percent className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90 font-bold">80/20 split until cap → 100% commission. Flat monthly fee.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon3D color="#9933ff"><Award className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90 font-bold">Optional revenue share income + stock opportunities.</span>
+                </div>
+              </div>
+              {/* Right: Stacked buttons that open modals */}
+              <div className="flex flex-col gap-2 items-center md:items-stretch">
+                <button
+                  onClick={() => setShowCommissionModal(true)}
+                  className="cta-light-bar cta-light-bar-pulse relative flex justify-center items-center px-5 py-2 rounded-xl text-button uppercase tracking-wide z-10 transition-all duration-500 overflow-hidden"
+                  style={{
+                    background: 'rgb(45,45,45)',
+                    color: 'var(--text-color-button, var(--color-headingText))',
+                    fontSize: 'var(--font-size-button, 20px)',
+                    fontFamily: 'var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)',
+                    fontWeight: 600,
+                    height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
+                    boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
+                    '--glow-color': '0, 255, 136',
+                  } as React.CSSProperties}
+                >
+                  Commission Calculator
+                  <span className="absolute left-[-5px] top-1/2 -translate-y-1/2 w-[10px] h-[18px] rounded-md z-[5]" style={{ background: '#00cc66', boxShadow: '0 0 10px rgba(0,255,136,1), 0 0 20px rgba(0,255,136,0.5)' }} />
+                  <span className="absolute right-[-5px] top-1/2 -translate-y-1/2 w-[10px] h-[18px] rounded-md z-[5]" style={{ background: '#00cc66', boxShadow: '0 0 10px rgba(0,255,136,1), 0 0 20px rgba(0,255,136,0.5)' }} />
+                </button>
+                <button
+                  onClick={() => setShowRevShareModal(true)}
+                  className="cta-light-bar cta-light-bar-pulse relative flex justify-center items-center px-5 py-2 rounded-xl text-button uppercase tracking-wide z-10 transition-all duration-500 overflow-hidden"
+                  style={{
+                    background: 'rgb(45,45,45)',
+                    color: 'var(--text-color-button, var(--color-headingText))',
+                    fontSize: 'var(--font-size-button, 20px)',
+                    fontFamily: 'var(--font-family-button, var(--font-taskor), Taskor, system-ui, sans-serif)',
+                    fontWeight: 600,
+                    height: 'clamp(45px, calc(43.182px + 0.7273vw), 65px)',
+                    boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
+                    '--glow-color': '191, 95, 255',
+                  } as React.CSSProperties}
+                >
+                  RevShare Visualizer
+                  <span className="absolute left-[-5px] top-1/2 -translate-y-1/2 w-[10px] h-[18px] rounded-md z-[5]" style={{ background: '#9933ff', boxShadow: '0 0 10px rgba(191,95,255,1), 0 0 20px rgba(191,95,255,0.5)' }} />
+                  <span className="absolute right-[-5px] top-1/2 -translate-y-1/2 w-[10px] h-[18px] rounded-md z-[5]" style={{ background: '#9933ff', boxShadow: '0 0 10px rgba(191,95,255,1), 0 0 20px rgba(191,95,255,0.5)' }} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div className={`relative z-10 transition-all duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         {/* 3D Curved Portal Edges - raised bars that logos slide under */}
@@ -861,6 +1085,52 @@ function MediaLogos() {
           </div>
         </div>
       </div>
+
+      {/* Commission Calculator Modal */}
+      {showCommissionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}>
+          <div className="relative w-full max-w-[700px] max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'rgba(20,20,20,0.98)', border: '1px solid rgba(255,215,0,0.2)' }}>
+            <button
+              onClick={() => setShowCommissionModal(false)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-white/10"
+              style={{ color: '#9a9890' }}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="p-6">
+              <InlineCommissionCalculator />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* RevShare Visualizer Modal */}
+      {showRevShareModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}>
+          <div className="relative w-full max-w-[900px] max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'rgba(20,20,20,0.98)', border: '1px solid rgba(255,215,0,0.2)' }}>
+            <button
+              onClick={() => setShowRevShareModal(false)}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-white/10"
+              style={{ color: '#9a9890' }}
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="p-6 text-center">
+              <h3 className="text-xl font-bold mb-4" style={{ color: '#ffd700' }}>Revenue Share Visualizer</h3>
+              <p className="text-body opacity-70 mb-6">Interactive revenue share calculator coming soon.</p>
+              <a
+                href="/exp-realty-revenue-share-calculator/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-6 py-3 rounded-lg font-bold transition-colors"
+                style={{ background: '#9933ff', color: 'white' }}
+              >
+                Open Full Visualizer
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

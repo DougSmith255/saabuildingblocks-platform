@@ -257,6 +257,11 @@ export function CommissionCalculator({
                   value={transactions}
                   onChange={(e) => setTransactions(Number(e.target.value))}
                   className="flex-1 accent-[#ffd700]"
+                  style={{
+                    touchAction: 'none',
+                    WebkitTapHighlightColor: 'transparent',
+                    minHeight: '44px',
+                  }}
                 />
               </div>
             </div>
@@ -282,12 +287,12 @@ export function CommissionCalculator({
               </div>
             </div>
 
-            {/* FEES card - full width on mobile, fixed width on desktop */}
-            <div className="flex flex-col justify-center p-3 sm:p-4 rounded-xl text-center sm:flex-shrink-0 sm:w-[130px]" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)' }}>
-              <p className="text-xs text-[#ffd700] mb-1 sm:mb-2">FEES</p>
-              <p className="text-lg sm:text-xl font-bold text-[#ffd700]" style={{ fontFamily: 'var(--font-taskor)', textShadow: '0 0 15px rgba(255,215,0,0.3)' }}>
+            {/* FEES card - horizontal on mobile (like GROSS/NET), centered column on desktop */}
+            <div className="flex sm:flex-col items-center sm:justify-center gap-3 sm:gap-0 p-2 sm:p-4 rounded-xl sm:text-center sm:flex-shrink-0 sm:w-[130px]" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)' }}>
+              <span className="text-xs text-[#ffd700] w-12 flex-shrink-0 sm:w-auto sm:mb-2">FEES</span>
+              <span className="text-lg sm:text-xl font-bold text-[#ffd700]" style={{ fontFamily: 'var(--font-taskor)', textShadow: '0 0 15px rgba(255,215,0,0.3)' }}>
                 <AnimatedNumber value={results.totalFees} />
-              </p>
+              </span>
             </div>
           </div>
 
