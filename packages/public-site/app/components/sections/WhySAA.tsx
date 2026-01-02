@@ -160,7 +160,7 @@ export function WhySAA() {
           flex-shrink: 0;
         }
       `}</style>
-      <div className="mx-auto" style={{ maxWidth: '1300px' }}>
+      <div className="mx-auto" style={{ maxWidth: '1500px' }}>
         {/* H2 with its own reveal */}
         <Reveal>
           <div className="text-center">
@@ -218,7 +218,7 @@ export function WhySAA() {
                 className="bento-card relative rounded-2xl overflow-hidden border p-6 md:p-8 text-center"
                 style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.3)' }}
               >
-                <p className="text-body text-lg mb-5">SAA is designed for independent agents, not for those seeking a traditional team structure, commission oversight, or required production standards.</p>
+                <p className="text-body text-lg mb-5">Grow independently. Succeed together.</p>
                 <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
               </div>
             </RevealScale>
@@ -227,7 +227,7 @@ export function WhySAA() {
 
         <Reveal delay={0.2}>
           <div className="text-center mt-12">
-            <p className="text-body max-w-xl mx-auto" style={{ color: '#e5e4dd' }}>{DISCLAIMER}</p>
+            <p className="text-body mx-auto" style={{ color: '#e5e4dd', maxWidth: '700px' }}>{DISCLAIMER}</p>
           </div>
         </Reveal>
       </div>

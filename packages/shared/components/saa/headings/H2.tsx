@@ -107,7 +107,7 @@ export default function H2({
           paddingLeft: '0.35em',
           paddingRight: '0.35em',
           fontFeatureSettings: '"ss01" 1',
-          maxWidth: '1400px',
+          maxWidth: style.maxWidth || '1400px',
           marginLeft: 'auto',
           marginRight: 'auto',
           marginBottom: '2.5rem', // 40px consistent spacing

@@ -137,7 +137,7 @@ export function WhatYouGet() {
           animation: whatYouGetFadeIn 0.3s ease-out forwards;
         }
       `}</style>
-      <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
         {/* Header */}
         <div
           ref={headerRef}

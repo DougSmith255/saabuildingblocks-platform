@@ -112,7 +112,7 @@ export function VideoSection({
       id={id}
       className={`video-section relative py-16 md:py-24 px-4 sm:px-8 md:px-12 ${className}`}
     >
-      <div className="max-w-[1900px] mx-auto">
+      <div className="max-w-[1400px] mx-auto">
         {/* Section Header */}
         {!hideTitle && (
           <div className="text-center mb-8 md:mb-12">

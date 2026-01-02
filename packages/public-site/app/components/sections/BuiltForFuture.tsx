@@ -139,26 +139,26 @@ export function BuiltForFuture() {
         @keyframes drawLine { from { width: 0; } to { width: 100%; } }
         .future-line { animation: drawLine 1s ease-out forwards; animation-delay: 0.5s; }
       `}</style>
-      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '1300px' }}>
+      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '1800px' }}>
         <div className="transition-all duration-700" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(20px)' }}>
-          <H2>{FUTURE_HEADLINE}</H2>
+          <H2 style={{ maxWidth: '100%' }}>{FUTURE_HEADLINE}</H2>
         </div>
         <p className="text-body opacity-70 mb-12 transition-all duration-700" style={{ opacity: isVisible ? 0.7 : 0, transitionDelay: '0.15s' }}>
           {FUTURE_SUBLINE}
         </p>
         <div className="relative mb-12">
-          <div className="absolute top-[60px] left-0 right-0 h-px bg-white/10 hidden md:block">
+          <div className="absolute top-[60px] md:top-[90px] left-0 right-0 h-px bg-white/10 hidden md:block">
             {isVisible && <div className="future-line h-full w-0" style={{ background: 'linear-gradient(90deg, transparent, ' + BRAND_YELLOW + ', transparent)' }} />}
           </div>
           <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-4">
             {FUTURE_POINTS.map((point, i) => (
               <div key={i} className="flex-1 relative z-10 flex flex-col items-center">
-                <div className="w-[120px] h-[120px] rounded-full mb-4 flex items-center justify-center transition-all duration-500 overflow-hidden" style={{ backgroundColor: point.bgColor, border: '3px solid ' + BRAND_YELLOW, boxShadow: isVisible ? '0 0 30px rgba(255,215,0,0.4)' : 'none', opacity: isVisible ? 1 : 0, transform: isVisible ? 'scale(1)' : 'scale(0.5)', transitionDelay: getIconDelay(i) + 's' }}>
+                <div className="w-[120px] h-[120px] md:w-[180px] md:h-[180px] rounded-full mb-4 flex items-center justify-center transition-all duration-500 overflow-hidden" style={{ backgroundColor: point.bgColor, border: '3px solid ' + BRAND_YELLOW, boxShadow: isVisible ? '0 0 30px rgba(255,215,0,0.4)' : 'none', opacity: isVisible ? 1 : 0, transform: isVisible ? 'scale(1)' : 'scale(0.5)', transitionDelay: getIconDelay(i) + 's' }}>
                   <img src={point.image} alt={point.text} className={point.imgClass} style={point.imgStyle} />
                 </div>
-                <p className="text-body text-sm transition-all duration-500" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(-10px)', transitionDelay: getTextDelay(i) + 's' }}>
+                <h3 className="font-bold transition-all duration-500" style={{ fontSize: 'clamp(27px, calc(25.36px + 0.65vw), 45px)', color: '#e5e4dd', opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(-10px)', transitionDelay: getTextDelay(i) + 's' }}>
                   {point.text}
-                </p>
+                </h3>
               </div>
             ))}
           </div>

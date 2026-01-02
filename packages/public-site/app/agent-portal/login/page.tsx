@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { H1, CyberCard } from '@saa/shared/components/saa';
-import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
+import { H1, Modal, FormCard, FormButton, FormInput, FormGroup, ModalTitle, FormMessage } from '@saa/shared/components/saa';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
@@ -23,6 +22,7 @@ export default function AgentPortalLogin() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -169,207 +169,188 @@ export default function AgentPortalLogin() {
   };
 
   return (
-    <main id="main-content">
-      <StickyHeroWrapper>
-        <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
-          {/* Data Stream Effect - Green background, does tunnel animation with content */}
-          <DataStreamEffect tunnelMode={showTransition} />
+    <main id="main-content" className="relative min-h-[100dvh] overflow-hidden">
+      {/* Data Stream Effect - Green background, does tunnel animation with content */}
+      <DataStreamEffect tunnelMode={showTransition} />
 
-          {/* Login Content - centered, fades out during transition */}
-          <div
-            className="relative z-10 flex flex-col items-center w-full transition-all ease-out"
-            style={{
-              opacity: showTransition ? 0 : 1,
-              transform: showTransition ? 'scale(0.9) translateY(-20px)' : 'scale(1) translateY(0)',
-              transitionDuration: '800ms',
-            }}
-          >
-        {/* Heading - full width */}
-        <div className="text-center mb-8">
-          <H1 className="mb-2">ACCESS PORTAL</H1>
-          <p className="text-body text-[#ffd700]/80">Access your agent command center</p>
+      {/* Login Content - centered, no scroll animations */}
+      <div className="relative z-10 min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
+        <div
+          className="flex flex-col items-center w-full transition-all ease-out"
+          style={{
+            opacity: showTransition ? 0 : 1,
+            transform: showTransition ? 'scale(0.9) translateY(-20px)' : 'scale(1) translateY(0)',
+            transitionDuration: '800ms',
+          }}
+        >
+          {/* Heading - full width */}
+          <div className="text-center mb-8">
+            <H1>ACCESS PORTAL</H1>
+          </div>
+
+        {/* Login Form - using base FormCard */}
+        <FormCard maxWidth="md">
+          <ModalTitle subtitle="Access your agent command center">
+            Agent Login
+          </ModalTitle>
+
+          <form onSubmit={handleSubmit}>
+            {/* Error Message */}
+            {error && (
+              <FormMessage type="error">{error}</FormMessage>
+            )}
+
+            {/* Email Field */}
+            <FormGroup label="Agent ID / Email" htmlFor="email" required>
+              <FormInput
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="agent@example.com"
+                required
+              />
+            </FormGroup>
+
+            {/* Password Field */}
+            <FormGroup label="Password" htmlFor="password" required>
+              <div style={{ position: 'relative' }}>
+                <FormInput
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter password"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    cursor: 'pointer',
+                    padding: '0.25rem',
+                  }}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </FormGroup>
+
+            {/* Submit Button */}
+            <div style={{ marginTop: '1.5rem' }}>
+              <FormButton isLoading={isLoading} loadingText="Logging in...">
+                Login
+              </FormButton>
+            </div>
+
+            {/* Forgot Password Link */}
+            <div className="text-center" style={{ marginTop: '1rem' }}>
+              <button
+                type="button"
+                onClick={openResetModal}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Forgot password?
+              </button>
+            </div>
+          </form>
+        </FormCard>
         </div>
+      </div>
 
-        {/* Login Form - CyberCard - constrained width */}
-        <CyberCard padding="lg" centered={false} className="w-full max-w-md">
-          <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Password Reset Modal - uses base Modal with base form components */}
+      <Modal isOpen={showResetModal} onClose={closeResetModal} size="md">
+        {resetStep === 'email' ? (
+          <>
+            <ModalTitle subtitle="Enter your email and we'll send you a reset link." centered>
+              Reset Password
+            </ModalTitle>
+
+            <form onSubmit={handleResetRequest}>
               {/* Error Message */}
-              {error && (
-                <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
-                  {error}
-                </div>
+              {resetError && (
+                <FormMessage type="error">{resetError}</FormMessage>
               )}
 
               {/* Email Field */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                  Agent ID / Email
-                </label>
-                <input
+              <FormGroup label="Email Address" htmlFor="reset-email" required>
+                <FormInput
                   type="email"
-                  id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
+                  id="reset-email"
+                  name="resetEmail"
+                  value={resetEmail}
+                  onChange={(e) => setResetEmail(e.target.value)}
                   placeholder="agent@example.com"
-                />
-              </div>
-
-              {/* Password Field */}
-              <div className="space-y-2">
-                <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                  placeholder="Enter password"
+                  autoFocus
                 />
-              </div>
+              </FormGroup>
 
               {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ fontSize: 'clamp(14px, calc(13.31px + 0.23vw), 18px)' }}
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                    Logging in...
-                  </span>
-                ) : (
-                  'Login'
-                )}
-              </button>
+              <div style={{ marginTop: '1.5rem' }}>
+                <FormButton isLoading={resetLoading} loadingText="Sending...">
+                  Send Reset Link
+                </FormButton>
+              </div>
 
-              {/* Forgot Password Link */}
-              <div className="text-center">
+              {/* Cancel Link */}
+              <div className="text-center" style={{ marginTop: '1rem' }}>
                 <button
                   type="button"
-                  onClick={openResetModal}
-                  className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors cursor-pointer bg-transparent border-none"
+                  onClick={closeResetModal}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                  }}
                 >
-                  Forgot password?
+                  Back to login
                 </button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📧</div>
+            <ModalTitle subtitle={resetMessage || ''} centered>
+              Check Your Email
+            </ModalTitle>
+            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '1.5rem' }}>
+              The link will expire in 15 minutes.
+            </p>
+            <FormButton onClick={closeResetModal}>
+              Back to Login
+            </FormButton>
           </div>
-          </form>
-        </CyberCard>
-          </div>
-        </section>
-      </StickyHeroWrapper>
-
-      {/* Password Reset Modal */}
-      {showResetModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={closeResetModal}
-          />
-
-          {/* Modal */}
-          <div className="relative w-full max-w-md">
-            {/* Close button - positioned outside CyberCard for consistent spacing */}
-            <button
-              onClick={closeResetModal}
-              className="absolute -top-2 -right-2 z-10 w-8 h-8 flex items-center justify-center bg-[#191818] border border-[#ffd700]/30 rounded-full text-[#ffd700]/60 hover:text-[#ffd700] hover:border-[#ffd700] transition-colors text-xl"
-            >
-              &times;
-            </button>
-            <CyberCard padding="lg" centered={false}>
-
-              {resetStep === 'email' ? (
-                <>
-                  <h2 className="text-h3 text-center mb-2">Reset Password</h2>
-                  <p className="text-body text-center text-[#e5e4dd]/70 mb-6">
-                    Enter your email and we&apos;ll send you a reset link.
-                  </p>
-
-                  <form onSubmit={handleResetRequest} className="space-y-6">
-                    {/* Error Message */}
-                    {resetError && (
-                      <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
-                        {resetError}
-                      </div>
-                    )}
-
-                    {/* Email Field */}
-                    <div className="space-y-2">
-                      <label htmlFor="reset-email" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        id="reset-email"
-                        value={resetEmail}
-                        onChange={(e) => setResetEmail(e.target.value)}
-                        required
-                        autoFocus
-                        className="w-full px-4 py-3 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                        placeholder="agent@example.com"
-                      />
-                    </div>
-
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      disabled={resetLoading}
-                      className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {resetLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                          Sending...
-                        </span>
-                      ) : (
-                        'Send Reset Link'
-                      )}
-                    </button>
-
-                    {/* Cancel Link */}
-                    <div className="text-center">
-                      <button
-                        type="button"
-                        onClick={closeResetModal}
-                        className="text-caption text-[#ffd700]/60 hover:text-[#ffd700] transition-colors"
-                      >
-                        Back to login
-                      </button>
-                    </div>
-                  </form>
-                </>
-              ) : (
-                <>
-                  <div className="text-center py-8">
-                    <div className="text-5xl mb-4">📧</div>
-                    <h2 className="text-h3 mb-2">Check Your Email</h2>
-                    <p className="text-body text-[#e5e4dd]/70 mb-6">
-                      {resetMessage}
-                    </p>
-                    <p className="text-caption text-[#e5e4dd]/50 mb-6">
-                      The link will expire in 15 minutes.
-                    </p>
-                    <button
-                      type="button"
-                      onClick={closeResetModal}
-                      className="px-8 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all"
-                    >
-                      Back to Login
-                    </button>
-                  </div>
-                </>
-              )}
-            </CyberCard>
-          </div>
-        </div>
-      )}
+        )}
+      </Modal>
     </main>
   );
 }

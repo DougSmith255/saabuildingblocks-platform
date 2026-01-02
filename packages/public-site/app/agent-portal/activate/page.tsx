@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { H1, CyberCard } from '@saa/shared/components/saa';
+import { H1, FormCard, FormGroup, FormInput, FormButton, FormMessage, ModalTitle } from '@saa/shared/components/saa';
 
 // Initial progress values for the data stream effect
 const INITIAL_PROGRESS_START = 0.05;
@@ -229,22 +229,17 @@ function ActivatePageContent() {
             <div className="text-center mb-8">
               <H1 className="mb-2">INVITATION ERROR</H1>
             </div>
-            <div className="w-full max-w-md">
-              <CyberCard padding="lg" centered={false}>
-                <div className="text-center py-4">
-                  <div className="text-5xl mb-4">⚠️</div>
-                  <p className="text-body text-[#e5e4dd]/70 mb-6">
-                    {error}
-                  </p>
-                  <button
-                    onClick={() => router.push('/agent-portal/login')}
-                    className="px-8 py-3 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-all"
-                  >
-                    Go to Login
-                  </button>
-                </div>
-              </CyberCard>
-            </div>
+            <FormCard maxWidth="md">
+              <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚠️</div>
+                <p style={{ color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' }}>
+                  {error}
+                </p>
+                <FormButton onClick={() => router.push('/agent-portal/login')}>
+                  Go to Login
+                </FormButton>
+              </div>
+            </FormCard>
           </div>
         </div>
       </main>
@@ -259,146 +254,150 @@ function ActivatePageContent() {
         <div className="flex flex-col items-center pt-[15vh]">
           <div className="text-center mb-8 px-4">
             <H1 className="mb-2">WELCOME TO THE ALLIANCE</H1>
-            <p className="text-body text-[#ffd700]/80">
+            <p className="text-body" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               {userName ? `Hello ${userName}! ` : ''}Set your password to get started
             </p>
           </div>
 
-          <div className="w-full max-w-md">
-            <CyberCard padding="lg" centered={false}>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {error && (
-                  <div className="p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 text-sm text-center">
-                    {error}
-                  </div>
-                )}
+          <FormCard maxWidth="md">
+            <ModalTitle subtitle="Create a secure password to activate your account">
+              Activate Your Account
+            </ModalTitle>
 
-                {/* Email Display (readonly) */}
-                {userEmail && (
-                  <div className="space-y-2">
-                    <label className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                      Email
-                    </label>
-                    <div className="w-full px-4 py-3 bg-black/30 border border-[#ffd700]/20 rounded-lg text-[#e5e4dd]/60">
-                      {userEmail}
-                    </div>
-                  </div>
-                )}
+            <form onSubmit={handleSubmit}>
+              {error && (
+                <FormMessage type="error">{error}</FormMessage>
+              )}
 
-                {/* Password Field */}
-                <div className="space-y-2">
-                  <label htmlFor="password" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                    Create Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      id="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={8}
-                      className="w-full px-4 py-3 pr-12 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                      placeholder="Enter password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  {/* Password requirements */}
-                  <div className="text-xs text-[#e5e4dd]/50 space-y-1 pt-1">
-                    <p className={password.length >= 8 ? 'text-green-400' : ''}>
-                      {password.length >= 8 ? '✓' : '○'} At least 8 characters
-                    </p>
-                    <p className={/[A-Z]/.test(password) ? 'text-green-400' : ''}>
-                      {/[A-Z]/.test(password) ? '✓' : '○'} One uppercase letter
-                    </p>
-                    <p className={/[a-z]/.test(password) ? 'text-green-400' : ''}>
-                      {/[a-z]/.test(password) ? '✓' : '○'} One lowercase letter
-                    </p>
-                    <p className={/[0-9]/.test(password) ? 'text-green-400' : ''}>
-                      {/[0-9]/.test(password) ? '✓' : '○'} One number
-                    </p>
-                    <p className={/[^A-Za-z0-9]/.test(password) ? 'text-green-400' : ''}>
-                      {/[^A-Za-z0-9]/.test(password) ? '✓' : '○'} One special character
-                    </p>
-                  </div>
+              {/* Email Display (readonly) */}
+              {userEmail && (
+                <FormGroup label="Email" htmlFor="email-display">
+                  <FormInput
+                    type="email"
+                    id="email-display"
+                    name="email"
+                    value={userEmail}
+                    disabled
+                  />
+                </FormGroup>
+              )}
+
+              {/* Password Field with visibility toggle */}
+              <FormGroup label="Create Password" htmlFor="password" required>
+                <div style={{ position: 'relative' }}>
+                  <FormInput
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '0.75rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      cursor: 'pointer',
+                      padding: '0.25rem',
+                    }}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
                 </div>
-
-                {/* Confirm Password Field */}
-                <div className="space-y-2">
-                  <label htmlFor="confirmPassword" className="block text-caption text-[#ffd700] uppercase tracking-wider">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      id="confirmPassword"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      minLength={8}
-                      className="w-full px-4 py-3 pr-12 bg-black/50 border border-[#ffd700]/30 rounded-lg text-[#e5e4dd] placeholder-[#e5e4dd]/40 focus:outline-none focus:border-[#ffd700] focus:ring-1 focus:ring-[#ffd700]/50 transition-all"
-                      placeholder="Re-enter password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
-                      aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showConfirmPassword ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                        </svg>
-                      ) : (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      )}
-                    </button>
-                  </div>
-                  {/* Password match indicator */}
-                  {confirmPassword && (
-                    <p className={`text-xs pt-1 ${password === confirmPassword ? 'text-green-400' : 'text-red-400'}`}>
-                      {password === confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
-                    </p>
-                  )}
+                {/* Password requirements */}
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '0.5rem' }}>
+                  <p style={{ color: password.length >= 8 ? '#4ade80' : undefined }}>
+                    {password.length >= 8 ? '✓' : '○'} At least 8 characters
+                  </p>
+                  <p style={{ color: /[A-Z]/.test(password) ? '#4ade80' : undefined }}>
+                    {/[A-Z]/.test(password) ? '✓' : '○'} One uppercase letter
+                  </p>
+                  <p style={{ color: /[a-z]/.test(password) ? '#4ade80' : undefined }}>
+                    {/[a-z]/.test(password) ? '✓' : '○'} One lowercase letter
+                  </p>
+                  <p style={{ color: /[0-9]/.test(password) ? '#4ade80' : undefined }}>
+                    {/[0-9]/.test(password) ? '✓' : '○'} One number
+                  </p>
+                  <p style={{ color: /[^A-Za-z0-9]/.test(password) ? '#4ade80' : undefined }}>
+                    {/[^A-Za-z0-9]/.test(password) ? '✓' : '○'} One special character
+                  </p>
                 </div>
+              </FormGroup>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full py-4 bg-[#ffd700]/20 border-2 border-[#ffd700] rounded-lg text-[#ffd700] font-bold uppercase tracking-wider hover:bg-[#ffd700]/30 hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-[#ffd700]/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="w-5 h-5 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
-                      Activating...
-                    </span>
-                  ) : (
-                    'Join The Alliance'
-                  )}
-                </button>
-              </form>
-            </CyberCard>
-          </div>
+              {/* Confirm Password Field with visibility toggle */}
+              <FormGroup label="Confirm Password" htmlFor="confirmPassword" required>
+                <div style={{ position: 'relative' }}>
+                  <FormInput
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '0.75rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      cursor: 'pointer',
+                      padding: '0.25rem',
+                    }}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                {/* Password match indicator */}
+                {confirmPassword && (
+                  <p style={{ fontSize: '0.75rem', marginTop: '0.25rem', color: password === confirmPassword ? '#4ade80' : '#f87171' }}>
+                    {password === confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
+                  </p>
+                )}
+              </FormGroup>
+
+              {/* Submit Button */}
+              <div style={{ marginTop: '1.5rem' }}>
+                <FormButton isLoading={isLoading} loadingText="Activating...">
+                  Join The Alliance
+                </FormButton>
+              </div>
+            </form>
+          </FormCard>
         </div>
       </div>
     </main>

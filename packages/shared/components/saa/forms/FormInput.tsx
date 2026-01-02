@@ -51,10 +51,12 @@ const variantStyles: Record<string, React.CSSProperties> = {
 export function FormInput({
   variant = 'dark',
   style,
+  className,
   ...props
 }: FormInputProps) {
   return (
     <input
+      className={`saa-form-input${className ? ` ${className}` : ''}`}
       style={{
         ...baseStyles,
         ...variantStyles[variant],

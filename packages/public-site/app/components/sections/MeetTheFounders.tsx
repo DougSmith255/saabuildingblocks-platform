@@ -61,7 +61,7 @@ export function MeetTheFounders() {
         }
       `}</style>
       <section ref={ref} className="py-16 md:py-24 px-6 relative">
-        <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
+        <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
         <div
           className="text-center transition-all duration-700 mb-12"
           style={{

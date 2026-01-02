@@ -152,53 +152,111 @@ export function MediaLogos() {
         }`}
       >
         <H2>Why eXp Realty?</H2>
-        {/* Layout B: Unified card - bullets left, stacked buttons right */}
-        <div
-          className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-          }`}
-          style={{ maxWidth: '1200px' }}
-        >
-          <div
-            className="p-6 md:p-8 rounded-2xl"
-            style={{
-              background: 'rgba(10,10,10,0.6)',
-              border: '1px solid rgba(255,215,0,0.15)',
-            }}
-          >
-            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-6 md:gap-10 items-center">
-              {/* Left: All bullet points with 3D icons */}
-              <div className="space-y-4">
-                {/* Top 3 - gold icons */}
-                <div className="flex items-start gap-3">
-                  <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90">The only cumulatively profitable public real estate company.</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Icon3D><Cloud className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90">S&P 600 SmallCap. First cloud-based brokerage.</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Icon3D><Users className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90">Choose your sponsor. Access real support.</span>
-                </div>
-                {/* Commission point - green icon (darker to match button light bar) */}
-                <div className="flex items-start gap-3">
-                  <Icon3D color="#00cc66"><Percent className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90 font-bold">80/20 split until cap → 100% commission. Flat monthly fee.</span>
-                </div>
-                {/* RevShare point - purple icon (darker to match button light bar) */}
-                <div className="flex items-start gap-3">
-                  <Icon3D color="#9933ff"><Award className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90 font-bold">Optional revenue share income + stock opportunities.</span>
-                </div>
-              </div>
 
-              {/* Right: Stacked buttons with matching color variants */}
-              <div className="flex flex-col gap-2 items-center md:items-stretch">
+        {/* Cards Grid: 3 on top, 2 on bottom */}
+        <div
+          className="mx-auto mb-8"
+          style={{ maxWidth: '1800px' }}
+        >
+          {/* Top Row - 3 cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            {/* Card 1: Profitable */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '1px solid rgba(255,215,0,0.15)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.2s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80}><TrendingUp className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Proven Profitability</h3>
+              <p className="text-body opacity-90 text-sm">The only cumulatively profitable public real estate company.</p>
+            </div>
+
+            {/* Card 2: Cloud-Based */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '1px solid rgba(255,215,0,0.15)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.35s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80}><Cloud className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Cloud-First Pioneer</h3>
+              <p className="text-body opacity-90 text-sm">S&P 600 SmallCap. First cloud-based brokerage.</p>
+            </div>
+
+            {/* Card 3: Sponsor Choice */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '1px solid rgba(255,215,0,0.15)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.5s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80}><Users className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#e5e4dd', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Choose Your Sponsor</h3>
+              <p className="text-body opacity-90 text-sm">Choose your sponsor. Access real support.</p>
+            </div>
+          </div>
+
+          {/* Bottom Row - 2 cards with colored borders and buttons */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Card 4: Commission - Green */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '2px solid rgba(0,204,102,0.5)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.65s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80} color="#00cc66"><Percent className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#00cc66', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Industry-Leading Splits</h3>
+              <p className="text-body opacity-90 text-sm mb-4">80/20 split until cap → 100% commission. Flat monthly fee.</p>
+              <div className="mt-auto">
                 <SecondaryButton href="/exp-commission-calculator/" variant="green">
                   Commission Calculator
                 </SecondaryButton>
+              </div>
+            </div>
+
+            {/* Card 5: RevShare - Purple */}
+            <div
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
+              style={{
+                background: 'rgba(10,10,10,0.6)',
+                border: '2px solid rgba(153,51,255,0.5)',
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.8s',
+              }}
+            >
+              <div className="mb-4">
+                <Icon3D size={80} color="#9933ff"><Award className="w-12 h-12" /></Icon3D>
+              </div>
+              <h3 className="font-bold mb-2" style={{ color: '#9933ff', fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)' }}>Passive Income Potential</h3>
+              <p className="text-body opacity-90 text-sm mb-4">Optional revenue share income + stock opportunities.</p>
+              <div className="mt-auto">
                 <SecondaryButton href="/exp-realty-revenue-share-calculator/" variant="purple">
                   RevShare Visualizer
                 </SecondaryButton>

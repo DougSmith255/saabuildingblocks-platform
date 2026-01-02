@@ -122,8 +122,8 @@ export default function RealEstateAgentBlogPage() {
         >
           <AsteroidBeltEffect />
 
-        {/* Content */}
-        <div className="relative z-20 max-w-[2500px] mx-auto w-full text-center">
+        {/* Content - z-10 for scroll animation (scale/blur/translateY) */}
+        <div className="relative z-10 max-w-[2500px] mx-auto w-full text-center">
           {/* H1: Using Master Controller H1 component */}
           <div className="mb-6">
             <H1 id="blog-heading">

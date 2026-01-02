@@ -176,7 +176,7 @@ export function WhyOnlyAtExp() {
   return (
     <GlassPanel variant="marigoldNoise">
       <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-      <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1600px' }}>
         <div
           className="text-center transition-all duration-700 relative z-20"
           style={{
@@ -184,7 +184,7 @@ export function WhyOnlyAtExp() {
             transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
           }}
         >
-          <H2>{HEADLINE}</H2>
+          <H2 style={{ maxWidth: '100%' }}>{HEADLINE}</H2>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 items-center">

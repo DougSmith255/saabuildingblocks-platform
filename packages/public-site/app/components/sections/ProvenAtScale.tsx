@@ -132,7 +132,7 @@ export function ProvenAtScale() {
         />
       </div>
 
-      <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1600px' }}>
         <div className="grid md:grid-cols-12 gap-8 items-center">
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
