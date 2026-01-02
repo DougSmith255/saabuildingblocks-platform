@@ -45,3 +45,6 @@ export * from './loaders';
 
 // Backgrounds (glass panels, section overlays)
 export * from './backgrounds';
+
+// Forms (inputs, selects, buttons, layout)
+export * from './forms';

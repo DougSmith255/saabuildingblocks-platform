@@ -19,6 +19,9 @@ export type { JoinModalProps, JoinFormData } from './JoinModal';
 export { InstructionsModal } from './InstructionsModal';
 export type { InstructionsModalProps } from './InstructionsModal';
 
+export { Modal } from './Modal';
+export type { ModalProps } from './Modal';
+
 export { ScrollIndicator } from './ScrollIndicator';
 
 export { CommissionCalculator } from './CommissionCalculator';
