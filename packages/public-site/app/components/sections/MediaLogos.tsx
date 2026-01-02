@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { H2, Icon3D } from '@saa/shared/components/saa';
+import { H2, Icon3D, SecondaryButton } from '@saa/shared/components/saa';
 import { TrendingUp, Cloud, Percent, Award, Users } from 'lucide-react';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
@@ -152,47 +152,58 @@ export function MediaLogos() {
         }`}
       >
         <H2>Why eXp Realty?</H2>
-        {/* Two-column layout: bullet points left, buttons right */}
+        {/* Layout B: Unified card - bullets left, stacked buttons right */}
         <div
-          className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-center ${
+          className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
-          style={{ maxWidth: '1100px' }}
+          style={{ maxWidth: '1200px' }}
         >
-          {/* Left column: Bullet points - left aligned */}
-          <div className="flex flex-col gap-2 text-left">
-            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>The only cumulatively profitable public real estate company.</span>
-            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Cloud className="w-5 h-5" /></Icon3D>S&P 600 SmallCap. First cloud-based brokerage.</span>
-            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Percent className="w-5 h-5" /></Icon3D>80/20 split until cap → 100% commission. Flat monthly fee.</span>
-            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Award className="w-5 h-5" /></Icon3D>Stock awards + optional revenue share income.</span>
-            <span className="flex items-center gap-3 text-body opacity-80"><Icon3D><Users className="w-5 h-5" /></Icon3D>Choose your sponsor. Access real support.</span>
-          </div>
-          {/* Right column: Action buttons */}
-          <div className="flex flex-col gap-3 items-center md:items-start">
-            <a
-              href="/exp-commission-calculator/"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,215,0,0.3)',
-                color: '#ffd700',
-              }}
-            >
-              <Percent className="w-4 h-4" />
-              See Commission Structure
-            </a>
-            <a
-              href="/exp-realty-revenue-share-calculator/"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,215,0,0.3)',
-                color: '#ffd700',
-              }}
-            >
-              <TrendingUp className="w-4 h-4" />
-              See Revenue Share Potential
-            </a>
+          <div
+            className="p-6 md:p-8 rounded-2xl"
+            style={{
+              background: 'rgba(10,10,10,0.6)',
+              border: '1px solid rgba(255,215,0,0.15)',
+            }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-6 md:gap-10 items-center">
+              {/* Left: All bullet points with 3D icons */}
+              <div className="space-y-4">
+                {/* Top 3 - gold icons */}
+                <div className="flex items-start gap-3">
+                  <Icon3D><TrendingUp className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">The only cumulatively profitable public real estate company.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon3D><Cloud className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">S&P 600 SmallCap. First cloud-based brokerage.</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Icon3D><Users className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">Choose your sponsor. Access real support.</span>
+                </div>
+                {/* Commission point - green icon (darker to match button light bar) */}
+                <div className="flex items-start gap-3">
+                  <Icon3D color="#00cc66"><Percent className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">80/20 split until cap → 100% commission. Flat monthly fee.</span>
+                </div>
+                {/* RevShare point - purple icon (darker to match button light bar) */}
+                <div className="flex items-start gap-3">
+                  <Icon3D color="#9933ff"><Award className="w-5 h-5" /></Icon3D>
+                  <span className="text-body opacity-90">Stock awards + optional revenue share income.</span>
+                </div>
+              </div>
+
+              {/* Right: Stacked buttons with matching color variants */}
+              <div className="flex flex-col gap-2 items-center md:items-stretch">
+                <SecondaryButton href="/exp-commission-calculator/" variant="green">
+                  Commission Calculator
+                </SecondaryButton>
+                <SecondaryButton href="/exp-realty-revenue-share-calculator/" variant="purple">
+                  RevShare Visualizer
+                </SecondaryButton>
+              </div>
+            </div>
           </div>
         </div>
       </div>

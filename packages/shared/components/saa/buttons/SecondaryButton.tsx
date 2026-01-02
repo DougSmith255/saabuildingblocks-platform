@@ -9,6 +9,8 @@ export interface SecondaryButtonProps {
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>) => void;
   as?: 'a' | 'button';
+  /** Light bar color variant - defaults to gold */
+  variant?: 'gold' | 'green' | 'purple';
 }
 
 /**
@@ -28,7 +30,7 @@ function isInternalLink(href: string): boolean {
  * <SecondaryButton href="/learn-more">Learn More</SecondaryButton>
  * <SecondaryButton as="button" onClick={handler}>Click Me</SecondaryButton>
  */
-export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a' }: SecondaryButtonProps) {
+export function SecondaryButton({ href = '#', children, className = '', onClick, as = 'a', variant = 'gold' }: SecondaryButtonProps) {
   // Determine if we should use Next.js Link for client-side navigation
   const useNextLink = useMemo(() => {
     return as === 'a' && isInternalLink(href);
@@ -43,8 +45,13 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     setLightPulseDelay(`${randomDelay.toFixed(2)}s`);
   }, []);
 
-  // Brand colors for glow effects (keep hardcoded for animation compatibility)
-  const brandGold = '#ffd700';
+  // Color variants - darker for light bars, lighter (neon) for glow
+  const colorConfig = {
+    gold: { bar: '#ffd700', glow: '#ffd700' },
+    green: { bar: '#00cc66', glow: '#00ff88' },   // Darker bar, neon glow
+    purple: { bar: '#9933ff', glow: '#bf5fff' },  // Darker bar, neon glow
+  };
+  const { bar: lightBarColor, glow: glowColor } = colorConfig[variant];
 
   const buttonClasses = `
     relative flex justify-center items-center
@@ -87,7 +94,9 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
     // Visual
     backgroundColor: 'rgb(45,45,45)',
     borderRadius: '0.75rem',
-    boxShadow: '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
+    boxShadow: variant !== 'gold'
+      ? `0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5), 0 0 20px ${glowColor}40, 0 0 40px ${glowColor}20`
+      : '0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5)',
     overflow: 'hidden',
     zIndex: 10,
     // Prevent text from causing layout shift during font load
@@ -144,11 +153,14 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             transform: 'translateY(-50%)',
             width: '10px',
             height: '18px',
-            background: brandGold,
+            background: lightBarColor,
             borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
-          }}
+            // Override glow color for non-gold variants
+            '--glow-color': glowColor,
+            boxShadow: variant !== 'gold' ? `0 0 10px ${glowColor}, 0 0 20px ${glowColor}80, 0 0 30px ${glowColor}40` : undefined,
+          } as React.CSSProperties}
         />
 
         {/* Right side glow bar - uses same pulsing animation as CTAButton */}
@@ -161,11 +173,14 @@ export function SecondaryButton({ href = '#', children, className = '', onClick,
             transform: 'translateY(-50%)',
             width: '10px',
             height: '18px',
-            background: brandGold,
+            background: lightBarColor,
             borderRadius: '6px',
             animationDelay: lightPulseDelay,
             zIndex: 5,
-          }}
+            // Override glow color for non-gold variants
+            '--glow-color': glowColor,
+            boxShadow: variant !== 'gold' ? `0 0 10px ${glowColor}, 0 0 20px ${glowColor}80, 0 0 30px ${glowColor}40` : undefined,
+          } as React.CSSProperties}
         />
       </div>
     </div>

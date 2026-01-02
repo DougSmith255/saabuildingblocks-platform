@@ -36,6 +36,23 @@ export interface Icon3DProps {
  * <Icon3D size={24}><Calendar className="w-6 h-6" /></Icon3D>
  * ```
  */
+// Helper to generate lighter/darker shades from a hex color
+function adjustColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const r = Math.min(255, Math.max(0, (num >> 16) + Math.round(255 * percent)));
+  const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + Math.round(255 * percent)));
+  const b = Math.min(255, Math.max(0, (num & 0x0000FF) + Math.round(255 * percent)));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
+function darkenColor(hex: string, percent: number): string {
+  const num = parseInt(hex.replace('#', ''), 16);
+  const r = Math.max(0, Math.round((num >> 16) * (1 - percent)));
+  const g = Math.max(0, Math.round(((num >> 8) & 0x00FF) * (1 - percent)));
+  const b = Math.max(0, Math.round((num & 0x0000FF) * (1 - percent)));
+  return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
 export function Icon3D({
   children,
   color = '#c4a94d',
@@ -43,10 +60,14 @@ export function Icon3D({
   className = '',
   style = {},
 }: Icon3DProps) {
-  // Optimized 4-layer metal effect - tighter depth for cohesive 3D look
+  // Generate highlight and shadow colors based on the input color
+  const highlight = adjustColor(color, 0.3); // Lighter version for top-left highlight
+  const midShadow = darkenColor(color, 0.4); // Darker version for depth
+
+  // Optimized 4-layer metal effect - colors now match the input color
   const filter = `
-    drop-shadow(-1px -1px 0 #ffe680)
-    drop-shadow(1px 1px 0 #8a7a3d)
+    drop-shadow(-1px -1px 0 ${highlight})
+    drop-shadow(1px 1px 0 ${midShadow})
     drop-shadow(3px 3px 0 #2a2a1d)
     drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))
   `;
