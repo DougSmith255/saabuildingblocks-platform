@@ -15,6 +15,7 @@ const INITIAL_PROGRESS_END = 0.5;
  */
 export function CalculatorDataStreamEffect() {
   const [progress, setProgress] = useState(INITIAL_PROGRESS_START);
+  const [scrollOpacity, setScrollOpacity] = useState(1);
   const currentRef = useRef(INITIAL_PROGRESS_START);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
@@ -40,6 +41,13 @@ export function CalculatorDataStreamEffect() {
       if (scrollDelta > 0) {
         scrollVelocityRef.current = Math.min(scrollDelta * SCROLL_VELOCITY_MULTIPLIER, 0.002);
       }
+
+      // Fade out based on scroll position - fade faster (complete by 40% of viewport)
+      const viewportHeight = window.innerHeight;
+      const fadeStart = 0; // Start fading immediately
+      const fadeEnd = viewportHeight * 0.4; // Fully faded by 40% of viewport
+      const opacity = Math.max(0, 1 - (currentScrollY - fadeStart) / (fadeEnd - fadeStart));
+      setScrollOpacity(opacity);
     };
 
     const animate = (timestamp: number) => {
@@ -123,7 +131,12 @@ export function CalculatorDataStreamEffect() {
   return (
     <>
       {/* Animation container - has overflow-hidden for performance */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer" lang="en" translate="no">
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden hero-effect-layer"
+        lang="en"
+        translate="no"
+        style={{ opacity: scrollOpacity, transition: 'opacity 0.1s ease-out' }}
+      >
         {/* Green data columns */}
         {columns.map((col, i) => {
           const colProgress = Math.max(0, (progress - col.delay) * col.speed * 2);
