@@ -20,3 +20,6 @@ export { InstructionsModal } from './InstructionsModal';
 export type { InstructionsModalProps } from './InstructionsModal';
 
 export { ScrollIndicator } from './ScrollIndicator';
+
+export { CommissionCalculator } from './CommissionCalculator';
+export type { CommissionCalculatorProps } from './CommissionCalculator';
