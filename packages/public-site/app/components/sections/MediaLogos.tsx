@@ -190,7 +190,7 @@ export function MediaLogos() {
                 {/* RevShare point - purple icon (darker to match button light bar) */}
                 <div className="flex items-start gap-3">
                   <Icon3D color="#9933ff"><Award className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90 font-bold">Revenue share income + stock opportunities.</span>
+                  <span className="text-body opacity-90 font-bold">Optional revenue share income + stock opportunities.</span>
                 </div>
               </div>
 
