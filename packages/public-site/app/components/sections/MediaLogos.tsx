@@ -185,12 +185,12 @@ export function MediaLogos() {
                 {/* Commission point - green icon (darker to match button light bar) */}
                 <div className="flex items-start gap-3">
                   <Icon3D color="#00cc66"><Percent className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90">80/20 split until cap → 100% commission. Flat monthly fee.</span>
+                  <span className="text-body opacity-90 font-bold">80/20 split until cap → 100% commission. Flat monthly fee.</span>
                 </div>
                 {/* RevShare point - purple icon (darker to match button light bar) */}
                 <div className="flex items-start gap-3">
                   <Icon3D color="#9933ff"><Award className="w-5 h-5" /></Icon3D>
-                  <span className="text-body opacity-90">Stock awards + optional revenue share income.</span>
+                  <span className="text-body opacity-90 font-bold">Revenue share income + stock opportunities.</span>
                 </div>
               </div>
 
