@@ -1088,17 +1088,24 @@ function MediaLogos() {
 
       {/* Commission Calculator Modal */}
       {showCommissionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}>
-          <div className="relative w-full max-w-[700px] max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'rgba(20,20,20,0.98)', border: '1px solid rgba(255,215,0,0.2)' }}>
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ zIndex: 100000, overflowY: 'auto', overscrollBehavior: 'contain' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowCommissionModal(false); }}
+        >
+          <div className="fixed inset-0" style={{ zIndex: 100000, background: 'rgba(0, 0, 0, 0.9)', backdropFilter: 'blur(8px)' }} />
+          <div className="relative w-full max-w-[700px]" style={{ zIndex: 100001, maxHeight: '90vh', margin: 'auto' }}>
             <button
               onClick={() => setShowCommissionModal(false)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-white/10"
-              style={{ color: '#9a9890' }}
+              className="absolute flex items-center justify-center"
+              style={{ top: '-12px', right: '-12px', width: '44px', height: '44px', background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', zIndex: 100005 }}
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
-            <div className="p-6">
-              <InlineCommissionCalculator />
+            <div className="rounded-2xl overflow-y-auto" style={{ background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', maxHeight: '90vh', overscrollBehavior: 'contain' }}>
+              <div className="p-6">
+                <InlineCommissionCalculator />
+              </div>
             </div>
           </div>
         </div>
@@ -1106,27 +1113,36 @@ function MediaLogos() {
 
       {/* RevShare Visualizer Modal */}
       {showRevShareModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.85)' }}>
-          <div className="relative w-full max-w-[900px] max-h-[90vh] overflow-y-auto rounded-2xl" style={{ background: 'rgba(20,20,20,0.98)', border: '1px solid rgba(255,215,0,0.2)' }}>
+        <div
+          className="fixed inset-0 flex items-center justify-center p-4"
+          style={{ zIndex: 100000, overflowY: 'auto', overscrollBehavior: 'contain' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setShowRevShareModal(false); }}
+        >
+          <div className="fixed inset-0" style={{ zIndex: 100000, background: 'rgba(0, 0, 0, 0.9)', backdropFilter: 'blur(8px)' }} />
+          <div className="relative w-full max-w-[900px]" style={{ zIndex: 100001, maxHeight: '90vh', margin: 'auto' }}>
             <button
               onClick={() => setShowRevShareModal(false)}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-white/10"
-              style={{ color: '#9a9890' }}
+              className="absolute flex items-center justify-center"
+              style={{ top: '-12px', right: '-12px', width: '44px', height: '44px', background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', zIndex: 100005 }}
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5" />
             </button>
-            <div className="p-6 text-center">
-              <h3 className="text-xl font-bold mb-4" style={{ color: '#ffd700' }}>Revenue Share Visualizer</h3>
-              <p className="text-body opacity-70 mb-6">Interactive revenue share calculator coming soon.</p>
-              <a
-                href="/exp-realty-revenue-share-calculator/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-6 py-3 rounded-lg font-bold transition-colors"
-                style={{ background: '#9933ff', color: 'white' }}
-              >
-                Open Full Visualizer
-              </a>
+            <div className="rounded-2xl overflow-y-auto text-center" style={{ background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', maxHeight: '90vh', overscrollBehavior: 'contain' }}>
+              <div className="p-6">
+                <h3 style={{ fontFamily: 'var(--font-family-h3, var(--font-amulya), system-ui, sans-serif)', fontSize: 'clamp(1.25rem, calc(1.1rem + 0.5vw), 1.75rem)', fontWeight: 700, color: 'var(--text-color-h3, #e5e4dd)', marginBottom: '0.35rem' }}>
+                  Revenue Share Visualizer
+                </h3>
+                <p className="text-body opacity-70 mb-6" style={{ fontSize: '0.9rem' }}>Interactive revenue share calculator coming soon.</p>
+                <a
+                  href="/exp-realty-revenue-share-calculator/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block rounded-lg font-bold transition-colors"
+                  style={{ padding: '0.75rem 1.5rem', background: '#9933ff', color: 'white', fontSize: '0.9rem', textDecoration: 'none' }}
+                >
+                  Open Full Visualizer
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -1664,20 +1680,20 @@ const JOIN_MODAL_STYLES: Record<string, React.CSSProperties> = {
   container: { position: 'fixed', inset: 0, zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' },
   backdrop: { position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0, 0, 0, 0.9)', backdropFilter: 'blur(8px)' },
   modalWrapper: { position: 'relative', zIndex: 100001, maxWidth: '500px', width: '100%', maxHeight: '90vh', margin: 'auto' },
-  modal: { position: 'relative', background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '2.5rem 2rem 2rem 2rem', width: '100%', maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' as const },
-  closeBtn: { position: 'absolute', top: '12px', right: '12px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', padding: 0, margin: 0, background: 'rgba(255, 255, 255, 0.15)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100002, touchAction: 'manipulation', outline: 'none', boxSizing: 'border-box' as const },
-  title: { fontFamily: 'var(--font-amulya, system-ui), sans-serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' },
-  subtitle: { fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.95rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '1.5rem' },
+  modal: { position: 'relative', background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '2.5rem 2rem 2rem 2rem', width: '100%', maxHeight: '90vh', overflowY: 'auto' as const, overscrollBehavior: 'contain', boxSizing: 'border-box' as const },
+  closeBtn: { position: 'absolute', top: '-12px', right: '-12px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', padding: 0, margin: 0, background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100005, touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', outline: 'none', boxSizing: 'border-box' as const, pointerEvents: 'auto' as const },
+  title: { fontFamily: 'var(--font-family-h3, var(--font-amulya), system-ui, sans-serif)', fontSize: 'clamp(1.25rem, calc(1.1rem + 0.5vw), 1.75rem)', fontWeight: 700, lineHeight: 1.3, color: 'var(--text-color-h3, #e5e4dd)', margin: 0, marginBottom: '0.35rem' },
+  subtitle: { fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.7)', margin: 0, marginBottom: '1.25rem' },
   formRow: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' },
-  formGroup: { marginBottom: '1rem' },
-  label: { display: 'block', fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.875rem', color: '#fff', marginBottom: '0.5rem' },
-  input: { width: '100%', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '8px', color: '#fff', fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '1rem', boxSizing: 'border-box' as const },
-  select: { width: '100%', padding: '0.75rem 1rem', background: '#1a1a1c', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '8px', color: '#fff', fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '1rem', boxSizing: 'border-box' as const, WebkitAppearance: 'none' as const, MozAppearance: 'none' as const, appearance: 'none' as const, backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', paddingRight: '2.5rem' },
+  formGroup: { marginBottom: '0.75rem' },
+  label: { display: 'block', fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.8rem', color: '#fff', marginBottom: '0.35rem' },
+  input: { width: '100%', padding: '0.5rem 0.75rem', background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '6px', color: '#fff', fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.9rem', boxSizing: 'border-box' as const, outline: 'none' },
+  select: { width: '100%', padding: '0.5rem 0.75rem', paddingRight: '2rem', background: '#1a1a1c', border: '1px solid rgba(255, 255, 255, 0.15)', borderRadius: '6px', color: '#fff', fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.9rem', boxSizing: 'border-box' as const, WebkitAppearance: 'none' as const, MozAppearance: 'none' as const, appearance: 'none' as const, backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 8L1 3h10z'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem center', cursor: 'pointer', outline: 'none' },
   option: { background: '#1a1a1c', color: '#fff' },
-  submit: { width: '100%', marginTop: '1.5rem', padding: '1rem', background: 'linear-gradient(135deg, #ffd700, #e6c200)', color: '#2a2a2a', fontFamily: 'var(--font-taskor, system-ui), sans-serif', fontWeight: 600, fontSize: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, border: 'none', borderRadius: '8px', cursor: 'pointer' },
+  submit: { width: '100%', marginTop: '1rem', padding: '0.75rem 1rem', background: 'linear-gradient(135deg, #ffd700, #e6c200)', color: '#2a2a2a', fontFamily: 'var(--font-taskor, system-ui), sans-serif', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, border: 'none', borderRadius: '6px', cursor: 'pointer' },
   submitDisabled: { opacity: 0.7, cursor: 'not-allowed' },
-  msgSuccess: { marginTop: '1rem', padding: '0.75rem', borderRadius: '8px', textAlign: 'center' as const, fontSize: '0.9rem', background: 'rgba(0, 255, 136, 0.1)', color: '#00ff88' },
-  msgError: { marginTop: '1rem', padding: '0.75rem', borderRadius: '8px', textAlign: 'center' as const, fontSize: '0.9rem', background: 'rgba(255, 68, 68, 0.1)', color: '#ff4444' },
+  msgSuccess: { marginTop: '1rem', padding: '0.75rem', borderRadius: '6px', textAlign: 'center' as const, fontSize: '0.9rem', background: 'rgba(0, 255, 136, 0.1)', color: '#00ff88' },
+  msgError: { marginTop: '1rem', padding: '0.75rem', borderRadius: '6px', textAlign: 'center' as const, fontSize: '0.9rem', background: 'rgba(255, 68, 68, 0.1)', color: '#ff4444' },
 };
 
 function JoinModal({ isOpen, onClose, onSuccess, sponsorName = null, apiEndpoint = '/api/join-team' }: { isOpen: boolean; onClose: () => void; onSuccess?: (data: JoinFormData) => void; sponsorName?: string | null; apiEndpoint?: string; }) {
@@ -1770,22 +1786,22 @@ function JoinModal({ isOpen, onClose, onSuccess, sponsorName = null, apiEndpoint
 // COMPONENT: InstructionsModal (Inlined)
 // =============================================================================
 const INSTRUCTIONS_MODAL_STYLES: Record<string, React.CSSProperties> = {
-  container: { position: 'fixed', inset: 0, zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' },
+  container: { position: 'fixed', inset: 0, zIndex: 100000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', overflowY: 'auto' as const, overscrollBehavior: 'contain' },
   backdrop: { position: 'fixed', inset: 0, zIndex: 100000, background: 'rgba(0, 0, 0, 0.9)', backdropFilter: 'blur(8px)' },
   modalWrapper: { position: 'relative', zIndex: 100001, maxWidth: '520px', width: '100%', maxHeight: '90vh', margin: 'auto' },
-  modal: { position: 'relative', background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '2.5rem 2rem 2rem 2rem', width: '100%', maxHeight: '90vh', overflowY: 'auto', textAlign: 'center', boxSizing: 'border-box' as const },
-  closeBtn: { position: 'absolute' as const, top: '-12px', right: '-12px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', padding: 0, margin: 0, background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100005, pointerEvents: 'auto' as const },
-  successIcon: { width: '64px', height: '64px', margin: '0 auto 1.5rem', background: 'rgba(0, 255, 136, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
-  title: { fontFamily: 'var(--font-amulya, system-ui), sans-serif', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: '#fff', marginBottom: '0.5rem' },
-  subtitle: { fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '1rem', color: 'rgba(255, 255, 255, 0.7)', marginBottom: '2rem' },
-  instructionsList: { textAlign: 'left' as const, marginBottom: '2rem' },
-  instructionItem: { display: 'flex', gap: '1rem', marginBottom: '1.25rem' },
-  instructionNumber: { flexShrink: 0, width: '32px', height: '32px', background: 'linear-gradient(135deg, #ffd700, #e6c200)', color: '#2a2a2a', fontWeight: 700, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  modal: { position: 'relative', background: '#151517', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '2.5rem 2rem 2rem 2rem', width: '100%', maxHeight: '90vh', overflowY: 'auto' as const, overscrollBehavior: 'contain', textAlign: 'center' as const, boxSizing: 'border-box' as const },
+  closeBtn: { position: 'absolute' as const, top: '-12px', right: '-12px', width: '44px', height: '44px', minWidth: '44px', minHeight: '44px', padding: 0, margin: 0, background: 'rgba(40, 40, 40, 0.95)', border: '2px solid rgba(255, 255, 255, 0.3)', borderRadius: '50%', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100005, touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent', outline: 'none', boxSizing: 'border-box' as const, pointerEvents: 'auto' as const },
+  successIcon: { width: '64px', height: '64px', margin: '0 auto 1.25rem', background: 'rgba(0, 255, 136, 0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
+  title: { fontFamily: 'var(--font-family-h3, var(--font-amulya), system-ui, sans-serif)', fontSize: 'clamp(1.25rem, calc(1.1rem + 0.5vw), 1.75rem)', fontWeight: 700, lineHeight: 1.3, color: 'var(--text-color-h3, #e5e4dd)', margin: 0, marginBottom: '0.35rem' },
+  subtitle: { fontFamily: 'var(--font-synonym, system-ui), sans-serif', fontSize: '0.9rem', color: 'rgba(255, 255, 255, 0.7)', margin: 0, marginBottom: '1.5rem' },
+  instructionsList: { textAlign: 'left' as const, marginBottom: '1.5rem' },
+  instructionItem: { display: 'flex', gap: '1rem', marginBottom: '1rem' },
+  instructionNumber: { flexShrink: 0, width: '28px', height: '28px', background: 'linear-gradient(135deg, #ffd700, #e6c200)', color: '#2a2a2a', fontWeight: 700, fontSize: '0.85rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' },
   instructionContent: { flex: 1 },
-  instructionTitle: { display: 'block', color: '#fff', fontFamily: 'var(--font-amulya, system-ui), sans-serif', fontSize: '1rem', marginBottom: '0.25rem' },
-  instructionText: { color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.9rem', lineHeight: 1.5, margin: 0 },
-  cta: { width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #ffd700, #e6c200)', color: '#2a2a2a', fontFamily: 'var(--font-taskor, system-ui), sans-serif', fontWeight: 600, fontSize: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, border: 'none', borderRadius: '8px', cursor: 'pointer', display: 'block', textDecoration: 'none', textAlign: 'center' as const },
-  footer: { marginTop: '1.5rem', fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)' },
+  instructionTitle: { display: 'block', color: '#fff', fontFamily: 'var(--font-amulya, system-ui), sans-serif', fontSize: '0.95rem', marginBottom: '0.2rem' },
+  instructionText: { color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', lineHeight: 1.5, margin: 0 },
+  cta: { width: '100%', padding: '0.75rem 1rem', background: 'linear-gradient(135deg, #ffd700, #e6c200)', color: '#2a2a2a', fontFamily: 'var(--font-taskor, system-ui), sans-serif', fontWeight: 600, fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' as const, border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'block', textDecoration: 'none', textAlign: 'center' as const },
+  footer: { marginTop: '1.25rem', fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.5)' },
 };
 
 function InstructionsModal({ isOpen, onClose, userName = 'Agent', sponsorEmail = AGENT_EXP_EMAIL, sponsorFullName = AGENT_FULL_NAME }: { isOpen: boolean; onClose: () => void; userName?: string; sponsorEmail?: string; sponsorFullName?: string; }) {
