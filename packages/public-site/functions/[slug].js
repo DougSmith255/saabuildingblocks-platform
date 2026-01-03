@@ -445,6 +445,7 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
  * @param escapeHTML - Function to escape HTML entities
  * @param escapeJS - Function to escape JS strings
  */
+
 function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance.com', escapeHTML, escapeJS) {
   const isActive = agent.activated ?? agent.is_active ?? false;
   if (!isActive) return null;
@@ -465,60 +466,33 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   // Cloudflare Images CDN
   const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
 
-  // Media logos for the scrolling section
-  const MEDIA_LOGOS = [
-    { id: 'wsj-logo', alt: 'The Wall Street Journal' },
-    { id: 'cnbc-logo', alt: 'CNBC' },
-    { id: 'fox-business-logo', alt: 'Fox Business' },
-    { id: 'bloomberg-logo', alt: 'Bloomberg' },
-    { id: 'yahoo-finance-logo', alt: 'Yahoo Finance' },
-    { id: 'forbes-logo', alt: 'Forbes' },
-    { id: 'business-insider-logo', alt: 'Business Insider' },
-    { id: 'market-watch-logo', alt: 'MarketWatch' },
-    { id: 'reuters-logo', alt: 'Reuters' },
-    { id: 'usa-today-logo', alt: 'USA Today' },
-    { id: 'la-times-logo', alt: 'Los Angeles Times' },
-    { id: 'washington-post-logo', alt: 'The Washington Post' },
-    { id: 'nasdaq-logo', alt: 'Nasdaq' },
-    { id: 'barrons-logo', alt: "Barron's" },
-    { id: 'new-york-post-logo', alt: 'New York Post' },
-  ];
-
-  const mediaLogosHTML = [...MEDIA_LOGOS, ...MEDIA_LOGOS].map((logo, index) => `
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="${CLOUDFLARE_BASE}/${logo.id}/public" alt="${escapeHTML(logo.alt)}" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;" />
-    </div>
-  `).join('');
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  return `<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>${escapeHTML(title)}</title>
-  <meta name="description" content="Join ${escapeHTML(displayName)}'s team at eXp Realty through Smart Agent Alliance. Access elite systems, proven training, and real community support."/>
-  <meta name="robots" content="index, follow"/>
-  <meta property="og:type" content="website"/>
-  <meta property="og:title" content="${escapeHTML(title)}"/>
-  <meta property="og:description" content="Join ${escapeHTML(displayName)}'s team at eXp Realty"/>
-  ${agentImageUrl ? `<meta property="og:image" content="${escapeHTML(agentImageUrl)}"/>` : ''}
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="${escapeHTML(title)}"/>
-  <link rel="icon" href="${siteUrl}/favicon.ico"/>
-  <link rel="preconnect" href="${siteUrl}" crossorigin/>
-  <link rel="preconnect" href="https://imagedelivery.net" crossorigin/>
-  <link rel="preload" href="${siteUrl}/_next/static/media/Amulya_Variable-s.6f10ee89.woff2" as="font" type="font/woff2" crossorigin/>
-  <link rel="preload" href="${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin/>
-  <link rel="preload" href="${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin/>
+  <meta name="description" content="Join ${escapeHTML(displayName)}'s team at eXp Realty through Smart Agent Alliance. Access elite systems, proven training, and real community support.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="${escapeHTML(title)}">
+  <meta property="og:description" content="Join ${escapeHTML(displayName)}'s team at eXp Realty">
+  <meta property="og:image" content="${escapeHTML(agentImageUrl)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeHTML(title)}">
+  <link rel="icon" href="https://saabuildingblocks.pages.dev/favicon.ico">
+  <link rel="preconnect" href="https://saabuildingblocks.pages.dev" crossorigin="">
+  <link rel="preconnect" href="https://imagedelivery.net" crossorigin="">
+  <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/Amulya_Variable-s.6f10ee89.woff2" as="font" type="font/woff2" crossorigin="">
+  <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin="">
+  <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin="">
 
   <!-- Plausible Analytics -->
-  <script defer data-domain="${analyticsDomain}" src="https://plausible.io/js/script.js"></script>
+  <script defer="" data-domain="smartagentalliance.com" src="https://plausible.io/js/script.js"></script>
 
   <style>
     /* Font Faces */
-    @font-face { font-family: 'Taskor'; src: url('${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2') format('woff2'); font-display: swap; font-weight: 400; }
-    @font-face { font-family: 'Amulya'; src: url('${siteUrl}/_next/static/media/Amulya_Variable-s.6f10ee89.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
-    @font-face { font-family: 'Synonym'; src: url('${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
+    @font-face { font-family: 'Taskor'; src: url('https://saabuildingblocks.pages.dev/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2') format('woff2'); font-display: swap; font-weight: 400; }
+    @font-face { font-family: 'Amulya'; src: url('https://saabuildingblocks.pages.dev/_next/static/media/Amulya_Variable-s.6f10ee89.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
+    @font-face { font-family: 'Synonym'; src: url('https://saabuildingblocks.pages.dev/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2') format('woff2'); font-display: swap; font-weight: 100 900; }
 
     /* CSS Custom Properties */
     :root {
@@ -750,65 +724,50 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       50% { opacity: 1; box-shadow: 0 0 20px rgba(255,215,0,0.8); }
     }
 
-    /* Secondary Button - matches main site SecondaryButton.tsx */
-    .secondary-button-wrapper {
-      position: relative;
-      display: inline-block;
-      padding: 8px 0;
+    /* Organic light bar pulse animation - matches globals.css ctaLightPulseOpacity */
+    @keyframes ctaLightPulseOpacity {
+      0% { opacity: 0.55; }
+      13% { opacity: 0.95; }
+      28% { opacity: 0.6; }
+      41% { opacity: 0.85; }
+      54% { opacity: 0.5; }
+      67% { opacity: 1; }
+      83% { opacity: 0.7; }
+      100% { opacity: 0.55; }
     }
 
-    .secondary-button {
+    /* Light bar pulse classes - matches globals.css */
+    .cta-light-bar-pulse {
       position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0 20px;
-      height: clamp(45px, calc(43.182px + 0.7273vw), 65px);
-      min-width: 180px;
-      background: rgb(45,45,45);
-      border-radius: 12px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      color: var(--color-headingText);
-      font-family: var(--font-taskor), sans-serif;
-      font-size: var(--font-size-button);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      white-space: nowrap;
-      box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5);
-      overflow: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      z-index: 10;
+      --glow-color: 255, 215, 0;
     }
 
-    .secondary-button::before {
-      content: '';
+    .cta-light-bar-pulse::before {
+      content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to left, rgba(255,255,255,0.15), transparent);
-      width: 50%;
-      transform: skewX(45deg);
+      border-radius: inherit;
+      box-shadow: 0 0 6px 2px rgba(var(--glow-color), 0.45), 0 0 20px 8px rgba(var(--glow-color), 0.15);
+      pointer-events: none;
     }
 
-    .secondary-light-bar {
+    .cta-light-bar-pulse::after {
+      content: "";
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 10px;
-      height: 18px;
-      background: #ffd700;
-      border-radius: 6px;
-      transition: height 0.5s ease;
-      animation: ctaLightPulse 2s ease-in-out infinite;
-      z-index: 5;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: 0 0 10px 4px rgba(var(--glow-color), 0.5), 0 0 35px 15px rgba(var(--glow-color), 0.2);
+      pointer-events: none;
+      animation: ctaLightPulseOpacity 2.4s linear infinite;
+      animation-delay: inherit;
+      will-change: opacity;
+      transform: translateZ(0);
     }
 
-    .secondary-light-bar-left { left: 3px; }
-    .secondary-light-bar-right { right: 3px; }
-    .secondary-button-wrapper:hover .secondary-light-bar { height: 60%; }
+    /* Side light bar hover expansion */
+    .group:hover .cta-light-bar-side {
+      height: 38px !important;
+    }
 
     /* Hero Section */
     .hero-fixed {
@@ -1168,6 +1127,91 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       color: #c4a94d;
       filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
       transform: perspective(500px) rotateX(8deg);
+    }
+    .icon-3d-green {
+      color: #00cc66;
+      filter: drop-shadow(-1px -1px 0 #66ff99) drop-shadow(1px 1px 0 #009944) drop-shadow(3px 3px 0 #1d2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+    }
+    .icon-3d-purple {
+      color: #9933ff;
+      filter: drop-shadow(-1px -1px 0 #cc88ff) drop-shadow(1px 1px 0 #6622aa) drop-shadow(3px 3px 0 #1d1d2a) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+    }
+
+    /* Why eXp Realty 5-Card Layout */
+    .why-exp-grid-top {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .why-exp-grid-bottom {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .why-exp-grid-top {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .why-exp-grid-bottom {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .why-exp-card {
+      padding: 1.5rem;
+      border-radius: 1rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: all 0.7s ease-out;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .why-exp-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .why-exp-card-heading {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);
+    }
+
+    /* Secondary Button Styles */
+    .secondary-button-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .secondary-button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: transparent;
+      color: #e5e4dd;
+      border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .secondary-button:hover {
+      border-color: rgba(255,215,0,0.6);
+      background: rgba(255,215,0,0.1);
+    }
+    .secondary-light-bar {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 2px;
+      opacity: 0.7;
+    }
+    .secondary-light-bar-top {
+      top: 0;
+    }
+    .secondary-light-bar-bottom {
+      bottom: 0;
     }
 
     /* Sections */
@@ -1775,6 +1819,59 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     .modal-close-btn svg { pointer-events: none; display: block; flex-shrink: 0; }
 
+    /* Tool Modal (fits content) */
+    .tool-modal-wrapper {
+      position: relative;
+      z-index: 100001;
+      width: auto;
+      max-width: 95vw;
+      margin: auto;
+    }
+
+    .tool-modal {
+      position: relative;
+      background: #0a0a0a;
+      border: none;
+      border-radius: 16px;
+      padding: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .tool-modal iframe {
+      display: block;
+      border: none;
+      border-radius: 0;
+      background: #0a0a0a;
+    }
+
+    #calculator-modal .tool-modal iframe {
+      width: 700px;
+      max-width: 95vw;
+      height: 680px;
+      max-height: 80vh;
+    }
+
+    #revshare-modal .tool-modal iframe {
+      width: 900px;
+      max-width: 95vw;
+      height: 720px;
+      max-height: 85vh;
+    }
+
+    @media (max-width: 768px) {
+      #calculator-modal .tool-modal iframe {
+        width: 95vw;
+        height: 80vh;
+        max-height: 85vh;
+      }
+      #revshare-modal .tool-modal iframe {
+        width: 95vw;
+        height: 85vh;
+        max-height: 90vh;
+      }
+    }
+
     /* Join Modal */
     .join-modal-title {
       font-family: var(--font-amulya), system-ui, sans-serif;
@@ -1978,24 +2075,39 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     /* Grid utilities */
     .grid { display: grid; }
     .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     @media (min-width: 768px) {
-      .md\\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .md\\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-      .md\\:col-span-5 { grid-column: span 5 / span 5; }
-      .md\\:col-span-7 { grid-column: span 7 / span 7; }
-      .md\\:col-span-8 { grid-column: span 8 / span 8; }
+      .md:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .md:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+      .md:col-span-5 { grid-column: span 5 / span 5; }
+      .md:col-span-7 { grid-column: span 7 / span 7; }
+      .md:col-span-8 { grid-column: span 8 / span 8; }
+    }
+
+    /* Why SAA section grid - two cards side by side */
+    .why-saa-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .why-saa-grid {
+        grid-template-columns: 7fr 5fr;
+        gap: 1.5rem;
+      }
     }
 
     .gap-4 { gap: 1rem; }
     .gap-6 { gap: 1.5rem; }
     @media (min-width: 768px) {
-      .md\\:gap-6 { gap: 1.5rem; }
+      .md:gap-6 { gap: 1.5rem; }
     }
 
     /* Flex utilities */
     .flex { display: flex; }
     .flex-col { flex-direction: column; }
     .flex-row { flex-direction: row; }
+    .flex-1 { flex: 1 1 0%; }
     .items-center { align-items: center; }
     .justify-center { justify-content: center; }
     .gap-3 { gap: 0.75rem; }
@@ -2014,8 +2126,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
     .py-24 { padding-top: 6rem; padding-bottom: 6rem; }
     @media (min-width: 768px) {
-      .md\\:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
-      .md\\:py-32 { padding-top: 8rem; padding-bottom: 8rem; }
+      .md:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+      .md:py-32 { padding-top: 8rem; padding-bottom: 8rem; }
     }
 
     /* Text utilities */
@@ -2386,12 +2498,42 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       from { width: 0; }
       to { width: 100%; }
     }
+    .future-line-container {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+    @media (min-width: 768px) {
+      .future-line-container {
+        top: 90px;
+      }
+    }
     .future-line {
       width: 0;
     }
     .future-line.animate {
       animation: drawLine 1s ease-out forwards;
       animation-delay: 0.5s;
+    }
+    /* Future circle sizes - 120px mobile, 180px desktop */
+    .future-circle {
+      width: 120px;
+      height: 120px;
+    }
+    @media (min-width: 768px) {
+      .future-circle {
+        width: 180px;
+        height: 180px;
+      }
+    }
+    /* Future text H5 style */
+    .future-text-h4 {
+      font-weight: bold;
+      color: #e5e4dd;
+      font-size: clamp(20px, calc(18px + 0.5vw), 28px);
     }
     /* Hide line on mobile */
     @media (max-width: 767px) {
@@ -2542,7 +2684,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 </head>
 <body>
   <!-- Star Field Background -->
-  <canvas id="star-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background: transparent;"></canvas>
+  <canvas id="star-canvas" style="position: fixed; top: 0px; left: 0px; width: 800px; height: 600px; z-index: -1; pointer-events: none; background: transparent;" width="800" height="600"></canvas>
   <div style="position: fixed; inset: 0; z-index: -2; background: radial-gradient(ellipse at bottom, #282828 0%, #0c0c0c 100%);"></div>
 
   <main id="main-content">
@@ -2551,38 +2693,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div class="hero-content">
         <section class="hero-section" aria-label="Hero">
           <!-- Agent Counter (Desktop) -->
-          <div class="agent-counter" id="agent-counter-desktop">
+          <div class="agent-counter" id="agent-counter-desktop" style="opacity: 1; filter: blur(0px) brightness(1);">
             <span style="display: inline-flex; align-items: center; gap: 0.25em; font-size: clamp(1.75rem, 2.625vw, 2.1875rem);">
               <span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: calc(1em + 10px);">
-                <span class="counter-digit">3</span><span class="counter-digit">7</span><span class="counter-digit">0</span><span class="counter-digit">0</span><span>+</span>
+                <span class="counter-digit">1</span><span class="counter-digit">6</span><span class="counter-digit">8</span><span class="counter-digit">8</span><span>+</span>
               </span>
               <span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em; text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8); filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));">AGENTS</span>
             </span>
           </div>
 
           <!-- Reveal Mask Effect -->
-          <div class="reveal-mask-effect hero-effect-layer">
-            <div class="reveal-glow"></div>
-            <div class="reveal-ring reveal-ring-outer"></div>
-            <div class="reveal-ring reveal-ring-inner"></div>
+          <div class="reveal-mask-effect hero-effect-layer" style="opacity: 1; visibility: visible;">
+            <div class="reveal-glow" style="background: radial-gradient(52.3329% 36.633% at 50% 42%, rgba(255, 215, 0, 0.2) 0%, rgba(255, 180, 0, 0.12) 35%, rgba(255, 150, 0, 0.06) 55%, transparent 80%);"></div>
+            <div class="reveal-ring reveal-ring-outer" style="transform: translate(-50%, -50%) rotate(9.55757deg); border-radius: 41.3239%;"></div>
+            <div class="reveal-ring reveal-ring-inner" style="transform: translate(-50%, -50%) rotate(-4.77878deg); border-radius: 28.6761%;"></div>
             <div class="hero-vignette"></div>
           </div>
 
           <!-- Hero Content -->
-          <div class="hero-content-wrapper" id="hero-content-wrapper">
+          <div class="hero-content-wrapper" id="hero-content-wrapper" style="transform-origin: center center; transform: scale(1) translateY(0px); filter: blur(0px) brightness(1); opacity: 1;">
             <!-- Profile Image -->
             <div class="hero-image-container">
               <div class="hero-3d-backdrop"></div>
-              <img
-                src="${escapeHTML(agentImageUrl)}"
-                alt=""
-                width="900"
-                height="500"
-                loading="eager"
-                fetchpriority="high"
-                decoding="async"
-                class="hero-image"
-              />
+              <img src="${escapeHTML(agentImageUrl)}" alt="${escapeHTML(displayName)}" width="900" height="500" loading="eager" fetchpriority="high" decoding="async" class="hero-image">
             </div>
 
             <!-- Hero Text -->
@@ -2591,12 +2724,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 SMART AGENT ALLIANCE
               </h1>
               <p class="text-tagline tagline">
-                ${escapeHTML(agentTagline)}<span class="tagline-counter-suffix"><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;"> (</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">3</span><span class="counter-digit-tagline">7</span><span class="counter-digit-tagline">0</span><span class="counter-digit-tagline">0</span><span>+ </span></span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">AGENTS)</span></span>
+                Join ${escapeHTML(displayName)}'s Team<span class="tagline-counter-suffix"><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;"> (</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+ </span></span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">AGENTS)</span></span>
               </p>
               <div class="flex justify-center items-center" style="margin-top: 14px;">
                 <div class="cta-button-wrapper">
                   <div class="cta-light-bar cta-light-bar-top"></div>
-                  <a href="#watch-and-decide" class="cta-button">WATCH & DECIDE</a>
+                  <a href="#watch-and-decide" class="cta-button">WATCH &amp; DECIDE</a>
                   <div class="cta-light-bar cta-light-bar-bottom"></div>
                 </div>
               </div>
@@ -2610,7 +2743,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <div class="hero-spacer" aria-hidden="true"></div>
 
     <!-- Scroll Indicator -->
-    <div class="scroll-indicator" id="scroll-indicator">
+    <div class="scroll-indicator" id="scroll-indicator" style="opacity: 1; transform: scale(1);">
       <div class="scroll-arrow-container">
         <div class="scroll-arrow"><div></div></div>
         <div class="scroll-arrow"><div></div></div>
@@ -2651,7 +2784,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     <!-- Why Smart Agent Alliance Section -->
     <section class="section py-24 md:py-32 px-6 overflow-hidden relative">
-      <div class="section-content scroll-reveal" id="why-saa-section" style="max-width: 1300px; margin: 0 auto;">
+      <div class="section-content scroll-reveal" id="why-saa-section" style="max-width: 1500px; margin: 0 auto;">
         <div class="text-center mb-12">
           <h2 class="text-h2 h2-container">
             <span class="h2-word">Why</span>
@@ -2661,52 +2794,50 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <span class="h2-word">(SAA)?</span>
           </h2>
         </div>
-        <div class="grid md:grid-cols-12 gap-4 md:gap-6">
-          <div style="grid-column: span 7 / span 7;">
-            <div class="bento-card" style="height: 100%;">
-              <div class="bento-card-content">
-                <div class="mb-6">
-                  <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
-                  <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
-                  <p class="font-bold mt-5" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.5rem;">Smart Agent Alliance was built differently.</p>
-                  <p class="text-body mt-3" style="line-height: 1.6;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
+        <div class="why-saa-grid">
+          <!-- Left Card -->
+          <div class="bento-card" style="height: 100%;">
+            <div class="bento-card-content">
+              <div>
+                <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
+                <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
+                <p class="font-bold mt-5" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.5rem;">Smart Agent Alliance was built differently.</p>
+                <p class="text-body mt-3" style="line-height: 1.6;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
+              </div>
+              <div class="grid grid-cols-2 mt-8" style="gap: 0.5rem 1rem;">
+                <div class="flex items-center gap-3">
+                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="text-body font-medium">Not a production team</span>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="flex items-center gap-3">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                    <span class="text-body font-medium">Not a production team</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                    <span class="text-body font-medium">No commission splits</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                    <span class="text-body font-medium">No sponsor team fees</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-                    <span class="text-body font-medium">No required meetings</span>
-                  </div>
+                <div class="flex items-center gap-3">
+                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="text-body font-medium">No commission splits</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="text-body font-medium">No sponsor team fees</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                  <span class="text-body font-medium">No required meetings</span>
                 </div>
               </div>
             </div>
           </div>
-          <div style="grid-column: span 5 / span 5;">
-            <div class="bento-card" style="position: relative; overflow: hidden; height: 100%; min-height: 300px;">
-              <div style="position: absolute; inset: 0; overflow: hidden;">
-                <img src="${CLOUDFLARE_BASE}/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-              </div>
-              <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
-              <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
-                <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
-                <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
-              </div>
+          <!-- Right Card - Aligned Incentives -->
+          <div class="bento-card" style="position: relative; overflow: hidden; min-height: 300px;">
+            <div style="position: absolute; inset: 0; overflow: hidden;">
+              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+            </div>
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
+              <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
+              <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
             </div>
           </div>
         </div>
         <div class="text-center mt-12 scroll-reveal">
-          <p class="text-body max-w-xl mx-auto" style="color: #e5e4dd;">SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.</p>
+          <p class="text-body mx-auto" style="color: #e5e4dd; max-width: 700px; font-size: clamp(16px, calc(14.91px + 0.44vw), 28px);">SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.</p>
         </div>
       </div>
     </section>
@@ -2718,21 +2849,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <section style="padding: var(--section-padding-y) 1.5rem; position: relative; overflow: hidden;">
           <!-- Wolf Pack Background -->
           <div style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-            <img
-              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop"
-              srcset="
+            <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop" srcset="
                 https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/mobile 640w,
                 https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/tablet 1024w,
                 https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop 2000w
-              "
-              sizes="100vw"
-              alt=""
-              aria-hidden="true"
-              style="width: 100%; height: 100%; object-fit: cover; object-position: center 55%; mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);"
-            />
+              " sizes="100vw" alt="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; object-position: center 55%; mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%); -webkit-mask-image: radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);">
           </div>
 
-          <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+          <div style="max-width: 1600px; margin: 0 auto; position: relative; z-index: 10;">
             <div class="proven-scale-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: center;">
               <!-- Left Content -->
               <div>
@@ -2746,15 +2870,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
                 <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg></span>
                     <p class="text-body">One of the fastest-growing sponsor organizations at eXp Realty</p>
                   </div>
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem; transition-delay: 0.1s;">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
                     <p class="text-body">Consistently strong agent retention</p>
                   </div>
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem; transition-delay: 0.2s;">
-                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
                     <p class="text-body">Supporting agents across the U.S., Canada, Mexico, Australia, and beyond</p>
                   </div>
                 </div>
@@ -2773,7 +2897,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 <div class="cyber-card-gold">
                   <div class="cyber-card-gold-frame">
                     <div class="cyber-card-gold-content">
-                      <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+                      <span class="icon-3d" style="margin: 0 auto 0.5rem; display: block; width: fit-content;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
                       <p style="font-family: 'Amulya', var(--font-amulya), sans-serif; font-size: clamp(1.875rem, 4vw, 2.5rem); font-weight: 700; color: #bfbdb0; text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; text-align: center; margin: 0;">3700+</p>
                       <p class="text-body" style="text-align: center; margin-top: 0.25rem;">Agents in Sponsor Network</p>
                     </div>
@@ -2788,7 +2912,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     <!-- What You Get Section -->
     <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
-      <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+      <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
         <div class="text-center scroll-reveal">
           <h2 class="text-h2 h2-container">
             <span class="h2-word">What</span>
@@ -2803,23 +2927,23 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <!-- Tab Buttons -->
         <div class="scroll-reveal" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding-bottom: 0.5rem; margin-bottom: 1.5rem;" id="wyg-tabs">
           <button class="wyg-tab wyg-tab-active" data-tab="0">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
             <span class="wyg-tab-label">Connected</span>
           </button>
           <button class="wyg-tab" data-tab="1">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
             <span class="wyg-tab-label">Passive</span>
           </button>
           <button class="wyg-tab" data-tab="2">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
             <span class="wyg-tab-label">Done-For-You</span>
           </button>
           <button class="wyg-tab" data-tab="3">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
             <span class="wyg-tab-label">Elite</span>
           </button>
           <button class="wyg-tab" data-tab="4">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
             <span class="wyg-tab-label">Private</span>
           </button>
         </div>
@@ -2836,37 +2960,37 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.5) 100%); z-index: 1;"></div>
           <!-- Content Panels -->
           <div class="wyg-content wyg-content-active" data-content="0">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span></div>
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span></div>
             <div style="text-align: left; flex: 1;">
               <h3 class="wyg-content-title">Connected Leadership and Community</h3>
               <p class="text-body">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
             </div>
           </div>
           <div class="wyg-content" data-content="1">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span></div>
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span></div>
             <div style="text-align: left; flex: 1;">
               <h3 class="wyg-content-title">Passive Income Infrastructure</h3>
               <p class="text-body">We handle the structure so you can build long-term income without relying solely on transactions.</p>
             </div>
           </div>
           <div class="wyg-content" data-content="2">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span></div>
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span></div>
             <div style="text-align: left; flex: 1;">
               <h3 class="wyg-content-title">Done-For-You Production Systems</h3>
               <p class="text-body">Curated systems designed to save time, not create tech overload.</p>
             </div>
           </div>
           <div class="wyg-content" data-content="3">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span></div>
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span></div>
             <div style="text-align: left; flex: 1;">
               <h3 class="wyg-content-title">Elite Training Libraries</h3>
               <p class="text-body">AI, social media, investing, and modern production systems, available when you need them.</p>
             </div>
           </div>
           <div class="wyg-content" data-content="4">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span></div>
+            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span></div>
             <div style="text-align: left; flex: 1;">
-              <h3 class="wyg-content-title">Private Referrals & Global Collaboration</h3>
+              <h3 class="wyg-content-title">Private Referrals &amp; Global Collaboration</h3>
               <p class="text-body">Warm introductions and deal flow inside a global agent network.</p>
             </div>
           </div>
@@ -2888,9 +3012,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div class="glass-panel-bg glass-panel-marigold-noise"></div>
       <div class="glass-panel-content">
         <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="why-exp-section">
-          <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
-            <div class="text-center scroll-reveal" style="margin-bottom: 2rem;">
-              <h2 class="text-h2 h2-container">
+          <div style="max-width: 1600px; margin: 0 auto; position: relative; z-index: 10;">
+            <div class="text-center scroll-reveal" style="margin-bottom: 2rem; position: relative; z-index: 20;">
+              <h2 class="text-h2 h2-container" style="max-width: 100%;">
                 <span class="h2-word">Why</span>
                 <span class="h2-word">This</span>
                 <span class="h2-word">Only</span>
@@ -2901,11 +3025,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               </h2>
             </div>
 
-            <div class="why-exp-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center;">
+            <div class="why-exp-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; position: relative; z-index: 1;">
               <!-- Left - Deck Stack -->
-              <div class="scroll-reveal deck-stack-container" style="position: relative; height: 260px; perspective: 1000px;" id="deck-stack">
+              <div class="scroll-reveal deck-stack-container" style="position: relative; height: 312px; perspective: 1000px;" id="deck-stack">
                 <!-- Card 1 -->
-                <div class="deck-card deck-card-active" data-card="0" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255,255,255,0.15);">
+                <div class="deck-card deck-card-active" data-card="0" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255, 255, 255, 0.15); transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); opacity: 1; z-index: 10;">
                   <div class="deck-card-number" style="background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%); border: 2px solid rgba(255,255,255,0.2);">
                     <span class="icon-3d" style="font-size: 32px; font-weight: bold;">1</span>
                   </div>
@@ -2913,7 +3037,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <p class="text-body opacity-40 mt-4">Click to advance</p>
                 </div>
                 <!-- Card 2 -->
-                <div class="deck-card" data-card="1" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255,255,255,0.15);">
+                <div class="deck-card" data-card="1" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255, 255, 255, 0.15); transform: translateY(6px) translateX(0px) rotate(0deg) scale(0.98); opacity: 0.8; z-index: 9;">
                   <div class="deck-card-number" style="background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%); border: 2px solid rgba(255,255,255,0.2);">
                     <span class="icon-3d" style="font-size: 32px; font-weight: bold;">2</span>
                   </div>
@@ -2921,7 +3045,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <p class="text-body opacity-40 mt-4">Click to advance</p>
                 </div>
                 <!-- Card 3 (Highlighted) -->
-                <div class="deck-card deck-card-highlight" data-card="2" style="background: rgba(40, 35, 10, 0.98); border: 2px solid rgba(255, 215, 0, 0.5);">
+                <div class="deck-card deck-card-highlight" data-card="2" style="background: rgba(40, 35, 10, 0.98); border: 2px solid rgba(255, 215, 0, 0.5); transform: translateY(12px) translateX(0px) rotate(0deg) scale(0.96); opacity: 0.6; z-index: 8;">
                   <div class="deck-card-number" style="background: #ffd700;">
                     <span style="font-size: 32px; font-weight: bold; color: #111;">3</span>
                   </div>
@@ -2940,7 +3064,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.3s;">
                 <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; min-height: 340px;">
                   <div style="position: absolute; inset: 0;">
-                    <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                    <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%);"></div>
                   </div>
                   <figcaption style="position: relative; z-index: 10; padding: 1.5rem 2rem; height: 100%; display: flex; flex-direction: column; justify-content: center;">
@@ -2956,38 +3080,230 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       </div>
     </div>
 
-    <!-- Media Logos Section (Why eXp Realty?) -->
+    <!-- Media Logos Section (Why eXp Realty?) - 5-Card Layout -->
     <section class="media-logos-section scroll-reveal" id="media-logos-section">
       <div class="text-center px-4 relative" style="z-index: 10;">
-        <h2 class="text-h2 h2-container">
+        <h2 class="text-h2 h2-container" style="max-width: 100%;">
           <span class="h2-word">Why</span>
           <span class="h2-word">eXp</span>
           <span class="h2-word">Realty?</span>
         </h2>
-        <div class="mx-auto mb-8 flex flex-col gap-2" style="max-width: 900px;">
-          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>The only cumulatively profitable public real estate company.</span>
-          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></span>S&P 600 SmallCap. First cloud-based brokerage.</span>
-          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></span>80/20 split until cap → 100% commission. Flat monthly fee.</span>
-          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg></span>Stock awards + optional revenue share income.</span>
-          <span class="flex items-center justify-center gap-3 text-body opacity-80"><span class="icon-3d"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>Choose your sponsor. Access real support.</span>
+
+        <!-- Cards Grid: 3 on top, 2 on bottom -->
+        <div class="mx-auto mb-8" style="max-width: 1800px;">
+          <!-- Top Row - 3 cards -->
+          <div class="why-exp-grid-top">
+            <!-- Card 1: Profitable -->
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.2s;">
+              <div class="mb-4">
+                <span class="icon-3d" style="width: 80px; height: 80px;">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                </span>
+              </div>
+              <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Proven Profitability</h3>
+              <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">The only cumulatively profitable public real estate company.</p>
+            </div>
+
+            <!-- Card 2: Cloud-Based -->
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.35s;">
+              <div class="mb-4">
+                <span class="icon-3d" style="width: 80px; height: 80px;">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                </span>
+              </div>
+              <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Cloud-First Pioneer</h3>
+              <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">S&amp;P 600 SmallCap. First cloud-based brokerage.</p>
+            </div>
+
+            <!-- Card 3: Sponsor Choice -->
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.5s;">
+              <div class="mb-4">
+                <span class="icon-3d" style="width: 80px; height: 80px;">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                </span>
+              </div>
+              <h3 class="why-exp-card-heading" style="color: #e5e4dd;">Choose Your Sponsor</h3>
+              <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9;">Choose your sponsor. Access real support.</p>
+            </div>
+          </div>
+
+          <!-- Bottom Row - 2 cards with colored borders and buttons -->
+          <div class="why-exp-grid-bottom">
+            <!-- Card 4: Commission - Green -->
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(0,204,102,0.5); transition-delay: 0.65s;">
+              <div class="mb-4">
+                <span class="icon-3d icon-3d-green" style="width: 80px; height: 80px;">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
+                </span>
+              </div>
+              <h3 class="why-exp-card-heading" style="color: #00cc66;">Industry-Leading Splits</h3>
+              <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9; margin-bottom: 1rem;">80/20 split until cap → 100% commission. Flat monthly fee.</p>
+              <div style="margin-top: auto; padding: 0.5rem 0;">
+                <div class="group" style="position: relative; display: inline-block;">
+                  <button id="btn-commission-calculator" style="position: relative; display: flex; justify-content: center; align-items: center; height: clamp(45px, calc(43.182px + 0.7273vw), 65px); padding: 0.5rem 1.25rem; background-color: rgb(45,45,45); border-radius: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); border-left: none; border-right: none; box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); color: var(--color-headingText, #e5e4dd); font-family: var(--font-taskor), Taskor, system-ui, sans-serif; font-size: var(--font-size-button, 20px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; white-space: nowrap; overflow: hidden; z-index: 10; cursor: pointer;">
+                    <span style="position: absolute; inset: 0; background: linear-gradient(to left, rgba(255,255,255,0.15), transparent); width: 50%; transform: skewX(45deg); pointer-events: none;"></span>
+                    Commission Calculator
+                  </button>
+                  <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #00cc66; border-radius: 6px; z-index: 5; --glow-color: 0, 255, 136; transition: height 0.5s ease;"></div>
+                  <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: auto; right: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #00cc66; border-radius: 6px; z-index: 5; --glow-color: 0, 255, 136; transition: height 0.5s ease;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 5: RevShare - Purple -->
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(153,51,255,0.5); transition-delay: 0.8s;">
+              <div class="mb-4">
+                <span class="icon-3d icon-3d-purple" style="width: 80px; height: 80px;">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                </span>
+              </div>
+              <h3 class="why-exp-card-heading" style="color: #9933ff;">Passive Income Potential</h3>
+              <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); opacity: 0.9; margin-bottom: 1rem;">Optional revenue share income + stock opportunities.</p>
+              <div style="margin-top: auto; padding: 0.5rem 0;">
+                <div class="group" style="position: relative; display: inline-block;">
+                  <button id="btn-revshare-visualizer" style="position: relative; display: flex; justify-content: center; align-items: center; height: clamp(45px, calc(43.182px + 0.7273vw), 65px); padding: 0.5rem 1.25rem; background-color: rgb(45,45,45); border-radius: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); border-left: none; border-right: none; box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); color: var(--color-headingText, #e5e4dd); font-family: var(--font-taskor), Taskor, system-ui, sans-serif; font-size: var(--font-size-button, 20px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; white-space: nowrap; overflow: hidden; z-index: 10; cursor: pointer;">
+                    <span style="position: absolute; inset: 0; background: linear-gradient(to left, rgba(255,255,255,0.15), transparent); width: 50%; transform: skewX(45deg); pointer-events: none;"></span>
+                    RevShare Visualizer
+                  </button>
+                  <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #9933ff; border-radius: 6px; z-index: 5; --glow-color: 191, 95, 255; transition: height 0.5s ease;"></div>
+                  <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: auto; right: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #9933ff; border-radius: 6px; z-index: 5; --glow-color: 191, 95, 255; transition: height 0.5s ease;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Logo Carousel -->
       <div class="media-logos-container">
         <div class="portal-edge-left"></div>
         <div class="portal-edge-right"></div>
         <div class="logo-track-container">
           <div class="logo-track-shadow-left"></div>
           <div class="logo-track-shadow-right"></div>
-          <div class="logo-track" id="logo-track">
-            ${mediaLogosHTML}
+          <div class="logo-track" id="logo-track" style="transform: translateX(-32.5px);">
+            
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
+      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    </div>
+  
           </div>
-        </div>
-      </div>
-      <div class="text-center px-4 relative" style="z-index: 10; margin-top: 2rem;">
-        <div class="cta-button-wrapper" style="display: inline-block;">
-          <div class="cta-light-bar cta-light-bar-top"></div>
-          <a href="#watch-and-decide" class="cta-button">Learn More About eXp</a>
-          <div class="cta-light-bar cta-light-bar-bottom"></div>
         </div>
       </div>
     </section>
@@ -2997,7 +3313,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div class="glass-panel-bg glass-panel-marigold"></div>
       <div class="glass-panel-content">
         <section style="padding: var(--section-padding-y) 1.5rem; position: relative;">
-          <div style="max-width: 1300px; margin: 0 auto; position: relative; z-index: 10;">
+          <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
             <!-- Header -->
             <div class="scroll-reveal" style="text-align: center; margin-bottom: 3rem; transition: all 0.7s ease;">
               <h2 class="text-h2 h2-container">
@@ -3013,16 +3329,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.2s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,215,0,0.3); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
-                    <span class="position-number">1</span>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        ${agent.profile_image_url ? `<img src="${escapeHTML(agent.profile_image_url)}" alt="${escapeHTML(fullName)}" style="width: 100%; height: 100%; object-fit: cover; background-color: #d8d8da;" />` : `<div style="width: 100%; height: 100%; background: #d8d8da; display: flex; align-items: center; justify-content: center;"><span style="font-size: 48px; color: #ffd700;">${escapeHTML(agent.display_first_name?.charAt(0) || 'A')}</span></div>`}
+                        <img src="${escapeHTML(agentImageUrl)}" alt="${escapeHTML(displayName)}" style="width: 100%; height: 100%; object-fit: cover; background-color: #d8d8da;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
-                  <h3 class="founder-name">${escapeHTML(fullName)}</h3>
+                  <h3 class="founder-name">${escapeHTML(displayName)}</h3>
                   <p class="founder-title">SAA Team Member</p>
                 </div>
               </div>
@@ -3031,20 +3346,19 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.35s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
-                    <span class="position-number">2</span>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public" alt="Doug Smart" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55dbdf32ddc5fbcc-Doug-Profile-Picture.png/public" alt="Doug Smart" style="width: 100%; height: 100%; object-fit: cover;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
                   <h3 class="founder-name">Doug Smart</h3>
-                  <p class="founder-title">Co-Founder & Full-Stack Developer</p>
+                  <p class="founder-title">Co-Founder &amp; Full-Stack Developer</p>
                   <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
                     <span>About Doug</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
                   </button>
                   <div class="founder-bio-content">
                     <p class="founder-bio" style="margin: 0;">Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.</p>
@@ -3056,20 +3370,19 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.5s;">
                 <div class="founder-card" style="padding: 1.5rem 2rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; background-color: rgba(20,20,20,0.75); height: 100%; display: flex; flex-direction: column; transition: border-color 0.3s ease;">
                   <div class="profile-cyber-frame" style="width: 192px; height: 192px; margin: 0 auto 24px auto; position: relative;">
-                    <span class="position-number">3</span>
                     <div class="profile-cyber-frame-metal"></div>
                     <div class="profile-cyber-frame-inner">
                       <div style="position: relative; width: 100%; height: 100%;">
-                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" alt="Karrie Hill" style="width: 100%; height: 100%; object-fit: cover;" />
+                        <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public" alt="Karrie Hill" style="width: 100%; height: 100%; object-fit: cover;">
                       </div>
                     </div>
                     <div class="profile-cyber-frame-ring"></div>
                   </div>
                   <h3 class="founder-name">Karrie Hill</h3>
-                  <p class="founder-title">Co-Founder & California Lawyer</p>
+                  <p class="founder-title">Co-Founder &amp; California Lawyer</p>
                   <button class="founder-bio-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('open');">
                     <span>About Karrie</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
                   </button>
                   <div class="founder-bio-content">
                     <p class="founder-bio" style="margin: 0;">UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.</p>
@@ -3080,7 +3393,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             <!-- Additional layers note -->
             <div class="scroll-reveal" style="text-align: center; margin-top: 2rem; transition: all 0.7s ease; transition-delay: 0.6s;">
-              <p class="text-heading">+4 more layers of leadership support</p>
+              <p style="font-size: clamp(16px, calc(14.91px + 0.44vw), 28px); color: #e5e4dd; opacity: 0.9;">+4 more layers of leadership support</p>
             </div>
           </div>
         </section>
@@ -3090,11 +3403,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <!-- Built for Future Section -->
     <section class="section" id="built-for-future" style="padding: var(--section-padding-y) 1.5rem; overflow: hidden; position: relative;">
       <!-- GrayscaleDataStream Background -->
-      <div class="data-stream-container" id="data-stream"></div>
+      <div class="data-stream-container" id="data-stream"><div class="data-stream-column" data-index="0" data-speed="0.8" data-offset="0" style="left: 0%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 9.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.752515;">1</div><div class="data-stream-char" data-char-index="1" style="top: 14.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 19.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 24.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 29.0302%; color: rgba(120, 120, 120, 0.247); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 34.0302%; color: rgba(120, 120, 120, 0.227); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 39.0302%; color: rgba(120, 120, 120, 0.208); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 44.0302%; color: rgba(120, 120, 120, 0.184); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 49.0302%; color: rgba(120, 120, 120, 0.165); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 54.0302%; color: rgba(120, 120, 120, 0.145); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 59.0302%; color: rgba(120, 120, 120, 0.125); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 64.0302%; color: rgba(120, 120, 120, 0.106); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 69.0302%; color: rgba(120, 120, 120, 0.086); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 74.0302%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 79.0302%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 84.0302%; color: rgba(120, 120, 120, 0.027); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 89.0302%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.09) 0px 0px 2px; opacity: 0.914152;">1</div><div class="data-stream-char" data-char-index="17" style="top: 94.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.497485;">0</div><div class="data-stream-char" data-char-index="18" style="top: 99.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0808183;">1</div><div class="data-stream-char" data-char-index="19" style="top: -5.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="20" style="top: -0.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="21" style="top: 4.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.335848;">0</div></div><div class="data-stream-column" data-index="1" data-speed="1.2000000000000002" data-offset="17" style="left: 5%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 35.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 40.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 45.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 50.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 55.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 60.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 65.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 70.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 75.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 80.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 85.5453%; color: rgba(120, 120, 120, 0.23); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 90.5453%; color: rgba(120, 120, 120, 0.17); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.787894;">1</div><div class="data-stream-char" data-char-index="12" style="top: 95.5453%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.371228;">0</div><div class="data-stream-char" data-char-index="13" style="top: -9.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="14" style="top: -4.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="15" style="top: 0.54527%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0454391;">1</div><div class="data-stream-char" data-char-index="16" style="top: 5.54527%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.462106;">0</div><div class="data-stream-char" data-char-index="17" style="top: 10.5453%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.878772;">1</div><div class="data-stream-char" data-char-index="18" style="top: 15.5453%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 20.5453%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 25.5453%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 30.5453%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="2" data-speed="1.6" data-offset="34" style="left: 10%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 62.0604%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 67.0604%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 72.0604%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 77.0604%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 82.0604%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 87.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 92.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.661637;">1</div><div class="data-stream-char" data-char-index="7" style="top: 97.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.024) 0px 0px 2px; opacity: 0.24497;">0</div><div class="data-stream-char" data-char-index="8" style="top: -7.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="9" style="top: -2.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="10" style="top: 2.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.171697;">1</div><div class="data-stream-char" data-char-index="11" style="top: 7.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.588363;">0</div><div class="data-stream-char" data-char-index="12" style="top: 12.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 17.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 22.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 27.0604%; color: rgba(120, 120, 120, 0.24); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 32.0604%; color: rgba(120, 120, 120, 0.22); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 37.0604%; color: rgba(120, 120, 120, 0.2); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 42.0604%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 47.0604%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 52.0604%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 57.0604%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="3" data-speed="2" data-offset="51" style="left: 15%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 88.5754%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.094) 0px 0px 2px; opacity: 0.952046;">0</div><div class="data-stream-char" data-char-index="1" style="top: 93.5754%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.535379;">1</div><div class="data-stream-char" data-char-index="2" style="top: 98.5754%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.118713;">0</div><div class="data-stream-char" data-char-index="3" style="top: -6.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="4" style="top: -1.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="5" style="top: 3.57545%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.297954;">1</div><div class="data-stream-char" data-char-index="6" style="top: 8.57545%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.714621;">0</div><div class="data-stream-char" data-char-index="7" style="top: 13.5754%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 18.5754%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 23.5754%; color: rgba(120, 120, 120, 0.024); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 28.5754%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 33.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 38.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 43.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 48.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 53.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 58.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 63.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 68.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 73.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 78.5754%; color: rgba(120, 120, 120, 0.243); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 83.5754%; color: rgba(120, 120, 120, 0.224); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="4" data-speed="0.8" data-offset="68" style="left: 20%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 77.0302%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 82.0302%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 87.0302%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 92.0302%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.664152;">0</div><div class="data-stream-char" data-char-index="4" style="top: 97.0302%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.024) 0px 0px 2px; opacity: 0.247485;">1</div><div class="data-stream-char" data-char-index="5" style="top: -7.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="6" style="top: -2.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="7" style="top: 2.03018%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.169182;">0</div><div class="data-stream-char" data-char-index="8" style="top: 7.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.585848;">1</div><div class="data-stream-char" data-char-index="9" style="top: 12.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 17.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 22.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 27.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 32.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 37.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 42.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 47.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 52.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 57.0302%; color: rgba(120, 120, 120, 0.24); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 62.0302%; color: rgba(120, 120, 120, 0.22); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 67.0302%; color: rgba(120, 120, 120, 0.2); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 72.0302%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="5" data-speed="1.2000000000000002" data-offset="85" style="left: 25%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: -6.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="1" style="top: -1.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="2" style="top: 3.54527%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.295439;">0</div><div class="data-stream-char" data-char-index="3" style="top: 8.54527%; color: rgba(120, 120, 120, 0.145); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.712106;">1</div><div class="data-stream-char" data-char-index="4" style="top: 13.5453%; color: rgba(120, 120, 120, 0.184); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 18.5453%; color: rgba(120, 120, 120, 0.165); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 23.5453%; color: rgba(120, 120, 120, 0.145); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 28.5453%; color: rgba(120, 120, 120, 0.125); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 33.5453%; color: rgba(120, 120, 120, 0.106); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 38.5453%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 43.5453%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 48.5453%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 53.5453%; color: rgba(120, 120, 120, 0.024); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 58.5453%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 63.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 68.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 73.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 78.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 83.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 88.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.094) 0px 0px 2px; opacity: 0.954561;">1</div><div class="data-stream-char" data-char-index="20" style="top: 93.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.537894;">0</div><div class="data-stream-char" data-char-index="21" style="top: 98.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.121228;">1</div></div><div class="data-stream-column" data-index="6" data-speed="1.6" data-offset="2" style="left: 30%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 30.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 35.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 40.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 45.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 50.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 55.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 60.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 65.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 70.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 75.0604%; color: rgba(120, 120, 120, 0.23); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 80.0604%; color: rgba(120, 120, 120, 0.21); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 85.0604%; color: rgba(120, 120, 120, 0.192); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 90.0604%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.828303;">1</div><div class="data-stream-char" data-char-index="13" style="top: 95.0604%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.04) 0px 0px 2px; opacity: 0.411637;">0</div><div class="data-stream-char" data-char-index="14" style="top: -9.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="15" style="top: -4.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="16" style="top: 0.0603596%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0.00502997;">1</div><div class="data-stream-char" data-char-index="17" style="top: 5.06036%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.043) 0px 0px 2px; opacity: 0.421697;">0</div><div class="data-stream-char" data-char-index="18" style="top: 10.0604%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.838363;">1</div><div class="data-stream-char" data-char-index="19" style="top: 15.0604%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 20.0604%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 25.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="7" data-speed="2" data-offset="19" style="left: 35%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 56.5754%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 61.5754%; color: rgba(120, 120, 120, 0.055); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 66.5754%; color: rgba(120, 120, 120, 0.035); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 71.5754%; color: rgba(120, 120, 120, 0.016); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 76.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 81.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 86.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 91.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.702046;">1</div><div class="data-stream-char" data-char-index="8" style="top: 96.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.027) 0px 0px 2px; opacity: 0.285379;">0</div><div class="data-stream-char" data-char-index="9" style="top: -8.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="10" style="top: -3.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="11" style="top: 1.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.131287;">1</div><div class="data-stream-char" data-char-index="12" style="top: 6.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.547954;">0</div><div class="data-stream-char" data-char-index="13" style="top: 11.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.964621;">1</div><div class="data-stream-char" data-char-index="14" style="top: 16.5754%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 21.5754%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 26.5754%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 31.5754%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 36.5754%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 41.5754%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 46.5754%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 51.5754%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="8" data-speed="0.8" data-offset="36" style="left: 40%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 45.0302%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 50.0302%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 55.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 60.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 65.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 70.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 75.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 80.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 85.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 90.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.830818;">0</div><div class="data-stream-char" data-char-index="10" style="top: 95.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.043) 0px 0px 2px; opacity: 0.414152;">1</div><div class="data-stream-char" data-char-index="11" style="top: -9.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="12" style="top: -4.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="13" style="top: 0.0301798%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0.00251499;">0</div><div class="data-stream-char" data-char-index="14" style="top: 5.03018%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.043) 0px 0px 2px; opacity: 0.419182;">1</div><div class="data-stream-char" data-char-index="15" style="top: 10.0302%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.835848;">0</div><div class="data-stream-char" data-char-index="16" style="top: 15.0302%; color: rgba(120, 120, 120, 0.15); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 20.0302%; color: rgba(120, 120, 120, 0.13); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 25.0302%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 30.0302%; color: rgba(120, 120, 120, 0.09); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 35.0302%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 40.0302%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="9" data-speed="1.2000000000000002" data-offset="53" style="left: 45%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 71.5453%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 76.5453%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 81.5453%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 86.5453%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 91.5453%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.704561;">0</div><div class="data-stream-char" data-char-index="5" style="top: 96.5453%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.027) 0px 0px 2px; opacity: 0.287894;">1</div><div class="data-stream-char" data-char-index="6" style="top: -8.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="7" style="top: -3.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="8" style="top: 1.54527%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.128772;">0</div><div class="data-stream-char" data-char-index="9" style="top: 6.54527%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.545439;">1</div><div class="data-stream-char" data-char-index="10" style="top: 11.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.962106;">0</div><div class="data-stream-char" data-char-index="11" style="top: 16.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 21.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 26.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 31.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 36.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 41.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 46.5453%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 51.5453%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 56.5453%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 61.5453%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 66.5453%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="10" data-speed="1.6" data-offset="70" style="left: 50%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 98.0604%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.161637;">1</div><div class="data-stream-char" data-char-index="1" style="top: -6.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="2" style="top: -1.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="3" style="top: 3.06036%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.027) 0px 0px 2px; opacity: 0.25503;">0</div><div class="data-stream-char" data-char-index="4" style="top: 8.06036%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.671697;">1</div><div class="data-stream-char" data-char-index="5" style="top: 13.0604%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 18.0604%; color: rgba(120, 120, 120, 0.12); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 23.0604%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 28.0604%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 33.0604%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 38.0604%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 43.0604%; color: rgba(120, 120, 120, 0.024); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 48.0604%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 53.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 58.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 63.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 68.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 73.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 78.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 83.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 88.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.99497;">1</div><div class="data-stream-char" data-char-index="21" style="top: 93.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.578303;">0</div></div><div class="data-stream-column" data-index="11" data-speed="2" data-offset="87" style="left: 55%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 14.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 19.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 24.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 29.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 34.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 39.5754%; color: rgba(120, 120, 120, 0.247); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 44.5754%; color: rgba(120, 120, 120, 0.227); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 49.5754%; color: rgba(120, 120, 120, 0.208); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 54.5754%; color: rgba(120, 120, 120, 0.19); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 59.5754%; color: rgba(120, 120, 120, 0.17); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 64.5754%; color: rgba(120, 120, 120, 0.15); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 69.5754%; color: rgba(120, 120, 120, 0.13); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 74.5754%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 79.5754%; color: rgba(120, 120, 120, 0.09); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 84.5754%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 89.5754%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.868713;">1</div><div class="data-stream-char" data-char-index="16" style="top: 94.5754%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.452046;">0</div><div class="data-stream-char" data-char-index="17" style="top: 99.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0353792;">1</div><div class="data-stream-char" data-char-index="18" style="top: -5.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="19" style="top: -0.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="20" style="top: 4.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.04) 0px 0px 2px; opacity: 0.381287;">0</div><div class="data-stream-char" data-char-index="21" style="top: 9.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.797954;">1</div></div><div class="data-stream-column" data-index="12" data-speed="0.8" data-offset="4" style="left: 60%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 13.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 18.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 23.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 28.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 33.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 38.0302%; color: rgba(120, 120, 120, 0.243); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 43.0302%; color: rgba(120, 120, 120, 0.224); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 48.0302%; color: rgba(120, 120, 120, 0.204); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 53.0302%; color: rgba(120, 120, 120, 0.18); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 58.0302%; color: rgba(120, 120, 120, 0.16); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 63.0302%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 68.0302%; color: rgba(120, 120, 120, 0.12); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 73.0302%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 78.0302%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 83.0302%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 88.0302%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.997485;">0</div><div class="data-stream-char" data-char-index="16" style="top: 93.0302%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.580818;">1</div><div class="data-stream-char" data-char-index="17" style="top: 98.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.164152;">0</div><div class="data-stream-char" data-char-index="18" style="top: -6.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="19" style="top: -1.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="20" style="top: 3.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.024) 0px 0px 2px; opacity: 0.252515;">1</div><div class="data-stream-char" data-char-index="21" style="top: 8.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.669182;">0</div></div><div class="data-stream-column" data-index="13" data-speed="1.2000000000000002" data-offset="21" style="left: 65%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 39.5453%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 44.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 49.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 54.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 59.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 64.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 69.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 74.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 79.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 84.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 89.5453%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.871228;">0</div><div class="data-stream-char" data-char-index="11" style="top: 94.5453%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.454561;">1</div><div class="data-stream-char" data-char-index="12" style="top: 99.5453%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0378942;">0</div><div class="data-stream-char" data-char-index="13" style="top: -5.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="14" style="top: -0.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="15" style="top: 4.54527%; color: rgba(120, 120, 120, 0.055); text-shadow: rgba(100, 100, 100, 0.04) 0px 0px 2px; opacity: 0.378772;">1</div><div class="data-stream-char" data-char-index="16" style="top: 9.54527%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.795439;">0</div><div class="data-stream-char" data-char-index="17" style="top: 14.5453%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 19.5453%; color: rgba(120, 120, 120, 0.086); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 24.5453%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 29.5453%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 34.5453%; color: rgba(120, 120, 120, 0.027); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="14" data-speed="1.6" data-offset="38" style="left: 70%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 66.0604%; color: rgba(120, 120, 120, 0.114); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 71.0604%; color: rgba(120, 120, 120, 0.094); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 76.0604%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 81.0604%; color: rgba(120, 120, 120, 0.055); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 86.0604%; color: rgba(120, 120, 120, 0.035); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 91.0604%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.74497;">0</div><div class="data-stream-char" data-char-index="6" style="top: 96.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.328303;">1</div><div class="data-stream-char" data-char-index="7" style="top: -8.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="8" style="top: -3.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="9" style="top: 1.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0883633;">0</div><div class="data-stream-char" data-char-index="10" style="top: 6.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.50503;">1</div><div class="data-stream-char" data-char-index="11" style="top: 11.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.094) 0px 0px 2px; opacity: 0.921697;">0</div><div class="data-stream-char" data-char-index="12" style="top: 16.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 21.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 26.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 31.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 36.0604%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 41.0604%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 46.0604%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 51.0604%; color: rgba(120, 120, 120, 0.173); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 56.0604%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 61.0604%; color: rgba(120, 120, 120, 0.133); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="15" data-speed="2" data-offset="55" style="left: 75%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 92.5754%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.618713;">0</div><div class="data-stream-char" data-char-index="1" style="top: 97.5754%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.202046;">1</div><div class="data-stream-char" data-char-index="2" style="top: -7.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="3" style="top: -2.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="4" style="top: 2.57545%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.214621;">0</div><div class="data-stream-char" data-char-index="5" style="top: 7.57545%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.631287;">1</div><div class="data-stream-char" data-char-index="6" style="top: 12.5754%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 17.5754%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 22.5754%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 27.5754%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 32.5754%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 37.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 42.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 47.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 52.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 57.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 62.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 67.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 72.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 77.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 82.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 87.5754%; color: rgba(120, 120, 120, 0.24); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="16" data-speed="0.8" data-offset="72" style="left: 80%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 81.0302%; color: rgba(120, 120, 120, 0.173); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 86.0302%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 91.0302%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.747485;">1</div><div class="data-stream-char" data-char-index="3" style="top: 96.0302%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.330818;">0</div><div class="data-stream-char" data-char-index="4" style="top: -8.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="5" style="top: -3.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="6" style="top: 1.03018%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0858483;">1</div><div class="data-stream-char" data-char-index="7" style="top: 6.03018%; color: rgba(120, 120, 120, 0.016); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.502515;">0</div><div class="data-stream-char" data-char-index="8" style="top: 11.0302%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.09) 0px 0px 2px; opacity: 0.919182;">1</div><div class="data-stream-char" data-char-index="9" style="top: 16.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 21.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 26.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 31.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 36.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 41.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 46.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 51.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 56.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 61.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 66.0302%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 71.0302%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 76.0302%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="17" data-speed="1.2000000000000002" data-offset="89" style="left: 85%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: -2.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="1" style="top: 2.54527%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.212106;">1</div><div class="data-stream-char" data-char-index="2" style="top: 7.54527%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.628772;">0</div><div class="data-stream-char" data-char-index="3" style="top: 12.5453%; color: rgba(120, 120, 120, 0.22); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 17.5453%; color: rgba(120, 120, 120, 0.2); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 22.5453%; color: rgba(120, 120, 120, 0.18); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 27.5453%; color: rgba(120, 120, 120, 0.16); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 32.5453%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 37.5453%; color: rgba(120, 120, 120, 0.12); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 42.5453%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 47.5453%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 52.5453%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 57.5453%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 62.5453%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 67.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 72.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 77.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 82.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 87.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 92.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.621228;">1</div><div class="data-stream-char" data-char-index="20" style="top: 97.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.204561;">0</div><div class="data-stream-char" data-char-index="21" style="top: -7.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div></div><div class="data-stream-column" data-index="18" data-speed="1.6" data-offset="6" style="left: 90%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 34.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 39.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 44.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 49.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 54.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 59.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 64.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 69.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 74.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 79.0604%; color: rgba(120, 120, 120, 0.247); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 84.0604%; color: rgba(120, 120, 120, 0.227); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 89.0604%; color: rgba(120, 120, 120, 0.19); text-shadow: rgba(100, 100, 100, 0.09) 0px 0px 2px; opacity: 0.911637;">0</div><div class="data-stream-char" data-char-index="12" style="top: 94.0604%; color: rgba(120, 120, 120, 0.094); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.49497;">1</div><div class="data-stream-char" data-char-index="13" style="top: 99.0604%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0783034;">0</div><div class="data-stream-char" data-char-index="14" style="top: -5.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="15" style="top: -0.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="16" style="top: 4.06036%; color: rgba(120, 120, 120, 0.035); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.338363;">1</div><div class="data-stream-char" data-char-index="17" style="top: 9.06036%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.75503;">0</div><div class="data-stream-char" data-char-index="18" style="top: 14.0604%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 19.0604%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 24.0604%; color: rgba(120, 120, 120, 0.027); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 29.0604%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="19" data-speed="2" data-offset="23" style="left: 95%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 60.5754%; color: rgba(120, 120, 120, 0.094); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 65.5754%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 70.5754%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 75.5754%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 80.5754%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 85.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 90.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.785379;">0</div><div class="data-stream-char" data-char-index="7" style="top: 95.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.368713;">1</div><div class="data-stream-char" data-char-index="8" style="top: -9.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="9" style="top: -4.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="10" style="top: 0.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0479541;">0</div><div class="data-stream-char" data-char-index="11" style="top: 5.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.464621;">1</div><div class="data-stream-char" data-char-index="12" style="top: 10.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.881287;">0</div><div class="data-stream-char" data-char-index="13" style="top: 15.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 20.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 25.5754%; color: rgba(120, 120, 120, 0.23); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 30.5754%; color: rgba(120, 120, 120, 0.21); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 35.5754%; color: rgba(120, 120, 120, 0.192); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 40.5754%; color: rgba(120, 120, 120, 0.173); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 45.5754%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 50.5754%; color: rgba(120, 120, 120, 0.133); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 55.5754%; color: rgba(120, 120, 120, 0.114); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div></div>
 
-      <div style="max-width: 1300px; margin: 0 auto; text-align: center; position: relative; z-index: 10;">
-        <div class="built-future-header" style="transition: all 0.7s ease;">
-          <h2 class="text-h2 h2-container">
+      <div style="max-width: 1800px; margin: 0 auto; text-align: center; position: relative; z-index: 10;">
+        <div class="built-future-header" style="transition: 0.7s; opacity: 0; transform: translateY(20px);">
+          <h2 class="text-h2 h2-container" style="max-width: 100%;">
             <span class="h2-word">Built</span>
             <span class="h2-word">for</span>
             <span class="h2-word">Where</span>
@@ -3104,43 +3417,43 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <span class="h2-word">Going</span>
           </h2>
         </div>
-        <p class="text-body built-future-subline" style="opacity: 0.7; margin-bottom: 3rem; transition: all 0.7s ease; transition-delay: 0.15s;">
+        <p class="text-body built-future-subline" style="opacity: 0; margin-bottom: 3rem; transition: 0.7s 0.15s;">
           The future of real estate is cloud-based, global, and technology-driven. SAA is already there.
         </p>
 
         <div style="position: relative; margin-bottom: 3rem;">
           <!-- Horizontal line connecting circles (desktop only) -->
-          <div class="future-line-container" style="position: absolute; top: 60px; left: 0; right: 0; height: 1px; background: rgba(255,255,255,0.1);">
+          <div class="future-line-container">
             <div class="future-line" id="future-line" style="height: 100%; width: 0; background: linear-gradient(90deg, transparent, #ffd700, transparent);"></div>
           </div>
           <div class="future-points-row" style="display: flex; flex-direction: row; justify-content: space-between; gap: 1rem;">
             <!-- Point 1: Cloud-first -->
             <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 0.9s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public" alt="Cloud-first brokerage model" style="width: 100%; height: 100%; object-fit: contain;" />
+              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 0.9s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public" alt="Cloud-first brokerage model" style="width: 100%; height: 100%; object-fit: contain;">
               </div>
-              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.05s;">Cloud-first brokerage model</p>
+              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.05s;">Cloud-first brokerage model</h4>
             </div>
             <!-- Point 2: AI-powered -->
             <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.15s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public" alt="AI-powered tools and training" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.25) translate(10px, 18px);" />
+              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.15s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public" alt="AI-powered tools and training" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.25) translate(10px, 18px);">
               </div>
-              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.3s;">AI-powered tools and training</p>
+              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.3s;">AI-powered tools and training</h4>
             </div>
             <!-- Point 3: Mobile-first -->
             <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.4s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public" alt="Mobile-first workflows" style="width: 100%; height: 100%; object-fit: cover; transform: scale(0.95) translate(3px, 10px);" />
+              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.4s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public" alt="Mobile-first workflows" style="width: 100%; height: 100%; object-fit: cover; transform: scale(0.95) translate(3px, 10px);">
               </div>
-              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.55s;">Mobile-first workflows</p>
+              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.55s;">Mobile-first workflows</h4>
             </div>
             <!-- Point 4: Sustainable income -->
             <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: #111; border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.65s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public" alt="Sustainable income paths beyond transactions" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35) translateX(5px);" />
+              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: #111; border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.65s;">
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public" alt="Sustainable income paths beyond transactions" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35) translateX(5px);">
               </div>
-              <p class="text-body future-text" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.8s;">Sustainable income paths beyond transactions</p>
+              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.8s;">Sustainable income paths beyond transactions</h4>
             </div>
           </div>
         </div>
@@ -3170,16 +3483,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="video-player-container">
                 <div class="video-frame">
                   <div class="video-wrapper" id="video-wrapper">
-                    <iframe
-                      id="video-iframe"
-                      src="https://customer-2twfsluc6inah5at.cloudflarestream.com/f8c3f1bd9c2db2409ed0e90f60fd4d5b/iframe?controls=false&poster=${encodeURIComponent(CLOUDFLARE_BASE + '/exp-realty-smart-agent-alliance-explained/desktop')}&letterboxColor=transparent"
-                      loading="lazy"
-                      allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-                      allowfullscreen
-                    ></iframe>
+                    <iframe id="video-iframe" src="https://customer-2twfsluc6inah5at.cloudflarestream.com/f8c3f1bd9c2db2409ed0e90f60fd4d5b/iframe?controls=false&amp;poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fexp-realty-smart-agent-alliance-explained%2Fdesktop&amp;letterboxColor=transparent" loading="lazy" allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture" allowfullscreen=""></iframe>
                     <div class="video-overlay" id="video-overlay">
                       <div class="overlay-play-btn" id="play-btn">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                       </div>
                     </div>
                     <div class="scrubber-container" id="scrubber-container">
@@ -3190,21 +3497,21 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   </div>
                   <div class="video-controls">
                     <button class="control-btn control-btn--play" id="btn-play" aria-label="Play">
-                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
                     </button>
                     <button class="control-btn" id="btn-rewind" aria-label="Rewind 15 seconds" title="Rewind 15s">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 4v6h6"></path><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
                       <span class="rewind-text">15</span>
                     </button>
                     <button class="control-btn" id="btn-restart" aria-label="Restart video" title="Restart">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v6h6"/><path d="M21 12A9 9 0 0 0 6 5.3L3 8"/><path d="M21 22v-6h-6"/><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"/></svg>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 2v6h6"></path><path d="M21 12A9 9 0 0 0 6 5.3L3 8"></path><path d="M21 22v-6h-6"></path><path d="M3 12a9 9 0 0 0 15 6.7l3-2.7"></path></svg>
                     </button>
                     <div class="time-display" id="time-display">0:00 / 0:00</div>
                     <div class="volume-controls">
                       <button class="control-btn" id="btn-mute" aria-label="Mute">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                       </button>
-                      <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volume-slider" aria-label="Volume" />
+                      <input type="range" min="0" max="1" step="0.1" value="1" class="volume-slider" id="volume-slider" aria-label="Volume">
                     </div>
                   </div>
                 </div>
@@ -3221,11 +3528,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <button class="cta-button" id="btn-join-alliance">JOIN THE ALLIANCE</button>
                   <div class="cta-light-bar cta-light-bar-bottom"></div>
                 </div>
-                <div id="book-call-wrapper" style="opacity: 0.4; filter: blur(1px) grayscale(0.8); pointer-events: none; transition: all 0.5s ease;">
-                  <div class="secondary-button-wrapper">
-                    <div class="secondary-light-bar secondary-light-bar-left"></div>
-                    <a href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7" target="_blank" rel="noopener noreferrer" class="secondary-button" id="btn-book-call">BOOK A CALL</a>
-                    <div class="secondary-light-bar secondary-light-bar-right"></div>
+                <div id="book-call-wrapper" style="opacity: 0.4; filter: blur(1px) grayscale(0.8); pointer-events: none; transition: all 0.5s ease; padding: 0.5rem 0;">
+                  <div class="group" style="position: relative; display: inline-block;">
+                    <a href="https://team.smartagentalliance.com/widget/booking/v5LFLy12isdGJiZmTxP7" target="_blank" rel="noopener noreferrer" id="btn-book-call" style="position: relative; display: flex; justify-content: center; align-items: center; height: clamp(45px, calc(43.182px + 0.7273vw), 65px); padding: 0.5rem 1.25rem; background-color: rgb(45,45,45); border-radius: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); box-shadow: 0 15px 15px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.5); color: var(--color-headingText, #e5e4dd); font-family: var(--font-taskor), Taskor, system-ui, sans-serif; font-size: var(--font-size-button, 20px); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1; text-decoration: none; white-space: nowrap; overflow: hidden; z-index: 10;">
+                      <span style="position: absolute; inset: 0; background: linear-gradient(to left, rgba(255,255,255,0.15), transparent); width: 50%; transform: skewX(45deg); pointer-events: none;"></span>
+                      BOOK A CALL
+                    </a>
+                    <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #ffd700; border-radius: 6px; z-index: 5; --glow-color: 255, 215, 0; transition: height 0.5s ease;"></div>
+                    <div class="cta-light-bar cta-light-bar-pulse cta-light-bar-side" style="position: absolute; top: 50%; left: auto; right: -5px; transform: translateY(-50%); width: 10px; height: 18px; background: #ffd700; border-radius: 6px; z-index: 5; --glow-color: 255, 215, 0; transition: height 0.5s ease;"></div>
                   </div>
                 </div>
               </div>
@@ -3242,7 +3552,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <div class="modal-backdrop" id="join-modal-backdrop"></div>
     <div class="modal-wrapper">
       <button class="modal-close-btn" id="join-modal-close" aria-label="Close modal">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
       <div class="modal">
         <h3 class="join-modal-title">Join Smart Agent Alliance</h3>
@@ -3251,20 +3561,20 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="form-row">
             <div class="form-group">
               <label class="form-label" for="firstName">First Name *</label>
-              <input type="text" id="firstName" name="firstName" class="form-input" required />
+              <input type="text" id="firstName" name="firstName" class="form-input" required="">
             </div>
             <div class="form-group">
               <label class="form-label" for="lastName">Last Name *</label>
-              <input type="text" id="lastName" name="lastName" class="form-input" required />
+              <input type="text" id="lastName" name="lastName" class="form-input" required="">
             </div>
           </div>
           <div class="form-group">
             <label class="form-label" for="email">Email *</label>
-            <input type="email" id="email" name="email" class="form-input" required />
+            <input type="email" id="email" name="email" class="form-input" required="">
           </div>
           <div class="form-group">
             <label class="form-label" for="country">Country *</label>
-            <select id="country" name="country" class="form-select" required>
+            <select id="country" name="country" class="form-select" required="">
               <option value="">Select country</option>
               <option value="US">United States</option>
               <option value="CA">Canada</option>
@@ -3285,11 +3595,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     <div class="modal-backdrop" id="instructions-modal-backdrop"></div>
     <div class="modal-wrapper">
       <button class="modal-close-btn" id="instructions-modal-close" aria-label="Close modal">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
       <div class="modal instructions-modal">
         <div class="success-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         </div>
         <h3 class="instructions-title">Welcome, <span id="user-name-display">Agent</span>!</h3>
         <p class="instructions-subtitle">Follow these steps to join Smart Agent Alliance at eXp Realty.</p>
@@ -3305,7 +3615,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="instruction-number">2</div>
             <div class="instruction-content">
               <strong class="instruction-title">Search for Your Sponsor</strong>
-              <p class="instruction-text">Enter <strong>${escapeHTML(agentExpEmail)}</strong> and click Search. Select <strong>${escapeHTML(agentFullLegalName)}</strong> as your sponsor.</p>
+              <p class="instruction-text">Enter <strong>${escapeHTML(agentExpEmail)}</strong> and click Search. Select <strong>${escapeHTML(displayName)}</strong> as your sponsor.</p>
             </div>
           </div>
           <div class="instruction-item">
@@ -3336,13 +3646,39 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
   </div>
 
+  <!-- Commission Calculator Modal -->
+  <div class="modal-container" id="calculator-modal">
+    <div class="modal-backdrop" id="calculator-modal-backdrop"></div>
+    <div class="tool-modal-wrapper">
+      <button class="modal-close-btn" id="calculator-modal-close" aria-label="Close calculator">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="tool-modal">
+        <iframe id="calculator-iframe" src="" title="Commission Calculator" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- RevShare Visualizer Modal -->
+  <div class="modal-container" id="revshare-modal">
+    <div class="modal-backdrop" id="revshare-modal-backdrop"></div>
+    <div class="tool-modal-wrapper">
+      <button class="modal-close-btn" id="revshare-modal-close" aria-label="Close visualizer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="tool-modal">
+        <iframe id="revshare-iframe" src="" title="Revenue Share Visualizer" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
   <script src="https://embed.cloudflarestream.com/embed/sdk.latest.js"></script>
   <script>
     (function() {
       // Constants
       const STORAGE_KEY = 'agent_attraction_video';
       const UNLOCK_THRESHOLD = 50;
-      const SPONSOR_NAME = ${JSON.stringify(displayName)};
+      const SPONSOR_NAME = "${escapeJS(displayName)}";
 
       // Video Player State
       let player = null;
@@ -3375,6 +3711,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       // Modal Elements
       const joinModal = document.getElementById('join-modal');
       const instructionsModal = document.getElementById('instructions-modal');
+      const calculatorModal = document.getElementById('calculator-modal');
+      const revshareModal = document.getElementById('revshare-modal');
+      const calculatorIframe = document.getElementById('calculator-iframe');
+      const revshareIframe = document.getElementById('revshare-iframe');
       const joinForm = document.getElementById('join-form');
       const joinSubmit = document.getElementById('join-submit');
       const joinMessage = document.getElementById('join-message');
@@ -3520,6 +3860,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         document.getElementById('instructions-modal-close').addEventListener('click', () => closeModal('instructions'));
         document.getElementById('instructions-modal-backdrop').addEventListener('click', () => closeModal('instructions'));
 
+        // Calculator modals
+        document.getElementById('btn-commission-calculator').addEventListener('click', () => openModal('calculator'));
+        document.getElementById('calculator-modal-close').addEventListener('click', () => closeModal('calculator'));
+        document.getElementById('calculator-modal-backdrop').addEventListener('click', () => closeModal('calculator'));
+        document.getElementById('btn-revshare-visualizer').addEventListener('click', () => openModal('revshare'));
+        document.getElementById('revshare-modal-close').addEventListener('click', () => closeModal('revshare'));
+        document.getElementById('revshare-modal-backdrop').addEventListener('click', () => closeModal('revshare'));
+
         // Form submission
         joinForm.addEventListener('submit', handleFormSubmit);
 
@@ -3528,6 +3876,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           if (e.key === 'Escape') {
             if (joinModal.classList.contains('open')) closeModal('join');
             if (instructionsModal.classList.contains('open')) closeModal('instructions');
+            if (calculatorModal.classList.contains('open')) closeModal('calculator');
+            if (revshareModal.classList.contains('open')) closeModal('revshare');
           }
         });
       }
@@ -3593,18 +3943,46 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
 
       // Modal functions
+      function getModal(type) {
+        switch(type) {
+          case 'join': return joinModal;
+          case 'instructions': return instructionsModal;
+          case 'calculator': return calculatorModal;
+          case 'revshare': return revshareModal;
+          default: return null;
+        }
+      }
+
       function openModal(type) {
-        const modal = type === 'join' ? joinModal : instructionsModal;
+        const modal = getModal(type);
+        if (!modal) return;
+
+        // For tool modals, load the iframe src when opening (using actual React pages with embed mode)
+        if (type === 'calculator' && calculatorIframe) {
+          calculatorIframe.src = '/exp-commission-calculator/?embed=true';
+        } else if (type === 'revshare' && revshareIframe) {
+          revshareIframe.src = '/exp-realty-revenue-share-calculator/?embed=true';
+        }
+
         modal.classList.add('open');
         document.body.classList.add('modal-open');
         document.documentElement.classList.add('modal-open');
       }
 
       function closeModal(type) {
-        const modal = type === 'join' ? joinModal : instructionsModal;
+        const modal = getModal(type);
+        if (!modal) return;
+
         modal.classList.remove('open');
         document.body.classList.remove('modal-open');
         document.documentElement.classList.remove('modal-open');
+
+        // Clear iframe src when closing to stop any running scripts
+        if (type === 'calculator' && calculatorIframe) {
+          calculatorIframe.src = '';
+        } else if (type === 'revshare' && revshareIframe) {
+          revshareIframe.src = '';
+        }
       }
 
       // Form submission
@@ -4435,9 +4813,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
     })();
   </script>
-</body>
-</html>`;
+
+</body></html>`;
 }
+
 
 /**
  * Generate the Linktree-style Links page HTML for an agent
