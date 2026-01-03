@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { H1, H2, Tagline, CTAButton } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
@@ -194,12 +195,12 @@ const scenarios = [
   { name: 'Starter', desc: 'First recruits, building foundation', tierCounts: [6, 3, 1, 1, 0, 0, 0], avgGCI: 80000 },
   { name: 'Growing', desc: 'Team taking shape, tiers unlocking', tierCounts: [12, 18, 14, 6, 3, 0, 0], avgGCI: 90000 },
   { name: 'Established', desc: 'Compounding kicks in across all tiers', tierCounts: [28, 45, 72, 85, 48, 22, 0], avgGCI: 100000 },
-  { name: 'Momentum', desc: 'Self-sustaining growth, network effect', tierCounts: [75, 140, 260, 380, 480, 520, 380], avgGCI: 100000 },
-  { name: 'Empire Builder', desc: 'Legacy organization, deep network', tierCounts: [150, 320, 680, 1400, 2600, 4200, 6800], avgGCI: 100000 },
+  { name: 'Momentum', desc: 'Self-sustaining growth, network effect', tierCounts: [60, 110, 200, 300, 380, 400, 280], avgGCI: 100000 },
+  { name: 'Empire Builder', desc: 'Legacy organization, deep network', tierCounts: [120, 250, 500, 900, 1400, 1800, 2200], avgGCI: 100000 },
 ];
 
-function DisclaimerDropdown({ isRealistic }: { isRealistic: boolean }) {
-  const [isOpen, setIsOpen] = useState(false);
+function DisclaimerSection() {
+  const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
 
   return (
     <div
@@ -214,17 +215,36 @@ function DisclaimerDropdown({ isRealistic }: { isRealistic: boolean }) {
         borderRadius: '0 0 1rem 1rem',
       }}
     >
-      {/* Disclaimer toggle button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 sm:px-6 py-3 text-left transition-all hover:bg-white/[0.02]"
-        style={{
-          borderTop: '1px solid rgba(255,215,0,0.1)',
-        }}
+      {/* Always visible disclaimer */}
+      <div
+        className="px-4 sm:px-6 py-4 text-xs text-[#9a9890]"
+        style={{ borderTop: '1px solid rgba(255,215,0,0.1)' }}
       >
-        <span className="text-sm font-medium text-[#9a9890]">Important Disclaimer</span>
+        <p>
+          Applies only to residential agents in the U.S. and Canada. International varies. These figures are not a guarantee, representation or projection of earnings or profits you can or should expect. eXp Realty makes no guarantee of financial success.{' '}
+          <a
+            href="https://exprealty.com/income"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#ffd700] transition-all duration-300"
+            style={{ textShadow: '0 0 8px rgba(255,215,0,0.4)' }}
+            onMouseEnter={(e) => e.currentTarget.style.textShadow = '0 0 12px rgba(255,215,0,0.8), 0 0 20px rgba(255,215,0,0.5)'}
+            onMouseLeave={(e) => e.currentTarget.style.textShadow = '0 0 8px rgba(255,215,0,0.4)'}
+          >
+            See eXp's Average Income Chart
+          </a>
+        </p>
+      </div>
+
+      {/* Methodology dropdown */}
+      <button
+        onClick={() => setIsMethodologyOpen(!isMethodologyOpen)}
+        className="w-full flex items-center justify-between px-4 sm:px-6 py-3 text-left transition-all hover:bg-white/[0.02]"
+        style={{ borderTop: '1px solid rgba(255,215,0,0.1)' }}
+      >
+        <span className="text-sm font-medium text-[#9a9890]">Methodology</span>
         <svg
-          className={`w-5 h-5 text-[#9a9890] transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 text-[#9a9890] transition-transform duration-300 ${isMethodologyOpen ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -233,54 +253,39 @@ function DisclaimerDropdown({ isRealistic }: { isRealistic: boolean }) {
         </svg>
       </button>
 
-      {/* Expandable content */}
+      {/* Methodology expandable content */}
       <div
-        className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`overflow-hidden transition-all duration-300 ${isMethodologyOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'}`}
       >
         <div
           className="px-4 sm:px-6 py-4 text-xs text-[#9a9890] space-y-3"
-          style={{
-            borderTop: '1px solid rgba(255,215,0,0.1)',
-          }}
+          style={{ borderTop: '1px solid rgba(255,215,0,0.1)' }}
         >
-          {/* Primary eXp Compliance Disclaimer */}
-          <p className="text-[#bfbdb0] font-medium">
-            These figures are not a guarantee, representation or projection of earnings or profits you can or should expect. They also do not include expenses incurred by Agents in operating their businesses. eXp Realty makes no guarantee of financial success. Success with eXp Realty results only from successful sales efforts, which require hard work, diligence, skill, persistence, competence, and leadership. Your success will depend upon how well you exercise these qualities.
-          </p>
+          {/* Assumptions */}
+          <ul className="list-disc list-inside space-y-1 ml-2">
+            <li>Assumes 100% of agents are capping, contributing the full $16,000 in company dollar</li>
+            <li>All Front Line Agents (FLAs) are assumed to qualify as Front Line Qualifying Agents (FLQAs)</li>
+            <li>FLQA status requires 2+ closed transactions or $5,000+ GCI within a rolling 6-month period</li>
+            <li>Approximately 20% adjustment bonus applied to Tier 1–3 earnings (actual bonus varies)</li>
+            <li>Revenue share rates, caps, and bonus structures are subject to change by eXp Realty</li>
+          </ul>
 
-          {/* Third-party site notice */}
-          <p>
-            <span className="text-[#bfbdb0]">Third-Party Disclosure:</span> Smart Agent Alliance is an independent organization and is not officially affiliated with eXp Realty. This calculator is provided for educational purposes only. For official eXp Realty income information, visit{' '}
-            <a
-              href="https://expincome.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#ffd700] hover:underline"
-            >
-              expincome.com
-            </a>.
-          </p>
-
-          {/* Calculator assumptions */}
+          {/* Tier Qualification Notes */}
           <div>
-            <span className="text-[#bfbdb0]">Calculator Assumptions:</span>
+            <span className="text-[#bfbdb0]">Tier Qualification Notes:</span>
             <ul className="list-disc list-inside mt-1 space-y-1 ml-2">
-              <li>Currently showing {isRealistic ? '30%' : '100%'} of agents capping (contributing full $16,000 to company dollar)</li>
-              <li>All Front Line Agents (FLAs) are assumed to be Front Line Qualifying Agents (FLQAs)</li>
-              <li>FLQA status requires closing 2+ transactions or $5,000+ GCI within a rolling 6-month period</li>
-              <li>~20% adjustment bonus applied to T1-T3 earnings (actual bonus varies)</li>
-              <li>Revenue share rates and caps are subject to change by eXp Realty</li>
+              <li>Tiers 4–7 require maintaining minimum FLQA counts</li>
+              <li className="ml-4">Tier 4: 5 FLQAs</li>
+              <li className="ml-4">Tier 5: 10 FLQAs</li>
+              <li className="ml-4">Tier 6: 15 FLQAs</li>
+              <li className="ml-4">Tier 7: 30 FLQAs</li>
+              <li>If FLQA counts fall below the required threshold, those tiers lock until requalified</li>
             </ul>
           </div>
 
-          {/* Geographic note */}
-          <p>
-            <span className="text-[#bfbdb0]">Geographic Scope:</span> This calculator reflects the revenue share structure for the United States and Canada. International rates and structures may vary.
-          </p>
-
-          {/* Tier unlock requirements */}
-          <p>
-            <span className="text-[#bfbdb0]">Tier Requirements:</span> Tiers 4-7 require maintaining qualifying FLQA counts (5, 10, 15, and 30 respectively). If FLQA count drops below threshold, those tiers become temporarily locked.
+          {/* Full compliance statement */}
+          <p className="text-[#6a6860] italic">
+            The illustration does not include expenses incurred by agents in operating their businesses. Success with eXp Realty results only from successful sales efforts, which require hard work, diligence, skill, persistence, competence, and leadership. Your success will depend upon how well you exercise these qualities.
           </p>
         </div>
       </div>
@@ -301,7 +306,7 @@ function InfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
 
       {/* Modal */}
       <div
-        className="relative max-w-lg w-full max-h-[80vh] overflow-y-auto rounded-2xl p-6"
+        className="relative max-w-sm w-full max-h-[80vh] overflow-y-auto rounded-2xl p-5"
         style={{
           background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(30,30,30,0.95) 100%)',
           border: '1px solid rgba(255,215,0,0.3)',
@@ -317,70 +322,41 @@ function InfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }
           ✕
         </button>
 
-        <h3 className="text-xl font-bold text-[#ffd700] mb-4">How to Read This Chart</h3>
+        <h3 className="text-lg font-bold text-[#ffd700] mb-4">Chart Key</h3>
 
         {/* Bar explanation */}
-        <div className="mb-5">
-          <div className="flex items-end gap-3 mb-3">
+        <div className="mb-4">
+          <div className="flex items-end gap-3">
             <div className="flex flex-col items-center">
-              <div className="text-sm text-[#ffd700] font-semibold mb-1">$8K</div>
-              <div className="w-10 h-12 rounded-t-lg flex items-center justify-center text-sm font-bold" style={{ background: 'linear-gradient(180deg, #ffed4a 0%, #ffd700 100%)', color: '#2a2a2a' }}>6</div>
+              <div className="text-xs text-[#ffd700] font-semibold mb-1">$8K</div>
+              <div className="w-8 h-10 rounded-t-lg flex items-center justify-center text-xs font-bold" style={{ background: 'linear-gradient(180deg, #ffed4a 0%, #ffd700 100%)', color: '#2a2a2a' }}>6</div>
             </div>
             <div className="flex-1 text-xs text-[#9a9890] space-y-1">
-              <p><span className="text-[#ffd700]">$8K</span> above bar = yearly earnings from this tier</p>
-              <p><span className="text-white">6</span> inside bar = number of agents in that tier</p>
+              <p><span className="text-[#ffd700]">$8K</span> = yearly earnings</p>
+              <p><span className="text-white">6</span> = agents in tier</p>
             </div>
           </div>
         </div>
 
-        {/* Tier explanation */}
-        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Tier Labels (T1-T7)</div>
-          <div className="text-xs text-[#9a9890] space-y-1">
-            <p><span className="text-[#ffd700]">T1 (Front Line)</span> — Agents you personally sponsor (your FLAs)</p>
-            <p><span className="text-[#ff9500]">T2-T3</span> — Agents sponsored by your T1 and T2</p>
-            <p><span className="text-[#c084fc]">T4-T7</span> — Deeper tiers, unlock as you grow (require 5-30 FLQAs)</p>
-          </div>
+        {/* Quick key */}
+        <div className="mb-4 p-3 rounded-lg text-xs" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <p className="mb-2"><span className="text-[#ffd700]">T1</span> = Your direct recruits (FLAs)</p>
+          <p className="mb-2"><span className="text-[#ff9500]">T2–T7</span> = Deeper network tiers</p>
+          <p className="mb-2"><span className="text-white">FLA</span> = Front Line Agent</p>
+          <p><span className="text-white">FLQA</span> = Qualifying FLA (2+ deals or $5K GCI in 6 mo)</p>
         </div>
 
-        {/* FLA/FLQA explanation */}
-        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Key Terms</div>
-          <div className="text-xs text-[#9a9890] space-y-1">
-            <p><span className="text-white">FLA</span> — Front Line Agent: an agent you personally sponsor</p>
-            <p><span className="text-white">FLQA</span> — Front Line Qualifying Agent: an FLA who has closed 2+ deals or $5K+ GCI in 6 months</p>
-          </div>
-        </div>
-
-        {/* Toggle explanation */}
-        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Capping Agents Toggle</div>
-          <div className="text-xs text-[#9a9890]">
-            <p className="mb-1"><span className="text-white">100%</span> — Assumes all agents cap (hit their $16k contribution limit)</p>
-            <p><span className="text-white">30%</span> — More realistic: ~30% of agents typically cap each year</p>
-          </div>
-        </div>
-
-        {/* Scenario explanation */}
-        <div className="mb-5 p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Scenario Tabs</div>
-          <div className="text-xs text-[#9a9890]">
-            <p>Each tab shows a different organization size — from <span className="text-white">Starter</span> (11 agents) to <span className="text-white">Empire Builder</span> (16,000+ agents). Watch how revenue share compounds as your network grows.</p>
-          </div>
-        </div>
-
-        {/* Tier Configuration Reference */}
-        <div className="p-3 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)' }}>
-          <div className="text-sm font-semibold text-[#e5e4dd] mb-2">Tier Configuration</div>
-          <div className="grid grid-cols-1 gap-1.5 text-xs text-[#9a9890]">
-            <p><span className="text-[#ffd700]">T1:</span> 3.5% of GCI, $1,400 cap per agent</p>
-            <p><span className="text-[#ff9500]">T2:</span> 4.0% of GCI, $1,600 cap per agent</p>
-            <p><span className="text-[#ff6b6b]">T3:</span> 2.5% of GCI, $1,000 cap per agent</p>
-            <p><span className="text-[#c084fc]">T4:</span> 1.5% of GCI, $600 cap (requires 5 FLQAs)</p>
-            <p><span className="text-[#60a5fa]">T5:</span> 1.0% of GCI, $400 cap (requires 10 FLQAs)</p>
-            <p><span className="text-[#34d399]">T6:</span> 2.5% of GCI, $1,000 cap (requires 15 FLQAs)</p>
-            <p><span className="text-[#f472b6]">T7:</span> 5.0% of GCI, $2,000 cap (requires 30 FLQAs)</p>
-            <p className="mt-2 text-[#bfbdb0]">+ ~20% adjustment bonus on T1-T3 earnings</p>
+        {/* Tier rates table */}
+        <div className="p-3 rounded-lg text-xs" style={{ background: 'rgba(255,255,255,0.03)' }}>
+          <div className="grid grid-cols-1 gap-1 text-[#9a9890]">
+            <p><span className="text-[#ffd700]">T1:</span> 3.5%, $1,400 cap</p>
+            <p><span className="text-[#ff9500]">T2:</span> 4.0%, $1,600 cap</p>
+            <p><span className="text-[#ff6b6b]">T3:</span> 2.5%, $1,000 cap</p>
+            <p><span className="text-[#c084fc]">T4:</span> 1.5%, $600 cap</p>
+            <p><span className="text-[#60a5fa]">T5:</span> 1.0%, $400 cap</p>
+            <p><span className="text-[#34d399]">T6:</span> 2.5%, $1,000 cap</p>
+            <p><span className="text-[#f472b6]">T7:</span> 5.0%, $2,000 cap</p>
+            <p className="mt-2 text-[#bfbdb0]">+ ~20% bonus on T1–T3</p>
           </div>
         </div>
       </div>
@@ -396,8 +372,6 @@ function RevenueShareVisualization({
   setIsAutoPlaying,
   setIsPaused,
   setPulsingTier,
-  isRealistic,
-  setIsRealistic
 }: {
   selectedScenario: number;
   setSelectedScenario: (i: number) => void;
@@ -406,25 +380,11 @@ function RevenueShareVisualization({
   setIsAutoPlaying: (v: boolean) => void;
   setIsPaused: (v: boolean) => void;
   setPulsingTier: (v: number) => void;
-  isRealistic: boolean;
-  setIsRealistic: (v: boolean) => void;
 }) {
   const currentScenario = scenarios[selectedScenario];
-  // Apply 30% multiplier for realistic mode (30% of agents capping)
-  const cappingMultiplier = isRealistic ? 0.30 : 1.0;
   const adjustedResults = calculateTotalRevShare(currentScenario.tierCounts, currentScenario.avgGCI);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const results = {
-    ...adjustedResults,
-    tiers: adjustedResults.tiers.map(t => ({
-      ...t,
-      earnings: t.earnings * cappingMultiplier,
-      perAgent: t.perAgent * cappingMultiplier,
-    })),
-    subtotal: adjustedResults.subtotal * cappingMultiplier,
-    adjustmentBonus: adjustedResults.adjustmentBonus * cappingMultiplier,
-    total: adjustedResults.total * cappingMultiplier,
-  };
+  const results = adjustedResults;
   // Use max from current scenario so bars scale nicely within each view
   const maxEarnings = Math.max(...results.tiers.map(t => t.earnings), 1);
   const [hoveredTier, setHoveredTier] = useState<number | null>(null);
@@ -528,7 +488,7 @@ function RevenueShareVisualization({
           eXp Revenue Share Potential
         </h2>
         <p className="text-center text-sm sm:text-body text-[#9a9890] mb-6 max-w-2xl mx-auto">
-          Whether you treat it as a side hustle or go all-in, eXp's 7-tier revenue share compounds over time into real passive income.
+          $171M paid to eXp agents in 2024 through Revenue Share. A 7-tier system built to compound.
         </p>
 
         {/* Mobile: 2-col grid with Empire Builder spanning both | Desktop: Flex row */}
@@ -696,7 +656,7 @@ function RevenueShareVisualization({
 
         {/* Info button and hint */}
         <div className="flex items-center justify-center gap-2 mt-1 mb-3">
-          <p className="text-sm text-[#9a9890]">Tap or hover tiers for details</p>
+          <p className="text-base text-[#9a9890]">Tap or hover tiers for details</p>
           <button
             onClick={() => setShowInfoModal(true)}
             className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold transition-all hover:scale-110"
@@ -713,37 +673,10 @@ function RevenueShareVisualization({
 
         <InfoModal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} />
 
-        {/* Total earnings - with realistic toggle */}
-        <div className="flex items-center gap-3 sm:gap-6 py-3 px-4 rounded-xl" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)' }}>
-          {/* Toggle on far left */}
-          <button
-            onClick={() => setIsRealistic(!isRealistic)}
-            className="flex flex-col items-center gap-1 flex-shrink-0"
-          >
-            <div className="flex items-center gap-2">
-              <div
-                className="relative w-10 h-5 rounded-full transition-colors duration-300"
-                style={{
-                  background: isRealistic ? 'rgba(255,215,0,0.4)' : 'rgba(255,255,255,0.15)',
-                }}
-              >
-                <div
-                  className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-300"
-                  style={{
-                    left: isRealistic ? '22px' : '2px',
-                    background: isRealistic ? '#ffd700' : '#9a9890',
-                  }}
-                />
-              </div>
-              <span className="text-[10px] text-[#9a9890] whitespace-nowrap">
-                {isRealistic ? '30%' : '100%'}
-              </span>
-            </div>
-            <span className="text-[9px] text-[#6a6860] whitespace-nowrap uppercase" style={{ fontFamily: 'var(--font-synonym), Synonym, system-ui, sans-serif' }}>Capping Agents</span>
-          </button>
-
+        {/* Total earnings */}
+        <div className="flex items-center justify-center py-3 px-4 rounded-xl" style={{ background: 'rgba(255,215,0,0.08)', border: '1px solid rgba(255,215,0,0.2)' }}>
           {/* Total - centered */}
-          <div className="flex-1 text-center">
+          <div className="text-center">
             <span
               className="text-[#ffd700]"
               style={{
@@ -754,13 +687,10 @@ function RevenueShareVisualization({
             >
               <ScrambleNumber value={results.total.toLocaleString()} prefix="$" suffix="/yr" />
             </span>
-            <div className="text-xs text-[#9a9890]">
+            <div className="text-sm text-[#9a9890]">
               incl. 20% bonus on T1-3
             </div>
           </div>
-
-          {/* Spacer to balance layout */}
-          <div className="w-16 flex-shrink-0 hidden sm:block" />
         </div>
       </div>
     </div>
@@ -770,19 +700,24 @@ function RevenueShareVisualization({
 /**
  * eXp Realty Revenue Share Calculator
  * Interactive visualization for projecting revenue share earnings
+ * Supports ?embed=true for embedding in iframes (just the visualizer, no page chrome)
  */
-export default function RevenueShareCalculator() {
+function RevenueShareCalculatorContent() {
+  const searchParams = useSearchParams();
+  const isEmbed = searchParams.get('embed') === 'true';
+
   const [selectedScenario, setSelectedScenario] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [pulsingTier, setPulsingTier] = useState(-1);
-  const [isPaused, setIsPaused] = useState(true);
+  const [isPaused, setIsPaused] = useState(!isEmbed); // Start playing immediately in embed mode
   const [isHovering, setIsHovering] = useState(false);
-  const [isRealistic, setIsRealistic] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(isEmbed); // Already visible in embed mode
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Start animation only when card is 50% visible
   useEffect(() => {
+    if (isEmbed) return; // Skip observer in embed mode - already visible
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !isVisible) {
@@ -802,7 +737,18 @@ export default function RevenueShareCalculator() {
     }
 
     return () => observer.disconnect();
-  }, [isVisible]);
+  }, [isVisible, isEmbed]);
+
+  // In embed mode, start animation immediately
+  useEffect(() => {
+    if (isEmbed && !isVisible) {
+      setIsVisible(true);
+      setTimeout(() => {
+        setIsPaused(false);
+        setPulsingTier(0);
+      }, 300);
+    }
+  }, [isEmbed, isVisible]);
 
   useEffect(() => {
     if (isPaused || isHovering) return;
@@ -850,10 +796,48 @@ export default function RevenueShareCalculator() {
     setIsAutoPlaying,
     setIsPaused,
     setPulsingTier,
-    isRealistic,
-    setIsRealistic,
   };
 
+  // Embed mode: just the visualization component - solid background fills iframe
+  if (isEmbed) {
+    return (
+      <>
+        {/* Override all styles in embed mode for solid background */}
+        <style>{`
+          html, body {
+            background: #0a0a0a !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 100% !important;
+            min-height: 100% !important;
+          }
+          /* Hide star background canvas in embed mode */
+          canvas {
+            display: none !important;
+          }
+          /* Hide any other background elements */
+          #star-background, [class*="star"], [class*="Star"] {
+            display: none !important;
+          }
+          /* Ensure the Next.js wrapper also has background */
+          #__next, [data-nextjs-scroll-focus-boundary] {
+            background: #0a0a0a !important;
+            min-height: 100% !important;
+          }
+          ${pulseKeyframes}
+        `}</style>
+        <div style={{ background: '#0a0a0a', minHeight: '100vh' }} ref={cardRef}>
+          {/* Override the rounded-t-2xl to full rounding for embed */}
+          <div style={{ borderRadius: '1rem', overflow: 'hidden' }}>
+            <RevenueShareVisualization {...sharedProps} />
+            <DisclaimerSection />
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  // Full page mode
   return (
     <main id="main-content">
       {/* Hero Section */}
@@ -889,7 +873,7 @@ export default function RevenueShareCalculator() {
           <RevenueShareVisualization {...sharedProps} />
 
           {/* Disclaimer Dropdown */}
-          <DisclaimerDropdown isRealistic={isRealistic} />
+          <DisclaimerSection />
         </div>
       </section>
 
@@ -913,5 +897,13 @@ export default function RevenueShareCalculator() {
         </section>
       </LazySection>
     </main>
+  );
+}
+
+export default function ExpRevenueShareCalculator() {
+  return (
+    <Suspense fallback={<div style={{ background: '#0a0a0a', minHeight: '100vh' }} />}>
+      <RevenueShareCalculatorContent />
+    </Suspense>
   );
 }

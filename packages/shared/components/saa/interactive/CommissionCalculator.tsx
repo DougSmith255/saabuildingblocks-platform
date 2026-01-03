@@ -227,13 +227,13 @@ export function CommissionCalculator({
             </h2>
           )}
           {subtitle !== null && (
-            <p className="text-xs text-[#9a9890] text-center mb-4 sm:mb-6">{subtitle}</p>
+            <p className="text-sm text-[#9a9890] text-center mb-4 sm:mb-6">{subtitle}</p>
           )}
 
           {/* Inputs - stack on mobile, side-by-side on desktop */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)' }}>
             <div className="w-full sm:w-28 sm:flex-shrink-0">
-              <label className="block text-xs text-[#9a9890] mb-1">Avg Commission</label>
+              <label className="block text-sm text-[#9a9890] mb-1">Avg Commission</label>
               <div className="flex items-center">
                 <span className="text-[#ffd700] text-sm">$</span>
                 <input
@@ -248,7 +248,7 @@ export function CommissionCalculator({
               </div>
             </div>
             <div className="flex-1">
-              <label className="block text-xs text-[#9a9890] mb-1">Transactions: {transactions}</label>
+              <label className="block text-sm text-[#9a9890] mb-1">Transactions: {transactions}</label>
               <div className="flex items-center gap-2">
                 <input
                   type="range"
@@ -335,9 +335,9 @@ export function CommissionCalculator({
                 <div key={i} className="flex items-center justify-between p-2 rounded" style={{ background: `${seg.color}08` }}>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded" style={{ background: seg.color }} />
-                    <span className="text-sm text-[#bfbdb0]">{seg.label}</span>
+                    <span className="text-base text-[#bfbdb0]">{seg.label}</span>
                   </div>
-                  <span className="text-sm font-bold font-mono" style={{ color: seg.color }}>${seg.value.toLocaleString()}</span>
+                  <span className="text-base font-bold font-mono" style={{ color: seg.color }}>${seg.value.toLocaleString()}</span>
                 </div>
               ))}
             </div>
