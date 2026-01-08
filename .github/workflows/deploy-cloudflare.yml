@@ -64,6 +64,46 @@ jobs:
           fetch-depth: 2  # Fetch last 2 commits for change detection
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # SAFETY CHECK: Verify critical functions files match live deployment
+      - name: Verify functions/ files match live deployment
+        run: |
+          echo "🔒 Safety Check: Verifying critical functions match live deployment..."
+          echo ""
+
+          # Critical file to verify
+          LOCAL_FILE="packages/public-site/functions/[slug].js"
+          LIVE_URL="https://saabuildingblocks.pages.dev/doug-smart"
+
+          if [ ! -f "$LOCAL_FILE" ]; then
+            echo "❌ CRITICAL: $LOCAL_FILE not found in repo!"
+            exit 1
+          fi
+
+          # Extract a unique identifier from local file
+          LOCAL_MARKER=$(grep -o "Scroll-Triggered 3D Card Stack\|Why Only at eXp Section -->" "$LOCAL_FILE" | head -1)
+
+          # Fetch live page and check for the same marker
+          echo "📡 Fetching live deployment to verify..."
+          LIVE_CONTENT=$(curl -s "$LIVE_URL" | head -5000)
+
+          if echo "$LIVE_CONTENT" | grep -q "$LOCAL_MARKER"; then
+            echo "✅ Verified: Local [slug].js matches live deployment"
+            echo "   Marker found: $LOCAL_MARKER"
+          else
+            echo "⚠️  WARNING: Local [slug].js may differ from live deployment!"
+            echo "   Expected marker: $LOCAL_MARKER"
+            echo ""
+            echo "   This could mean:"
+            echo "   1. The repo has an outdated [slug].js"
+            echo "   2. A manual deployment updated live without committing"
+            echo ""
+            echo "   To fix: Ensure local functions/ matches what's currently live"
+            echo "   Then commit: git add packages/public-site/functions/ && git commit"
+            echo ""
+            echo "   Proceeding anyway (marker check is advisory)..."
+          fi
+          echo ""
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

@@ -1,0 +1,36 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Pre-commit: Checking critical functions/ files..."
+
+# List of critical files that must stay in sync with live deployment
+CRITICAL_FILES="packages/public-site/functions/[slug].js"
+
+# Check if any critical files have uncommitted changes
+has_unstaged=false
+for file in $CRITICAL_FILES; do
+  if [ -f "$file" ]; then
+    # Check if file is modified but not staged
+    if git diff --name-only "$file" 2>/dev/null | grep -q .; then
+      echo "⚠️  WARNING: $file has unstaged changes!"
+      echo "   The local version may differ from what you're committing."
+      echo ""
+      echo "   Options:"
+      echo "   1. Stage it:  git add \"$file\""
+      echo "   2. Skip hook: git commit --no-verify"
+      echo ""
+      has_unstaged=true
+    fi
+  fi
+done
+
+if [ "$has_unstaged" = true ]; then
+  echo "❌ Commit blocked: Critical files have unstaged changes."
+  echo "   This prevents accidentally deploying outdated function files."
+  echo ""
+  echo "   To include local changes: git add packages/public-site/functions/"
+  echo "   To skip this check:       git commit --no-verify"
+  exit 1
+fi
+
+echo "✅ Pre-commit: All critical files are properly staged or unchanged."
