@@ -651,6 +651,25 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
     }
 
+    /* Tagline ellipse gradient background for readability */
+    .tagline-backdrop {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tagline-backdrop::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 140px;
+      background: radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
     /* CTA Button */
     .cta-button {
       position: relative;
@@ -1262,149 +1281,224 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       flex-shrink: 0;
     }
 
-    /* What You Get Tabbed Interface */
-    .wyg-tab {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-      background: rgba(255,255,255,0.05);
-      color: rgba(255,255,255,0.7);
-      border: 1px solid rgba(255,255,255,0.1);
-      cursor: pointer;
-      font-family: var(--font-taskor), system-ui, sans-serif;
-      font-weight: 500;
-      font-size: 0.875rem;
+    /* What You Get - Blur Reveal Cards */
+    .wyg-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
-    .wyg-tab:hover { background: rgba(255,255,255,0.1); }
-    .wyg-tab-active {
-      background: #ffd700 !important;
-      color: #111 !important;
-      border: none !important;
+    @media (min-width: 1200px) {
+      .wyg-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .wyg-grid .wyg-full-width {
+        grid-column: 1 / -1;
+      }
     }
-    .wyg-tab-active .icon-3d {
-      filter: none;
-      color: #111;
+    .wyg-blur-card {
+      transition: filter 0.1s ease-out, opacity 0.1s ease-out, transform 0.1s ease-out;
     }
-    .wyg-bg {
+    .wyg-card-inner {
+      border-radius: 1rem;
+      overflow: hidden;
+      position: relative;
+      min-height: 160px;
+      height: 100%;
+    }
+    .wyg-card-bg {
       position: absolute;
       inset: 0;
       background-size: cover;
       background-position: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
     }
-    .wyg-bg-active { opacity: 1; }
-    .wyg-content {
+    .wyg-card-overlay {
       position: absolute;
       inset: 0;
-      z-index: 2;
-      display: none;
-      flex-direction: row;
+      background: linear-gradient(90deg, rgba(30,30,30,0.88) 0%, rgba(40,40,40,0.75) 50%, rgba(50,50,50,0.6) 100%);
+    }
+    .wyg-card-accent {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: #ffd700;
+    }
+    .wyg-card-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
       align-items: center;
       gap: 1.5rem;
-      padding: 2rem;
+      padding: 1.5rem;
     }
-    .wyg-content-active {
-      display: flex;
-      animation: wygFadeIn 0.3s ease-out forwards;
-    }
-    @keyframes wygFadeIn {
-      from { opacity: 0; transform: translateX(10px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .wyg-icon-box {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .wyg-card-icon {
       flex-shrink: 0;
-      background: rgba(255, 215, 0, 0.2);
-      backdrop-filter: blur(4px);
     }
-    .wyg-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-      padding: 0;
-    }
-    .wyg-dot-active {
-      background: #ffd700;
-      transform: scale(1.5);
-    }
-    .wyg-tab-label {
-      font-family: var(--font-taskor), system-ui, sans-serif;
-      font-weight: 500;
-      font-size: 0.875rem;
-    }
-    .wyg-content-title {
+    .wyg-card-title {
       font-family: var(--font-amulya), system-ui, sans-serif;
       font-weight: 700;
-      font-size: clamp(18px, 2.5vw, 20px);
-      color: #ffd700;
+      font-size: clamp(20px, calc(18px + 0.5vw), 28px);
+      color: var(--color-heading, #f5f5f0);
       margin-bottom: 0.5rem;
     }
+    .wyg-card-desc {
+      color: #d1d5db;
+      font-size: 0.875rem;
+    }
 
-    /* Deck Stack (WhyOnlyAtExp) */
-    .deck-stack-container { position: relative; }
-    .deck-card {
+    /* WhyOnlyAtExp - 3D Rotating Card Stack with ScrollTrigger */
+    .why-only-section {
+      position: relative;
+    }
+    .why-only-trigger {
+      /* This gets pinned by GSAP ScrollTrigger */
+    }
+    .why-only-content {
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,190,0,0.032) 0%, rgba(255,190,0,0.04) 50%, rgba(255,190,0,0.032) 100%);
+      box-shadow:
+        0 8px 32px rgba(0,0,0,0.4),
+        0 4px 12px rgba(0,0,0,0.25),
+        inset 0 1px 0 0 rgba(255,255,255,0.35),
+        inset 0 2px 4px 0 rgba(255,255,255,0.2),
+        inset 0 8px 20px -8px rgba(255,190,0,0.3),
+        inset 0 20px 40px -20px rgba(255,255,255,0.15),
+        inset 0 -1px 0 0 rgba(0,0,0,0.7),
+        inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+        inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+        inset 0 -25px 50px -20px rgba(0,0,0,0.45);
+      backdrop-filter: blur(2px);
+      transform: translateY(30px);
+    }
+    .why-only-noise {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 24px;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.06;
+      mix-blend-mode: overlay;
+    }
+    .why-only-card-stack {
+      position: relative;
+      height: 280px;
+      width: 100%;
+      perspective: 1200px;
+    }
+    @media (min-width: 768px) {
+      .why-only-card-stack {
+        height: 340px;
+      }
+    }
+    .why-only-card {
       position: absolute;
       inset: 0;
       border-radius: 16px;
-      padding: 1rem 1.5rem;
-      cursor: pointer;
-      transition: all 0.5s ease;
+      padding: 1.5rem 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+      backface-visibility: hidden;
+      transform-origin: center bottom;
+      transition: background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
     }
-    @media (min-width: 768px) { .deck-card { padding: 1.5rem 2rem; } }
-    .deck-card-active { z-index: 10; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
-    .deck-card-highlight.deck-card-active { box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2); }
-    .deck-card-number {
-      width: 48px;
-      height: 48px;
+    .why-only-card-dark {
+      background: linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99));
+      border: 1px solid rgba(255,215,0,0.27);
+      box-shadow: 0 0 40px rgba(255,215,0,0.08), 0 30px 60px -30px rgba(0,0,0,0.8);
+    }
+    .why-only-card-highlight {
+      background:
+        radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+        radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+        radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%);
+      border: 2px solid rgba(180,150,50,0.5);
+      box-shadow: 0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25);
+    }
+    .why-only-number-badge {
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
+      margin-bottom: 1.25rem;
     }
-    @media (min-width: 768px) { .deck-card-number { width: 64px; height: 64px; } }
-    .deck-dots {
-      position: absolute;
-      bottom: -40px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
+    @media (min-width: 768px) {
+      .why-only-number-badge {
+        width: 64px;
+        height: 64px;
+      }
     }
-    .deck-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.2);
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-      padding: 0;
+    .why-only-number-badge-dark {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.15);
     }
-    .deck-dot-active {
-      background: #ffd700;
-      transform: scale(1.5);
+    .why-only-number-badge-highlight {
+      background: rgba(42,42,42,0.9);
+      border: 3px solid rgba(42,42,42,0.7);
+      box-shadow: 0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15);
+    }
+    .why-only-number-3d {
+      font-weight: bold;
+      font-size: 32px;
+      color: #c4a94d;
+      filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+      transform: perspective(500px) rotateX(8deg);
+    }
+    .why-only-number-3d-highlight {
+      color: #9a9a9a;
+      filter: drop-shadow(-1px -1px 0 #ccc) drop-shadow(1px 1px 0 #666) drop-shadow(2px 2px 0 #444) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5));
+    }
+    .why-only-card-text {
+      font-family: var(--font-heading), system-ui, sans-serif;
+      font-weight: bold;
+      line-height: 1.4;
+      padding: 0 0.5rem;
+      font-size: clamp(24px, calc(22.55px + 0.58vw), 40px);
+    }
+    .why-only-card-text-light {
+      color: #e5e5e5;
+    }
+    .why-only-card-text-dark {
+      color: #2a2a2a;
+    }
+    /* Progress bar */
+    .why-only-progress-bar {
+      width: 256px;
+      height: 12px;
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+      border: 1px solid rgba(245, 245, 240, 0.25);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);
+    }
+    @media (min-width: 768px) {
+      .why-only-progress-bar {
+        width: 320px;
+      }
+    }
+    .why-only-progress-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%);
+      box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);
+      transition: width 0.05s ease-out;
+    }
+    /* Responsive grid for WhyOnly section */
+    @media (min-width: 768px) {
+      .why-only-grid-responsive {
+        grid-template-columns: 1fr 1fr !important;
+      }
     }
 
     /* Media Logos */
@@ -1484,6 +1578,32 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     @media (min-width: 768px) { .logo-track { gap: 64px; } }
+
+    /* 3D Logo Effect */
+    .logo-3d-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #c4a94d;
+      filter: drop-shadow(-1px -1px 0 #e6d99a) drop-shadow(1px 1px 0 #756429) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+      transform: perspective(500px) rotateX(8deg);
+      width: 120px;
+      height: 120px;
+    }
+
+    .logo-img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+      max-width: clamp(200px, 18vw, 300px);
+      filter: brightness(0) invert(0.8);
+    }
+
+    @media (min-width: 768px) {
+      .logo-img {
+        height: 72px;
+      }
+    }
 
     /* Video Player */
     .video-player-container { width: 100%; }
@@ -1831,11 +1951,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .tool-modal {
       position: relative;
       background: #0a0a0a;
-      border: none;
+      border: 1px solid rgba(255,215,0,0.3);
       border-radius: 16px;
       padding: 0;
       overflow: hidden;
       box-sizing: border-box;
+      box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
     }
 
     .tool-modal iframe {
@@ -1843,31 +1964,67 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border: none;
       border-radius: 0;
       background: #0a0a0a;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tool-modal iframe.loaded {
+      opacity: 1;
+    }
+
+    /* Loading spinner for tool modals */
+    .tool-modal-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .tool-modal-spinner.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .spinner-ring {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(255, 215, 0, 0.2);
+      border-top-color: #ffd700;
+      border-radius: 50%;
+      animation: spinnerRotate 1s linear infinite;
+    }
+
+    @keyframes spinnerRotate {
+      to { transform: rotate(360deg); }
     }
 
     #calculator-modal .tool-modal iframe {
-      width: 700px;
+      width: 900px;
       max-width: 95vw;
-      height: 680px;
-      max-height: 80vh;
+      height: auto;
+      max-height: 85vh;
     }
 
     #revshare-modal .tool-modal iframe {
       width: 900px;
       max-width: 95vw;
-      height: 720px;
+      height: auto;
       max-height: 85vh;
     }
 
     @media (max-width: 768px) {
       #calculator-modal .tool-modal iframe {
         width: 95vw;
-        height: 80vh;
+        height: auto;
         max-height: 85vh;
       }
       #revshare-modal .tool-modal iframe {
         width: 95vw;
-        height: 85vh;
+        height: auto;
         max-height: 90vh;
       }
     }
@@ -2095,6 +2252,39 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         grid-template-columns: 7fr 5fr;
         gap: 1.5rem;
       }
+    }
+
+    /* Expand reveal animation - cards open from edges with rounded corners */
+    .expand-card-wrapper {
+      position: relative;
+      height: 100%;
+    }
+    .expand-card-frame {
+      position: absolute;
+      top: 0;
+      overflow: hidden;
+      height: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4));
+      transition: width 0.15s ease-out;
+    }
+    .expand-card-frame-left {
+      left: 0;
+    }
+    .expand-card-frame-right {
+      right: 0;
+    }
+    .expand-card-content-inner {
+      position: absolute;
+      top: 0;
+      height: 100%;
+    }
+    .expand-card-content-left {
+      left: 0;
+    }
+    .expand-card-content-right {
+      right: 0;
     }
 
     .gap-4 { gap: 1rem; }
@@ -2473,7 +2663,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
     }
 
-    /* BuiltForFuture Data Stream */
+    /* BuiltForFuture - Horizontal Scroll Cards with ScrollTrigger */
+    .built-future-section {
+      position: relative;
+      padding-top: 4rem;
+    }
+    @media (min-width: 768px) {
+      .built-future-section {
+        padding-top: 6rem;
+      }
+    }
+    .built-future-trigger {
+      /* Gets pinned by ScrollTrigger */
+    }
+    .built-future-content {
+      position: relative;
+      transform: translateY(30px);
+    }
+    /* Data stream background */
     .data-stream-container {
       position: absolute;
       inset: 0;
@@ -2493,47 +2700,158 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .data-stream-char {
       position: absolute;
     }
-    /* BuiltForFuture horizontal line animation */
-    @keyframes drawLine {
-      from { width: 0; }
-      to { width: 100%; }
-    }
-    .future-line-container {
+    /* Portal edges */
+    .portal-edge-left {
       position: absolute;
-      top: 60px;
       left: 0;
+      z-index: 20;
+      pointer-events: none;
+      top: -40px;
+      bottom: -40px;
+      width: 12px;
+      border-radius: 0 12px 12px 0;
+      background: linear-gradient(90deg, rgba(30,28,20,0.95) 0%, rgba(40,35,25,0.9) 100%);
+      border-right: 1px solid rgba(255,190,0,0.3);
+      box-shadow: 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3);
+      transform: perspective(500px) rotateY(-3deg);
+      transform-origin: right center;
+    }
+    .portal-edge-right {
+      position: absolute;
       right: 0;
-      height: 1px;
-      background: rgba(255,255,255,0.1);
+      z-index: 20;
+      pointer-events: none;
+      top: -40px;
+      bottom: -40px;
+      width: 12px;
+      border-radius: 12px 0 0 12px;
+      background: linear-gradient(270deg, rgba(30,28,20,0.95) 0%, rgba(40,35,25,0.9) 100%);
+      border-left: 1px solid rgba(255,190,0,0.3);
+      box-shadow: -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3);
+      transform: perspective(500px) rotateY(3deg);
+      transform-origin: left center;
     }
-    @media (min-width: 768px) {
-      .future-line-container {
-        top: 90px;
+    /* Cards container */
+    .built-future-cards-container {
+      position: relative;
+      margin-left: 12px;
+      margin-right: 12px;
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+    .built-future-cards-track {
+      display: flex;
+      padding: 3rem 0;
+    }
+    /* Individual cards */
+    .built-future-card-wrapper {
+      flex-shrink: 0;
+      width: 280px;
+      transition: transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out;
+    }
+    @media (min-width: 640px) {
+      .built-future-card-wrapper {
+        width: 560px;
       }
     }
-    .future-line {
-      width: 0;
+    .built-future-card {
+      padding: 2rem;
+      border-radius: 1rem;
+      min-height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
     }
-    .future-line.animate {
-      animation: drawLine 1s ease-out forwards;
-      animation-delay: 0.5s;
+    .built-future-card-inactive {
+      background: linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98));
+      border: 2px solid rgba(255,215,0,0.13);
     }
-    /* Future circle sizes - 120px mobile, 180px desktop */
-    .future-circle {
-      width: 120px;
-      height: 120px;
+    .built-future-card-active {
+      background:
+        radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+        radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+        radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+        linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%);
+      border: 2px solid rgba(180,150,50,0.5);
+      box-shadow: 0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25);
+    }
+    .built-future-card-image {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+      z-index: 10;
+      transition: background-color 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
     }
     @media (min-width: 768px) {
-      .future-circle {
-        width: 180px;
-        height: 180px;
+      .built-future-card-image {
+        width: 200px;
+        height: 200px;
       }
     }
-    /* Future text H5 style */
+    .built-future-card-image-inactive {
+      background-color: rgba(17,17,17,0.5);
+      border: 3px solid #ffd700;
+    }
+    .built-future-card-image-active {
+      background-color: rgba(20,18,12,0.85);
+      border: 3px solid rgba(40,35,20,0.8);
+      box-shadow: 0 0 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2);
+    }
+    .built-future-card-title {
+      font-family: var(--font-heading), system-ui, sans-serif;
+      font-weight: bold;
+      font-size: clamp(1.25rem, 2vw, 1.5rem);
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      transition: color 0.2s ease-out;
+    }
+    .built-future-card-title-light {
+      color: #e5e4dd;
+    }
+    .built-future-card-title-dark {
+      color: #2a2a2a;
+    }
+    /* Progress bar */
+    .built-future-progress-bar {
+      width: 256px;
+      height: 12px;
+      border-radius: 9999px;
+      overflow: hidden;
+      position: relative;
+      background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+      border: 1px solid rgba(245, 245, 240, 0.25);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);
+    }
+    @media (min-width: 768px) {
+      .built-future-progress-bar {
+        width: 320px;
+      }
+    }
+    .built-future-progress-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%);
+      box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);
+      transition: width 0.05s ease-out;
+    }
+    /* Keep old styles for backwards compatibility */
     .future-text-h4 {
       font-weight: bold;
       color: #e5e4dd;
-      font-size: clamp(20px, calc(18px + 0.5vw), 28px);
+      font-size: clamp(18px, calc(16.73px + 0.51vw), 32px);
     }
     /* Hide line on mobile */
     @media (max-width: 767px) {
@@ -2681,6 +2999,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     body.modal-open { overflow: hidden; }
     html.modal-open { overflow: hidden; }
   </style>
+
+  <!-- GSAP and Lenis for scroll animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.15/dist/lenis.min.js"></script>
 </head>
 <body>
   <!-- Star Field Background -->
@@ -2723,9 +3046,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <h1 id="hero-heading" class="text-h1 h1-neon" style="font-size: clamp(50px, calc(30px + 4vw + 0.3vh), 150px); margin-bottom: 3px;">
                 SMART AGENT ALLIANCE
               </h1>
-              <p class="text-tagline tagline">
+              <div class="tagline-backdrop">
+                <p class="text-tagline tagline">
                 Join ${escapeHTML(displayName)}'s Team<span class="tagline-counter-suffix"><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;"> (</span><span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: 1em;" class="counter-numbers-tagline"><span class="counter-digit-tagline">1</span><span class="counter-digit-tagline">6</span><span class="counter-digit-tagline">8</span><span class="counter-digit-tagline">8</span><span>+ </span></span><span style="color: #bfbdb0; font-family: var(--font-taskor), sans-serif; font-feature-settings: 'ss01' 1; text-transform: uppercase; letter-spacing: 0.05em;">AGENTS)</span></span>
               </p>
+              </div>
               <div class="flex justify-center items-center" style="margin-top: 14px;">
                 <div class="cta-button-wrapper">
                   <div class="cta-light-bar cta-light-bar-top"></div>
@@ -2760,31 +3085,30 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="glass-panel-texture"></div>
         </div>
         <div class="glass-panel-content">
-          <section class="px-6" style="padding-top: calc(1.5rem + 15px); padding-bottom: calc(1.5rem + 15px);">
-            <div class="mx-auto" style="max-width: 1500px;">
-              <div class="flex flex-col gap-3">
-                <div class="flex items-center gap-3 justify-center pillar-row">
+          <section class="px-6" style="padding-top: calc(1.5rem + 15px); padding-bottom: calc(1.5rem + 15px); text-align: center;">
+            <div style="display: inline-block; text-align: left;">
+                <div class="flex items-center gap-3 pillar-row">
                   <span class="pillar-number-large text-body">01</span>
                   <span class="pillar-text text-body"><span class="pillar-label">Smart Agent Alliance</span><span class="pillar-description">, sponsor support built and provided at no cost to agents.</span></span>
                 </div>
-                <div class="flex items-center gap-3 justify-center pillar-row">
+                <div class="flex items-center gap-3 pillar-row">
                   <span class="pillar-number-large text-body">02</span>
                   <span class="pillar-text text-body"><span class="pillar-label">Inside eXp Realty</span><span class="pillar-description">, the largest independent real estate brokerage in the world.</span></span>
                 </div>
-                <div class="flex items-center gap-3 justify-center pillar-row">
+                <div class="flex items-center gap-3 pillar-row">
                   <span class="pillar-number-large text-body">03</span>
                   <span class="pillar-text text-body"><span class="pillar-label">Stronger Together</span><span class="pillar-description">, eXp infrastructure plus SAA systems drive higher agent success.</span></span>
                 </div>
-              </div>
             </div>
           </section>
         </div>
       </div>
     </div>
 
-    <!-- Why Smart Agent Alliance Section -->
-    <section class="section py-24 md:py-32 px-6 overflow-hidden relative">
-      <div class="section-content scroll-reveal" id="why-saa-section" style="max-width: 1500px; margin: 0 auto;">
+    <!-- Why Smart Agent Alliance Section - Expand Reveal -->
+    <section class="section py-24 md:py-32 px-6 overflow-hidden relative" id="why-saa-section">
+      <div style="max-width: 1500px; margin: 0 auto;">
+        <!-- Header - always visible, no animation -->
         <div class="text-center mb-12">
           <h2 class="text-h2 h2-container">
             <span class="h2-word">Why</span>
@@ -2795,48 +3119,51 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </h2>
         </div>
         <div class="why-saa-grid">
-          <!-- Left Card -->
-          <div class="bento-card" style="height: 100%;">
-            <div class="bento-card-content">
-              <div>
+          <!-- Left Card - expands from left using clip-path -->
+          <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left">
+            <div id="saa-left-frame" class="rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); clip-path: inset(0 100% 0 0 round 16px); transition: clip-path 0.1s ease-out;">
+              <div id="saa-left-content" style="padding: 2rem 2.5rem; opacity: 0;">
                 <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
                 <p class="font-bold mt-5" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.5rem;">Smart Agent Alliance was built differently.</p>
                 <p class="text-body mt-3" style="line-height: 1.6;">We invest in real systems, long-term training, and agent collaboration because our incentives are aligned with agent success.</p>
-              </div>
-              <div class="grid grid-cols-2 mt-8" style="gap: 0.5rem 1rem;">
-                <div class="flex items-center gap-3">
-                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
-                  <span class="text-body font-medium">Not a production team</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
-                  <span class="text-body font-medium">No commission splits</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
-                  <span class="text-body font-medium">No sponsor team fees</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
-                  <span class="text-body font-medium">No required meetings</span>
+                <div class="grid grid-cols-2 mt-8" style="gap: 0.5rem 1rem;">
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span class="text-body font-medium">Not a production team</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span class="text-body font-medium">No commission splits</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span class="text-body font-medium">No sponsor team fees</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <span class="icon-3d"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></span>
+                    <span class="text-body font-medium">No required meetings</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <!-- Right Card - Aligned Incentives -->
-          <div class="bento-card" style="position: relative; overflow: hidden; min-height: 300px;">
-            <div style="position: absolute; inset: 0; overflow: hidden;">
-              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
-            </div>
-            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
-            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
-              <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
-              <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
+          <!-- Right Card - Aligned Incentives - expands from right using clip-path -->
+          <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="min-height: 300px;">
+            <div id="saa-right-frame" class="rounded-2xl overflow-hidden relative h-full" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(0 0 0 100% round 16px); transition: clip-path 0.1s ease-out; min-height: 300px;">
+              <!-- Image is always visible -->
+              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+              <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
+              <!-- Caption is always visible -->
+              <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
+                <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
+                <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
+              </div>
             </div>
           </div>
         </div>
-        <div class="text-center mt-12 scroll-reveal">
+        <!-- Disclaimer - fade up -->
+        <div class="expand-reveal-element text-center mt-12" data-expand-id="saa-disclaimer">
           <p class="text-body mx-auto" style="color: #e5e4dd; max-width: 700px; font-size: clamp(16px, calc(14.91px + 0.44vw), 28px);">SAA resources are available to agents who select a SAA-aligned sponsor at the time they join eXp Realty.</p>
         </div>
       </div>
@@ -2860,13 +3187,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <div class="proven-scale-grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: center;">
               <!-- Left Content -->
               <div>
-                <div class="scroll-reveal">
-                  <h2 class="text-h2 h2-container" style="justify-content: flex-start; text-align: left;">
-                    <span class="h2-word">Proven</span>
-                    <span class="h2-word">at</span>
-                    <span class="h2-word">Scale</span>
-                  </h2>
-                </div>
+                <!-- H2 - always visible, no animation -->
+                <h2 class="text-h2 h2-container" style="justify-content: flex-start; text-align: left;">
+                  <span class="h2-word">Proven</span>
+                  <span class="h2-word">at</span>
+                  <span class="h2-word">Scale</span>
+                </h2>
 
                 <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
                   <div class="scroll-reveal" style="display: flex; align-items: center; gap: 1rem;">
@@ -2910,10 +3236,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       </div>
     </div>
 
-    <!-- What You Get Section -->
+    <!-- What You Get Section - Blur Reveal Cards -->
     <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="what-you-get-section">
       <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
-        <div class="text-center scroll-reveal">
+        <div class="text-center" style="margin-bottom: 3rem;">
           <h2 class="text-h2 h2-container">
             <span class="h2-word">What</span>
             <span class="h2-word">You</span>
@@ -2921,164 +3247,182 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             <span class="h2-word">with</span>
             <span class="h2-word">SAA</span>
           </h2>
-          <p class="text-body" style="opacity: 0.6; margin-bottom: 2rem;">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
+          <p class="text-body" style="opacity: 0.6; margin-top: 1rem; max-width: 700px; margin-left: auto; margin-right: auto;">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
         </div>
 
-        <!-- Tab Buttons -->
-        <div class="scroll-reveal" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; padding-bottom: 0.5rem; margin-bottom: 1.5rem;" id="wyg-tabs">
-          <button class="wyg-tab wyg-tab-active" data-tab="0">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
-            <span class="wyg-tab-label">Connected</span>
-          </button>
-          <button class="wyg-tab" data-tab="1">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
-            <span class="wyg-tab-label">Passive</span>
-          </button>
-          <button class="wyg-tab" data-tab="2">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-            <span class="wyg-tab-label">Done-For-You</span>
-          </button>
-          <button class="wyg-tab" data-tab="3">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
-            <span class="wyg-tab-label">Elite</span>
-          </button>
-          <button class="wyg-tab" data-tab="4">
-            <span class="wyg-tab-icon icon-3d"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
-            <span class="wyg-tab-label">Private</span>
-          </button>
-        </div>
+        <!-- Blur Reveal Cards - 2 columns on 1200px+, 1 column below -->
+        <div class="wyg-grid" style="max-width: 1400px; margin: 0 auto;" id="wyg-cards">
+          <!-- Card 1: Connected Leadership -->
+          <div class="wyg-blur-card" data-wyg-card="0">
+            <div class="wyg-card-inner">
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
+              <div class="wyg-card-overlay"></div>
+              <div class="wyg-card-accent"></div>
+              <div class="wyg-card-content">
+                <div class="wyg-card-icon">
+                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+                </div>
+                <div>
+                  <h3 class="wyg-card-title">Connected Leadership and Community</h3>
+                  <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <!-- Content Card with Background Images -->
-        <div class="scroll-reveal" style="margin-bottom: 2.5rem; border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; position: relative; height: 210px;" id="wyg-card">
-          <!-- Background Images (all present, only active one visible) -->
-          <div class="wyg-bg wyg-bg-active" data-bg="0" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
-          <div class="wyg-bg" data-bg="1" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
-          <div class="wyg-bg" data-bg="2" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
-          <div class="wyg-bg" data-bg="3" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
-          <div class="wyg-bg" data-bg="4" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
-          <!-- Gradient Overlay -->
-          <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.5) 100%); z-index: 1;"></div>
-          <!-- Content Panels -->
-          <div class="wyg-content wyg-content-active" data-content="0">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span></div>
-            <div style="text-align: left; flex: 1;">
-              <h3 class="wyg-content-title">Connected Leadership and Community</h3>
-              <p class="text-body">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
+          <!-- Card 2: Passive Income -->
+          <div class="wyg-blur-card" data-wyg-card="1">
+            <div class="wyg-card-inner">
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
+              <div class="wyg-card-overlay"></div>
+              <div class="wyg-card-accent"></div>
+              <div class="wyg-card-content">
+                <div class="wyg-card-icon">
+                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
+                </div>
+                <div>
+                  <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
+                  <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="wyg-content" data-content="1">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span></div>
-            <div style="text-align: left; flex: 1;">
-              <h3 class="wyg-content-title">Passive Income Infrastructure</h3>
-              <p class="text-body">We handle the structure so you can build long-term income without relying solely on transactions.</p>
-            </div>
-          </div>
-          <div class="wyg-content" data-content="2">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span></div>
-            <div style="text-align: left; flex: 1;">
-              <h3 class="wyg-content-title">Done-For-You Production Systems</h3>
-              <p class="text-body">Curated systems designed to save time, not create tech overload.</p>
-            </div>
-          </div>
-          <div class="wyg-content" data-content="3">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span></div>
-            <div style="text-align: left; flex: 1;">
-              <h3 class="wyg-content-title">Elite Training Libraries</h3>
-              <p class="text-body">AI, social media, investing, and modern production systems, available when you need them.</p>
-            </div>
-          </div>
-          <div class="wyg-content" data-content="4">
-            <div class="wyg-icon-box"><span class="icon-3d"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span></div>
-            <div style="text-align: left; flex: 1;">
-              <h3 class="wyg-content-title">Private Referrals &amp; Global Collaboration</h3>
-              <p class="text-body">Warm introductions and deal flow inside a global agent network.</p>
-            </div>
-          </div>
-        </div>
 
-        <!-- Progress Dots -->
-        <div class="scroll-reveal" style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 2rem;" id="wyg-dots">
-          <button class="wyg-dot wyg-dot-active" data-dot="0"></button>
-          <button class="wyg-dot" data-dot="1"></button>
-          <button class="wyg-dot" data-dot="2"></button>
-          <button class="wyg-dot" data-dot="3"></button>
-          <button class="wyg-dot" data-dot="4"></button>
+          <!-- Card 3: Done-For-You -->
+          <div class="wyg-blur-card" data-wyg-card="2">
+            <div class="wyg-card-inner">
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
+              <div class="wyg-card-overlay"></div>
+              <div class="wyg-card-accent"></div>
+              <div class="wyg-card-content">
+                <div class="wyg-card-icon">
+                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
+                </div>
+                <div>
+                  <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
+                  <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Elite Training -->
+          <div class="wyg-blur-card" data-wyg-card="3">
+            <div class="wyg-card-inner">
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
+              <div class="wyg-card-overlay"></div>
+              <div class="wyg-card-accent"></div>
+              <div class="wyg-card-content">
+                <div class="wyg-card-icon">
+                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
+                </div>
+                <div>
+                  <h3 class="wyg-card-title">Elite Training Libraries</h3>
+                  <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 5: Private Referrals -->
+          <div class="wyg-blur-card wyg-full-width" data-wyg-card="4">
+            <div class="wyg-card-inner">
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
+              <div class="wyg-card-overlay"></div>
+              <div class="wyg-card-accent"></div>
+              <div class="wyg-card-content">
+                <div class="wyg-card-icon">
+                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
+                </div>
+                <div>
+                  <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
+                  <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Why Only at eXp Section -->
-    <div class="glass-panel">
-      <div class="glass-panel-bg glass-panel-marigold-noise"></div>
-      <div class="glass-panel-content">
-        <section style="padding: var(--section-padding-y) 1.5rem; position: relative;" id="why-exp-section">
-          <div style="max-width: 1600px; margin: 0 auto; position: relative; z-index: 10;">
-            <div class="text-center scroll-reveal" style="margin-bottom: 2rem; position: relative; z-index: 20;">
-              <h2 class="text-h2 h2-container" style="max-width: 100%;">
-                <span class="h2-word">Why</span>
-                <span class="h2-word">This</span>
-                <span class="h2-word">Only</span>
-                <span class="h2-word">Works</span>
-                <span class="h2-word">at</span>
-                <span class="h2-word">eXp</span>
-                <span class="h2-word">Realty</span>
-              </h2>
-            </div>
+    <!-- Why Only at eXp Section - Scroll-Triggered 3D Card Stack -->
+    <section class="why-only-section" id="why-only-section">
+      <div class="why-only-trigger" id="why-only-trigger">
+        <div class="why-only-content" id="why-only-content">
+          <!-- Noise overlay -->
+          <div class="why-only-noise"></div>
 
-            <div class="why-exp-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; position: relative; z-index: 1;">
-              <!-- Left - Deck Stack -->
-              <div class="scroll-reveal deck-stack-container" style="position: relative; height: 312px; perspective: 1000px;" id="deck-stack">
-                <!-- Card 1 -->
-                <div class="deck-card deck-card-active" data-card="0" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255, 255, 255, 0.15); transform: translateY(0px) translateX(0px) rotate(0deg) scale(1); opacity: 1; z-index: 10;">
-                  <div class="deck-card-number" style="background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%); border: 2px solid rgba(255,255,255,0.2);">
-                    <span class="icon-3d" style="font-size: 32px; font-weight: bold;">1</span>
-                  </div>
-                  <p class="text-body" style="font-weight: bold;">Most real estate brokerages provide tools, training, and support centrally.</p>
-                  <p class="text-body opacity-40 mt-4">Click to advance</p>
-                </div>
-                <!-- Card 2 -->
-                <div class="deck-card" data-card="1" style="background: rgba(25, 25, 25, 0.98); border: 2px solid rgba(255, 255, 255, 0.15); transform: translateY(6px) translateX(0px) rotate(0deg) scale(0.98); opacity: 0.8; z-index: 9;">
-                  <div class="deck-card-number" style="background: linear-gradient(180deg, #3d3d3d 0%, #2a2a2a 100%); border: 2px solid rgba(255,255,255,0.2);">
-                    <span class="icon-3d" style="font-size: 32px; font-weight: bold;">2</span>
-                  </div>
-                  <p class="text-body" style="font-weight: bold;">Even when sponsorship exists, sponsors are limited to offering only what the brokerage provides.</p>
-                  <p class="text-body opacity-40 mt-4">Click to advance</p>
-                </div>
-                <!-- Card 3 (Highlighted) -->
-                <div class="deck-card deck-card-highlight" data-card="2" style="background: rgba(40, 35, 10, 0.98); border: 2px solid rgba(255, 215, 0, 0.5); transform: translateY(12px) translateX(0px) rotate(0deg) scale(0.96); opacity: 0.6; z-index: 8;">
-                  <div class="deck-card-number" style="background: #ffd700;">
-                    <span style="font-size: 32px; font-weight: bold; color: #111;">3</span>
-                  </div>
-                  <p class="text-body" style="font-weight: bold; color: #ffd700;">eXp Realty sponsorship works differently.</p>
-                  <p class="text-body opacity-40 mt-4">Click to advance</p>
-                </div>
-                <!-- Progress Dots -->
-                <div class="deck-dots">
-                  <button class="deck-dot deck-dot-active" data-dot="0"></button>
-                  <button class="deck-dot" data-dot="1"></button>
-                  <button class="deck-dot" data-dot="2"></button>
-                </div>
+          <!-- Content -->
+          <div style="position: relative; z-index: 10; padding: 4rem 1.5rem;">
+            <div style="max-width: 1600px; margin: 0 auto;">
+              <!-- Section Header -->
+              <div class="text-center" style="margin-bottom: 2rem;">
+                <h2 class="text-h2 h2-container" style="max-width: 100%;">
+                  <span class="h2-word">Why</span>
+                  <span class="h2-word">This</span>
+                  <span class="h2-word">Only</span>
+                  <span class="h2-word">Works</span>
+                  <span class="h2-word">at</span>
+                  <span class="h2-word">eXp</span>
+                  <span class="h2-word">Realty</span>
+                </h2>
               </div>
 
-              <!-- Right - Key Message -->
-              <div class="scroll-reveal" style="transition: all 0.7s ease; transition-delay: 0.3s;">
-                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; min-height: 340px;">
+              <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start;" class="why-only-grid-responsive">
+                <!-- Left Column: Card Stack + Progress Bar -->
+                <div style="display: flex; flex-direction: column; position: relative; z-index: 10;">
+                  <!-- 3D Rotating Card Stack -->
+                  <div class="why-only-card-stack" id="why-only-card-stack">
+                    <!-- Card 1 -->
+                    <div class="why-only-card why-only-card-dark" data-card-index="0" id="why-only-card-0">
+                      <div class="why-only-number-badge why-only-number-badge-dark">
+                        <span class="why-only-number-3d">1</span>
+                      </div>
+                      <p class="why-only-card-text why-only-card-text-light">Most real estate brokerages provide tools, training, and support centrally.</p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="why-only-card why-only-card-dark" data-card-index="1" id="why-only-card-1">
+                      <div class="why-only-number-badge why-only-number-badge-dark">
+                        <span class="why-only-number-3d">2</span>
+                      </div>
+                      <p class="why-only-card-text why-only-card-text-light">Even when sponsorship exists, sponsors are limited to offering only what the brokerage provides.</p>
+                    </div>
+                    <!-- Card 3 (Highlighted) -->
+                    <div class="why-only-card why-only-card-highlight" data-card-index="2" id="why-only-card-2">
+                      <div class="why-only-number-badge why-only-number-badge-highlight">
+                        <span class="why-only-number-3d why-only-number-3d-highlight">3</span>
+                      </div>
+                      <p class="why-only-card-text why-only-card-text-dark">eXp Realty sponsorship works differently.</p>
+                    </div>
+                  </div>
+
+                  <!-- Progress Bar -->
+                  <div style="display: flex; justify-content: center; margin-top: 4rem;">
+                    <div class="why-only-progress-bar">
+                      <div class="why-only-progress-fill" id="why-only-progress-fill" style="width: 0%;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Column: Key message card -->
+                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; min-height: 340px; z-index: 1;">
                   <div style="position: absolute; inset: 0;">
                     <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%);"></div>
                   </div>
                   <figcaption style="position: relative; z-index: 10; padding: 1.5rem 2rem; height: 100%; display: flex; flex-direction: column; justify-content: center;">
-                    <p class="text-body" style="font-weight: bold; color: #ffd700; margin-bottom: 1rem;">eXp Realty Sponsorship is Different.</p>
+                    <p style="font-family: var(--font-heading), system-ui, sans-serif; font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: bold; color: #ffd700; margin-bottom: 1rem;">eXp Realty Sponsorship is Different.</p>
                     <p class="text-body" style="line-height: 1.6; margin-bottom: 1rem;">It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.</p>
                     <p class="text-body" style="color: #ffd700; font-style: italic; font-size: clamp(18px, 2vw, 20px); margin-bottom: 1.5rem;">When you succeed, we succeed.</p>
+                    <a href="/exp-realty-sponsor" class="cta-button" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; width: fit-content;">See Our Systems</a>
                   </figcaption>
                 </figure>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       </div>
-    </div>
+    </section>
 
     <!-- Media Logos Section (Why eXp Realty?) - 5-Card Layout -->
     <section class="media-logos-section scroll-reveal" id="media-logos-section">
@@ -3094,7 +3438,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Top Row - 3 cards -->
           <div class="why-exp-grid-top">
             <!-- Card 1: Profitable -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.2s;">
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0s;">
               <div class="mb-4">
                 <span class="icon-3d" style="width: 80px; height: 80px;">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
@@ -3105,7 +3449,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 2: Cloud-Based -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.35s;">
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.1s;">
               <div class="mb-4">
                 <span class="icon-3d" style="width: 80px; height: 80px;">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
@@ -3116,7 +3460,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 3: Sponsor Choice -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.5s;">
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 1px solid rgba(255,215,0,0.15); transition-delay: 0.2s;">
               <div class="mb-4">
                 <span class="icon-3d" style="width: 80px; height: 80px;">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
@@ -3130,7 +3474,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <!-- Bottom Row - 2 cards with colored borders and buttons -->
           <div class="why-exp-grid-bottom">
             <!-- Card 4: Commission - Green -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(0,204,102,0.5); transition-delay: 0.65s;">
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(0,204,102,0.5); transition-delay: 0.1s;">
               <div class="mb-4">
                 <span class="icon-3d icon-3d-green" style="width: 80px; height: 80px;">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="5" x2="5" y2="19"></line><circle cx="6.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="17.5" r="2.5"></circle></svg>
@@ -3151,7 +3495,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
 
             <!-- Card 5: RevShare - Purple -->
-            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(153,51,255,0.5); transition-delay: 0.8s;">
+            <div class="why-exp-card scroll-reveal" style="background: rgba(10,10,10,0.6); border: 2px solid rgba(153,51,255,0.5); transition-delay: 0.2s;">
               <div class="mb-4">
                 <span class="icon-3d icon-3d-purple" style="width: 80px; height: 80px;">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
@@ -3183,124 +3527,124 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="logo-track-shadow-right"></div>
           <div class="logo-track" id="logo-track" style="transform: translateX(-32.5px);">
             
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wsj-logo/public" alt="The Wall Street Journal" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/cnbc-logo/public" alt="CNBC" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/fox-business-logo/public" alt="Fox Business" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/bloomberg-logo/public" alt="Bloomberg" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/yahoo-finance-logo/public" alt="Yahoo Finance" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/forbes-logo/public" alt="Forbes" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/business-insider-logo/public" alt="Business Insider" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/market-watch-logo/public" alt="MarketWatch" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/reuters-logo/public" alt="Reuters" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/usa-today-logo/public" alt="USA Today" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/la-times-logo/public" alt="Los Angeles Times" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/washington-post-logo/public" alt="The Washington Post" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/nasdaq-logo/public" alt="Nasdaq" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/barrons-logo/public" alt="Barron's" loading="eager" class="logo-img"></span>
     </div>
   
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;">
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper"><img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/new-york-post-logo/public" alt="New York Post" loading="eager" class="logo-img"></span>
     </div>
   
           </div>
@@ -3314,8 +3658,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div class="glass-panel-content">
         <section style="padding: var(--section-padding-y) 1.5rem; position: relative;">
           <div style="max-width: 1500px; margin: 0 auto; position: relative; z-index: 10;">
-            <!-- Header -->
-            <div class="scroll-reveal" style="text-align: center; margin-bottom: 3rem; transition: all 0.7s ease;">
+            <!-- Header - always visible, no animation -->
+            <div style="text-align: center; margin-bottom: 3rem;">
               <h2 class="text-h2 h2-container">
                 <span class="h2-word">Your</span>
                 <span class="h2-word">Support</span>
@@ -3400,60 +3744,55 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       </div>
     </div>
 
-    <!-- Built for Future Section -->
-    <section class="section" id="built-for-future" style="padding: var(--section-padding-y) 1.5rem; overflow: hidden; position: relative;">
-      <!-- GrayscaleDataStream Background -->
-      <div class="data-stream-container" id="data-stream"><div class="data-stream-column" data-index="0" data-speed="0.8" data-offset="0" style="left: 0%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 9.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.752515;">1</div><div class="data-stream-char" data-char-index="1" style="top: 14.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 19.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 24.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 29.0302%; color: rgba(120, 120, 120, 0.247); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 34.0302%; color: rgba(120, 120, 120, 0.227); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 39.0302%; color: rgba(120, 120, 120, 0.208); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 44.0302%; color: rgba(120, 120, 120, 0.184); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 49.0302%; color: rgba(120, 120, 120, 0.165); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 54.0302%; color: rgba(120, 120, 120, 0.145); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 59.0302%; color: rgba(120, 120, 120, 0.125); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 64.0302%; color: rgba(120, 120, 120, 0.106); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 69.0302%; color: rgba(120, 120, 120, 0.086); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 74.0302%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 79.0302%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 84.0302%; color: rgba(120, 120, 120, 0.027); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 89.0302%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.09) 0px 0px 2px; opacity: 0.914152;">1</div><div class="data-stream-char" data-char-index="17" style="top: 94.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.497485;">0</div><div class="data-stream-char" data-char-index="18" style="top: 99.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0808183;">1</div><div class="data-stream-char" data-char-index="19" style="top: -5.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="20" style="top: -0.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="21" style="top: 4.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.335848;">0</div></div><div class="data-stream-column" data-index="1" data-speed="1.2000000000000002" data-offset="17" style="left: 5%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 35.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 40.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 45.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 50.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 55.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 60.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 65.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 70.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 75.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 80.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 85.5453%; color: rgba(120, 120, 120, 0.23); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 90.5453%; color: rgba(120, 120, 120, 0.17); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.787894;">1</div><div class="data-stream-char" data-char-index="12" style="top: 95.5453%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.371228;">0</div><div class="data-stream-char" data-char-index="13" style="top: -9.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="14" style="top: -4.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="15" style="top: 0.54527%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0454391;">1</div><div class="data-stream-char" data-char-index="16" style="top: 5.54527%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.462106;">0</div><div class="data-stream-char" data-char-index="17" style="top: 10.5453%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.878772;">1</div><div class="data-stream-char" data-char-index="18" style="top: 15.5453%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 20.5453%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 25.5453%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 30.5453%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="2" data-speed="1.6" data-offset="34" style="left: 10%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 62.0604%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 67.0604%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 72.0604%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 77.0604%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 82.0604%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 87.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 92.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.661637;">1</div><div class="data-stream-char" data-char-index="7" style="top: 97.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.024) 0px 0px 2px; opacity: 0.24497;">0</div><div class="data-stream-char" data-char-index="8" style="top: -7.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="9" style="top: -2.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="10" style="top: 2.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.171697;">1</div><div class="data-stream-char" data-char-index="11" style="top: 7.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.588363;">0</div><div class="data-stream-char" data-char-index="12" style="top: 12.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 17.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 22.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 27.0604%; color: rgba(120, 120, 120, 0.24); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 32.0604%; color: rgba(120, 120, 120, 0.22); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 37.0604%; color: rgba(120, 120, 120, 0.2); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 42.0604%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 47.0604%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 52.0604%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 57.0604%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="3" data-speed="2" data-offset="51" style="left: 15%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 88.5754%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.094) 0px 0px 2px; opacity: 0.952046;">0</div><div class="data-stream-char" data-char-index="1" style="top: 93.5754%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.535379;">1</div><div class="data-stream-char" data-char-index="2" style="top: 98.5754%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.118713;">0</div><div class="data-stream-char" data-char-index="3" style="top: -6.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="4" style="top: -1.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="5" style="top: 3.57545%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.297954;">1</div><div class="data-stream-char" data-char-index="6" style="top: 8.57545%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.714621;">0</div><div class="data-stream-char" data-char-index="7" style="top: 13.5754%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 18.5754%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 23.5754%; color: rgba(120, 120, 120, 0.024); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 28.5754%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 33.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 38.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 43.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 48.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 53.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 58.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 63.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 68.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 73.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 78.5754%; color: rgba(120, 120, 120, 0.243); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 83.5754%; color: rgba(120, 120, 120, 0.224); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="4" data-speed="0.8" data-offset="68" style="left: 20%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 77.0302%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 82.0302%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 87.0302%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 92.0302%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.664152;">0</div><div class="data-stream-char" data-char-index="4" style="top: 97.0302%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.024) 0px 0px 2px; opacity: 0.247485;">1</div><div class="data-stream-char" data-char-index="5" style="top: -7.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="6" style="top: -2.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="7" style="top: 2.03018%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.169182;">0</div><div class="data-stream-char" data-char-index="8" style="top: 7.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.585848;">1</div><div class="data-stream-char" data-char-index="9" style="top: 12.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 17.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 22.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 27.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 32.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 37.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 42.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 47.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 52.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 57.0302%; color: rgba(120, 120, 120, 0.24); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 62.0302%; color: rgba(120, 120, 120, 0.22); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 67.0302%; color: rgba(120, 120, 120, 0.2); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 72.0302%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="5" data-speed="1.2000000000000002" data-offset="85" style="left: 25%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: -6.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="1" style="top: -1.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="2" style="top: 3.54527%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.295439;">0</div><div class="data-stream-char" data-char-index="3" style="top: 8.54527%; color: rgba(120, 120, 120, 0.145); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.712106;">1</div><div class="data-stream-char" data-char-index="4" style="top: 13.5453%; color: rgba(120, 120, 120, 0.184); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 18.5453%; color: rgba(120, 120, 120, 0.165); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 23.5453%; color: rgba(120, 120, 120, 0.145); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 28.5453%; color: rgba(120, 120, 120, 0.125); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 33.5453%; color: rgba(120, 120, 120, 0.106); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 38.5453%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 43.5453%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 48.5453%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 53.5453%; color: rgba(120, 120, 120, 0.024); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 58.5453%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 63.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 68.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 73.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 78.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 83.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 88.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.094) 0px 0px 2px; opacity: 0.954561;">1</div><div class="data-stream-char" data-char-index="20" style="top: 93.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.537894;">0</div><div class="data-stream-char" data-char-index="21" style="top: 98.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.121228;">1</div></div><div class="data-stream-column" data-index="6" data-speed="1.6" data-offset="2" style="left: 30%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 30.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 35.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 40.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 45.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 50.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 55.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 60.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 65.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 70.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 75.0604%; color: rgba(120, 120, 120, 0.23); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 80.0604%; color: rgba(120, 120, 120, 0.21); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 85.0604%; color: rgba(120, 120, 120, 0.192); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 90.0604%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.828303;">1</div><div class="data-stream-char" data-char-index="13" style="top: 95.0604%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.04) 0px 0px 2px; opacity: 0.411637;">0</div><div class="data-stream-char" data-char-index="14" style="top: -9.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="15" style="top: -4.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="16" style="top: 0.0603596%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0.00502997;">1</div><div class="data-stream-char" data-char-index="17" style="top: 5.06036%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.043) 0px 0px 2px; opacity: 0.421697;">0</div><div class="data-stream-char" data-char-index="18" style="top: 10.0604%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.838363;">1</div><div class="data-stream-char" data-char-index="19" style="top: 15.0604%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 20.0604%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 25.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="7" data-speed="2" data-offset="19" style="left: 35%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 56.5754%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 61.5754%; color: rgba(120, 120, 120, 0.055); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 66.5754%; color: rgba(120, 120, 120, 0.035); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 71.5754%; color: rgba(120, 120, 120, 0.016); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 76.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 81.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 86.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 91.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.702046;">1</div><div class="data-stream-char" data-char-index="8" style="top: 96.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.027) 0px 0px 2px; opacity: 0.285379;">0</div><div class="data-stream-char" data-char-index="9" style="top: -8.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="10" style="top: -3.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="11" style="top: 1.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.131287;">1</div><div class="data-stream-char" data-char-index="12" style="top: 6.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.547954;">0</div><div class="data-stream-char" data-char-index="13" style="top: 11.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.964621;">1</div><div class="data-stream-char" data-char-index="14" style="top: 16.5754%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 21.5754%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 26.5754%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 31.5754%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 36.5754%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 41.5754%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 46.5754%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 51.5754%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="8" data-speed="0.8" data-offset="36" style="left: 40%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 45.0302%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 50.0302%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 55.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 60.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 65.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 70.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 75.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 80.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 85.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 90.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.830818;">0</div><div class="data-stream-char" data-char-index="10" style="top: 95.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.043) 0px 0px 2px; opacity: 0.414152;">1</div><div class="data-stream-char" data-char-index="11" style="top: -9.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="12" style="top: -4.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="13" style="top: 0.0301798%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0.00251499;">0</div><div class="data-stream-char" data-char-index="14" style="top: 5.03018%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.043) 0px 0px 2px; opacity: 0.419182;">1</div><div class="data-stream-char" data-char-index="15" style="top: 10.0302%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.082) 0px 0px 2px; opacity: 0.835848;">0</div><div class="data-stream-char" data-char-index="16" style="top: 15.0302%; color: rgba(120, 120, 120, 0.15); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 20.0302%; color: rgba(120, 120, 120, 0.13); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 25.0302%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 30.0302%; color: rgba(120, 120, 120, 0.09); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 35.0302%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 40.0302%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="9" data-speed="1.2000000000000002" data-offset="53" style="left: 45%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 71.5453%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 76.5453%; color: rgba(120, 120, 120, 0.118); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 81.5453%; color: rgba(120, 120, 120, 0.098); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 86.5453%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 91.5453%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.07) 0px 0px 2px; opacity: 0.704561;">0</div><div class="data-stream-char" data-char-index="5" style="top: 96.5453%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.027) 0px 0px 2px; opacity: 0.287894;">1</div><div class="data-stream-char" data-char-index="6" style="top: -8.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="7" style="top: -3.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="8" style="top: 1.54527%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.01) 0px 0px 2px; opacity: 0.128772;">0</div><div class="data-stream-char" data-char-index="9" style="top: 6.54527%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.055) 0px 0px 2px; opacity: 0.545439;">1</div><div class="data-stream-char" data-char-index="10" style="top: 11.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.962106;">0</div><div class="data-stream-char" data-char-index="11" style="top: 16.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 21.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 26.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 31.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 36.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 41.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 46.5453%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 51.5453%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 56.5453%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 61.5453%; color: rgba(120, 120, 120, 0.176); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 66.5453%; color: rgba(120, 120, 120, 0.157); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="10" data-speed="1.6" data-offset="70" style="left: 50%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 98.0604%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.161637;">1</div><div class="data-stream-char" data-char-index="1" style="top: -6.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="2" style="top: -1.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="3" style="top: 3.06036%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.027) 0px 0px 2px; opacity: 0.25503;">0</div><div class="data-stream-char" data-char-index="4" style="top: 8.06036%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.671697;">1</div><div class="data-stream-char" data-char-index="5" style="top: 13.0604%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 18.0604%; color: rgba(120, 120, 120, 0.12); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 23.0604%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 28.0604%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 33.0604%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 38.0604%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 43.0604%; color: rgba(120, 120, 120, 0.024); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 48.0604%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 53.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 58.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 63.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 68.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 73.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 78.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 83.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 88.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.99497;">1</div><div class="data-stream-char" data-char-index="21" style="top: 93.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.578303;">0</div></div><div class="data-stream-column" data-index="11" data-speed="2" data-offset="87" style="left: 55%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 14.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 19.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 24.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 29.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 34.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 39.5754%; color: rgba(120, 120, 120, 0.247); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 44.5754%; color: rgba(120, 120, 120, 0.227); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 49.5754%; color: rgba(120, 120, 120, 0.208); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 54.5754%; color: rgba(120, 120, 120, 0.19); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 59.5754%; color: rgba(120, 120, 120, 0.17); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 64.5754%; color: rgba(120, 120, 120, 0.15); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 69.5754%; color: rgba(120, 120, 120, 0.13); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 74.5754%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 79.5754%; color: rgba(120, 120, 120, 0.09); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 84.5754%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 89.5754%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.868713;">1</div><div class="data-stream-char" data-char-index="16" style="top: 94.5754%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.452046;">0</div><div class="data-stream-char" data-char-index="17" style="top: 99.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0353792;">1</div><div class="data-stream-char" data-char-index="18" style="top: -5.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="19" style="top: -0.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="20" style="top: 4.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.04) 0px 0px 2px; opacity: 0.381287;">0</div><div class="data-stream-char" data-char-index="21" style="top: 9.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.797954;">1</div></div><div class="data-stream-column" data-index="12" data-speed="0.8" data-offset="4" style="left: 60%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 13.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 18.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 23.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 28.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 33.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 38.0302%; color: rgba(120, 120, 120, 0.243); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 43.0302%; color: rgba(120, 120, 120, 0.224); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 48.0302%; color: rgba(120, 120, 120, 0.204); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 53.0302%; color: rgba(120, 120, 120, 0.18); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 58.0302%; color: rgba(120, 120, 120, 0.16); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 63.0302%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 68.0302%; color: rgba(120, 120, 120, 0.12); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 73.0302%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 78.0302%; color: rgba(120, 120, 120, 0.082); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 83.0302%; color: rgba(120, 120, 120, 0.063); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 88.0302%; color: rgba(120, 120, 120, 0.043); text-shadow: rgba(100, 100, 100, 0.098) 0px 0px 2px; opacity: 0.997485;">0</div><div class="data-stream-char" data-char-index="16" style="top: 93.0302%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.06) 0px 0px 2px; opacity: 0.580818;">1</div><div class="data-stream-char" data-char-index="17" style="top: 98.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.016) 0px 0px 2px; opacity: 0.164152;">0</div><div class="data-stream-char" data-char-index="18" style="top: -6.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="19" style="top: -1.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="20" style="top: 3.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.024) 0px 0px 2px; opacity: 0.252515;">1</div><div class="data-stream-char" data-char-index="21" style="top: 8.03018%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.067) 0px 0px 2px; opacity: 0.669182;">0</div></div><div class="data-stream-column" data-index="13" data-speed="1.2000000000000002" data-offset="21" style="left: 65%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 39.5453%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 44.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 49.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 54.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 59.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 64.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 69.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 74.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 79.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 84.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 89.5453%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.871228;">0</div><div class="data-stream-char" data-char-index="11" style="top: 94.5453%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.454561;">1</div><div class="data-stream-char" data-char-index="12" style="top: 99.5453%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0378942;">0</div><div class="data-stream-char" data-char-index="13" style="top: -5.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="14" style="top: -0.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="15" style="top: 4.54527%; color: rgba(120, 120, 120, 0.055); text-shadow: rgba(100, 100, 100, 0.04) 0px 0px 2px; opacity: 0.378772;">1</div><div class="data-stream-char" data-char-index="16" style="top: 9.54527%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.795439;">0</div><div class="data-stream-char" data-char-index="17" style="top: 14.5453%; color: rgba(120, 120, 120, 0.11); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 19.5453%; color: rgba(120, 120, 120, 0.086); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 24.5453%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 29.5453%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 34.5453%; color: rgba(120, 120, 120, 0.027); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="14" data-speed="1.6" data-offset="38" style="left: 70%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 66.0604%; color: rgba(120, 120, 120, 0.114); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 71.0604%; color: rgba(120, 120, 120, 0.094); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 76.0604%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 81.0604%; color: rgba(120, 120, 120, 0.055); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 86.0604%; color: rgba(120, 120, 120, 0.035); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 91.0604%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.74497;">0</div><div class="data-stream-char" data-char-index="6" style="top: 96.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.328303;">1</div><div class="data-stream-char" data-char-index="7" style="top: -8.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="8" style="top: -3.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="9" style="top: 1.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0883633;">0</div><div class="data-stream-char" data-char-index="10" style="top: 6.06036%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.50503;">1</div><div class="data-stream-char" data-char-index="11" style="top: 11.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.094) 0px 0px 2px; opacity: 0.921697;">0</div><div class="data-stream-char" data-char-index="12" style="top: 16.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 21.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 26.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 31.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 36.0604%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 41.0604%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 46.0604%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 51.0604%; color: rgba(120, 120, 120, 0.173); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 56.0604%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 61.0604%; color: rgba(120, 120, 120, 0.133); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="15" data-speed="2" data-offset="55" style="left: 75%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 92.5754%; color: rgba(120, 120, 120, 0.137); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.618713;">0</div><div class="data-stream-char" data-char-index="1" style="top: 97.5754%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.202046;">1</div><div class="data-stream-char" data-char-index="2" style="top: -7.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="3" style="top: -2.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="4" style="top: 2.57545%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.214621;">0</div><div class="data-stream-char" data-char-index="5" style="top: 7.57545%; color: rgba(120, 120, 120, 0.075); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.631287;">1</div><div class="data-stream-char" data-char-index="6" style="top: 12.5754%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 17.5754%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 22.5754%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 27.5754%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 32.5754%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 37.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 42.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 47.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 52.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 57.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 62.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 67.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 72.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 77.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 82.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 87.5754%; color: rgba(120, 120, 120, 0.24); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div><div class="data-stream-column" data-index="16" data-speed="0.8" data-offset="72" style="left: 80%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 81.0302%; color: rgba(120, 120, 120, 0.173); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 86.0302%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 91.0302%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.747485;">1</div><div class="data-stream-char" data-char-index="3" style="top: 96.0302%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.03) 0px 0px 2px; opacity: 0.330818;">0</div><div class="data-stream-char" data-char-index="4" style="top: -8.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="5" style="top: -3.96982%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="6" style="top: 1.03018%; color: rgba(120, 120, 120, 0.004); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0858483;">1</div><div class="data-stream-char" data-char-index="7" style="top: 6.03018%; color: rgba(120, 120, 120, 0.016); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.502515;">0</div><div class="data-stream-char" data-char-index="8" style="top: 11.0302%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.09) 0px 0px 2px; opacity: 0.919182;">1</div><div class="data-stream-char" data-char-index="9" style="top: 16.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 21.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 26.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="12" style="top: 31.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="13" style="top: 36.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="14" style="top: 41.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="15" style="top: 46.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="16" style="top: 51.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="17" style="top: 56.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="18" style="top: 61.0302%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 66.0302%; color: rgba(120, 120, 120, 0.235); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 71.0302%; color: rgba(120, 120, 120, 0.216); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 76.0302%; color: rgba(120, 120, 120, 0.196); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="17" data-speed="1.2000000000000002" data-offset="89" style="left: 85%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: -2.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="1" style="top: 2.54527%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.212106;">1</div><div class="data-stream-char" data-char-index="2" style="top: 7.54527%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.628772;">0</div><div class="data-stream-char" data-char-index="3" style="top: 12.5453%; color: rgba(120, 120, 120, 0.22); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 17.5453%; color: rgba(120, 120, 120, 0.2); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 22.5453%; color: rgba(120, 120, 120, 0.18); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 27.5453%; color: rgba(120, 120, 120, 0.16); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="7" style="top: 32.5453%; color: rgba(120, 120, 120, 0.14); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="8" style="top: 37.5453%; color: rgba(120, 120, 120, 0.12); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="9" style="top: 42.5453%; color: rgba(120, 120, 120, 0.1); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="10" style="top: 47.5453%; color: rgba(120, 120, 120, 0.08); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="11" style="top: 52.5453%; color: rgba(120, 120, 120, 0.06); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="12" style="top: 57.5453%; color: rgba(120, 120, 120, 0.04); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="13" style="top: 62.5453%; color: rgba(120, 120, 120, 0.02); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 67.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 72.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 77.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 82.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 87.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 92.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.063) 0px 0px 2px; opacity: 0.621228;">1</div><div class="data-stream-char" data-char-index="20" style="top: 97.5453%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.02) 0px 0px 2px; opacity: 0.204561;">0</div><div class="data-stream-char" data-char-index="21" style="top: -7.45473%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div></div><div class="data-stream-column" data-index="18" data-speed="1.6" data-offset="6" style="left: 90%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 34.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="1" style="top: 39.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="2" style="top: 44.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="3" style="top: 49.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="4" style="top: 54.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="5" style="top: 59.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="6" style="top: 64.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="7" style="top: 69.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="8" style="top: 74.0604%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="9" style="top: 79.0604%; color: rgba(120, 120, 120, 0.247); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="10" style="top: 84.0604%; color: rgba(120, 120, 120, 0.227); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="11" style="top: 89.0604%; color: rgba(120, 120, 120, 0.19); text-shadow: rgba(100, 100, 100, 0.09) 0px 0px 2px; opacity: 0.911637;">0</div><div class="data-stream-char" data-char-index="12" style="top: 94.0604%; color: rgba(120, 120, 120, 0.094); text-shadow: rgba(100, 100, 100, 0.05) 0px 0px 2px; opacity: 0.49497;">1</div><div class="data-stream-char" data-char-index="13" style="top: 99.0604%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.008) 0px 0px 2px; opacity: 0.0783034;">0</div><div class="data-stream-char" data-char-index="14" style="top: -5.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="15" style="top: -0.93964%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="16" style="top: 4.06036%; color: rgba(120, 120, 120, 0.035); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.338363;">1</div><div class="data-stream-char" data-char-index="17" style="top: 9.06036%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.075) 0px 0px 2px; opacity: 0.75503;">0</div><div class="data-stream-char" data-char-index="18" style="top: 14.0604%; color: rgba(120, 120, 120, 0.067); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="19" style="top: 19.0604%; color: rgba(120, 120, 120, 0.047); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="20" style="top: 24.0604%; color: rgba(120, 120, 120, 0.027); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="21" style="top: 29.0604%; color: rgba(120, 120, 120, 0.008); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div></div><div class="data-stream-column" data-index="19" data-speed="2" data-offset="23" style="left: 95%; width: 5%;"><div class="data-stream-char" data-char-index="0" style="top: 60.5754%; color: rgba(120, 120, 120, 0.094); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="1" style="top: 65.5754%; color: rgba(120, 120, 120, 0.07); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="2" style="top: 70.5754%; color: rgba(120, 120, 120, 0.05); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="3" style="top: 75.5754%; color: rgba(120, 120, 120, 0.03); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="4" style="top: 80.5754%; color: rgba(120, 120, 120, 0.01); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="5" style="top: 85.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="6" style="top: 90.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.08) 0px 0px 2px; opacity: 0.785379;">0</div><div class="data-stream-char" data-char-index="7" style="top: 95.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.035) 0px 0px 2px; opacity: 0.368713;">1</div><div class="data-stream-char" data-char-index="8" style="top: -9.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">0</div><div class="data-stream-char" data-char-index="9" style="top: -4.42455%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0) 0px 0px 2px; opacity: 0;">1</div><div class="data-stream-char" data-char-index="10" style="top: 0.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.004) 0px 0px 2px; opacity: 0.0479541;">0</div><div class="data-stream-char" data-char-index="11" style="top: 5.57545%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.047) 0px 0px 2px; opacity: 0.464621;">1</div><div class="data-stream-char" data-char-index="12" style="top: 10.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.086) 0px 0px 2px; opacity: 0.881287;">0</div><div class="data-stream-char" data-char-index="13" style="top: 15.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="14" style="top: 20.5754%; color: rgba(120, 120, 120, 0); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="15" style="top: 25.5754%; color: rgba(120, 120, 120, 0.23); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="16" style="top: 30.5754%; color: rgba(120, 120, 120, 0.21); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="17" style="top: 35.5754%; color: rgba(120, 120, 120, 0.192); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="18" style="top: 40.5754%; color: rgba(120, 120, 120, 0.173); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="19" style="top: 45.5754%; color: rgba(120, 120, 120, 0.153); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div><div class="data-stream-char" data-char-index="20" style="top: 50.5754%; color: rgba(120, 120, 120, 0.133); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">0</div><div class="data-stream-char" data-char-index="21" style="top: 55.5754%; color: rgba(120, 120, 120, 0.114); text-shadow: rgba(100, 100, 100, 0.1) 0px 0px 2px; opacity: 1;">1</div></div></div>
+    <!-- Built for Where Real Estate Is Going - Horizontal Scroll Cards -->
+    <section style="position: relative; padding-top: 4rem;" id="built-for-future">
+      <!-- Fixed background animation - outside pinned content -->
+      <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0;">
+        <!-- GrayscaleDataStream will be rendered here by JS -->
+        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; z-index: 0;" id="grayscale-data-stream"></div>
+      </div>
 
-      <div style="max-width: 1800px; margin: 0 auto; text-align: center; position: relative; z-index: 10;">
-        <div class="built-future-header" style="transition: 0.7s; opacity: 0; transform: translateY(20px);">
-          <h2 class="text-h2 h2-container" style="max-width: 100%;">
-            <span class="h2-word">Built</span>
-            <span class="h2-word">for</span>
-            <span class="h2-word">Where</span>
-            <span class="h2-word">Real</span>
-            <span class="h2-word">Estate</span>
-            <span class="h2-word">Is</span>
-            <span class="h2-word">Going</span>
-          </h2>
-        </div>
-        <p class="text-body built-future-subline" style="opacity: 0; margin-bottom: 3rem; transition: 0.7s 0.15s;">
-          The future of real estate is cloud-based, global, and technology-driven. SAA is already there.
-        </p>
-
-        <div style="position: relative; margin-bottom: 3rem;">
-          <!-- Horizontal line connecting circles (desktop only) -->
-          <div class="future-line-container">
-            <div class="future-line" id="future-line" style="height: 100%; width: 0; background: linear-gradient(90deg, transparent, #ffd700, transparent);"></div>
+      <!-- Invisible wrapper that gets pinned -->
+      <div id="built-future-trigger" style="position: relative; z-index: 1;">
+        <!-- Content - animates upward -->
+        <div id="built-future-content" style="position: relative; transform: translateY(30px);">
+          <!-- Section Header -->
+          <div style="text-align: center; margin-bottom: 1rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+            <h2 class="text-h2 h2-container" style="max-width: 100%;">
+              <span class="h2-word">Built</span>
+              <span class="h2-word">for</span>
+              <span class="h2-word">Where</span>
+              <span class="h2-word">Real</span>
+              <span class="h2-word">Estate</span>
+              <span class="h2-word">Is</span>
+              <span class="h2-word">Going</span>
+            </h2>
           </div>
-          <div class="future-points-row" style="display: flex; flex-direction: row; justify-content: space-between; gap: 1rem;">
-            <!-- Point 1: Cloud-first -->
-            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 0.9s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public" alt="Cloud-first brokerage model" style="width: 100%; height: 100%; object-fit: contain;">
+          <p class="text-body" style="opacity: 0.7; margin-bottom: 3rem; text-align: center; max-width: 42rem; margin-left: auto; margin-right: auto; padding-left: 1.5rem; padding-right: 1.5rem;">The future of real estate is cloud-based, global, and technology-driven. SAA is already there.</p>
+
+          <!-- Horizontal Scroll Cards Container with Portal Edges -->
+          <div style="position: relative;">
+            <!-- 3D Curved Portal Edges - raised bars that cards slide under -->
+            <!-- Left curved bar -->
+            <div style="position: absolute; left: 0; z-index: 20; pointer-events: none; top: -40px; bottom: -40px; width: 12px; border-radius: 0 12px 12px 0; background: linear-gradient(90deg, rgba(30,28,20,0.95) 0%, rgba(40,35,25,0.9) 100%); border-right: 1px solid rgba(255,190,0,0.3); box-shadow: 3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3); transform: perspective(500px) rotateY(-3deg); transform-origin: right center;"></div>
+            <!-- Right curved bar -->
+            <div style="position: absolute; right: 0; z-index: 20; pointer-events: none; top: -40px; bottom: -40px; width: 12px; border-radius: 12px 0 0 12px; background: linear-gradient(270deg, rgba(30,28,20,0.95) 0%, rgba(40,35,25,0.9) 100%); border-left: 1px solid rgba(255,190,0,0.3); box-shadow: -3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3); transform: perspective(500px) rotateY(3deg); transform-origin: left center;"></div>
+
+            <!-- Inner container - clips cards horizontally at inner edge of bars, but allows vertical overflow for glow -->
+            <div style="position: relative; margin-left: 12px; margin-right: 12px; overflow-x: clip; overflow-y: visible;">
+              <!-- Cards track -->
+              <div style="padding-top: 3rem; padding-bottom: 3rem;">
+                <div id="built-future-track" style="display: flex; gap: 24px;">
+                  <!-- Cards are generated by JavaScript -->
+                </div>
               </div>
-              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.05s;">Cloud-first brokerage model</h4>
             </div>
-            <!-- Point 2: AI-powered -->
-            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.15s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public" alt="AI-powered tools and training" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.25) translate(10px, 18px);">
-              </div>
-              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.3s;">AI-powered tools and training</h4>
-            </div>
-            <!-- Point 3: Mobile-first -->
-            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: rgba(17,17,17,0.5); border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.4s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public" alt="Mobile-first workflows" style="width: 100%; height: 100%; object-fit: cover; transform: scale(0.95) translate(3px, 10px);">
-              </div>
-              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.55s;">Mobile-first workflows</h4>
-            </div>
-            <!-- Point 4: Sustainable income -->
-            <div style="flex: 1; position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
-              <div class="future-circle" style="border-radius: 50%; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.5s ease; overflow: hidden; background-color: #111; border: 3px solid #ffd700; opacity: 0; transform: scale(0.5); transition-delay: 1.65s;">
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public" alt="Sustainable income paths beyond transactions" style="width: 100%; height: 100%; object-fit: cover; transform: scale(1.35) translateX(5px);">
-              </div>
-              <h4 class="future-text-h4" style="transition: all 0.5s ease; opacity: 0; transform: translateY(-10px); transition-delay: 1.8s;">Sustainable income paths beyond transactions</h4>
+          </div>
+
+          <!-- 3D Plasma Tube Progress Bar -->
+          <div style="display: flex; justify-content: center; margin-top: 2rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+            <div style="width: 320px; height: 12px; border-radius: 9999px; overflow: hidden; position: relative; background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%); border: 1px solid rgba(245, 245, 240, 0.25); box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);">
+              <div id="built-future-progress" style="height: 100%; border-radius: 9999px; width: 0%; background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%); box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);"></div>
             </div>
           </div>
         </div>
@@ -3654,6 +3993,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
       <div class="tool-modal">
+        <div class="tool-modal-spinner" id="calculator-spinner">
+          <div class="spinner-ring"></div>
+        </div>
         <iframe id="calculator-iframe" src="" title="Commission Calculator" loading="lazy"></iframe>
       </div>
     </div>
@@ -3667,6 +4009,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
       <div class="tool-modal">
+        <div class="tool-modal-spinner" id="revshare-spinner">
+          <div class="spinner-ring"></div>
+        </div>
         <iframe id="revshare-iframe" src="" title="Revenue Share Visualizer" loading="lazy"></iframe>
       </div>
     </div>
@@ -3715,6 +4060,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       const revshareModal = document.getElementById('revshare-modal');
       const calculatorIframe = document.getElementById('calculator-iframe');
       const revshareIframe = document.getElementById('revshare-iframe');
+      const calculatorSpinner = document.getElementById('calculator-spinner');
+      const revshareSpinner = document.getElementById('revshare-spinner');
       const joinForm = document.getElementById('join-form');
       const joinSubmit = document.getElementById('join-submit');
       const joinMessage = document.getElementById('join-message');
@@ -3748,8 +4095,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         setupCounterAnimation();
         setupLogoAnimation();
         setupRevealMaskAnimation();
-        setupWhatYouGetTabs();
+        setupWhatYouGetBlurReveal();
+        setupWhySAAClipReveal();
         setupDeckStack();
+        initGrayscaleDataStream();
+        setupBuiltForFutureScrollAnimation();
       }
 
       function initPlayer() {
@@ -3868,6 +4218,40 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         document.getElementById('revshare-modal-close').addEventListener('click', () => closeModal('revshare'));
         document.getElementById('revshare-modal-backdrop').addEventListener('click', () => closeModal('revshare'));
 
+        // Iframe load handlers - hide spinner and fade in content
+        calculatorIframe.addEventListener('load', () => {
+          if (calculatorIframe.src) {
+            calculatorSpinner.classList.add('hidden');
+            calculatorIframe.classList.add('loaded');
+          }
+        });
+        revshareIframe.addEventListener('load', () => {
+          if (revshareIframe.src) {
+            revshareSpinner.classList.add('hidden');
+            revshareIframe.classList.add('loaded');
+          }
+        });
+
+        // Listen for messages from embedded iframes (height changes, dropdown open, etc.)
+        window.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'setHeight') {
+            // Dynamically set iframe height to match content
+            const iframe = event.data.modal === 'calculator' ? calculatorIframe : revshareIframe;
+            if (iframe && event.data.height) {
+              iframe.style.height = event.data.height + 'px';
+            }
+          }
+          if (event.data && event.data.type === 'scrollToBottom') {
+            // Scroll the modal wrapper to show expanded content
+            const modalWrapper = event.data.modal === 'calculator'
+              ? document.querySelector('#calculator-modal .tool-modal-wrapper')
+              : document.querySelector('#revshare-modal .tool-modal-wrapper');
+            if (modalWrapper) {
+              modalWrapper.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+          }
+        });
+
         // Form submission
         joinForm.addEventListener('submit', handleFormSubmit);
 
@@ -3959,8 +4343,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         // For tool modals, load the iframe src when opening (using actual React pages with embed mode)
         if (type === 'calculator' && calculatorIframe) {
+          // Reset state: show spinner, hide iframe
+          calculatorIframe.classList.remove('loaded');
+          calculatorSpinner.classList.remove('hidden');
           calculatorIframe.src = '/exp-commission-calculator/?embed=true';
         } else if (type === 'revshare' && revshareIframe) {
+          // Reset state: show spinner, hide iframe
+          revshareIframe.classList.remove('loaded');
+          revshareSpinner.classList.remove('hidden');
           revshareIframe.src = '/exp-realty-revenue-share-calculator/?embed=true';
         }
 
@@ -3980,8 +4370,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // Clear iframe src when closing to stop any running scripts
         if (type === 'calculator' && calculatorIframe) {
           calculatorIframe.src = '';
+          calculatorIframe.classList.remove('loaded');
         } else if (type === 'revshare' && revshareIframe) {
           revshareIframe.src = '';
+          revshareIframe.classList.remove('loaded');
         }
       }
 
@@ -4303,218 +4695,599 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         requestAnimationFrame(animate);
       }
 
-      // What You Get Tabbed Interface
-      function setupWhatYouGetTabs() {
-        const tabs = document.querySelectorAll('.wyg-tab');
-        const bgs = document.querySelectorAll('.wyg-bg');
-        const contents = document.querySelectorAll('.wyg-content');
-        const dots = document.querySelectorAll('.wyg-dot');
-
-        if (!tabs.length) return;
-
-        let currentTab = 0;
-        let autoAdvanceTimer = null;
-        let userInteracted = false;
-        const autoAdvanceTimes = [6000, 5000, 4000, 5000, 4000]; // Variable timing per tab
-
-        function setActiveTab(index) {
-          currentTab = index;
-
-          // Update tabs
-          tabs.forEach((tab, i) => {
-            if (i === index) {
-              tab.classList.add('wyg-tab-active');
-            } else {
-              tab.classList.remove('wyg-tab-active');
-            }
-          });
-
-          // Update backgrounds
-          bgs.forEach((bg, i) => {
-            if (i === index) {
-              bg.classList.add('wyg-bg-active');
-            } else {
-              bg.classList.remove('wyg-bg-active');
-            }
-          });
-
-          // Update content
-          contents.forEach((content, i) => {
-            if (i === index) {
-              content.classList.add('wyg-content-active');
-            } else {
-              content.classList.remove('wyg-content-active');
-            }
-          });
-
-          // Update dots
-          dots.forEach((dot, i) => {
-            if (i === index) {
-              dot.classList.add('wyg-dot-active');
-            } else {
-              dot.classList.remove('wyg-dot-active');
-            }
-          });
-
-          // Restart auto-advance if user hasn't interacted
-          if (!userInteracted) {
-            startAutoAdvance();
-          }
-        }
-
-        function startAutoAdvance() {
-          if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-          if (userInteracted) return;
-          autoAdvanceTimer = setTimeout(function() {
-            setActiveTab((currentTab + 1) % tabs.length);
-          }, autoAdvanceTimes[currentTab]);
-        }
-
-        // Tab click handlers
-        tabs.forEach(function(tab) {
-          tab.addEventListener('click', function() {
-            userInteracted = true;
-            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-            const index = parseInt(tab.getAttribute('data-tab'));
-            setActiveTab(index);
-          });
-        });
-
-        // Dot click handlers
-        dots.forEach(function(dot) {
-          dot.addEventListener('click', function() {
-            userInteracted = true;
-            if (autoAdvanceTimer) clearTimeout(autoAdvanceTimer);
-            const index = parseInt(dot.getAttribute('data-dot'));
-            setActiveTab(index);
-          });
-        });
-
-        // Start auto-advance when section is visible
-        const section = document.getElementById('what-you-get-section');
-        if (section) {
-          const observer = new IntersectionObserver(function(entries) {
-            if (entries[0].isIntersecting && !userInteracted) {
-              startAutoAdvance();
-            }
-          }, { threshold: 0.3 });
-          observer.observe(section);
-        }
-      }
-
-      // Deck Stack (WhyOnlyAtExp) Animation
-      function setupDeckStack() {
-        const cards = document.querySelectorAll('.deck-card');
-        const dots = document.querySelectorAll('.deck-dot');
-
+      // What You Get - Blur Reveal Cards
+      function setupWhatYouGetBlurReveal() {
+        const cards = document.querySelectorAll('.wyg-blur-card');
         if (!cards.length) return;
 
-        let currentCard = 0;
-        let autoAdvanceTimer = null;
-        let userInteracted = false;
+        // Create thresholds for smooth animation
+        var thresholds = [];
+        for (var i = 0; i <= 50; i++) {
+          thresholds.push(i / 50);
+        }
 
-        function setActiveCard(index) {
-          currentCard = index;
+        cards.forEach(function(card) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              var p = entry.intersectionRatio;
+              // Blur goes from 12px to 0 as card enters
+              var blur = Math.max(0, 12 * (1 - p));
+              // Opacity goes from 0 to 1
+              var opacity = Math.min(1, p);
+              // TranslateY goes from 30px to 0
+              var translateY = 30 * (1 - p);
 
-          cards.forEach(function(card, i) {
-            const isActive = i === index;
-            const isPast = i < index;
+              card.style.filter = 'blur(' + blur + 'px)';
+              card.style.opacity = opacity;
+              card.style.transform = 'translateY(' + translateY + 'px)';
+            });
+          }, {
+            threshold: thresholds,
+            rootMargin: '-5% 0px -5% 0px'
+          });
+          observer.observe(card);
+        });
+      }
 
-            let translateY = 0;
-            let translateX = 0;
-            let rotation = 0;
-            let scale = 1;
-            let opacity = 1;
-            let zIndex = 10;
+      // Why SAA - Expand Reveal Animation (cards open from edges with rounded corners)
+      function setupWhySAAClipReveal() {
+        var elements = document.querySelectorAll('.expand-reveal-element');
+        if (!elements.length) return;
 
-            if (isActive) {
-              translateY = 0;
-              rotation = 0;
-              scale = 1;
-              opacity = 1;
-              zIndex = 10;
-            } else if (isPast) {
-              translateY = (index - i) * -15;
-              translateX = (index - i) * -20;
-              rotation = (index - i) * -5;
-              scale = 1 - (index - i) * 0.05;
-              opacity = 0.3;
-              zIndex = 10 - (index - i);
+        // Easing function for smooth deceleration (easeOutQuart)
+        function easeOutQuart(t) {
+          return 1 - Math.pow(1 - t, 4);
+        }
+
+        function updateProgress() {
+          elements.forEach(function(el) {
+            var expandId = el.getAttribute('data-expand-id');
+            var expandDir = el.getAttribute('data-expand-dir');
+            var frameEl = document.getElementById(expandId + '-frame');
+            var contentEl = document.getElementById(expandId + '-content');
+
+            var rect = el.getBoundingClientRect();
+            var windowHeight = window.innerHeight;
+
+            // Start animation when element top enters viewport
+            // End animation after 400px of scroll
+            var scrollDistance = 400;
+            var elementTop = rect.top;
+            var startPoint = windowHeight;
+            var distanceScrolled = startPoint - elementTop;
+
+            // Clamp between 0 and 1
+            var rawProgress = Math.max(0, Math.min(1, distanceScrolled / scrollDistance));
+            var p = easeOutQuart(rawProgress);
+            var clipPercent = 100 - (p * 100); // 100% to 0% as progress goes 0 to 1
+
+            if (expandDir === 'left' && frameEl) {
+              // Expand from left using clip-path
+              frameEl.style.clipPath = 'inset(0 ' + clipPercent + '% 0 0 round 16px)';
+              if (contentEl) {
+                contentEl.style.opacity = Math.min(1, p * 1.5);
+              }
+            } else if (expandDir === 'right' && frameEl) {
+              // Expand from right using clip-path
+              frameEl.style.clipPath = 'inset(0 0 0 ' + clipPercent + '% round 16px)';
             } else {
-              translateY = (i - index) * 6;
-              rotation = 0;
-              scale = 1 - (i - index) * 0.02;
-              opacity = 1 - (i - index) * 0.2;
-              zIndex = 10 - (i - index);
+              // Default: fade up (for disclaimer)
+              el.style.opacity = Math.min(1, p * 1.5);
+              el.style.transform = 'translateY(' + ((1 - p) * 20) + 'px)';
+            }
+          });
+        }
+
+        // Initial calculation
+        updateProgress();
+
+        // Update on scroll
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        window.addEventListener('resize', updateProgress, { passive: true });
+      }
+
+      // WhyOnlyAtExp - Scroll-Triggered 3D Card Stack Animation (GSAP)
+      function setupWhyOnlyScrollAnimation() {
+        // Register GSAP plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        const triggerEl = document.getElementById('why-only-trigger');
+        const contentEl = document.getElementById('why-only-content');
+        const progressFill = document.getElementById('why-only-progress-fill');
+        const cards = [
+          document.getElementById('why-only-card-0'),
+          document.getElementById('why-only-card-1'),
+          document.getElementById('why-only-card-2')
+        ];
+
+        if (!triggerEl || !contentEl || cards.some(c => !c)) return;
+
+        const totalCards = cards.length;
+
+        // State for magnetic snap effect
+        let rawProgress = 0;
+        let displayProgress = 0;
+        let lastRaw = 0;
+        let velocity = 0;
+        let rafId = null;
+
+        // Grace period: 10% at start and 10% at end of scroll range
+        const GRACE = 0.1;
+        const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
+
+        // Update card transforms based on progress
+        function updateCards(progress) {
+          cards.forEach(function(card, index) {
+            const isLastCard = index === totalCards - 1;
+            // Scale so 3rd card (index 2) reaches position 0 when progress = 1
+            const globalCardPosition = progress * (totalCards - 1) - index;
+
+            let rotateX = 0, translateZ = 0, translateY = 0, opacity = 1, scale = 1;
+
+            if (isLastCard) {
+              // Last card: slides up into position, no flip
+              if (globalCardPosition >= 0) {
+                rotateX = 0;
+                opacity = 1;
+                scale = 1;
+                translateZ = 0;
+                translateY = 0;
+              } else {
+                const stackPosition = -globalCardPosition;
+                translateZ = -30 * stackPosition;
+                translateY = 20 * stackPosition;
+                opacity = Math.max(0.4, 1 - stackPosition * 0.15);
+                scale = Math.max(0.88, 1 - stackPosition * 0.04);
+              }
+            } else if (globalCardPosition >= 1) {
+              rotateX = -90;
+              opacity = 0;
+              scale = 0.9;
+            } else if (globalCardPosition >= 0) {
+              rotateX = -globalCardPosition * 90;
+              opacity = globalCardPosition > 0.7 ? 1 - ((globalCardPosition - 0.7) / 0.3) : 1;
+              scale = 1 - globalCardPosition * 0.1;
+            } else {
+              const stackPosition = -globalCardPosition;
+              translateZ = -30 * stackPosition;
+              translateY = 20 * stackPosition;
+              opacity = Math.max(0.4, 1 - stackPosition * 0.15);
+              scale = Math.max(0.88, 1 - stackPosition * 0.04);
             }
 
-            card.style.transform = 'translateY(' + translateY + 'px) translateX(' + translateX + 'px) rotate(' + rotation + 'deg) scale(' + scale + ')';
+            card.style.transform = 'perspective(1200px) rotateX(' + rotateX + 'deg) translateZ(' + translateZ + 'px) translateY(' + translateY + 'px) scale(' + scale + ')';
             card.style.opacity = opacity;
-            card.style.zIndex = zIndex;
-
-            if (isActive) {
-              card.classList.add('deck-card-active');
-            } else {
-              card.classList.remove('deck-card-active');
-            }
+            card.style.zIndex = totalCards - index;
           });
 
-          // Update dots
-          dots.forEach(function(dot, i) {
-            if (i === index) {
-              dot.classList.add('deck-dot-active');
-            } else {
-              dot.classList.remove('deck-dot-active');
-            }
-          });
-
-          // Restart auto-advance if user hasn't interacted
-          if (!userInteracted) {
-            startAutoAdvance();
+          // Update progress bar
+          if (progressFill) {
+            progressFill.style.width = (progress * 100) + '%';
           }
         }
 
-        function startAutoAdvance() {
-          if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
-          if (userInteracted) return;
-          autoAdvanceTimer = setInterval(function() {
-            setActiveCard((currentCard + 1) % cards.length);
-          }, 5000);
+        // Velocity-based magnetic snap animation loop
+        function animateMagnetic() {
+          const raw = rawProgress;
+          const currentDisplay = displayProgress;
+
+          // Calculate velocity (change since last frame)
+          const instantVelocity = Math.abs(raw - lastRaw);
+          // Smooth velocity with decay
+          velocity = velocity * 0.9 + instantVelocity * 0.1;
+          lastRaw = raw;
+
+          // Card positions are at 0, 0.5, 1 (for 3 cards)
+          const cardStep = 1 / (totalCards - 1);
+          const nearestCardIndex = Math.round(raw / cardStep);
+          const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
+
+          // When velocity is high, follow raw position
+          // When velocity is low, snap to nearest card
+          const velocityFactor = Math.min(1, velocity * 100); // 0 = stopped, 1 = scrolling fast
+
+          // Blend between snap target (when stopped) and raw position (when scrolling)
+          const targetProgress = nearestCardProgress * (1 - velocityFactor) + raw * velocityFactor;
+
+          // Smooth interpolation toward target
+          const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
+
+          // Always update to keep smooth animation
+          if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+            displayProgress = newProgress;
+            updateCards(newProgress);
+          }
+
+          rafId = requestAnimationFrame(animateMagnetic);
         }
 
-        // Card click handlers
-        cards.forEach(function(card) {
-          card.addEventListener('click', function() {
-            userInteracted = true;
-            if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
-            setActiveCard((currentCard + 1) % cards.length);
-          });
+        // Start the magnetic animation loop
+        rafId = requestAnimationFrame(animateMagnetic);
+
+        // Create GSAP timeline for content drift
+        const tl = gsap.timeline();
+        tl.to(contentEl, {
+          y: -60, // Drift upward by 60px total (from +30 to -30)
+          duration: 1,
+          ease: 'none',
         });
 
-        // Dot click handlers
-        dots.forEach(function(dot) {
-          dot.addEventListener('click', function(e) {
-            e.stopPropagation();
-            userInteracted = true;
-            if (autoAdvanceTimer) clearInterval(autoAdvanceTimer);
-            const index = parseInt(dot.getAttribute('data-dot'));
-            setActiveCard(index);
-          });
-        });
+        // Create ScrollTrigger for pinning and progress tracking
+        ScrollTrigger.create({
+          trigger: triggerEl,
+          start: 'center center',
+          end: '+=200%', // Extended for more buffer between card flips
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.5,
+          animation: tl,
+          onUpdate: function(self) {
+            // Map scroll progress to card progress with grace periods
+            let cardProgress = 0;
 
-        // Initialize card positions
-        setActiveCard(0);
-
-        // Start auto-advance when section is visible
-        const section = document.getElementById('why-exp-section');
-        if (section) {
-          const observer = new IntersectionObserver(function(entries) {
-            if (entries[0].isIntersecting && !userInteracted) {
-              startAutoAdvance();
+            if (self.progress <= GRACE) {
+              cardProgress = 0;
+            } else if (self.progress >= 1 - GRACE) {
+              cardProgress = 1;
+            } else {
+              cardProgress = (self.progress - GRACE) / CONTENT_RANGE;
             }
-          }, { threshold: 0.15 });
-          observer.observe(section);
+
+            // Update raw progress - magnetic loop will interpolate
+            rawProgress = cardProgress;
+          },
+        });
+
+        // Initialize cards at position 0
+        updateCards(0);
+      }
+
+      // ========================================
+      // Built For Future - Horizontal Scroll Cards
+      // ========================================
+
+      // ========================================
+      // Built For Future - Horizontal Scroll Cards (matches homepage exactly)
+      // ========================================
+
+      // ========================================
+      // GrayscaleDataStream - Digital Rain Background
+      // Exact copy from BuiltForFuture.tsx GrayscaleDataStream component
+      // ========================================
+      function initGrayscaleDataStream() {
+        var container = document.getElementById('grayscale-data-stream');
+        if (!container) {
+          console.log('[GrayscaleDataStream] Container not found');
+          return;
         }
+
+        // Get the section to ensure proper dimensions
+        var section = document.getElementById('built-for-future');
+        if (!section) {
+          console.log('[GrayscaleDataStream] Section not found');
+          return;
+        }
+
+        // Set container to fill the section
+        container.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 0;';
+
+        var isMobile = window.innerWidth < 768;
+        var columnCount = isMobile ? 8 : 20;
+        var numChars = 22;
+        var timeRef = 0;
+        var scrollSpeedRef = 1;
+        var lastScrollY = 0;
+        var BASE_SPEED = 0.00028;
+        var lastTimestamp = 0;
+
+        // Scroll speed boost handler
+        window.addEventListener('scroll', function() {
+          var currentY = window.scrollY;
+          var scrollDelta = Math.abs(currentY - lastScrollY);
+          lastScrollY = currentY;
+          scrollSpeedRef = 1 + Math.min(scrollDelta * 0.05, 3);
+        }, { passive: true });
+
+        // getChar function
+        function getChar(colIndex, charIndex, time) {
+          var flipRate = 0.6 + (colIndex % 3) * 0.3;
+          var charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
+          return charSeed % 2 === 0 ? '0' : '1';
+        }
+
+        // Create columns with characters
+        for (var i = 0; i < columnCount; i++) {
+          var colX = (i / columnCount) * 100;
+          var colWidth = 100 / columnCount;
+          var speed = 0.8 + (i % 4) * 0.4;
+          var offset = (i * 17) % 100;
+
+          var colDiv = document.createElement('div');
+          colDiv.style.cssText = 'position: absolute; left: ' + colX + '%; top: 0; width: ' + colWidth + '%; height: 100%; overflow: hidden; font-family: monospace; font-size: 14px; line-height: 1.4;';
+          colDiv.setAttribute('data-col', i);
+          colDiv.setAttribute('data-speed', speed);
+          colDiv.setAttribute('data-offset', offset);
+
+          for (var j = 0; j < numChars; j++) {
+            var charDiv = document.createElement('div');
+            charDiv.style.cssText = 'position: absolute; left: 0;';
+            charDiv.setAttribute('data-char', j);
+            charDiv.textContent = getChar(i, j, 0);
+            colDiv.appendChild(charDiv);
+          }
+
+          container.appendChild(colDiv);
+        }
+
+        // Animation loop
+        function animate(timestamp) {
+          var deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+          lastTimestamp = timestamp;
+          timeRef += BASE_SPEED * deltaTime * scrollSpeedRef;
+          scrollSpeedRef = Math.max(1, scrollSpeedRef * 0.95);
+
+          var columns = container.querySelectorAll('[data-col]');
+          for (var c = 0; c < columns.length; c++) {
+            var colDiv = columns[c];
+            var colIndex = parseInt(colDiv.getAttribute('data-col'));
+            var speed = parseFloat(colDiv.getAttribute('data-speed'));
+            var offset = parseFloat(colDiv.getAttribute('data-offset'));
+            var columnOffset = (timeRef * speed * 60 + offset) % 110;
+            var headPosition = (columnOffset / 5) % numChars;
+
+            var chars = colDiv.querySelectorAll('[data-char]');
+            for (var k = 0; k < chars.length; k++) {
+              var charDiv = chars[k];
+              var charIndex = parseInt(charDiv.getAttribute('data-char'));
+              var baseY = charIndex * 5;
+              var charY = (baseY + columnOffset) % 110 - 10;
+              var distanceFromHead = (charIndex - headPosition + numChars) % numChars;
+              var isHead = distanceFromHead === 0;
+              var trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
+              var edgeFade = charY < 12 ? Math.max(0, charY / 12) : charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
+
+              charDiv.style.top = charY + '%';
+              charDiv.style.color = isHead ? 'rgba(180,180,180,' + (0.4 * edgeFade) + ')' : 'rgba(120,120,120,' + (trailBrightness * 0.25 * edgeFade) + ')';
+              charDiv.style.textShadow = isHead ? '0 0 6px rgba(150,150,150,' + (0.3 * edgeFade) + ')' : '0 0 2px rgba(100,100,100,' + (0.1 * edgeFade) + ')';
+              charDiv.style.opacity = edgeFade;
+              charDiv.textContent = getChar(colIndex, charIndex, timeRef);
+            }
+          }
+
+          requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+        console.log('[GrayscaleDataStream] Initialized with ' + columnCount + ' columns');
+      }
+
+      // ========================================
+      // Built For Future - Horizontal Scroll Cards
+      // Exact copy from BuiltForFuture.tsx BuiltForFuture component
+      // ========================================
+      function setupBuiltForFutureScrollAnimation() {
+        var trigger = document.getElementById('built-future-trigger');
+        var content = document.getElementById('built-future-content');
+        var track = document.getElementById('built-future-track');
+        var progressBar = document.getElementById('built-future-progress');
+
+        if (!trigger || !content || !track) {
+          console.log('[BuiltForFuture] Elements not found, skipping');
+          return;
+        }
+
+        var BRAND_YELLOW = '#ffd700';
+
+        // FUTURE_POINTS - exact from React
+        var FUTURE_POINTS = [
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public', text: 'Cloud-First Brokerage Model', imgClass: 'w-full h-full object-contain', imgStyle: '', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public', text: 'AI-Powered Tools and Training', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.25) translate(10px, 18px);', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public', text: 'Mobile-First Workflows', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(0.95) translate(3px, 10px);', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-borderless/public', text: 'Borderless Business', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.15) translate(-1px, -1px);', bgColor: 'rgba(17,17,17,0.5)' },
+          { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public', text: 'Sustainable Income Beyond Sales', imgClass: 'w-full h-full object-cover', imgStyle: 'transform: scale(1.35) translateX(5px);', bgColor: '#111' }
+        ];
+
+        var totalCards = FUTURE_POINTS.length;
+
+        // Responsive - exact from React
+        var isMobile = window.innerWidth < 640;
+        var CARD_WIDTH = isMobile ? 280 : 560;
+        var CARD_GAP = isMobile ? 16 : 24;
+
+        // Grace periods - exact from React
+        var GRACE = 0.1;
+        var CONTENT_RANGE = 1 - (GRACE * 2);
+
+        // Magnetic snap state - exact from React refs
+        var rawPositionRef = 0;
+        var displayPositionRef = 0;
+        var lastRawRef = 0;
+        var velocityRef = 0;
+
+        // Create looped cards array - exact from React
+        var loopedCards = FUTURE_POINTS.slice(-2).concat(FUTURE_POINTS).concat(FUTURE_POINTS.slice(0, 2));
+
+        // Active/inactive backgrounds - exact from React
+        var activeBackground = 'radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%), radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%), radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)';
+        var inactiveBackground = 'linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))';
+
+        // Set track gap
+        track.style.gap = CARD_GAP + 'px';
+
+        // Generate cards HTML - using inline styles (not Tailwind classes since this is vanilla HTML)
+        loopedCards.forEach(function(point, loopIndex) {
+          var wrapper = document.createElement('div');
+          wrapper.style.cssText = 'flex-shrink: 0; width: ' + CARD_WIDTH + 'px; transition: transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out;';
+          wrapper.dataset.loopIndex = loopIndex;
+
+          var card = document.createElement('div');
+          card.style.cssText = 'padding: 2rem; border-radius: 1rem; min-height: 380px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;';
+          card.dataset.card = 'true';
+
+          var imgContainer = document.createElement('div');
+          var imgSize = isMobile ? '180px' : '200px';
+          imgContainer.style.cssText = 'width: ' + imgSize + '; height: ' + imgSize + '; border-radius: 50%; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; z-index: 10; transition: background-color 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;';
+          imgContainer.setAttribute('data-img-container', 'true');
+
+          var img = document.createElement('img');
+          img.src = point.image;
+          img.alt = point.text;
+          img.style.cssText = 'width: 100%; height: 100%; object-fit: ' + (point.imgClass.includes('object-contain') ? 'contain' : 'cover') + ';';
+          if (point.imgStyle) {
+            img.style.cssText += point.imgStyle;
+          }
+
+          var title = document.createElement('h3');
+          title.style.cssText = 'font-family: var(--font-amulya), sans-serif; font-weight: bold; font-size: clamp(22px, calc(20.82px + 0.47vw), 35px); text-align: center; position: relative; z-index: 10; transition: color 0.2s ease-out;';
+          title.textContent = point.text;
+          title.dataset.title = 'true';
+
+          imgContainer.appendChild(img);
+          card.appendChild(imgContainer);
+          card.appendChild(title);
+          wrapper.appendChild(card);
+          track.appendChild(wrapper);
+        });
+
+        var wrappers = track.querySelectorAll('[data-loop-index]');
+
+        // updateCards function - renders card states based on scroll position
+        function updateCards(scrollPosition) {
+          var progress = scrollPosition / (totalCards - 1);
+          if (progressBar) {
+            progressBar.style.width = (progress * 100) + '%';
+          }
+
+          // Track transform - exact formula from React
+          var offset = (scrollPosition + 2) * (CARD_WIDTH + CARD_GAP);
+          track.style.transform = 'translateX(calc(50vw - ' + (CARD_WIDTH / 2) + 'px - 12px - ' + offset + 'px))';
+
+          wrappers.forEach(function(wrapper) {
+            var loopIndex = parseInt(wrapper.dataset.loopIndex);
+            var card = wrapper.querySelector('[data-card]');
+            var imgContainer = wrapper.querySelector('[data-img-container]');
+            var title = wrapper.querySelector('[data-title]');
+
+            var actualIndex = loopIndex - 2;
+            var distance = Math.abs(scrollPosition - actualIndex);
+            var isActive = distance < 0.5;
+
+            // Scale - exact from React
+            var scale = Math.max(0.85, 1 - distance * 0.1);
+
+            // Blur - exact from React
+            var blurAmount = Math.min(5, distance * 10);
+
+            // Blackout for looped cards - exact from React
+            var blackoutOpacity = 0;
+            if (actualIndex < 0) {
+              blackoutOpacity = Math.max(0, 1 - scrollPosition);
+            } else if (actualIndex > totalCards - 1) {
+              blackoutOpacity = Math.max(0, (scrollPosition - (totalCards - 2)) / 1);
+            }
+
+            // Apply wrapper styles - exact from React
+            wrapper.style.transform = 'scale(' + scale + ')';
+            wrapper.style.filter = 'blur(' + (blurAmount + blackoutOpacity * 4) + 'px) grayscale(' + (blackoutOpacity * 100) + '%) brightness(' + (1 - blackoutOpacity * 0.6) + ')';
+            wrapper.style.opacity = 1 - blackoutOpacity * 0.4;
+
+            // Card styles - exact from React
+            card.style.background = isActive ? activeBackground : inactiveBackground;
+            card.style.border = isActive ? '2px solid rgba(180,150,50,0.5)' : '2px solid ' + BRAND_YELLOW + '22';
+            card.style.boxShadow = isActive ? '0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)' : 'none';
+
+            // Image container styles - exact from React
+            if (imgContainer) {
+              imgContainer.style.backgroundColor = isActive ? 'rgba(20,18,12,0.85)' : loopedCards[loopIndex].bgColor;
+              imgContainer.style.border = isActive ? '3px solid rgba(40,35,20,0.8)' : '3px solid ' + BRAND_YELLOW;
+              imgContainer.style.boxShadow = isActive ? '0 0 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)' : 'none';
+            }
+
+            // Title color - exact from React
+            if (title) {
+              title.style.color = isActive ? '#2a2a2a' : '#e5e4dd';
+            }
+          });
+        }
+
+        // Magnetic animation loop - exact from React useLayoutEffect
+        function animateMagnetic() {
+          var raw = rawPositionRef;
+          var lastRaw = lastRawRef;
+          var currentDisplay = displayPositionRef;
+
+          var instantVelocity = Math.abs(raw - lastRaw);
+          velocityRef = velocityRef * 0.9 + instantVelocity * 0.1;
+          lastRawRef = raw;
+
+          var nearestCard = Math.round(raw);
+          var clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
+
+          var velocityFactor = Math.min(1, velocityRef * 50);
+          var targetPosition = clampedTarget * (1 - velocityFactor) + raw * velocityFactor;
+          var newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.15;
+
+          if (Math.abs(newPosition - currentDisplay) > 0.001) {
+            displayPositionRef = newPosition;
+            updateCards(newPosition);
+          }
+
+          requestAnimationFrame(animateMagnetic);
+        }
+
+        requestAnimationFrame(animateMagnetic);
+
+        // GSAP ScrollTrigger - exact from React
+        gsap.registerPlugin(ScrollTrigger);
+
+        ScrollTrigger.create({
+          trigger: trigger,
+          start: 'center center',
+          end: '+=300%',
+          pin: true,
+          pinSpacing: true,
+          scrub: 0.5,
+          onUpdate: function(self) {
+            var cardPosition = 0;
+
+            if (self.progress <= GRACE) {
+              cardPosition = 0;
+            } else if (self.progress >= 1 - GRACE) {
+              cardPosition = totalCards - 1;
+            } else {
+              var contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
+              cardPosition = contentProgress * (totalCards - 1);
+            }
+
+            rawPositionRef = cardPosition;
+          }
+        });
+
+        // Y drift animation - exact from React
+        gsap.to(content, {
+          y: -60,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: trigger,
+            start: 'center center',
+            end: '+=300%',
+            scrub: 2.5
+          }
+        });
+
+        // Initialize at position 0
+        updateCards(0);
+
+        // Force immediate visual update to ensure cards display correctly
+        var initialOffset = 2 * (CARD_WIDTH + CARD_GAP);
+        track.style.transform = 'translateX(calc(50vw - ' + (CARD_WIDTH / 2) + 'px - 12px - ' + initialOffset + 'px))';
+
+        console.log('[BuiltForFuture] Initialized with ' + loopedCards.length + ' looped cards');
+        console.log('[BuiltForFuture] CARD_WIDTH=' + CARD_WIDTH + ', CARD_GAP=' + CARD_GAP + ', initialOffset=' + initialOffset);
+      }
+      // Keep old function name for backwards compatibility
+      function setupDeckStack() {
+        setupWhyOnlyScrollAnimation();
       }
 
       // Check for previously submitted user
@@ -4552,21 +5325,100 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       // Make toggleFaq available globally
       window.toggleFaq = toggleFaq;
 
+      // Lenis Smooth Scroll initialization
+      function initLenisSmoothScroll() {
+        // Skip if Lenis not available
+        if (typeof Lenis === 'undefined') {
+          console.log('[SmoothScroll] Lenis not loaded, skipping');
+          return;
+        }
+
+        // Detect touch-PRIMARY devices (phones/tablets) - NOT laptops with touchscreens
+        function checkTouchPrimaryDevice() {
+          // Check if primary pointer is coarse (finger) rather than fine (mouse)
+          if (window.matchMedia('(pointer: coarse)').matches) {
+            return true;
+          }
+          // Fallback: narrow screen + touch = likely mobile
+          var hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+          var isNarrowScreen = window.innerWidth < 768;
+          return hasTouch && isNarrowScreen;
+        }
+
+        // Disable browser's automatic scroll restoration
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+
+        // Skip Lenis on touch-primary devices - use native scroll
+        if (checkTouchPrimaryDevice()) {
+          console.log('[SmoothScroll] Skipping Lenis - touch-primary device detected');
+          return;
+        }
+
+        console.log('[SmoothScroll] Initializing Lenis for desktop');
+
+        // Defer Lenis initialization to avoid blocking main thread
+        function initLenis() {
+          // Initialize Lenis with default settings
+          var lenis = new Lenis({
+            duration: 1.2,
+            easing: function(t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+            orientation: 'vertical',
+            gestureOrientation: 'vertical',
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 1,
+            infinite: false,
+            lerp: 0.1,
+          });
+
+          // Stop current scroll animation on any click
+          function handleClick() {
+            if (lenis.isScrolling) {
+              lenis.stop();
+              lenis.start();
+            }
+          }
+
+          window.addEventListener('pointerdown', handleClick, { capture: true, passive: true });
+
+          // Animation frame loop for Lenis
+          var rafId = null;
+          function raf(time) {
+            lenis.raf(time);
+            rafId = requestAnimationFrame(raf);
+          }
+
+          rafId = requestAnimationFrame(raf);
+          console.log('[SmoothScroll] Lenis initialized and running');
+        }
+
+        // Use requestIdleCallback to defer initialization
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(initLenis, { timeout: 1000 });
+        } else {
+          setTimeout(initLenis, 50);
+        }
+      }
+
       // Wait for DOM and Stream SDK
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
+          initLenisSmoothScroll();
           init();
           checkPreviousSubmission();
           initStarField();
-          initDataStream();
-          initBuiltForFutureAnimations();
+          // initDataStream(); // Old circles version replaced
+          // initBuiltForFutureAnimations(); // Old circles version replaced
         });
       } else {
+        initLenisSmoothScroll();
         init();
         checkPreviousSubmission();
         initStarField();
-        initDataStream();
-        initBuiltForFutureAnimations();
+        // initDataStream(); // Old circles version replaced
+        // initBuiltForFutureAnimations(); // Old circles version replaced
       }
 
       // Star Field Animation - Canvas-based, matches linktree template exactly
