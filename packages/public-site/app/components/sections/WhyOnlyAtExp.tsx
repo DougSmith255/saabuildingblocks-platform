@@ -1,13 +1,24 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
-import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 /**
  * "Why This Only Works at eXp Realty" Section
- * Deck Stack with Auto-Rotation + Circuit Board Background
+ * 3D Rotating Card Stack with Scroll-Based Animation
+ *
+ * Structure:
+ * - sectionRef: outer section element
+ * - triggerRef: invisible wrapper that gets pinned (no styling)
+ * - contentRef: glass panel + content that animates upward together
  */
 
 // Content
@@ -30,8 +41,26 @@ const ENTREPRENEURIAL_SPONSOR_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpk
 const ENTREPRENEURIAL_SPONSOR_ALT = 'eXp Realty sponsor delivering entrepreneurial systems to real estate agents';
 const ENTREPRENEURIAL_SPONSOR_TITLE = 'eXp Realty Entrepreneurial Sponsor Systems';
 
+// Marigold Glass Panel styles (inlined from GlassPanel component)
+const GLASS_STYLES: React.CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(255,190,0,0.032) 0%, rgba(255,190,0,0.04) 50%, rgba(255,190,0,0.032) 100%)',
+  boxShadow: `
+    0 8px 32px rgba(0,0,0,0.4),
+    0 4px 12px rgba(0,0,0,0.25),
+    inset 0 1px 0 0 rgba(255,255,255,0.35),
+    inset 0 2px 4px 0 rgba(255,255,255,0.2),
+    inset 0 8px 20px -8px rgba(255,190,0,0.3),
+    inset 0 20px 40px -20px rgba(255,255,255,0.15),
+    inset 0 -1px 0 0 rgba(0,0,0,0.7),
+    inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+    inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+    inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+  `,
+  backdropFilter: 'blur(2px)',
+};
+
 // 3D Number Component
-function Number3D({ num, size = 'medium', dark = false }: { num: number; size?: 'small' | 'medium' | 'large'; dark?: boolean }) {
+function Number3D({ num, size = 'medium', dark = false, highlight = false }: { num: number; size?: 'small' | 'medium' | 'large'; dark?: boolean; highlight?: boolean }) {
   const sizeStyles = {
     small: { minWidth: '40px', height: '40px', fontSize: '24px' },
     medium: { minWidth: '56px', height: '56px', fontSize: '32px' },
@@ -40,15 +69,19 @@ function Number3D({ num, size = 'medium', dark = false }: { num: number; size?: 
 
   const style = sizeStyles[size];
 
+  // Highlight version uses lighter gray for contrast - brighter than the gray circle background
+  const highlightColor = '#9a9a9a';
+  const highlightFilter = 'drop-shadow(-1px -1px 0 #ccc) drop-shadow(1px 1px 0 #666) drop-shadow(2px 2px 0 #444) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5))';
+
   return (
     <span
       className="inline-flex items-center justify-center font-bold"
       style={{
         ...style,
-        color: dark ? '#111' : '#c4a94d',
+        color: dark ? '#111' : (highlight ? highlightColor : '#c4a94d'),
         filter: dark
           ? 'none'
-          : 'drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))',
+          : (highlight ? highlightFilter : 'drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))'),
         transform: dark ? 'none' : 'perspective(500px) rotateX(8deg)',
       }}
     >
@@ -57,270 +90,330 @@ function Number3D({ num, size = 'medium', dark = false }: { num: number; size?: 
   );
 }
 
-// Circuit Board Background
-function CircuitBoardBackground() {
-  return (
-    <div className="absolute inset-0 overflow-hidden" style={{ opacity: 0.6 }}>
-      <svg
-        viewBox="0 0 400 500"
-        preserveAspectRatio="xMidYMid slice"
-        className="w-full h-full"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <filter id="circuit-glow-why" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <filter id="pulse-glow-why" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
-
-        {/* Circuit traces */}
-        <g className="circuit-traces" stroke="rgba(212, 175, 55, 0.25)" strokeWidth="1.5" fill="none">
-          <path d="M200 0 L200 100 L150 150 L150 250 L200 300 L200 500" />
-          <path d="M200 100 L100 100 L100 200 L50 250 L50 350" />
-          <path d="M100 200 L60 200 L60 280" />
-          <path d="M150 250 L80 250 L80 380 L120 420" />
-          <path d="M200 100 L300 100 L300 180 L350 230 L350 350" />
-          <path d="M300 180 L340 180 L340 300" />
-          <path d="M200 300 L280 300 L280 400 L320 450" />
-          <path d="M50 350 L150 350 L200 400 L350 400" />
-          <path d="M80 450 L200 450 L280 450" />
-        </g>
-
-        {/* Traveling pulses */}
-        <g filter="url(#pulse-glow-why)">
-          <circle r="3" fill="#FFD700" opacity="0.9">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M200 0 L200 100 L150 150 L150 250 L200 300 L200 500" />
-          </circle>
-          <circle r="2.5" fill="#FFD700" opacity="0.9">
-            <animateMotion dur="5s" repeatCount="indefinite" path="M200 100 L100 100 L100 200 L50 250 L50 350" begin="0.5s" />
-          </circle>
-          <circle r="2.5" fill="#FFD700" opacity="0.9">
-            <animateMotion dur="5s" repeatCount="indefinite" path="M200 100 L300 100 L300 180 L350 230 L350 350" begin="1s" />
-          </circle>
-          <circle r="2" fill="#FFD700" opacity="0.9">
-            <animateMotion dur="6s" repeatCount="indefinite" path="M50 350 L150 350 L200 400 L350 400" begin="2s" />
-          </circle>
-          <circle r="2" fill="#FFD700" opacity="0.9">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M150 250 L80 250 L80 380 L120 420" begin="1.5s" />
-          </circle>
-          <circle r="2" fill="#FFD700" opacity="0.9">
-            <animateMotion dur="4s" repeatCount="indefinite" path="M200 300 L280 300 L280 400 L320 450" begin="3s" />
-          </circle>
-        </g>
-      </svg>
-    </div>
-  );
-}
-
 export function WhyOnlyAtExp() {
-  const [activeCard, setActiveCard] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const hasStartedRef = useRef(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const cardStackRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
-  const startTimer = useCallback(() => {
-    if (userInteracted) return; // Stop auto-advance after user clicks
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setActiveCard(prev => (prev + 1) % 3);
-    }, 5000);
-  }, [userInteracted]);
+  // Refs for magnetic effect
+  const rawProgressRef = useRef(0);
+  const displayProgressRef = useRef(0);
+  const lastRawRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number>(0);
 
-  // Only start timer when section becomes visible
+  const totalCards = STEPS.length;
+
+  // Detect mobile screen size
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasStartedRef.current) {
-          hasStartedRef.current = true;
-          setIsVisible(true);
-          startTimer();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(section);
-    return () => {
-      observer.disconnect();
-      if (timerRef.current) clearInterval(timerRef.current);
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const isMobileView = window.innerWidth < 768;
+
+    // Grace period: 10% at start and 10% at end of scroll range
+    const GRACE = 0.1;
+    const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
+
+    // Velocity-based magnetic snap
+    const animateMagnetic = () => {
+      const raw = rawProgressRef.current;
+      const lastRaw = lastRawRef.current;
+      const currentDisplay = displayProgressRef.current;
+
+      // Calculate velocity (change since last frame)
+      const instantVelocity = Math.abs(raw - lastRaw);
+      // Smooth velocity with decay
+      velocityRef.current = velocityRef.current * 0.9 + instantVelocity * 0.1;
+      lastRawRef.current = raw;
+
+      // Card positions are at 0, 0.5, 1 (for 3 cards)
+      const cardStep = 1 / (totalCards - 1);
+      const nearestCardIndex = Math.round(raw / cardStep);
+      const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
+
+      // When velocity is high, follow raw position
+      // When velocity is low, snap to nearest card
+      const velocityFactor = Math.min(1, velocityRef.current * 100); // 0 = stopped, 1 = scrolling fast
+
+      // Blend between snap target (when stopped) and raw position (when scrolling)
+      const targetProgress = nearestCardProgress * (1 - velocityFactor) + raw * velocityFactor;
+
+      // Smooth interpolation toward target
+      const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
+
+      // Always update to keep smooth animation
+      if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+        displayProgressRef.current = newProgress;
+        setProgress(newProgress);
+      }
+
+      rafRef.current = requestAnimationFrame(animateMagnetic);
     };
-  }, [startTimer]);
 
-  const handleCardClick = () => {
-    setUserInteracted(true); // Permanently disable auto-advance
-    if (timerRef.current) clearInterval(timerRef.current);
-    setActiveCard(prev => (prev + 1) % 3);
-  };
+    rafRef.current = requestAnimationFrame(animateMagnetic);
 
-  const handleDotClick = (index: number) => {
-    setUserInteracted(true); // Permanently disable auto-advance
-    if (timerRef.current) clearInterval(timerRef.current);
-    setActiveCard(index);
-  };
+    const ctx = gsap.context(() => {
+      // Timeline animates the glass+content together (desktop only)
+      const tl = gsap.timeline();
+
+      if (!isMobileView) {
+        tl.to(contentRef.current, {
+          y: -60, // Drift upward by 60px total (from +30 to -30)
+          duration: 1,
+          ease: 'none',
+        });
+      }
+
+      // Pin when the CARD STACK reaches center of screen
+      // On mobile: trigger based on card stack position, pin the card stack area
+      // On desktop: same trigger, pin the wrapper
+      ScrollTrigger.create({
+        trigger: cardStackRef.current,
+        start: 'center center',
+        end: isMobileView ? '+=150%' : '+=200%', // Shorter scroll distance on mobile
+        pin: triggerRef.current, // Pin the wrapper
+        pinSpacing: true,
+        scrub: isMobileView ? 0.3 : 0.5, // Faster response on mobile
+        animation: isMobileView ? undefined : tl,
+        onUpdate: (self) => {
+          // Map scroll progress to card progress with grace periods
+          let cardProgress = 0;
+
+          if (self.progress <= GRACE) {
+            cardProgress = 0;
+          } else if (self.progress >= 1 - GRACE) {
+            cardProgress = 1;
+          } else {
+            cardProgress = (self.progress - GRACE) / CONTENT_RANGE;
+          }
+
+          // Update raw progress - magnetic loop will interpolate
+          rawProgressRef.current = cardProgress;
+        },
+      });
+    }, sectionRef);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ctx.revert();
+    };
+  }, [totalCards, isMobile]);
 
   return (
-    <GlassPanel variant="marigoldNoise">
-      <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-      <div className="mx-auto relative z-10" style={{ maxWidth: '1600px' }}>
+    <section ref={sectionRef}>
+      {/* Invisible wrapper that gets pinned */}
+      <div ref={triggerRef}>
+        {/* Glass panel + content - this entire thing animates upward (desktop only) */}
         <div
-          className="text-center transition-all duration-700 relative z-20"
+          ref={contentRef}
+          className="rounded-3xl overflow-hidden relative"
           style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            ...GLASS_STYLES,
+            transform: isMobile ? 'none' : 'translateY(30px)', // Start 30px below center on desktop
           }}
         >
-          <H2 style={{ maxWidth: '100%' }}>{HEADLINE}</H2>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 items-center">
-          {/* Deck of cards */}
+          {/* Noise texture overlay */}
           <div
-            className="relative h-[260px] md:h-[340px] transition-all duration-700"
+            className="absolute inset-0 pointer-events-none rounded-3xl"
             style={{
-              perspective: '1000px',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(-40px)',
-              transitionDelay: '0.15s',
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+              opacity: 0.06,
+              mixBlendMode: 'overlay',
             }}
-          >
-            {STEPS.map((step, i) => {
-              const isActive = i === activeCard;
-              const isPast = i < activeCard;
+          />
 
-              let translateY = 0;
-              let translateX = 0;
-              let rotation = 0;
-              let scale = 1;
-              let opacity = 1;
-              let zIndex = 10;
+          {/* Content */}
+          <div className="relative z-10 px-6 py-16 md:py-24">
+            <div className="mx-auto" style={{ maxWidth: '1600px' }}>
+              {/* Section Header */}
+              <div className="text-center mb-8">
+                <H2 style={{ maxWidth: '100%' }}>{HEADLINE}</H2>
+              </div>
 
-              if (isActive) {
-                translateY = 0;
-                rotation = 0;
-                scale = 1;
-                opacity = 1;
-                zIndex = 10;
-              } else if (isPast) {
-                translateY = (activeCard - i) * -15;
-                translateX = (activeCard - i) * -20;
-                rotation = (activeCard - i) * -5;
-                scale = 1 - (activeCard - i) * 0.05;
-                opacity = 0.3;
-                zIndex = 10 - (activeCard - i);
-              } else {
-                translateY = (i - activeCard) * 6;
-                rotation = 0;
-                scale = 1 - (i - activeCard) * 0.02;
-                opacity = 1 - (i - activeCard) * 0.2;
-                zIndex = 10 - (i - activeCard);
-              }
+              <div className="grid md:grid-cols-2 gap-8 items-start">
+                {/* Left Column: Card Stack + Progress Bar */}
+                <div className="flex flex-col relative" style={{ zIndex: 10 }}>
+                  {/* 3D Rotating Card Stack - works on both mobile and desktop */}
+                  <div
+                    ref={cardStackRef}
+                    className="relative w-full"
+                    style={{
+                      perspective: '1200px',
+                      height: isMobile ? '280px' : '340px',
+                    }}
+                  >
+                        {STEPS.map((step, index) => {
+                          const isLastCard = index === totalCards - 1;
+                          const globalCardPosition = progress * (totalCards - 1) - index;
 
-              return (
-                <div
-                  key={i}
-                  className="absolute inset-0 rounded-2xl p-4 md:p-6 border-2 cursor-pointer transition-all duration-500 flex flex-col items-center justify-center text-center"
-                  style={{
-                    backgroundColor: step.highlight ? 'rgba(40, 35, 10, 0.98)' : 'rgba(25, 25, 25, 0.98)',
-                    borderColor: step.highlight ? 'rgba(255, 215, 0, 0.5)' : 'rgba(255,255,255,0.15)',
-                    transform: `translateY(${translateY}px) translateX(${translateX}px) rotate(${rotation}deg) scale(${scale})`,
-                    opacity,
-                    zIndex,
-                    boxShadow: isActive
-                      ? (step.highlight ? '0 10px 40px rgba(255, 215, 0, 0.2)' : '0 10px 40px rgba(0,0,0,0.5)')
-                      : '0 5px 20px rgba(0,0,0,0.3)',
-                  }}
-                  onClick={handleCardClick}
-                >
-                  {step.highlight ? (
+                          let rotateX = 0, translateZ = 0, translateY = 0, opacity = 1, scale = 1;
+
+                          if (isLastCard) {
+                            if (globalCardPosition >= 0) {
+                              rotateX = 0;
+                              opacity = 1;
+                              scale = 1;
+                              translateZ = 0;
+                              translateY = 0;
+                            } else {
+                              const stackPosition = -globalCardPosition;
+                              translateZ = -30 * stackPosition;
+                              translateY = 20 * stackPosition;
+                              opacity = Math.max(0.4, 1 - stackPosition * 0.15);
+                              scale = Math.max(0.88, 1 - stackPosition * 0.04);
+                            }
+                          } else if (globalCardPosition >= 1) {
+                            rotateX = -90;
+                            opacity = 0;
+                            scale = 0.9;
+                          } else if (globalCardPosition >= 0) {
+                            rotateX = -globalCardPosition * 90;
+                            opacity = globalCardPosition > 0.7 ? 1 - ((globalCardPosition - 0.7) / 0.3) : 1;
+                            scale = 1 - globalCardPosition * 0.1;
+                          } else {
+                            const stackPosition = -globalCardPosition;
+                            translateZ = -30 * stackPosition;
+                            translateY = 20 * stackPosition;
+                            opacity = Math.max(0.4, 1 - stackPosition * 0.15);
+                            scale = Math.max(0.88, 1 - stackPosition * 0.04);
+                          }
+
+                          const mistyBackground = `
+                            radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+                            radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+                            radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+                            radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+                            radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+                            linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+                          `;
+                          const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
+
+                          return (
+                            <div
+                              key={index}
+                              className="absolute inset-0 rounded-2xl p-4 md:p-8 flex flex-col items-center justify-center text-center"
+                              style={{
+                                background: step.highlight ? mistyBackground : darkBackground,
+                                border: step.highlight
+                                  ? '2px solid rgba(180,150,50,0.5)'
+                                  : `1px solid ${BRAND_YELLOW}44`,
+                                boxShadow: step.highlight
+                                  ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
+                                  : `0 0 40px ${BRAND_YELLOW}15, 0 30px 60px -30px rgba(0,0,0,0.8)`,
+                                transform: `perspective(1200px) rotateX(${rotateX}deg) translateZ(${translateZ}px) translateY(${translateY}px) scale(${scale})`,
+                                transformOrigin: 'center bottom',
+                                opacity,
+                                zIndex: totalCards - index,
+                                backfaceVisibility: 'hidden',
+                                transition: 'background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out',
+                              }}
+                            >
+                              {step.highlight ? (
+                                <div
+                                  className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-5"
+                                  style={{
+                                    backgroundColor: 'rgba(42,42,42,0.9)',
+                                    border: '3px solid rgba(42,42,42,0.7)',
+                                    boxShadow: '0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15)',
+                                  }}
+                                >
+                                  <Number3D num={step.num} size={isMobile ? 'small' : 'medium'} highlight />
+                                </div>
+                              ) : (
+                                <div
+                                  className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-5"
+                                  style={{
+                                    background: 'rgba(255,255,255,0.08)',
+                                    border: '2px solid rgba(255,255,255,0.15)',
+                                  }}
+                                >
+                                  <Number3D num={step.num} size={isMobile ? 'small' : 'medium'} />
+                                </div>
+                              )}
+                              <p
+                                className="font-heading font-bold leading-relaxed px-2"
+                                style={{
+                                  color: step.highlight ? '#2a2a2a' : '#e5e5e5',
+                                  fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)',
+                                }}
+                              >
+                                {step.text}
+                              </p>
+                            </div>
+                          );
+                        })}
+                  </div>
+
+                  {/* 3D Plasma Tube Progress Bar */}
+                  <div className={`flex justify-center ${isMobile ? 'mt-8' : 'mt-16'}`}>
                     <div
-                      className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-4"
-                      style={{ backgroundColor: BRAND_YELLOW }}
+                      className="w-80 h-3 rounded-full overflow-hidden relative"
+                      style={{
+                        background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                        border: '1px solid rgba(245, 245, 240, 0.25)',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
+                      }}
                     >
-                      <Number3D num={step.num} size="medium" dark />
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progress * 100}%`,
+                          background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
+                          boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                        }}
+                      />
                     </div>
-                  ) : (
-                    <div className="rounded-full flex items-center justify-center bg-white/10 border-2 border-white/20 w-12 h-12 md:w-16 md:h-16 mb-4">
-                      <Number3D num={step.num} size="medium" />
-                    </div>
-                  )}
-                  <p className="font-heading text-lg md:text-2xl font-bold leading-relaxed px-4" style={step.highlight ? { color: BRAND_YELLOW } : undefined}>{step.text}</p>
-                  <p className="text-body text-xs opacity-40 mt-4">Click to advance</p>
+                  </div>
                 </div>
-              );
-            })}
 
-            {/* Progress dots */}
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
-              {STEPS.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleDotClick(i)}
-                  className="w-2 h-2 rounded-full transition-all duration-300"
-                  style={{
-                    backgroundColor: i === activeCard ? BRAND_YELLOW : 'rgba(255,255,255,0.2)',
-                    transform: i === activeCard ? 'scale(1.5)' : 'scale(1)',
-                  }}
-                />
-              ))}
+                {/* Right Column: Key message card */}
+                <figure
+                  className="relative rounded-2xl overflow-hidden border border-white/10"
+                  style={{ minHeight: '340px', zIndex: 1 }}
+                  itemScope
+                  itemType="https://schema.org/ImageObject"
+                >
+                  <div className="absolute inset-0">
+                    <img
+                      src={ENTREPRENEURIAL_SPONSOR_IMAGE}
+                      alt={ENTREPRENEURIAL_SPONSOR_ALT}
+                      title={ENTREPRENEURIAL_SPONSOR_TITLE}
+                      className="w-full h-full object-cover"
+                      itemProp="contentUrl"
+                      loading="lazy"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%)'
+                      }}
+                    />
+                  </div>
+
+                  <figcaption className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
+                    <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>{DIFFERENTIATOR}</p>
+                    <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{KEY_POINT}</p>
+                    <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
+                    <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
+                  </figcaption>
+
+                  <meta itemProp="name" content={ENTREPRENEURIAL_SPONSOR_TITLE} />
+                </figure>
+              </div>
             </div>
           </div>
-
-          {/* Key message card with background image + circuit board overlay */}
-          <figure
-            className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-700"
-            style={{
-              minHeight: '340px',
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
-              transitionDelay: '0.3s',
-            }}
-            itemScope
-            itemType="https://schema.org/ImageObject"
-          >
-            <div className="absolute inset-0">
-              <img
-                src={ENTREPRENEURIAL_SPONSOR_IMAGE}
-                alt={ENTREPRENEURIAL_SPONSOR_ALT}
-                title={ENTREPRENEURIAL_SPONSOR_TITLE}
-                className="w-full h-full object-cover"
-                itemProp="contentUrl"
-                loading="lazy"
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%)'
-                }}
-              />
-            </div>
-
-            <figcaption className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
-              <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>{DIFFERENTIATOR}</p>
-              <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{KEY_POINT}</p>
-              <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-              <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
-            </figcaption>
-
-            <meta itemProp="name" content={ENTREPRENEURIAL_SPONSOR_TITLE} />
-          </figure>
         </div>
       </div>
-      </section>
-    </GlassPanel>
+    </section>
   );
 }
