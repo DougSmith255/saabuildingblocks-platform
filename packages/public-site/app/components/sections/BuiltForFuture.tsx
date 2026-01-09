@@ -205,21 +205,36 @@ export function BuiltForFuture() {
   const lastRawRef = useRef(0);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
+  const isMobileRef = useRef(false);
 
   const totalCards = FUTURE_POINTS.length;
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Check if mobile
+    const isMobile = window.innerWidth < 768;
+    isMobileRef.current = isMobile;
+
     // Grace period: 10% at start and 10% at end of scroll range
     const GRACE = 0.1;
     const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
 
-    // Velocity-based magnetic snap
-    // When velocity is high (scrolling): follow raw position closely
-    // When velocity is low (stopped): snap strongly to nearest card
+    // Velocity-based magnetic snap (desktop only)
     const animateMagnetic = () => {
       const raw = rawPositionRef.current;
+
+      // On mobile: directly follow scroll, no magnetic effect
+      if (isMobileRef.current) {
+        if (Math.abs(raw - displayPositionRef.current) > 0.001) {
+          displayPositionRef.current = raw;
+          setScrollPosition(raw);
+        }
+        rafRef.current = requestAnimationFrame(animateMagnetic);
+        return;
+      }
+
+      // Desktop: magnetic snap effect
       const lastRaw = lastRawRef.current;
       const currentDisplay = displayPositionRef.current;
 
@@ -255,10 +270,13 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
+    // Pin trigger: on mobile, start 20% higher (30% from top instead of center)
+    const pinStart = isMobile ? 'center 30%' : 'center center';
+
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: triggerRef.current,
-        start: 'center center',
+        start: pinStart,
         end: '+=300%',
         pin: triggerRef.current,
         pinSpacing: true,
@@ -287,7 +305,7 @@ export function BuiltForFuture() {
         ease: 'none',
           scrollTrigger: {
             trigger: triggerRef.current,
-            start: 'center center',
+            start: pinStart,
             end: '+=300%',
             scrub: 2.5,
           }
@@ -464,7 +482,7 @@ export function BuiltForFuture() {
                                 filter: `blur(${blurAmount + blackoutOpacity * 4}px) grayscale(${blackoutOpacity * 100}%) brightness(${1 - blackoutOpacity * 0.6})`,
                                 opacity: 1 - blackoutOpacity * 0.4,
                                 willChange: 'transform, filter, opacity',
-                                transition: 'transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out',
+                                transition: 'transform 0.05s ease-out, filter 0.075s ease-out, opacity 0.075s ease-out',
                               }}
                             >
                               <div

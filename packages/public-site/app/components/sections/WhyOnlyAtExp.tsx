@@ -103,19 +103,35 @@ export function WhyOnlyAtExp() {
   const lastRawRef = useRef(0);
   const velocityRef = useRef(0);
   const rafRef = useRef<number>(0);
+  const isMobileRef = useRef(false);
 
   const totalCards = STEPS.length;
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Check if mobile
+    isMobileRef.current = window.innerWidth < 768;
+
     // Grace period: 10% at start and 10% at end of scroll range
     const GRACE = 0.1;
     const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
 
-    // Velocity-based magnetic snap
+    // Velocity-based magnetic snap (desktop only)
     const animateMagnetic = () => {
       const raw = rawProgressRef.current;
+
+      // On mobile: directly follow scroll, no magnetic effect
+      if (isMobileRef.current) {
+        if (Math.abs(raw - displayProgressRef.current) > 0.0001) {
+          displayProgressRef.current = raw;
+          setProgress(raw);
+        }
+        rafRef.current = requestAnimationFrame(animateMagnetic);
+        return;
+      }
+
+      // Desktop: magnetic snap effect
       const lastRaw = lastRawRef.current;
       const currentDisplay = displayProgressRef.current;
 
