@@ -26,98 +26,6 @@ const ALIGNED_INCENTIVES_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDx
 // Brand yellow color
 const BRAND_YELLOW = '#ffd700';
 
-// Scroll reveal hook - each element gets its own observer
-function useScrollReveal(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
-}
-
-// Individual reveal wrapper components (like ProvenAtScale)
-function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible } = useScrollReveal(0.1);
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-        transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function RevealFromLeft({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible } = useScrollReveal(0.1);
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateX(0)' : 'translateX(-40px)',
-        transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function RevealFromRight({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const { ref, isVisible } = useScrollReveal(0.1);
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
-        transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function RevealScale({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible } = useScrollReveal(0.1);
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'scale(1)' : 'scale(0.95)',
-        transition: `opacity 0.7s ease-out ${delay}s, transform 0.7s ease-out ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
 // 3D Checkmark Component
 function Check3D() {
   return (
@@ -128,8 +36,60 @@ function Check3D() {
 }
 
 export function WhySAA() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [elementProgress, setElementProgress] = useState<{ [key: string]: number }>({});
+
+  useEffect(() => {
+    const elements = sectionRef.current?.querySelectorAll('.expand-reveal');
+    if (!elements) return;
+
+    const updateProgress = () => {
+      elements.forEach((el) => {
+        const id = el.getAttribute('data-id') || '';
+        const rect = el.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        // Start animation when element top enters viewport
+        // End animation when element has scrolled up 400px from its start position
+        const scrollDistance = 400; // pixels of scroll for full animation
+
+        // Calculate progress: 0 when top of element enters viewport, 1 after scrollDistance
+        const elementTop = rect.top;
+        const startPoint = windowHeight; // when top of element enters bottom of viewport
+        const distanceScrolled = startPoint - elementTop;
+
+        // Clamp between 0 and 1
+        const rawProgress = Math.max(0, Math.min(1, distanceScrolled / scrollDistance));
+
+        setElementProgress(prev => ({ ...prev, [id]: rawProgress }));
+      });
+    };
+
+    // Initial calculation
+    updateProgress();
+
+    // Update on scroll
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', updateProgress);
+      window.removeEventListener('resize', updateProgress);
+    };
+  }, []);
+
+  // Get progress for an element (0-1), with easing for smoother motion
+  const getProgress = (id: string) => {
+    const raw = elementProgress[id] || 0;
+    // Apply easeOutQuart for smooth deceleration
+    return 1 - Math.pow(1 - raw, 4);
+  };
+
+  // Width percentage for expanding cards (0% to 100%)
+  const getExpandWidth = (id: string) => Math.min(100, getProgress(id) * 100);
+
   return (
-    <section className="py-24 md:py-32 px-6 overflow-hidden relative">
+    <section ref={sectionRef} className="py-24 md:py-32 px-6 overflow-hidden relative">
       <style>{`
         .bento-card {
           transition: transform 0.5s ease, box-shadow 0.5s ease;
@@ -161,59 +121,85 @@ export function WhySAA() {
         }
       `}</style>
       <div className="mx-auto" style={{ maxWidth: '1500px' }}>
-        {/* H2 with its own reveal */}
-        <Reveal>
-          <div className="text-center">
-            <H2>{HEADLINE}</H2>
-          </div>
-        </Reveal>
+        {/* H2 - always visible, no animation */}
+        <div className="text-center mb-8">
+          <H2>{HEADLINE}</H2>
+        </div>
 
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
-          {/* Main content card - 7 columns */}
-          <div className="md:col-span-7">
-            <RevealFromLeft>
-              <div className="bento-card relative rounded-2xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 border border-white/10 p-8 md:p-10 h-full">
-              {/* Tagline and content */}
-              <div className="mb-8">
+          {/* Main content card - 7 columns - expands from left */}
+          <div className="md:col-span-7 expand-reveal h-full" data-id="main-card">
+            {/* Card with clip-path reveal from left */}
+            <div
+              className="rounded-2xl overflow-hidden h-full"
+              style={{
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4))',
+                clipPath: `inset(0 ${100 - getExpandWidth('main-card')}% 0 0 round 16px)`,
+                transition: 'clip-path 0.1s ease-out',
+              }}
+            >
+              <div
+                className="p-8 md:p-10"
+                style={{
+                  opacity: Math.min(1, getProgress('main-card') * 1.5),
+                }}
+              >
                 <p className="font-heading text-2xl md:text-3xl font-bold" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
                 <p className="text-body text-lg mt-4 opacity-70">{INTRO}</p>
                 <p className="font-heading text-xl md:text-2xl font-bold mt-6" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
                 <p className="text-body text-lg mt-4 leading-relaxed">{DESCRIPTION}</p>
-              </div>
 
-              {/* Benefits Grid with 3D Checkmarks */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {BENEFITS.map((benefit, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Check3D />
-                    <span className="text-body text-sm font-medium">{benefit}</span>
-                  </div>
-                ))}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                  {BENEFITS.map((benefit, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <Check3D />
+                      <span className="text-body text-sm font-medium">{benefit}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-              </div>
-            </RevealFromLeft>
+            </div>
           </div>
 
           {/* Right column - 5 columns */}
           <div className="md:col-span-5 flex flex-col gap-4 md:gap-6">
-            <RevealFromRight className="flex-1 flex">
-              <div className="bento-card relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex-1">
-                <div className="absolute inset-0 overflow-hidden">
-                  <img
-                    src={ALIGNED_INCENTIVES_IMAGE}
-                    alt="Smart Agent Alliance aligned incentives model - where agent success and sponsor success grow together"
-                    className="bento-image w-full h-full object-cover object-center"
-                  />
-                </div>
+            {/* Image card - expands from right, image stays static */}
+            <div className="expand-reveal flex-1" data-id="image-card" style={{ minHeight: '280px' }}>
+              {/* Card with clip-path reveal from right */}
+              <div
+                className="rounded-2xl overflow-hidden relative h-full"
+                style={{
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'rgba(255,255,255,0.05)',
+                  clipPath: `inset(0 0 0 ${100 - getExpandWidth('image-card')}% round 16px)`,
+                  transition: 'clip-path 0.1s ease-out',
+                }}
+              >
+                {/* Image is always visible */}
+                <img
+                  src={ALIGNED_INCENTIVES_IMAGE}
+                  alt="Smart Agent Alliance aligned incentives model - where agent success and sponsor success grow together"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                {/* Caption is always visible */}
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <p className="font-heading font-bold" style={{ color: BRAND_YELLOW, fontSize: '23px' }}>Aligned Incentives</p>
                   <p className="text-body text-xs opacity-70 mt-1">When you succeed, we succeed</p>
                 </div>
               </div>
-            </RevealFromRight>
+            </div>
 
-            <RevealScale delay={0.1}>
+            {/* CTA card - scale reveal */}
+            <div
+              className="expand-reveal"
+              data-id="cta-card"
+              style={{
+                opacity: Math.min(1, getProgress('cta-card') * 1.5),
+                transform: `scale(${0.9 + getProgress('cta-card') * 0.1})`,
+              }}
+            >
               <div
                 className="bento-card relative rounded-2xl overflow-hidden border p-6 md:p-8 text-center"
                 style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.3)' }}
@@ -221,15 +207,21 @@ export function WhySAA() {
                 <p className="text-body text-lg mb-5">Grow independently. Succeed together.</p>
                 <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
               </div>
-            </RevealScale>
+            </div>
           </div>
         </div>
 
-        <Reveal delay={0.2}>
-          <div className="text-center mt-12">
-            <p className="text-body mx-auto" style={{ color: '#e5e4dd', maxWidth: '700px' }}>{DISCLAIMER}</p>
-          </div>
-        </Reveal>
+        {/* Disclaimer - fade up */}
+        <div
+          className="expand-reveal text-center mt-12"
+          data-id="disclaimer"
+          style={{
+            opacity: Math.min(1, getProgress('disclaimer') * 1.5),
+            transform: `translateY(${(1 - getProgress('disclaimer')) * 20}px)`,
+          }}
+        >
+          <p className="text-body mx-auto" style={{ color: '#e5e4dd', maxWidth: '700px' }}>{DISCLAIMER}</p>
+        </div>
       </div>
     </section>
   );
