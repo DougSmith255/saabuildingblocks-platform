@@ -50,8 +50,8 @@ export function WhySAA() {
         const windowHeight = window.innerHeight;
 
         // Start animation when element top enters viewport
-        // End animation when element has scrolled up 400px from its start position
-        const scrollDistance = 400; // pixels of scroll for full animation
+        // End animation when element has scrolled up - longer distance = slower animation
+        const scrollDistance = 600; // pixels of scroll for full animation
 
         // Calculate progress: 0 when top of element enters viewport, 1 after scrollDistance
         const elementTop = rect.top;
@@ -126,9 +126,9 @@ export function WhySAA() {
           <H2>{HEADLINE}</H2>
         </div>
 
-        <div className="grid md:grid-cols-12 gap-4 md:gap-6">
+        <div className="grid md:grid-cols-12 gap-4 md:gap-6 items-stretch">
           {/* Main content card - 7 columns - expands from left */}
-          <div className="md:col-span-7 expand-reveal h-full" data-id="main-card">
+          <div className="md:col-span-7 expand-reveal" data-id="main-card">
             {/* Card with clip-path reveal from left */}
             <div
               className="rounded-2xl overflow-hidden h-full"
@@ -162,10 +162,10 @@ export function WhySAA() {
             </div>
           </div>
 
-          {/* Right column - 5 columns */}
-          <div className="md:col-span-5 flex flex-col gap-4 md:gap-6">
-            {/* Image card - expands from right, image stays static */}
-            <div className="expand-reveal flex-1" data-id="image-card" style={{ minHeight: '280px' }}>
+          {/* Right column - 5 columns - stretches to match left column height */}
+          <div className="md:col-span-5 flex flex-col gap-4 md:gap-6 h-full">
+            {/* Image card - expands from right, fills remaining space */}
+            <div className="expand-reveal flex-1 min-h-0" data-id="image-card">
               {/* Card with clip-path reveal from right */}
               <div
                 className="rounded-2xl overflow-hidden relative h-full"
