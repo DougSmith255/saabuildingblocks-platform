@@ -1326,7 +1326,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+      background: rgba(20,20,20,0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 3px solid #ffd700;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
@@ -1347,6 +1349,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border-radius: 1rem;
       position: relative;
       overflow: hidden;
+      background: rgba(15,15,15,0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255,215,0,0.27);
       box-shadow: 0 0 40px rgba(255,215,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
@@ -1356,11 +1361,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       inset: 0;
       background-size: cover;
       background-position: center;
+      opacity: 0.4;
     }
     .wyg-card-glass-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(20,20,20,0.7), rgba(10,10,10,0.8));
+      display: none;
     }
     .wyg-card-content-inner {
       position: relative;

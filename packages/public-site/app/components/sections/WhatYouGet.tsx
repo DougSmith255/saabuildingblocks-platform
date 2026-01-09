@@ -125,11 +125,13 @@ export function WhatYouGet() {
                 key={benefit.title}
                 className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
-                {/* Icon circle - solid dark background */}
+                {/* Icon circle - transparent with backdrop blur */}
                 <div
                   className="w-28 h-28 md:w-36 md:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
-                    background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
+                    background: 'rgba(20,20,20,0.5)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     border: `3px solid ${BRAND_YELLOW}`,
                     boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
                     transform: `scale(${0.8 + cardProgress * 0.2})`,
@@ -145,10 +147,13 @@ export function WhatYouGet() {
                   </div>
                 </div>
 
-                {/* Card content - glassmorphism effect with background image */}
+                {/* Card content - glassmorphism with backdrop blur and background image */}
                 <div
                   className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
                   style={{
+                    background: 'rgba(15,15,15,0.6)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
                     opacity: 0.4 + cardProgress * 0.6,
@@ -163,13 +168,7 @@ export function WhatYouGet() {
                       backgroundImage: `url(${benefit.bgImage})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                    }}
-                  />
-                  {/* Dark overlay - no blur so image shows through */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: 'linear-gradient(180deg, rgba(20,20,20,0.7), rgba(10,10,10,0.8))',
+                      opacity: 0.4,
                     }}
                   />
                   {/* Subtitle badge */}
