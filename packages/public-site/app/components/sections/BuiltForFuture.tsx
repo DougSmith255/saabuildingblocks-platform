@@ -284,8 +284,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin when section's top reaches near top of viewport (with small offset)
-    const pinStart = 'top 10%';
+    // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
+    const pinStart = isMobile ? 'center 65%' : 'center 55%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
