@@ -49,6 +49,8 @@ const BENEFITS = [
 export function WhatYouGet() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [elementProgress, setElementProgress] = useState<{ [key: string]: number }>({});
+  // Track which cards have been fully revealed (stay revealed once shown)
+  const revealedRef = useRef<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     const elements = sectionRef.current?.querySelectorAll('.blur-reveal');
@@ -59,7 +61,19 @@ export function WhatYouGet() {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            setElementProgress(prev => ({ ...prev, [id]: entry.intersectionRatio }));
+            const ratio = entry.intersectionRatio;
+
+            // Once fully revealed (95%+), mark as revealed and keep at 1
+            if (ratio >= 0.95) {
+              revealedRef.current[id] = true;
+            }
+
+            // If already revealed, keep progress at 1 (stay visible)
+            if (revealedRef.current[id]) {
+              setElementProgress(prev => ({ ...prev, [id]: 1 }));
+            } else {
+              setElementProgress(prev => ({ ...prev, [id]: ratio }));
+            }
           });
         },
         {
