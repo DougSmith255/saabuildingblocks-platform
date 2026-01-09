@@ -1288,69 +1288,116 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       flex-shrink: 0;
     }
 
-    /* What You Get - Blur Reveal Cards */
-    .wyg-grid {
-      display: grid;
-      grid-template-columns: 1fr;
+    /* What You Get - Clip-Path Reveal Cards */
+    .wyg-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    @media (min-width: 768px) {
+      .wyg-container {
+        gap: 3rem;
+      }
+    }
+    .wyg-reveal-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       gap: 1.5rem;
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
-    @media (min-width: 1200px) {
-      .wyg-grid {
-        grid-template-columns: repeat(2, 1fr);
+    @media (min-width: 768px) {
+      .wyg-reveal-card {
+        flex-direction: row;
       }
-      .wyg-grid .wyg-full-width {
-        grid-column: 1 / -1;
+      .wyg-reveal-card.wyg-reverse {
+        flex-direction: row-reverse;
       }
     }
-    .wyg-blur-card {
-      transition: filter 0.1s ease-out, opacity 0.1s ease-out, transform 0.1s ease-out;
-    }
-    .wyg-card-inner {
-      border-radius: 1rem;
-      overflow: hidden;
+    .wyg-icon-circle {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      flex-shrink: 0;
       position: relative;
-      min-height: 160px;
-      height: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
-    .wyg-card-bg {
+    @media (min-width: 768px) {
+      .wyg-icon-circle {
+        width: 144px;
+        height: 144px;
+      }
+    }
+    .wyg-icon-bg {
       position: absolute;
       inset: 0;
       background-size: cover;
       background-position: center;
     }
-    .wyg-card-overlay {
+    .wyg-icon-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(90deg, rgba(30,30,30,0.88) 0%, rgba(40,40,40,0.75) 50%, rgba(50,50,50,0.6) 100%);
+      background: rgba(0,0,0,0.5);
     }
-    .wyg-card-accent {
+    .wyg-icon-border {
       position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: #ffd700;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid #ffd700;
     }
-    .wyg-card-content {
+    .wyg-icon-inner {
       position: relative;
       z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 1.5rem;
     }
-    .wyg-card-icon {
-      flex-shrink: 0;
+    .wyg-card-content {
+      flex: 1;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      background: linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99));
+      border: 1px solid rgba(255,215,0,0.27);
+      box-shadow: 0 0 40px rgba(255,215,0,0.08);
+      transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    }
+    @media (min-width: 768px) {
+      .wyg-reveal-card.wyg-reverse .wyg-card-content {
+        text-align: right;
+      }
+    }
+    .wyg-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      background: rgba(255,215,0,0.13);
+      color: #ffd700;
+    }
+    @media (min-width: 768px) {
+      .wyg-reveal-card.wyg-reverse .wyg-badge {
+        float: right;
+        margin-left: 0.75rem;
+      }
+    }
+    .wyg-clear {
+      clear: both;
     }
     .wyg-card-title {
       font-family: var(--font-amulya), system-ui, sans-serif;
       font-weight: 700;
-      font-size: clamp(20px, calc(18px + 0.5vw), 28px);
+      font-size: clamp(20px, calc(18px + 0.5vw), 26px);
       color: var(--color-heading, #f5f5f0);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
     .wyg-card-desc {
-      color: #d1d5db;
+      color: #9ca3af;
       font-family: var(--font-synonym);
       font-size: var(--font-size-body);
       line-height: 1.6;
@@ -3280,95 +3327,75 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <p class="text-body" style="opacity: 0.6; margin-top: 1rem; max-width: 700px; margin-left: auto; margin-right: auto;">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
         </div>
 
-        <!-- Blur Reveal Cards - 2 columns on 1200px+, 1 column below -->
-        <div class="wyg-grid" style="max-width: 1400px; margin: 0 auto;" id="wyg-cards">
-          <!-- Card 1: Connected Leadership -->
-          <div class="wyg-blur-card" data-wyg-card="0">
-            <div class="wyg-card-inner">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
-              <div class="wyg-card-overlay"></div>
-              <div class="wyg-card-accent"></div>
-              <div class="wyg-card-content">
-                <div class="wyg-card-icon">
-                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
-                </div>
-                <div>
-                  <h3 class="wyg-card-title">Connected Leadership and Community</h3>
-                  <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
-                </div>
-              </div>
+        <!-- Clip-Path Reveal Cards - Alternating left/right -->
+        <div class="wyg-container" id="wyg-cards">
+          <!-- Card 1: Connected Leadership (from left) -->
+          <div class="wyg-reveal-card" data-wyg-card="0" data-wyg-direction="left">
+            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');">
+              <div class="wyg-icon-overlay"></div>
+              <div class="wyg-icon-border"></div>
+              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
+            </div>
+            <div class="wyg-card-content">
+              <span class="wyg-badge">Leadership</span>
+              <h3 class="wyg-card-title">Connected Leadership and Community</h3>
+              <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
             </div>
           </div>
 
-          <!-- Card 2: Passive Income -->
-          <div class="wyg-blur-card" data-wyg-card="1">
-            <div class="wyg-card-inner">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
-              <div class="wyg-card-overlay"></div>
-              <div class="wyg-card-accent"></div>
-              <div class="wyg-card-content">
-                <div class="wyg-card-icon">
-                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
-                </div>
-                <div>
-                  <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
-                  <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
-                </div>
-              </div>
+          <!-- Card 2: Passive Income (from right) -->
+          <div class="wyg-reveal-card wyg-from-right" data-wyg-card="1" data-wyg-direction="right">
+            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');">
+              <div class="wyg-icon-overlay"></div>
+              <div class="wyg-icon-border"></div>
+              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
+            </div>
+            <div class="wyg-card-content">
+              <span class="wyg-badge">Income</span>
+              <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
+              <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
             </div>
           </div>
 
-          <!-- Card 3: Done-For-You -->
-          <div class="wyg-blur-card" data-wyg-card="2">
-            <div class="wyg-card-inner">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
-              <div class="wyg-card-overlay"></div>
-              <div class="wyg-card-accent"></div>
-              <div class="wyg-card-content">
-                <div class="wyg-card-icon">
-                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-                </div>
-                <div>
-                  <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
-                  <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
-                </div>
-              </div>
+          <!-- Card 3: Done-For-You (from left) -->
+          <div class="wyg-reveal-card" data-wyg-card="2" data-wyg-direction="left">
+            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');">
+              <div class="wyg-icon-overlay"></div>
+              <div class="wyg-icon-border"></div>
+              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M9 16l2 2 4-4"></path></svg></span>
+            </div>
+            <div class="wyg-card-content">
+              <span class="wyg-badge">Systems</span>
+              <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
+              <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
             </div>
           </div>
 
-          <!-- Card 4: Elite Training -->
-          <div class="wyg-blur-card" data-wyg-card="3">
-            <div class="wyg-card-inner">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
-              <div class="wyg-card-overlay"></div>
-              <div class="wyg-card-accent"></div>
-              <div class="wyg-card-content">
-                <div class="wyg-card-icon">
-                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
-                </div>
-                <div>
-                  <h3 class="wyg-card-title">Elite Training Libraries</h3>
-                  <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
-                </div>
-              </div>
+          <!-- Card 4: Elite Training (from right) -->
+          <div class="wyg-reveal-card wyg-from-right" data-wyg-card="3" data-wyg-direction="right">
+            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');">
+              <div class="wyg-icon-overlay"></div>
+              <div class="wyg-icon-border"></div>
+              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
+            </div>
+            <div class="wyg-card-content">
+              <span class="wyg-badge">Training</span>
+              <h3 class="wyg-card-title">Elite Training Libraries</h3>
+              <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
             </div>
           </div>
 
-          <!-- Card 5: Private Referrals -->
-          <div class="wyg-blur-card wyg-full-width" data-wyg-card="4">
-            <div class="wyg-card-inner">
-              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
-              <div class="wyg-card-overlay"></div>
-              <div class="wyg-card-accent"></div>
-              <div class="wyg-card-content">
-                <div class="wyg-card-icon">
-                  <span class="icon-3d" style="width: 56px; height: 56px;"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
-                </div>
-                <div>
-                  <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
-                  <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
-                </div>
-              </div>
+          <!-- Card 5: Private Referrals (from left) -->
+          <div class="wyg-reveal-card" data-wyg-card="4" data-wyg-direction="left">
+            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');">
+              <div class="wyg-icon-overlay"></div>
+              <div class="wyg-icon-border"></div>
+              <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
+            </div>
+            <div class="wyg-card-content">
+              <span class="wyg-badge">Referrals</span>
+              <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
+              <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
             </div>
           </div>
         </div>
@@ -4127,7 +4154,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         setupCounterAnimation();
         setupLogoAnimation();
         setupRevealMaskAnimation();
-        setupWhatYouGetBlurReveal();
+        setupWhatYouGetClipReveal();
         setupWhySAAClipReveal();
         setupDeckStack();
         initGrayscaleDataStream();
@@ -4727,9 +4754,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         requestAnimationFrame(animate);
       }
 
-      // What You Get - Blur Reveal Cards
-      function setupWhatYouGetBlurReveal() {
-        const cards = document.querySelectorAll('.wyg-blur-card');
+      // What You Get - Clip-Path Reveal Cards (alternating left/right)
+      function setupWhatYouGetClipReveal() {
+        var cards = document.querySelectorAll('.wyg-reveal-card');
         if (!cards.length) return;
 
         // Create thresholds for smooth animation
@@ -4738,36 +4765,42 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           thresholds.push(i / 50);
         }
 
-        cards.forEach(function(card) {
+        cards.forEach(function(card, index) {
           var hasRevealed = false; // Track if card has been fully revealed
+          var direction = card.getAttribute('data-wyg-direction') || 'left';
+          var isFromRight = direction === 'right';
+          var iconCircle = card.querySelector('.wyg-icon-circle');
+          var cardContent = card.querySelector('.wyg-card-content');
 
           var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
-              // Once fully revealed, stay revealed (don't animate out at top)
-              if (hasRevealed) {
-                card.style.filter = 'blur(0px)';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0px)';
-                return;
-              }
-
               var p = entry.intersectionRatio;
 
-              // Mark as revealed when fully visible
-              if (p >= 0.95) {
+              // Once fully revealed (90%+), mark as revealed and keep at 1
+              if (p >= 0.9) {
                 hasRevealed = true;
               }
 
-              // Blur goes from 12px to 0 as card enters
-              var blur = Math.max(0, 12 * (1 - p));
-              // Opacity goes from 0 to 1
-              var opacity = Math.min(1, p);
-              // TranslateY goes from 30px to 0
-              var translateY = 30 * (1 - p);
+              // If already revealed, keep progress at 1
+              if (hasRevealed) {
+                p = 1;
+              }
 
-              card.style.filter = 'blur(' + blur + 'px)';
-              card.style.opacity = opacity;
-              card.style.transform = 'translateY(' + translateY + 'px)';
+              // Icon circle: scale from 0.8 to 1, opacity from 0.3 to 1
+              if (iconCircle) {
+                var scale = 0.8 + p * 0.2;
+                var iconOpacity = 0.3 + p * 0.7;
+                iconCircle.style.transform = 'scale(' + scale + ')';
+                iconCircle.style.opacity = iconOpacity;
+              }
+
+              // Card content: slide in from left or right, fade in
+              if (cardContent) {
+                var translateX = isFromRight ? (p - 1) * 40 : (1 - p) * 40;
+                var contentOpacity = 0.4 + p * 0.6;
+                cardContent.style.transform = 'translateX(' + translateX + 'px)';
+                cardContent.style.opacity = contentOpacity;
+              }
             });
           }, {
             threshold: thresholds,

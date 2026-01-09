@@ -7,7 +7,7 @@ import { Users, DollarSign, Bot, GraduationCap, Globe } from 'lucide-react';
 
 /**
  * What You Get with SAA Section
- * Blur reveal cards that animate in as user scrolls (Variation 7 style)
+ * Clip-Path Reveal - Cards slide in alternating from left/right
  */
 
 const BRAND_YELLOW = '#ffd700';
@@ -17,30 +17,35 @@ const BENEFITS = [
   {
     icon: Users,
     title: "Connected Leadership and Community",
+    subtitle: "Leadership",
     description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public',
   },
   {
     icon: DollarSign,
     title: "Passive Income Infrastructure",
+    subtitle: "Income",
     description: "We handle the structure so you can build long-term income without relying solely on transactions.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public',
   },
   {
     icon: Bot,
     title: "Done-For-You Production Systems",
+    subtitle: "Systems",
     description: "Curated systems designed to save time, not create tech overload.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public',
   },
   {
     icon: GraduationCap,
     title: "Elite Training Libraries",
+    subtitle: "Training",
     description: "AI, social media, investing, and modern production systems, available when you need them.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public',
   },
   {
     icon: Globe,
     title: "Private Referrals & Global Collaboration",
+    subtitle: "Referrals",
     description: "Warm introductions and deal flow inside a global agent network.",
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public',
   },
@@ -48,64 +53,58 @@ const BENEFITS = [
 
 export function WhatYouGet() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [elementProgress, setElementProgress] = useState<{ [key: string]: number }>({});
-  // Track which cards have been fully revealed (stay revealed once shown)
-  const revealedRef = useRef<{ [key: string]: boolean }>({});
+  const [revealProgress, setRevealProgress] = useState<number[]>(
+    new Array(BENEFITS.length).fill(0)
+  );
+  // Track which cards have been fully revealed
+  const revealedRef = useRef<boolean[]>(new Array(BENEFITS.length).fill(false));
 
   useEffect(() => {
-    const elements = sectionRef.current?.querySelectorAll('.blur-reveal');
-    if (!elements) return;
+    const cards = sectionRef.current?.querySelectorAll('.reveal-card');
+    if (!cards) return;
 
-    const observers = Array.from(elements).map((el) => {
-      const id = el.getAttribute('data-id') || '';
+    const observers = Array.from(cards).map((card, index) => {
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const ratio = entry.intersectionRatio;
 
-            // Once fully revealed (95%+), mark as revealed and keep at 1
-            if (ratio >= 0.95) {
-              revealedRef.current[id] = true;
+            // Once fully revealed (90%+), mark as revealed and keep at 1
+            if (ratio >= 0.9) {
+              revealedRef.current[index] = true;
             }
 
-            // If already revealed, keep progress at 1 (stay visible)
-            if (revealedRef.current[id]) {
-              setElementProgress(prev => ({ ...prev, [id]: 1 }));
+            // If already revealed, keep progress at 1
+            if (revealedRef.current[index]) {
+              setRevealProgress(prev => {
+                const newProgress = [...prev];
+                newProgress[index] = 1;
+                return newProgress;
+              });
             } else {
-              setElementProgress(prev => ({ ...prev, [id]: ratio }));
+              setRevealProgress(prev => {
+                const newProgress = [...prev];
+                newProgress[index] = ratio;
+                return newProgress;
+              });
             }
           });
         },
         {
           threshold: Array.from({ length: 50 }, (_, i) => i / 50),
-          rootMargin: '-5% 0px -5% 0px',
+          rootMargin: '-5% 0px -5% 0px'
         }
       );
-      observer.observe(el);
+      observer.observe(card);
       return observer;
     });
 
     return () => observers.forEach(o => o.disconnect());
   }, []);
 
-  const getBlur = (id: string) => {
-    const p = elementProgress[id] || 0;
-    return Math.max(0, 12 * (1 - p));
-  };
-
-  const getOpacity = (id: string) => {
-    const p = elementProgress[id] || 0;
-    return Math.min(1, p);
-  };
-
-  const getTranslateY = (id: string) => {
-    const p = elementProgress[id] || 0;
-    return 30 * (1 - p);
-  };
-
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-      <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
+      <div className="mx-auto relative z-10" style={{ maxWidth: '1200px' }}>
         {/* Header - always visible */}
         <div className="text-center mb-12">
           <H2>What You Get with SAA</H2>
@@ -114,46 +113,28 @@ export function WhatYouGet() {
           </p>
         </div>
 
-        {/* Blur reveal cards - 2 columns on xl (1200px+), 1 column below */}
-        <style>{`
-          .wyg-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-          }
-          @media (min-width: 1200px) {
-            .wyg-grid {
-              grid-template-columns: repeat(2, 1fr);
-              gap: 1.5rem;
-            }
-            .wyg-grid .wyg-full-width {
-              grid-column: 1 / -1;
-            }
-          }
-        `}</style>
-        <div className="wyg-grid mx-auto" style={{ maxWidth: '1400px' }}>
+        {/* Clip-Path Reveal Cards */}
+        <div className="space-y-10 md:space-y-12">
           {BENEFITS.map((benefit, index) => {
             const Icon = benefit.icon;
-            const id = `saa-card-${index}`;
-            const isLastCard = index === BENEFITS.length - 1;
+            const cardProgress = revealProgress[index];
+            const isEven = index % 2 === 0;
+
             return (
               <div
                 key={benefit.title}
-                className={`blur-reveal${isLastCard ? ' wyg-full-width' : ''}`}
-                data-id={id}
-                style={{
-                  filter: `blur(${getBlur(id)}px)`,
-                  opacity: getOpacity(id),
-                  transform: `translateY(${getTranslateY(id)}px)`,
-                }}
+                className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
+                {/* Icon circle with background image */}
                 <div
-                  className="rounded-2xl overflow-hidden relative h-full"
+                  className="w-28 h-28 md:w-36 md:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
-                    minHeight: '160px',
+                    transform: `scale(${0.8 + cardProgress * 0.2})`,
+                    opacity: 0.3 + cardProgress * 0.7,
+                    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
-                  {/* Background image */}
+                  {/* Background image in circle */}
                   <div
                     className="absolute inset-0"
                     style={{
@@ -162,45 +143,72 @@ export function WhatYouGet() {
                       backgroundPosition: 'center',
                     }}
                   />
-                  {/* Gradient overlay */}
+                  {/* Overlay for contrast */}
                   <div
                     className="absolute inset-0"
                     style={{
-                      background: 'linear-gradient(90deg, rgba(30,30,30,0.88) 0%, rgba(40,40,40,0.75) 50%, rgba(50,50,50,0.6) 100%)',
+                      background: 'rgba(0,0,0,0.5)',
                     }}
                   />
-                  {/* Left accent border */}
+                  {/* Border */}
                   <div
-                    className="absolute left-0 top-0 bottom-0 w-1"
-                    style={{ backgroundColor: BRAND_YELLOW }}
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      border: `3px solid ${BRAND_YELLOW}`,
+                    }}
                   />
-                  {/* Content */}
-                  <div className="relative z-10 flex items-center gap-6 p-6">
-                    <div className="flex-shrink-0">
-                      <Icon3D color={ICON_GOLD} size={56}>
-                        <Icon className="w-14 h-14" />
-                      </Icon3D>
-                    </div>
-                    <div>
-                      <h3
-                        className="font-heading font-bold mb-2"
-                        style={{
-                          color: 'var(--color-heading, #f5f5f0)',
-                          fontSize: 'clamp(20px, calc(18px + 0.5vw), 28px)',
-                        }}
-                      >
-                        {benefit.title}
-                      </h3>
-                      <p className="text-body text-gray-300 text-sm">{benefit.description}</p>
-                    </div>
+                  {/* Icon */}
+                  <div className="relative z-10">
+                    <Icon3D color={ICON_GOLD} size={48}>
+                      <Icon className="w-12 h-12" />
+                    </Icon3D>
                   </div>
+                </div>
+
+                {/* Card content */}
+                <div
+                  className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
+                  style={{
+                    background: 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                    border: `1px solid ${BRAND_YELLOW}44`,
+                    boxShadow: `0 0 40px ${BRAND_YELLOW}15`,
+                    opacity: 0.4 + cardProgress * 0.6,
+                    transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
+                    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+                  }}
+                >
+                  {/* Subtitle badge */}
+                  <div
+                    className={`inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3 ${isEven ? '' : 'md:float-right md:ml-3'}`}
+                    style={{
+                      background: `${BRAND_YELLOW}22`,
+                      color: BRAND_YELLOW,
+                    }}
+                  >
+                    {benefit.subtitle}
+                  </div>
+
+                  {/* Clear float for title */}
+                  {!isEven && <div className="hidden md:block clear-both" />}
+
+                  <h3
+                    className="font-heading font-bold mb-3 text-gray-100"
+                    style={{
+                      fontSize: 'clamp(20px, calc(18px + 0.5vw), 26px)',
+                    }}
+                  >
+                    {benefit.title}
+                  </h3>
+                  <p className="text-body leading-relaxed text-gray-400">
+                    {benefit.description}
+                  </p>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* CTA - always visible, no animation */}
+        {/* CTA - always visible */}
         <div className="text-center mt-12">
           <CTAButton href="/exp-realty-sponsor">See the Full Value Stack</CTAButton>
         </div>
