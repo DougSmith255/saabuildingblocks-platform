@@ -590,16 +590,23 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .h2-container {
       display: flex;
       justify-content: center;
-      gap: 0.5em;
+      gap: 0.3em;
       flex-wrap: wrap;
       position: relative;
-      padding-left: 0.35em;
-      padding-right: 0.35em;
+      padding-left: 0.25em;
+      padding-right: 0.25em;
       font-feature-settings: "ss01" 1;
       max-width: 1400px;
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 2.5rem;
+    }
+    @media (min-width: 768px) {
+      .h2-container {
+        gap: 0.5em;
+        padding-left: 0.35em;
+        padding-right: 0.35em;
+      }
     }
 
     .h2-word {

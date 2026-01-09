@@ -59,6 +59,28 @@ export default function H2({
   return (
     <>
       <style>{`
+        /* Responsive H2 container - tighter spacing on mobile */
+        .h2-container {
+          display: flex;
+          justify-content: center;
+          gap: 0.3em;
+          flex-wrap: wrap;
+          position: relative;
+          padding-left: 0.25em;
+          padding-right: 0.25em;
+          font-feature-settings: "ss01" 1;
+          margin-left: auto;
+          margin-right: auto;
+          margin-bottom: 2.5rem;
+        }
+        @media (min-width: 768px) {
+          .h2-container {
+            gap: 0.5em;
+            padding-left: 0.35em;
+            padding-right: 0.35em;
+          }
+        }
+
         /* Metal backing plate - 3D brushed gunmetal effect with glossy highlights */
         .h2-word::before {
           content: "";
@@ -97,20 +119,9 @@ export default function H2({
       `}</style>
 
       <h2
-        className={`text-h2 ${className}`}
+        className={`text-h2 h2-container ${className}`}
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '0.5em',
-          flexWrap: 'wrap',
-          position: 'relative',
-          paddingLeft: '0.35em',
-          paddingRight: '0.35em',
-          fontFeatureSettings: '"ss01" 1',
           maxWidth: style.maxWidth || '1400px',
-          marginLeft: 'auto',
-          marginRight: 'auto',
-          marginBottom: '2.5rem', // 40px consistent spacing
           ...style
         }}
       >
