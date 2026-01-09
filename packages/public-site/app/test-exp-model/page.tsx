@@ -409,15 +409,6 @@ function Variation3() {
     return () => observers.forEach(o => o.disconnect());
   }, []);
 
-  // Misty gold background for revealed state
-  const mistyBackground = `
-    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
-    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
-    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
-    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
-  `;
   const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
 
   return (
@@ -438,7 +429,6 @@ function Variation3() {
           {VARIATION_3_CARDS.map((card, index) => {
             const IconComponent = PILLAR_ICONS[index];
             const cardProgress = revealProgress[index];
-            const isRevealed = cardProgress > 0.5;
             const isEven = index % 2 === 0;
 
             return (
@@ -446,22 +436,14 @@ function Variation3() {
                 key={card.title}
                 className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
-                {/* Icon circle with clip-path reveal */}
+                {/* Icon circle */}
                 <div
                   className="w-32 h-32 md:w-40 md:h-40 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
-                    background: isRevealed
-                      ? 'rgba(20,18,12,0.85)'
-                      : 'rgba(255,255,255,0.08)',
-                    border: isRevealed
-                      ? '3px solid rgba(40,35,20,0.8)'
-                      : '2px solid rgba(255,255,255,0.15)',
-                    boxShadow: isRevealed
-                      ? '0 0 30px rgba(255,200,80,0.3), inset 0 0 20px rgba(0,0,0,0.2)'
-                      : 'none',
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '2px solid rgba(255,255,255,0.15)',
                     transform: `scale(${0.8 + cardProgress * 0.2})`,
                     opacity: 0.3 + cardProgress * 0.7,
-                    transition: 'background 0.3s, border 0.3s, box-shadow 0.3s',
                   }}
                 >
                   <Icon3D color={ICON_GOLD} size={64}>
@@ -473,37 +455,26 @@ function Variation3() {
                 <div
                   className={`flex-1 p-6 rounded-2xl ${isEven ? '' : 'md:text-right'}`}
                   style={{
-                    background: isRevealed ? mistyBackground : darkBackground,
-                    border: isRevealed
-                      ? '2px solid rgba(180,150,50,0.5)'
-                      : `1px solid ${BRAND_YELLOW}44`,
-                    boxShadow: isRevealed
-                      ? '0 0 40px 8px rgba(255,200,80,0.3), 0 0 80px 16px rgba(255,180,50,0.15)'
-                      : `0 0 40px ${BRAND_YELLOW}15`,
+                    background: darkBackground,
+                    border: `1px solid ${BRAND_YELLOW}44`,
+                    boxShadow: `0 0 40px ${BRAND_YELLOW}15`,
                     opacity: 0.4 + cardProgress * 0.6,
                     transform: `translateX(${isEven ? (1 - cardProgress) * 30 : (cardProgress - 1) * 30}px)`,
-                    transition: 'background 0.3s, border 0.3s, box-shadow 0.3s',
                   }}
                 >
                   <div
                     className={`inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3`}
                     style={{
-                      background: isRevealed ? 'rgba(42,42,42,0.6)' : `${BRAND_YELLOW}22`,
-                      color: isRevealed ? '#9a9a9a' : BRAND_YELLOW,
+                      background: `${BRAND_YELLOW}22`,
+                      color: BRAND_YELLOW,
                     }}
                   >
                     {card.subtitle}
                   </div>
-                  <h3
-                    className="text-h5 font-bold mb-3"
-                    style={{ color: isRevealed ? '#2a2a2a' : '#e5e5e5' }}
-                  >
+                  <h3 className="text-h5 font-bold mb-3 text-gray-100">
                     {card.title}
                   </h3>
-                  <p
-                    className="text-body leading-relaxed"
-                    style={{ color: isRevealed ? '#3a3a3a' : '#9ca3af' }}
-                  >
+                  <p className="text-body leading-relaxed text-gray-400">
                     {card.description}
                   </p>
                 </div>
@@ -913,15 +884,6 @@ function Variation7() {
     return 40 * (1 - p);
   };
 
-  // Misty gold background for revealed state
-  const mistyBackground = `
-    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
-    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
-    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
-    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
-  `;
   const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
 
   return (
@@ -942,8 +904,6 @@ function Variation7() {
           {VARIATION_7_CARDS.map((card, index) => {
             const IconComponent = PILLAR_ICONS[index];
             const id = `card7-${index}`;
-            const progress = elementProgress[id] || 0;
-            const isRevealed = progress > 0.6;
 
             return (
               <div
@@ -959,24 +919,17 @@ function Variation7() {
                 <div
                   className="p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-center gap-6"
                   style={{
-                    background: isRevealed ? mistyBackground : darkBackground,
-                    border: isRevealed
-                      ? '2px solid rgba(180,150,50,0.5)'
-                      : `1px solid ${BRAND_YELLOW}44`,
-                    boxShadow: isRevealed
-                      ? '0 0 40px 8px rgba(255,200,80,0.3), 0 0 80px 16px rgba(255,180,50,0.15)'
-                      : `0 0 40px ${BRAND_YELLOW}15`,
-                    transition: 'background 0.4s, border 0.4s, box-shadow 0.4s',
+                    background: darkBackground,
+                    border: `1px solid ${BRAND_YELLOW}44`,
+                    boxShadow: `0 0 40px ${BRAND_YELLOW}15`,
                   }}
                 >
                   {/* Icon circle */}
                   <div
                     className="w-20 h-20 md:w-24 md:h-24 rounded-full flex-shrink-0 flex items-center justify-center"
                     style={{
-                      background: isRevealed ? 'rgba(42,42,42,0.9)' : 'rgba(255,255,255,0.08)',
-                      border: isRevealed ? '3px solid rgba(42,42,42,0.7)' : '2px solid rgba(255,255,255,0.15)',
-                      boxShadow: isRevealed ? '0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15)' : 'none',
-                      transition: 'background 0.4s, border 0.4s, box-shadow 0.4s',
+                      background: 'rgba(255,255,255,0.08)',
+                      border: '2px solid rgba(255,255,255,0.15)',
                     }}
                   >
                     <Icon3D color={ICON_GOLD} size={48}>
@@ -985,22 +938,13 @@ function Variation7() {
                   </div>
 
                   <div className="text-center md:text-left">
-                    <p
-                      className="text-xs uppercase tracking-wider mb-1"
-                      style={{ color: isRevealed ? '#5a5a5a' : BRAND_YELLOW }}
-                    >
+                    <p className="text-xs uppercase tracking-wider mb-1" style={{ color: BRAND_YELLOW }}>
                       {card.subtitle}
                     </p>
-                    <h3
-                      className="text-h5 font-bold mb-2"
-                      style={{ color: isRevealed ? '#2a2a2a' : '#e5e5e5' }}
-                    >
+                    <h3 className="text-h5 font-bold mb-2 text-gray-100">
                       {card.title}
                     </h3>
-                    <p
-                      className="text-body"
-                      style={{ color: isRevealed ? '#3a3a3a' : '#9ca3af' }}
-                    >
+                    <p className="text-body text-gray-400">
                       {card.description}
                     </p>
                   </div>
