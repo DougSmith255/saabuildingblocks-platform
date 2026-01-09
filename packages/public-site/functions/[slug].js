@@ -1344,7 +1344,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .wyg-card-desc {
       color: #d1d5db;
-      font-size: 0.875rem;
+      font-family: var(--font-synonym);
+      font-size: var(--font-size-body);
+      line-height: 1.6;
     }
 
     /* WhyOnlyAtExp - 3D Rotating Card Stack with ScrollTrigger */
@@ -4719,9 +4721,25 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
 
         cards.forEach(function(card) {
+          var hasRevealed = false; // Track if card has been fully revealed
+
           var observer = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
+              // Once fully revealed, stay revealed (don't animate out at top)
+              if (hasRevealed) {
+                card.style.filter = 'blur(0px)';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0px)';
+                return;
+              }
+
               var p = entry.intersectionRatio;
+
+              // Mark as revealed when fully visible
+              if (p >= 0.95) {
+                hasRevealed = true;
+              }
+
               // Blur goes from 12px to 0 as card enters
               var blur = Math.max(0, 12 * (1 - p));
               // Opacity goes from 0 to 1
