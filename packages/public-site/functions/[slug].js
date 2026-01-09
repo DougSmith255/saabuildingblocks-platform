@@ -178,8 +178,7 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
 
     body {
       font-family: 'Synonym', system-ui, -apple-system, sans-serif;
-      background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
-      background-color: rgb(12, 12, 12);
+      background: transparent;
       color: #e5e4dd;
       min-height: 100vh;
       display: flex;
@@ -3823,7 +3822,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
 
     <!-- Built for Where Real Estate Is Going - Horizontal Scroll Cards -->
-    <section style="position: relative; padding-top: calc(4rem + 25px); padding-bottom: 4rem;" id="built-for-future">
+    <section style="position: relative; padding-top: calc(6rem + 25px); padding-bottom: 6rem;" id="built-for-future">
       <!-- Fixed background animation - outside pinned content -->
       <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0;">
         <!-- GrayscaleDataStream will be rendered here by JS -->
