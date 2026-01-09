@@ -2246,10 +2246,22 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
+      align-items: stretch;
     }
     @media (min-width: 768px) {
       .why-saa-grid {
         grid-template-columns: 7fr 5fr;
+        gap: 1.5rem;
+      }
+    }
+    .why-saa-right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      height: 100%;
+    }
+    @media (min-width: 768px) {
+      .why-saa-right-column {
         gap: 1.5rem;
       }
     }
@@ -3120,8 +3132,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         </div>
         <div class="why-saa-grid">
           <!-- Left Card - expands from left using clip-path -->
-          <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left">
-            <div id="saa-left-frame" class="rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); clip-path: inset(0 100% 0 0 round 16px); transition: clip-path 0.1s ease-out;">
+          <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left" style="height: 100%;">
+            <div id="saa-left-frame" class="rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); clip-path: inset(0 100% 0 0 round 16px); transition: clip-path 0.1s ease-out; height: 100%;">
               <div id="saa-left-content" style="padding: 2rem 2.5rem; opacity: 0;">
                 <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
@@ -3149,8 +3161,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
           </div>
           <!-- Right Card - Aligned Incentives - expands from right using clip-path -->
-          <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="min-height: 300px;">
-            <div id="saa-right-frame" class="rounded-2xl overflow-hidden relative h-full" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(0 0 0 100% round 16px); transition: clip-path 0.1s ease-out; min-height: 300px;">
+          <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
+            <div id="saa-right-frame" class="rounded-2xl overflow-hidden relative" style="border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(0 0 0 100% round 16px); transition: clip-path 0.1s ease-out; height: 100%; min-height: 300px;">
               <!-- Image is always visible -->
               <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
