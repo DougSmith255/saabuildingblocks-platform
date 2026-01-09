@@ -243,7 +243,7 @@ export default function AgentPortalLogin() {
 
   return (
     <main id="main-content" className="relative min-h-[100dvh] overflow-hidden">
-      {/* Get Help Link Styles */}
+      {/* Link Styles */}
       <style>{`
         .get-help-link {
           color: rgba(255, 255, 255, 0.4);
@@ -253,6 +253,31 @@ export default function AgentPortalLogin() {
         }
         .get-help-link:hover {
           color: #ffd700;
+        }
+        .forgot-link {
+          background: transparent;
+          border: none;
+          color: rgba(255, 255, 255, 0.5);
+          font-size: 0.85rem;
+          cursor: pointer;
+          transition: color 0.2s ease;
+        }
+        .forgot-link:hover {
+          color: #ffd700;
+        }
+        .forgot-links-container {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          align-items: center;
+          margin-top: 1rem;
+        }
+        @media (min-width: 400px) {
+          .forgot-links-container {
+            flex-direction: row;
+            justify-content: center;
+            gap: 1.25rem;
+          }
         }
       `}</style>
 
@@ -349,30 +374,18 @@ export default function AgentPortalLogin() {
             </div>
 
             {/* Forgot Username/Password Links */}
-            <div className="text-center" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+            <div className="forgot-links-container">
               <button
                 type="button"
                 onClick={openUsernameModal}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                }}
+                className="forgot-link"
               >
                 Forgot username?
               </button>
               <button
                 type="button"
                 onClick={openResetModal}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                }}
+                className="forgot-link"
               >
                 Forgot password?
               </button>
