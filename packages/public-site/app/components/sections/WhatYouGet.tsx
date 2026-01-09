@@ -165,13 +165,11 @@ export function WhatYouGet() {
                       backgroundPosition: 'center',
                     }}
                   />
-                  {/* Glass overlay */}
+                  {/* Dark overlay - no blur so image shows through */}
                   <div
                     className="absolute inset-0"
                     style={{
-                      background: 'linear-gradient(180deg, rgba(20,20,20,0.85), rgba(10,10,10,0.9))',
-                      backdropFilter: 'blur(8px)',
-                      WebkitBackdropFilter: 'blur(8px)',
+                      background: 'linear-gradient(180deg, rgba(20,20,20,0.7), rgba(10,10,10,0.8))',
                     }}
                   />
                   {/* Subtitle badge */}

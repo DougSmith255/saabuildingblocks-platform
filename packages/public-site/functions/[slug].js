@@ -1360,9 +1360,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .wyg-card-glass-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(20,20,20,0.85), rgba(10,10,10,0.9));
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(20,20,20,0.7), rgba(10,10,10,0.8));
     }
     .wyg-card-content-inner {
       position: relative;
