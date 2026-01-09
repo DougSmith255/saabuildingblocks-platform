@@ -4974,21 +4974,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // Start the magnetic animation loop
         rafId = requestAnimationFrame(animateMagnetic);
 
-        // Create GSAP timeline for content drift (desktop only)
-        var isMobileCards = window.innerWidth < 768;
+        // Create GSAP timeline for content drift
         const tl = gsap.timeline();
-
-        // Only apply Y drift on desktop - on mobile it causes content to get cut off
-        if (!isMobileCards) {
-          tl.to(contentEl, {
-            y: -60, // Drift upward by 60px total (from +30 to -30)
-            duration: 1,
-            ease: 'none',
-          });
-        }
+        tl.to(contentEl, {
+          y: -60, // Drift upward by 60px total (from +30 to -30)
+          duration: 1,
+          ease: 'none',
+        });
 
         // Create ScrollTrigger for pinning and progress tracking
         // Pin trigger at 55% from top of viewport
+        var isMobileCards = window.innerWidth < 768;
         ScrollTrigger.create({
           trigger: triggerEl,
           start: 'center 55%',
@@ -4996,7 +4992,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           pin: true,
           pinSpacing: true,
           scrub: 0.5,
-          animation: isMobileCards ? undefined : tl,
+          animation: tl,
           onUpdate: function(self) {
             // Map scroll progress to card progress with grace periods
             // On mobile, cards move 2x faster relative to scroll
@@ -5369,19 +5365,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           }
         });
 
-        // Y drift animation (desktop only - on mobile it causes content to get cut off)
-        if (!isMobileHorizontal) {
-          gsap.to(content, {
-            y: -60,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: trigger,
-              start: pinStartHorizontal,
-              end: '+=300%',
-              scrub: 2.5
-            }
-          });
-        }
+        // Y drift animation - exact from React
+        gsap.to(content, {
+          y: -60,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: trigger,
+            start: pinStartHorizontal,
+            end: '+=300%',
+            scrub: 2.5
+          }
+        });
 
         // Initialize at position 0
         updateCards(0);
