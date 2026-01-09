@@ -143,8 +143,6 @@ export function BuiltForFuture() {
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const isMobileView = window.innerWidth < 768;
-
     // Grace period: 10% at start and 10% at end of scroll range
     const GRACE = 0.1;
     const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
@@ -190,15 +188,13 @@ export function BuiltForFuture() {
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
     const ctx = gsap.context(() => {
-      // On mobile: trigger based on cards container, shorter scroll distance
-      // On desktop: trigger based on section wrapper
       ScrollTrigger.create({
-        trigger: isMobileView ? cardsContainerRef.current : triggerRef.current,
+        trigger: triggerRef.current,
         start: 'center center',
-        end: isMobileView ? '+=200%' : '+=300%', // Shorter scroll distance on mobile
+        end: '+=300%',
         pin: triggerRef.current,
         pinSpacing: true,
-        scrub: isMobileView ? 0.3 : 0.5, // Faster response on mobile
+        scrub: 0.5,
         onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card positions with grace periods
           let cardPosition = 0;
@@ -217,11 +213,10 @@ export function BuiltForFuture() {
         },
       });
 
-      // Subtle Y drift animation (desktop only)
-      if (!isMobileView) {
-        gsap.to(contentRef.current, {
-          y: -60,
-          ease: 'none',
+      // Subtle Y drift animation
+      gsap.to(contentRef.current, {
+        y: -60,
+        ease: 'none',
           scrollTrigger: {
             trigger: triggerRef.current,
             start: 'center center',
@@ -229,7 +224,6 @@ export function BuiltForFuture() {
             scrub: 2.5,
           }
         });
-      }
     }, sectionRef);
 
     return () => {
@@ -269,7 +263,7 @@ export function BuiltForFuture() {
           ref={contentRef}
           className="relative"
           style={{
-            transform: isMobile ? 'none' : 'translateY(30px)', // Start 30px below center on desktop
+            transform: 'translateY(30px)', // Start 30px below center
           }}
         >
           {/* Section Header */}

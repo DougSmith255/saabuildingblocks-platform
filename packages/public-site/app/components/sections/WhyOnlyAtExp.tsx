@@ -96,7 +96,6 @@ export function WhyOnlyAtExp() {
   const contentRef = useRef<HTMLDivElement>(null);
   const cardStackRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
   // Refs for magnetic effect
   const rawProgressRef = useRef(0);
@@ -107,18 +106,8 @@ export function WhyOnlyAtExp() {
 
   const totalCards = STEPS.length;
 
-  // Detect mobile screen size
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const isMobileView = window.innerWidth < 768;
 
     // Grace period: 10% at start and 10% at end of scroll range
     const GRACE = 0.1;
@@ -163,28 +152,24 @@ export function WhyOnlyAtExp() {
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
     const ctx = gsap.context(() => {
-      // Timeline animates the glass+content together (desktop only)
+      // Timeline animates the glass+content together
       const tl = gsap.timeline();
 
-      if (!isMobileView) {
-        tl.to(contentRef.current, {
-          y: -60, // Drift upward by 60px total (from +30 to -30)
-          duration: 1,
-          ease: 'none',
-        });
-      }
+      tl.to(contentRef.current, {
+        y: -60, // Drift upward by 60px total (from +30 to -30)
+        duration: 1,
+        ease: 'none',
+      });
 
       // Pin when the CARD STACK reaches center of screen
-      // On mobile: trigger based on card stack position, pin the card stack area
-      // On desktop: same trigger, pin the wrapper
       ScrollTrigger.create({
         trigger: cardStackRef.current,
         start: 'center center',
-        end: isMobileView ? '+=150%' : '+=200%', // Shorter scroll distance on mobile
-        pin: triggerRef.current, // Pin the wrapper
+        end: '+=200%',
+        pin: triggerRef.current,
         pinSpacing: true,
-        scrub: isMobileView ? 0.3 : 0.5, // Faster response on mobile
-        animation: isMobileView ? undefined : tl,
+        scrub: 0.5,
+        animation: tl,
         onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card progress with grace periods
           let cardProgress = 0;
@@ -207,7 +192,7 @@ export function WhyOnlyAtExp() {
       cancelAnimationFrame(rafRef.current);
       ctx.revert();
     };
-  }, [totalCards, isMobile]);
+  }, [totalCards]);
 
   return (
     <section ref={sectionRef}>
@@ -219,7 +204,7 @@ export function WhyOnlyAtExp() {
           className="rounded-3xl overflow-hidden relative"
           style={{
             ...GLASS_STYLES,
-            transform: isMobile ? 'none' : 'translateY(30px)', // Start 30px below center on desktop
+            transform: 'translateY(30px)', // Start 30px below center
           }}
         >
           {/* Noise texture overlay */}
@@ -249,7 +234,7 @@ export function WhyOnlyAtExp() {
                     className="relative w-full"
                     style={{
                       perspective: '1200px',
-                      height: isMobile ? '280px' : '340px',
+                      height: '340px',
                     }}
                   >
                         {STEPS.map((step, index) => {
@@ -327,7 +312,7 @@ export function WhyOnlyAtExp() {
                                     boxShadow: '0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15)',
                                   }}
                                 >
-                                  <Number3D num={step.num} size={isMobile ? 'small' : 'medium'} highlight />
+                                  <Number3D num={step.num} size="medium" highlight />
                                 </div>
                               ) : (
                                 <div
@@ -337,7 +322,7 @@ export function WhyOnlyAtExp() {
                                     border: '2px solid rgba(255,255,255,0.15)',
                                   }}
                                 >
-                                  <Number3D num={step.num} size={isMobile ? 'small' : 'medium'} />
+                                  <Number3D num={step.num} size="medium" />
                                 </div>
                               )}
                               <p
@@ -355,7 +340,7 @@ export function WhyOnlyAtExp() {
                   </div>
 
                   {/* 3D Plasma Tube Progress Bar */}
-                  <div className={`flex justify-center ${isMobile ? 'mt-8' : 'mt-16'}`}>
+                  <div className="flex justify-center mt-16">
                     <div
                       className="w-80 h-3 rounded-full overflow-hidden relative"
                       style={{
