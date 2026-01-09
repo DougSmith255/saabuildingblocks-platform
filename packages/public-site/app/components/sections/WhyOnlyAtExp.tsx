@@ -197,7 +197,13 @@ export function WhyOnlyAtExp() {
   return (
     <section ref={sectionRef}>
       {/* Invisible wrapper that gets pinned */}
-      <div ref={triggerRef}>
+      <div
+        ref={triggerRef}
+        style={{
+          willChange: 'transform',
+          contain: 'layout style paint',
+        }}
+      >
         {/* Glass panel + content - this entire thing animates upward (desktop only) */}
         <div
           ref={contentRef}
@@ -295,11 +301,12 @@ export function WhyOnlyAtExp() {
                                 boxShadow: step.highlight
                                   ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
                                   : `0 0 40px ${BRAND_YELLOW}15, 0 30px 60px -30px rgba(0,0,0,0.8)`,
-                                transform: `perspective(1200px) rotateX(${rotateX}deg) translateZ(${translateZ}px) translateY(${translateY}px) scale(${scale})`,
+                                transform: `perspective(1200px) rotateX(${rotateX}deg) translate3d(0, ${translateY}px, ${translateZ}px) scale(${scale})`,
                                 transformOrigin: 'center bottom',
                                 opacity,
                                 zIndex: totalCards - index,
                                 backfaceVisibility: 'hidden',
+                                willChange: 'transform, opacity',
                                 transition: 'background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out',
                               }}
                             >

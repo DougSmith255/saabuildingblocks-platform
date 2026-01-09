@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react';
+import React, { useEffect, useRef, useState, useMemo, useLayoutEffect } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -24,7 +24,7 @@ const BRAND_YELLOW = '#ffd700';
  */
 
 function GrayscaleDataStream() {
-  const [time, setTime] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
   const timeRef = useRef(0);
   const rafRef = useRef<number>(0);
@@ -39,6 +39,7 @@ function GrayscaleDataStream() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Animation loop that updates DOM directly without React re-renders
   useEffect(() => {
     const BASE_SPEED = 0.00028;
     let lastTimestamp = 0;
@@ -56,8 +57,13 @@ function GrayscaleDataStream() {
       const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
       lastTimestamp = timestamp;
       timeRef.current += BASE_SPEED * deltaTime * scrollSpeedRef.current;
-      setTime(timeRef.current);
       scrollSpeedRef.current = Math.max(1, scrollSpeedRef.current * 0.95);
+
+      // Update CSS custom property directly on container - no React re-render
+      if (containerRef.current) {
+        containerRef.current.style.setProperty('--stream-time', String(timeRef.current));
+      }
+
       rafRef.current = requestAnimationFrame(animate);
     };
 
@@ -77,41 +83,103 @@ function GrayscaleDataStream() {
     offset: (i * 17) % 100,
   })), [columnCount, columnWidth]);
 
-  const getChar = (colIndex: number, charIndex: number) => {
-    const flipRate = 0.6 + (colIndex % 3) * 0.3;
-    const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
-    return charSeed % 2 === 0 ? '0' : '1';
-  };
-
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
-      {columnConfigs.map((col, i) => {
-        const columnOffset = (time * col.speed * 60 + col.offset) % 110;
-        const numChars = 22;
-        return (
-          <div key={i} className="absolute" style={{ left: col.x + '%', top: 0, width: columnWidth + '%', height: '100%', overflow: 'hidden', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.4' }}>
-            {[...Array(numChars)].map((_, j) => {
-              const baseY = j * 5;
-              const charY = (baseY + columnOffset) % 110 - 10;
-              const headPosition = (columnOffset / 5) % numChars;
-              const distanceFromHead = (j - headPosition + numChars) % numChars;
-              const isHead = distanceFromHead === 0;
-              const trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
-              const edgeFade = charY < 12 ? Math.max(0, charY / 12) : charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
-              const headColor = 'rgba(180,180,180,' + (0.4 * edgeFade) + ')';
-              const trailColor = 'rgba(120,120,120,' + (trailBrightness * 0.25 * edgeFade) + ')';
-              return (
-                <div key={j} style={{ position: 'absolute', top: charY + '%', color: isHead ? headColor : trailColor, textShadow: isHead ? '0 0 6px rgba(150,150,150,' + (0.3 * edgeFade) + ')' : '0 0 2px rgba(100,100,100,' + (0.1 * edgeFade) + ')', opacity: edgeFade }}>
-                  {getChar(i, j)}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+    <div
+      ref={containerRef}
+      className="absolute inset-0 pointer-events-none overflow-hidden"
+      style={{ zIndex: 0, contain: 'strict' }}
+    >
+      {columnConfigs.map((col, i) => (
+        <DataStreamColumn key={i} col={col} colIndex={i} columnWidth={columnWidth} />
+      ))}
     </div>
   );
 }
+
+// Memoized column component - only re-renders when props change (they don't during animation)
+const DataStreamColumn = React.memo(function DataStreamColumn({
+  col,
+  colIndex,
+  columnWidth,
+}: {
+  col: { x: number; speed: number; offset: number };
+  colIndex: number;
+  columnWidth: number;
+}) {
+  const columnRef = useRef<HTMLDivElement>(null);
+  const numChars = 22;
+
+  // Update positions via RAF reading parent's CSS custom property
+  useEffect(() => {
+    let rafId: number;
+
+    const updatePositions = () => {
+      const container = columnRef.current?.parentElement;
+      if (!container || !columnRef.current) {
+        rafId = requestAnimationFrame(updatePositions);
+        return;
+      }
+
+      const time = parseFloat(container.style.getPropertyValue('--stream-time') || '0');
+      const columnOffset = (time * col.speed * 60 + col.offset) % 110;
+
+      const chars = columnRef.current.children;
+      for (let j = 0; j < chars.length; j++) {
+        const charEl = chars[j] as HTMLElement;
+        const baseY = j * 5;
+        const charY = (baseY + columnOffset) % 110 - 10;
+        const headPosition = (columnOffset / 5) % numChars;
+        const distanceFromHead = (j - headPosition + numChars) % numChars;
+        const isHead = distanceFromHead === 0;
+        const trailBrightness = isHead ? 1 : Math.max(0, 1 - distanceFromHead * 0.08);
+        const edgeFade = charY < 12 ? Math.max(0, charY / 12) : charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
+
+        charEl.style.top = charY + '%';
+        charEl.style.opacity = String(edgeFade);
+        charEl.style.color = isHead
+          ? `rgba(180,180,180,${0.4 * edgeFade})`
+          : `rgba(120,120,120,${trailBrightness * 0.25 * edgeFade})`;
+        charEl.style.textShadow = isHead
+          ? `0 0 6px rgba(150,150,150,${0.3 * edgeFade})`
+          : `0 0 2px rgba(100,100,100,${0.1 * edgeFade})`;
+
+        // Update character (0 or 1) based on time
+        const flipRate = 0.6 + (colIndex % 3) * 0.3;
+        const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + j * 13);
+        charEl.textContent = charSeed % 2 === 0 ? '0' : '1';
+      }
+
+      rafId = requestAnimationFrame(updatePositions);
+    };
+
+    rafId = requestAnimationFrame(updatePositions);
+    return () => cancelAnimationFrame(rafId);
+  }, [col.speed, col.offset, colIndex]);
+
+  return (
+    <div
+      ref={columnRef}
+      className="absolute"
+      style={{
+        left: col.x + '%',
+        top: 0,
+        width: columnWidth + '%',
+        height: '100%',
+        overflow: 'hidden',
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        lineHeight: '1.4',
+        contain: 'layout style',
+      }}
+    >
+      {[...Array(numChars)].map((_, j) => (
+        <div key={j} style={{ position: 'absolute', willChange: 'top, opacity, color' }}>
+          0
+        </div>
+      ))}
+    </div>
+  );
+});
 
 const FUTURE_HEADLINE = "Built for Where Real Estate Is Going";
 const FUTURE_SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA is already there.";
@@ -257,7 +325,15 @@ export function BuiltForFuture() {
       </div>
 
       {/* Invisible wrapper that gets pinned */}
-      <div ref={triggerRef} className="relative" style={{ zIndex: 1 }}>
+      <div
+        ref={triggerRef}
+        className="relative"
+        style={{
+          zIndex: 1,
+          willChange: 'transform',
+          contain: 'layout style paint',
+        }}
+      >
         {/* Content - animates upward (desktop only) */}
         <div
           ref={contentRef}
@@ -384,9 +460,10 @@ export function BuiltForFuture() {
                               className="flex-shrink-0"
                               style={{
                                 width: `${CARD_WIDTH}px`,
-                                transform: `scale(${scale})`,
+                                transform: `scale3d(${scale}, ${scale}, 1) translate3d(0, 0, 0)`,
                                 filter: `blur(${blurAmount + blackoutOpacity * 4}px) grayscale(${blackoutOpacity * 100}%) brightness(${1 - blackoutOpacity * 0.6})`,
                                 opacity: 1 - blackoutOpacity * 0.4,
+                                willChange: 'transform, filter, opacity',
                                 transition: 'transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out',
                               }}
                             >
