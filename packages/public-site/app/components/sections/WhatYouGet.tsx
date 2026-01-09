@@ -7,257 +7,187 @@ import { Users, DollarSign, Bot, GraduationCap, Globe } from 'lucide-react';
 
 /**
  * What You Get with SAA Section
- * Interactive tabbed display with auto-rotation and background images
+ * Blur reveal cards that animate in as user scrolls (Variation 7 style)
  */
 
 const BRAND_YELLOW = '#ffd700';
+const ICON_GOLD = '#c4a94d';
 
 const BENEFITS = [
   {
     icon: Users,
     title: "Connected Leadership and Community",
-    tabLabel: "Connected",
     description: "Big enough to back you. Small enough to know you. Real access, real wins, real support.",
-    autoAdvanceTime: 6000,
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public',
-    bgAlt: 'Connected Leadership - Real estate team collaboration and support',
   },
   {
     icon: DollarSign,
     title: "Passive Income Infrastructure",
-    tabLabel: "Passive",
     description: "We handle the structure so you can build long-term income without relying solely on transactions.",
-    autoAdvanceTime: 5000,
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public',
-    bgAlt: 'Passive Income Infrastructure - Revenue share and wealth building',
   },
   {
     icon: Bot,
     title: "Done-For-You Production Systems",
-    tabLabel: "Done-For-You",
     description: "Curated systems designed to save time, not create tech overload.",
-    autoAdvanceTime: 4000,
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public',
-    bgAlt: 'Done-For-You Production Systems - AI tools and automation',
   },
   {
     icon: GraduationCap,
     title: "Elite Training Libraries",
-    tabLabel: "Elite",
     description: "AI, social media, investing, and modern production systems, available when you need them.",
-    autoAdvanceTime: 5000,
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public',
-    bgAlt: 'Elite Training Libraries - World-class real estate education',
   },
   {
     icon: Globe,
     title: "Private Referrals & Global Collaboration",
-    tabLabel: "Private",
     description: "Warm introductions and deal flow inside a global agent network.",
-    autoAdvanceTime: 4000,
     bgImage: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public',
-    bgAlt: 'Private Referrals - Global agent network and collaboration',
   },
 ];
 
-// Scroll reveal hook
-function useScrollReveal(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
+export function WhatYouGet() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [elementProgress, setElementProgress] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
+    const elements = sectionRef.current?.querySelectorAll('.blur-reveal');
+    if (!elements) return;
+
+    const observers = Array.from(elements).map((el) => {
+      const id = el.getAttribute('data-id') || '';
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            setElementProgress(prev => ({ ...prev, [id]: entry.intersectionRatio }));
+          });
+        },
+        {
+          threshold: Array.from({ length: 50 }, (_, i) => i / 50),
+          rootMargin: '-5% 0px -5% 0px',
         }
-      },
-      { threshold }
-    );
+      );
+      observer.observe(el);
+      return observer;
+    });
 
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    return () => observers.forEach(o => o.disconnect());
+  }, []);
 
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
-}
-
-export function WhatYouGet() {
-  const [activeTab, setActiveTab] = useState(0);
-  const [userInteracted, setUserInteracted] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Individual scroll reveal for each element
-  const { ref: headerRef, isVisible: isHeaderVisible } = useScrollReveal(0.5);
-  const { ref: tabsRef, isVisible: isTabsVisible } = useScrollReveal(0.5);
-  const { ref: cardRef, isVisible: isCardVisible } = useScrollReveal(0.3);
-  const { ref: dotsRef, isVisible: isDotsVisible } = useScrollReveal(0.5);
-  const { ref: ctaRef, isVisible: isCtaVisible } = useScrollReveal(0.5);
-
-  const activeBenefit = BENEFITS[activeTab];
-  const Icon = activeBenefit.icon;
-
-  // Auto-advance tabs with variable timing (only if user hasn't interacted)
-  const startTimer = () => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (userInteracted) return; // Stop auto-advance after user clicks
-    timerRef.current = setTimeout(() => {
-      setActiveTab(prev => (prev + 1) % BENEFITS.length);
-    }, BENEFITS[activeTab].autoAdvanceTime);
+  const getBlur = (id: string) => {
+    const p = elementProgress[id] || 0;
+    return Math.max(0, 12 * (1 - p));
   };
 
-  useEffect(() => {
-    // Only start auto-rotation when the card is visible (not just the section)
-    if (isCardVisible && !userInteracted) {
-      startTimer();
-    }
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [activeTab, isCardVisible, userInteracted]);
+  const getOpacity = (id: string) => {
+    const p = elementProgress[id] || 0;
+    return Math.min(1, p);
+  };
 
-  const handleTabClick = (index: number) => {
-    setUserInteracted(true); // Permanently disable auto-advance
-    if (timerRef.current) clearTimeout(timerRef.current);
-    setActiveTab(index);
+  const getTranslateY = (id: string) => {
+    const p = elementProgress[id] || 0;
+    return 30 * (1 - p);
   };
 
   return (
-    <section className="py-16 md:py-24 px-6 relative">
-      <style>{`
-        @keyframes whatYouGetFadeIn {
-          from { opacity: 0; transform: translateX(10px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .what-you-get-animate {
-          animation: whatYouGetFadeIn 0.3s ease-out forwards;
-        }
-      `}</style>
+    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
       <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
-        {/* Header */}
-        <div
-          ref={headerRef}
-          className="text-center transition-all duration-700"
-          style={{
-            opacity: isHeaderVisible ? 1 : 0,
-            transform: isHeaderVisible ? 'translateY(0)' : 'translateY(30px)',
-          }}
-        >
+        {/* Header - always visible */}
+        <div className="text-center mb-12">
           <H2>What You Get with SAA</H2>
-          <p className="text-body opacity-60 mb-8">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
+          <p className="text-body opacity-60 mt-4 max-w-2xl mx-auto">
+            Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.
+          </p>
         </div>
 
-        {/* Tab buttons - centered, wrap on mobile */}
-        <div
-          ref={tabsRef}
-          className="flex flex-wrap justify-center gap-2 pb-2 mb-6 transition-all duration-700"
-          style={{
-            opacity: isTabsVisible ? 1 : 0,
-            transform: isTabsVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
-        >
-          {BENEFITS.map((benefit, i) => {
-            const TabIcon = benefit.icon;
-            const isActive = activeTab === i;
+        {/* Blur reveal cards - 2 columns on xl (1200px+), 1 column below */}
+        <style>{`
+          .wyg-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          @media (min-width: 1200px) {
+            .wyg-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 1.5rem;
+            }
+            .wyg-grid .wyg-full-width {
+              grid-column: 1 / -1;
+            }
+          }
+        `}</style>
+        <div className="wyg-grid mx-auto" style={{ maxWidth: '1400px' }}>
+          {BENEFITS.map((benefit, index) => {
+            const Icon = benefit.icon;
+            const id = `saa-card-${index}`;
+            const isLastCard = index === BENEFITS.length - 1;
             return (
-              <button
-                key={i}
-                onClick={() => handleTabClick(i)}
-                className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 whitespace-nowrap flex-shrink-0"
+              <div
+                key={benefit.title}
+                className={`blur-reveal${isLastCard ? ' wyg-full-width' : ''}`}
+                data-id={id}
                 style={{
-                  backgroundColor: isActive ? BRAND_YELLOW : 'rgba(255,255,255,0.05)',
-                  color: isActive ? '#111' : 'rgba(255,255,255,0.7)',
-                  border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                  filter: `blur(${getBlur(id)}px)`,
+                  opacity: getOpacity(id),
+                  transform: `translateY(${getTranslateY(id)}px)`,
                 }}
               >
-                {isActive ? (
-                  <TabIcon className="w-4 h-4" />
-                ) : (
-                  <Icon3D><TabIcon className="w-4 h-4" /></Icon3D>
-                )}
-                <span className="font-heading font-medium text-sm">{benefit.tabLabel}</span>
-              </button>
+                <div
+                  className="rounded-2xl overflow-hidden relative h-full"
+                  style={{
+                    minHeight: '160px',
+                  }}
+                >
+                  {/* Background image */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: `url(${benefit.bgImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(90deg, rgba(30,30,30,0.88) 0%, rgba(40,40,40,0.75) 50%, rgba(50,50,50,0.6) 100%)',
+                    }}
+                  />
+                  {/* Left accent border */}
+                  <div
+                    className="absolute left-0 top-0 bottom-0 w-1"
+                    style={{ backgroundColor: BRAND_YELLOW }}
+                  />
+                  {/* Content */}
+                  <div className="relative z-10 flex items-center gap-6 p-6">
+                    <div className="flex-shrink-0">
+                      <Icon3D color={ICON_GOLD} size={56}>
+                        <Icon className="w-14 h-14" />
+                      </Icon3D>
+                    </div>
+                    <div>
+                      <h3
+                        className="font-heading font-bold mb-2"
+                        style={{
+                          color: 'var(--color-heading, #f5f5f0)',
+                          fontSize: 'clamp(20px, calc(18px + 0.5vw), 28px)',
+                        }}
+                      >
+                        {benefit.title}
+                      </h3>
+                      <p className="text-body text-gray-300 text-sm">{benefit.description}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
 
-        {/* Active content card with background image */}
-        <div
-          ref={cardRef}
-          className="transition-all duration-700 mb-10 rounded-2xl border border-white/10 overflow-hidden relative h-[210px] md:h-[190px]"
-          style={{
-            opacity: isCardVisible ? 1 : 0,
-            transform: isCardVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
-        >
-          {/* Background image */}
-          <div
-            key={`bg-${activeTab}`}
-            className="absolute inset-0 what-you-get-animate"
-            style={{
-              backgroundImage: `url(${activeBenefit.bgImage})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          />
-          {/* Gradient overlay */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: 'linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.5) 100%)',
-            }}
-          />
-          {/* Content */}
-          <div key={activeTab} className="what-you-get-animate relative z-10 flex flex-row items-center gap-6 h-full p-8">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)', backdropFilter: 'blur(4px)' }}
-            >
-              <Icon3D><Icon className="w-8 h-8" /></Icon3D>
-            </div>
-            <div className="text-left flex-1">
-              <h3 className="font-heading text-xl font-bold mb-2" style={{ color: BRAND_YELLOW }}>
-                {activeBenefit.title}
-              </h3>
-              <p className="text-body text-base">{activeBenefit.description}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress indicators */}
-        <div
-          ref={dotsRef}
-          className="flex justify-center gap-2 mb-8 transition-all duration-700"
-          style={{
-            opacity: isDotsVisible ? 1 : 0,
-          }}
-        >
-          {BENEFITS.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => handleTabClick(i)}
-              className="w-2 h-2 rounded-full transition-all duration-300"
-              style={{
-                backgroundColor: i === activeTab ? BRAND_YELLOW : 'rgba(255,255,255,0.2)',
-                transform: i === activeTab ? 'scale(1.5)' : 'scale(1)',
-              }}
-            />
-          ))}
-        </div>
-
-        {/* CTA */}
-        <div
-          ref={ctaRef}
-          className="text-center transition-all duration-700"
-          style={{
-            opacity: isCtaVisible ? 1 : 0,
-            transform: isCtaVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
-        >
+        {/* CTA - always visible, no animation */}
+        <div className="text-center mt-12">
           <CTAButton href="/exp-realty-sponsor">See the Full Value Stack</CTAButton>
         </div>
       </div>
