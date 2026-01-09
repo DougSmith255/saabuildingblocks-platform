@@ -182,14 +182,17 @@ export function WhyOnlyAtExp() {
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
     const ctx = gsap.context(() => {
-      // Timeline animates the glass+content together
+      // Timeline animates the glass+content together (desktop only)
       const tl = gsap.timeline();
 
-      tl.to(contentRef.current, {
-        y: -60, // Drift upward by 60px total (from +30 to -30)
-        duration: 1,
-        ease: 'none',
-      });
+      // Only apply Y drift on desktop - on mobile it causes content to get cut off
+      if (!isMobileRef.current) {
+        tl.to(contentRef.current, {
+          y: -60, // Drift upward by 60px total (from +30 to -30)
+          duration: 1,
+          ease: 'none',
+        });
+      }
 
       // Pin when the CARD STACK reaches 55% from top of viewport
       ScrollTrigger.create({
@@ -199,7 +202,7 @@ export function WhyOnlyAtExp() {
         pin: triggerRef.current,
         pinSpacing: true,
         scrub: 0.5,
-        animation: tl,
+        animation: isMobileRef.current ? undefined : tl,
         onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card progress with grace periods
           // On mobile, cards move 2x faster relative to scroll

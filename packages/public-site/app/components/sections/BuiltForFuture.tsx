@@ -316,10 +316,11 @@ export function BuiltForFuture() {
         },
       });
 
-      // Subtle Y drift animation
-      gsap.to(contentRef.current, {
-        y: -60,
-        ease: 'none',
+      // Subtle Y drift animation (desktop only - on mobile it causes content to get cut off)
+      if (!isMobile) {
+        gsap.to(contentRef.current, {
+          y: -60,
+          ease: 'none',
           scrollTrigger: {
             trigger: triggerRef.current,
             start: pinStart,
@@ -327,6 +328,7 @@ export function BuiltForFuture() {
             scrub: 2.5,
           }
         });
+      }
     }, sectionRef);
 
     return () => {
