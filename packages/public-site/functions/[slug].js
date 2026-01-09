@@ -4975,6 +4975,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         rafId = requestAnimationFrame(animateMagnetic);
 
         // Create GSAP timeline for content drift
+        var isMobileCards = window.innerWidth < 768;
         const tl = gsap.timeline();
         tl.to(contentEl, {
           y: -60, // Drift upward by 60px total (from +30 to -30)
@@ -4984,7 +4985,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         // Create ScrollTrigger for pinning and progress tracking
         // Pin trigger at 55% from top of viewport
-        var isMobileCards = window.innerWidth < 768;
         ScrollTrigger.create({
           trigger: triggerEl,
           start: 'center 55%',

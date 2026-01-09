@@ -234,7 +234,7 @@ export function WhyOnlyAtExp() {
         ref={triggerRef}
         style={{
           willChange: 'transform',
-          contain: 'layout style paint',
+          contain: 'layout style', // Removed 'paint' to allow content to extend beyond bounds during Y drift
         }}
       >
         {/* Glass panel + content - this entire thing animates upward (desktop only) */}

@@ -366,7 +366,7 @@ export function BuiltForFuture() {
         style={{
           zIndex: 1,
           willChange: 'transform',
-          contain: 'layout style paint',
+          contain: 'layout style', // Removed 'paint' to allow content to extend beyond bounds during Y drift
         }}
       >
         {/* Content - animates upward (desktop only) */}
