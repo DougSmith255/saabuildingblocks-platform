@@ -3831,11 +3831,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       </div>
 
       <!-- Invisible wrapper that gets pinned -->
-      <div id="built-future-trigger" style="position: relative; z-index: 1;">
-        <!-- Content - animates upward -->
-        <div id="built-future-content" style="position: relative; transform: translateY(30px);">
+      <div id="built-future-trigger" style="position: relative; z-index: 1; overflow: visible;">
+        <!-- Content -->
+        <div id="built-future-content" style="position: relative;">
           <!-- Section Header - extra top padding for H2 metal backing plate -->
-          <div style="text-align: center; margin-bottom: 1rem; padding-top: 0.5rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+          <div style="text-align: center; margin-bottom: 1rem; padding-top: 1rem; padding-left: 1.5rem; padding-right: 1.5rem;">
             <h2 class="text-h2 h2-container" style="max-width: 100%;">
               <span class="h2-word">Built</span>
               <span class="h2-word">for</span>
@@ -3868,7 +3868,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
 
           <!-- 3D Plasma Tube Progress Bar -->
-          <div style="display: flex; justify-content: center; margin-top: 2rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+          <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 3rem; padding-left: 1.5rem; padding-right: 1.5rem;">
             <div style="width: 320px; height: 12px; border-radius: 9999px; overflow: hidden; position: relative; background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%); border: 1px solid rgba(245, 245, 240, 0.25); box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);">
               <div id="built-future-progress" style="height: 100%; border-radius: 9999px; width: 0%; background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%); box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);"></div>
             </div>
