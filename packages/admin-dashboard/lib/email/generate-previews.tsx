@@ -41,10 +41,9 @@ async function generatePreviews() {
     {
       name: 'welcome',
       component: WelcomeEmail({
-        username: 'JohnDoe',
-        email: 'john.doe@example.com',
-        temporaryPassword: 'Temp@Pass123!',
-        loginUrl: 'https://smartagentalliance.com/agent-portal/login',
+        firstName: 'John',
+        activationLink: 'https://smartagentalliance.com/agent-portal/activate?token=abc123',
+        expiresInHours: 24,
       }),
     },
     {

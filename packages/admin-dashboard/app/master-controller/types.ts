@@ -140,7 +140,9 @@ export type SAAComponentCategory =
   | 'navigation'
   | 'layouts'
   | 'forms'
-  | 'typography';
+  | 'typography'
+  | 'loaders'
+  | 'scroll-animations';
 
 // ShadCN Component
 export interface ShadCNComponent {

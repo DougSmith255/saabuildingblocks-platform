@@ -4,4 +4,5 @@
  * Animated text effects for the Smart Agent Alliance design system.
  */
 
-// Currently empty - components removed
+// Empty export to make this a valid module
+export {};

@@ -46,22 +46,18 @@ export function ComponentsTab() {
   // Category statistics
   const stats = useMemo(() => getConversionStats(), [saaComponents]);
 
-  // Count per category
+  // Count per category - dynamically build from SAA_CATEGORY_LABELS
   const categoryCounts = useMemo(() => {
-    const counts: Record<SAAComponentCategory, number> = {
-      buttons: 0,
-      cards: 0,
-      navigation: 0,
-      gallery: 0,
-      effects: 0,
-      interactive: 0,
-      layouts: 0,
-      forms: 0,
-      typography: 0,
-    };
+    const counts = Object.keys(SAA_CATEGORY_LABELS).reduce((acc, key) => {
+      acc[key as SAAComponentCategory] = 0;
+      return acc;
+    }, {} as Record<SAAComponentCategory, number>);
+
     saaComponents.forEach((comp) => {
       const category = comp.category as SAAComponentCategory;
-      counts[category]++;
+      if (counts[category] !== undefined) {
+        counts[category]++;
+      }
     });
     return counts;
   }, [saaComponents]);
