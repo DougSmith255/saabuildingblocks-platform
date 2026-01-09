@@ -4781,7 +4781,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
             // Start animation when element top enters viewport
             // End animation after 400px of scroll
-            var scrollDistance = 400;
+            var scrollDistance = 600;
             var elementTop = rect.top;
             var startPoint = windowHeight;
             var distanceScrolled = startPoint - elementTop;
