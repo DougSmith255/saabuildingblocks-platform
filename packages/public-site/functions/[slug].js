@@ -1359,9 +1359,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       flex: 1;
       padding: 1.5rem;
       border-radius: 1rem;
-      background: linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99));
+      background: linear-gradient(180deg, rgba(40,40,40,0.75), rgba(20,20,20,0.8));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255,215,0,0.27);
-      box-shadow: 0 0 40px rgba(255,215,0,0.08);
+      box-shadow: 0 0 40px rgba(255,215,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
     @media (min-width: 768px) {

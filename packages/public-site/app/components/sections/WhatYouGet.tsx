@@ -165,13 +165,15 @@ export function WhatYouGet() {
                   </div>
                 </div>
 
-                {/* Card content */}
+                {/* Card content - glassmorphism effect */}
                 <div
                   className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
                   style={{
-                    background: 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                    background: 'linear-gradient(180deg, rgba(40,40,40,0.75), rgba(20,20,20,0.8))',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     border: `1px solid ${BRAND_YELLOW}44`,
-                    boxShadow: `0 0 40px ${BRAND_YELLOW}15`,
+                    boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
                     opacity: 0.4 + cardProgress * 0.6,
                     transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
