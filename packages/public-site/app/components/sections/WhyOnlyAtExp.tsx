@@ -118,21 +118,10 @@ export function WhyOnlyAtExp() {
     const GRACE = isMobileRef.current ? 0 : 0.1;
     const CONTENT_RANGE = 1 - (GRACE * 2);
 
-    // Velocity-based magnetic snap (desktop only)
+    // Velocity-based magnetic snap
+    // Desktop: strong magnetic effect, Mobile: subtle centering assist
     const animateMagnetic = () => {
       const raw = rawProgressRef.current;
-
-      // On mobile: directly follow scroll, no magnetic effect
-      if (isMobileRef.current) {
-        if (Math.abs(raw - displayProgressRef.current) > 0.0001) {
-          displayProgressRef.current = raw;
-          setProgress(raw);
-        }
-        rafRef.current = requestAnimationFrame(animateMagnetic);
-        return;
-      }
-
-      // Desktop: magnetic snap effect
       const lastRaw = lastRawRef.current;
       const currentDisplay = displayProgressRef.current;
 
@@ -147,6 +136,30 @@ export function WhyOnlyAtExp() {
       const nearestCardIndex = Math.round(raw / cardStep);
       const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
 
+      // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
+      // Desktop: strong magnetic snap effect
+      if (isMobileRef.current) {
+        // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
+        // velocityFactor: 0 = stopped (apply centering), 1 = scrolling (follow raw)
+        const velocityFactor = Math.min(1, velocityRef.current * 150); // Higher multiplier = less magnetic pull
+
+        // Only apply subtle centering when nearly stopped (velocityFactor < 0.3)
+        // Blend: 85% raw position + 15% snap target when stopped
+        const magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
+        const targetProgress = raw * (1 - magneticStrength) + nearestCardProgress * magneticStrength;
+
+        // Very gentle interpolation for mobile
+        const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.12;
+
+        if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+          displayProgressRef.current = newProgress;
+          setProgress(newProgress);
+        }
+        rafRef.current = requestAnimationFrame(animateMagnetic);
+        return;
+      }
+
+      // Desktop: strong magnetic snap effect
       // When velocity is high, follow raw position
       // When velocity is low, snap to nearest card
       const velocityFactor = Math.min(1, velocityRef.current * 100); // 0 = stopped, 1 = scrolling fast

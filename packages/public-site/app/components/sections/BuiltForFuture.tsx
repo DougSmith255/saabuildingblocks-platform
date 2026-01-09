@@ -221,21 +221,10 @@ export function BuiltForFuture() {
     const GRACE = isMobile ? 0 : 0.1;
     const CONTENT_RANGE = 1 - (GRACE * 2);
 
-    // Velocity-based magnetic snap (desktop only)
+    // Velocity-based magnetic snap
+    // Desktop: strong magnetic effect, Mobile: subtle centering assist
     const animateMagnetic = () => {
       const raw = rawPositionRef.current;
-
-      // On mobile: directly follow scroll, no magnetic effect
-      if (isMobileRef.current) {
-        if (Math.abs(raw - displayPositionRef.current) > 0.001) {
-          displayPositionRef.current = raw;
-          setScrollPosition(raw);
-        }
-        rafRef.current = requestAnimationFrame(animateMagnetic);
-        return;
-      }
-
-      // Desktop: magnetic snap effect
       const lastRaw = lastRawRef.current;
       const currentDisplay = displayPositionRef.current;
 
@@ -249,6 +238,30 @@ export function BuiltForFuture() {
       const nearestCard = Math.round(raw);
       const clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
 
+      // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
+      // Desktop: strong magnetic snap effect
+      if (isMobileRef.current) {
+        // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
+        // velocityFactor: 0 = stopped (apply centering), 1 = scrolling (follow raw)
+        const velocityFactor = Math.min(1, velocityRef.current * 80); // Higher multiplier = less magnetic pull
+
+        // Only apply subtle centering when nearly stopped (velocityFactor < 0.3)
+        // Blend: 85% raw position + 15% snap target when stopped
+        const magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
+        const targetPosition = raw * (1 - magneticStrength) + clampedTarget * magneticStrength;
+
+        // Very gentle interpolation for mobile
+        const newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.12;
+
+        if (Math.abs(newPosition - currentDisplay) > 0.001) {
+          displayPositionRef.current = newPosition;
+          setScrollPosition(newPosition);
+        }
+        rafRef.current = requestAnimationFrame(animateMagnetic);
+        return;
+      }
+
+      // Desktop: strong magnetic snap effect
       // When velocity is high, follow raw position
       // When velocity is low, snap to nearest card
       // velocityRef.current typically ranges from 0 (stopped) to ~0.1 (fast scroll)
@@ -271,8 +284,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger at 55% from top (slightly below center)
-    const pinStart = 'center 55%';
+    // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
+    const pinStart = isMobile ? 'center 65%' : 'center 55%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({

@@ -4917,6 +4917,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
 
         // Velocity-based magnetic snap animation loop
+        // Desktop: strong magnetic effect, Mobile: subtle centering assist
+        var isMobileMagnetic = window.innerWidth < 768;
         function animateMagnetic() {
           const raw = rawProgress;
           const currentDisplay = displayProgress;
@@ -4932,6 +4934,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           const nearestCardIndex = Math.round(raw / cardStep);
           const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
 
+          // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
+          if (isMobileMagnetic) {
+            // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
+            const velocityFactor = Math.min(1, velocity * 150); // Higher multiplier = less magnetic pull
+            // Only apply subtle centering when nearly stopped
+            const magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
+            const targetProgress = raw * (1 - magneticStrength) + nearestCardProgress * magneticStrength;
+            // Very gentle interpolation for mobile
+            const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.12;
+            if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+              displayProgress = newProgress;
+              updateCards(newProgress);
+            }
+            rafId = requestAnimationFrame(animateMagnetic);
+            return;
+          }
+
+          // Desktop: strong magnetic snap effect
           // When velocity is high, follow raw position
           // When velocity is low, snap to nearest card
           const velocityFactor = Math.min(1, velocity * 100); // 0 = stopped, 1 = scrolling fast
@@ -5268,6 +5288,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
 
         // Magnetic animation loop - exact from React useLayoutEffect
+        // Desktop: strong magnetic effect, Mobile: subtle centering assist
+        var isMobileHorizontal = window.innerWidth < 768;
         function animateMagnetic() {
           var raw = rawPositionRef;
           var lastRaw = lastRawRef;
@@ -5280,6 +5302,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           var nearestCard = Math.round(raw);
           var clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
 
+          // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
+          if (isMobileHorizontal) {
+            // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
+            var velocityFactor = Math.min(1, velocityRef * 80); // Higher multiplier = less magnetic pull
+            // Only apply subtle centering when nearly stopped
+            var magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
+            var targetPosition = raw * (1 - magneticStrength) + clampedTarget * magneticStrength;
+            // Very gentle interpolation for mobile
+            var newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.12;
+            if (Math.abs(newPosition - currentDisplay) > 0.001) {
+              displayPositionRef = newPosition;
+              updateCards(newPosition);
+            }
+            requestAnimationFrame(animateMagnetic);
+            return;
+          }
+
+          // Desktop: strong magnetic snap effect
           var velocityFactor = Math.min(1, velocityRef * 50);
           var targetPosition = clampedTarget * (1 - velocityFactor) + raw * velocityFactor;
           var newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.15;
@@ -5297,11 +5337,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger - exact from React
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger at 55% from top of viewport
-        var isMobileHorizontal = window.innerWidth < 768;
+        // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
+        var pinStartHorizontal = isMobileHorizontal ? 'center 65%' : 'center 55%';
         ScrollTrigger.create({
           trigger: trigger,
-          start: 'center 55%',
+          start: pinStartHorizontal,
           end: '+=300%',
           pin: true,
           pinSpacing: true,
@@ -5331,7 +5371,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           ease: 'none',
           scrollTrigger: {
             trigger: trigger,
-            start: 'center 55%',
+            start: pinStartHorizontal,
             end: '+=300%',
             scrub: 2.5
           }
