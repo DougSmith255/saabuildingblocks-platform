@@ -1353,6 +1353,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .why-only-section {
       position: relative;
     }
+    .why-only-cta-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+    @media (min-width: 768px) {
+      .why-only-cta-wrapper {
+        justify-content: flex-start;
+      }
+    }
     .why-only-trigger {
       /* This gets pinned by GSAP ScrollTrigger */
     }
@@ -3428,7 +3437,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <p style="font-family: var(--font-heading), system-ui, sans-serif; font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: bold; color: #ffd700; margin-bottom: 1rem;">eXp Realty Sponsorship is Different.</p>
                     <p class="text-body" style="line-height: 1.6; margin-bottom: 1rem;">It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.</p>
                     <p class="text-body" style="color: #ffd700; font-style: italic; font-size: clamp(18px, 2vw, 20px); margin-bottom: 1.5rem;">When you succeed, we succeed.</p>
-                    <a href="/exp-realty-sponsor" class="cta-button" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; width: fit-content;">See Our Systems</a>
+                    <div class="why-only-cta-wrapper">
+                      <a href="/exp-realty-sponsor" class="cta-button" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; width: fit-content;">See Our Systems</a>
+                    </div>
                   </figcaption>
                 </figure>
               </div>
