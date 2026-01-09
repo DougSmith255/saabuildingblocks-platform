@@ -98,15 +98,15 @@ export function ScrollIndicator() {
           border-bottom: 8px solid #888;
           border-radius: 4px;
           transform: rotate(45deg) translateZ(1px);
-          /* White outline using drop-shadow which follows the L-shape */
+          /* Tight white outline using drop-shadow */
           filter:
-            drop-shadow(0 0 1px #fff)
-            drop-shadow(0 0 2px #fff)
-            drop-shadow(0 0 3px rgba(255,255,255,0.8));
+            drop-shadow(0 0 1px rgba(255,255,255,0.6))
+            drop-shadow(0 0 2px rgba(255,255,255,0.3));
         }
       `}</style>
 
       <div
+        id="global-scroll-indicator"
         className="fixed pointer-events-none"
         style={{
           bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
@@ -118,12 +118,11 @@ export function ScrollIndicator() {
           zIndex: -1, // Behind all content, sections scroll over it
         }}
       >
-        {/* Arrow container with tight glow */}
+        {/* Arrow container with subtle glow */}
         <div
           style={{
             filter: `
-              drop-shadow(0 0 3px rgba(136, 136, 136, 0.3))
-              drop-shadow(0 0 6px rgba(136, 136, 136, 0.15))
+              drop-shadow(0 0 2px rgba(136, 136, 136, 0.2))
             `,
           }}
         >

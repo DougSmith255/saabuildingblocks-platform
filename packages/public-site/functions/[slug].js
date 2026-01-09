@@ -974,7 +974,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       right: 32px;
       pointer-events: none;
       z-index: -1;
-      filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
+      filter: drop-shadow(0 0 2px rgba(136, 136, 136, 0.2));
       transition: opacity 0.3s ease-out, transform 0.3s ease-out;
     }
 
@@ -1002,11 +1002,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .scroll-arrow > div {
       width: 36px;
       height: 36px;
-      border-right: 8px solid #bfbdb0;
-      border-bottom: 8px solid #bfbdb0;
+      border-right: 8px solid #888;
+      border-bottom: 8px solid #888;
       border-radius: 4px;
       transform: rotate(45deg) translateZ(1px);
-      filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+      filter: drop-shadow(0 0 1px rgba(255,255,255,0.6)) drop-shadow(0 0 2px rgba(255,255,255,0.3));
     }
 
     /* Glass Panel */

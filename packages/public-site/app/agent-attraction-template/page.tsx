@@ -14,9 +14,17 @@
  * 5. Add agent-specific data from KV/Supabase
  */
 
-import React, { useEffect, useRef, useState, useMemo, ReactNode, createContext, useContext, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useMemo, ReactNode, createContext, useContext, useCallback, useLayoutEffect } from 'react';
 import Link from 'next/link';
 import { Globe, Users, TrendingUp, Check, DollarSign, Bot, GraduationCap, Cloud, Percent, Award, X } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+
+// Register GSAP plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // =============================================================================
 // BRAND CONSTANTS
@@ -54,6 +62,122 @@ function extractPlainText(children: React.ReactNode): string {
     return extractPlainText(props.children);
   }
   return String(children);
+}
+
+// =============================================================================
+// COMPONENT: SmoothScroll (Lenis) - Inlined for Cloudflare Functions
+// =============================================================================
+function SmoothScroll() {
+  const lenisRef = useRef<Lenis | null>(null);
+  const rafIdRef = useRef<number | null>(null);
+  const [isMobile, setIsMobile] = useState(true); // Default to mobile (SSR safe)
+
+  useEffect(() => {
+    // Detect touch-PRIMARY devices (phones/tablets) - NOT laptops with touchscreens
+    // Use CSS media query 'pointer: coarse' which detects touch-primary input devices
+    // This allows Lenis on laptops with touchscreens while disabling on phones/tablets
+    const checkTouchPrimaryDevice = () => {
+      // Check if primary pointer is coarse (finger) rather than fine (mouse)
+      if (window.matchMedia('(pointer: coarse)').matches) {
+        return true;
+      }
+      // Fallback: narrow screen + touch = likely mobile
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isNarrowScreen = window.innerWidth < 768;
+      return hasTouch && isNarrowScreen;
+    };
+
+    setIsMobile(checkTouchPrimaryDevice());
+
+    // Disable browser's automatic scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
+    // Scroll to top on initial page load
+    window.scrollTo(0, 0);
+
+    // Skip Lenis on touch-primary devices - use native scroll
+    // This avoids the issue where clicks are blocked during scroll momentum on mobile
+    if (checkTouchPrimaryDevice()) {
+      console.log('[SmoothScroll] Skipping Lenis - touch-primary device detected');
+      return;
+    }
+
+    console.log('[SmoothScroll] Initializing Lenis for desktop');
+
+    // Defer Lenis initialization to avoid blocking main thread
+    const initLenis = () => {
+      console.log('[SmoothScroll] Lenis init callback running');
+      // Initialize Lenis with DEFAULT settings
+      const lenis = new Lenis({
+        duration: 1.2, // Default duration
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Default easing
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1, // Default
+        touchMultiplier: 1, // Default (not used since disabled on mobile)
+        infinite: false,
+        lerp: 0.1, // Default lerp
+      });
+
+      lenisRef.current = lenis;
+
+      // Stop current scroll animation on any click - allows immediate interaction
+      // This fixes the issue where clicks don't register while Lenis is animating
+      // We use stop() then start() to cancel momentum but keep Lenis active
+      const handleClick = () => {
+        if (lenis.isScrolling) {
+          lenis.stop();
+          // Immediately restart Lenis so future scrolling works
+          lenis.start();
+        }
+      };
+
+      // Use capture phase to catch clicks before they reach interactive elements
+      window.addEventListener('pointerdown', handleClick, { capture: true, passive: true });
+
+      // Animation frame loop for Lenis
+      function raf(time: number) {
+        lenis.raf(time);
+        rafIdRef.current = requestAnimationFrame(raf);
+      }
+
+      rafIdRef.current = requestAnimationFrame(raf);
+      console.log('[SmoothScroll] Lenis initialized and running');
+
+      // Store cleanup function
+      (lenis as any).__clickCleanup = () => {
+        window.removeEventListener('pointerdown', handleClick, { capture: true });
+      };
+    };
+
+    // Use requestIdleCallback to defer initialization
+    let idleCallbackId: number | undefined;
+    if ('requestIdleCallback' in window) {
+      idleCallbackId = window.requestIdleCallback(initLenis, { timeout: 1000 });
+    } else {
+      setTimeout(initLenis, 50);
+    }
+
+    // Cleanup
+    return () => {
+      if (idleCallbackId && 'cancelIdleCallback' in window) {
+        window.cancelIdleCallback(idleCallbackId);
+      }
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+      if (lenisRef.current) {
+        // Clean up click listener
+        (lenisRef.current as any).__clickCleanup?.();
+        lenisRef.current.destroy();
+      }
+    };
+  }, []);
+
+  return null;
 }
 
 // =============================================================================
@@ -386,9 +510,9 @@ function ScrollIndicator() {
         .scroll-prompt-arrow { animation: scrollOpacity 1.5s infinite; }
         .scroll-prompt-arrow:last-child { animation-direction: reverse; margin-top: -6px; }
         .scroll-prompt-arrow > div {
-          width: 36px; height: 36px; border-right: 8px solid #ffd700; border-bottom: 8px solid #ffd700;
+          width: 36px; height: 36px; border-right: 8px solid #888; border-bottom: 8px solid #888;
           border-radius: 4px; transform: rotate(45deg) translateZ(1px);
-          filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 2px rgba(255,255,255,0.8));
+          filter: drop-shadow(0 0 1px rgba(255,255,255,0.6)) drop-shadow(0 0 2px rgba(255,255,255,0.3));
         }
       `}</style>
       <div
@@ -399,7 +523,7 @@ function ScrollIndicator() {
           transition: 'opacity 0.3s ease-out, transform 0.3s ease-out', zIndex: -1,
         }}
       >
-        <div style={{ filter: 'drop-shadow(0 0 6px rgba(255, 215, 0, 0.6)) drop-shadow(0 0 12px rgba(255, 215, 0, 0.4)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.2))' }}>
+        <div style={{ filter: 'drop-shadow(0 0 2px rgba(136, 136, 136, 0.2))' }}>
           <div className="scroll-prompt-arrow-container">
             <div className="scroll-prompt-arrow"><div></div></div>
             <div className="scroll-prompt-arrow"><div></div></div>
@@ -1373,113 +1497,413 @@ function WhatYouGet() {
 // =============================================================================
 // SECTION: WhyOnlyAtExp
 // =============================================================================
-const EXP_STEPS = [
+
+/**
+ * "Why This Only Works at eXp Realty" Section
+ * 3D Rotating Card Stack with Scroll-Based Animation
+ *
+ * Structure:
+ * - sectionRef: outer section element
+ * - triggerRef: invisible wrapper that gets pinned (no styling)
+ * - contentRef: glass panel + content that animates upward together
+ */
+
+// Content
+const WHY_ONLY_HEADLINE = "Why This Only Works at eXp Realty";
+const WHY_ONLY_STEPS = [
   { num: 1, text: "Most real estate brokerages provide tools, training, and support centrally.", highlight: false },
   { num: 2, text: "Even when sponsorship exists, sponsors are limited to offering only what the brokerage provides.", highlight: false },
   { num: 3, text: "eXp Realty sponsorship works differently.", highlight: true },
 ];
+const WHY_ONLY_DIFFERENTIATOR = "eXp Realty Sponsorship is Different.";
+const WHY_ONLY_KEY_POINT = "It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.";
+const WHY_ONLY_TAGLINE = "When you succeed, we succeed.";
+const WHY_ONLY_CTA_TEXT = "See Our Systems";
 
-function Number3D({ num, dark = false }: { num: number; dark?: boolean }) {
+// Images
+const ENTREPRENEURIAL_SPONSOR_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop';
+const ENTREPRENEURIAL_SPONSOR_ALT = 'eXp Realty sponsor delivering entrepreneurial systems to real estate agents';
+const ENTREPRENEURIAL_SPONSOR_TITLE = 'eXp Realty Entrepreneurial Sponsor Systems';
+
+// Marigold Glass Panel styles (inlined from GlassPanel component)
+const WHY_ONLY_GLASS_STYLES: React.CSSProperties = {
+  background: 'linear-gradient(180deg, rgba(255,190,0,0.032) 0%, rgba(255,190,0,0.04) 50%, rgba(255,190,0,0.032) 100%)',
+  boxShadow: `
+    0 8px 32px rgba(0,0,0,0.4),
+    0 4px 12px rgba(0,0,0,0.25),
+    inset 0 1px 0 0 rgba(255,255,255,0.35),
+    inset 0 2px 4px 0 rgba(255,255,255,0.2),
+    inset 0 8px 20px -8px rgba(255,190,0,0.3),
+    inset 0 20px 40px -20px rgba(255,255,255,0.15),
+    inset 0 -1px 0 0 rgba(0,0,0,0.7),
+    inset 0 -2px 6px 0 rgba(0,0,0,0.5),
+    inset 0 -10px 25px -8px rgba(0,0,0,0.6),
+    inset 0 -25px 50px -20px rgba(0,0,0,0.45)
+  `,
+  backdropFilter: 'blur(2px)',
+};
+
+// 3D Number Component
+function WhyOnlyNumber3D({ num, size = 'medium', dark = false, highlight = false }: { num: number; size?: 'small' | 'medium' | 'large'; dark?: boolean; highlight?: boolean }) {
+  const sizeStyles = {
+    small: { minWidth: '40px', height: '40px', fontSize: '24px' },
+    medium: { minWidth: '56px', height: '56px', fontSize: '32px' },
+    large: { minWidth: '72px', height: '72px', fontSize: '42px' },
+  };
+
+  const style = sizeStyles[size];
+
+  // Highlight version uses lighter gray for contrast - brighter than the gray circle background
+  const highlightColor = '#9a9a9a';
+  const highlightFilter = 'drop-shadow(-1px -1px 0 #ccc) drop-shadow(1px 1px 0 #666) drop-shadow(2px 2px 0 #444) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5))';
+
   return (
-    <span className="inline-flex items-center justify-center font-bold" style={{ minWidth: '56px', height: '56px', fontSize: '32px', color: dark ? '#111' : '#c4a94d', filter: dark ? 'none' : 'drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))', transform: dark ? 'none' : 'perspective(500px) rotateX(8deg)' }}>
+    <span
+      className="inline-flex items-center justify-center font-bold"
+      style={{
+        ...style,
+        color: dark ? '#111' : (highlight ? highlightColor : '#c4a94d'),
+        filter: dark
+          ? 'none'
+          : (highlight ? highlightFilter : 'drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))'),
+        transform: dark ? 'none' : 'perspective(500px) rotateX(8deg)',
+      }}
+    >
       {num}
     </span>
   );
 }
 
 function WhyOnlyAtExp() {
-  const [activeCard, setActiveCard] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const hasStartedRef = useRef(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [progress, setProgress] = useState(0);
 
-  const startTimer = useCallback(() => {
-    if (userInteracted) return;
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => setActiveCard(prev => (prev + 1) % 3), 5000);
-  }, [userInteracted]);
+  // Refs for magnetic effect
+  const rawProgressRef = useRef(0);
+  const displayProgressRef = useRef(0);
+  const lastRawRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number>(0);
 
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting && !hasStartedRef.current) { hasStartedRef.current = true; setIsVisible(true); startTimer(); } },
-      { threshold: 0.15 }
-    );
-    observer.observe(section);
-    return () => { observer.disconnect(); if (timerRef.current) clearInterval(timerRef.current); };
-  }, [startTimer]);
+  const totalCards = WHY_ONLY_STEPS.length;
 
-  const handleCardClick = () => { setUserInteracted(true); if (timerRef.current) clearInterval(timerRef.current); setActiveCard(prev => (prev + 1) % 3); };
-  const handleDotClick = (index: number) => { setUserInteracted(true); if (timerRef.current) clearInterval(timerRef.current); setActiveCard(index); };
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Grace period: 10% at start and 10% at end of scroll range
+    const GRACE = 0.1;
+    const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
+
+    // Velocity-based magnetic snap
+    const animateMagnetic = () => {
+      const raw = rawProgressRef.current;
+      const lastRaw = lastRawRef.current;
+      const currentDisplay = displayProgressRef.current;
+
+      // Calculate velocity (change since last frame)
+      const instantVelocity = Math.abs(raw - lastRaw);
+      // Smooth velocity with decay
+      velocityRef.current = velocityRef.current * 0.9 + instantVelocity * 0.1;
+      lastRawRef.current = raw;
+
+      // Card positions are at 0, 0.5, 1 (for 3 cards)
+      const cardStep = 1 / (totalCards - 1);
+      const nearestCardIndex = Math.round(raw / cardStep);
+      const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
+
+      // When velocity is high, follow raw position
+      // When velocity is low, snap to nearest card
+      const velocityFactor = Math.min(1, velocityRef.current * 100); // 0 = stopped, 1 = scrolling fast
+
+      // Blend between snap target (when stopped) and raw position (when scrolling)
+      const targetProgress = nearestCardProgress * (1 - velocityFactor) + raw * velocityFactor;
+
+      // Smooth interpolation toward target
+      const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
+
+      // Always update to keep smooth animation
+      if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+        displayProgressRef.current = newProgress;
+        setProgress(newProgress);
+      }
+
+      rafRef.current = requestAnimationFrame(animateMagnetic);
+    };
+
+    rafRef.current = requestAnimationFrame(animateMagnetic);
+
+    const ctx = gsap.context(() => {
+      // Timeline animates the glass+content together
+      const tl = gsap.timeline();
+
+      tl.to(contentRef.current, {
+        y: -60, // Drift upward by 60px total (from +30 to -30)
+        duration: 1,
+        ease: 'none',
+      });
+
+      // Use 'center center' - pin starts when section center reaches viewport center
+      ScrollTrigger.create({
+        trigger: triggerRef.current,
+        start: 'center center',
+        end: '+=200%', // Extended for more buffer between card flips
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.5, // Faster scrub for more responsive feel
+        animation: tl,
+        onUpdate: (self) => {
+          // Map scroll progress to card progress with grace periods
+          let cardProgress = 0;
+
+          if (self.progress <= GRACE) {
+            cardProgress = 0;
+          } else if (self.progress >= 1 - GRACE) {
+            cardProgress = 1;
+          } else {
+            cardProgress = (self.progress - GRACE) / CONTENT_RANGE;
+          }
+
+          // Update raw progress - magnetic loop will interpolate
+          rawProgressRef.current = cardProgress;
+        },
+      });
+    }, sectionRef);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ctx.revert();
+    };
+  }, [totalCards]);
 
   return (
-    <GlassPanel variant="marigoldNoise">
-      <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
-        <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
-          <div className="text-center transition-all duration-700 relative z-20" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(30px)' }}>
-            <H2>Why This Only Works at eXp Realty</H2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div className="relative h-[260px] md:h-[340px] transition-all duration-700" style={{ perspective: '1000px', opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(-40px)', transitionDelay: '0.15s' }}>
-              {EXP_STEPS.map((step, i) => {
-                const isActive = i === activeCard;
-                const isPast = i < activeCard;
-                let translateY = 0, translateX = 0, rotation = 0, scale = 1, opacity = 1, zIndex = 10;
-                if (isActive) { translateY = 0; rotation = 0; scale = 1; opacity = 1; zIndex = 10; }
-                else if (isPast) { translateY = (activeCard - i) * -15; translateX = (activeCard - i) * -20; rotation = (activeCard - i) * -5; scale = 1 - (activeCard - i) * 0.05; opacity = 0.3; zIndex = 10 - (activeCard - i); }
-                else { translateY = (i - activeCard) * 6; rotation = 0; scale = 1 - (i - activeCard) * 0.02; opacity = 1 - (i - activeCard) * 0.2; zIndex = 10 - (i - activeCard); }
-                return (
-                  <div key={i} className="absolute inset-0 rounded-2xl p-4 md:p-6 border-2 cursor-pointer transition-all duration-500 flex flex-col items-center justify-center text-center" onClick={handleCardClick}
-                    style={{ backgroundColor: step.highlight ? 'rgba(40, 35, 10, 0.98)' : 'rgba(25, 25, 25, 0.98)', borderColor: step.highlight ? 'rgba(255, 215, 0, 0.5)' : 'rgba(255,255,255,0.15)', transform: `translateY(${translateY}px) translateX(${translateX}px) rotate(${rotation}deg) scale(${scale})`, opacity, zIndex, boxShadow: isActive ? (step.highlight ? '0 10px 40px rgba(255, 215, 0, 0.2)' : '0 10px 40px rgba(0,0,0,0.5)') : '0 5px 20px rgba(0,0,0,0.3)' }}>
-                    {step.highlight ? (
-                      <div className="rounded-full flex items-center justify-center w-12 h-12 md:w-16 md:h-16 mb-4" style={{ backgroundColor: BRAND_YELLOW }}><Number3D num={step.num} dark /></div>
-                    ) : (
-                      <div className="rounded-full flex items-center justify-center bg-white/10 border-2 border-white/20 w-12 h-12 md:w-16 md:h-16 mb-4"><Number3D num={step.num} /></div>
-                    )}
-                    <p className="font-heading text-lg md:text-2xl font-bold leading-relaxed px-4" style={step.highlight ? { color: BRAND_YELLOW } : undefined}>{step.text}</p>
-                    <p className="text-body text-xs opacity-40 mt-4">Click to advance</p>
+    <section ref={sectionRef}>
+      {/* Invisible wrapper that gets pinned */}
+      <div ref={triggerRef}>
+        {/* Glass panel + content - this entire thing animates upward */}
+        <div
+          ref={contentRef}
+          className="rounded-3xl overflow-hidden relative"
+          style={{
+            ...WHY_ONLY_GLASS_STYLES,
+            transform: 'translateY(30px)', // Start 30px below center
+          }}
+        >
+          {/* Noise texture overlay */}
+          <div
+            className="absolute inset-0 pointer-events-none rounded-3xl"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+              opacity: 0.06,
+              mixBlendMode: 'overlay',
+            }}
+          />
+
+          {/* Content */}
+          <div className="relative z-10 px-6 py-16 md:py-24">
+            <div className="mx-auto" style={{ maxWidth: '1600px' }}>
+              {/* Section Header */}
+              <div className="text-center mb-8">
+                <H2 style={{ maxWidth: '100%' }}>{WHY_ONLY_HEADLINE}</H2>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 items-start">
+                {/* Left Column: Card Stack + Progress Bar */}
+                <div className="flex flex-col relative" style={{ zIndex: 10 }}>
+                  {/* 3D Rotating Card Stack */}
+                  <div
+                    className="relative h-[280px] md:h-[340px] w-full"
+                    style={{ perspective: '1200px' }}
+                  >
+                    {WHY_ONLY_STEPS.map((step, index) => {
+                      const isLastCard = index === totalCards - 1;
+                      // Scale so 3rd card (index 2) reaches position 0 when progress = 1
+                      // progress * (totalCards - 1) - index: at progress=1, card 2 gets (1*2)-2=0
+                      const globalCardPosition = progress * (totalCards - 1) - index;
+
+                      let rotateX = 0, translateZ = 0, translateY = 0, opacity = 1, scale = 1;
+
+                      if (isLastCard) {
+                        // Last card: slides up into position, no flip
+                        if (globalCardPosition >= 0) {
+                          // Card is in final position
+                          rotateX = 0;
+                          opacity = 1;
+                          scale = 1;
+                          translateZ = 0;
+                          translateY = 0;
+                        } else {
+                          // Card is still in stack, waiting to slide up
+                          const stackPosition = -globalCardPosition;
+                          translateZ = -30 * stackPosition;
+                          translateY = 20 * stackPosition;
+                          opacity = Math.max(0.4, 1 - stackPosition * 0.15);
+                          scale = Math.max(0.88, 1 - stackPosition * 0.04);
+                        }
+                      } else if (globalCardPosition >= 1) {
+                        rotateX = -90;
+                        opacity = 0;
+                        scale = 0.9;
+                      } else if (globalCardPosition >= 0) {
+                        rotateX = -globalCardPosition * 90;
+                        opacity = globalCardPosition > 0.7 ? 1 - ((globalCardPosition - 0.7) / 0.3) : 1;
+                        scale = 1 - globalCardPosition * 0.1;
+                      } else {
+                        const stackPosition = -globalCardPosition;
+                        translateZ = -30 * stackPosition;
+                        translateY = 20 * stackPosition;
+                        opacity = Math.max(0.4, 1 - stackPosition * 0.15);
+                        scale = Math.max(0.88, 1 - stackPosition * 0.04);
+                      }
+
+                      // Misty vibrant gradient for highlighted card
+                      const mistyBackground = `
+                        radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+                        radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+                        radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+                        radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+                        linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+                      `;
+                      const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
+
+                      return (
+                        <div
+                          key={index}
+                          className="absolute inset-0 rounded-2xl p-6 md:p-8 flex flex-col items-center justify-center text-center"
+                          style={{
+                            background: step.highlight ? mistyBackground : darkBackground,
+                            border: step.highlight
+                              ? '2px solid rgba(180,150,50,0.5)'
+                              : `1px solid ${BRAND_YELLOW}44`,
+                            boxShadow: step.highlight
+                              ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
+                              : `0 0 40px ${BRAND_YELLOW}15, 0 30px 60px -30px rgba(0,0,0,0.8)`,
+                            transform: `perspective(1200px) rotateX(${rotateX}deg) translateZ(${translateZ}px) translateY(${translateY}px) scale(${scale})`,
+                            transformOrigin: 'center bottom',
+                            opacity,
+                            zIndex: totalCards - index,
+                            backfaceVisibility: 'hidden',
+                            transition: 'background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out',
+                          }}
+                        >
+                          {step.highlight ? (
+                            <div
+                              className="rounded-full flex items-center justify-center w-14 h-14 md:w-16 md:h-16 mb-5"
+                              style={{
+                                backgroundColor: 'rgba(42,42,42,0.9)',
+                                border: '3px solid rgba(42,42,42,0.7)',
+                                boxShadow: '0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15)',
+                              }}
+                            >
+                              <WhyOnlyNumber3D num={step.num} size="medium" highlight />
+                            </div>
+                          ) : (
+                            <div
+                              className="rounded-full flex items-center justify-center w-14 h-14 md:w-16 md:h-16 mb-5"
+                              style={{
+                                background: 'rgba(255,255,255,0.08)',
+                                border: '2px solid rgba(255,255,255,0.15)',
+                              }}
+                            >
+                              <WhyOnlyNumber3D num={step.num} size="medium" />
+                            </div>
+                          )}
+                          <p
+                            className="font-heading font-bold leading-relaxed px-2"
+                            style={{
+                              color: step.highlight ? '#2a2a2a' : '#e5e5e5',
+                              fontSize: 'clamp(24px, calc(22.55px + 0.58vw), 40px)',
+                            }}
+                          >
+                            {step.text}
+                          </p>
+                        </div>
+                      );
+                    })}
                   </div>
-                );
-              })}
-              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-2">
-                {EXP_STEPS.map((_, i) => (
-                  <button key={i} onClick={() => handleDotClick(i)} className="w-2 h-2 rounded-full transition-all duration-300" style={{ backgroundColor: i === activeCard ? BRAND_YELLOW : 'rgba(255,255,255,0.2)', transform: i === activeCard ? 'scale(1.5)' : 'scale(1)' }} />
-                ))}
+
+                  {/* 3D Plasma Tube Progress Bar */}
+                  <div className="flex justify-center mt-16">
+                    <div
+                      className="w-64 md:w-80 h-3 rounded-full overflow-hidden relative"
+                      style={{
+                        background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                        border: '1px solid rgba(245, 245, 240, 0.25)',
+                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
+                      }}
+                    >
+                      <div
+                        className="h-full rounded-full"
+                        style={{
+                          width: `${progress * 100}%`,
+                          background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
+                          boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Key message card */}
+                <figure
+                  className="relative rounded-2xl overflow-hidden border border-white/10"
+                  style={{ minHeight: '340px', zIndex: 1 }}
+                  itemScope
+                  itemType="https://schema.org/ImageObject"
+                >
+                  <div className="absolute inset-0">
+                    <img
+                      src={ENTREPRENEURIAL_SPONSOR_IMAGE}
+                      alt={ENTREPRENEURIAL_SPONSOR_ALT}
+                      title={ENTREPRENEURIAL_SPONSOR_TITLE}
+                      className="w-full h-full object-cover"
+                      itemProp="contentUrl"
+                      loading="lazy"
+                    />
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%)'
+                      }}
+                    />
+                  </div>
+
+                  <figcaption className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
+                    <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>{WHY_ONLY_DIFFERENTIATOR}</p>
+                    <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{WHY_ONLY_KEY_POINT}</p>
+                    <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>{WHY_ONLY_TAGLINE}</p>
+                    <CTAButton href="/exp-realty-sponsor">{WHY_ONLY_CTA_TEXT}</CTAButton>
+                  </figcaption>
+
+                  <meta itemProp="name" content={ENTREPRENEURIAL_SPONSOR_TITLE} />
+                </figure>
               </div>
             </div>
-            <figure className="relative rounded-2xl overflow-hidden border border-white/10 transition-all duration-700" style={{ minHeight: '340px', opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(40px)', transitionDelay: '0.3s' }}>
-              <div className="absolute inset-0">
-                <img src={`${CLOUDFLARE_BASE}/exp-entrepreneurial-sponsor-v2/desktop`} alt="eXp Realty sponsor delivering entrepreneurial systems" className="w-full h-full object-cover" loading="lazy" />
-                <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%)' }} />
-              </div>
-              <figcaption className="relative z-10 p-6 md:p-8 h-full flex flex-col justify-center">
-                <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>eXp Realty Sponsorship is Different.</p>
-                <p className="text-body text-lg leading-relaxed mb-4">It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.</p>
-                <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>When you succeed, we succeed.</p>
-                <CTAButton href="#watch-and-decide">See The Full Explanation</CTAButton>
-              </figcaption>
-            </figure>
           </div>
         </div>
-      </section>
-    </GlassPanel>
+      </div>
+    </section>
   );
 }
 
 // =============================================================================
 // SECTION: BuiltForFuture
 // =============================================================================
-const FUTURE_POINTS = [
-  { image: `${CLOUDFLARE_BASE}/saa-future-cloud/public`, text: "Cloud-first brokerage model", imgClass: "w-full h-full object-contain", imgStyle: {} },
-  { image: `${CLOUDFLARE_BASE}/saa-future-ai-bot/public`, text: "AI-powered tools and training", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.25) translate(10px, 18px)' } },
-  { image: `${CLOUDFLARE_BASE}/saa-future-mobile-first/public`, text: "Mobile-first workflows", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(0.95) translate(3px, 10px)' } },
-  { image: `${CLOUDFLARE_BASE}/saa-future-income-benjamins/public`, text: "Sustainable income paths beyond transactions", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.35) translateX(5px)' } },
-];
 
-function GrayscaleDataStream() {
+/**
+ * "Built for Where Real Estate Is Going" Section
+ * Horizontal Scroll Cards with Scroll-Based Animation
+ *
+ * Structure:
+ * - sectionRef: outer section element
+ * - BuiltForFutureDataStream: fixed background animation (not pinned)
+ * - triggerRef: invisible wrapper that gets pinned (no styling)
+ * - contentRef: content that animates upward together
+ */
+
+function BuiltForFutureDataStream() {
   const [time, setTime] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const timeRef = useRef(0);
@@ -1487,6 +1911,7 @@ function GrayscaleDataStream() {
   const scrollSpeedRef = useRef(1);
   const lastScrollY = useRef(0);
 
+  // Detect mobile screen size
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -1495,24 +1920,53 @@ function GrayscaleDataStream() {
   }, []);
 
   useEffect(() => {
-    const BASE_SPEED = 0.00028; // Slowed down from 0.0004
+    const BASE_SPEED = 0.00028;
     let lastTimestamp = 0;
-    const handleScroll = () => { const currentY = window.scrollY; const scrollDelta = Math.abs(currentY - lastScrollY.current); lastScrollY.current = currentY; scrollSpeedRef.current = 1 + Math.min(scrollDelta * 0.05, 3); };
+
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const scrollDelta = Math.abs(currentY - lastScrollY.current);
+      lastScrollY.current = currentY;
+      scrollSpeedRef.current = 1 + Math.min(scrollDelta * 0.05, 3);
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    const animate = (timestamp: number) => { const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16; lastTimestamp = timestamp; timeRef.current += BASE_SPEED * deltaTime * scrollSpeedRef.current; setTime(timeRef.current); scrollSpeedRef.current = Math.max(1, scrollSpeedRef.current * 0.95); rafRef.current = requestAnimationFrame(animate); };
+
+    const animate = (timestamp: number) => {
+      const deltaTime = lastTimestamp ? timestamp - lastTimestamp : 16;
+      lastTimestamp = timestamp;
+      timeRef.current += BASE_SPEED * deltaTime * scrollSpeedRef.current;
+      setTime(timeRef.current);
+      scrollSpeedRef.current = Math.max(1, scrollSpeedRef.current * 0.95);
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
     rafRef.current = requestAnimationFrame(animate);
-    return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener('scroll', handleScroll); };
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const columnCount = isMobile ? 8 : 20;
   const columnWidth = 100 / columnCount;
-  const columnConfigs = useMemo(() => [...Array(columnCount)].map((_, i) => ({ x: i * columnWidth, speed: 0.8 + (i % 4) * 0.4, offset: (i * 17) % 100 })), [columnCount, columnWidth]);
-  const getChar = (colIndex: number, charIndex: number) => { const flipRate = 0.6 + (colIndex % 3) * 0.3; const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13); return charSeed % 2 === 0 ? '0' : '1'; };
+
+  const columnConfigs = useMemo(() => [...Array(columnCount)].map((_, i) => ({
+    x: i * columnWidth,
+    speed: 0.8 + (i % 4) * 0.4,
+    offset: (i * 17) % 100,
+  })), [columnCount, columnWidth]);
+
+  const getChar = (colIndex: number, charIndex: number) => {
+    const flipRate = 0.6 + (colIndex % 3) * 0.3;
+    const charSeed = Math.floor(time * 15 * flipRate + colIndex * 7 + charIndex * 13);
+    return charSeed % 2 === 0 ? '0' : '1';
+  };
 
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" style={{ zIndex: 0 }}>
       {columnConfigs.map((col, i) => {
-        const columnOffset = (time * col.speed * 60 + col.offset) % 110; // Slowed from 80
+        const columnOffset = (time * col.speed * 60 + col.offset) % 110;
         const numChars = 22;
         return (
           <div key={i} className="absolute" style={{ left: col.x + '%', top: 0, width: columnWidth + '%', height: '100%', overflow: 'hidden', fontFamily: 'monospace', fontSize: '14px', lineHeight: '1.4' }}>
@@ -1526,7 +1980,11 @@ function GrayscaleDataStream() {
               const edgeFade = charY < 12 ? Math.max(0, charY / 12) : charY > 88 ? Math.max(0, (100 - charY) / 12) : 1;
               const headColor = 'rgba(180,180,180,' + (0.4 * edgeFade) + ')';
               const trailColor = 'rgba(120,120,120,' + (trailBrightness * 0.25 * edgeFade) + ')';
-              return <div key={j} style={{ position: 'absolute', top: charY + '%', color: isHead ? headColor : trailColor, textShadow: isHead ? '0 0 6px rgba(150,150,150,' + (0.3 * edgeFade) + ')' : '0 0 2px rgba(100,100,100,' + (0.1 * edgeFade) + ')', opacity: edgeFade }}>{getChar(i, j)}</div>;
+              return (
+                <div key={j} style={{ position: 'absolute', top: charY + '%', color: isHead ? headColor : trailColor, textShadow: isHead ? '0 0 6px rgba(150,150,150,' + (0.3 * edgeFade) + ')' : '0 0 2px rgba(100,100,100,' + (0.1 * edgeFade) + ')', opacity: edgeFade }}>
+                  {getChar(i, j)}
+                </div>
+              );
             })}
           </div>
         );
@@ -1535,31 +1993,354 @@ function GrayscaleDataStream() {
   );
 }
 
+const BUILT_FUTURE_HEADLINE = "Built for Where Real Estate Is Going";
+const BUILT_FUTURE_SUBLINE = "The future of real estate is cloud-based, global, and technology-driven. SAA is already there.";
+
+const BUILT_FUTURE_POINTS = [
+  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-cloud/public', text: "Cloud-First Brokerage Model", imgClass: "w-full h-full object-contain", imgStyle: {}, bgColor: 'rgba(17,17,17,0.5)' },
+  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-ai-bot/public', text: "AI-Powered Tools and Training", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.25) translate(10px, 18px)' }, bgColor: 'rgba(17,17,17,0.5)' },
+  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-mobile-first/public', text: "Mobile-First Workflows", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(0.95) translate(3px, 10px)' }, bgColor: 'rgba(17,17,17,0.5)' },
+  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-borderless/public', text: "Borderless Business", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.15) translate(-1px, -1px)' }, bgColor: 'rgba(17,17,17,0.5)' },
+  { image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-future-income-benjamins/public', text: "Sustainable Income Beyond Sales", imgClass: "w-full h-full object-cover", imgStyle: { transform: 'scale(1.35) translateX(5px)' }, bgColor: '#111' },
+];
+
 function BuiltForFuture() {
-  const { ref, isVisible } = useScrollReveal();
-  const getIconDelay = (index: number) => 0.9 + (index * 0.25);
-  const getTextDelay = (index: number) => 0.9 + (index * 0.25) + 0.15;
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+
+  // Refs for magnetic effect
+  const rawPositionRef = useRef(0);
+  const displayPositionRef = useRef(0);
+  const lastRawRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number>(0);
+
+  const totalCards = BUILT_FUTURE_POINTS.length;
+
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Grace period: 10% at start and 10% at end of scroll range
+    const GRACE = 0.1;
+    const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
+
+    // Velocity-based magnetic snap
+    // When velocity is high (scrolling): follow raw position closely
+    // When velocity is low (stopped): snap strongly to nearest card
+    const animateMagnetic = () => {
+      const raw = rawPositionRef.current;
+      const lastRaw = lastRawRef.current;
+      const currentDisplay = displayPositionRef.current;
+
+      // Calculate velocity (change since last frame)
+      const instantVelocity = Math.abs(raw - lastRaw);
+      // Smooth velocity with decay
+      velocityRef.current = velocityRef.current * 0.9 + instantVelocity * 0.1;
+      lastRawRef.current = raw;
+
+      // Find nearest card position
+      const nearestCard = Math.round(raw);
+      const clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
+
+      // When velocity is high, follow raw position
+      // When velocity is low, snap to nearest card
+      // velocityRef.current typically ranges from 0 (stopped) to ~0.1 (fast scroll)
+      const velocityFactor = Math.min(1, velocityRef.current * 50); // 0 = stopped, 1 = scrolling fast
+
+      // Blend between snap target (when stopped) and raw position (when scrolling)
+      const targetPosition = clampedTarget * (1 - velocityFactor) + raw * velocityFactor;
+
+      // Smooth interpolation toward target
+      const newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.15;
+
+      // Always update to keep smooth animation
+      if (Math.abs(newPosition - currentDisplay) > 0.001) {
+        displayPositionRef.current = newPosition;
+        setScrollPosition(newPosition);
+      }
+
+      rafRef.current = requestAnimationFrame(animateMagnetic);
+    };
+
+    rafRef.current = requestAnimationFrame(animateMagnetic);
+
+    const ctx = gsap.context(() => {
+      // Use 'center center' - pin starts when section center reaches viewport center
+      ScrollTrigger.create({
+        trigger: triggerRef.current,
+        start: 'center center',
+        end: '+=300%', // Extended to account for grace periods
+        pin: true,
+        pinSpacing: true,
+        scrub: 0.5, // Faster scrub for more responsive feel
+        onUpdate: (self) => {
+          // Map scroll progress to card positions with grace periods
+          let cardPosition = 0;
+
+          if (self.progress <= GRACE) {
+            cardPosition = 0;
+          } else if (self.progress >= 1 - GRACE) {
+            cardPosition = totalCards - 1;
+          } else {
+            const contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
+            cardPosition = contentProgress * (totalCards - 1);
+          }
+
+          // Update raw position - magnetic loop will interpolate
+          rawPositionRef.current = cardPosition;
+        },
+      });
+
+      // Subtle Y drift animation
+      gsap.to(contentRef.current, {
+        y: -60,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: triggerRef.current,
+          start: 'center center',
+          end: '+=300%',
+          scrub: 2.5,
+        }
+      });
+    }, sectionRef);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ctx.revert();
+    };
+  }, [totalCards]);
+
+  // Progress for the progress bar
+  const progress = scrollPosition / (totalCards - 1);
+
+  // Responsive card width
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Card dimensions - responsive
+  const CARD_WIDTH = isMobile ? 280 : 560;
+  const CARD_GAP = isMobile ? 16 : 24;
 
   return (
-    <section ref={ref} className="py-16 md:py-24 px-6 overflow-hidden relative">
-      <GrayscaleDataStream />
-      <style>{`@keyframes drawLine { from { width: 0; } to { width: 100%; } } .future-line { animation: drawLine 1s ease-out forwards; animation-delay: 0.5s; }`}</style>
-      <div className="mx-auto text-center relative z-10" style={{ maxWidth: '1300px' }}>
-        <div className="transition-all duration-700" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(20px)' }}>
-          <H2>Built for Where Real Estate Is Going</H2>
-        </div>
-        <p className="text-body opacity-70 mb-12 transition-all duration-700" style={{ opacity: isVisible ? 0.7 : 0, transitionDelay: '0.15s' }}>The future of real estate is cloud-based, global, and technology-driven. SAA is already there.</p>
-        <div className="relative mb-12">
-          <div className="absolute top-[60px] left-0 right-0 h-px bg-white/10 hidden md:block">{isVisible && <div className="future-line h-full w-0" style={{ background: `linear-gradient(90deg, transparent, ${BRAND_YELLOW}, transparent)` }} />}</div>
-          <div className="flex flex-col md:flex-row justify-between gap-8 md:gap-4">
-            {FUTURE_POINTS.map((point, i) => (
-              <div key={i} className="flex-1 relative z-10 flex flex-col items-center">
-                <div className="w-[120px] h-[120px] rounded-full mb-4 flex items-center justify-center transition-all duration-500 overflow-hidden" style={{ backgroundColor: 'rgba(17,17,17,0.5)', border: `3px solid ${BRAND_YELLOW}`, boxShadow: isVisible ? '0 0 30px rgba(255,215,0,0.4)' : 'none', opacity: isVisible ? 1 : 0, transform: isVisible ? 'scale(1)' : 'scale(0.5)', transitionDelay: getIconDelay(i) + 's' }}>
-                  <img src={point.image} alt={point.text} className={point.imgClass} style={point.imgStyle} />
+    <section ref={sectionRef} className="relative pt-16 md:pt-24">
+      {/* Fixed background animation - outside pinned content */}
+      <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
+        <BuiltForFutureDataStream />
+      </div>
+
+      {/* Invisible wrapper that gets pinned */}
+      <div ref={triggerRef} className="relative" style={{ zIndex: 1 }}>
+        {/* Content - animates upward */}
+        <div
+          ref={contentRef}
+          className="relative"
+          style={{
+            transform: 'translateY(30px)', // Start 30px below center
+          }}
+        >
+          {/* Section Header */}
+          <div className="text-center mb-4 px-6">
+            <H2 style={{ maxWidth: '100%' }}>{BUILT_FUTURE_HEADLINE}</H2>
+          </div>
+          <p className="text-body opacity-70 mb-12 text-center max-w-2xl mx-auto px-6">
+            {BUILT_FUTURE_SUBLINE}
+          </p>
+
+          {/* Horizontal Scroll Cards Container with Portal Edges */}
+          <div className="relative">
+            {/* 3D Curved Portal Edges - raised bars that cards slide under */}
+            {/* Left curved bar */}
+            <div
+              className="absolute left-0 z-20 pointer-events-none"
+              style={{
+                top: '-40px',
+                bottom: '-40px',
+                width: '12px',
+                borderRadius: '0 12px 12px 0',
+                background: 'linear-gradient(90deg, rgba(30,28,20,0.95) 0%, rgba(40,35,25,0.9) 100%)',
+                borderRight: '1px solid rgba(255,190,0,0.3)',
+                boxShadow: '3px 0 12px rgba(0,0,0,0.6), 6px 0 24px rgba(0,0,0,0.3)',
+                transform: 'perspective(500px) rotateY(-3deg)',
+                transformOrigin: 'right center',
+              }}
+            />
+            {/* Right curved bar */}
+            <div
+              className="absolute right-0 z-20 pointer-events-none"
+              style={{
+                top: '-40px',
+                bottom: '-40px',
+                width: '12px',
+                borderRadius: '12px 0 0 12px',
+                background: 'linear-gradient(270deg, rgba(30,28,20,0.95) 0%, rgba(40,35,25,0.9) 100%)',
+                borderLeft: '1px solid rgba(255,190,0,0.3)',
+                boxShadow: '-3px 0 12px rgba(0,0,0,0.6), -6px 0 24px rgba(0,0,0,0.3)',
+                transform: 'perspective(500px) rotateY(3deg)',
+                transformOrigin: 'left center',
+              }}
+            />
+
+            {/* Inner container - clips cards horizontally at inner edge of bars, but allows vertical overflow for glow */}
+            <div
+              className="relative"
+              style={{
+                marginLeft: '12px',
+                marginRight: '12px',
+                overflowX: 'clip',
+                overflowY: 'visible',
+              }}
+            >
+              {/* Cards track */}
+              <div className="py-12">
+                <div
+                  className="flex"
+                  style={{
+                    gap: `${CARD_GAP}px`,
+                    // Offset for looped cards on left (2 cards worth), then center current card
+                    // 50vw centers in viewport, subtract half card width, subtract margin, subtract position offset
+                    transform: `translateX(calc(50vw - ${CARD_WIDTH / 2}px - 12px - ${(scrollPosition + 2) * (CARD_WIDTH + CARD_GAP)}px))`,
+                  }}
+                >
+                  {/* Create looped array: last 2 cards + all cards + first 2 cards */}
+                  {(() => {
+                    const loopedCards = [
+                      ...BUILT_FUTURE_POINTS.slice(-2), // Last 2 cards at start
+                      ...BUILT_FUTURE_POINTS,            // All cards
+                      ...BUILT_FUTURE_POINTS.slice(0, 2) // First 2 cards at end
+                    ];
+
+                    return loopedCards.map((point, loopIndex) => {
+                      // Calculate the actual card index relative to scroll position
+                      // loopIndex 0,1 are the prepended cards (indices -2, -1)
+                      // loopIndex 2 to totalCards+1 are the real cards (indices 0 to totalCards-1)
+                      // loopIndex totalCards+2 onwards are appended cards
+                      const actualIndex = loopIndex - 2;
+                      const distance = Math.abs(scrollPosition - actualIndex);
+                      const isActive = distance < 0.5;
+
+                      // Scale based on distance from center
+                      const scale = Math.max(0.85, 1 - distance * 0.1);
+
+                      // Blur for non-active cards - fast transition, reduced max blur for readability
+                      // At distance 0.5+, full blur (5px). At distance 0, no blur.
+                      const blurAmount = Math.min(5, distance * 10);
+
+                      // Smart blackout for looped cards based on scroll position
+                      // At start (card 0): black out cards to the left (actualIndex < 0)
+                      // At end (card 4): black out cards to the right (actualIndex > 4)
+                      let blackoutOpacity = 0;
+                      if (actualIndex < 0) {
+                        // Prepended cards (left side) - fade out as we approach the start
+                        // When scrollPosition is 0, fully black. When scrollPosition > 1, visible.
+                        blackoutOpacity = Math.max(0, 1 - scrollPosition);
+                      } else if (actualIndex > totalCards - 1) {
+                        // Appended cards (right side) - fade out as we approach the end
+                        // When scrollPosition is 4, fully black. When scrollPosition < 3, visible.
+                        blackoutOpacity = Math.max(0, (scrollPosition - (totalCards - 2)) / 1);
+                      }
+
+                      // Mystic fog gradient for active card - 90% opacity (10% transparent)
+                      const activeBackground = `
+                        radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+                        radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+                        radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+                        radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+                        radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+                        linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+                      `;
+                      const inactiveBackground = `linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))`;
+
+                      return (
+                        <div
+                          key={`${point.text}-${loopIndex}`}
+                          className="flex-shrink-0"
+                          style={{
+                            width: `${CARD_WIDTH}px`,
+                            transform: `scale(${scale})`,
+                            filter: `blur(${blurAmount + blackoutOpacity * 4}px) grayscale(${blackoutOpacity * 100}%) brightness(${1 - blackoutOpacity * 0.6})`,
+                            opacity: 1 - blackoutOpacity * 0.4,
+                            transition: 'transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out',
+                          }}
+                        >
+                          <div
+                            className="p-8 rounded-2xl min-h-[380px] flex flex-col items-center justify-center relative overflow-hidden"
+                            style={{
+                              background: isActive ? activeBackground : inactiveBackground,
+                              border: isActive ? '2px solid rgba(180,150,50,0.5)' : `2px solid ${BRAND_YELLOW}22`,
+                              boxShadow: isActive
+                                ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
+                                : 'none',
+                              transition: 'background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out',
+                            }}
+                          >
+                            {/* Circled Image */}
+                            <div
+                              className="w-[180px] h-[180px] md:w-[200px] md:h-[200px] rounded-full mb-6 flex items-center justify-center overflow-hidden relative z-10"
+                              style={{
+                                backgroundColor: isActive ? 'rgba(20,18,12,0.85)' : point.bgColor,
+                                border: isActive ? '3px solid rgba(40,35,20,0.8)' : `3px solid ${BRAND_YELLOW}`,
+                                boxShadow: isActive
+                                  ? `0 0 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)`
+                                  : 'none',
+                                transition: 'background-color 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out',
+                              }}
+                            >
+                              <img
+                                src={point.image}
+                                alt={point.text}
+                                className={point.imgClass}
+                                style={point.imgStyle}
+                              />
+                            </div>
+
+                            {/* Text */}
+                            <h3
+                              className="text-h5 font-bold text-center relative z-10"
+                              style={{
+                                color: isActive ? '#2a2a2a' : '#e5e4dd',
+                                transition: 'color 0.2s ease-out',
+                              }}
+                            >
+                              {point.text}
+                            </h3>
+
+                          </div>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
-                <p className="text-body text-sm transition-all duration-500" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(-10px)', transitionDelay: getTextDelay(i) + 's' }}>{point.text}</p>
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* 3D Plasma Tube Progress Bar */}
+          <div className="flex justify-center mt-8 px-6">
+            <div
+              className="w-64 md:w-80 h-3 rounded-full overflow-hidden relative"
+              style={{
+                background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                border: '1px solid rgba(245, 245, 240, 0.25)',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
+              }}
+            >
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${progress * 100}%`,
+                  background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
+                  boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -2121,6 +2902,7 @@ function WatchAndDecide() {
 export default function AgentAttractionTemplate2() {
   return (
     <ViewportProvider>
+      <SmoothScroll />
       <main id="main-content">
         {/* Hero Section - Fixed in place, content scrolls over it */}
         <FixedHeroWrapper>
