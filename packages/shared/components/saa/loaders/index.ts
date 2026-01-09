@@ -1,1 +1,1 @@
-export { ClaudeLoader, type ClaudeLoaderProps } from './ClaudeLoader';
+// Loaders index - currently empty

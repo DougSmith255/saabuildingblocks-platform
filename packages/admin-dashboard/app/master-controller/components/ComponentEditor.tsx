@@ -320,36 +320,6 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
         return lazy(() => import('@saa/shared/components/saa/headings/Tagline').then(m => ({
           default: () => <m.default>For Agents Who Want More</m.default>
         })));
-      case 'cyber-text-3d':
-        return lazy(() => import('@saa/shared/components/saa/text/CyberText3D').then(m => ({
-          default: () => (
-            <div className="space-y-6 text-center">
-              <m.CyberText3D variant="gold" glowIntensity="intense" className="text-4xl font-bold">
-                3700+
-              </m.CyberText3D>
-              <m.CyberText3D variant="white" flicker flickerSpeed="slow" className="text-2xl">
-                AGENTS
-              </m.CyberText3D>
-            </div>
-          )
-        })));
-      case 'gold-embossed-text':
-        return lazy(() => import('@saa/shared/components/saa/text/GoldEmbossedText').then(m => ({
-          default: () => (
-            <div className="space-y-6 text-center">
-              <m.GoldEmbossedText className="text-5xl font-bold" as="div">
-                PREMIUM
-              </m.GoldEmbossedText>
-              <m.GoldEmbossedText className="text-3xl" as="div">
-                Gold Embossed
-              </m.GoldEmbossedText>
-              <m.GoldEmbossedText className="text-xl" as="div">
-                Raised metallic text effect
-              </m.GoldEmbossedText>
-            </div>
-          )
-        })));
-
       // ============================================
       // EFFECTS
       // ============================================
@@ -435,18 +405,6 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
             </m.CyberFrame>
           )
         })));
-      case 'youtube-facade':
-        return lazy(() => import('@saa/shared/components/saa/media/YouTubeFacade').then(m => ({
-          default: () => (
-            <div className="w-full max-w-lg aspect-video relative">
-              <m.YouTubeFacade
-                videoId="dQw4w9WgXcQ"
-                title="Sample YouTube Video"
-              />
-            </div>
-          )
-        })));
-
       default:
         return () => (
           <div className="flex items-center justify-center p-8 bg-transparent border-2 border-dashed border-[#404040] rounded-lg">

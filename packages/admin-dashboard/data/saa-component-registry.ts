@@ -147,26 +147,6 @@ export const saaComponentRegistry: SAAComponent[] = [
     source: 'custom',
     tags: ['tagline', 'neon', 'typography', '3d', 'server-component', 'performance'],
   },
-  {
-    id: 'cyber-text-3d',
-    name: 'CyberText 3D',
-    category: 'typography',
-    description: 'Cyberpunk 3D neon glow text effect with gold/white variants, configurable glow intensity, optional flickering animation, and metal backing plate.',
-    reactPath: '../shared/components/saa/text/CyberText3D.tsx',
-    converted: true,
-    source: 'custom',
-    tags: ['text', '3d', 'neon', 'glow', 'flicker', 'cyberpunk', 'gold', 'metal-plate'],
-  },
-  {
-    id: 'gold-embossed-text',
-    name: 'Gold Embossed Text',
-    category: 'typography',
-    description: 'Raised/embossed gold text effect with metallic gradient and 3D depth. Features highlight on top edge, shadow on bottom for stamped metal appearance. Perfect for premium headings.',
-    reactPath: '../shared/components/saa/text/GoldEmbossedText.tsx',
-    converted: true,
-    source: 'custom',
-    tags: ['text', 'gold', 'embossed', 'raised', '3d', 'metallic', 'premium', 'trophy'],
-  },
 
   // ============================================
   // EFFECTS (0) - LightningText removed from design system
@@ -219,16 +199,6 @@ export const saaComponentRegistry: SAAComponent[] = [
     source: 'custom',
     tags: ['frame', 'image', 'video', 'holographic', 'glass', '3d', 'metal', 'corners'],
   },
-  {
-    id: 'youtube-facade',
-    name: 'YouTube Facade',
-    category: 'gallery',
-    description: 'Lazy-loading YouTube embed with thumbnail facade. Dramatically improves page load performance (~1MB+ saved per video). Shows thumbnail with play button, loads iframe only on click.',
-    reactPath: '../shared/components/saa/media/YouTubeFacade.tsx',
-    converted: true,
-    source: 'custom',
-    tags: ['youtube', 'video', 'lazy-load', 'facade', 'performance', 'thumbnail', 'embed'],
-  },
 
   // ============================================
   // ICONS (1)
@@ -242,20 +212,6 @@ export const saaComponentRegistry: SAAComponent[] = [
     converted: true,
     source: 'custom',
     tags: ['icon', '3d', 'metal', 'depth', 'shadow', 'perspective'],
-  },
-
-  // ============================================
-  // LOADERS (1)
-  // ============================================
-  {
-    id: 'claude-loader',
-    name: 'Claude Loader',
-    category: 'loaders',
-    description: 'Claude Code style loading indicator with rotating symbols and random "thinking" words. Features gold neon glow, monospace font, and configurable color/size/speed.',
-    reactPath: '../shared/components/saa/loaders/ClaudeLoader.tsx',
-    converted: true,
-    source: 'custom',
-    tags: ['loader', 'loading', 'spinner', 'animation', 'claude', 'thinking', 'symbols'],
   },
 
 ];
