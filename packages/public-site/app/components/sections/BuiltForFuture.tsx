@@ -217,8 +217,9 @@ export function BuiltForFuture() {
     isMobileRef.current = isMobile;
 
     // Grace period: 10% at start and 10% at end of scroll range
-    const GRACE = 0.1;
-    const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
+    // No buffer zones - cards move immediately with scroll
+    const GRACE = 0;
+    const CONTENT_RANGE = 1;
 
     // Velocity-based magnetic snap (desktop only)
     const animateMagnetic = () => {
@@ -287,15 +288,8 @@ export function BuiltForFuture() {
           const mobileMultiplier = isMobileRef.current ? 2 : 1;
           let cardPosition = 0;
 
-          if (self.progress <= GRACE) {
-            cardPosition = 0;
-          } else if (self.progress >= 1 - GRACE) {
-            cardPosition = totalCards - 1;
-          } else {
-            const contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
-            // Apply mobile multiplier and clamp to valid range
-            cardPosition = Math.min(contentProgress * mobileMultiplier, 1) * (totalCards - 1);
-          }
+          // Apply mobile multiplier (2x speed on mobile) and clamp to valid range
+          cardPosition = Math.min(self.progress * mobileMultiplier, 1) * (totalCards - 1);
 
           // Update raw position - magnetic loop will interpolate
           rawPositionRef.current = cardPosition;

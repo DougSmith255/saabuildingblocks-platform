@@ -114,8 +114,9 @@ export function WhyOnlyAtExp() {
     isMobileRef.current = window.innerWidth < 768;
 
     // Grace period: 10% at start and 10% at end of scroll range
-    const GRACE = 0.1;
-    const CONTENT_RANGE = 1 - (GRACE * 2); // 80% of scroll for actual card movement
+    // No buffer zones - cards move immediately with scroll
+    const GRACE = 0;
+    const CONTENT_RANGE = 1;
 
     // Velocity-based magnetic snap (desktop only)
     const animateMagnetic = () => {
@@ -192,14 +193,8 @@ export function WhyOnlyAtExp() {
           const mobileMultiplier = isMobileRef.current ? 2 : 1;
           let cardProgress = 0;
 
-          if (self.progress <= GRACE) {
-            cardProgress = 0;
-          } else if (self.progress >= 1 - GRACE) {
-            cardProgress = 1;
-          } else {
-            // Apply mobile multiplier and clamp to 0-1 range
-            cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
-          }
+          // Apply mobile multiplier (2x speed on mobile) and clamp to 0-1 range
+          cardProgress = Math.min(self.progress * mobileMultiplier, 1);
 
           // Update raw progress - magnetic loop will interpolate
           rawProgressRef.current = cardProgress;
