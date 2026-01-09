@@ -204,7 +204,7 @@ main#main-content > section:not(:first-child) {
 }
 
 /* Counter responsive sizing - mobile overrides */
-@media (max-width: 1450px) {
+@media (max-width: 1600px) {
   .counter-numbers {
     font-size: 40px;
     font-weight: 400;
@@ -284,18 +284,24 @@ main#main-content > section:not(:first-child) {
  */
 
 /* Star background support with radial gradient behind stars */
-/* html must be transparent so star canvas shows through */
+/*
+ * RUBBER BANDING FIX:
+ * html needs a dark background so when users scroll beyond bounds (rubber banding),
+ * they see dark instead of white. The star canvas is position:fixed with z-index:-1,
+ * so it renders on top of these backgrounds but behind the content.
+ */
 html {
-  background: transparent !important;
-  background-color: transparent !important;
+  /* Dark background for rubber banding areas */
+  background-color: rgb(12, 12, 12) !important;
   scroll-behavior: smooth;
   overscroll-behavior: none; /* Prevent rubber-banding on iOS/Chrome */
 }
 
 body {
-  /* Radial gradient from WordPress - appears behind star canvas */
-  background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%) !important;
-  background-color: rgb(12, 12, 12) !important;
+  /* IMPORTANT: Body must be transparent for stars to show!
+     The gradient is rendered by StarBackgroundCanvas component */
+  background: transparent !important;
+  background-color: transparent !important;
   margin: 0;
   padding: 0;
   overscroll-behavior: none; /* Prevent rubber-banding on iOS/Chrome */
@@ -350,7 +356,7 @@ main {
    * Tailwind v4's @theme directive can create issues with Next.js font variables */
 
   /* Custom Breakpoints */
-  --breakpoint-xlg: 90.625rem;  /* 1450px - Desktop menu breakpoint */
+  --breakpoint-xlg: 100rem;  /* 1600px - Desktop menu breakpoint */
 
   /* Fluid Typography with clamp() */
   --font-size-display-xl: clamp(3.5rem, 5vw + 1rem, 6rem);
@@ -1026,25 +1032,21 @@ main {
     }
   }
 
-  @keyframes fadeInUp {
+  @keyframes menuContentFadeIn {
     from {
       opacity: 0;
-      transform: translateY(20px);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
     }
   }
 
-  @keyframes fadeOutDown {
+  @keyframes menuContentFadeOut {
     from {
       opacity: 1;
-      transform: translateY(0);
     }
     to {
       opacity: 0;
-      transform: translateY(20px);
     }
   }
 
@@ -1058,15 +1060,18 @@ main {
   }
 
   .menu-closing {
-    animation: slideUp 0.3s ease-in forwards;
+    animation: slideUp 0.25s ease-in forwards;
   }
 
+  /* Content fades in after container slides down */
   .menu-opening .mobile-menu-content {
-    animation: fadeInUp 0.4s ease-out 0.1s both;
+    opacity: 0;
+    animation: menuContentFadeIn 0.25s ease-out 0.15s forwards;
   }
 
+  /* Content fades out before container slides up */
   .menu-closing .mobile-menu-content {
-    animation: fadeOutDown 0.25s ease-in both;
+    animation: menuContentFadeOut 0.15s ease-in forwards;
   }
 
   /* Browser scrollbar styling for mobile menu and all pages */
@@ -1263,6 +1268,22 @@ main {
       drop-shadow(2px 2px 0 #6a5a2d)
       drop-shadow(3px 3px 0 #4a3a1d)
       drop-shadow(4px 4px 3px rgba(0,0,0,0.5));
+  }
+
+  /* ========================================
+     STAT 3D TEXT - Metal Effect for Large Numbers
+     Uses text-shadow for 3D depth effect (no transform to avoid clipping)
+     ======================================== */
+  .stat-3d-text {
+    color: #c4a94d !important;
+    text-shadow:
+      -1px -1px 0 #ffe680,
+      1px 1px 0 #8a7a3d,
+      2px 2px 0 #6a5a2d,
+      3px 3px 0 #4a3a1d,
+      4px 4px 0 #2a2a1d,
+      5px 5px 4px rgba(0, 0, 0, 0.5);
+    display: inline-block;
   }
 
   /* Accessibility: Disable animations for users who prefer reduced motion */

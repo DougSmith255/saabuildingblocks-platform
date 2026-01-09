@@ -94,14 +94,15 @@ export function ScrollIndicator() {
         .scroll-prompt-arrow > div {
           width: 36px;
           height: 36px;
-          border-right: 8px solid #ffd700;
-          border-bottom: 8px solid #ffd700;
+          border-right: 8px solid #888;
+          border-bottom: 8px solid #888;
           border-radius: 4px;
           transform: rotate(45deg) translateZ(1px);
           /* White outline using drop-shadow which follows the L-shape */
           filter:
             drop-shadow(0 0 1px #fff)
-            drop-shadow(0 0 2px rgba(255,255,255,0.8));
+            drop-shadow(0 0 2px #fff)
+            drop-shadow(0 0 3px rgba(255,255,255,0.8));
         }
       `}</style>
 
@@ -117,13 +118,12 @@ export function ScrollIndicator() {
           zIndex: -1, // Behind all content, sections scroll over it
         }}
       >
-        {/* Arrow container with glow */}
+        {/* Arrow container with tight glow */}
         <div
           style={{
             filter: `
-              drop-shadow(0 0 6px rgba(255, 215, 0, 0.6))
-              drop-shadow(0 0 12px rgba(255, 215, 0, 0.4))
-              drop-shadow(0 0 20px rgba(255, 215, 0, 0.2))
+              drop-shadow(0 0 3px rgba(136, 136, 136, 0.3))
+              drop-shadow(0 0 6px rgba(136, 136, 136, 0.15))
             `,
           }}
         >

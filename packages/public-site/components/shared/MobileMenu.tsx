@@ -12,15 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
-  {
-    label: 'Our Team',
-    dropdown: [
-      { label: 'Team Value', href: '/exp-realty-sponsor/' },
-      { label: 'About Us', href: '/our-exp-team/' },
-      { label: 'About Karrie Hill', href: '/about-karrie-hill/' },
-      { label: 'About Doug Smart', href: '/about-doug-smart/' },
-    ],
-  },
+  { label: 'Team Value', href: '/exp-realty-sponsor/' },
   { label: 'About eXp', href: '/about-exp-realty/' },
   {
     label: 'Resources',
@@ -34,6 +26,14 @@ const navItems: NavItem[] = [
       { label: 'eXp Awards', href: '/awards/' },
     ],
   },
+  {
+    label: 'Team Leaders',
+    dropdown: [
+      { label: 'About Doug Smart', href: '/about-doug-smart/' },
+      { label: 'About Karrie Hill', href: '/about-karrie-hill/' },
+    ],
+  },
+  { label: 'About Us', href: '/our-exp-team/' },
   { label: 'Agent Portal', href: '/agent-portal/login/' },
 ];
 
@@ -45,7 +45,7 @@ interface MobileMenuProps {
 }
 
 /**
- * Mobile Menu (<1450px)
+ * Mobile Menu (<1600px)
  * Fullscreen menu overlay with Lenis smooth scrolling (hamburger button in Header)
  */
 export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {
@@ -174,7 +174,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             display: shouldRenderMenu ? undefined : 'none',
           }}
         >
-        <div className="mobile-menu-content pt-24 pb-32 min-h-screen">
+        <div className="mobile-menu-content pt-16 pb-32 min-h-screen">
           <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
             {navItems.map((item, index) => (
               <div key={index}>

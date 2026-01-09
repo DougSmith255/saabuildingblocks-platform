@@ -12,15 +12,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
-  {
-    label: 'Our Team',
-    dropdown: [
-      { label: 'Team Value', href: '/exp-realty-sponsor/' },
-      { label: 'About Us', href: '/our-exp-team/' },
-      { label: 'About Karrie Hill', href: '/about-karrie-hill/' },
-      { label: 'About Doug Smart', href: '/about-doug-smart/' },
-    ],
-  },
+  { label: 'Team Value', href: '/exp-realty-sponsor/' },
   { label: 'About eXp', href: '/about-exp-realty/' },
   {
     label: 'Resources',
@@ -34,6 +26,14 @@ const navItems: NavItem[] = [
       { label: 'eXp Awards', href: '/awards/' },
     ],
   },
+  {
+    label: 'Team Leaders',
+    dropdown: [
+      { label: 'About Doug Smart', href: '/about-doug-smart/' },
+      { label: 'About Karrie Hill', href: '/about-karrie-hill/' },
+    ],
+  },
+  { label: 'About Us', href: '/our-exp-team/' },
   { label: 'Agent Portal', href: '/agent-portal/login/' },
 ];
 
@@ -43,7 +43,7 @@ interface DesktopNavProps {
 }
 
 /**
- * Desktop Navigation (≥1450px)
+ * Desktop Navigation (≥1600px)
  * Horizontal nav with hover dropdowns + CTA button
  */
 export default function DesktopNav({ isPortalClicked, handlePortalClick }: DesktopNavProps) {

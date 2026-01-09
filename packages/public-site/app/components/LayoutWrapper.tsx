@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
-import { usePathname } from 'next/navigation';
+import { useMemo, useRef, useState, useEffect } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Header from '@/components/shared/Header';
 import { DeferredFooter } from '@saa/shared/components/performance/DeferredContent';
@@ -11,6 +11,16 @@ const Footer = dynamic(() => import('@/components/shared/Footer'), { ssr: false 
 
 // Dynamic import SmoothScroll (Lenis) - deferred to reduce initial JS bundle
 const SmoothScroll = dynamic(() => import('@/components/SmoothScroll'), { ssr: false });
+
+// Dynamic import ScrollProgress - moved here to conditionally hide in embed mode
+const ScrollProgress = dynamic(() => import('@/components/shared/ScrollProgress'), { ssr: false });
+
+// Dynamic import ScrollIndicator - global scroll arrow indicator for all pages
+const ScrollIndicator = dynamic(
+  () => import('@saa/shared/components/saa/interactive/ScrollIndicator').then(mod => mod.ScrollIndicator),
+  { ssr: false }
+);
+
 import { ExternalLinkHandler } from './ExternalLinkHandler';
 import { ScrollPerformanceOptimizer } from './ScrollPerformanceOptimizer';
 import { ViewportHeightLock } from './ViewportHeightLock';
@@ -67,8 +77,32 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/agent-portal/login', // Login page - header yes, footer no
   ], []);
 
+  // Routes where scroll indicator should be hidden (auth flows, utility pages)
+  // These are pages with a header but no meaningful content to scroll to
+  // Format: prefix-based routes (matches /route and /route/*)
+  const noScrollIndicatorPrefixes = useMemo(() => [
+    '/agent-portal/login',      // Login page - single viewport, no scroll content
+    '/agent-portal/activate',   // Account activation - single viewport form
+    '/agent-portal/forgot',     // Forgot password/username (future routes)
+    '/agent-portal/reset',      // Password reset (future routes)
+  ], []);
+
+  // Check for embed mode via URL search params
+  const [isEmbedMode, setIsEmbedMode] = useState(false);
+
+  useEffect(() => {
+    // Check URL for embed=true parameter (client-side only)
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setIsEmbedMode(params.get('embed') === 'true');
+    }
+  }, [pathname]);
+
   // Check if current path matches any no-header-footer route (SSR-safe)
   const shouldHideHeaderFooter = useMemo(() => {
+    // Embed mode hides everything
+    if (isEmbedMode) return true;
+
     // 404 pages detected via data attribute (checked synchronously before render)
     if (is404PageRef.current) return true;
 
@@ -86,7 +120,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     }
 
     return false;
-  }, [pathname, noHeaderFooterRoutes, exactNoHeaderFooterRoutes]);
+  }, [pathname, noHeaderFooterRoutes, exactNoHeaderFooterRoutes, isEmbedMode]);
 
   // Check if footer should be hidden (but header stays)
   const shouldHideFooterOnly = useMemo(() => {
@@ -94,9 +128,27 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     return noFooterRoutes.includes(pathname) || noFooterRoutes.includes(pathname.replace(/\/$/, ''));
   }, [pathname, noFooterRoutes]);
 
+  // Check if scroll indicator should be hidden (auth pages, utility pages)
+  // Uses prefix matching to catch sub-routes and trailing slashes
+  const shouldHideScrollIndicator = useMemo(() => {
+    if (!pathname) return false;
+    const normalizedPath = pathname.replace(/\/$/, '');
+    // Check if path starts with any of the no-scroll-indicator prefixes
+    return noScrollIndicatorPrefixes.some(prefix =>
+      normalizedPath === prefix || normalizedPath.startsWith(prefix + '/')
+    );
+  }, [pathname, noScrollIndicatorPrefixes]);
+
+  // Embed mode: minimal wrapper, just the content
+  if (isEmbedMode) {
+    return <>{children}</>;
+  }
+
   return (
     <ViewportProvider>
       <SmoothScroll />
+      <ScrollProgress />
+      {!shouldHideHeaderFooter && !shouldHideScrollIndicator && <ScrollIndicator />}
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
       <ViewportHeightLock />

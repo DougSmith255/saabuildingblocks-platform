@@ -279,8 +279,8 @@ p a {
 }
 
 /* Critical Responsive Breakpoints - Prevents FOUC on navigation */
-/* xlg breakpoint: 1450px (90.625rem) - Controls desktop nav vs mobile burger menu */
-@media (min-width: 90.625rem) {
+/* xlg breakpoint: 1600px (100rem) - Controls desktop nav vs mobile burger menu */
+@media (min-width: 100rem) {
   .xlg\:hidden {
     display: none !important;
   }
@@ -334,8 +334,8 @@ p a {
   stroke-width: 3;
 }
 
-/* Header Container - Fixed 80px height for mobile (<1450px) */
-@media (max-width: 90.625rem) {
+/* Header Container - Fixed 80px height for mobile (<1600px) */
+@media (max-width: 100rem) {
   .header-container {
     height: 80px !important;
     min-height: 80px !important;
