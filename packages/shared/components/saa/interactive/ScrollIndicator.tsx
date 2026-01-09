@@ -21,6 +21,12 @@ export function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
   const [scale, setScale] = useState(1);
 
+  // Debug: Log when component mounts
+  useEffect(() => {
+    console.log('[ScrollIndicator] Component mounted');
+    return () => console.log('[ScrollIndicator] Component unmounted');
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
@@ -107,6 +113,7 @@ export function ScrollIndicator() {
 
       <div
         id="global-scroll-indicator"
+        data-source="layout-wrapper"
         className="fixed pointer-events-none"
         style={{
           bottom: 'max(32px, calc(env(safe-area-inset-bottom, 0px) + 24px))',
