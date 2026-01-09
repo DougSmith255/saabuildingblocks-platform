@@ -4916,9 +4916,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           }
         }
 
-        // Velocity-based magnetic snap animation loop
-        // Desktop: strong magnetic effect, Mobile: subtle centering assist
-        var isMobileMagnetic = window.innerWidth < 768;
+        // Velocity-based magnetic snap - same strength for desktop and mobile
         function animateMagnetic() {
           const raw = rawProgress;
           const currentDisplay = displayProgress;
@@ -4934,24 +4932,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           const nearestCardIndex = Math.round(raw / cardStep);
           const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
 
-          // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
-          if (isMobileMagnetic) {
-            // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
-            const velocityFactor = Math.min(1, velocity * 150); // Higher multiplier = less magnetic pull
-            // Only apply subtle centering when nearly stopped
-            const magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
-            const targetProgress = raw * (1 - magneticStrength) + nearestCardProgress * magneticStrength;
-            // Very gentle interpolation for mobile
-            const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.12;
-            if (Math.abs(newProgress - currentDisplay) > 0.0001) {
-              displayProgress = newProgress;
-              updateCards(newProgress);
-            }
-            rafId = requestAnimationFrame(animateMagnetic);
-            return;
-          }
-
-          // Desktop: strong magnetic snap effect
           // When velocity is high, follow raw position
           // When velocity is low, snap to nearest card
           const velocityFactor = Math.min(1, velocity * 100); // 0 = stopped, 1 = scrolling fast
@@ -4974,17 +4954,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // Start the magnetic animation loop
         rafId = requestAnimationFrame(animateMagnetic);
 
-        // Create GSAP timeline for content drift
-        var isMobileCards = window.innerWidth < 768;
-        const tl = gsap.timeline();
-        tl.to(contentEl, {
-          y: -60, // Drift upward by 60px total (from +30 to -30)
-          duration: 1,
-          ease: 'none',
-        });
-
         // Create ScrollTrigger for pinning and progress tracking
         // Pin trigger at 55% from top of viewport
+        var isMobileCards = window.innerWidth < 768;
         ScrollTrigger.create({
           trigger: triggerEl,
           start: 'center 55%',
@@ -4992,7 +4964,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           pin: true,
           pinSpacing: true,
           scrub: 0.5,
-          animation: tl,
           onUpdate: function(self) {
             // Map scroll progress to card progress with grace periods
             // On mobile, cards move 2x faster relative to scroll
@@ -5287,8 +5258,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           });
         }
 
-        // Magnetic animation loop - exact from React useLayoutEffect
-        // Desktop: strong magnetic effect, Mobile: subtle centering assist
+        // Magnetic animation loop - same strength for desktop and mobile
         var isMobileHorizontal = window.innerWidth < 768;
         function animateMagnetic() {
           var raw = rawPositionRef;
@@ -5302,24 +5272,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           var nearestCard = Math.round(raw);
           var clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
 
-          // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
-          if (isMobileHorizontal) {
-            // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
-            var velocityFactor = Math.min(1, velocityRef * 80); // Higher multiplier = less magnetic pull
-            // Only apply subtle centering when nearly stopped
-            var magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
-            var targetPosition = raw * (1 - magneticStrength) + clampedTarget * magneticStrength;
-            // Very gentle interpolation for mobile
-            var newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.12;
-            if (Math.abs(newPosition - currentDisplay) > 0.001) {
-              displayPositionRef = newPosition;
-              updateCards(newPosition);
-            }
-            requestAnimationFrame(animateMagnetic);
-            return;
-          }
-
-          // Desktop: strong magnetic snap effect
+          // When velocity is high, follow raw position
+          // When velocity is low, snap to nearest card
           var velocityFactor = Math.min(1, velocityRef * 50);
           var targetPosition = clampedTarget * (1 - velocityFactor) + raw * velocityFactor;
           var newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.15;
@@ -5334,7 +5288,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         requestAnimationFrame(animateMagnetic);
 
-        // GSAP ScrollTrigger - exact from React
+        // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
         // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
@@ -5362,18 +5316,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             }
 
             rawPositionRef = cardPosition;
-          }
-        });
-
-        // Y drift animation - exact from React
-        gsap.to(content, {
-          y: -60,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: trigger,
-            start: pinStartHorizontal,
-            end: '+=300%',
-            scrub: 2.5
           }
         });
 

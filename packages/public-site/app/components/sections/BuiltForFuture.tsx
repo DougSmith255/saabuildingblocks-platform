@@ -222,7 +222,7 @@ export function BuiltForFuture() {
     const CONTENT_RANGE = 1 - (GRACE * 2);
 
     // Velocity-based magnetic snap
-    // Desktop: strong magnetic effect, Mobile: subtle centering assist
+    // Both desktop and mobile use magnetic snap to center cards
     const animateMagnetic = () => {
       const raw = rawPositionRef.current;
       const lastRaw = lastRawRef.current;
@@ -238,33 +238,8 @@ export function BuiltForFuture() {
       const nearestCard = Math.round(raw);
       const clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
 
-      // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
-      // Desktop: strong magnetic snap effect
-      if (isMobileRef.current) {
-        // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
-        // velocityFactor: 0 = stopped (apply centering), 1 = scrolling (follow raw)
-        const velocityFactor = Math.min(1, velocityRef.current * 80); // Higher multiplier = less magnetic pull
-
-        // Only apply subtle centering when nearly stopped (velocityFactor < 0.3)
-        // Blend: 85% raw position + 15% snap target when stopped
-        const magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
-        const targetPosition = raw * (1 - magneticStrength) + clampedTarget * magneticStrength;
-
-        // Very gentle interpolation for mobile
-        const newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.12;
-
-        if (Math.abs(newPosition - currentDisplay) > 0.001) {
-          displayPositionRef.current = newPosition;
-          setScrollPosition(newPosition);
-        }
-        rafRef.current = requestAnimationFrame(animateMagnetic);
-        return;
-      }
-
-      // Desktop: strong magnetic snap effect
       // When velocity is high, follow raw position
       // When velocity is low, snap to nearest card
-      // velocityRef.current typically ranges from 0 (stopped) to ~0.1 (fast scroll)
       const velocityFactor = Math.min(1, velocityRef.current * 50); // 0 = stopped, 1 = scrolling fast
 
       // Blend between snap target (when stopped) and raw position (when scrolling)
@@ -315,18 +290,6 @@ export function BuiltForFuture() {
           rawPositionRef.current = cardPosition;
         },
       });
-
-      // Subtle Y drift animation
-      gsap.to(contentRef.current, {
-        y: -60,
-        ease: 'none',
-          scrollTrigger: {
-            trigger: triggerRef.current,
-            start: pinStart,
-            end: '+=300%',
-            scrub: 2.5,
-          }
-        });
     }, sectionRef);
 
     return () => {
@@ -366,16 +329,13 @@ export function BuiltForFuture() {
         style={{
           zIndex: 1,
           willChange: 'transform',
-          contain: 'layout style', // Removed 'paint' to allow content to extend beyond bounds during Y drift
+          contain: 'layout style paint',
         }}
       >
-        {/* Content - animates upward (desktop only) */}
+        {/* Content */}
         <div
           ref={contentRef}
           className="relative"
-          style={{
-            transform: 'translateY(30px)', // Start 30px below center
-          }}
         >
           {/* Section Header */}
           <div className="text-center mb-4 px-6">

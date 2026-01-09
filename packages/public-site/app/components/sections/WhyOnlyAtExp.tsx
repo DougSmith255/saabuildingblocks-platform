@@ -119,7 +119,7 @@ export function WhyOnlyAtExp() {
     const CONTENT_RANGE = 1 - (GRACE * 2);
 
     // Velocity-based magnetic snap
-    // Desktop: strong magnetic effect, Mobile: subtle centering assist
+    // Both desktop and mobile use magnetic snap to center cards
     const animateMagnetic = () => {
       const raw = rawProgressRef.current;
       const lastRaw = lastRawRef.current;
@@ -136,30 +136,6 @@ export function WhyOnlyAtExp() {
       const nearestCardIndex = Math.round(raw / cardStep);
       const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
 
-      // Mobile: subtle magnetic assist (low intensity, helps center cards when stopped)
-      // Desktop: strong magnetic snap effect
-      if (isMobileRef.current) {
-        // Mobile: much weaker magnetic effect - mostly follows scroll with gentle centering
-        // velocityFactor: 0 = stopped (apply centering), 1 = scrolling (follow raw)
-        const velocityFactor = Math.min(1, velocityRef.current * 150); // Higher multiplier = less magnetic pull
-
-        // Only apply subtle centering when nearly stopped (velocityFactor < 0.3)
-        // Blend: 85% raw position + 15% snap target when stopped
-        const magneticStrength = Math.max(0, 0.15 * (1 - velocityFactor * 3));
-        const targetProgress = raw * (1 - magneticStrength) + nearestCardProgress * magneticStrength;
-
-        // Very gentle interpolation for mobile
-        const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.12;
-
-        if (Math.abs(newProgress - currentDisplay) > 0.0001) {
-          displayProgressRef.current = newProgress;
-          setProgress(newProgress);
-        }
-        rafRef.current = requestAnimationFrame(animateMagnetic);
-        return;
-      }
-
-      // Desktop: strong magnetic snap effect
       // When velocity is high, follow raw position
       // When velocity is low, snap to nearest card
       const velocityFactor = Math.min(1, velocityRef.current * 100); // 0 = stopped, 1 = scrolling fast
@@ -182,15 +158,6 @@ export function WhyOnlyAtExp() {
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
     const ctx = gsap.context(() => {
-      // Timeline animates the glass+content together
-      const tl = gsap.timeline();
-
-      tl.to(contentRef.current, {
-        y: -60, // Drift upward by 60px total (from +30 to -30)
-        duration: 1,
-        ease: 'none',
-      });
-
       // Pin when the CARD STACK reaches 55% from top of viewport
       ScrollTrigger.create({
         trigger: cardStackRef.current,
@@ -199,7 +166,6 @@ export function WhyOnlyAtExp() {
         pin: triggerRef.current,
         pinSpacing: true,
         scrub: 0.5,
-        animation: tl,
         onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card progress with grace periods
           // On mobile, cards move 2x faster relative to scroll
@@ -234,17 +200,14 @@ export function WhyOnlyAtExp() {
         ref={triggerRef}
         style={{
           willChange: 'transform',
-          contain: 'layout style', // Removed 'paint' to allow content to extend beyond bounds during Y drift
+          contain: 'layout style paint',
         }}
       >
-        {/* Glass panel + content - this entire thing animates upward (desktop only) */}
+        {/* Glass panel + content */}
         <div
           ref={contentRef}
           className="rounded-3xl overflow-hidden relative"
-          style={{
-            ...GLASS_STYLES,
-            transform: 'translateY(30px)', // Start 30px below center
-          }}
+          style={GLASS_STYLES}
         >
           {/* Noise texture overlay */}
           <div
