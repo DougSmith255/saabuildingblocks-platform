@@ -366,28 +366,38 @@ export function MediaLogos() {
               willChange: 'transform',
             }}
           >
-            {/* Double the logos for seamless loop */}
+            {/* Double the logos for seamless loop - with 3D effect matching agent attraction page */}
             {[...logos, ...logos].map((logo, index) => (
               <div
                 key={`${logo.id}-${index}`}
                 className="flex-shrink-0 flex items-center justify-center"
                 style={{
-                  // Mobile: 80px (doubled from 40), Desktop: 56px
-                  height: 'clamp(80px, 6vw, 56px)',
                   minWidth: 'clamp(180px, 15vw, 200px)',
                 }}
               >
-                <img
-                  src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
-                  alt={logo.alt}
-                  loading="eager"
-                  className="h-full w-auto object-contain"
+                {/* 3D wrapper - matches [slug].js .logo-3d-wrapper */}
+                <span
                   style={{
-                    maxWidth: 'clamp(200px, 18vw, 240px)',
-                    filter: 'url(#crosshatch-texture) brightness(1.1) contrast(1.05)',
-                    opacity: 0.9,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '120px',
+                    height: '120px',
+                    filter: 'drop-shadow(-1px -1px 0 #e6d99a) drop-shadow(1px 1px 0 #756429) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))',
+                    transform: 'perspective(500px) rotateX(8deg)',
                   }}
-                />
+                >
+                  <img
+                    src={`${CLOUDFLARE_BASE}/${logo.id}/public`}
+                    alt={logo.alt}
+                    loading="eager"
+                    className="h-[70px] md:h-[72px] w-auto object-contain"
+                    style={{
+                      maxWidth: 'clamp(200px, 18vw, 300px)',
+                      filter: 'brightness(0) invert(0.8)',
+                    }}
+                  />
+                </span>
               </div>
             ))}
           </div>
