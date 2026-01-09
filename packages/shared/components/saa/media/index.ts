@@ -14,3 +14,6 @@ export type { VideoPlayerProps } from './VideoPlayer';
 
 export { VideoSection } from './VideoSection';
 export type { VideoSectionProps } from './VideoSection';
+
+export { YouTubeFacade } from './YouTubeFacade';
+export type { YouTubeFacadeProps } from './YouTubeFacade';
