@@ -1326,6 +1326,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: flex;
       align-items: center;
       justify-content: center;
+      background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+      border: 3px solid #ffd700;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
     @media (min-width: 768px) {
@@ -1333,23 +1336,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         width: 144px;
         height: 144px;
       }
-    }
-    .wyg-icon-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-    }
-    .wyg-icon-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-    }
-    .wyg-icon-border {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      border: 3px solid #ffd700;
     }
     .wyg-icon-inner {
       position: relative;
@@ -1359,12 +1345,28 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       flex: 1;
       padding: 1.5rem;
       border-radius: 1rem;
-      background: linear-gradient(180deg, rgba(40,40,40,0.75), rgba(20,20,20,0.8));
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
       border: 1px solid rgba(255,215,0,0.27);
       box-shadow: 0 0 40px rgba(255,215,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    }
+    .wyg-card-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+    }
+    .wyg-card-glass-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(20,20,20,0.85), rgba(10,10,10,0.9));
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .wyg-card-content-inner {
+      position: relative;
+      z-index: 10;
     }
     @media (min-width: 768px) {
       .wyg-reveal-card.wyg-reverse .wyg-card-content {
@@ -1453,11 +1455,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       height: 280px;
       width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
       perspective: 1200px;
     }
     @media (min-width: 768px) {
       .why-only-card-stack {
         height: 340px;
+        max-width: 550px;
       }
     }
     .why-only-card {
@@ -3333,71 +3338,81 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         <div class="wyg-container" id="wyg-cards">
           <!-- Card 1: Connected Leadership (from left) -->
           <div class="wyg-reveal-card" data-wyg-card="0" data-wyg-direction="left">
-            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');">
-              <div class="wyg-icon-overlay"></div>
-              <div class="wyg-icon-border"></div>
+            <div class="wyg-icon-circle">
               <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
             </div>
             <div class="wyg-card-content">
-              <span class="wyg-badge">Leadership</span>
-              <h3 class="wyg-card-title">Connected Leadership and Community</h3>
-              <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
+              <div class="wyg-card-glass-overlay"></div>
+              <div class="wyg-card-content-inner">
+                <span class="wyg-badge">Leadership</span>
+                <h3 class="wyg-card-title">Connected Leadership and Community</h3>
+                <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
+              </div>
             </div>
           </div>
 
           <!-- Card 2: Passive Income (from right) -->
           <div class="wyg-reveal-card wyg-from-right" data-wyg-card="1" data-wyg-direction="right">
-            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');">
-              <div class="wyg-icon-overlay"></div>
-              <div class="wyg-icon-border"></div>
+            <div class="wyg-icon-circle">
               <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></span>
             </div>
             <div class="wyg-card-content">
-              <span class="wyg-badge">Income</span>
-              <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
-              <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
+              <div class="wyg-card-glass-overlay"></div>
+              <div class="wyg-card-content-inner">
+                <span class="wyg-badge">Income</span>
+                <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
+                <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
+              </div>
             </div>
           </div>
 
           <!-- Card 3: Done-For-You (from left) -->
           <div class="wyg-reveal-card" data-wyg-card="2" data-wyg-direction="left">
-            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');">
-              <div class="wyg-icon-overlay"></div>
-              <div class="wyg-icon-border"></div>
+            <div class="wyg-icon-circle">
               <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line><path d="M9 16l2 2 4-4"></path></svg></span>
             </div>
             <div class="wyg-card-content">
-              <span class="wyg-badge">Systems</span>
-              <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
-              <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
+              <div class="wyg-card-glass-overlay"></div>
+              <div class="wyg-card-content-inner">
+                <span class="wyg-badge">Systems</span>
+                <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
+                <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
+              </div>
             </div>
           </div>
 
           <!-- Card 4: Elite Training (from right) -->
           <div class="wyg-reveal-card wyg-from-right" data-wyg-card="3" data-wyg-direction="right">
-            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');">
-              <div class="wyg-icon-overlay"></div>
-              <div class="wyg-icon-border"></div>
+            <div class="wyg-icon-circle">
               <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></span>
             </div>
             <div class="wyg-card-content">
-              <span class="wyg-badge">Training</span>
-              <h3 class="wyg-card-title">Elite Training Libraries</h3>
-              <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
+              <div class="wyg-card-glass-overlay"></div>
+              <div class="wyg-card-content-inner">
+                <span class="wyg-badge">Training</span>
+                <h3 class="wyg-card-title">Elite Training Libraries</h3>
+                <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
+              </div>
             </div>
           </div>
 
           <!-- Card 5: Private Referrals (from left) -->
           <div class="wyg-reveal-card" data-wyg-card="4" data-wyg-direction="left">
-            <div class="wyg-icon-circle" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');">
-              <div class="wyg-icon-overlay"></div>
-              <div class="wyg-icon-border"></div>
+            <div class="wyg-icon-circle">
               <span class="icon-3d" style="position: relative; z-index: 10;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></span>
             </div>
             <div class="wyg-card-content">
-              <span class="wyg-badge">Referrals</span>
-              <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
-              <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
+              <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
+              <div class="wyg-card-glass-overlay"></div>
+              <div class="wyg-card-content-inner">
+                <span class="wyg-badge">Referrals</span>
+                <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
+                <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -5326,8 +5341,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 80% on mobile, 40% on desktop (higher = pins sooner/higher on screen)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 80%' : 'center 40%';
+        // Pin trigger: 60% on mobile (was 80%), 45% on desktop (was 40%)
+        var pinStartHorizontal = isMobileHorizontal ? 'center 60%' : 'center 45%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,

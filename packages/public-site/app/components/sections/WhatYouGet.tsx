@@ -125,38 +125,18 @@ export function WhatYouGet() {
                 key={benefit.title}
                 className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
-                {/* Icon circle with background image */}
+                {/* Icon circle - solid dark background */}
                 <div
                   className="w-28 h-28 md:w-36 md:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
+                    background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
+                    border: `3px solid ${BRAND_YELLOW}`,
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
                     transform: `scale(${0.8 + cardProgress * 0.2})`,
                     opacity: 0.3 + cardProgress * 0.7,
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
-                  {/* Background image in circle */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      backgroundImage: `url(${benefit.bgImage})`,
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                  {/* Overlay for contrast */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background: 'rgba(0,0,0,0.5)',
-                    }}
-                  />
-                  {/* Border */}
-                  <div
-                    className="absolute inset-0 rounded-full"
-                    style={{
-                      border: `3px solid ${BRAND_YELLOW}`,
-                    }}
-                  />
                   {/* Icon */}
                   <div className="relative z-10">
                     <Icon3D color={ICON_GOLD} size={48}>
@@ -165,13 +145,10 @@ export function WhatYouGet() {
                   </div>
                 </div>
 
-                {/* Card content - glassmorphism effect */}
+                {/* Card content - glassmorphism effect with background image */}
                 <div
                   className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
                   style={{
-                    background: 'linear-gradient(180deg, rgba(40,40,40,0.75), rgba(20,20,20,0.8))',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
                     opacity: 0.4 + cardProgress * 0.6,
@@ -179,9 +156,27 @@ export function WhatYouGet() {
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
+                  {/* Background image */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      backgroundImage: `url(${benefit.bgImage})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
+                  />
+                  {/* Glass overlay */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: 'linear-gradient(180deg, rgba(20,20,20,0.85), rgba(10,10,10,0.9))',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                    }}
+                  />
                   {/* Subtitle badge */}
                   <div
-                    className={`inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3 ${isEven ? '' : 'md:float-right md:ml-3'}`}
+                    className={`relative z-10 inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3 ${isEven ? '' : 'md:float-right md:ml-3'}`}
                     style={{
                       background: `${BRAND_YELLOW}22`,
                       color: BRAND_YELLOW,
@@ -194,14 +189,14 @@ export function WhatYouGet() {
                   {!isEven && <div className="hidden md:block clear-both" />}
 
                   <h3
-                    className="font-heading font-bold mb-3 text-gray-100"
+                    className="relative z-10 font-heading font-bold mb-3 text-gray-100"
                     style={{
                       fontSize: 'clamp(20px, calc(18px + 0.5vw), 26px)',
                     }}
                   >
                     {benefit.title}
                   </h3>
-                  <p className="text-body leading-relaxed text-gray-400">
+                  <p className="relative z-10 text-body leading-relaxed text-gray-400">
                     {benefit.description}
                   </p>
                 </div>
