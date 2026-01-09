@@ -38,11 +38,11 @@ export function ApplyInstructionsEmail({
           {/* Header */}
           <Section style={headerStyle}>
             <Img
-              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-logo-gold/public"
+              src="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png"
               alt="Smart Agent Alliance"
               width={180}
               height={64}
-              style={{ margin: '0 auto' }}
+              style={{ display: 'block', margin: '0 auto' }}
             />
           </Section>
 
@@ -56,121 +56,80 @@ export function ApplyInstructionsEmail({
             </Text>
 
             <Heading as="h2" style={headingStyle}>
-              How to Apply to Join The Alliance
+              How to Join Smart Agent Alliance at eXp
             </Heading>
 
             {/* Step 1 */}
-            <Section style={stepStyle}>
-              <Text style={stepNumberStyle}>1</Text>
-              <Text style={stepTextStyle}>
-                Go to{' '}
-                <Link href="https://join.exprealty.com" style={linkStyle}>
-                  join.exprealty.com
-                </Link>
-              </Text>
-            </Section>
+            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
+              <tr>
+                <td style={stepNumberCellStyle}>
+                  <div style={stepNumberStyle}>1</div>
+                </td>
+                <td style={stepTextCellStyle}>
+                  <strong style={{color: '#fff'}}>Start Your Application</strong>
+                  <br />
+                  <span style={subTextStyle}>
+                    Visit{' '}
+                    <Link href="https://joinapp.exprealty.com/" style={linkStyle}>
+                      joinapp.exprealty.com
+                    </Link>{' '}
+                    to begin your eXp Realty application.
+                  </span>
+                </td>
+              </tr>
+            </table>
 
             {/* Step 2 */}
-            <Section style={stepStyle}>
-              <Text style={stepNumberStyle}>2</Text>
-              <Text style={stepTextStyle}>
-                Click &quot;Join Us&quot; or &quot;I&apos;m Ready&quot;
-              </Text>
-            </Section>
+            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
+              <tr>
+                <td style={stepNumberCellStyle}>
+                  <div style={stepNumberStyle}>2</div>
+                </td>
+                <td style={stepTextCellStyle}>
+                  <strong style={{color: '#fff'}}>Search for Your Sponsor</strong>
+                  <br />
+                  <span style={subTextStyle}>
+                    Enter <strong style={{color: '#ffd700'}}>{agentEmail}</strong> and click Search.
+                    Select <strong style={{color: '#ffd700'}}>{agentName}</strong> as your sponsor.
+                  </span>
+                </td>
+              </tr>
+            </table>
 
             {/* Step 3 */}
-            <Section style={stepStyle}>
-              <Text style={stepNumberStyle}>3</Text>
-              <Text style={stepTextStyle}>
-                Select U.S. or Canada
-                <br />
-                <span style={subTextStyle}>For other countries, email us</span>
-              </Text>
-            </Section>
+            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
+              <tr>
+                <td style={stepNumberCellStyle}>
+                  <div style={stepNumberStyle}>3</div>
+                </td>
+                <td style={stepTextCellStyle}>
+                  <strong style={{color: '#fff'}}>Complete Your Application</strong>
+                  <br />
+                  <span style={subTextStyle}>
+                    Fill out the application form and submit. You&apos;ll receive a confirmation email from eXp.
+                  </span>
+                </td>
+              </tr>
+            </table>
 
             {/* Step 4 */}
-            <Section style={stepStyle}>
-              <Text style={stepNumberStyle}>4</Text>
-              <Text style={stepTextStyle}>
-                <strong>Residential Agents:</strong> Complete the form and click Create Account
-                <br />
-                <strong>Commercial or Referral Agents:</strong> Use the links at the bottom of the page
-              </Text>
-            </Section>
-
-            {/* Sponsor Section - Highlighted */}
-            <Section style={highlightBoxStyle}>
-              <Heading as="h3" style={highlightHeadingStyle}>
-                Naming Your Sponsor
-              </Heading>
-              <Text style={highlightTextStyle}>
-                When prompted in the application:
-              </Text>
-              <Text style={sponsorDetailStyle}>
-                Enter: <span style={goldTextStyle}>{agentEmail}</span>
-              </Text>
-              <Text style={sponsorDetailStyle}>
-                Hit search, then select: <span style={goldTextStyle}>{agentName}</span>
-              </Text>
-              <Text style={highlightTextStyle}>That&apos;s it.</Text>
-            </Section>
-
-            <Hr style={dividerStyle} />
-
-            {/* Licensing Notes */}
-            <Heading as="h3" style={subHeadingStyle}>
-              Licensing Notes (If Applicable)
-            </Heading>
-            <Text style={paragraphStyle}>
-              If your location requires a broker choice before licensing:
-            </Text>
-            <ul style={listStyle}>
-              <li>Join eXp first</li>
-              <li>When asked for your license number, enter all zeros</li>
-              <li>eXp will guide you through the rest</li>
-            </ul>
-
-            {/* Paused Application */}
-            <Heading as="h3" style={subHeadingStyle}>
-              If You Pause Your Application
-            </Heading>
-            <Text style={paragraphStyle}>
-              If you don&apos;t finish, eXp may contact you. You can resume your application using
-              the link in their email.
-            </Text>
-
-            <Hr style={dividerStyle} />
-
-            {/* Need Help */}
-            <Heading as="h3" style={subHeadingStyle}>
-              Need Help?
-            </Heading>
-            <Text style={contactStyle}>
-              <strong>eXp Expert Care</strong>
-              <br />
-              833-303-0610 |{' '}
-              <Link href="mailto:expertcare@exprealty.com" style={linkStyle}>
-                expertcare@exprealty.com
-              </Link>
-            </Text>
-            <Text style={contactStyle}>
-              <strong>Doug Smart</strong>
-              <br />
-              Text only: 415-320-5606
-              <br />
-              <Link href="mailto:doug@smartagentalliance.com" style={linkStyle}>
-                doug@smartagentalliance.com
-              </Link>
-            </Text>
-            <Text style={contactStyle}>
-              <strong>Karrie Hill</strong>
-              <br />
-              415-238-0922
-              <br />
-              <Link href="mailto:karrie@smartagentalliance.com" style={linkStyle}>
-                karrie@smartagentalliance.com
-              </Link>
-            </Text>
+            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
+              <tr>
+                <td style={stepNumberCellStyle}>
+                  <div style={stepNumberStyle}>4</div>
+                </td>
+                <td style={stepTextCellStyle}>
+                  <strong style={{color: '#fff'}}>eXp Realty Support</strong>
+                  <br />
+                  <span style={subTextStyle}>
+                    For application issues, call <strong style={{color: '#fff'}}>833-303-0610</strong> or email{' '}
+                    <Link href="mailto:expertcare@exprealty.com" style={linkStyle}>
+                      expertcare@exprealty.com
+                    </Link>
+                  </span>
+                </td>
+              </tr>
+            </table>
 
             <Hr style={dividerStyle} />
 
@@ -181,7 +140,10 @@ export function ApplyInstructionsEmail({
               <strong>Doug & Karrie</strong>
               <br />
               Team Leaders, Smart Agent Alliance
-              <br />
+            </Text>
+
+            <Text style={{...paragraphStyle, marginTop: '20px'}}>
+              Questions? Email us at{' '}
               <Link href="mailto:team@smartagentalliance.com" style={linkStyle}>
                 team@smartagentalliance.com
               </Link>
@@ -227,13 +189,22 @@ const containerStyle: React.CSSProperties = {
 };
 
 const headerStyle: React.CSSProperties = {
-  padding: '32px 24px',
+  padding: '20px 24px 16px',
   backgroundColor: '#0a0a0a',
   textAlign: 'center',
+  borderBottom: '1px solid rgba(255, 215, 0, 0.2)',
+};
+
+const headerBrandTextStyle: React.CSSProperties = {
+  color: '#ffd700',
+  fontSize: '20px',
+  fontWeight: 700,
+  margin: 0,
+  letterSpacing: '0.5px',
 };
 
 const contentStyle: React.CSSProperties = {
-  padding: '32px 24px',
+  padding: '24px 24px 28px',
 };
 
 const greetingStyle: React.CSSProperties = {
@@ -252,43 +223,49 @@ const paragraphStyle: React.CSSProperties = {
 
 const headingStyle: React.CSSProperties = {
   color: '#ffd700',
-  fontSize: '24px',
+  fontSize: '22px',
   fontWeight: 700,
-  margin: '24px 0 16px 0',
+  margin: '20px 0 14px 0',
 };
 
 const subHeadingStyle: React.CSSProperties = {
   color: '#e5e4dd',
-  fontSize: '18px',
+  fontSize: '17px',
   fontWeight: 600,
-  margin: '24px 0 12px 0',
+  margin: '20px 0 10px 0',
 };
 
-const stepStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'flex-start',
-  marginBottom: '16px',
+const stepTableStyle: React.CSSProperties = {
+  width: '100%',
+  marginBottom: '12px',
+};
+
+const stepNumberCellStyle: React.CSSProperties = {
+  width: '36px',
+  verticalAlign: 'top',
+  paddingTop: '2px',
 };
 
 const stepNumberStyle: React.CSSProperties = {
   color: '#ffd700',
-  fontSize: '16px',
+  fontSize: '14px',
   fontWeight: 700,
   width: '28px',
   height: '28px',
   borderRadius: '50%',
-  backgroundColor: 'rgba(255, 215, 0, 0.1)',
+  backgroundColor: 'rgba(255, 215, 0, 0.15)',
+  border: '1px solid rgba(255, 215, 0, 0.3)',
   textAlign: 'center',
-  lineHeight: '28px',
-  marginRight: '12px',
-  flexShrink: 0,
+  lineHeight: '26px',
+  display: 'block',
 };
 
-const stepTextStyle: React.CSSProperties = {
+const stepTextCellStyle: React.CSSProperties = {
   color: '#e5e4dd',
-  fontSize: '16px',
+  fontSize: '15px',
   lineHeight: '1.5',
-  margin: '2px 0 0 0',
+  verticalAlign: 'top',
+  paddingTop: '4px',
 };
 
 const subTextStyle: React.CSSProperties = {
@@ -300,8 +277,8 @@ const highlightBoxStyle: React.CSSProperties = {
   backgroundColor: 'rgba(255, 215, 0, 0.05)',
   border: '1px solid rgba(255, 215, 0, 0.2)',
   borderRadius: '8px',
-  padding: '20px',
-  margin: '24px 0',
+  padding: '16px 18px',
+  margin: '18px 0',
 };
 
 const highlightHeadingStyle: React.CSSProperties = {
@@ -336,7 +313,7 @@ const linkStyle: React.CSSProperties = {
 
 const dividerStyle: React.CSSProperties = {
   borderColor: 'rgba(255, 255, 255, 0.1)',
-  margin: '24px 0',
+  margin: '18px 0',
 };
 
 const listStyle: React.CSSProperties = {

@@ -80,29 +80,28 @@ export async function sendUsernameReminderEmail(
 }
 
 /**
- * Send welcome email to new users
+ * Send welcome/activation email to new users
  */
 export async function sendWelcomeEmail(
   email: string,
-  username: string,
-  temporaryPassword: string
+  firstName: string,
+  activationToken: string,
+  expiresInHours: number = 48
 ): Promise<EmailResult> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
-  const loginUrl = `${baseUrl}/login`;
+  const activationLink = `${baseUrl}/agent-portal/activate?token=${activationToken}`;
 
   try {
     const result = await sendEmail({
       to: email,
-      subject: 'Welcome to Smart Agent Alliance! 🎉',
+      subject: 'Welcome to Smart Agent Alliance - Activate Your Account',
       react: WelcomeEmail({
-        username,
-        email,
-        temporaryPassword,
-        loginUrl,
+        firstName,
+        activationLink,
+        expiresInHours,
       }),
       tags: [
-        { name: 'category', value: 'welcome' },
-        { name: 'username', value: username },
+        { name: 'category', value: 'welcome-activation' },
       ],
     });
 

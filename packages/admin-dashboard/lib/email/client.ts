@@ -3,19 +3,95 @@
  *
  * Handles email sending with Resend API, including error handling,
  * retry logic, and development mode fallbacks.
+ *
+ * Now integrated with Infisical for secure secret management.
  */
 
 import { Resend } from 'resend';
+import {
+  getResendApiKey,
+  getEmailFrom,
+  getEmailReplyTo,
+} from '../infisical';
 
-// Initialize Resend client
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+// Lazy-loaded Resend client (will be initialized on first use)
+let resendClient: Resend | null = null;
+let emailConfigCache: {
+  from: string;
+  replyTo: string;
+  initialized: boolean;
+} = {
+  from: 'Agent Portal <noreply@smartagentalliance.com>',
+  replyTo: 'team@smartagentalliance.com',
+  initialized: false,
+};
 
-// Email configuration
+/**
+ * Initialize the Resend client with secrets from Infisical
+ */
+async function initializeResendClient(): Promise<Resend | null> {
+  if (resendClient) {
+    return resendClient;
+  }
+
+  try {
+    const apiKey = await getResendApiKey();
+    if (apiKey) {
+      resendClient = new Resend(apiKey);
+      console.log('[Email] Resend client initialized with Infisical secrets');
+    } else if (process.env.RESEND_API_KEY) {
+      // Fallback to environment variable
+      resendClient = new Resend(process.env.RESEND_API_KEY);
+      console.log('[Email] Resend client initialized with environment variable');
+    }
+  } catch (error) {
+    console.error('[Email] Failed to initialize Resend client:', error);
+    // Try environment variable fallback
+    if (process.env.RESEND_API_KEY) {
+      resendClient = new Resend(process.env.RESEND_API_KEY);
+      console.log('[Email] Resend client initialized with environment variable (fallback)');
+    }
+  }
+
+  return resendClient;
+}
+
+/**
+ * Load email configuration from Infisical
+ */
+async function loadEmailConfig(): Promise<typeof emailConfigCache> {
+  if (emailConfigCache.initialized) {
+    return emailConfigCache;
+  }
+
+  try {
+    const [from, replyTo] = await Promise.all([
+      getEmailFrom(),
+      getEmailReplyTo(),
+    ]);
+
+    emailConfigCache = {
+      from: from || process.env.EMAIL_FROM || 'Agent Portal <noreply@smartagentalliance.com>',
+      replyTo: replyTo || process.env.EMAIL_REPLY_TO || 'team@smartagentalliance.com',
+      initialized: true,
+    };
+    console.log('[Email] Email config loaded from Infisical');
+  } catch (error) {
+    console.warn('[Email] Failed to load config from Infisical, using defaults:', error);
+    emailConfigCache = {
+      from: process.env.EMAIL_FROM || 'Agent Portal <noreply@smartagentalliance.com>',
+      replyTo: process.env.EMAIL_REPLY_TO || 'team@smartagentalliance.com',
+      initialized: true,
+    };
+  }
+
+  return emailConfigCache;
+}
+
+// Email configuration (now async, with sync fallback for backwards compatibility)
 export const EMAIL_CONFIG = {
-  from: process.env.EMAIL_FROM || 'Agent Portal <noreply@smartagentalliance.com>',
-  replyTo: process.env.EMAIL_REPLY_TO || 'support@smartagentalliance.com',
+  get from() { return emailConfigCache.from; },
+  get replyTo() { return emailConfigCache.replyTo; },
   maxRetries: 3,
   retryDelay: 1000, // 1 second
 };
@@ -54,6 +130,12 @@ export async function sendEmail(
 ): Promise<EmailResult> {
   const timestamp = new Date().toISOString();
   const recipient = options.to;
+
+  // Ensure config is loaded
+  await loadEmailConfig();
+
+  // Initialize Resend client from Infisical
+  const resend = await initializeResendClient();
 
   // Development mode - log to console instead of sending
   if (!resend || process.env.NODE_ENV === 'development') {
@@ -142,17 +224,35 @@ export async function sendEmail(
 /**
  * Validate email configuration
  */
-export function validateEmailConfig(): {
+export async function validateEmailConfig(): Promise<{
   isValid: boolean;
   errors: string[];
-} {
+  source: 'infisical' | 'environment' | 'none';
+}> {
   const errors: string[] = [];
+  let source: 'infisical' | 'environment' | 'none' = 'none';
 
-  if (!process.env.RESEND_API_KEY) {
-    errors.push('RESEND_API_KEY is not configured');
+  // Try to load from Infisical first
+  try {
+    const apiKey = await getResendApiKey();
+    if (apiKey) {
+      source = 'infisical';
+    } else if (process.env.RESEND_API_KEY) {
+      source = 'environment';
+    } else {
+      errors.push('RESEND_API_KEY is not configured in Infisical or environment');
+    }
+  } catch {
+    if (process.env.RESEND_API_KEY) {
+      source = 'environment';
+    } else {
+      errors.push('RESEND_API_KEY is not configured');
+    }
   }
 
-  if (!process.env.EMAIL_FROM) {
+  await loadEmailConfig();
+
+  if (!EMAIL_CONFIG.from) {
     errors.push('EMAIL_FROM is not configured');
   }
 
@@ -163,17 +263,22 @@ export function validateEmailConfig(): {
   return {
     isValid: errors.length === 0,
     errors,
+    source,
   };
 }
 
 /**
  * Get email client status
  */
-export function getEmailClientStatus() {
+export async function getEmailClientStatus() {
+  await loadEmailConfig();
+  const resend = await initializeResendClient();
+
   return {
     configured: !!resend,
     isDevelopment: process.env.NODE_ENV === 'development',
     from: EMAIL_CONFIG.from,
     replyTo: EMAIL_CONFIG.replyTo,
+    secretSource: resendClient ? 'initialized' : 'pending',
   };
 }

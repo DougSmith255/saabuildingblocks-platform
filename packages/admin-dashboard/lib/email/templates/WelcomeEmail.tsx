@@ -1,163 +1,98 @@
 /**
- * Welcome Email Template
+ * Welcome / Activate Account Email Template
  *
- * Sends a welcome email to new users with temporary password and setup instructions.
+ * Sent to new users to activate their account.
+ * User will create their own email and password during activation.
  */
 
 import * as React from 'react';
 import {
   EmailLayout,
   EmailHeading,
+  EmailGreeting,
   EmailParagraph,
   EmailButton,
-  EmailCode,
   EmailAlert,
+  EmailDivider,
+  EmailNumberedStep,
+  EmailLink,
+  EmailSignature,
+  BRAND_COLORS,
 } from './components/Layout';
 
 interface WelcomeEmailProps {
-  username: string;
-  email: string;
-  temporaryPassword: string;
-  loginUrl: string;
+  firstName: string;
+  activationLink: string;
+  expiresInHours?: number;
 }
 
 export function WelcomeEmail({
-  username,
-  email,
-  temporaryPassword,
-  loginUrl,
+  firstName,
+  activationLink,
+  expiresInHours = 48,
 }: WelcomeEmailProps) {
   return (
-    <EmailLayout preview="Welcome to Smart Agent Alliance">
-      <EmailHeading>Welcome to Smart Agent Alliance! 🎉</EmailHeading>
+    <EmailLayout preview="Welcome to Smart Agent Alliance - Activate your account">
+      <EmailGreeting>Welcome, {firstName}!</EmailGreeting>
 
-      <EmailParagraph>Hello {username},</EmailParagraph>
+      <EmailHeading>Activate Your Account</EmailHeading>
 
       <EmailParagraph>
-        Welcome aboard! Your account has been successfully created. We're excited to
-        have you join the Smart Agent Alliance community.
+        Congratulations on joining the Smart Agent Alliance! We&apos;re excited to have you
+        as part of our community of elite real estate professionals.
       </EmailParagraph>
 
-      <EmailParagraph style={{ marginTop: '24px' }}>
-        <strong>Your Login Credentials:</strong>
+      <EmailParagraph>
+        Click the button below to activate your account and set up your login credentials.
       </EmailParagraph>
 
-      <table
-        style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          margin: '16px 0',
-        }}
-      >
-        <tr>
-          <td
-            style={{
-              padding: '12px',
-              backgroundColor: '#f4f4f5',
-              borderBottom: '1px solid #e4e4e7',
-              fontWeight: 'bold',
-            }}
-          >
-            Email:
-          </td>
-          <td
-            style={{
-              padding: '12px',
-              backgroundColor: '#f4f4f5',
-              borderBottom: '1px solid #e4e4e7',
-            }}
-          >
-            {email}
-          </td>
-        </tr>
-        <tr>
-          <td
-            style={{
-              padding: '12px',
-              backgroundColor: '#f4f4f5',
-              borderBottom: '1px solid #e4e4e7',
-              fontWeight: 'bold',
-            }}
-          >
-            Username:
-          </td>
-          <td
-            style={{
-              padding: '12px',
-              backgroundColor: '#f4f4f5',
-              borderBottom: '1px solid #e4e4e7',
-            }}
-          >
-            {username}
-          </td>
-        </tr>
-        <tr>
-          <td
-            style={{
-              padding: '12px',
-              backgroundColor: '#f4f4f5',
-              fontWeight: 'bold',
-            }}
-          >
-            Temporary Password:
-          </td>
-          <td
-            style={{
-              padding: '12px',
-              backgroundColor: '#f4f4f5',
-            }}
-          >
-            <code style={{ fontFamily: 'monospace' }}>{temporaryPassword}</code>
-          </td>
-        </tr>
-      </table>
+      <EmailButton href={activationLink}>Activate My Account</EmailButton>
 
       <EmailAlert type="warning">
-        <strong>Important:</strong> You must change your password on first login for
-        security reasons. This temporary password will expire after your first
-        successful login.
+        This activation link will expire in <strong>{expiresInHours} hours</strong> for security reasons.
       </EmailAlert>
 
-      <div style={{ textAlign: 'center', marginTop: '24px' }}>
-        <EmailButton href={loginUrl}>Login to Your Account</EmailButton>
-      </div>
+      <EmailDivider />
 
-      <EmailParagraph style={{ marginTop: '32px' }}>
-        <strong>Getting Started:</strong>
+      <EmailParagraph style={{ fontWeight: 600, marginBottom: '12px' }}>
+        What happens next:
       </EmailParagraph>
 
-      <ol style={{ color: '#525252', fontSize: '14px', lineHeight: '20px' }}>
-        <li>Click the login button above or visit {loginUrl}</li>
-        <li>Enter your username and temporary password</li>
-        <li>You'll be prompted to create a new secure password</li>
-        <li>Complete your profile setup</li>
-        <li>Start exploring the platform!</li>
-      </ol>
+      <EmailNumberedStep number={1}>Click the activation button above</EmailNumberedStep>
+      <EmailNumberedStep number={2}>Create your email and password</EmailNumberedStep>
+      <EmailNumberedStep number={3}>Complete your profile setup</EmailNumberedStep>
+      <EmailNumberedStep number={4}>Start exploring your Agent Portal!</EmailNumberedStep>
 
-      <EmailAlert type="info">
-        <strong>Security Best Practices:</strong>
-        <ul style={{ margin: '8px 0 0 0', paddingLeft: '20px' }}>
-          <li>Choose a strong, unique password (at least 12 characters)</li>
-          <li>Enable two-factor authentication in your account settings</li>
-          <li>Never share your password with anyone</li>
-          <li>Use a password manager to securely store your credentials</li>
-        </ul>
-      </EmailAlert>
+      <EmailDivider />
 
-      <EmailParagraph>
-        If you encounter any issues or have questions, our support team is here to
-        help. Feel free to reach out at any time.
+      <EmailParagraph style={{ fontSize: '14px', color: BRAND_COLORS.textMuted }}>
+        If the button doesn&apos;t work, copy and paste this link into your browser:
+      </EmailParagraph>
+      <EmailParagraph style={{
+        fontSize: '12px',
+        color: BRAND_COLORS.gold,
+        wordBreak: 'break-all',
+        backgroundColor: BRAND_COLORS.highlightStrong,
+        padding: '10px 12px',
+        borderRadius: '6px',
+      }}>
+        {activationLink}
       </EmailParagraph>
 
-      <EmailParagraph>
-        We're thrilled to have you with us!
+      <EmailDivider />
+
+      <EmailParagraph style={{ fontSize: '14px', color: BRAND_COLORS.textMuted }}>
+        Need help? Contact us at{' '}
+        <EmailLink href="mailto:team@smartagentalliance.com">
+          team@smartagentalliance.com
+        </EmailLink>
       </EmailParagraph>
 
-      <EmailParagraph>
-        Best regards,
-        <br />
-        Smart Agent Alliance Team
-      </EmailParagraph>
+      <EmailSignature
+        name="The SAA Team"
+        title="Smart Agent Alliance"
+        email="team@smartagentalliance.com"
+      />
     </EmailLayout>
   );
 }

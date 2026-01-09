@@ -1,25 +1,26 @@
 /**
  * Invitation Email Template
  *
- * Sends an invitation email to new users with activation link.
+ * Sent to new users with activation link.
  * Token expires in 7 days (168 hours).
- *
- * Features:
- * - Personalized greeting with invitee name
- * - Optional inviter name for personal touch
- * - Professional Smart Agent Alliance branding
- * - Clear CTA with secure activation link
- * - Expiration notice and security information
  */
 
 import * as React from 'react';
 import {
   EmailLayout,
   EmailHeading,
+  EmailGreeting,
   EmailParagraph,
   EmailButton,
+  EmailHighlightBox,
   EmailAlert,
+  EmailDivider,
+  EmailListItem,
+  EmailLink,
+  EmailSignature,
+  BRAND_COLORS,
 } from './components/Layout';
+import { Text } from '@react-email/components';
 
 interface InvitationEmailProps {
   full_name: string;
@@ -38,90 +39,79 @@ export function InvitationEmail({
 }: InvitationEmailProps) {
   return (
     <EmailLayout preview={`${full_name}, you're invited to join The Alliance!`}>
-      <EmailHeading>You're Invited to The Alliance!</EmailHeading>
+      <EmailGreeting>Hi {full_name},</EmailGreeting>
 
-      <EmailParagraph>Hello {full_name},</EmailParagraph>
+      <EmailHeading>You&apos;re Invited to The Alliance!</EmailHeading>
 
-      {inviterName && (
+      {inviterName ? (
         <EmailParagraph>
-          <strong>{inviterName}</strong> has invited you to join the Smart Agent Alliance,
-          a community of elite real estate professionals collaborating to achieve extraordinary results.
+          <Text style={{ color: BRAND_COLORS.gold, fontWeight: 600 }}>{inviterName}</Text> has
+          invited you to join the Smart Agent Alliance, a community of elite real estate
+          professionals collaborating to achieve extraordinary results.
+        </EmailParagraph>
+      ) : (
+        <EmailParagraph>
+          You&apos;ve been invited to join The Alliance! We&apos;re excited to welcome you to our
+          community of elite real estate professionals working together to achieve
+          extraordinary results.
         </EmailParagraph>
       )}
 
-      {!inviterName && (
-        <EmailParagraph>
-          You've been invited to join The Alliance! We're excited to welcome you
-          to our community of elite real estate professionals working together to achieve extraordinary results.
-        </EmailParagraph>
-      )}
-
-      <EmailParagraph>
-        To complete your registration and join the team, simply click the
-        button below:
-      </EmailParagraph>
-
-      <div style={{ textAlign: 'center', marginTop: '24px', marginBottom: '24px' }}>
-        <EmailButton href={activationLink}>Accept Invitation</EmailButton>
-      </div>
+      <EmailButton href={activationLink}>Accept Invitation</EmailButton>
 
       <EmailAlert type="warning">
-        <strong>Time-Sensitive:</strong> This invitation link will expire in{' '}
-        <strong>{expiresIn}</strong>. Please activate your account before the link expires.
+        This invitation link will expire in <strong>{expiresIn}</strong>. Please activate
+        your account before the link expires.
       </EmailAlert>
 
-      <EmailParagraph style={{ marginTop: '32px' }}>
-        <strong>Getting Started:</strong>
+      <EmailDivider />
+
+      <Text
+        style={{
+          color: BRAND_COLORS.textPrimary,
+          fontSize: '16px',
+          fontWeight: 600,
+          margin: '0 0 16px',
+        }}
+      >
+        Getting Started:
+      </Text>
+
+      <EmailListItem bullet="1.">Click the &quot;Accept Invitation&quot; button above</EmailListItem>
+      <EmailListItem bullet="2.">Set up your secure password</EmailListItem>
+      <EmailListItem bullet="3.">
+        {role === 'admin'
+          ? 'Access the admin dashboard and configure settings'
+          : 'Access your Agent Portal and explore the resources'}
+      </EmailListItem>
+
+      <EmailHighlightBox title="Security Note">
+        <EmailParagraph style={{ margin: 0, fontSize: '14px' }}>
+          This invitation link is unique and secure. For your protection, it can only be
+          used once and will expire automatically after {expiresIn}.
+        </EmailParagraph>
+      </EmailHighlightBox>
+
+      <EmailDivider />
+
+      <EmailParagraph style={{ fontSize: '14px', color: BRAND_COLORS.textMuted }}>
+        Didn&apos;t request this invitation? If you didn&apos;t expect this email or believe you
+        received it by mistake, you can safely ignore it. The invitation will expire
+        automatically and no account will be created.
       </EmailParagraph>
 
-      <ol style={{ color: '#525252', fontSize: '14px', lineHeight: '24px', paddingLeft: '20px' }}>
-        <li style={{ marginBottom: '8px' }}>
-          Click the "Accept Invitation" button above
-        </li>
-        <li style={{ marginBottom: '8px' }}>
-          Set up your secure password
-        </li>
-        <li style={{ marginBottom: '8px' }}>
-          {role === 'admin' ? 'Access the admin dashboard and configure settings' :
-           'Access your Agent Portal and explore the resources'}
-        </li>
-      </ol>
-
-      <EmailAlert type="info">
-        <strong>Security Note:</strong>
-        <br />
-        This invitation link is unique and secure. For your protection, it can only be
-        used once and will expire automatically after {expiresIn}.
-      </EmailAlert>
-
-      <EmailAlert type="success" style={{ marginTop: '16px' }}>
-        <strong>Need Help?</strong>
-        <br />
-        If you have any questions or encounter issues during activation, our support
-        team is ready to assist. Contact us at{' '}
-        <a
-          href="mailto:support@smartagentalliance.com"
-          style={{ color: '#10b981', textDecoration: 'none', fontWeight: 'bold' }}
-        >
-          support@smartagentalliance.com
-        </a>
-      </EmailAlert>
-
-      <EmailParagraph style={{ marginTop: '32px', fontSize: '14px', color: '#6b7280' }}>
-        <strong>Didn't request this invitation?</strong> If you didn't expect this email
-        or believe you received it by mistake, you can safely ignore it. The invitation
-        will expire automatically and no account will be created.
+      <EmailParagraph style={{ fontSize: '14px', color: BRAND_COLORS.textMuted }}>
+        Need help? Contact us at{' '}
+        <EmailLink href="mailto:team@smartagentalliance.com">
+          team@smartagentalliance.com
+        </EmailLink>
       </EmailParagraph>
 
-      <EmailParagraph style={{ marginTop: '32px' }}>
-        We look forward to having you as part of the Smart Agent Alliance community!
-      </EmailParagraph>
-
-      <EmailParagraph>
-        Best regards,
-        <br />
-        <strong>The SAA Team</strong>
-      </EmailParagraph>
+      <EmailSignature
+        name="The SAA Team"
+        title="Smart Agent Alliance"
+        email="team@smartagentalliance.com"
+      />
     </EmailLayout>
   );
 }

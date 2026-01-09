@@ -33,7 +33,8 @@ import { Input } from '@saa/shared/components/ui/input';
 import { Checkbox } from '@saa/shared/components/ui/checkbox';
 import { Alert, AlertDescription } from '@saa/shared/components/ui/alert';
 import PasswordInput from './PasswordInput';
-import Link from 'next/link';
+import ForgotPasswordModal from './ForgotPasswordModal';
+import ForgotUsernameModal from './ForgotUsernameModal';
 import { SecondaryButton } from '@saa/shared/components/saa';
 
 // Validation schema
@@ -56,6 +57,8 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showForgotUsername, setShowForgotUsername] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -111,20 +114,20 @@ export default function LoginForm() {
           </Alert>
         )}
 
-        {/* Email/Username Field */}
+        {/* Email Field */}
         <FormField
           control={form.control}
           name="emailOrUsername"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-[#e5e4dd]">Email or Username</FormLabel>
+              <FormLabel className="text-[#e5e4dd]">Agent Email</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-[#dcdbd5]" />
                   <Input
                     {...field}
                     type="text"
-                    placeholder="email@example.com or username"
+                    placeholder="email@example.com"
                     autoComplete="username"
                     disabled={isSubmitting}
                     className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-yellow-500 focus:ring-yellow-500/50"
@@ -179,12 +182,20 @@ export default function LoginForm() {
           />
 
           <div className="flex flex-col items-end gap-1">
-            <Link
-              href="/reset-password"
+            <button
+              type="button"
+              onClick={() => setShowForgotUsername(true)}
+              className="text-sm text-[#ffd700] hover:opacity-80 transition-opacity"
+            >
+              Forgot username?
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowForgotPassword(true)}
               className="text-sm text-[#ffd700] hover:opacity-80 transition-opacity"
             >
               Forgot password?
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -209,14 +220,28 @@ export default function LoginForm() {
           )}
         </SecondaryButton>
 
-        {/* Support Link */}
-        <p className="text-center text-sm text-[#dcdbd5] mt-4 pb-5">
-          Can&apos;t access your account?{' '}
-          <Link href="/contact-support" className="text-[#ffd700] hover:opacity-80 transition-opacity">
-            Contact Support
-          </Link>
-        </p>
+        {/* Get Help Link */}
+        <div className="flex justify-start mt-4 pb-5">
+          <a
+            href="mailto:team@smartagentalliance.com"
+            className="text-sm text-[#ffd700] hover:opacity-80 transition-opacity"
+          >
+            Get Help
+          </a>
+        </div>
       </form>
+
+      {/* Forgot Password Modal */}
+      <ForgotPasswordModal
+        isOpen={showForgotPassword}
+        onClose={() => setShowForgotPassword(false)}
+      />
+
+      {/* Forgot Username Modal */}
+      <ForgotUsernameModal
+        isOpen={showForgotUsername}
+        onClose={() => setShowForgotUsername(false)}
+      />
     </Form>
   );
 }

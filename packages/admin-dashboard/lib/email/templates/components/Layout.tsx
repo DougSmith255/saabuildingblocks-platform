@@ -1,8 +1,16 @@
 /**
- * Email Layout Component
+ * Email Layout Component - Brand Themed
  *
- * Shared layout for all email templates with responsive design,
- * dark mode support, and consistent branding.
+ * Shared layout for all email templates with Smart Agent Alliance
+ * dark/gold brand styling, responsive design, and consistent branding.
+ *
+ * Brand Colors:
+ * - Primary Gold: #ffd700
+ * - Off-Black Background: #0a0a0a
+ * - Container Background: #1a1a1a
+ * - Primary Text: #e5e4dd
+ * - Secondary Text: #bfbdb0
+ * - Muted Text: #888888
  */
 
 import {
@@ -19,6 +27,22 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
+// Brand Colors
+export const BRAND_COLORS = {
+  gold: '#ffd700',
+  goldDark: '#d4af37',
+  offBlack: '#0a0a0a',
+  containerBg: '#1a1a1a',
+  textPrimary: '#e5e4dd',
+  textSecondary: '#bfbdb0',
+  textMuted: '#888888',
+  textDark: '#1a1a1a',
+  border: 'rgba(255, 215, 0, 0.2)',
+  borderLight: 'rgba(255, 255, 255, 0.1)',
+  highlight: 'rgba(255, 215, 0, 0.05)',
+  highlightStrong: 'rgba(255, 215, 0, 0.1)',
+};
+
 interface EmailLayoutProps {
   preview: string;
   children: React.ReactNode;
@@ -30,58 +54,53 @@ export function EmailLayout({
   children,
   showFooter = true,
 }: EmailLayoutProps) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://smartagentalliance.com';
+  const baseUrl = 'https://smartagentalliance.com';
 
   return (
     <Html>
-      <Head />
+      <Head>
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        `}</style>
+      </Head>
       <Preview>{preview}</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header - spacing only, logo moved to footer/signature */}
+          {/* Header with Logo */}
           <Section style={header}>
-            <Text style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a1a1a', margin: 0 }}>
-              Smart Agent Alliance
-            </Text>
+            <Img
+              src="https://saabuildingblocks.pages.dev/images/saa-logo-gold.png"
+              alt="Smart Agent Alliance"
+              width={180}
+              height={64}
+              style={{ display: 'block', margin: '0 auto' }}
+            />
           </Section>
 
           {/* Content */}
           <Section style={content}>{children}</Section>
 
-          {/* Footer with logo in signature */}
+          {/* Footer */}
           {showFooter && (
-            <>
-              <Hr style={hr} />
-              <Section style={footer}>
-                {/* Logo in signature area - email clients typically show these */}
-                <Img
-                  src="https://smartagentalliance.com/apple-touch-icon.png"
-                  width="60"
-                  height="60"
-                  alt="Smart Agent Alliance"
-                  style={{ margin: '0 auto 16px', borderRadius: '12px' }}
-                />
-                <Text style={footerText}>
-                  This email was sent by Smart Agent Alliance
-                </Text>
-                <Text style={footerText}>
-                  <Link href={`${baseUrl}/privacy`} style={footerLink}>
-                    Privacy Policy
-                  </Link>
-                  {' | '}
-                  <Link href={`${baseUrl}/terms`} style={footerLink}>
-                    Terms of Service
-                  </Link>
-                  {' | '}
-                  <Link href={`${baseUrl}/contact`} style={footerLink}>
-                    Contact Us
-                  </Link>
-                </Text>
-                <Text style={footerText}>
-                  © {new Date().getFullYear()} Smart Agent Alliance. All rights reserved.
-                </Text>
-              </Section>
-            </>
+            <Section style={footer}>
+              <Hr style={footerDivider} />
+              <Text style={footerText}>
+                © {new Date().getFullYear()} Smart Agent Alliance. All rights reserved.
+              </Text>
+              <Text style={footerLinks}>
+                <Link href={`${baseUrl}/privacy-policy`} style={footerLink}>
+                  Privacy Policy
+                </Link>
+                {' | '}
+                <Link href={`${baseUrl}/terms-of-use`} style={footerLink}>
+                  Terms of Use
+                </Link>
+                {' | '}
+                <Link href="mailto:team@smartagentalliance.com" style={footerLink}>
+                  Contact Us
+                </Link>
+              </Text>
+            </Section>
           )}
         </Container>
       </Body>
@@ -89,84 +108,140 @@ export function EmailLayout({
   );
 }
 
-// Styles
-const main = {
-  backgroundColor: '#f6f9fc',
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+// Base Styles
+const main: React.CSSProperties = {
+  backgroundColor: BRAND_COLORS.offBlack,
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif',
+  margin: 0,
+  padding: '20px 0',
 };
 
-const container = {
-  backgroundColor: '#ffffff',
+const container: React.CSSProperties = {
+  backgroundColor: BRAND_COLORS.containerBg,
   margin: '0 auto',
-  padding: '20px 0 48px',
-  marginBottom: '64px',
   maxWidth: '600px',
+  borderRadius: '12px',
+  border: `1px solid ${BRAND_COLORS.border}`,
+  overflow: 'hidden',
 };
 
-const header = {
-  padding: '32px 20px 20px',
+const header: React.CSSProperties = {
+  padding: '20px 24px 16px',
+  backgroundColor: BRAND_COLORS.offBlack,
+  textAlign: 'center' as const,
+  borderBottom: `1px solid ${BRAND_COLORS.border}`,
+};
+
+const headerBrandText: React.CSSProperties = {
+  color: BRAND_COLORS.gold,
+  fontSize: '20px',
+  fontWeight: 700,
+  margin: 0,
+  letterSpacing: '0.5px',
+};
+
+const content: React.CSSProperties = {
+  padding: '24px 24px 28px',
+};
+
+const footer: React.CSSProperties = {
+  padding: '24px',
+  backgroundColor: BRAND_COLORS.offBlack,
   textAlign: 'center' as const,
 };
 
-const logo = {
-  margin: '0 auto',
+const footerDivider: React.CSSProperties = {
+  borderColor: BRAND_COLORS.borderLight,
+  margin: '0 0 20px 0',
 };
 
-const content = {
-  padding: '0 20px',
-};
-
-const hr = {
-  borderColor: '#e6ebf1',
-  margin: '20px 0',
-};
-
-const footer = {
-  padding: '0 20px',
-  textAlign: 'center' as const,
-};
-
-const footerText = {
-  color: '#8898aa',
+const footerText: React.CSSProperties = {
+  color: BRAND_COLORS.textMuted,
   fontSize: '12px',
   lineHeight: '16px',
-  margin: '4px 0',
+  margin: '0 0 8px 0',
 };
 
-const footerLink = {
-  color: '#556cd6',
-  textDecoration: 'none',
+const footerLinks: React.CSSProperties = {
+  color: BRAND_COLORS.textMuted,
+  fontSize: '12px',
+  lineHeight: '16px',
+  margin: '0',
 };
 
-// Export utility components for reuse in templates
-export const EmailHeading = ({ children }: { children: React.ReactNode }) => (
-  <Text
-    style={{
-      color: '#1a1a1a',
-      fontSize: '24px',
-      fontWeight: 'bold',
-      lineHeight: '32px',
-      margin: '0 0 20px',
-      textAlign: 'center',
-    }}
-  >
-    {children}
-  </Text>
-);
+const footerLink: React.CSSProperties = {
+  color: BRAND_COLORS.textMuted,
+  textDecoration: 'underline',
+};
 
-export const EmailParagraph = ({
+// =============================================================================
+// UTILITY COMPONENTS
+// =============================================================================
+
+/**
+ * Email Heading - Large centered gold heading
+ */
+export const EmailHeading = ({
   children,
-  style
+  style,
 }: {
   children: React.ReactNode;
   style?: React.CSSProperties;
 }) => (
   <Text
     style={{
-      color: '#525252',
-      fontSize: '16px',
+      color: BRAND_COLORS.gold,
+      fontSize: '22px',
+      fontWeight: 700,
+      lineHeight: '30px',
+      margin: '0 0 16px',
+      textAlign: 'center' as const,
+      ...style,
+    }}
+  >
+    {children}
+  </Text>
+);
+
+/**
+ * Email Subheading - Secondary heading in off-white
+ */
+export const EmailSubheading = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <Text
+    style={{
+      color: BRAND_COLORS.textPrimary,
+      fontSize: '17px',
+      fontWeight: 600,
       lineHeight: '24px',
+      margin: '18px 0 10px',
+      ...style,
+    }}
+  >
+    {children}
+  </Text>
+);
+
+/**
+ * Email Paragraph - Standard body text
+ */
+export const EmailParagraph = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <Text
+    style={{
+      color: BRAND_COLORS.textSecondary,
+      fontSize: '16px',
+      lineHeight: '26px',
       margin: '0 0 16px',
       ...style,
     }}
@@ -175,51 +250,175 @@ export const EmailParagraph = ({
   </Text>
 );
 
-export const EmailButton = ({
-  href,
+/**
+ * Email Greeting - Gold colored greeting text
+ */
+export const EmailGreeting = ({
   children,
+  style,
 }: {
-  href: string;
   children: React.ReactNode;
+  style?: React.CSSProperties;
 }) => (
-  <Link
-    href={href}
-    style={{
-      backgroundColor: '#556cd6',
-      borderRadius: '6px',
-      color: '#fff',
-      display: 'inline-block',
-      fontSize: '16px',
-      fontWeight: 'bold',
-      lineHeight: '24px',
-      padding: '12px 24px',
-      textDecoration: 'none',
-      textAlign: 'center' as const,
-      margin: '20px 0',
-    }}
-  >
-    {children}
-  </Link>
-);
-
-export const EmailCode = ({ children }: { children: React.ReactNode }) => (
   <Text
     style={{
-      backgroundColor: '#f4f4f5',
-      border: '1px solid #e4e4e7',
-      borderRadius: '4px',
-      color: '#18181b',
-      fontFamily: 'monospace',
-      fontSize: '14px',
-      padding: '12px 16px',
-      margin: '16px 0',
-      textAlign: 'center' as const,
+      color: BRAND_COLORS.gold,
+      fontSize: '20px',
+      fontWeight: 600,
+      margin: '0 0 16px',
+      ...style,
     }}
   >
     {children}
   </Text>
 );
 
+/**
+ * Email Button - Brand yellow button with off-black text
+ */
+export const EmailButton = ({
+  href,
+  children,
+  style,
+}: {
+  href: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <table cellPadding="0" cellSpacing="0" style={{ margin: '18px auto', ...style }}>
+    <tr>
+      <td>
+        <Link
+          href={href}
+          style={{
+            backgroundColor: BRAND_COLORS.gold,
+            borderRadius: '8px',
+            color: BRAND_COLORS.textDark,
+            display: 'inline-block',
+            fontSize: '15px',
+            fontWeight: 700,
+            lineHeight: '22px',
+            padding: '12px 28px',
+            textDecoration: 'none',
+            textAlign: 'center' as const,
+          }}
+        >
+          {children}
+        </Link>
+      </td>
+    </tr>
+  </table>
+);
+
+/**
+ * Email Secondary Button - Outlined style
+ */
+export const EmailSecondaryButton = ({
+  href,
+  children,
+  style,
+}: {
+  href: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <table cellPadding="0" cellSpacing="0" style={{ margin: '24px auto', ...style }}>
+    <tr>
+      <td>
+        <Link
+          href={href}
+          style={{
+            backgroundColor: 'transparent',
+            border: `2px solid ${BRAND_COLORS.gold}`,
+            borderRadius: '8px',
+            color: BRAND_COLORS.gold,
+            display: 'inline-block',
+            fontSize: '16px',
+            fontWeight: 600,
+            lineHeight: '24px',
+            padding: '12px 28px',
+            textDecoration: 'none',
+            textAlign: 'center' as const,
+          }}
+        >
+          {children}
+        </Link>
+      </td>
+    </tr>
+  </table>
+);
+
+/**
+ * Email Code Block - For displaying credentials, codes, etc.
+ */
+export const EmailCode = ({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <Text
+    style={{
+      backgroundColor: BRAND_COLORS.highlightStrong,
+      border: `1px solid ${BRAND_COLORS.border}`,
+      borderRadius: '8px',
+      color: BRAND_COLORS.gold,
+      fontFamily: '"SF Mono", Monaco, Consolas, monospace',
+      fontSize: '18px',
+      fontWeight: 600,
+      padding: '16px 20px',
+      margin: '16px 0',
+      textAlign: 'center' as const,
+      letterSpacing: '1px',
+      ...style,
+    }}
+  >
+    {children}
+  </Text>
+);
+
+/**
+ * Email Highlight Box - For important callouts
+ */
+export const EmailHighlightBox = ({
+  children,
+  title,
+  style,
+}: {
+  children: React.ReactNode;
+  title?: string;
+  style?: React.CSSProperties;
+}) => (
+  <Section
+    style={{
+      backgroundColor: BRAND_COLORS.highlight,
+      border: `1px solid ${BRAND_COLORS.border}`,
+      borderRadius: '8px',
+      padding: '16px 18px',
+      margin: '16px 0',
+      ...style,
+    }}
+  >
+    {title && (
+      <Text
+        style={{
+          color: BRAND_COLORS.gold,
+          fontSize: '15px',
+          fontWeight: 600,
+          margin: '0 0 10px',
+        }}
+      >
+        {title}
+      </Text>
+    )}
+    {children}
+  </Section>
+);
+
+/**
+ * Email Alert - Contextual alerts with different severity levels
+ */
 export const EmailAlert = ({
   children,
   type = 'info',
@@ -229,21 +428,41 @@ export const EmailAlert = ({
   type?: 'info' | 'warning' | 'error' | 'success';
   style?: React.CSSProperties;
 }) => {
-  const colors = {
-    info: { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },
-    warning: { bg: '#fef3c7', border: '#f59e0b', text: '#92400e' },
-    error: { bg: '#fee2e2', border: '#ef4444', text: '#991b1b' },
-    success: { bg: '#d1fae5', border: '#10b981', text: '#065f46' },
+  const alertStyles = {
+    info: {
+      bg: 'rgba(59, 130, 246, 0.1)',
+      border: 'rgba(59, 130, 246, 0.3)',
+      text: '#93c5fd',
+      icon: 'ℹ️',
+    },
+    warning: {
+      bg: 'rgba(245, 158, 11, 0.1)',
+      border: 'rgba(245, 158, 11, 0.3)',
+      text: '#fcd34d',
+      icon: '⚠️',
+    },
+    error: {
+      bg: 'rgba(239, 68, 68, 0.1)',
+      border: 'rgba(239, 68, 68, 0.3)',
+      text: '#fca5a5',
+      icon: '❌',
+    },
+    success: {
+      bg: 'rgba(16, 185, 129, 0.1)',
+      border: 'rgba(16, 185, 129, 0.3)',
+      text: '#6ee7b7',
+      icon: '✅',
+    },
   };
 
-  const color = colors[type];
+  const alertStyle = alertStyles[type];
 
   return (
     <Section
       style={{
-        backgroundColor: color.bg,
-        border: `1px solid ${color.border}`,
-        borderRadius: '6px',
+        backgroundColor: alertStyle.bg,
+        border: `1px solid ${alertStyle.border}`,
+        borderRadius: '8px',
         padding: '16px',
         margin: '16px 0',
         ...style,
@@ -251,14 +470,189 @@ export const EmailAlert = ({
     >
       <Text
         style={{
-          color: color.text,
+          color: alertStyle.text,
           fontSize: '14px',
-          lineHeight: '20px',
+          lineHeight: '22px',
           margin: 0,
         }}
       >
-        {children}
+        {alertStyle.icon} {children}
       </Text>
     </Section>
   );
 };
+
+/**
+ * Email Link - Styled link in brand gold
+ */
+export const EmailLink = ({
+  href,
+  children,
+  style,
+}: {
+  href: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <Link
+    href={href}
+    style={{
+      color: BRAND_COLORS.gold,
+      textDecoration: 'underline',
+      ...style,
+    }}
+  >
+    {children}
+  </Link>
+);
+
+/**
+ * Email Divider - Styled horizontal rule
+ */
+export const EmailDivider = ({ style }: { style?: React.CSSProperties }) => (
+  <Hr
+    style={{
+      borderColor: BRAND_COLORS.borderLight,
+      margin: '18px 0',
+      ...style,
+    }}
+  />
+);
+
+/**
+ * Email List Item - For styled list items
+ */
+export const EmailListItem = ({
+  children,
+  bullet = '•',
+  style,
+}: {
+  children: React.ReactNode;
+  bullet?: string;
+  style?: React.CSSProperties;
+}) => (
+  <Text
+    style={{
+      color: BRAND_COLORS.textSecondary,
+      fontSize: '15px',
+      lineHeight: '24px',
+      margin: '0 0 8px',
+      paddingLeft: '0',
+      ...style,
+    }}
+  >
+    <span style={{ color: BRAND_COLORS.gold, marginRight: '8px' }}>{bullet}</span>
+    {children}
+  </Text>
+);
+
+/**
+ * Email Numbered Step - For numbered lists with styled circles
+ */
+export const EmailNumberedStep = ({
+  number,
+  children,
+  style,
+}: {
+  number: number;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => (
+  <table cellPadding="0" cellSpacing="0" style={{ width: '100%', marginBottom: '10px', ...style }}>
+    <tr>
+      <td style={{ width: '32px', verticalAlign: 'top', paddingTop: '2px' }}>
+        <div
+          style={{
+            color: BRAND_COLORS.gold,
+            fontSize: '13px',
+            fontWeight: 700,
+            width: '24px',
+            height: '24px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(255, 215, 0, 0.15)',
+            border: '1px solid rgba(255, 215, 0, 0.3)',
+            textAlign: 'center' as const,
+            lineHeight: '22px',
+            display: 'block',
+          }}
+        >
+          {number}
+        </div>
+      </td>
+      <td
+        style={{
+          color: BRAND_COLORS.textSecondary,
+          fontSize: '15px',
+          lineHeight: '1.5',
+          verticalAlign: 'top',
+          paddingTop: '3px',
+        }}
+      >
+        {children}
+      </td>
+    </tr>
+  </table>
+);
+
+/**
+ * Email Signature - Closing signature block
+ */
+export const EmailSignature = ({
+  name,
+  title,
+  email,
+}: {
+  name: string;
+  title?: string;
+  email?: string;
+}) => (
+  <Section style={{ marginTop: '32px' }}>
+    <Text
+      style={{
+        color: BRAND_COLORS.textPrimary,
+        fontSize: '16px',
+        lineHeight: '24px',
+        margin: '0 0 4px',
+      }}
+    >
+      Best regards,
+    </Text>
+    <Text
+      style={{
+        color: BRAND_COLORS.gold,
+        fontSize: '16px',
+        fontWeight: 600,
+        lineHeight: '24px',
+        margin: '8px 0 4px',
+      }}
+    >
+      {name}
+    </Text>
+    {title && (
+      <Text
+        style={{
+          color: BRAND_COLORS.textSecondary,
+          fontSize: '14px',
+          lineHeight: '20px',
+          margin: '0',
+        }}
+      >
+        {title}
+      </Text>
+    )}
+    {email && (
+      <Link
+        href={`mailto:${email}`}
+        style={{
+          color: BRAND_COLORS.gold,
+          fontSize: '14px',
+          textDecoration: 'underline',
+        }}
+      >
+        {email}
+      </Link>
+    )}
+  </Section>
+);
+
+export default EmailLayout;

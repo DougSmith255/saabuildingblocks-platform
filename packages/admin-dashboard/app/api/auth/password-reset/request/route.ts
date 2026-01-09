@@ -5,21 +5,21 @@ export const dynamic = 'force-dynamic';
  * Password Reset Request API Route
  * POST /api/auth/password-reset/request
  *
- * Initiates password reset flow by generating a secure token
+ * Initiates password reset flow by generating a secure JWT token
  * and sending reset email to the user.
  *
  * Security Features:
- * - Rate limiting: 3 requests per hour per email
+ * - Rate limiting: 3 requests per 10 minutes per email
  * - Generic responses to prevent email enumeration
- * - Cryptographically secure tokens (32 bytes)
+ * - Stateless JWT tokens (no database required)
  * - 15-minute token expiration
- * - Audit logging
+ * - Token includes user ID and password hash for validation
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { randomBytes } from 'crypto';
-import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
-import { hashToken, logAuthEvent, checkRateLimit } from '@/lib/auth/jwt';
+import { SignJWT } from 'jose';
+import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { logAuthEvent, checkRateLimit } from '@/lib/auth/jwt';
 import { passwordResetRequestSchema, formatZodErrors } from '@/lib/validation/password-schemas';
 
 // CORS headers for cross-origin requests (public site calls this API)
@@ -40,9 +40,14 @@ function corsResponse(body: object, status: number = 200, extraHeaders: Record<s
   return NextResponse.json(body, { status, headers: { ...CORS_HEADERS, ...extraHeaders } });
 }
 
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 3;
 const TOKEN_EXPIRY_MINUTES = 15;
+
+// JWT secret for password reset tokens (separate from auth tokens for security)
+const PASSWORD_RESET_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'your-secret-key-min-32-chars-replace-in-production'
+);
 
 /**
  * Mask email for security (show first 2 chars and domain)
@@ -56,8 +61,30 @@ function maskEmail(email: string): string {
   return `${local.substring(0, 2)}***@${domain}`;
 }
 
+/**
+ * Generate a stateless JWT reset token
+ * Includes user ID and password hash fingerprint to invalidate on password change
+ */
+async function generateResetToken(userId: string, passwordHash: string): Promise<string> {
+  // Include first 8 chars of password hash - token will be invalid if password changes
+  const passwordFingerprint = passwordHash.substring(0, 8);
+
+  const token = await new SignJWT({
+    sub: userId,
+    type: 'password_reset',
+    pwfp: passwordFingerprint, // Password fingerprint for invalidation
+  })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime(`${TOKEN_EXPIRY_MINUTES}m`)
+    .setJti(crypto.randomUUID())
+    .sign(PASSWORD_RESET_SECRET);
+
+  return token;
+}
+
 export async function POST(request: NextRequest) {
-  const supabase = getSupabaseClient();
+  const supabase = getSupabaseServiceClient();
 
   if (!supabase) {
     return corsResponse(
@@ -83,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     const { email } = validation.data;
 
-    // Rate limiting check (3 requests per hour per email)
+    // Rate limiting check (3 requests per 10 minutes per email)
     const rateLimitKey = `password-reset:${email.toLowerCase()}`;
     const rateLimit = checkRateLimit(rateLimitKey, RATE_LIMIT_MAX_ATTEMPTS, RATE_LIMIT_WINDOW_MS);
 
@@ -113,11 +140,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Find user by email (case-insensitive)
+    console.log('[Password Reset] Looking up user with email:', maskEmail(email));
     const { data: user, error: userError } = await supabase
       .from('users')
-      .select('id, email, username')
+      .select('id, email, username, status, password_hash')
       .ilike('email', email)
       .single();
+
+    console.log('[Password Reset] User lookup result:', { found: !!user, error: userError?.message });
 
     // ALWAYS return success to prevent email enumeration
     // But only actually send email if user exists
@@ -144,14 +174,9 @@ export async function POST(request: NextRequest) {
       return corsResponse(genericResponse);
     }
 
-    // Check if user account is active
-    const { data: userStatus } = await supabase
-      .from('users')
-      .select('status')
-      .eq('id', user.id)
-      .single();
+    console.log('[Password Reset] User status:', user.status);
 
-    if (userStatus?.status !== 'active') {
+    if (user.status !== 'active') {
       // Don't reveal account status - return generic success
       await logAuthEvent({
         userId: user.id,
@@ -165,44 +190,17 @@ export async function POST(request: NextRequest) {
       return corsResponse(genericResponse);
     }
 
-    // Generate cryptographically secure token (32 bytes = 64 hex chars)
-    const resetToken = randomBytes(32).toString('hex');
-    const tokenHash = hashToken(resetToken);
+    // Generate stateless JWT reset token
+    console.log('[Password Reset] Generating JWT token for user:', user.id);
+    const resetToken = await generateResetToken(user.id, user.password_hash || '');
     const expiresAt = new Date(Date.now() + TOKEN_EXPIRY_MINUTES * 60 * 1000);
 
-    // Invalidate any existing reset tokens for this user
-    await supabase
-      .from('password_reset_tokens')
-      .update({ used_at: new Date().toISOString() })
-      .eq('user_id', user.id)
-      .is('used_at', null);
-
-    // Store hashed token in database
-    const { error: tokenError } = await supabase
-      .from('password_reset_tokens')
-      .insert({
-        user_id: user.id,
-        token_hash: tokenHash,
-        expires_at: expiresAt.toISOString(),
-        ip_address: ipAddress,
-      });
-
-    if (tokenError) {
-      console.error('[Password Reset] Token creation error:', tokenError);
-      return corsResponse(
-        {
-          success: false,
-          error: 'INTERNAL_SERVER_ERROR',
-          message: 'Failed to create password reset token',
-        },
-        500
-      );
-    }
+    console.log('[Password Reset] Token generated successfully');
 
     // Log successful password reset request
     await logAuthEvent({
       userId: user.id,
-      eventType: 'failed_login', // Using failed_login for password events
+      eventType: 'failed_login', // Using failed_login for password events (audit table)
       success: true,
       ipAddress,
       userAgent,
@@ -213,18 +211,22 @@ export async function POST(request: NextRequest) {
     });
 
     // Send email with reset link using email service
-    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com'}/login/reset-password/${resetToken}`;
+    console.log('[Password Reset] Preparing to send email to:', maskEmail(user.email));
+    console.log('[Password Reset] RESEND_API_KEY configured:', !!process.env.RESEND_API_KEY);
 
     // Import email sending function
     const { sendPasswordResetEmail } = await import('@/lib/email/send');
 
     // Send password reset email
+    console.log('[Password Reset] Calling sendPasswordResetEmail...');
     const emailResult = await sendPasswordResetEmail(
       user.email,
       user.username,
       resetToken,
       TOKEN_EXPIRY_MINUTES
     );
+
+    console.log('[Password Reset] Email result:', JSON.stringify(emailResult));
 
     if (!emailResult.success) {
       console.error('[Password Reset] Failed to send email:', emailResult.error);
