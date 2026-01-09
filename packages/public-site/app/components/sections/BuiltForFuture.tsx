@@ -259,8 +259,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
-    const pinStart = isMobile ? 'center 65%' : 'center 55%';
+    // Pin trigger: 50% on mobile, 40% on desktop (moved up 15% to pin higher on screen)
+    const pinStart = isMobile ? 'center 50%' : 'center 40%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -316,7 +316,7 @@ export function BuiltForFuture() {
   const CARD_GAP = isMobile ? 16 : 24;
 
   return (
-    <section ref={sectionRef} className="relative pt-16 md:pt-24">
+    <section ref={sectionRef} className="relative pt-[calc(4rem+25px)] md:pt-[calc(6rem+25px)]">
       {/* Fixed background animation - outside pinned content */}
       <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
         <GrayscaleDataStream />
