@@ -367,8 +367,17 @@ function Variation2() {
 // ============================================================
 // VARIATION 3: Clip-Path Reveal Animation
 // TYPE: IntersectionObserver (natural scroll)
-// STATUS: WORKING - no changes needed
+// Updated with mystic fog styling for revealed cards
 // ============================================================
+
+// Sample content for Variation 3
+const VARIATION_3_CARDS = [
+  { title: "Commission", subtitle: "The Foundation", description: "80/20 split until $16K cap, then 100%. ICON agents earn the cap back in stock." },
+  { title: "Ownership", subtitle: "Build Equity", description: "Earn EXPI stock for production milestones. Own part of a publicly traded company." },
+  { title: "Leverage", subtitle: "Scale Systems", description: "Access 90,000+ agents globally. Systems that scale with your ambition." },
+  { title: "Longevity", subtitle: "Income That Lasts", description: "Seven-tier revenue share. Continues after retirement. Passed to heirs." },
+];
+
 function Variation3() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [revealProgress, setRevealProgress] = useState<number[]>([0, 0, 0, 0]);
@@ -400,6 +409,17 @@ function Variation3() {
     return () => observers.forEach(o => o.disconnect());
   }, []);
 
+  // Misty gold background for revealed state
+  const mistyBackground = `
+    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+  `;
+  const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
+
   return (
     <section ref={sectionRef} className="py-16 px-4">
       <div className="max-w-4xl mx-auto">
@@ -410,69 +430,86 @@ function Variation3() {
         </div>
 
         <div className="text-center mb-12">
-          <H2>The eXp Model</H2>
-          <p className="text-body text-gray-400 mt-4">{MODEL_INTRO.line1}</p>
-          <p className="text-body text-gold-400 font-medium">{MODEL_INTRO.line2}</p>
+          <H2>Sample Heading</H2>
+          <p className="text-body text-gray-400 mt-4">Sample subheading text that describes the section.</p>
         </div>
 
-        <div className="space-y-20">
-          {PILLARS.map((pillar, index) => {
+        <div className="space-y-12">
+          {VARIATION_3_CARDS.map((card, index) => {
             const IconComponent = PILLAR_ICONS[index];
             const cardProgress = revealProgress[index];
-            const clipValue = Math.min(100, cardProgress * 200);
+            const isRevealed = cardProgress > 0.5;
             const isEven = index % 2 === 0;
 
             return (
               <div
-                key={pillar.title}
-                className={`reveal-card flex items-center gap-8 ${isEven ? '' : 'flex-row-reverse'}`}
+                key={card.title}
+                className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
+                {/* Icon circle with clip-path reveal */}
                 <div
-                  className="w-1/3 aspect-square rounded-2xl relative overflow-hidden flex-shrink-0"
+                  className="w-32 h-32 md:w-40 md:h-40 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
-                    background: `linear-gradient(135deg, ${BRAND_YELLOW}22, ${BRAND_YELLOW}44)`,
-                    clipPath: isEven
-                      ? `polygon(0 0, ${clipValue}% 0, ${clipValue}% 100%, 0 100%)`
-                      : `polygon(${100 - clipValue}% 0, 100% 0, 100% 100%, ${100 - clipValue}% 100%)`,
+                    background: isRevealed
+                      ? 'rgba(20,18,12,0.85)'
+                      : 'rgba(255,255,255,0.08)',
+                    border: isRevealed
+                      ? '3px solid rgba(40,35,20,0.8)'
+                      : '2px solid rgba(255,255,255,0.15)',
+                    boxShadow: isRevealed
+                      ? '0 0 30px rgba(255,200,80,0.3), inset 0 0 20px rgba(0,0,0,0.2)'
+                      : 'none',
+                    transform: `scale(${0.8 + cardProgress * 0.2})`,
+                    opacity: 0.3 + cardProgress * 0.7,
+                    transition: 'background 0.3s, border 0.3s, box-shadow 0.3s',
                   }}
                 >
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div
-                      style={{
-                        transform: `scale(${0.6 + cardProgress * 0.4})`,
-                        opacity: cardProgress,
-                      }}
-                    >
-                      <Icon3D color={ICON_GOLD} size={64}>
-                        <IconComponent className="w-16 h-16" />
-                      </Icon3D>
-                    </div>
-                  </div>
+                  <Icon3D color={ICON_GOLD} size={64}>
+                    <IconComponent className="w-16 h-16" />
+                  </Icon3D>
                 </div>
 
+                {/* Card content */}
                 <div
-                  className={`flex-1 ${isEven ? '' : 'text-right'}`}
+                  className={`flex-1 p-6 rounded-2xl ${isEven ? '' : 'md:text-right'}`}
                   style={{
-                    opacity: Math.min(1, cardProgress * 2),
-                    transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
+                    background: isRevealed ? mistyBackground : darkBackground,
+                    border: isRevealed
+                      ? '2px solid rgba(180,150,50,0.5)'
+                      : `1px solid ${BRAND_YELLOW}44`,
+                    boxShadow: isRevealed
+                      ? '0 0 40px 8px rgba(255,200,80,0.3), 0 0 80px 16px rgba(255,180,50,0.15)'
+                      : `0 0 40px ${BRAND_YELLOW}15`,
+                    opacity: 0.4 + cardProgress * 0.6,
+                    transform: `translateX(${isEven ? (1 - cardProgress) * 30 : (cardProgress - 1) * 30}px)`,
+                    transition: 'background 0.3s, border 0.3s, box-shadow 0.3s',
                   }}
                 >
                   <div
-                    className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3"
-                    style={{ background: `${BRAND_YELLOW}22`, color: BRAND_YELLOW }}
+                    className={`inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3`}
+                    style={{
+                      background: isRevealed ? 'rgba(42,42,42,0.6)' : `${BRAND_YELLOW}22`,
+                      color: isRevealed ? '#9a9a9a' : BRAND_YELLOW,
+                    }}
                   >
-                    {pillar.subtitle}
+                    {card.subtitle}
                   </div>
-                  <h3 className="text-h5 font-bold text-gray-100 mb-3">{pillar.title}</h3>
-                  <p className="text-body text-gray-400 leading-relaxed">{pillar.description}</p>
+                  <h3
+                    className="text-h5 font-bold mb-3"
+                    style={{ color: isRevealed ? '#2a2a2a' : '#e5e5e5' }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    className="text-body leading-relaxed"
+                    style={{ color: isRevealed ? '#3a3a3a' : '#9ca3af' }}
+                  >
+                    {card.description}
+                  </p>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        <div className="text-center mt-16">
-          <p className="text-body text-gray-400 max-w-xl mx-auto">{OUTRO}</p>
         </div>
       </div>
     </section>
@@ -822,8 +859,17 @@ function Variation6() {
 // ============================================================
 // VARIATION 7: Text Blur Reveal
 // TYPE: IntersectionObserver (natural scroll)
-// STATUS: ATTEMPT 8 - Fix outro, reduce card spacing
+// Updated with mystic fog styling for revealed cards
 // ============================================================
+
+// Sample content for Variation 7
+const VARIATION_7_CARDS = [
+  { title: "Commission", subtitle: "The Foundation", description: "80/20 split until $16K cap, then 100%. ICON agents earn the cap back in stock." },
+  { title: "Ownership", subtitle: "Build Equity", description: "Earn EXPI stock for production milestones. Own part of a publicly traded company." },
+  { title: "Leverage", subtitle: "Scale Systems", description: "Access 90,000+ agents globally. Systems that scale with your ambition." },
+  { title: "Longevity", subtitle: "Income That Lasts", description: "Seven-tier revenue share. Continues after retirement. Passed to heirs." },
+];
+
 function Variation7() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [elementProgress, setElementProgress] = useState<{ [key: string]: number }>({});
@@ -841,11 +887,7 @@ function Variation7() {
           });
         },
         {
-          // More thresholds for smoother animation
           threshold: Array.from({ length: 50 }, (_, i) => i / 50),
-          // rootMargin: top right bottom left
-          // -20% top = outro starts when element is 20% from exiting the top (reasonable)
-          // -10% bottom = intro starts when element is 10% into viewport from bottom
           rootMargin: '-20% 0px -10% 0px',
         }
       );
@@ -856,24 +898,31 @@ function Variation7() {
     return () => observers.forEach(o => o.disconnect());
   }, []);
 
-  // MUCH SLOWER blur reveal - takes full intersection ratio to complete
   const getBlur = (id: string) => {
     const p = elementProgress[id] || 0;
-    // Blur goes from 15px to 0 over the entire progress (0 to 1)
     return Math.max(0, 15 * (1 - p));
   };
 
   const getOpacity = (id: string) => {
     const p = elementProgress[id] || 0;
-    // Opacity goes from 0 to 1 over the entire progress (slower than before)
     return Math.min(1, p);
   };
 
   const getTranslateY = (id: string) => {
     const p = elementProgress[id] || 0;
-    // TranslateY goes from 40px to 0 over the entire progress
     return 40 * (1 - p);
   };
+
+  // Misty gold background for revealed state
+  const mistyBackground = `
+    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+  `;
+  const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
 
   return (
     <section ref={sectionRef} className="py-24 px-4">
@@ -884,20 +933,21 @@ function Variation7() {
           </span>
         </div>
 
-        {/* H2 with metal backing plate and subheading */}
         <div className="text-center mb-12">
-          <H2>The eXp Model</H2>
-          <p className="text-body text-gray-400 mt-4 max-w-xl mx-auto">{PROBLEM_TEXT.line1}</p>
+          <H2>Sample Heading</H2>
+          <p className="text-body text-gray-400 mt-4 max-w-xl mx-auto">Sample subheading text that describes the section.</p>
         </div>
 
-        {/* Reduced spacing between cards */}
         <div className="space-y-12">
-          {PILLARS.map((pillar, index) => {
+          {VARIATION_7_CARDS.map((card, index) => {
             const IconComponent = PILLAR_ICONS[index];
             const id = `card7-${index}`;
+            const progress = elementProgress[id] || 0;
+            const isRevealed = progress > 0.6;
+
             return (
               <div
-                key={pillar.title}
+                key={card.title}
                 className="blur-reveal max-w-2xl mx-auto"
                 data-id={id}
                 style={{
@@ -907,42 +957,57 @@ function Variation7() {
                 }}
               >
                 <div
-                  className="p-8 rounded-3xl"
+                  className="p-6 md:p-8 rounded-2xl flex flex-col md:flex-row items-center gap-6"
                   style={{
-                    background: `linear-gradient(135deg, rgba(25,25,25,0.9), rgba(15,15,15,0.95))`,
-                    borderLeft: `4px solid ${BRAND_YELLOW}`,
+                    background: isRevealed ? mistyBackground : darkBackground,
+                    border: isRevealed
+                      ? '2px solid rgba(180,150,50,0.5)'
+                      : `1px solid ${BRAND_YELLOW}44`,
+                    boxShadow: isRevealed
+                      ? '0 0 40px 8px rgba(255,200,80,0.3), 0 0 80px 16px rgba(255,180,50,0.15)'
+                      : `0 0 40px ${BRAND_YELLOW}15`,
+                    transition: 'background 0.4s, border 0.4s, box-shadow 0.4s',
                   }}
                 >
-                  <div className="flex items-start gap-6">
-                    <div className="flex-shrink-0">
-                      <Icon3D color={ICON_GOLD} size={64}>
-                        <IconComponent className="w-16 h-16" />
-                      </Icon3D>
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-wider mb-1" style={{ color: BRAND_YELLOW }}>
-                        {pillar.subtitle}
-                      </p>
-                      <h3 className="text-h5 font-bold text-gray-100 mb-2">{pillar.title}</h3>
-                      <p className="text-body text-gray-400">{pillar.description}</p>
-                    </div>
+                  {/* Icon circle */}
+                  <div
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-full flex-shrink-0 flex items-center justify-center"
+                    style={{
+                      background: isRevealed ? 'rgba(42,42,42,0.9)' : 'rgba(255,255,255,0.08)',
+                      border: isRevealed ? '3px solid rgba(42,42,42,0.7)' : '2px solid rgba(255,255,255,0.15)',
+                      boxShadow: isRevealed ? '0 0 30px rgba(0,0,0,0.25), inset 0 0 20px rgba(0,0,0,0.15)' : 'none',
+                      transition: 'background 0.4s, border 0.4s, box-shadow 0.4s',
+                    }}
+                  >
+                    <Icon3D color={ICON_GOLD} size={48}>
+                      <IconComponent className="w-12 h-12" />
+                    </Icon3D>
+                  </div>
+
+                  <div className="text-center md:text-left">
+                    <p
+                      className="text-xs uppercase tracking-wider mb-1"
+                      style={{ color: isRevealed ? '#5a5a5a' : BRAND_YELLOW }}
+                    >
+                      {card.subtitle}
+                    </p>
+                    <h3
+                      className="text-h5 font-bold mb-2"
+                      style={{ color: isRevealed ? '#2a2a2a' : '#e5e5e5' }}
+                    >
+                      {card.title}
+                    </h3>
+                    <p
+                      className="text-body"
+                      style={{ color: isRevealed ? '#3a3a3a' : '#9ca3af' }}
+                    >
+                      {card.description}
+                    </p>
                   </div>
                 </div>
               </div>
             );
           })}
-        </div>
-
-        <div
-          className="blur-reveal text-center mt-16"
-          data-id="outro7"
-          style={{
-            filter: `blur(${getBlur('outro7')}px)`,
-            opacity: getOpacity('outro7'),
-            transform: `translateY(${getTranslateY('outro7')}px)`,
-          }}
-        >
-          <p className="text-body text-gray-400 max-w-xl mx-auto">{OUTRO}</p>
         </div>
       </div>
     </section>
@@ -950,122 +1015,211 @@ function Variation7() {
 }
 
 // ============================================================
-// VARIATION 8: Split Letter Animation (cards only)
-// TYPE: GSAP ScrollTrigger with pin + eased Y movement
-// STATUS: ATTEMPT 8 - H2/subheading always visible, only cards animate
+// VARIATION 8: Grid Card Animation
+// TYPE: GSAP ScrollTrigger with magnetic snap
+// Updated with mystic fog styling for active cards
 // ============================================================
+
+// Sample content for Variation 8
+const VARIATION_8_CARDS = [
+  { title: "Commission", subtitle: "The Foundation" },
+  { title: "Ownership", subtitle: "Build Equity" },
+  { title: "Leverage", subtitle: "Scale Systems" },
+  { title: "Longevity", subtitle: "Income That Lasts" },
+];
+
 function Variation8() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const cardGridRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+
+  // Refs for magnetic effect
+  const rawProgressRef = useRef(0);
+  const displayProgressRef = useRef(0);
+  const lastRawRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const isMobileRef = useRef(false);
+
+  const totalCards = VARIATION_8_CARDS.length;
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
+    isMobileRef.current = window.innerWidth < 768;
+
+    const GRACE = isMobileRef.current ? 0 : 0.1;
+    const CONTENT_RANGE = 1 - (GRACE * 2);
+
+    // Velocity-based magnetic snap
+    const animateMagnetic = () => {
+      const raw = rawProgressRef.current;
+      const lastRaw = lastRawRef.current;
+      const currentDisplay = displayProgressRef.current;
+
+      const instantVelocity = Math.abs(raw - lastRaw);
+      velocityRef.current = velocityRef.current * 0.9 + instantVelocity * 0.1;
+      lastRawRef.current = raw;
+
+      const cardStep = 1 / (totalCards - 1);
+      const nearestCardIndex = Math.round(raw / cardStep);
+      const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
+
+      const velocityFactor = Math.min(1, velocityRef.current * 100);
+      const targetProgress = nearestCardProgress * (1 - velocityFactor) + raw * velocityFactor;
+      const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
+
+      if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+        displayProgressRef.current = newProgress;
+        setProgress(newProgress);
+      }
+
+      rafRef.current = requestAnimationFrame(animateMagnetic);
+    };
+
+    rafRef.current = requestAnimationFrame(animateMagnetic);
+
     const ctx = gsap.context(() => {
-      // Multi-phase timeline for easing into/out of slow scroll
-      const tl = gsap.timeline();
-
-      // Phase 1 (0-15%): Fast initial movement
-      tl.to(contentRef.current, {
-        y: -50,
-        duration: 0.15,
-        ease: 'power2.out',
-      });
-
-      // Phase 2 (15-85%): Very slow movement during main animation
-      tl.to(contentRef.current, {
-        y: -70,
-        duration: 0.70,
-        ease: 'none',
-      });
-
-      // Phase 3 (85-100%): Fast movement out
-      tl.to(contentRef.current, {
-        y: -120,
-        duration: 0.15,
-        ease: 'power2.in',
-      });
-
       ScrollTrigger.create({
-        trigger: triggerRef.current,
-        start: 'top top',
-        end: '+=350%',
-        pin: true,
+        trigger: cardGridRef.current,
+        start: 'center 55%',
+        end: '+=200%',
+        pin: triggerRef.current,
+        pinSpacing: true,
         scrub: 0.5,
-        animation: tl,
-        onUpdate: (self) => setProgress(self.progress),
+        onUpdate: (self: ScrollTrigger) => {
+          const mobileMultiplier = isMobileRef.current ? 2 : 1;
+          let cardProgress = 0;
+
+          if (self.progress <= GRACE) {
+            cardProgress = 0;
+          } else if (self.progress >= 1 - GRACE) {
+            cardProgress = 1;
+          } else {
+            cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
+          }
+
+          rawProgressRef.current = cardProgress;
+        },
       });
     }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ctx.revert();
+    };
+  }, [totalCards]);
+
+  // Misty gold background for active card
+  const mistyBackground = `
+    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+  `;
+  const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
 
   return (
     <section ref={sectionRef}>
-      <div ref={triggerRef} className="h-screen flex items-center justify-center overflow-hidden">
-        <div ref={contentRef} className="max-w-4xl mx-auto px-4 w-full text-center">
-          <div className="mb-6">
-            <span className="text-xs uppercase tracking-widest text-gold-500 font-medium">
-              Variation 8: Card Animation
-            </span>
-          </div>
+      <div
+        ref={triggerRef}
+        style={{
+          willChange: 'transform',
+          contain: 'layout style paint',
+        }}
+      >
+        <div className="px-6 py-16 md:py-24">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-6">
+              <span className="text-xs uppercase tracking-widest text-gold-500 font-medium">
+                Variation 8: Grid Card Animation
+              </span>
+            </div>
 
-          <div className="mb-8">
-            <H2>The eXp Model</H2>
-            <p className="text-body text-gray-400 mt-4 max-w-xl mx-auto">
-              {MODEL_INTRO.line2}
-            </p>
-          </div>
+            <div className="mb-8">
+              <H2>Sample Heading</H2>
+              <p className="text-body text-gray-400 mt-4 max-w-xl mx-auto">
+                Sample subheading text that describes the section.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {PILLARS.map((pillar, index) => {
-              const IconComponent = PILLAR_ICONS[index];
-              const cardStart = index * 0.15;
-              const cardProgress = Math.max(0, Math.min(1, (progress - cardStart) / 0.2));
+            <div ref={cardGridRef} className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {VARIATION_8_CARDS.map((card, index) => {
+                const IconComponent = PILLAR_ICONS[index];
+                const activeIndex = Math.round(progress * (totalCards - 1));
+                const isActive = index === activeIndex;
+                const distance = Math.abs(progress * (totalCards - 1) - index);
+                const cardOpacity = Math.max(0.4, 1 - distance * 0.3);
+                const cardScale = Math.max(0.9, 1 - distance * 0.05);
 
-              return (
-                <div
-                  key={pillar.title}
-                  className="p-5 rounded-2xl text-center transition-all duration-100"
-                  style={{
-                    background: `linear-gradient(180deg, rgba(30,30,30,0.9), rgba(20,20,20,0.95))`,
-                    border: `1px solid ${BRAND_YELLOW}33`,
-                    transform: `translateY(${(1 - cardProgress) * 50}px) scale(${0.85 + cardProgress * 0.15})`,
-                    opacity: cardProgress,
-                  }}
-                >
-                  <div className="mx-auto mb-3">
-                    <Icon3D color={ICON_GOLD} size={48}>
-                      <IconComponent className="w-12 h-12" />
-                    </Icon3D>
+                return (
+                  <div
+                    key={card.title}
+                    className="p-5 rounded-2xl text-center"
+                    style={{
+                      background: isActive ? mistyBackground : darkBackground,
+                      border: isActive
+                        ? '2px solid rgba(180,150,50,0.5)'
+                        : `1px solid ${BRAND_YELLOW}44`,
+                      boxShadow: isActive
+                        ? '0 0 40px 8px rgba(255,200,80,0.3), 0 0 80px 16px rgba(255,180,50,0.15)'
+                        : `0 0 40px ${BRAND_YELLOW}15`,
+                      transform: `scale(${cardScale})`,
+                      opacity: cardOpacity,
+                      transition: 'background 0.2s, border 0.2s, box-shadow 0.2s',
+                    }}
+                  >
+                    <div
+                      className="mx-auto mb-3 w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{
+                        background: isActive ? 'rgba(42,42,42,0.9)' : 'rgba(255,255,255,0.08)',
+                        border: isActive ? '3px solid rgba(42,42,42,0.7)' : '2px solid rgba(255,255,255,0.15)',
+                        boxShadow: isActive ? '0 0 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(0,0,0,0.1)' : 'none',
+                      }}
+                    >
+                      <Icon3D color={ICON_GOLD} size={40}>
+                        <IconComponent className="w-10 h-10" />
+                      </Icon3D>
+                    </div>
+                    <h3
+                      className="text-h6 font-bold mb-1"
+                      style={{ color: isActive ? '#2a2a2a' : '#e5e5e5' }}
+                    >
+                      {card.title}
+                    </h3>
+                    <p
+                      className="text-xs"
+                      style={{ color: isActive ? '#5a5a5a' : BRAND_YELLOW }}
+                    >
+                      {card.subtitle}
+                    </p>
                   </div>
-                  <h3 className="text-h6 font-bold text-gray-100 mb-1">{pillar.title}</h3>
-                  <p className="text-xs" style={{ color: BRAND_YELLOW }}>{pillar.subtitle}</p>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
 
-          {/* Progress bar - 3D plasma tube */}
-          <div className="mt-12 flex justify-center">
-            <div
-              className="w-80 h-3 rounded-full overflow-hidden relative"
-              style={{
-                background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                border: '1px solid rgba(245, 245, 240, 0.25)',
-                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
-              }}
-            >
+            {/* 3D Plasma Tube Progress Bar */}
+            <div className="mt-12 flex justify-center">
               <div
-                className="h-full rounded-full transition-all duration-100"
+                className="w-80 h-3 rounded-full overflow-hidden relative"
                 style={{
-                  width: `${progress * 100}%`,
-                  background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
-                  boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                  background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                  border: '1px solid rgba(245, 245, 240, 0.25)',
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
                 }}
-              />
+              >
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${progress * 100}%`,
+                    background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
+                    boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1075,151 +1229,200 @@ function Variation8() {
 }
 
 // ============================================================
-// VARIATION 9: Counter Animation
-// TYPE: GSAP ScrollTrigger with pin + eased Y movement
-// STATUS: ATTEMPT 7 - Multi-phase Y movement for easing into/out of slow
+// VARIATION 9: Counter Animation with Stats
+// TYPE: GSAP ScrollTrigger with magnetic snap
+// Updated with mystic fog styling for active stats
 // ============================================================
+
+// Sample stats for Variation 9
+const VARIATION_9_STATS = [
+  { number: 90000, suffix: '+', label: 'Agents Worldwide' },
+  { number: 24, suffix: '', label: 'Countries' },
+  { number: 80, suffix: '/20', label: 'Commission Split' },
+  { number: 7, suffix: ' Tiers', label: 'Revenue Share' },
+];
+
 function Variation9() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const statsGridRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+
+  // Refs for magnetic effect
+  const rawProgressRef = useRef(0);
+  const displayProgressRef = useRef(0);
+  const lastRawRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const isMobileRef = useRef(false);
+
+  const totalStats = VARIATION_9_STATS.length;
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
+    isMobileRef.current = window.innerWidth < 768;
+
+    const GRACE = isMobileRef.current ? 0 : 0.1;
+    const CONTENT_RANGE = 1 - (GRACE * 2);
+
+    // Velocity-based magnetic snap
+    const animateMagnetic = () => {
+      const raw = rawProgressRef.current;
+      const lastRaw = lastRawRef.current;
+      const currentDisplay = displayProgressRef.current;
+
+      const instantVelocity = Math.abs(raw - lastRaw);
+      velocityRef.current = velocityRef.current * 0.9 + instantVelocity * 0.1;
+      lastRawRef.current = raw;
+
+      const statStep = 1 / (totalStats - 1);
+      const nearestStatIndex = Math.round(raw / statStep);
+      const nearestStatProgress = Math.max(0, Math.min(1, nearestStatIndex * statStep));
+
+      const velocityFactor = Math.min(1, velocityRef.current * 100);
+      const targetProgress = nearestStatProgress * (1 - velocityFactor) + raw * velocityFactor;
+      const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
+
+      if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+        displayProgressRef.current = newProgress;
+        setProgress(newProgress);
+      }
+
+      rafRef.current = requestAnimationFrame(animateMagnetic);
+    };
+
+    rafRef.current = requestAnimationFrame(animateMagnetic);
+
     const ctx = gsap.context(() => {
-      // Multi-phase timeline for easing into/out of slow scroll
-      const tl = gsap.timeline();
-
-      // Phase 1 (0-15%): Fast initial movement
-      tl.to(contentRef.current, {
-        y: -40,
-        duration: 0.15,
-        ease: 'power2.out',
-      });
-
-      // Phase 2 (15-85%): Very slow movement during main animation
-      tl.to(contentRef.current, {
-        y: -60,
-        duration: 0.70,
-        ease: 'none',
-      });
-
-      // Phase 3 (85-100%): Fast movement out
-      tl.to(contentRef.current, {
-        y: -100,
-        duration: 0.15,
-        ease: 'power2.in',
-      });
-
       ScrollTrigger.create({
-        trigger: triggerRef.current,
-        start: 'top top',
-        end: '+=300%',
-        pin: true,
+        trigger: statsGridRef.current,
+        start: 'center 55%',
+        end: '+=200%',
+        pin: triggerRef.current,
+        pinSpacing: true,
         scrub: 0.5,
-        animation: tl,
-        onUpdate: (self) => setProgress(self.progress),
+        onUpdate: (self: ScrollTrigger) => {
+          const mobileMultiplier = isMobileRef.current ? 2 : 1;
+          let statProgress = 0;
+
+          if (self.progress <= GRACE) {
+            statProgress = 0;
+          } else if (self.progress >= 1 - GRACE) {
+            statProgress = 1;
+          } else {
+            statProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
+          }
+
+          rawProgressRef.current = statProgress;
+        },
       });
     }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ctx.revert();
+    };
+  }, [totalStats]);
 
-  const stats = [
-    { number: 90000, suffix: '+', label: 'Agents Worldwide' },
-    { number: 24, suffix: '', label: 'Countries' },
-    { number: 80, suffix: '/20', label: 'Commission Split' },
-    { number: 7, suffix: ' Tiers', label: 'Revenue Share' },
-  ];
+  // Misty gold background for active stat
+  const mistyBackground = `
+    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+  `;
+  const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
 
   return (
     <section ref={sectionRef}>
-      <div ref={triggerRef} className="h-screen flex items-center justify-center">
-        <div ref={contentRef} className="max-w-5xl mx-auto px-4 w-full">
-          <div className="text-center mb-4">
-            <span className="text-xs uppercase tracking-widest text-gold-500 font-medium">
-              Variation 9: Counter Animation
-            </span>
-          </div>
+      <div
+        ref={triggerRef}
+        style={{
+          willChange: 'transform',
+          contain: 'layout style paint',
+        }}
+      >
+        <div className="px-6 py-16 md:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="text-center mb-4">
+              <span className="text-xs uppercase tracking-widest text-gold-500 font-medium">
+                Variation 9: Counter Animation
+              </span>
+            </div>
 
-          <div className="text-center mb-10">
-            <H2>The eXp Model</H2>
-            <p className="text-body text-gray-400 mt-3">{MODEL_INTRO.line1}</p>
-          </div>
+            <div className="text-center mb-10">
+              <H2>Sample Heading</H2>
+              <p className="text-body text-gray-400 mt-3">Sample subheading text that describes the section.</p>
+            </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
-            {stats.map((stat, index) => {
-              const statStart = index * 0.1;
-              const statProgress = Math.max(0, Math.min(1, (progress - statStart) / 0.3));
-              const currentNumber = Math.floor(stat.number * statProgress);
+            <div ref={statsGridRef} className="grid grid-cols-2 md:grid-cols-4 gap-5">
+              {VARIATION_9_STATS.map((stat, index) => {
+                const activeIndex = Math.round(progress * (totalStats - 1));
+                const isActive = index === activeIndex;
+                const distance = Math.abs(progress * (totalStats - 1) - index);
+                const statOpacity = Math.max(0.4, 1 - distance * 0.3);
+                const statScale = Math.max(0.9, 1 - distance * 0.05);
 
-              return (
-                <div
-                  key={stat.label}
-                  className="text-center p-5 rounded-2xl transition-all duration-100"
-                  style={{
-                    background: 'rgba(20,20,20,0.85)',
-                    border: `1px solid ${BRAND_YELLOW}44`,
-                    boxShadow: `0 0 ${50 * statProgress}px ${BRAND_YELLOW}33`,
-                    transform: `scale(${0.85 + statProgress * 0.15}) translateY(${(1 - statProgress) * 25}px)`,
-                    opacity: 0.4 + statProgress * 0.6,
-                  }}
-                >
-                  <div className="text-4xl md:text-5xl font-bold mb-2 tabular-nums" style={{ color: BRAND_YELLOW }}>
-                    {currentNumber.toLocaleString()}{stat.suffix}
+                // Animate the counter based on overall progress
+                const countProgress = Math.min(1, progress * 2);
+                const currentNumber = Math.floor(stat.number * countProgress);
+
+                return (
+                  <div
+                    key={stat.label}
+                    className="text-center p-5 rounded-2xl"
+                    style={{
+                      background: isActive ? mistyBackground : darkBackground,
+                      border: isActive
+                        ? '2px solid rgba(180,150,50,0.5)'
+                        : `1px solid ${BRAND_YELLOW}44`,
+                      boxShadow: isActive
+                        ? '0 0 40px 8px rgba(255,200,80,0.3), 0 0 80px 16px rgba(255,180,50,0.15)'
+                        : `0 0 40px ${BRAND_YELLOW}15`,
+                      transform: `scale(${statScale})`,
+                      opacity: statOpacity,
+                      transition: 'background 0.2s, border 0.2s, box-shadow 0.2s',
+                    }}
+                  >
+                    <div
+                      className="text-4xl md:text-5xl font-bold mb-2 tabular-nums"
+                      style={{ color: isActive ? '#2a2a2a' : BRAND_YELLOW }}
+                    >
+                      {currentNumber.toLocaleString()}{stat.suffix}
+                    </div>
+                    <div
+                      className="text-sm"
+                      style={{ color: isActive ? '#4a4a4a' : '#9ca3af' }}
+                    >
+                      {stat.label}
+                    </div>
                   </div>
-                  <div className="text-gray-400 text-sm">{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
-            {PILLARS.map((pillar, index) => {
-              const IconComponent = PILLAR_ICONS[index];
-              const cardStart = 0.5 + index * 0.08;
-              const cardProgress = Math.max(0, Math.min(1, (progress - cardStart) / 0.2));
-
-              return (
-                <div
-                  key={pillar.title}
-                  className="p-3 rounded-xl text-center transition-all duration-100"
-                  style={{
-                    background: `${BRAND_YELLOW}11`,
-                    border: `1px solid ${BRAND_YELLOW}33`,
-                    transform: `translateY(${(1 - cardProgress) * 30}px)`,
-                    opacity: cardProgress,
-                  }}
-                >
-                  <Icon3D color={ICON_GOLD} size={32}>
-                    <IconComponent className="w-8 h-8" />
-                  </Icon3D>
-                  <p className="text-xs font-medium text-gray-100 mt-1">{pillar.title}</p>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Progress bar - 3D plasma tube */}
-          <div className="mt-8 flex justify-center">
-            <div
-              className="w-80 h-3 rounded-full overflow-hidden relative"
-              style={{
-                background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                border: '1px solid rgba(245, 245, 240, 0.25)',
-                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
-              }}
-            >
+            {/* 3D Plasma Tube Progress Bar */}
+            <div className="mt-12 flex justify-center">
               <div
-                className="h-full rounded-full transition-all duration-100"
+                className="w-80 h-3 rounded-full overflow-hidden relative"
                 style={{
-                  width: `${progress * 100}%`,
-                  background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
-                  boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                  background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                  border: '1px solid rgba(245, 245, 240, 0.25)',
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
                 }}
-              />
+              >
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${progress * 100}%`,
+                    background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
+                    boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -1230,155 +1433,250 @@ function Variation9() {
 
 // ============================================================
 // VARIATION 10: Diagonal Wipe Reveal
-// TYPE: GSAP ScrollTrigger with pin + eased Y movement
-// STATUS: ATTEMPT 8 - Brand yellow, 3D icons, progress bar, no bg
+// TYPE: GSAP ScrollTrigger with magnetic snap
+// Updated with mystic fog styling for revealed cards
 // ============================================================
+
+// Sample content for Variation 10
+const VARIATION_10_CARDS = [
+  { title: "Commission", subtitle: "The Foundation", description: "80/20 split until $16K cap, then 100%. ICON agents earn the cap back in stock." },
+  { title: "Ownership", subtitle: "Build Equity", description: "Earn EXPI stock for production milestones. Own part of a publicly traded company." },
+  { title: "Leverage", subtitle: "Scale Systems", description: "Access 90,000+ agents globally. Systems that scale with your ambition." },
+  { title: "Longevity", subtitle: "Income That Lasts", description: "Seven-tier revenue share. Continues after retirement. Passed to heirs." },
+];
+
 function Variation10() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const cardGridRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
+
+  // Refs for magnetic effect
+  const rawProgressRef = useRef(0);
+  const displayProgressRef = useRef(0);
+  const lastRawRef = useRef(0);
+  const velocityRef = useRef(0);
+  const rafRef = useRef<number>(0);
+  const isMobileRef = useRef(false);
+
+  const totalCards = VARIATION_10_CARDS.length;
 
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
+    isMobileRef.current = window.innerWidth < 768;
+
+    const GRACE = isMobileRef.current ? 0 : 0.1;
+    const CONTENT_RANGE = 1 - (GRACE * 2);
+
+    // Velocity-based magnetic snap
+    const animateMagnetic = () => {
+      const raw = rawProgressRef.current;
+      const lastRaw = lastRawRef.current;
+      const currentDisplay = displayProgressRef.current;
+
+      const instantVelocity = Math.abs(raw - lastRaw);
+      velocityRef.current = velocityRef.current * 0.9 + instantVelocity * 0.1;
+      lastRawRef.current = raw;
+
+      const cardStep = 1 / (totalCards - 1);
+      const nearestCardIndex = Math.round(raw / cardStep);
+      const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
+
+      const velocityFactor = Math.min(1, velocityRef.current * 100);
+      const targetProgress = nearestCardProgress * (1 - velocityFactor) + raw * velocityFactor;
+      const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
+
+      if (Math.abs(newProgress - currentDisplay) > 0.0001) {
+        displayProgressRef.current = newProgress;
+        setProgress(newProgress);
+      }
+
+      rafRef.current = requestAnimationFrame(animateMagnetic);
+    };
+
+    rafRef.current = requestAnimationFrame(animateMagnetic);
+
     const ctx = gsap.context(() => {
-      // Multi-phase timeline for easing into/out of slow scroll
-      const tl = gsap.timeline();
-
-      // Phase 1 (0-15%): Fast initial movement
-      tl.to(contentRef.current, {
-        y: -50,
-        duration: 0.15,
-        ease: 'power2.out',
-      });
-
-      // Phase 2 (15-85%): Very slow movement during main animation
-      tl.to(contentRef.current, {
-        y: -70,
-        duration: 0.70,
-        ease: 'none',
-      });
-
-      // Phase 3 (85-100%): Fast movement out
-      tl.to(contentRef.current, {
-        y: -120,
-        duration: 0.15,
-        ease: 'power2.in',
-      });
-
       ScrollTrigger.create({
-        trigger: triggerRef.current,
-        start: 'top top',
-        end: '+=330%',
-        pin: true,
+        trigger: cardGridRef.current,
+        start: 'center 55%',
+        end: '+=200%',
+        pin: triggerRef.current,
+        pinSpacing: true,
         scrub: 0.5,
-        animation: tl,
-        onUpdate: (self) => setProgress(self.progress),
+        onUpdate: (self: ScrollTrigger) => {
+          const mobileMultiplier = isMobileRef.current ? 2 : 1;
+          let cardProgress = 0;
+
+          if (self.progress <= GRACE) {
+            cardProgress = 0;
+          } else if (self.progress >= 1 - GRACE) {
+            cardProgress = 1;
+          } else {
+            cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
+          }
+
+          rawProgressRef.current = cardProgress;
+        },
       });
     }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ctx.revert();
+    };
+  }, [totalCards]);
+
+  // Misty gold background for active card
+  const mistyBackground = `
+    radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
+    radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 20% 70%, rgba(255,180,50,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
+    linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
+  `;
+  const darkBackground = 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))';
 
   return (
     <section ref={sectionRef}>
-      <div ref={triggerRef} className="h-screen flex items-center justify-center overflow-hidden relative">
+      <div
+        ref={triggerRef}
+        style={{
+          willChange: 'transform',
+          contain: 'layout style paint',
+        }}
+      >
+        <div className="px-6 py-16 md:py-24">
+          <div className="mx-auto max-w-5xl">
+            <div className="text-center mb-4">
+              <span className="text-xs uppercase tracking-widest text-gold-500 font-medium">
+                Variation 10: Diagonal Wipe
+              </span>
+            </div>
 
-        <div ref={contentRef} className="relative z-10 max-w-5xl mx-auto px-4 w-full">
-          <div className="text-center mb-4">
-            <span className="text-xs uppercase tracking-widest text-gold-500 font-medium">
-              Variation 10: Diagonal Wipe
-            </span>
-          </div>
+            <div className="text-center mb-10">
+              <H2>Sample Heading</H2>
+              <p className="text-body text-gray-400 mt-3">Sample subheading text that describes the section.</p>
+            </div>
 
-          {/* H2 always visible - no animation */}
-          <div className="text-center mb-10">
-            <H2>The eXp Model</H2>
-          </div>
+            <div ref={cardGridRef} className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ gridAutoRows: '1fr' }}>
+              {VARIATION_10_CARDS.map((card, index) => {
+                const IconComponent = PILLAR_ICONS[index];
+                const activeIndex = Math.round(progress * (totalCards - 1));
+                const isActive = index === activeIndex;
+                const distance = Math.abs(progress * (totalCards - 1) - index);
+                const cardOpacity = Math.max(0.4, 1 - distance * 0.3);
+                const cardScale = Math.max(0.95, 1 - distance * 0.03);
 
-          {/* Grid with auto-row sizing for equal heights per row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5" style={{ gridAutoRows: '1fr' }}>
-            {PILLARS.map((pillar, index) => {
-              const IconComponent = PILLAR_ICONS[index];
-              // Cards start immediately since H2 has no animation
-              const cardStart = index * 0.15;
-              const cardProgress = Math.max(0, Math.min(1, (progress - cardStart) / 0.28));
-              const wipePercent = cardProgress * 220;
+                // Diagonal wipe effect based on card reveal progress
+                const revealProgress = Math.max(0, Math.min(1, (progress * (totalCards - 1) - index + 1)));
+                const wipePercent = revealProgress * 220;
 
-              return (
-                <div
-                  key={pillar.title}
-                  className="relative overflow-hidden rounded-2xl transition-all duration-100"
-                  style={{ background: 'rgba(20,20,20,0.4)' }}
-                >
-                  {/* Content layer - position relative for natural sizing */}
-                  <div className="p-7 relative z-10">
-                    <div className="flex items-start gap-4">
-                      <div
-                        className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0"
-                        style={{ background: `${BRAND_YELLOW}22`, boxShadow: `0 0 30px ${BRAND_YELLOW}44` }}
-                      >
-                        <Icon3D color={ICON_GOLD} size={40}>
-                          <IconComponent className="w-10 h-10" />
-                        </Icon3D>
-                      </div>
-                      <div>
-                        <p className="text-xs uppercase tracking-wider mb-1" style={{ color: BRAND_YELLOW }}>
-                          {pillar.subtitle}
-                        </p>
-                        <h3 className="text-h6 font-bold text-gray-100 mb-2">{pillar.title}</h3>
-                        <p className="text-body text-gray-400">{pillar.description}</p>
+                return (
+                  <div
+                    key={card.title}
+                    className="relative overflow-hidden rounded-2xl"
+                    style={{
+                      transform: `scale(${cardScale})`,
+                      opacity: cardOpacity,
+                    }}
+                  >
+                    {/* Content layer */}
+                    <div
+                      className="p-6 md:p-7 relative z-10"
+                      style={{
+                        background: isActive ? mistyBackground : darkBackground,
+                        transition: 'background 0.3s',
+                      }}
+                    >
+                      <div className="flex items-start gap-4">
+                        <div
+                          className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{
+                            background: isActive ? 'rgba(42,42,42,0.9)' : 'rgba(255,255,255,0.08)',
+                            border: isActive ? '3px solid rgba(42,42,42,0.7)' : '2px solid rgba(255,255,255,0.15)',
+                            boxShadow: isActive ? '0 0 20px rgba(0,0,0,0.2), inset 0 0 15px rgba(0,0,0,0.1)' : 'none',
+                            transition: 'background 0.3s, border 0.3s, box-shadow 0.3s',
+                          }}
+                        >
+                          <Icon3D color={ICON_GOLD} size={36}>
+                            <IconComponent className="w-9 h-9" />
+                          </Icon3D>
+                        </div>
+                        <div>
+                          <p
+                            className="text-xs uppercase tracking-wider mb-1"
+                            style={{ color: isActive ? '#5a5a5a' : BRAND_YELLOW }}
+                          >
+                            {card.subtitle}
+                          </p>
+                          <h3
+                            className="text-h6 font-bold mb-2"
+                            style={{ color: isActive ? '#2a2a2a' : '#e5e5e5' }}
+                          >
+                            {card.title}
+                          </h3>
+                          <p
+                            className="text-body"
+                            style={{ color: isActive ? '#3a3a3a' : '#9ca3af' }}
+                          >
+                            {card.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
+
+                    {/* Wipe overlay for unrevealed cards */}
+                    {!isActive && revealProgress < 1 && (
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                          background: 'linear-gradient(135deg, rgba(30,30,30,0.96), rgba(20,20,20,0.98))',
+                          clipPath: `polygon(${wipePercent}% 0, 100% 0, 100% 100%, ${wipePercent - 120}% 100%)`,
+                        }}
+                      />
+                    )}
+
+                    {/* Border */}
+                    <div
+                      className="absolute inset-0 rounded-2xl pointer-events-none"
+                      style={{
+                        border: isActive
+                          ? '2px solid rgba(180,150,50,0.5)'
+                          : `1px solid ${BRAND_YELLOW}44`,
+                        boxShadow: isActive
+                          ? '0 0 40px 8px rgba(255,200,80,0.2), 0 0 80px 16px rgba(255,180,50,0.1)'
+                          : 'none',
+                        transition: 'border 0.3s, box-shadow 0.3s',
+                      }}
+                    />
                   </div>
-                  {/* Wipe overlay - starts covering card, reveals as wipe progresses */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: `linear-gradient(135deg, rgba(30,30,30,0.96), rgba(20,20,20,0.98))`,
-                      clipPath: `polygon(${wipePercent}% 0, 100% 0, 100% 100%, ${wipePercent - 120}% 100%)`,
-                    }}
-                  />
-                  {/* Border overlay */}
-                  <div
-                    className="absolute inset-0 rounded-2xl pointer-events-none transition-all duration-100"
-                    style={{ border: `2px solid ${BRAND_YELLOW}`, opacity: cardProgress * 0.6 }}
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Progress bar - 3D plasma tube */}
-          <div className="mt-8 flex justify-center">
-            <div
-              className="w-80 h-3 rounded-full overflow-hidden relative"
-              style={{
-                background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                border: '1px solid rgba(245, 245, 240, 0.25)',
-                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
-              }}
-            >
-              <div
-                className="h-full rounded-full transition-all duration-100"
-                style={{
-                  width: `${progress * 100}%`,
-                  background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
-                  boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
-                }}
-              />
+                );
+              })}
             </div>
-          </div>
 
-          <div
-            className="text-center mt-8 transition-all duration-200"
-            style={{
-              opacity: Math.max(0, (progress - 0.8) * 5),
-              transform: `translateY(${Math.max(0, (1 - (progress - 0.8) * 5) * 15)}px)`,
-            }}
-          >
-            <p className="text-body text-gray-400 max-w-xl mx-auto">{OUTRO}</p>
+            {/* 3D Plasma Tube Progress Bar */}
+            <div className="mt-12 flex justify-center">
+              <div
+                className="w-80 h-3 rounded-full overflow-hidden relative"
+                style={{
+                  background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                  border: '1px solid rgba(245, 245, 240, 0.25)',
+                  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
+                }}
+              >
+                <div
+                  className="h-full rounded-full"
+                  style={{
+                    width: `${progress * 100}%`,
+                    background: `linear-gradient(180deg, #ffe566 0%, ${BRAND_YELLOW} 40%, #cc9900 100%)`,
+                    boxShadow: `0 0 8px ${BRAND_YELLOW}, 0 0 16px ${BRAND_YELLOW}, 0 0 32px ${BRAND_YELLOW}66, inset 0 1px 2px rgba(255,255,255,0.4)`,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1395,15 +1693,15 @@ export default function TestExpModelPage() {
       {/* Page Header */}
       <div className="py-16 px-4 text-center border-b border-white/10">
         <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          eXp Model Section - Design Variations
+          SAA Scroll Animation Variations
         </h1>
         <p className="text-body text-gray-400 max-w-2xl mx-auto">
-          Testing GSAP ScrollTrigger with smooth ease and slight viewport movement during pin.
-          All pinned variations now have smooth start/stop and the content moves slightly downward.
+          Reusable scroll animation effects with magnetic snap centering, mystic fog highlights,
+          and smooth GSAP ScrollTrigger integration.
         </p>
         <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg inline-block">
           <p className="text-emerald-400 text-sm">
-            Attempt 4: Smooth ease + slight Y movement (50-80px) during pin
+            All variations feature magnetic snap, mystic fog active state, and 3D icon styling
           </p>
         </div>
       </div>
@@ -1418,7 +1716,7 @@ export default function TestExpModelPage() {
 
       <div className="py-12 px-4 text-center">
         <p className="text-gray-500 text-sm">
-          Variation 2 and 6 now use the improved effects with magnetic snap centering.
+          All variations now use velocity-based magnetic snap centering and mystic fog active card styling.
         </p>
       </div>
     </main>
