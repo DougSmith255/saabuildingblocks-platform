@@ -396,7 +396,7 @@ export function WhyOnlyAtExp() {
                     <p className="font-heading text-2xl md:text-3xl font-bold mb-4" style={{ color: BRAND_YELLOW }}>{DIFFERENTIATOR}</p>
                     <p className="text-body text-lg leading-relaxed mb-4" itemProp="description">{KEY_POINT}</p>
                     <p className="text-body text-xl italic mb-6" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
-                    <div className="flex justify-center md:justify-start">
+                    <div className="flex justify-center md:justify-start w-full">
                       <CTAButton href="/exp-realty-sponsor">{CTA_TEXT}</CTAButton>
                     </div>
                   </figcaption>
