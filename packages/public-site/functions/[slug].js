@@ -5291,8 +5291,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 80% on mobile, 70% on desktop (content appears higher when pinned)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 80%' : 'center 70%';
+        // Pin trigger: 80% on mobile, 55% on desktop
+        var pinStartHorizontal = isMobileHorizontal ? 'center 80%' : 'center 55%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,

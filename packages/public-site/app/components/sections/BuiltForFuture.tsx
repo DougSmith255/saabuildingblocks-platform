@@ -259,8 +259,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: 80% on mobile, 70% on desktop (content appears higher when pinned)
-    const pinStart = isMobile ? 'center 80%' : 'center 70%';
+    // Pin trigger: 80% on mobile, 55% on desktop
+    const pinStart = isMobile ? 'center 80%' : 'center 55%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
