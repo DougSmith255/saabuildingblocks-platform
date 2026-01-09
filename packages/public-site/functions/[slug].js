@@ -3162,14 +3162,18 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
           <!-- Right Card - Aligned Incentives - expands from right using clip-path -->
           <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
-            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(0 0 0 100% round 16px); transition: clip-path 0.1s ease-out; height: 100%; min-height: 300px;">
-              <!-- Image is always visible -->
-              <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
-              <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
-              <!-- Caption is always visible -->
-              <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
-                <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
-                <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
+            <!-- Outer frame with border - always visible with rounded corners -->
+            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); height: 100%; min-height: 300px;">
+              <!-- Inner content that gets clipped -->
+              <div id="saa-right-content" style="position: absolute; inset: 0; clip-path: inset(0 0 0 100%); transition: clip-path 0.1s ease-out;">
+                <!-- Image -->
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
+                <!-- Caption -->
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 20px;">
+                  <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 23px;">Aligned Incentives</p>
+                  <p class="text-body opacity-70 mt-1">When you succeed, we succeed</p>
+                </div>
               </div>
             </div>
           </div>
@@ -4774,14 +4778,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             var clipPercent = 100 - (p * 100); // 100% to 0% as progress goes 0 to 1
 
             if (expandDir === 'left' && frameEl) {
-              // Expand from left using clip-path
+              // Expand from left using clip-path on frame
               frameEl.style.clipPath = 'inset(0 ' + clipPercent + '% 0 0 round 16px)';
               if (contentEl) {
                 contentEl.style.opacity = Math.min(1, p * 1.5);
               }
-            } else if (expandDir === 'right' && frameEl) {
-              // Expand from right using clip-path
-              frameEl.style.clipPath = 'inset(0 0 0 ' + clipPercent + '% round 16px)';
+            } else if (expandDir === 'right' && contentEl) {
+              // Expand from right using clip-path on content (frame border stays visible)
+              contentEl.style.clipPath = 'inset(0 0 0 ' + clipPercent + '%)';
             } else {
               // Default: fade up (for disclaimer)
               el.style.opacity = Math.min(1, p * 1.5);
