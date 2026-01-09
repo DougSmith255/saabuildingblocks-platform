@@ -4860,9 +4860,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         let rafId = null;
 
         // Grace period: 10% at start and 10% at end of scroll range
-        // No buffer zones - cards move immediately with scroll
-        const GRACE = 0;
-        const CONTENT_RANGE = 1;
+        // Buffer zones: desktop has 10% grace at start/end, mobile has none
+        var isMobileGrace = window.innerWidth < 768;
+        const GRACE = isMobileGrace ? 0 : 0.1;
+        const CONTENT_RANGE = 1 - (GRACE * 2);
 
         // Update card transforms based on progress
         function updateCards(progress) {
@@ -4978,8 +4979,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             var mobileMultiplier = isMobileCards ? 2 : 1;
             let cardProgress = 0;
 
-            // Apply mobile multiplier (2x speed on mobile) and clamp to 0-1 range
-            cardProgress = Math.min(self.progress * mobileMultiplier, 1);
+            if (self.progress <= GRACE) {
+              cardProgress = 0;
+            } else if (self.progress >= 1 - GRACE) {
+              cardProgress = 1;
+            } else {
+              // Apply mobile multiplier (2x speed on mobile) and clamp to 0-1 range
+              cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
+            }
 
             // Update raw progress - magnetic loop will interpolate
             rawProgress = cardProgress;
@@ -5143,9 +5150,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         var CARD_GAP = isMobile ? 16 : 24;
 
         // Grace periods - exact from React
-        // No buffer zones - cards move immediately with scroll
-        var GRACE = 0;
-        var CONTENT_RANGE = 1;
+        // Buffer zones: desktop has 10% grace at start/end, mobile has none
+        var isMobileGrace2 = window.innerWidth < 768;
+        var GRACE = isMobileGrace2 ? 0 : 0.1;
+        var CONTENT_RANGE = 1 - (GRACE * 2);
 
         // Magnetic snap state - exact from React refs
         var rawPositionRef = 0;
@@ -5303,8 +5311,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             var mobileMultiplier = isMobileHorizontal ? 2 : 1;
             var cardPosition = 0;
 
-            // Apply mobile multiplier (2x speed on mobile) and clamp to valid range
-            cardPosition = Math.min(self.progress * mobileMultiplier, 1) * (totalCards - 1);
+            if (self.progress <= GRACE) {
+              cardPosition = 0;
+            } else if (self.progress >= 1 - GRACE) {
+              cardPosition = totalCards - 1;
+            } else {
+              var contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
+              // Apply mobile multiplier (2x speed on mobile) and clamp to valid range
+              cardPosition = Math.min(contentProgress * mobileMultiplier, 1) * (totalCards - 1);
+            }
 
             rawPositionRef = cardPosition;
           }
