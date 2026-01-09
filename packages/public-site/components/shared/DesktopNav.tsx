@@ -27,13 +27,13 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    label: 'Team Leaders',
+    label: 'About Us',
     dropdown: [
+      { label: 'Our Team', href: '/our-exp-team/' },
       { label: 'About Doug Smart', href: '/about-doug-smart/' },
       { label: 'About Karrie Hill', href: '/about-karrie-hill/' },
     ],
   },
-  { label: 'About Us', href: '/our-exp-team/' },
   { label: 'Agent Portal', href: '/agent-portal/login/' },
 ];
 
