@@ -4983,11 +4983,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         });
 
         // Create ScrollTrigger for pinning and progress tracking
-        // Pin trigger at 55% from top of viewport
+        // Pin when section's top reaches near top of viewport
         var isMobileCards = window.innerWidth < 768;
         ScrollTrigger.create({
           trigger: triggerEl,
-          start: 'center 55%',
+          start: 'top 10%',
           end: '+=200%', // Extended for more buffer between card flips
           pin: true,
           pinSpacing: true,
@@ -5337,8 +5337,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger - exact from React
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
-        var pinStartHorizontal = isMobileHorizontal ? 'center 65%' : 'center 55%';
+        // Pin when section's top reaches near top of viewport
+        var pinStartHorizontal = 'top 10%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,

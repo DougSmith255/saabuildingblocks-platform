@@ -191,10 +191,10 @@ export function WhyOnlyAtExp() {
         ease: 'none',
       });
 
-      // Pin when the CARD STACK reaches 55% from top of viewport
+      // Pin when the section's top reaches the top of viewport (with small offset)
       ScrollTrigger.create({
-        trigger: cardStackRef.current,
-        start: 'center 55%',
+        trigger: triggerRef.current,
+        start: 'top 10%',
         end: '+=200%',
         pin: triggerRef.current,
         pinSpacing: true,
