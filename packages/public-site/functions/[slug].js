@@ -3804,7 +3804,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
 
     <!-- Built for Where Real Estate Is Going - Horizontal Scroll Cards -->
-    <section style="position: relative; padding-top: calc(4rem + 25px);" id="built-for-future">
+    <section style="position: relative; padding-top: calc(4rem + 25px); padding-bottom: 4rem;" id="built-for-future">
       <!-- Fixed background animation - outside pinned content -->
       <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0;">
         <!-- GrayscaleDataStream will be rendered here by JS -->
@@ -3815,8 +3815,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div id="built-future-trigger" style="position: relative; z-index: 1;">
         <!-- Content - animates upward -->
         <div id="built-future-content" style="position: relative; transform: translateY(30px);">
-          <!-- Section Header -->
-          <div style="text-align: center; margin-bottom: 1rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+          <!-- Section Header - extra top padding for H2 metal backing plate -->
+          <div style="text-align: center; margin-bottom: 1rem; padding-top: 0.5rem; padding-left: 1.5rem; padding-right: 1.5rem;">
             <h2 class="text-h2 h2-container" style="max-width: 100%;">
               <span class="h2-word">Built</span>
               <span class="h2-word">for</span>
@@ -5324,8 +5324,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 80% on mobile, 55% on desktop
-        var pinStartHorizontal = isMobileHorizontal ? 'center 80%' : 'center 55%';
+        // Pin trigger: 80% on mobile, 40% on desktop (higher = pins sooner/higher on screen)
+        var pinStartHorizontal = isMobileHorizontal ? 'center 80%' : 'center 40%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,
