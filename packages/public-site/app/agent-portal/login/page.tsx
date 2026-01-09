@@ -14,6 +14,9 @@ const AUTH_API_URL = 'https://saabuildingblocks.com';
 // Password Reset Modal States
 type ResetStep = 'email' | 'success';
 
+// Username Recovery Modal States
+type UsernameStep = 'email' | 'success';
+
 /**
  * Agent Portal Login Page
  * Features the Data Stream effect in green with centered login form in CyberCardGold
@@ -36,6 +39,14 @@ export default function AgentPortalLogin() {
   const [resetLoading, setResetLoading] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
   const [resetMessage, setResetMessage] = useState<string | null>(null);
+
+  // Username recovery state
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const [usernameStep, setUsernameStep] = useState<UsernameStep>('email');
+  const [usernameEmail, setUsernameEmail] = useState('');
+  const [usernameLoading, setUsernameLoading] = useState(false);
+  const [usernameError, setUsernameError] = useState<string | null>(null);
+  const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
 
   // Check if already logged in
   useEffect(() => {
@@ -168,8 +179,83 @@ export default function AgentPortalLogin() {
     setResetMessage(null);
   };
 
+  // Username recovery handler
+  const handleUsernameRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setUsernameLoading(true);
+    setUsernameError(null);
+    setUsernameMessage(null);
+
+    try {
+      const response = await fetch(`${AUTH_API_URL}/api/auth/username-recovery/request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: usernameEmail,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok && response.status !== 429) {
+        setUsernameError(data.message || 'Failed to send username reminder. Please try again.');
+        setUsernameLoading(false);
+        return;
+      }
+
+      if (response.status === 429) {
+        setUsernameError('Too many requests. Please wait before trying again.');
+        setUsernameLoading(false);
+        return;
+      }
+
+      // Success - show confirmation
+      setUsernameMessage(data.message || 'If an account exists with this email, your username has been sent.');
+      setUsernameStep('success');
+      setUsernameLoading(false);
+    } catch (err) {
+      console.error('Username recovery error:', err);
+      setUsernameError('Network error. Please check your connection and try again.');
+      setUsernameLoading(false);
+    }
+  };
+
+  // Open username modal
+  const openUsernameModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setShowUsernameModal(true);
+    setUsernameStep('email');
+    setUsernameEmail('');
+    setUsernameError(null);
+    setUsernameMessage(null);
+  };
+
+  // Close username modal
+  const closeUsernameModal = () => {
+    setShowUsernameModal(false);
+    setUsernameStep('email');
+    setUsernameEmail('');
+    setUsernameError(null);
+    setUsernameMessage(null);
+  };
+
   return (
     <main id="main-content" className="relative min-h-[100dvh] overflow-hidden">
+      {/* Get Help Link Styles */}
+      <style>{`
+        .get-help-link {
+          color: rgba(255, 255, 255, 0.4);
+          font-size: 0.8rem;
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        .get-help-link:hover {
+          color: #ffd700;
+        }
+      `}</style>
+
       {/* Data Stream Effect - Green background, does tunnel animation with content */}
       <DataStreamEffect tunnelMode={showTransition} />
 
@@ -201,7 +287,7 @@ export default function AgentPortalLogin() {
             )}
 
             {/* Email Field */}
-            <FormGroup label="Agent ID / Email" htmlFor="email" required>
+            <FormGroup label="Agent Email" htmlFor="email" required>
               <FormInput
                 type="email"
                 id="email"
@@ -262,8 +348,21 @@ export default function AgentPortalLogin() {
               </FormButton>
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="text-center" style={{ marginTop: '1rem' }}>
+            {/* Forgot Username/Password Links */}
+            <div className="text-center" style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center' }}>
+              <button
+                type="button"
+                onClick={openUsernameModal}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                }}
+              >
+                Forgot username?
+              </button>
               <button
                 type="button"
                 onClick={openResetModal}
@@ -277,6 +376,16 @@ export default function AgentPortalLogin() {
               >
                 Forgot password?
               </button>
+            </div>
+
+            {/* Get Help Link */}
+            <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+              <a
+                href="mailto:team@smartagentalliance.com"
+                className="get-help-link"
+              >
+                Get Help
+              </a>
             </div>
           </form>
         </FormCard>
@@ -334,6 +443,16 @@ export default function AgentPortalLogin() {
                   Back to login
                 </button>
               </div>
+
+              {/* Get Help Link */}
+              <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+                <a
+                  href="mailto:team@smartagentalliance.com"
+                  className="get-help-link"
+                >
+                  Get Help
+                </a>
+              </div>
             </form>
           </>
         ) : (
@@ -346,6 +465,85 @@ export default function AgentPortalLogin() {
               The link will expire in 15 minutes.
             </p>
             <FormButton onClick={closeResetModal}>
+              Back to Login
+            </FormButton>
+          </div>
+        )}
+      </Modal>
+
+      {/* Username Recovery Modal */}
+      <Modal isOpen={showUsernameModal} onClose={closeUsernameModal} size="md">
+        {usernameStep === 'email' ? (
+          <>
+            <ModalTitle subtitle="Enter your email and we'll send you your username." centered>
+              Forgot Username
+            </ModalTitle>
+
+            <form onSubmit={handleUsernameRequest}>
+              {/* Error Message */}
+              {usernameError && (
+                <FormMessage type="error">{usernameError}</FormMessage>
+              )}
+
+              {/* Email Field */}
+              <FormGroup label="Email Address" htmlFor="username-email" required>
+                <FormInput
+                  type="email"
+                  id="username-email"
+                  name="usernameEmail"
+                  value={usernameEmail}
+                  onChange={(e) => setUsernameEmail(e.target.value)}
+                  placeholder="agent@example.com"
+                  required
+                  autoFocus
+                />
+              </FormGroup>
+
+              {/* Submit Button */}
+              <div style={{ marginTop: '1.5rem' }}>
+                <FormButton isLoading={usernameLoading} loadingText="Sending...">
+                  Send Username
+                </FormButton>
+              </div>
+
+              {/* Cancel Link */}
+              <div className="text-center" style={{ marginTop: '1rem' }}>
+                <button
+                  type="button"
+                  onClick={closeUsernameModal}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Back to login
+                </button>
+              </div>
+
+              {/* Get Help Link */}
+              <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+                <a
+                  href="mailto:team@smartagentalliance.com"
+                  className="get-help-link"
+                >
+                  Get Help
+                </a>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📧</div>
+            <ModalTitle subtitle={usernameMessage || ''} centered>
+              Check Your Email
+            </ModalTitle>
+            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '1.5rem' }}>
+              Your username has been sent to your email.
+            </p>
+            <FormButton onClick={closeUsernameModal}>
               Back to Login
             </FormButton>
           </div>
