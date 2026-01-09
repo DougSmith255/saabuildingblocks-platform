@@ -24,7 +24,8 @@ export type SAAComponentCategory =
   | 'layouts'
   | 'forms'
   | 'typography'
-  | 'loaders';
+  | 'loaders'
+  | 'scroll-animations';
 
 export interface SAAComponent {
   id: string;
@@ -42,7 +43,7 @@ export interface SAAComponent {
 }
 
 /**
- * Complete SAA Component Registry (18 components)
+ * Complete SAA Component Registry (21 components)
  * All components from @saa/shared/components/saa
  */
 export const saaComponentRegistry: SAAComponent[] = [
@@ -214,6 +215,85 @@ export const saaComponentRegistry: SAAComponent[] = [
     tags: ['icon', '3d', 'metal', 'depth', 'shadow', 'perspective'],
   },
 
+  // ============================================
+  // SCROLL ANIMATIONS (7)
+  // ============================================
+  {
+    id: 'stacked-flipping-cards',
+    name: 'Stacked Flipping Cards',
+    category: 'scroll-animations',
+    description: '3D rotating card stack with magnetic snap. Cards flip up and away as you scroll, creating a stacked deck effect with velocity-based snapping.',
+    reactPath: '../shared/components/saa/scroll-animations/StackedFlippingCards.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'cards', '3d', 'flip', 'gsap', 'magnetic-snap', 'stack'],
+    dependencies: ['gsap'],
+  },
+  {
+    id: 'clip-path-reveal',
+    name: 'Clip-Path Reveal',
+    category: 'scroll-animations',
+    description: 'Cards reveal as you scroll with clip-path animation. Uses IntersectionObserver for natural scroll-based reveal with alternating left/right slide-in.',
+    reactPath: '../shared/components/saa/scroll-animations/ClipPathReveal.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'reveal', 'clip-path', 'intersection-observer', 'slide'],
+  },
+  {
+    id: 'horizontal-scroll-cards',
+    name: 'Horizontal Scroll Cards',
+    category: 'scroll-animations',
+    description: 'Cards slide horizontally with magnetic centering. Features velocity-based snap, mystic fog active state, portal edge styling, and infinite loop effect.',
+    reactPath: '../shared/components/saa/scroll-animations/HorizontalScrollCards.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'horizontal', 'carousel', 'gsap', 'magnetic-snap', 'portal'],
+    dependencies: ['gsap'],
+  },
+  {
+    id: 'text-blur-reveal',
+    name: 'Text Blur Reveal',
+    category: 'scroll-animations',
+    description: 'Cards blur-reveal as they scroll into view. Uses IntersectionObserver with blur filter and translate animations for a smooth focus effect.',
+    reactPath: '../shared/components/saa/scroll-animations/TextBlurReveal.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'blur', 'reveal', 'intersection-observer', 'focus'],
+  },
+  {
+    id: 'grid-card-animation',
+    name: 'Grid Card Animation',
+    category: 'scroll-animations',
+    description: '4-card grid with magnetic snap between cards. Displays cards in a 2x2 grid with velocity-based magnetic snapping and mystic fog highlighting.',
+    reactPath: '../shared/components/saa/scroll-animations/GridCardAnimation.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'grid', 'cards', 'gsap', 'magnetic-snap', 'highlight'],
+    dependencies: ['gsap'],
+  },
+  {
+    id: 'counter-animation',
+    name: 'Counter Animation',
+    category: 'scroll-animations',
+    description: 'Stats grid with counting animation. Displays statistics with animated counters that count up as you scroll, with magnetic snap and mystic fog highlighting.',
+    reactPath: '../shared/components/saa/scroll-animations/CounterAnimation.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'counter', 'stats', 'numbers', 'gsap', 'magnetic-snap'],
+    dependencies: ['gsap'],
+  },
+  {
+    id: 'diagonal-wipe-reveal',
+    name: 'Diagonal Wipe Reveal',
+    category: 'scroll-animations',
+    description: 'Cards reveal with diagonal wipe effect. Features velocity-based magnetic snap, clip-path diagonal wipe animation, and mystic fog highlighting.',
+    reactPath: '../shared/components/saa/scroll-animations/DiagonalWipeReveal.tsx',
+    converted: true,
+    source: 'custom',
+    tags: ['scroll', 'animation', 'diagonal', 'wipe', 'reveal', 'gsap', 'magnetic-snap'],
+    dependencies: ['gsap'],
+  },
+
 ];
 
 /**
@@ -283,4 +363,5 @@ export const SAA_CATEGORY_LABELS: Record<SAAComponentCategory, string> = {
   forms: 'Forms',
   typography: 'Typography',
   loaders: 'Loaders',
+  'scroll-animations': 'Scroll Animations',
 };

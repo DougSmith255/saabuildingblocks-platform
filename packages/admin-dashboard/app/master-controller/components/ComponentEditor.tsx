@@ -405,6 +405,287 @@ function ComponentPreview({ component, code, onError }: ComponentPreviewProps) {
             </m.CyberFrame>
           )
         })));
+
+      // ============================================
+      // SCROLL ANIMATIONS
+      // Note: These components require scrolling to work.
+      // Previews show static representation of the component structure.
+      // ============================================
+      case 'stacked-flipping-cards':
+        return () => (
+          <div className="w-full max-w-lg">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Stacked Flipping Cards</p>
+              <p className="text-[#dcdbd5]/70 text-xs">3D rotating card stack with magnetic snap</p>
+            </div>
+            <div className="relative h-[200px]" style={{ perspective: '1000px' }}>
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="absolute inset-0 rounded-2xl p-6 flex items-center justify-center"
+                  style={{
+                    background: i === 2
+                      ? 'radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,180,50,0.9) 100%)'
+                      : 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                    border: i === 2 ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,215,0,0.27)',
+                    transform: `translateZ(${-30 * (2 - i)}px) translateY(${20 * (2 - i)}px) scale(${1 - (2 - i) * 0.04})`,
+                    zIndex: i,
+                    opacity: 1 - (2 - i) * 0.15,
+                  }}
+                >
+                  <p className="font-bold" style={{ color: i === 2 ? '#2a2a2a' : '#e5e5e5' }}>
+                    Card {i + 1}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Requires scroll to see flip animation
+            </p>
+          </div>
+        );
+
+      case 'clip-path-reveal':
+        return () => (
+          <div className="w-full max-w-md space-y-4">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Clip-Path Reveal</p>
+              <p className="text-[#dcdbd5]/70 text-xs">Cards reveal with alternating left/right slide</p>
+            </div>
+            {[0, 1].map((i) => (
+              <div
+                key={i}
+                className={`flex items-center gap-4 ${i % 2 === 1 ? 'flex-row-reverse' : ''}`}
+              >
+                <div className="w-16 h-16 rounded-full flex-shrink-0 flex items-center justify-center"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '2px solid rgba(255,255,255,0.15)' }}>
+                  <span className="text-[#c4a94d] text-2xl">✦</span>
+                </div>
+                <div className="flex-1 p-4 rounded-xl" style={{
+                  background: 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                  border: '1px solid rgba(255,215,0,0.27)',
+                }}>
+                  <p className="text-[#ffd700] text-xs uppercase mb-1">Label {i + 1}</p>
+                  <p className="text-[#e5e5e5] font-bold">Title {i + 1}</p>
+                </div>
+              </div>
+            ))}
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Uses IntersectionObserver for scroll reveal
+            </p>
+          </div>
+        );
+
+      case 'horizontal-scroll-cards':
+        return () => (
+          <div className="w-full max-w-xl">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Horizontal Scroll Cards</p>
+              <p className="text-[#dcdbd5]/70 text-xs">Cards slide horizontally with magnetic centering</p>
+            </div>
+            <div className="flex gap-4 overflow-hidden py-4">
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className="flex-shrink-0 w-[200px] p-6 rounded-2xl flex flex-col items-center"
+                  style={{
+                    background: i === 1
+                      ? 'radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,180,50,0.9) 100%)'
+                      : 'linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))',
+                    border: i === 1 ? '2px solid rgba(180,150,50,0.5)' : '2px solid rgba(255,215,0,0.13)',
+                    transform: `scale(${i === 1 ? 1 : 0.9})`,
+                    filter: i === 1 ? 'none' : 'blur(2px)',
+                    opacity: i === 1 ? 1 : 0.7,
+                  }}
+                >
+                  <div className="w-16 h-16 rounded-full mb-3" style={{
+                    background: i === 1 ? 'rgba(20,18,12,0.85)' : 'rgba(17,17,17,0.5)',
+                    border: i === 1 ? '3px solid rgba(40,35,20,0.8)' : '3px solid #ffd700',
+                  }} />
+                  <p className="font-bold text-sm" style={{ color: i === 1 ? '#2a2a2a' : '#e5e4dd' }}>
+                    Card {i + 1}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Features portal edge styling and infinite loop
+            </p>
+          </div>
+        );
+
+      case 'text-blur-reveal':
+        return () => (
+          <div className="w-full max-w-md space-y-4">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Text Blur Reveal</p>
+              <p className="text-[#dcdbd5]/70 text-xs">Cards blur-reveal as they scroll into view</p>
+            </div>
+            {[0, 1].map((i) => (
+              <div
+                key={i}
+                className="p-5 rounded-xl flex items-center gap-4"
+                style={{
+                  background: 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                  border: '1px solid rgba(255,215,0,0.27)',
+                  filter: i === 1 ? 'blur(4px)' : 'none',
+                  opacity: i === 1 ? 0.5 : 1,
+                  transform: i === 1 ? 'translateY(10px)' : 'none',
+                }}
+              >
+                <div className="w-14 h-14 rounded-full flex-shrink-0 flex items-center justify-center"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '2px solid rgba(255,255,255,0.15)' }}>
+                  <span className="text-[#c4a94d] text-xl">✦</span>
+                </div>
+                <div>
+                  <p className="text-[#ffd700] text-xs uppercase mb-1">Label</p>
+                  <p className="text-[#e5e5e5] font-bold">Title {i + 1}</p>
+                  <p className="text-[#9ca3af] text-sm">Description text</p>
+                </div>
+              </div>
+            ))}
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Uses IntersectionObserver with blur filter
+            </p>
+          </div>
+        );
+
+      case 'grid-card-animation':
+        return () => (
+          <div className="w-full max-w-md">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Grid Card Animation</p>
+              <p className="text-[#dcdbd5]/70 text-xs">4-card grid with magnetic snap</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[0, 1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="p-4 rounded-xl text-center"
+                  style={{
+                    background: i === 0
+                      ? 'radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,180,50,0.9) 100%)'
+                      : 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                    border: i === 0 ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,215,0,0.27)',
+                    transform: `scale(${i === 0 ? 1 : 0.95})`,
+                    opacity: i === 0 ? 1 : 0.6,
+                  }}
+                >
+                  <div className="mx-auto mb-2 w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{
+                      background: i === 0 ? 'rgba(42,42,42,0.9)' : 'rgba(255,255,255,0.08)',
+                      border: i === 0 ? '2px solid rgba(42,42,42,0.7)' : '2px solid rgba(255,255,255,0.15)',
+                    }}>
+                    <span className="text-[#c4a94d]">✦</span>
+                  </div>
+                  <p className="font-bold text-sm" style={{ color: i === 0 ? '#2a2a2a' : '#e5e5e5' }}>
+                    Item {i + 1}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Velocity-based magnetic snapping
+            </p>
+          </div>
+        );
+
+      case 'counter-animation':
+        return () => (
+          <div className="w-full max-w-md">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Counter Animation</p>
+              <p className="text-[#dcdbd5]/70 text-xs">Stats grid with counting animation</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { num: '90,000+', label: 'Agents' },
+                { num: '24', label: 'Countries' },
+                { num: '80/20', label: 'Split' },
+                { num: '7 Tiers', label: 'Revenue' },
+              ].map((stat, i) => (
+                <div
+                  key={i}
+                  className="p-4 rounded-xl text-center"
+                  style={{
+                    background: i === 0
+                      ? 'radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,180,50,0.9) 100%)'
+                      : 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                    border: i === 0 ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,215,0,0.27)',
+                    transform: `scale(${i === 0 ? 1 : 0.95})`,
+                    opacity: i === 0 ? 1 : 0.6,
+                  }}
+                >
+                  <p className="text-2xl font-bold tabular-nums" style={{ color: i === 0 ? '#2a2a2a' : '#ffd700' }}>
+                    {stat.num}
+                  </p>
+                  <p className="text-xs" style={{ color: i === 0 ? '#4a4a4a' : '#9ca3af' }}>
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Counters animate as you scroll
+            </p>
+          </div>
+        );
+
+      case 'diagonal-wipe-reveal':
+        return () => (
+          <div className="w-full max-w-md">
+            <div className="text-center mb-4">
+              <p className="text-[#ffd700] text-sm mb-2">Diagonal Wipe Reveal</p>
+              <p className="text-[#dcdbd5]/70 text-xs">Cards reveal with diagonal wipe effect</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              {[0, 1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="relative overflow-hidden rounded-xl"
+                  style={{
+                    transform: `scale(${i === 0 ? 1 : 0.97})`,
+                    opacity: i > 1 ? 0.5 : 1,
+                  }}
+                >
+                  <div className="p-4" style={{
+                    background: i === 0
+                      ? 'radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%), linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,180,50,0.9) 100%)'
+                      : 'linear-gradient(180deg, rgba(40,40,40,0.98), rgba(20,20,20,0.99))',
+                  }}>
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"
+                        style={{
+                          background: i === 0 ? 'rgba(42,42,42,0.9)' : 'rgba(255,255,255,0.08)',
+                          border: i === 0 ? '2px solid rgba(42,42,42,0.7)' : '2px solid rgba(255,255,255,0.15)',
+                        }}>
+                        <span className="text-[#c4a94d] text-sm">✦</span>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase" style={{ color: i === 0 ? '#5a5a5a' : '#ffd700' }}>Label</p>
+                        <p className="font-bold text-sm" style={{ color: i === 0 ? '#2a2a2a' : '#e5e5e5' }}>Title</p>
+                      </div>
+                    </div>
+                  </div>
+                  {/* Wipe overlay for unrevealed cards */}
+                  {i > 1 && (
+                    <div className="absolute inset-0" style={{
+                      background: 'linear-gradient(135deg, rgba(30,30,30,0.96), rgba(20,20,20,0.98))',
+                      clipPath: i === 2 ? 'polygon(50% 0, 100% 0, 100% 100%, 0% 100%)' : 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
+                    }} />
+                  )}
+                  <div className="absolute inset-0 rounded-xl pointer-events-none" style={{
+                    border: i === 0 ? '2px solid rgba(180,150,50,0.5)' : '1px solid rgba(255,215,0,0.27)',
+                  }} />
+                </div>
+              ))}
+            </div>
+            <p className="text-center text-[#dcdbd5]/50 text-xs mt-4">
+              Diagonal clip-path animation
+            </p>
+          </div>
+        );
+
       default:
         return () => (
           <div className="flex items-center justify-center p-8 bg-transparent border-2 border-dashed border-[#404040] rounded-lg">
