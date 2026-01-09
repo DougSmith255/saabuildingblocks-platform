@@ -1,6 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+
+// Global instance counter to prevent duplicate scroll indicators
+let globalInstanceCount = 0;
 
 /**
  * ScrollIndicator - Double chevron scroll indicator
@@ -14,17 +17,29 @@ import { useEffect, useState } from 'react';
  * - Gold color with neon glow effect matching website theme
  * - Fixed to bottom-right with safe area inset for mobile
  * - Fades out as user scrolls down
+ * - Singleton pattern: only one instance renders at a time
  *
  * Based on: https://codepen.io/ckschmieder/pen/MGGMQG
  */
 export function ScrollIndicator() {
   const [opacity, setOpacity] = useState(1);
   const [scale, setScale] = useState(1);
+  const instanceIdRef = useRef<number | null>(null);
+  const [isFirstInstance, setIsFirstInstance] = useState(false);
 
-  // Debug: Log when component mounts
+  // Singleton pattern: only the first instance should render
   useEffect(() => {
-    console.log('[ScrollIndicator] Component mounted');
-    return () => console.log('[ScrollIndicator] Component unmounted');
+    globalInstanceCount++;
+    instanceIdRef.current = globalInstanceCount;
+    const isFirst = globalInstanceCount === 1;
+
+    console.log(`[ScrollIndicator] Instance ${instanceIdRef.current} mounted, isFirst: ${isFirst}`);
+    setIsFirstInstance(isFirst);
+
+    return () => {
+      console.log(`[ScrollIndicator] Instance ${instanceIdRef.current} unmounted`);
+      globalInstanceCount--;
+    };
   }, []);
 
   useEffect(() => {
@@ -51,7 +66,8 @@ export function ScrollIndicator() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (opacity === 0) return null;
+  // Don't render if opacity is 0 or if this is not the first instance
+  if (opacity === 0 || !isFirstInstance) return null;
 
   return (
     <>
