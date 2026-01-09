@@ -199,7 +199,7 @@ export function BuiltForFuture() {
         pin: triggerRef.current,
         pinSpacing: true,
         scrub: isMobileView ? 0.3 : 0.5, // Faster response on mobile
-        onUpdate: (self) => {
+        onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card positions with grace periods
           let cardPosition = 0;
 

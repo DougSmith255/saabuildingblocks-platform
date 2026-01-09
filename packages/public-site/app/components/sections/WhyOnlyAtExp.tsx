@@ -185,7 +185,7 @@ export function WhyOnlyAtExp() {
         pinSpacing: true,
         scrub: isMobileView ? 0.3 : 0.5, // Faster response on mobile
         animation: isMobileView ? undefined : tl,
-        onUpdate: (self) => {
+        onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card progress with grace periods
           let cardProgress = 0;
 
