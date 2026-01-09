@@ -270,8 +270,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: on mobile, start 20% higher (30% from top instead of center)
-    const pinStart = isMobile ? 'center 30%' : 'center center';
+    // Pin trigger at 55% from top (slightly below center)
+    const pinStart = 'center 55%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -283,6 +283,8 @@ export function BuiltForFuture() {
         scrub: 0.5,
         onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card positions with grace periods
+          // On mobile, cards move 2x faster relative to scroll
+          const mobileMultiplier = isMobileRef.current ? 2 : 1;
           let cardPosition = 0;
 
           if (self.progress <= GRACE) {
@@ -291,7 +293,8 @@ export function BuiltForFuture() {
             cardPosition = totalCards - 1;
           } else {
             const contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
-            cardPosition = contentProgress * (totalCards - 1);
+            // Apply mobile multiplier and clamp to valid range
+            cardPosition = Math.min(contentProgress * mobileMultiplier, 1) * (totalCards - 1);
           }
 
           // Update raw position - magnetic loop will interpolate

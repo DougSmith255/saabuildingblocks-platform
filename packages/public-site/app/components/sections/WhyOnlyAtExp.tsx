@@ -177,10 +177,10 @@ export function WhyOnlyAtExp() {
         ease: 'none',
       });
 
-      // Pin when the CARD STACK reaches center of screen
+      // Pin when the CARD STACK reaches 55% from top of viewport
       ScrollTrigger.create({
         trigger: cardStackRef.current,
-        start: 'center center',
+        start: 'center 55%',
         end: '+=200%',
         pin: triggerRef.current,
         pinSpacing: true,
@@ -188,6 +188,8 @@ export function WhyOnlyAtExp() {
         animation: tl,
         onUpdate: (self: ScrollTrigger) => {
           // Map scroll progress to card progress with grace periods
+          // On mobile, cards move 2x faster relative to scroll
+          const mobileMultiplier = isMobileRef.current ? 2 : 1;
           let cardProgress = 0;
 
           if (self.progress <= GRACE) {
@@ -195,7 +197,8 @@ export function WhyOnlyAtExp() {
           } else if (self.progress >= 1 - GRACE) {
             cardProgress = 1;
           } else {
-            cardProgress = (self.progress - GRACE) / CONTENT_RANGE;
+            // Apply mobile multiplier and clamp to 0-1 range
+            cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
           }
 
           // Update raw progress - magnetic loop will interpolate

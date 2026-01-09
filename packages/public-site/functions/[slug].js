@@ -4961,9 +4961,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         });
 
         // Create ScrollTrigger for pinning and progress tracking
+        // Pin trigger at 55% from top of viewport
+        var isMobileCards = window.innerWidth < 768;
         ScrollTrigger.create({
           trigger: triggerEl,
-          start: 'center center',
+          start: 'center 55%',
           end: '+=200%', // Extended for more buffer between card flips
           pin: true,
           pinSpacing: true,
@@ -4971,6 +4973,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           animation: tl,
           onUpdate: function(self) {
             // Map scroll progress to card progress with grace periods
+            // On mobile, cards move 2x faster relative to scroll
+            var mobileMultiplier = isMobileCards ? 2 : 1;
             let cardProgress = 0;
 
             if (self.progress <= GRACE) {
@@ -4978,7 +4982,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             } else if (self.progress >= 1 - GRACE) {
               cardProgress = 1;
             } else {
-              cardProgress = (self.progress - GRACE) / CONTENT_RANGE;
+              // Apply mobile multiplier and clamp to 0-1 range
+              cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
             }
 
             // Update raw progress - magnetic loop will interpolate
@@ -5288,14 +5293,18 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger - exact from React
         gsap.registerPlugin(ScrollTrigger);
 
+        // Pin trigger at 55% from top of viewport
+        var isMobileHorizontal = window.innerWidth < 768;
         ScrollTrigger.create({
           trigger: trigger,
-          start: 'center center',
+          start: 'center 55%',
           end: '+=300%',
           pin: true,
           pinSpacing: true,
           scrub: 0.5,
           onUpdate: function(self) {
+            // On mobile, cards move 2x faster relative to scroll
+            var mobileMultiplier = isMobileHorizontal ? 2 : 1;
             var cardPosition = 0;
 
             if (self.progress <= GRACE) {
@@ -5304,7 +5313,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               cardPosition = totalCards - 1;
             } else {
               var contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
-              cardPosition = contentProgress * (totalCards - 1);
+              // Apply mobile multiplier and clamp to valid range
+              cardPosition = Math.min(contentProgress * mobileMultiplier, 1) * (totalCards - 1);
             }
 
             rawPositionRef = cardPosition;
@@ -5317,7 +5327,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           ease: 'none',
           scrollTrigger: {
             trigger: trigger,
-            start: 'center center',
+            start: 'center 55%',
             end: '+=300%',
             scrub: 2.5
           }
