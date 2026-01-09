@@ -3777,7 +3777,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
 
     <!-- Built for Where Real Estate Is Going - Horizontal Scroll Cards -->
-    <section style="position: relative; padding-top: calc(4rem + 25px);" id="built-for-future">
+    <section style="position: relative; padding-top: 4rem;" id="built-for-future">
       <!-- Fixed background animation - outside pinned content -->
       <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; overflow: hidden; z-index: 0;">
         <!-- GrayscaleDataStream will be rendered here by JS -->
@@ -5291,8 +5291,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 50% on mobile, 40% on desktop (pins higher on screen)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 50%' : 'center 40%';
+        // Pin trigger: 65% on mobile (lower on screen), 55% on desktop
+        var pinStartHorizontal = isMobileHorizontal ? 'center 65%' : 'center 55%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,
