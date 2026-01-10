@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies (monorepo)
         run: npm ci
 
+      - name: Build shared package (required for type checking)
+        run: npm run build --workspace=@saa/shared
+
       - name: Run ESLint (${{ matrix.package }})
         working-directory: packages/${{ matrix.package }}
         run: npm run lint

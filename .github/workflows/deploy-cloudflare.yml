@@ -116,7 +116,15 @@ jobs:
           echo "📦 Installing dependencies (with npm cache enabled)..."
           npm ci --prefer-offline --no-audit
 
-      # NEW: Type check BEFORE building to catch ALL errors at once
+      # Build shared package first (required for type checking other packages)
+      - name: Build shared package
+        run: |
+          echo "🔨 Building shared package..."
+          cd packages/shared
+          npm run build
+          echo "✅ Shared package built"
+
+      # Type check BEFORE building to catch ALL errors at once
       - name: Type Check (Catch all errors upfront)
         run: |
           echo "🔍 Running TypeScript type check..."
@@ -151,14 +159,6 @@ jobs:
           else
             echo "⚠️  Static CSS not generated, proceeding without it"
           fi
-
-      # Build shared package first (required for public-site to use updated components)
-      - name: Build shared package
-        run: |
-          echo "🔨 Building shared package..."
-          cd packages/shared
-          npm run build
-          echo "✅ Shared package built"
 
       # Clean Next.js cache before build
       - name: Clean Next.js cache
