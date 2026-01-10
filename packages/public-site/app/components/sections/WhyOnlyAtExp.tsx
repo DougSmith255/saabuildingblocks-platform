@@ -110,8 +110,8 @@ export function WhyOnlyAtExp() {
   useLayoutEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Check if mobile
-    isMobileRef.current = window.innerWidth < 768;
+    // Check if mobile (stacking layout below 1020px)
+    isMobileRef.current = window.innerWidth < 1020;
 
     // Grace period: 10% at start and 10% at end of scroll range
     // Buffer zones: desktop has 10% grace at start/end, mobile has none
@@ -227,7 +227,7 @@ export function WhyOnlyAtExp() {
                 <H2 style={{ maxWidth: '100%' }}>{HEADLINE}</H2>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8 items-start">
+              <div className="grid min-[1020px]:grid-cols-2 gap-8 items-start">
                 {/* Left Column: Card Stack + Progress Bar */}
                 <div className="flex flex-col relative" style={{ zIndex: 10 }}>
                   {/* 3D Rotating Card Stack - works on both mobile and desktop */}

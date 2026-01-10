@@ -1646,8 +1646,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);
       transition: width 0.05s ease-out;
     }
-    /* Responsive grid for WhyOnly section */
-    @media (min-width: 768px) {
+    /* Responsive grid for WhyOnly section - stack below 1020px */
+    @media (min-width: 1020px) {
       .why-only-grid-responsive {
         grid-template-columns: 1fr 1fr !important;
       }
@@ -5001,8 +5001,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         let rafId = null;
 
         // Grace period: 10% at start and 10% at end of scroll range
-        // Buffer zones: desktop has 10% grace at start/end, mobile has none
-        var isMobileGrace = window.innerWidth < 768;
+        // Buffer zones: desktop has 10% grace at start/end, mobile/tablet (stacking layout) has none
+        var isMobileGrace = window.innerWidth < 1020;
         const GRACE = isMobileGrace ? 0 : 0.1;
         const CONTENT_RANGE = 1 - (GRACE * 2);
 
@@ -5097,7 +5097,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         // Create ScrollTrigger for pinning and progress tracking
         // Pin when the CARD STACK reaches 55% from top of viewport (same as home page)
-        var isMobileCards = window.innerWidth < 768;
+        var isMobileCards = window.innerWidth < 1020;
         ScrollTrigger.create({
           trigger: cardStackEl,
           start: 'center 55%',
