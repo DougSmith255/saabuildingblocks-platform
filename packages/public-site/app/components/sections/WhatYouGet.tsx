@@ -113,21 +113,21 @@ export function WhatYouGet() {
           </p>
         </div>
 
-        {/* Clip-Path Reveal Cards */}
-        <div className="space-y-10 md:space-y-12">
+        {/* Clip-Path Reveal Cards - 2-column grid on 1200px+ screens, stacked on smaller */}
+        <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-8">
           {BENEFITS.map((benefit, index) => {
             const Icon = benefit.icon;
             const cardProgress = revealProgress[index];
-            const isEven = index % 2 === 0;
+            const isLastCard = index === BENEFITS.length - 1;
 
             return (
               <div
                 key={benefit.title}
-                className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
+                className={`reveal-card flex flex-col items-center gap-4 ${isLastCard ? 'min-[1200px]:col-span-2 min-[1200px]:max-w-xl min-[1200px]:mx-auto' : ''}`}
               >
                 {/* Icon circle - transparent with backdrop blur */}
                 <div
-                  className="w-28 h-28 md:w-36 md:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
+                  className="w-24 h-24 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
                     background: 'rgba(10,10,10,0.25)',
                     backdropFilter: 'blur(8px)',
@@ -141,15 +141,15 @@ export function WhatYouGet() {
                 >
                   {/* Icon */}
                   <div className="relative z-10">
-                    <Icon3D color={ICON_GOLD} size={48}>
-                      <Icon className="w-12 h-12" />
+                    <Icon3D color={ICON_GOLD} size={40}>
+                      <Icon className="w-10 h-10" />
                     </Icon3D>
                   </div>
                 </div>
 
                 {/* Card content - glassmorphism with backdrop blur and background image */}
                 <div
-                  className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
+                  className="w-full p-6 rounded-2xl relative overflow-hidden text-center"
                   style={{
                     background: 'rgba(10,10,10,0.3)',
                     backdropFilter: 'blur(8px)',
@@ -157,7 +157,7 @@ export function WhatYouGet() {
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
                     opacity: 0.4 + cardProgress * 0.6,
-                    transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
+                    transform: `translateY(${(1 - cardProgress) * 20}px)`,
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
@@ -173,7 +173,7 @@ export function WhatYouGet() {
                   />
                   {/* Subtitle badge */}
                   <div
-                    className={`relative z-10 inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3 ${isEven ? '' : 'md:float-right md:ml-3'}`}
+                    className="relative z-10 inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3"
                     style={{
                       background: `${BRAND_YELLOW}22`,
                       color: BRAND_YELLOW,
@@ -182,18 +182,15 @@ export function WhatYouGet() {
                     {benefit.subtitle}
                   </div>
 
-                  {/* Clear float for title */}
-                  {!isEven && <div className="hidden md:block clear-both" />}
-
                   <h3
                     className="relative z-10 font-heading font-bold mb-3 text-gray-100"
                     style={{
-                      fontSize: 'clamp(20px, calc(18px + 0.5vw), 26px)',
+                      fontSize: 'clamp(18px, calc(16px + 0.5vw), 24px)',
                     }}
                   >
                     {benefit.title}
                   </h3>
-                  <p className="relative z-10 text-body leading-relaxed" style={{ color: '#bfbdb0' }}>
+                  <p className="relative z-10 text-body leading-relaxed text-sm" style={{ color: '#bfbdb0' }}>
                     {benefit.description}
                   </p>
                 </div>
