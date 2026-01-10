@@ -1418,7 +1418,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
     }
     .wyg-badge {
-      display: inline-block;
+      display: none;
       padding: 0.25rem 0.75rem;
       border-radius: 9999px;
       font-size: 0.75rem;
@@ -1427,6 +1427,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       background: rgba(255,215,0,0.13);
       color: #ffd700;
       width: fit-content;
+    }
+    @media (min-width: 600px) {
+      .wyg-badge {
+        display: inline-block;
+      }
     }
     .wyg-card-title {
       font-family: var(--font-amulya), system-ui, sans-serif;

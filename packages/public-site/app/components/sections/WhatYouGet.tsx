@@ -169,11 +169,11 @@ export function WhatYouGet() {
                       opacity: 0.25,
                     }}
                   />
-                  {/* Title row with badge - badge on icon side */}
-                  <div className={`relative z-10 flex flex-col min-[600px]:flex-row min-[600px]:items-center gap-2 min-[600px]:gap-3 mb-3 ${isEven ? '' : 'min-[600px]:flex-row-reverse'}`}>
-                    {/* Subtitle badge */}
+                  {/* Title row with badge - badge on icon side, hidden below 600px */}
+                  <div className={`relative z-10 flex min-[600px]:flex-row min-[600px]:items-center min-[600px]:gap-3 mb-3 ${isEven ? '' : 'min-[600px]:flex-row-reverse'}`}>
+                    {/* Subtitle badge - hidden below 600px to save vertical space */}
                     <div
-                      className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider w-fit"
+                      className="hidden min-[600px]:inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider w-fit"
                       style={{
                         background: `${BRAND_YELLOW}22`,
                         color: BRAND_YELLOW,
