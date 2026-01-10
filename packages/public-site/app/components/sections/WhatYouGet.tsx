@@ -129,11 +129,11 @@ export function WhatYouGet() {
                 <div
                   className="w-28 h-28 md:w-36 md:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
-                    background: 'rgba(20,20,20,0.5)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
+                    background: 'rgba(10,10,10,0.25)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
                     border: `3px solid ${BRAND_YELLOW}`,
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
                     transform: `scale(${0.8 + cardProgress * 0.2})`,
                     opacity: 0.3 + cardProgress * 0.7,
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
@@ -151,9 +151,9 @@ export function WhatYouGet() {
                 <div
                   className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
                   style={{
-                    background: 'rgba(15,15,15,0.6)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
+                    background: 'rgba(10,10,10,0.3)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
                     opacity: 0.4 + cardProgress * 0.6,
@@ -168,7 +168,7 @@ export function WhatYouGet() {
                       backgroundImage: `url(${benefit.bgImage})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
-                      opacity: 0.4,
+                      opacity: 0.25,
                     }}
                   />
                   {/* Subtitle badge */}
@@ -193,7 +193,7 @@ export function WhatYouGet() {
                   >
                     {benefit.title}
                   </h3>
-                  <p className="relative z-10 text-body leading-relaxed text-gray-400">
+                  <p className="relative z-10 text-body leading-relaxed" style={{ color: '#bfbdb0' }}>
                     {benefit.description}
                   </p>
                 </div>

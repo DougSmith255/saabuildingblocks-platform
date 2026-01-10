@@ -1311,7 +1311,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .wyg-reveal-card {
         flex-direction: row;
       }
-      .wyg-reveal-card.wyg-reverse {
+      .wyg-reveal-card.wyg-from-right {
         flex-direction: row-reverse;
       }
     }
@@ -1325,11 +1325,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(20,20,20,0.5);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(10,10,10,0.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 3px solid #ffd700;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
     @media (min-width: 768px) {
@@ -1348,9 +1348,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border-radius: 1rem;
       position: relative;
       overflow: hidden;
-      background: rgba(15,15,15,0.6);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(10,10,10,0.3);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       border: 1px solid rgba(255,215,0,0.27);
       box-shadow: 0 0 40px rgba(255,215,0,0.08), inset 0 1px 0 rgba(255,255,255,0.05);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
@@ -1360,7 +1360,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       inset: 0;
       background-size: cover;
       background-position: center;
-      opacity: 0.4;
+      opacity: 0.25;
     }
     .wyg-card-glass-overlay {
       display: none;
@@ -1370,7 +1370,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       z-index: 10;
     }
     @media (min-width: 768px) {
-      .wyg-reveal-card.wyg-reverse .wyg-card-content {
+      .wyg-reveal-card.wyg-from-right .wyg-card-content {
         text-align: right;
       }
     }
@@ -1402,7 +1402,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       margin-bottom: 0.75rem;
     }
     .wyg-card-desc {
-      color: #9ca3af;
+      color: var(--color-bodyText);
       font-family: var(--font-synonym);
       font-size: var(--font-size-body);
       line-height: 1.6;
@@ -4891,6 +4891,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         gsap.registerPlugin(ScrollTrigger);
 
         const triggerEl = document.getElementById('why-only-trigger');
+        const cardStackEl = document.getElementById('why-only-card-stack');
         const contentEl = document.getElementById('why-only-content');
         const progressFill = document.getElementById('why-only-progress-fill');
         const cards = [
@@ -4899,7 +4900,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           document.getElementById('why-only-card-2')
         ];
 
-        if (!triggerEl || !contentEl || cards.some(c => !c)) return;
+        if (!triggerEl || !cardStackEl || !contentEl || cards.some(c => !c)) return;
 
         const totalCards = cards.length;
 
@@ -5006,13 +5007,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         rafId = requestAnimationFrame(animateMagnetic);
 
         // Create ScrollTrigger for pinning and progress tracking
-        // Pin trigger at 55% from top of viewport
+        // Pin when the CARD STACK reaches 55% from top of viewport (same as home page)
         var isMobileCards = window.innerWidth < 768;
         ScrollTrigger.create({
-          trigger: triggerEl,
+          trigger: cardStackEl,
           start: 'center 55%',
-          end: '+=200%', // Extended for more buffer between card flips
-          pin: true,
+          end: '+=200%',
+          pin: triggerEl,
           pinSpacing: true,
           scrub: 0.5,
           onUpdate: function(self) {

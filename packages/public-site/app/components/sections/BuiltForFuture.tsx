@@ -259,8 +259,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: 80% on mobile, 55% on desktop
-    const pinStart = isMobile ? 'center 80%' : 'center 55%';
+    // Pin trigger: 60% on mobile, 45% on desktop (synced with agent attraction page)
+    const pinStart = isMobile ? 'center 60%' : 'center 45%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -316,7 +316,7 @@ export function BuiltForFuture() {
   const CARD_GAP = isMobile ? 16 : 24;
 
   return (
-    <section ref={sectionRef} className="relative pt-[calc(4rem+25px)] md:pt-[calc(6rem+25px)]">
+    <section ref={sectionRef} className="relative pt-[calc(6rem+25px)] pb-24">
       {/* Fixed background animation - outside pinned content */}
       <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
         <GrayscaleDataStream />
@@ -328,8 +328,7 @@ export function BuiltForFuture() {
         className="relative"
         style={{
           zIndex: 1,
-          willChange: 'transform',
-          contain: 'layout style paint',
+          overflow: 'visible',
         }}
       >
         {/* Content */}
@@ -515,7 +514,7 @@ export function BuiltForFuture() {
               </div>
 
           {/* 3D Plasma Tube Progress Bar */}
-          <div className="flex justify-center mt-8 px-6">
+          <div className="flex justify-center mt-8 mb-12 px-6">
             <div
               className="w-80 h-3 rounded-full overflow-hidden relative"
               style={{
