@@ -852,18 +852,12 @@ export default function AgentPortal() {
               </svg>
             </Link>
 
-            {/* Desktop: AGENT PORTAL title - centered in header, uses H1 styling */}
-            <h1 className="hidden md:block absolute left-1/2 -translate-x-1/2 text-[#ffd700] font-bold tracking-tight"
-              style={{
-                fontFamily: 'var(--font-amulya), system-ui, sans-serif',
-                fontSize: 'clamp(32px, calc(27.27px + 1.45vw), 72px)',
-                lineHeight: 1.2,
-                letterSpacing: '-0.01em',
-                textShadow: '0 0 20px rgba(255, 215, 0, 0.4)',
-              }}
-            >
-              AGENT PORTAL
-            </h1>
+            {/* Desktop: AGENT PORTAL title - centered in header, uses H1 component styling */}
+            <div className="hidden md:block absolute left-1/2 -translate-x-1/2">
+              <H1 className="whitespace-nowrap" style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
+                AGENT PORTAL
+              </H1>
+            </div>
 
             {/* Mobile: Section Title / Desktop: Logout Button */}
             <div className="flex items-center gap-3">
@@ -1748,7 +1742,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                 <h3 className="text-h5 group-hover:text-[#ffd700] transition-colors">
                   {card.title}
                 </h3>
-                <p className="text-caption">
+                <p className="text-body opacity-70">
                   {card.description}
                 </p>
               </div>
