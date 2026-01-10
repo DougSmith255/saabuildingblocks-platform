@@ -1,54 +1,92 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
+import { useState } from 'react';
+import { H1, H2, Tagline, CTAButton, GenericCard, FreebieDownloadModal } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { ParticleStormEffect } from '@/components/shared/hero-effects/ParticleStormEffect';
+
+interface Freebie {
+  title: string;
+  description: string;
+  image: string;
+  type: 'download' | 'canva';
+  fileUrl: string;
+  fileName: string;
+}
 
 /**
  * Freebies Page
  * Free downloadable resources for real estate agents
  */
 export default function Freebies() {
-  const freebies = [
+  const [selectedFreebie, setSelectedFreebie] = useState<Freebie | null>(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const freebies: Freebie[] = [
     {
       title: '"This or That" Posts',
-      description: 'Boost engagement with your audience with "This or That" social media posts!',
+      description: 'Boost engagement with your audience with "This or That" social media posts! (Canva Template)',
       image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/03ff008ff4e48e5c-This-or-that-WebP.webp/public',
-      downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/YxtfQekzqmQfkp7G0XX3',
+      type: 'canva',
+      fileUrl: 'https://www.canva.com/design/DAG9-31Bilg/k1JVE9ThGFrunUkHUAkj9A/view?utm_content=DAG9-31Bilg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview',
+      fileName: 'This-or-That-Posts.canva',
     },
     {
       title: 'Before Joining a Brokerage',
       description: '50+ essential questions to ask before choosing a brokerage!',
       image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/7e81caf29f9fa3c2-Brokerage-Interview-Questions-WebP-2.webp/public',
-      downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/V8owfiQpXTATkg8T8rxL',
+      type: 'download',
+      fileUrl: '/freebies/brokerage-interview-questions.pdf',
+      fileName: 'Brokerage-Interview-Questions.pdf',
     },
     {
       title: 'Open House Sign-in Sheets',
       description: 'Impress clients with these professional open house sign-in sheets! (Canva Templates)',
       image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/5ee94ed87b4d1eb7-Open-House-Sign-In-Sheets-WebP-2.webp/public',
-      downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/as4ILKy1ddg2fiQnHnHU',
+      type: 'canva',
+      fileUrl: 'https://www.canva.com/design/DAGiYencGxg/SL6_rJR3hFb9t7G477qPxg/view?utm_content=DAGiYencGxg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview',
+      fileName: 'Open-House-Sign-In-Sheets.canva',
     },
     {
       title: 'Essential Buyer Checklist',
       description: 'Navigate each step with confidence: covers Pre-Offer, Offer, and Post-Offer essentials.',
       image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/9308b112da094661-Seller-WebP.webp/public',
-      downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/LiQ8PzwEGDeXmfFIr29l',
+      type: 'download',
+      fileUrl: '/freebies/buyer-checklist.pdf',
+      fileName: 'Buyer-Checklist.pdf',
     },
     {
       title: 'Complete Listing Checklist',
       description: 'Prepare for a smooth sale with guidelines for Pre-Listing, Activation, and Closing.',
       image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/d402a3b65b35bc37-Buyer-WebP.webp/public',
-      downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/rFZeAYhV3bTJxlN7wGEt',
+      type: 'download',
+      fileUrl: '/freebies/listing-checklist.pdf',
+      fileName: 'Listing-Checklist.pdf',
     },
     {
       title: 'Home Tour Note Sheet',
       description: 'Have your clients easily track their favorite features and deal-breakers at each home visit.',
       image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/c3cc2ab729e003c9-Tour-notes-WebP.webp/public',
-      downloadLink: 'https://link.proedgemarketingcrm.com/widget/form/gbjJZg8kNe6g3GFuCDGW',
+      type: 'download',
+      fileUrl: '/freebies/home-tour-notes.pdf',
+      fileName: 'Home-Tour-Notes.pdf',
+    },
+    {
+      title: 'Business Card Templates',
+      description: 'Professional Canva business card designs to make a lasting impression!',
+      image: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/7e81caf29f9fa3c2-Brokerage-Interview-Questions-WebP-2.webp/public',
+      type: 'canva',
+      fileUrl: 'https://www.canva.com/design/DAGsotBSd5w/2AzNUwuAw_7j0c0EuRsD6g/view?utm_content=DAGsotBSd5w&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview',
+      fileName: 'Business-Card-Templates.canva',
     },
   ];
+
+  const handleFreebieClick = (freebie: Freebie) => {
+    setSelectedFreebie(freebie);
+    setShowModal(true);
+  };
 
   return (
     <main id="main-content">
@@ -65,21 +103,6 @@ export default function Freebies() {
         </section>
       </StickyHeroWrapper>
 
-      {/* Download All CTA - Premium gold card */}
-      <section className="relative py-12 px-4 sm:px-8 md:px-12">
-        <div className="max-w-[1400px] mx-auto">
-          <CyberCardGold padding="lg">
-            <NeonGoldText as="h3" className="text-h3 mb-4">Grab Everything</NeonGoldText>
-            <p className="text-body mb-8 max-w-md mx-auto">
-              All 6 resources in one download. Build your arsenal today.
-            </p>
-            <CTAButton href="https://link.proedgemarketingcrm.com/widget/form/Qy4wih5GxV4dzudHGxPV">
-              DOWNLOAD ALL ASSETS
-            </CTAButton>
-          </CyberCardGold>
-        </div>
-      </section>
-
       {/* Freebies Grid */}
       <LazySection height={800}>
         <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
@@ -93,12 +116,10 @@ export default function Freebies() {
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {freebies.map((freebie, index) => (
-                <a
+                <button
                   key={index}
-                  href={freebie.downloadLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group block"
+                  onClick={() => handleFreebieClick(freebie)}
+                  className="group block text-left w-full"
                 >
                   <GenericCard hover padding="md" className="h-full overflow-hidden">
                     <div className="flex flex-col h-full">
@@ -113,6 +134,12 @@ export default function Freebies() {
                         />
                         {/* Overlay gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        {/* Canva badge */}
+                        {freebie.type === 'canva' && (
+                          <div className="absolute top-3 right-3 bg-[#00c4cc] text-white text-xs font-semibold px-2 py-1 rounded">
+                            Canva Template
+                          </div>
+                        )}
                       </div>
 
                       {/* Content */}
@@ -124,15 +151,19 @@ export default function Freebies() {
                           {freebie.description}
                         </p>
                         <span className="inline-flex items-center gap-2 text-[#ffd700] font-medium group-hover:gap-3 transition-all" style={{ fontSize: 'var(--font-size-caption)' }}>
-                          Download Free
+                          {freebie.type === 'canva' ? 'Get Template' : 'Download Free'}
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            {freebie.type === 'canva' ? (
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            ) : (
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            )}
                           </svg>
                         </span>
                       </div>
                     </div>
                   </GenericCard>
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -195,6 +226,13 @@ export default function Freebies() {
           </div>
         </section>
       </LazySection>
+
+      {/* Freebie Download Modal */}
+      <FreebieDownloadModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        freebie={selectedFreebie}
+      />
     </main>
   );
 }

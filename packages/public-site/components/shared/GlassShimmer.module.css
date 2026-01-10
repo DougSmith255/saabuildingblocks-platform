@@ -72,6 +72,12 @@
 /* Mobile optimization - use solid background to prevent color shift during scroll */
 /* backdrop-filter causes color changes when content behind header moves (address bar, scrolling) */
 @media (max-width: 768px) {
+  .glassContainer {
+    /* Prevent tap highlight and touch-induced color changes */
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+  }
+
   .glassBase {
     /* Disable backdrop-filter on mobile to prevent color shift */
     backdrop-filter: none !important;
@@ -82,8 +88,18 @@
     background:
       linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22)),
       repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px) !important;
-    /* Prevent any repaints during scroll */
+    /* Prevent any repaints during scroll/touch */
     will-change: auto;
+    /* Prevent tap highlight */
+    -webkit-tap-highlight-color: transparent !important;
+  }
+
+  /* Prevent active state from changing appearance */
+  .glassBase:active,
+  .glassContainer:active {
+    background:
+      linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22)),
+      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px) !important;
   }
 
   .glassBase::after {
@@ -96,6 +112,8 @@
   .shimmerGradient {
     /* Reduce shimmer opacity on mobile to prevent visual shifts */
     opacity: 0.5;
+    /* Prevent tap highlight */
+    -webkit-tap-highlight-color: transparent !important;
   }
 }
 
