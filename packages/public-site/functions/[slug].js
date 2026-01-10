@@ -1374,6 +1374,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         text-align: right;
       }
     }
+    .wyg-title-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    @media (min-width: 600px) {
+      .wyg-title-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+      }
+    }
+    @media (min-width: 768px) {
+      .wyg-reveal-card.wyg-from-right .wyg-title-row {
+        flex-direction: row-reverse;
+      }
+    }
     .wyg-badge {
       display: inline-block;
       padding: 0.25rem 0.75rem;
@@ -1381,25 +1399,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
       background: rgba(255,215,0,0.13);
       color: #ffd700;
-    }
-    @media (min-width: 768px) {
-      .wyg-reveal-card.wyg-reverse .wyg-badge {
-        float: right;
-        margin-left: 0.75rem;
-      }
-    }
-    .wyg-clear {
-      clear: both;
+      width: fit-content;
     }
     .wyg-card-title {
       font-family: var(--font-amulya), system-ui, sans-serif;
       font-weight: 700;
       font-size: clamp(20px, calc(18px + 0.5vw), 26px);
       color: var(--color-heading, #f5f5f0);
-      margin-bottom: 0.75rem;
     }
     .wyg-card-desc {
       color: var(--color-bodyText);
@@ -3388,8 +3396,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-connected-leadership/public');"></div>
               <div class="wyg-card-glass-overlay"></div>
               <div class="wyg-card-content-inner">
-                <span class="wyg-badge">Leadership</span>
-                <h3 class="wyg-card-title">Connected Leadership and Community</h3>
+                <div class="wyg-title-row">
+                  <span class="wyg-badge">Leadership</span>
+                  <h3 class="wyg-card-title">Connected Leadership and Community</h3>
+                </div>
                 <p class="text-body wyg-card-desc">Big enough to back you. Small enough to know you. Real access, real wins, real support.</p>
               </div>
             </div>
@@ -3404,8 +3414,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-passive-income/public');"></div>
               <div class="wyg-card-glass-overlay"></div>
               <div class="wyg-card-content-inner">
-                <span class="wyg-badge">Income</span>
-                <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
+                <div class="wyg-title-row">
+                  <span class="wyg-badge">Income</span>
+                  <h3 class="wyg-card-title">Passive Income Infrastructure</h3>
+                </div>
                 <p class="text-body wyg-card-desc">We handle the structure so you can build long-term income without relying solely on transactions.</p>
               </div>
             </div>
@@ -3420,8 +3432,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-done-for-you/public');"></div>
               <div class="wyg-card-glass-overlay"></div>
               <div class="wyg-card-content-inner">
-                <span class="wyg-badge">Systems</span>
-                <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
+                <div class="wyg-title-row">
+                  <span class="wyg-badge">Systems</span>
+                  <h3 class="wyg-card-title">Done-For-You Production Systems</h3>
+                </div>
                 <p class="text-body wyg-card-desc">Curated systems designed to save time, not create tech overload.</p>
               </div>
             </div>
@@ -3436,8 +3450,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-elite-training/public');"></div>
               <div class="wyg-card-glass-overlay"></div>
               <div class="wyg-card-content-inner">
-                <span class="wyg-badge">Training</span>
-                <h3 class="wyg-card-title">Elite Training Libraries</h3>
+                <div class="wyg-title-row">
+                  <span class="wyg-badge">Training</span>
+                  <h3 class="wyg-card-title">Elite Training Libraries</h3>
+                </div>
                 <p class="text-body wyg-card-desc">AI, social media, investing, and modern production systems, available when you need them.</p>
               </div>
             </div>
@@ -3452,8 +3468,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div class="wyg-card-bg" style="background-image: url('https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-tab-private-referrals/public');"></div>
               <div class="wyg-card-glass-overlay"></div>
               <div class="wyg-card-content-inner">
-                <span class="wyg-badge">Referrals</span>
-                <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
+                <div class="wyg-title-row">
+                  <span class="wyg-badge">Referrals</span>
+                  <h3 class="wyg-card-title">Private Referrals &amp; Global Collaboration</h3>
+                </div>
                 <p class="text-body wyg-card-desc">Warm introductions and deal flow inside a global agent network.</p>
               </div>
             </div>

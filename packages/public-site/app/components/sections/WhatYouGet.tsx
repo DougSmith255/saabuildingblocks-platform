@@ -171,28 +171,27 @@ export function WhatYouGet() {
                       opacity: 0.25,
                     }}
                   />
-                  {/* Subtitle badge */}
-                  <div
-                    className={`relative z-10 inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3 ${isEven ? '' : 'md:float-right md:ml-3'}`}
-                    style={{
-                      background: `${BRAND_YELLOW}22`,
-                      color: BRAND_YELLOW,
-                    }}
-                  >
-                    {benefit.subtitle}
+                  {/* Title row with badge - badge on icon side */}
+                  <div className={`relative z-10 flex flex-col min-[600px]:flex-row min-[600px]:items-center gap-2 min-[600px]:gap-3 mb-3 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+                    {/* Subtitle badge */}
+                    <div
+                      className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider w-fit"
+                      style={{
+                        background: `${BRAND_YELLOW}22`,
+                        color: BRAND_YELLOW,
+                      }}
+                    >
+                      {benefit.subtitle}
+                    </div>
+                    <h3
+                      className="font-heading font-bold text-gray-100"
+                      style={{
+                        fontSize: 'clamp(20px, calc(18px + 0.5vw), 26px)',
+                      }}
+                    >
+                      {benefit.title}
+                    </h3>
                   </div>
-
-                  {/* Clear float for title */}
-                  {!isEven && <div className="hidden md:block clear-both" />}
-
-                  <h3
-                    className="relative z-10 font-heading font-bold mb-3 text-gray-100"
-                    style={{
-                      fontSize: 'clamp(20px, calc(18px + 0.5vw), 26px)',
-                    }}
-                  >
-                    {benefit.title}
-                  </h3>
                   <p className="relative z-10 text-body leading-relaxed" style={{ color: '#bfbdb0' }}>
                     {benefit.description}
                   </p>
