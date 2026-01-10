@@ -1889,10 +1889,23 @@ function TeamCallsSection() {
 // ============================================================================
 
 // Helper: Extract Canva design ID and generate thumbnail URL
-function getCanvaThumbnail(canvaUrl: string, width = 400, height = 300): string {
-  const match = canvaUrl.match(/design\/([A-Za-z0-9_-]+)/);
-  if (!match) return '';
-  return `https://www.canva.com/design/${match[1]}/screen?width=${width}&height=${height}`;
+// Format icons for template cards (Canva thumbnail API no longer works - blocked by Cloudflare)
+const FORMAT_ICONS: Record<string, string> = {
+  Story: '📱',
+  Square: '◻️',
+  Wide: '🖼️',
+  Carousel: '🎠',
+  Flyer: '📄',
+  Print: '🖨️',
+  Brochure: '📖',
+  Interactive: '🎯',
+  Ad: '📣',
+  Guide: '📚',
+  Slides: '📊',
+};
+
+function getFormatIcon(format: string): string {
+  return FORMAT_ICONS[format] || '🎨';
 }
 
 // Template data structure
@@ -2066,29 +2079,8 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
 
 function TemplatesSection() {
   const [activeCategory, setActiveCategory] = useState(TEMPLATE_CATEGORIES[0].id);
-  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
-  const categoryScrollRef = useRef<HTMLDivElement>(null);
 
   const currentCategory = TEMPLATE_CATEGORIES.find(c => c.id === activeCategory) || TEMPLATE_CATEGORIES[0];
-
-  // Scroll active category into view
-  const scrollCategoryIntoView = (categoryId: string) => {
-    const container = categoryScrollRef.current;
-    if (!container) return;
-    const button = container.querySelector(`[data-category="${categoryId}"]`);
-    if (button) {
-      button.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }
-  };
-
-  const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    scrollCategoryIntoView(categoryId);
-  };
-
-  const handleImageError = (templateUrl: string) => {
-    setImageErrors(prev => new Set(prev).add(templateUrl));
-  };
 
   return (
     <SectionWrapper>
@@ -2100,40 +2092,29 @@ function TemplatesSection() {
           </p>
         </div>
 
-        {/* Category Pills - Horizontal Scroll */}
-        <div className="relative">
-          {/* Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
-
-          <div
-            ref={categoryScrollRef}
-            className="flex gap-2 overflow-x-auto scrollbar-hide px-2 py-1 -mx-2"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {TEMPLATE_CATEGORIES.map((category) => (
-              <button
-                key={category.id}
-                data-category={category.id}
-                onClick={() => handleCategoryClick(category.id)}
-                className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
-                  activeCategory === category.id
-                    ? 'bg-[#ffd700] text-black'
-                    : 'bg-black/30 border border-white/10 text-[#e5e4dd]/80 hover:border-[#ffd700]/30 hover:text-[#ffd700]'
-                }`}
-              >
-                <span>{category.icon}</span>
-                <span>{category.label}</span>
-                <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  activeCategory === category.id
-                    ? 'bg-black/20 text-black'
-                    : 'bg-white/10 text-[#e5e4dd]/60'
-                }`}>
-                  {category.templates.length}
-                </span>
-              </button>
-            ))}
-          </div>
+        {/* Category Grid - All visible, no scrolling */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+          {TEMPLATE_CATEGORIES.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setActiveCategory(category.id)}
+              className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                activeCategory === category.id
+                  ? 'bg-[#ffd700] text-black shadow-lg shadow-[#ffd700]/20'
+                  : 'bg-black/40 border border-white/10 text-[#e5e4dd]/80 hover:border-[#ffd700]/30 hover:text-[#ffd700] hover:bg-black/60'
+              }`}
+            >
+              <span className="text-base">{category.icon}</span>
+              <span className="truncate">{category.label}</span>
+              <span className={`text-xs px-1.5 py-0.5 rounded-full ml-auto ${
+                activeCategory === category.id
+                  ? 'bg-black/20 text-black'
+                  : 'bg-white/10 text-[#e5e4dd]/60'
+              }`}>
+                {category.templates.length}
+              </span>
+            </button>
+          ))}
         </div>
 
         {/* Category Description */}
@@ -2143,72 +2124,57 @@ function TemplatesSection() {
 
         {/* Templates Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-          {currentCategory.templates.map((template, index) => {
-            const thumbnailUrl = getCanvaThumbnail(template.url, 400, 300);
-            const hasError = imageErrors.has(template.url);
+          {currentCategory.templates.map((template, index) => (
+            <a
+              key={`${template.name}-${template.variant || ''}-${index}`}
+              href={template.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
+            >
+              {/* Icon Preview (Canva thumbnails blocked by Cloudflare) */}
+              <div className="relative aspect-[4/3] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden flex items-center justify-center">
+                <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                  {getFormatIcon(template.format)}
+                </span>
 
-            return (
-              <a
-                key={`${template.name}-${template.variant || ''}-${index}`}
-                href={template.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
-              >
-                {/* Thumbnail */}
-                <div className="relative aspect-[4/3] bg-black/50 overflow-hidden">
-                  {thumbnailUrl && !hasError ? (
-                    <img
-                      src={thumbnailUrl}
-                      alt={template.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      onError={() => handleImageError(template.url)}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-4xl bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a]">
-                      🎨
-                    </div>
+                {/* Format Badge */}
+                <div className="absolute top-2 left-2 flex gap-1">
+                  <span className="px-2 py-0.5 text-xs font-medium rounded bg-black/70 text-[#e5e4dd] backdrop-blur-sm">
+                    {template.format}
+                  </span>
+                  {template.variant && (
+                    <span className={`px-1.5 py-0.5 text-xs font-bold rounded backdrop-blur-sm ${
+                      template.variant === 'W'
+                        ? 'bg-white/90 text-black'
+                        : 'bg-black/90 text-white border border-white/20'
+                    }`}>
+                      {template.variant}
+                    </span>
                   )}
-
-                  {/* Format Badge */}
-                  <div className="absolute top-2 left-2 flex gap-1">
-                    <span className="px-2 py-0.5 text-xs font-medium rounded bg-black/70 text-[#e5e4dd] backdrop-blur-sm">
-                      {template.format}
-                    </span>
-                    {template.variant && (
-                      <span className={`px-1.5 py-0.5 text-xs font-bold rounded backdrop-blur-sm ${
-                        template.variant === 'W'
-                          ? 'bg-white/90 text-black'
-                          : 'bg-black/90 text-white border border-white/20'
-                      }`}>
-                        {template.variant}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
-                      Open in Canva
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                        <polyline points="15 3 21 3 21 9" />
-                        <line x1="10" y1="14" x2="21" y2="3" />
-                      </svg>
-                    </span>
-                  </div>
                 </div>
 
-                {/* Template Name */}
-                <div className="px-3 py-2">
-                  <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors">
-                    {template.name}
-                  </p>
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
+                    Open in Canva
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                  </span>
                 </div>
-              </a>
-            );
-          })}
+              </div>
+
+              {/* Template Name */}
+              <div className="px-3 py-2">
+                <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors">
+                  {template.name}
+                </p>
+              </div>
+            </a>
+          ))}
         </div>
 
         {/* Canva Login Reminder */}
