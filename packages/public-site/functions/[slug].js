@@ -1412,6 +1412,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .why-only-section {
       position: relative;
     }
+    .why-only-inner-content {
+      padding: 4rem 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .why-only-inner-content {
+        padding: 6rem 1.5rem;
+      }
+    }
     .why-only-cta-wrapper {
       display: flex;
       justify-content: center;
@@ -1420,6 +1428,43 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .why-only-cta-wrapper {
         justify-content: flex-start;
       }
+    }
+    .why-only-figcaption {
+      position: relative;
+      z-index: 10;
+      padding: 1.5rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (min-width: 768px) {
+      .why-only-figcaption {
+        padding: 2rem;
+      }
+    }
+    .why-only-differentiator {
+      font-family: var(--font-heading), system-ui, sans-serif;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 768px) {
+      .why-only-differentiator {
+        font-size: 1.875rem;
+      }
+    }
+    .why-only-key-point {
+      font-size: 1.125rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .why-only-tagline {
+      color: #ffd700;
+      font-style: italic;
+      font-size: 1.25rem;
+      margin-bottom: 1.5rem;
     }
     .why-only-trigger {
       /* This gets pinned by GSAP ScrollTrigger */
@@ -1456,14 +1501,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       height: 280px;
       width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
       perspective: 1200px;
     }
     @media (min-width: 768px) {
       .why-only-card-stack {
         height: 340px;
-        max-width: 550px;
       }
     }
     .why-only-card {
@@ -3428,7 +3470,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           <div class="why-only-noise"></div>
 
           <!-- Content -->
-          <div style="position: relative; z-index: 10; padding: 4rem 1.5rem;">
+          <div style="position: relative; z-index: 10; padding: 4rem 1.5rem;" class="why-only-inner-content">
             <div style="max-width: 1600px; margin: 0 auto;">
               <!-- Section Header -->
               <div class="text-center" style="margin-bottom: 2rem;">
@@ -3485,10 +3527,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%);"></div>
                   </div>
-                  <figcaption style="position: relative; z-index: 10; padding: 1.5rem 2rem; height: 100%; display: flex; flex-direction: column; justify-content: center;">
-                    <p style="font-family: var(--font-heading), system-ui, sans-serif; font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: bold; color: #ffd700; margin-bottom: 1rem;">eXp Realty Sponsorship is Different.</p>
-                    <p class="text-body" style="line-height: 1.6; margin-bottom: 1rem;">It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.</p>
-                    <p class="text-body" style="color: #ffd700; font-style: italic; font-size: clamp(18px, 2vw, 20px); margin-bottom: 1.5rem;">When you succeed, we succeed.</p>
+                  <figcaption class="why-only-figcaption">
+                    <p class="why-only-differentiator">eXp Realty Sponsorship is Different.</p>
+                    <p class="text-body why-only-key-point">It is the only brokerage that allows sponsors to build and deliver real systems, training, and support. Most sponsors don't use that freedom. Smart Agent Alliance does.</p>
+                    <p class="text-body why-only-tagline">When you succeed, we succeed.</p>
                     <div class="why-only-cta-wrapper">
                       <a href="/exp-realty-sponsor" class="cta-button" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; width: fit-content;">See Our Systems</a>
                     </div>
@@ -5343,8 +5385,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 60% on mobile (was 80%), 45% on desktop (was 40%)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 60%' : 'center 45%';
+        // Pin trigger: 60% on mobile, 50% on desktop (synced with home page)
+        var pinStartHorizontal = isMobileHorizontal ? 'center 60%' : 'center 50%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,
