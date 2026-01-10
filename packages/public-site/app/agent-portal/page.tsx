@@ -904,7 +904,7 @@ export default function AgentPortal() {
 
 
       {/* Mobile Bottom Navigation - App-like experience */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-[#ffd700]/20 pb-safe">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-[#ffd700]/20 pb-safe">
         <div className="flex justify-around items-center h-16">
           {[
             { id: 'dashboard' as SectionId, label: 'Home', icon: '⬡' },
@@ -942,7 +942,7 @@ export default function AgentPortal() {
 
       {/* Mobile More Menu Overlay */}
       {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/95 backdrop-blur-xl overflow-y-auto pb-20">
+        <div className="md:hidden fixed inset-0 z-40 bg-black overflow-y-auto pb-20">
           <div className="p-4 pt-20">
             {/* User Profile Card */}
             <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-[#ffd700]/20 mb-6">
@@ -1025,7 +1025,7 @@ export default function AgentPortal() {
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
-              <div className="rounded-xl p-4 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15">
+              <div className="rounded-xl p-4 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
                 {/* Hidden file input for profile picture upload */}
                 {/* Using specific MIME types + extensions for cross-platform compatibility */}
                 <input
@@ -1102,7 +1102,7 @@ export default function AgentPortal() {
               </div>
 
               {/* Navigation Menu */}
-              <nav className="rounded-xl p-4 space-y-2 bg-black/30 backdrop-blur-sm border border-[#ffd700]/15">
+              <nav className="rounded-xl p-4 space-y-2 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
               {navItems.map((item) => (
                 <button
                   key={item.id}
@@ -1200,7 +1200,7 @@ export default function AgentPortal() {
           onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+          <div className="fixed inset-0 bg-black md:bg-black/90 md:backdrop-blur-md" />
 
           {/* Modal */}
           <div
@@ -1450,7 +1450,7 @@ export default function AgentPortal() {
           onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+          <div className="fixed inset-0 bg-black md:bg-black/90 md:backdrop-blur-md" />
 
           {/* Modal */}
           <div
@@ -4107,7 +4107,7 @@ function AgentPagesSection({
 // ============================================================================
 function SectionWrapper({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl p-6 sm:p-8 bg-black/30 backdrop-blur-sm border border-[#ffd700]/10">
+    <div className="rounded-xl p-6 sm:p-8 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/10">
       {title && (
         <div className="mb-[50px]">
           <H2>{title}</H2>
