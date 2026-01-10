@@ -12,9 +12,6 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [shouldLoadMobileMenu, setShouldLoadMobileMenu] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [scrollAnchor, setScrollAnchor] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [isPortalClicked, setIsPortalClicked] = useState(false);
   const [isLoginSlideOut, setIsLoginSlideOut] = useState(false);
   // Note: 404 pages hide the entire header via CSS :has() selector, so no is404Page state needed
@@ -30,6 +27,14 @@ export default function Header() {
   const pathname = usePathname();
 
   const portalClickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Scroll state ref - declared early so it can be used in route change effect
+  const scrollStateRef = useRef({
+    lastScrollY: 0,
+    scrollAnchor: 0,
+    scrollDirection: null as 'up' | 'down' | null,
+    isHidden: false,
+  });
 
   // Track mount state and trigger slide-in animation
   useEffect(() => {
@@ -52,9 +57,13 @@ export default function Header() {
   // Reset header visibility on route change - ensures header is visible on new pages
   useEffect(() => {
     setIsHidden(false);
-    setLastScrollY(0);
-    setScrollAnchor(0);
-    setScrollDirection(null);
+    // Reset scroll state ref on route change
+    if (scrollStateRef.current) {
+      scrollStateRef.current.lastScrollY = 0;
+      scrollStateRef.current.scrollAnchor = 0;
+      scrollStateRef.current.scrollDirection = null;
+      scrollStateRef.current.isHidden = false;
+    }
   }, [pathname]);
 
   // Font loading handled by page-level settling mask
@@ -91,63 +100,66 @@ export default function Header() {
 
 
   // Handle scroll for header hide/show (500px down to hide, 250px up to show)
-  // Throttled to 100ms to reduce CPU usage (was running every frame at 60fps)
+  // Using refs to avoid stale closure issues during fast scrolling
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    scrollStateRef.current.isHidden = isHidden;
+  }, [isHidden]);
+
   useEffect(() => {
     let ticking = false;
-    let lastKnownScrollY = window.scrollY;
-
-    const updateHeader = () => {
-      const currentScrollY = lastKnownScrollY;
-
-      // Always show header at top of page (with small buffer for mobile bounce)
-      // This takes priority over all other logic
-      if (currentScrollY <= 50) {
-        if (isHidden) {
-          setIsHidden(false);
-        }
-        // Reset anchor and direction when at top
-        setScrollAnchor(0);
-        setScrollDirection(null);
-        setLastScrollY(currentScrollY);
-        ticking = false;
-        return;
-      }
-
-      // Detect scroll direction
-      const currentDirection = currentScrollY > lastScrollY ? 'down' : 'up';
-
-      // If direction changed, reset anchor point
-      if (currentDirection !== scrollDirection) {
-        setScrollAnchor(lastScrollY);
-        setScrollDirection(currentDirection);
-      }
-
-      // Calculate scroll distance from anchor
-      const scrollDistance = Math.abs(currentScrollY - scrollAnchor);
-
-      // Apply thresholds: 500px down to hide, 250px up to show
-      if (currentDirection === 'down' && scrollDistance >= 500) {
-        setIsHidden(true);
-      } else if (currentDirection === 'up' && scrollDistance >= 250) {
-        setIsHidden(false);
-      }
-
-      setLastScrollY(currentScrollY);
-      ticking = false;
-    };
 
     const handleScroll = () => {
-      lastKnownScrollY = window.scrollY;
-      if (!ticking) {
-        // Use requestAnimationFrame for smooth throttling
-        requestAnimationFrame(updateHeader);
-        ticking = true;
-      }
+      if (ticking) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        const state = scrollStateRef.current;
+
+        // Always show header at top of page (with small buffer for mobile bounce)
+        if (currentScrollY <= 50) {
+          if (state.isHidden) {
+            setIsHidden(false);
+            state.isHidden = false;
+          }
+          state.scrollAnchor = 0;
+          state.scrollDirection = null;
+          state.lastScrollY = currentScrollY;
+          ticking = false;
+          return;
+        }
+
+        // Detect scroll direction
+        const currentDirection = currentScrollY > state.lastScrollY ? 'down' : 'up';
+
+        // If direction changed, reset anchor point
+        if (currentDirection !== state.scrollDirection) {
+          state.scrollAnchor = state.lastScrollY;
+          state.scrollDirection = currentDirection;
+        }
+
+        // Calculate scroll distance from anchor
+        const scrollDistance = Math.abs(currentScrollY - state.scrollAnchor);
+
+        // Apply thresholds: 500px down to hide, 250px up to show
+        if (currentDirection === 'down' && scrollDistance >= 500 && !state.isHidden) {
+          setIsHidden(true);
+          state.isHidden = true;
+        } else if (currentDirection === 'up' && scrollDistance >= 250 && state.isHidden) {
+          setIsHidden(false);
+          state.isHidden = false;
+        }
+
+        state.lastScrollY = currentScrollY;
+        ticking = false;
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY, scrollAnchor, scrollDirection, isHidden]);
+  }, []); // Empty dependency array - refs handle the state
 
 
   // Handle hamburger menu click - lazy load mobile menu on first click
@@ -195,6 +207,8 @@ export default function Header() {
           // CRITICAL: Disable pointer events on entire header when modal is open
           // This allows clicks to pass through to modal elements (like X button)
           pointerEvents: isHidden ? 'none' : 'auto',
+          // Prevent tap highlight color change on mobile
+          WebkitTapHighlightColor: 'transparent',
         }}
       >
         {/* Sliding container for background and content */}
@@ -217,6 +231,8 @@ export default function Header() {
               : ((isHidden || isLoginSlideOut) ? 'translateY(-100%) translateZ(0)' : 'translateY(0) translateZ(0)'),
             // Disable pointer events when header is hidden (modal open) to allow clicks through to modal X button
             pointerEvents: isHidden ? 'none' : 'auto',
+            // Prevent tap highlight color change on mobile
+            WebkitTapHighlightColor: 'transparent',
           }}
         >
           {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
@@ -283,7 +299,7 @@ export default function Header() {
               </svg>
             </Link>
 
-            {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1450px (xlg breakpoint) */}
+            {/* Desktop Navigation - Hidden on mobile via CSS, shown at ≥1600px (xlg breakpoint) */}
             <div className="hidden xlg:block">
               <DesktopNav isPortalClicked={isPortalClicked} handlePortalClick={handlePortalClick} />
             </div>
@@ -603,15 +619,20 @@ export default function Header() {
           font-family: var(--font-taskor), Taskor, system-ui, sans-serif !important;
           color: inherit !important;
           background-color: transparent !important;
-          /* Relative positioning within header-container flex */
-          position: relative;
-          /* Move down 2px for better vertical alignment */
-          top: 2px;
-          /* Negative margin to pull closer to edge - matches logo spacing on left */
-          margin-right: -17px;
+          /* Static positioning for stability - use transform for alignment */
+          position: static;
           width: 65px;
           height: 65px;
+          min-width: 65px;
+          min-height: 65px;
           flex-shrink: 0;
+          /* GPU acceleration for stability during scroll */
+          transform: translateZ(0);
+          will-change: transform;
+          /* Vertical alignment via transform instead of top */
+          transform: translateY(2px) translateZ(0);
+          /* Fixed right margin for consistent spacing */
+          margin-right: -12px;
         }
 
         /* Prevent color change on hover */
@@ -623,7 +644,14 @@ export default function Header() {
         .hamburger-svg {
           width: 65px;
           height: 65px;
+          min-width: 65px;
+          min-height: 65px;
           transition: transform 600ms cubic-bezier(0.4, 0, 0.2, 1);
+          /* Prevent layout shifts */
+          contain: strict;
+          /* GPU acceleration */
+          transform: translateZ(0);
+          will-change: transform;
         }
 
         .line {
@@ -649,7 +677,7 @@ export default function Header() {
 
         /* Animate to X when menu is open */
         .hamburger.menu-open .hamburger-svg {
-          transform: rotate(-45deg);
+          transform: rotate(-45deg) translateZ(0);
         }
 
         .hamburger.menu-open .line-top-bottom {
@@ -672,18 +700,14 @@ export default function Header() {
           }
         }
 
-        /* Mobile header height - fixed 64px below 1450px breakpoint */
-        @media (max-width: 90.625rem) {
+        /* Mobile header height - fixed 64px below 1600px breakpoint (xlg) */
+        @media (max-width: 100rem) {
           .header-container {
             height: 64px !important;
           }
         }
 
         @media (max-width: 550px) {
-          .header-container {
-            padding-left: 15px !important;
-            padding-right: 15px !important;
-          }
           .header-container .header-btn,
           .header-container .cta-button {
             display: none !important;
@@ -691,7 +715,7 @@ export default function Header() {
         }
 
         /* Ensure header container maintains flexbox on desktop */
-        @media (min-width: 90.625rem) {
+        @media (min-width: 100rem) {
           .header-container {
             padding-left: 32px !important;
             padding-right: 32px !important;

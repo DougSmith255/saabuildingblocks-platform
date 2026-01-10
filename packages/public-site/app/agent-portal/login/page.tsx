@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { H1, Modal, FormCard, FormButton, FormInput, FormGroup, ModalTitle, FormMessage } from '@saa/shared/components/saa';
 
 // Initial progress values for the data stream effect
@@ -17,11 +18,35 @@ type ResetStep = 'email' | 'success';
 // Username Recovery Modal States
 type UsernameStep = 'email' | 'success';
 
+// New Password Reset (with token) Modal States
+type NewPasswordStep = 'form' | 'success';
+
 /**
  * Agent Portal Login Page
  * Features the Data Stream effect in green with centered login form in CyberCardGold
  */
 export default function AgentPortalLogin() {
+  return (
+    <Suspense fallback={<LoginPageSkeleton />}>
+      <AgentPortalLoginContent />
+    </Suspense>
+  );
+}
+
+function LoginPageSkeleton() {
+  return (
+    <main id="main-content" className="relative min-h-[100dvh] overflow-hidden bg-black">
+      <div className="relative z-10 min-h-[100dvh] flex items-center justify-center px-4">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-12 w-64 bg-white/10 rounded mb-8"></div>
+          <div className="h-96 w-full max-w-md bg-white/5 rounded-lg"></div>
+        </div>
+      </div>
+    </main>
+  );
+}
+
+function AgentPortalLoginContent() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -47,6 +72,29 @@ export default function AgentPortalLogin() {
   const [usernameLoading, setUsernameLoading] = useState(false);
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
+
+  // New password (with token from email) state
+  const [showNewPasswordModal, setShowNewPasswordModal] = useState(false);
+  const [newPasswordStep, setNewPasswordStep] = useState<NewPasswordStep>('form');
+  const [newPasswordToken, setNewPasswordToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [newPasswordLoading, setNewPasswordLoading] = useState(false);
+  const [newPasswordError, setNewPasswordError] = useState<string | null>(null);
+
+  // Get search params to check for reset_token
+  const searchParams = useSearchParams();
+
+  // Check for reset_token in URL and open modal
+  useEffect(() => {
+    const resetToken = searchParams?.get('reset_token');
+    if (resetToken) {
+      setNewPasswordToken(resetToken);
+      setShowNewPasswordModal(true);
+    }
+  }, [searchParams]);
 
   // Check if already logged in
   useEffect(() => {
@@ -239,6 +287,99 @@ export default function AgentPortalLogin() {
     setUsernameEmail('');
     setUsernameError(null);
     setUsernameMessage(null);
+  };
+
+  // New password submit handler (with token from email)
+  const handleNewPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setNewPasswordLoading(true);
+    setNewPasswordError(null);
+
+    // Validate passwords match
+    if (newPassword !== confirmPassword) {
+      setNewPasswordError('Passwords do not match.');
+      setNewPasswordLoading(false);
+      return;
+    }
+
+    // Validate password strength
+    if (newPassword.length < 8) {
+      setNewPasswordError('Password must be at least 8 characters.');
+      setNewPasswordLoading(false);
+      return;
+    }
+
+    if (!/[a-z]/.test(newPassword)) {
+      setNewPasswordError('Password must contain at least one lowercase letter.');
+      setNewPasswordLoading(false);
+      return;
+    }
+
+    if (!/[A-Z]/.test(newPassword)) {
+      setNewPasswordError('Password must contain at least one uppercase letter.');
+      setNewPasswordLoading(false);
+      return;
+    }
+
+    if (!/[0-9]/.test(newPassword)) {
+      setNewPasswordError('Password must contain at least one number.');
+      setNewPasswordLoading(false);
+      return;
+    }
+
+    if (!/[^a-zA-Z0-9]/.test(newPassword)) {
+      setNewPasswordError('Password must contain at least one special character.');
+      setNewPasswordLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${AUTH_API_URL}/api/auth/password-reset/confirm`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: newPasswordToken,
+          password: newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setNewPasswordError(data.message || 'Failed to reset password. Please try again.');
+        setNewPasswordLoading(false);
+        return;
+      }
+
+      // Success
+      setNewPasswordStep('success');
+      setNewPasswordLoading(false);
+
+      // Clear URL params after successful reset
+      if (typeof window !== 'undefined') {
+        window.history.replaceState({}, '', '/agent-portal/login');
+      }
+    } catch (err) {
+      console.error('New password error:', err);
+      setNewPasswordError('Network error. Please check your connection and try again.');
+      setNewPasswordLoading(false);
+    }
+  };
+
+  // Close new password modal
+  const closeNewPasswordModal = () => {
+    setShowNewPasswordModal(false);
+    setNewPasswordStep('form');
+    setNewPasswordToken('');
+    setNewPassword('');
+    setConfirmPassword('');
+    setNewPasswordError(null);
+    // Clear URL params
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, '', '/agent-portal/login');
+    }
   };
 
   return (
@@ -558,6 +699,159 @@ export default function AgentPortalLogin() {
             </p>
             <FormButton onClick={closeUsernameModal}>
               Back to Login
+            </FormButton>
+          </div>
+        )}
+      </Modal>
+
+      {/* New Password Modal (from reset token in URL) */}
+      <Modal isOpen={showNewPasswordModal} onClose={closeNewPasswordModal} size="md">
+        {newPasswordStep === 'form' ? (
+          <>
+            <ModalTitle subtitle="Create a new password for your account." centered>
+              Reset Password
+            </ModalTitle>
+
+            <form onSubmit={handleNewPasswordSubmit}>
+              {/* Error Message */}
+              {newPasswordError && (
+                <FormMessage type="error">{newPasswordError}</FormMessage>
+              )}
+
+              {/* New Password Field */}
+              <FormGroup label="New Password" htmlFor="new-password" required>
+                <div style={{ position: 'relative' }}>
+                  <FormInput
+                    type={showNewPassword ? 'text' : 'password'}
+                    id="new-password"
+                    name="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    required
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '0.75rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      cursor: 'pointer',
+                      padding: '0.25rem',
+                    }}
+                    aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showNewPassword ? (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+                <p style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.4)', marginTop: '0.5rem' }}>
+                  8+ chars with uppercase, lowercase, number, and special character
+                </p>
+              </FormGroup>
+
+              {/* Confirm Password Field */}
+              <FormGroup label="Confirm Password" htmlFor="confirm-password" required>
+                <div style={{ position: 'relative' }}>
+                  <FormInput
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    id="confirm-password"
+                    name="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm new password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '0.75rem',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: 'transparent',
+                      border: 'none',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      cursor: 'pointer',
+                      padding: '0.25rem',
+                    }}
+                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showConfirmPassword ? (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      </svg>
+                    ) : (
+                      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </FormGroup>
+
+              {/* Submit Button */}
+              <div style={{ marginTop: '1.5rem' }}>
+                <FormButton isLoading={newPasswordLoading} loadingText="Saving...">
+                  Save New Password
+                </FormButton>
+              </div>
+
+              {/* Cancel Link */}
+              <div className="text-center" style={{ marginTop: '1rem' }}>
+                <button
+                  type="button"
+                  onClick={closeNewPasswordModal}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'rgba(255, 255, 255, 0.5)',
+                    fontSize: '0.85rem',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Back to login
+                </button>
+              </div>
+
+              {/* Get Help Link */}
+              <div style={{ marginTop: '1.5rem', textAlign: 'left' }}>
+                <a
+                  href="mailto:team@smartagentalliance.com"
+                  className="get-help-link"
+                >
+                  Get Help
+                </a>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>✅</div>
+            <ModalTitle subtitle="Your password has been successfully reset." centered>
+              Password Updated
+            </ModalTitle>
+            <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.5)', marginBottom: '1.5rem' }}>
+              You can now log in with your new password.
+            </p>
+            <FormButton onClick={closeNewPasswordModal}>
+              Log In Now
             </FormButton>
           </div>
         )}

@@ -22,8 +22,9 @@ export async function sendPasswordResetEmail(
   resetToken: string,
   expiresInMinutes: number = 15
 ): Promise<EmailResult> {
+  // Link goes to login page with reset_token param, which opens the reset password modal
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.com';
-  const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
+  const resetLink = `${baseUrl}/agent-portal/login?reset_token=${resetToken}`;
 
   try {
     const result = await sendEmail({
