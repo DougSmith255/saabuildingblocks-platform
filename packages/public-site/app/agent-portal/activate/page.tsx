@@ -11,6 +11,15 @@ const INITIAL_PROGRESS_END = 0.5;
 // Auth API URL - admin dashboard handles authentication
 const AUTH_API_URL = 'https://saabuildingblocks.com';
 
+// Onboarding step type
+type OnboardingStep = 'welcome' | 'photo' | 'install-app' | null;
+
+// PWA install prompt event interface
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
 /**
  * Agent Portal Activation Page
  * For new users to set their password after receiving an invitation
@@ -33,6 +42,140 @@ function ActivatePageContent() {
   const [userName, setUserName] = useState('');
   const [userFirstName, setUserFirstName] = useState('');
   const [userLastName, setUserLastName] = useState('');
+
+  // Onboarding state
+  const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>(null);
+  const [activatedUser, setActivatedUser] = useState<{
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    profilePictureUrl: string | null;
+  } | null>(null);
+
+  // Photo upload state for onboarding
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreviewUrl, setPhotoPreviewUrl] = useState<string | null>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const [photoUploadError, setPhotoUploadError] = useState<string | null>(null);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
+  // PWA install state
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  // Listen for PWA install prompt
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    };
+
+    const handleAppInstalled = () => {
+      setIsInstalled(true);
+      setDeferredPrompt(null);
+    };
+
+    // Check if already installed (PWA display mode)
+    if (typeof window !== 'undefined' && window.matchMedia('(display-mode: standalone)').matches) {
+      setIsInstalled(true);
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  // Handle PWA install
+  const handleInstallApp = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+
+    if (outcome === 'accepted') {
+      setIsInstalled(true);
+    }
+    setDeferredPrompt(null);
+  };
+
+  // Handle photo file selection
+  const handlePhotoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setPhotoUploadError('Please select an image file');
+      return;
+    }
+
+    // Validate file size (10MB max)
+    if (file.size > 10 * 1024 * 1024) {
+      setPhotoUploadError('Image must be less than 10MB');
+      return;
+    }
+
+    setPhotoFile(file);
+    setPhotoUploadError(null);
+
+    // Create preview URL
+    const url = URL.createObjectURL(file);
+    setPhotoPreviewUrl(url);
+  };
+
+  // Handle photo upload
+  const handlePhotoUpload = async () => {
+    if (!photoFile || !activatedUser) return;
+
+    setIsUploadingPhoto(true);
+    setPhotoUploadError(null);
+
+    try {
+      const token = localStorage.getItem('agent_portal_token');
+      const formData = new FormData();
+      formData.append('file', photoFile);
+
+      const response = await fetch(`${AUTH_API_URL}/api/agent-pages/upload-image`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+
+      // Update user data with new profile picture
+      const updatedUser = { ...activatedUser, profilePictureUrl: data.url };
+      setActivatedUser(updatedUser);
+      localStorage.setItem('agent_portal_user', JSON.stringify({
+        ...JSON.parse(localStorage.getItem('agent_portal_user') || '{}'),
+        profilePictureUrl: data.url,
+      }));
+
+      // Move to next step
+      setOnboardingStep('install-app');
+    } catch {
+      setPhotoUploadError('Failed to upload photo. You can add it later from the dashboard.');
+    } finally {
+      setIsUploadingPhoto(false);
+    }
+  };
+
+  // Navigate to dashboard
+  const goToDashboard = () => {
+    router.push('/agent-portal');
+  };
 
   // Validate token on mount
   useEffect(() => {
@@ -156,8 +299,10 @@ function ActivatePageContent() {
         localStorage.setItem('agent_portal_user', JSON.stringify(userData));
         localStorage.setItem('agent_portal_token', data.data.accessToken);
 
-        // Redirect directly to agent portal
-        router.push('/agent-portal');
+        // Start onboarding flow instead of redirecting
+        setActivatedUser(userData);
+        setOnboardingStep('welcome');
+        setIsLoading(false);
       } else {
         // Fallback: auto-login after activation
         const loginResponse = await fetch(`${AUTH_API_URL}/api/auth/login`, {
@@ -188,8 +333,10 @@ function ActivatePageContent() {
           localStorage.setItem('agent_portal_user', JSON.stringify(userData));
           localStorage.setItem('agent_portal_token', loginData.data.accessToken);
 
-          // Redirect directly to agent portal
-          router.push('/agent-portal');
+          // Start onboarding flow instead of redirecting
+          setActivatedUser(userData);
+          setOnboardingStep('welcome');
+          setIsLoading(false);
         } else {
           // If auto-login fails, redirect to login page
           router.push('/agent-portal/login?activated=true');
@@ -240,6 +387,240 @@ function ActivatePageContent() {
                 </FormButton>
               </div>
             </FormCard>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Show onboarding flow after successful activation
+  if (onboardingStep && activatedUser) {
+    return (
+      <main id="main-content" className="relative min-h-screen flex flex-col overflow-x-hidden">
+        <DataStreamEffect />
+
+        <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4 py-8">
+          <div className="flex flex-col items-center w-full max-w-lg">
+            {/* Step indicators */}
+            <div className="flex justify-center gap-3 mb-6">
+              <div className={`w-2.5 h-2.5 rounded-full transition-colors ${onboardingStep === 'welcome' ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
+              <div className={`w-2.5 h-2.5 rounded-full transition-colors ${onboardingStep === 'photo' ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
+              <div className={`w-2.5 h-2.5 rounded-full transition-colors ${onboardingStep === 'install-app' ? 'bg-[#ffd700]' : 'bg-white/20'}`} />
+            </div>
+
+            {/* Welcome Step */}
+            {onboardingStep === 'welcome' && (
+              <FormCard maxWidth="md">
+                <div className="text-center py-4">
+                  <div className="text-5xl mb-4">🎉</div>
+                  <h2 className="text-2xl font-bold text-[#ffd700] mb-2">
+                    Welcome, {activatedUser.firstName || 'Agent'}!
+                  </h2>
+                  <p className="text-[#e5e4dd]/70 mb-6">
+                    Your account is now active. Let&apos;s get you set up in just a couple of quick steps.
+                  </p>
+
+                  <div className="space-y-3 text-left mb-8 px-4">
+                    <h3 className="text-sm font-semibold text-[#ffd700] mb-2">Your Agent Portal includes:</h3>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">📚</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Exclusive Templates</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Marketing assets ready to customize</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">🎓</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Elite Courses</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Social Agent Academy, Investor Army & more</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">🔗</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Your SAA Pages</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Personal agent page & linktree</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">📹</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Team Calls</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Live and recorded training sessions</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <FormButton onClick={() => setOnboardingStep('photo')}>
+                    Let&apos;s Go →
+                  </FormButton>
+                </div>
+              </FormCard>
+            )}
+
+            {/* Photo Upload Step */}
+            {onboardingStep === 'photo' && (
+              <FormCard maxWidth="md">
+                <div className="text-center py-4">
+                  <div className="text-5xl mb-4">📸</div>
+                  <h2 className="text-2xl font-bold text-[#ffd700] mb-2">
+                    Add Your Photo
+                  </h2>
+                  <p className="text-[#e5e4dd]/70 mb-2">
+                    Your photo appears on your personal agent page and SAA linktree.
+                  </p>
+                  <p className="text-xs text-[#e5e4dd]/50 mb-6">
+                    We&apos;ll automatically remove the background and create both color and B&W versions.
+                  </p>
+
+                  {/* Hidden file input */}
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoSelect}
+                    className="hidden"
+                  />
+
+                  {/* Photo preview or upload button */}
+                  {photoPreviewUrl ? (
+                    <div className="mb-6">
+                      <div className="relative w-32 h-32 mx-auto rounded-full overflow-hidden border-2 border-[#ffd700]/30 mb-3">
+                        <img
+                          src={photoPreviewUrl}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => photoInputRef.current?.click()}
+                        className="text-sm text-[#ffd700] hover:text-[#ffe55c] transition-colors"
+                      >
+                        Choose Different Photo
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => photoInputRef.current?.click()}
+                      className="w-32 h-32 mx-auto rounded-full border-2 border-dashed border-[#ffd700]/30 hover:border-[#ffd700]/60 flex flex-col items-center justify-center gap-2 transition-colors mb-6 bg-white/5"
+                    >
+                      <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                      </svg>
+                      <span className="text-xs text-[#e5e4dd]/60">Upload Photo</span>
+                    </button>
+                  )}
+
+                  {photoUploadError && (
+                    <p className="text-sm text-red-400 mb-4">{photoUploadError}</p>
+                  )}
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setOnboardingStep('install-app')}
+                      className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-sm"
+                    >
+                      Skip for Now
+                    </button>
+                    {photoFile && (
+                      <FormButton
+                        onClick={handlePhotoUpload}
+                        isLoading={isUploadingPhoto}
+                        loadingText="Uploading..."
+                      >
+                        Upload & Continue →
+                      </FormButton>
+                    )}
+                  </div>
+                </div>
+              </FormCard>
+            )}
+
+            {/* Install App Step */}
+            {onboardingStep === 'install-app' && (
+              <FormCard maxWidth="md">
+                <div className="text-center py-4">
+                  <div className="text-5xl mb-4">📱</div>
+                  <h2 className="text-2xl font-bold text-[#ffd700] mb-2">
+                    Install the App
+                  </h2>
+                  <p className="text-[#e5e4dd]/70 mb-6">
+                    Get quick access to your portal right from your phone&apos;s home screen.
+                  </p>
+
+                  <div className="space-y-3 text-left mb-8 px-4">
+                    <h3 className="text-sm font-semibold text-[#ffd700] mb-2">Why install the app?</h3>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">⚡</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Instant Access</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Open your portal in one tap from your home screen</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">🔗</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Quick Links</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Find your agent page link, edit your linktree anytime</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">📚</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">Resources On-The-Go</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Access templates, support info & done-for-you assets</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <span className="text-lg">❓</span>
+                      <div>
+                        <p className="text-sm font-medium text-[#e5e4dd]">eXp Support</p>
+                        <p className="text-xs text-[#e5e4dd]/60">Quickly find where to go for any eXp-related question</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={goToDashboard}
+                      className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors text-sm"
+                    >
+                      Skip for Now
+                    </button>
+                    {isInstalled ? (
+                      <FormButton onClick={goToDashboard}>
+                        Enter Dashboard →
+                      </FormButton>
+                    ) : deferredPrompt ? (
+                      <FormButton onClick={handleInstallApp}>
+                        Install App
+                      </FormButton>
+                    ) : (
+                      <FormButton onClick={goToDashboard}>
+                        Enter Dashboard →
+                      </FormButton>
+                    )}
+                  </div>
+
+                  {/* Manual install instructions for iOS/browsers without install prompt */}
+                  {!deferredPrompt && !isInstalled && (
+                    <div className="mt-6 p-3 rounded-lg bg-white/5 border border-white/10">
+                      <p className="text-xs text-[#e5e4dd]/60 mb-2">
+                        <span className="font-semibold text-[#e5e4dd]/80">On iOS:</span> Tap the Share button, then &quot;Add to Home Screen&quot;
+                      </p>
+                      <p className="text-xs text-[#e5e4dd]/60">
+                        <span className="font-semibold text-[#e5e4dd]/80">On Android:</span> Tap the menu (⋮), then &quot;Install app&quot; or &quot;Add to Home Screen&quot;
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </FormCard>
+            )}
           </div>
         </div>
       </main>
