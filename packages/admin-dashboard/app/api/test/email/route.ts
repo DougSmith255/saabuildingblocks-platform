@@ -28,15 +28,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Return email service status
-  const config = validateEmailConfig();
-  const status = getEmailClientStatus();
+  // Return email service status (now async)
+  const config = await validateEmailConfig();
+  const status = await getEmailClientStatus();
 
   return NextResponse.json({
     status: 'Email Test Endpoint',
     environment: process.env.NODE_ENV,
     emailService: {
       errors: config.errors,
+      source: config.source,
       ...status,
     },
     availableTemplates: [
