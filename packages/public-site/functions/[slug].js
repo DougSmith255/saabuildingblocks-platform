@@ -1302,22 +1302,22 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .wyg-reveal-card {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1rem;
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
-    @media (min-width: 768px) {
+    @media (min-width: 640px) {
       .wyg-reveal-card {
-        flex-direction: row;
-      }
-      .wyg-reveal-card.wyg-from-right {
-        flex-direction: row-reverse;
+        gap: 1.5rem;
       }
     }
+    .wyg-reveal-card.wyg-from-right {
+      flex-direction: row-reverse;
+    }
     .wyg-icon-circle {
-      width: 112px;
-      height: 112px;
+      width: 64px;
+      height: 64px;
       border-radius: 50%;
       flex-shrink: 0;
       position: relative;
@@ -1328,11 +1328,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       background: rgba(10,10,10,0.25);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 3px solid #ffd700;
+      border: 2px solid #ffd700;
       box-shadow: 0 4px 20px rgba(0,0,0,0.3);
       transition: transform 0.1s ease-out, opacity 0.1s ease-out;
     }
+    @media (min-width: 640px) {
+      .wyg-icon-circle {
+        width: 80px;
+        height: 80px;
+      }
+    }
     @media (min-width: 768px) {
+      .wyg-icon-circle {
+        width: 112px;
+        height: 112px;
+        border-width: 3px;
+      }
+    }
+    @media (min-width: 1024px) {
       .wyg-icon-circle {
         width: 144px;
         height: 144px;
@@ -1341,6 +1354,22 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .wyg-icon-inner {
       position: relative;
       z-index: 10;
+    }
+    .wyg-icon-circle .icon-3d svg {
+      width: 28px;
+      height: 28px;
+    }
+    @media (min-width: 640px) {
+      .wyg-icon-circle .icon-3d svg {
+        width: 36px;
+        height: 36px;
+      }
+    }
+    @media (min-width: 768px) {
+      .wyg-icon-circle .icon-3d svg {
+        width: 48px;
+        height: 48px;
+      }
     }
     .wyg-card-content {
       flex: 1;

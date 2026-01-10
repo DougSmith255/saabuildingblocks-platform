@@ -123,27 +123,25 @@ export function WhatYouGet() {
             return (
               <div
                 key={benefit.title}
-                className={`reveal-card flex flex-col md:flex-row items-center gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
+                className={`reveal-card flex flex-row items-center gap-4 md:gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
               >
-                {/* Icon circle - transparent with backdrop blur */}
+                {/* Icon circle - transparent with backdrop blur, smaller on mobile */}
                 <div
-                  className="w-28 h-28 md:w-36 md:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
+                  className="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 lg:w-36 lg:h-36 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
                     background: 'rgba(10,10,10,0.25)',
                     backdropFilter: 'blur(8px)',
                     WebkitBackdropFilter: 'blur(8px)',
-                    border: `3px solid ${BRAND_YELLOW}`,
+                    border: `2px solid ${BRAND_YELLOW}`,
                     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
                     transform: `scale(${0.8 + cardProgress * 0.2})`,
                     opacity: 0.3 + cardProgress * 0.7,
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
-                  {/* Icon */}
-                  <div className="relative z-10">
-                    <Icon3D color={ICON_GOLD} size={48}>
-                      <Icon className="w-12 h-12" />
-                    </Icon3D>
+                  {/* Icon - responsive size */}
+                  <div className="relative z-10 w-7 h-7 sm:w-9 sm:h-9 md:w-12 md:h-12">
+                    <Icon className="w-full h-full" style={{ color: ICON_GOLD }} />
                   </div>
                 </div>
 
