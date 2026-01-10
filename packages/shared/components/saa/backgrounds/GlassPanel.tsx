@@ -20,6 +20,8 @@ export interface GlassPanelProps {
   className?: string;
   /** Border radius - default is 'xl' (24px) */
   rounded?: 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full';
+  /** Override the default opacity (0-1). Higher = less transparent */
+  opacity?: number;
   /** Add a rounded cutout at the bottom (for overlapping sections) */
   bottomCutout?: {
     /** Height of the cutout area */
@@ -147,10 +149,13 @@ export function GlassPanel({
   children,
   className = '',
   rounded = '3xl',
+  opacity,
   bottomCutout,
 }: GlassPanelProps) {
   const config = VARIANTS[variant];
   const { r, g, b } = config.color;
+  // Use custom opacity if provided, otherwise use variant default
+  const effectiveOpacity = opacity !== undefined ? opacity : config.colorOpacity;
   const textureStyle = getTextureStyle(config.texture, config.textureOpacity, config.noiseFrequency);
   const roundedClass = ROUNDED_CLASSES[rounded];
   const isEmerald = variant === 'emerald';
@@ -185,7 +190,7 @@ export function GlassPanel({
       <div
         className={`absolute inset-0 pointer-events-none overflow-hidden z-[1] ${roundedClass}`}
         style={{
-          background: `linear-gradient(180deg, rgba(${r},${g},${b},${config.colorOpacity * 0.8}) 0%, rgba(${r},${g},${b},${config.colorOpacity}) 50%, rgba(${r},${g},${b},${config.colorOpacity * 0.8}) 100%)`,
+          background: `linear-gradient(180deg, rgba(${r},${g},${b},${effectiveOpacity * 0.8}) 0%, rgba(${r},${g},${b},${effectiveOpacity}) 50%, rgba(${r},${g},${b},${effectiveOpacity * 0.8}) 100%)`,
           boxShadow: `
             /* External shadow for depth */
             0 8px 32px rgba(0,0,0,0.4),

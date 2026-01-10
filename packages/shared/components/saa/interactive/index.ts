@@ -19,6 +19,9 @@ export type { JoinModalProps, JoinFormData } from './JoinModal';
 export { InstructionsModal } from './InstructionsModal';
 export type { InstructionsModalProps } from './InstructionsModal';
 
+export { FreebieDownloadModal } from './FreebieDownloadModal';
+export type { FreebieDownloadModalProps } from './FreebieDownloadModal';
+
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
 
