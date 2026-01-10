@@ -114,20 +114,26 @@ export function WhatYouGet() {
         </div>
 
         {/* Clip-Path Reveal Cards - 2-column grid on 1200px+ screens, stacked on smaller */}
-        <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 gap-6 min-[1200px]:gap-8">
           {BENEFITS.map((benefit, index) => {
             const Icon = benefit.icon;
             const cardProgress = revealProgress[index];
             const isLastCard = index === BENEFITS.length - 1;
+            // In 2-col layout: left column (0,2) from left, right column (1,3) from right
+            // In single-col: alternate left/right
+            const isLeftColumn = index % 2 === 0;
 
             return (
               <div
                 key={benefit.title}
-                className={`reveal-card flex flex-col items-center gap-4 ${isLastCard ? 'min-[1200px]:col-span-2 min-[1200px]:max-w-xl min-[1200px]:mx-auto' : ''}`}
+                className={`reveal-card flex flex-row items-center gap-4 ${isLastCard ? 'min-[1200px]:col-span-2 min-[1200px]:max-w-2xl min-[1200px]:mx-auto' : ''}`}
+                style={{
+                  minHeight: isLastCard ? undefined : '180px',
+                }}
               >
                 {/* Icon circle - transparent with backdrop blur */}
                 <div
-                  className="w-24 h-24 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
+                  className="w-20 h-20 min-[1200px]:w-24 min-[1200px]:h-24 rounded-full flex-shrink-0 relative overflow-hidden flex items-center justify-center"
                   style={{
                     background: 'rgba(10,10,10,0.25)',
                     backdropFilter: 'blur(8px)',
@@ -141,15 +147,15 @@ export function WhatYouGet() {
                 >
                   {/* Icon */}
                   <div className="relative z-10">
-                    <Icon3D color={ICON_GOLD} size={40}>
-                      <Icon className="w-10 h-10" />
+                    <Icon3D color={ICON_GOLD} size={36}>
+                      <Icon className="w-9 h-9" />
                     </Icon3D>
                   </div>
                 </div>
 
                 {/* Card content - glassmorphism with backdrop blur and background image */}
                 <div
-                  className="w-full p-6 rounded-2xl relative overflow-hidden text-center"
+                  className="flex-1 p-5 rounded-2xl relative overflow-hidden h-full flex flex-col justify-center"
                   style={{
                     background: 'rgba(10,10,10,0.3)',
                     backdropFilter: 'blur(8px)',
@@ -157,8 +163,9 @@ export function WhatYouGet() {
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
                     opacity: 0.4 + cardProgress * 0.6,
-                    transform: `translateY(${(1 - cardProgress) * 20}px)`,
+                    transform: `translateX(${isLeftColumn ? (1 - cardProgress) * 30 : (cardProgress - 1) * 30}px)`,
                     transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+                    minHeight: '140px',
                   }}
                 >
                   {/* Background image */}
@@ -173,7 +180,7 @@ export function WhatYouGet() {
                   />
                   {/* Subtitle badge */}
                   <div
-                    className="relative z-10 inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-3"
+                    className="relative z-10 inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-2 w-fit"
                     style={{
                       background: `${BRAND_YELLOW}22`,
                       color: BRAND_YELLOW,
@@ -183,9 +190,9 @@ export function WhatYouGet() {
                   </div>
 
                   <h3
-                    className="relative z-10 font-heading font-bold mb-3 text-gray-100"
+                    className="relative z-10 font-heading font-bold mb-2 text-gray-100"
                     style={{
-                      fontSize: 'clamp(18px, calc(16px + 0.5vw), 24px)',
+                      fontSize: 'clamp(16px, calc(14px + 0.4vw), 20px)',
                     }}
                   >
                     {benefit.title}
