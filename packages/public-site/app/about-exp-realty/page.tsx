@@ -1,11 +1,131 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { H1, Tagline, GlassPanel, Icon3D } from '@saa/shared/components/saa';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { SatelliteConstellationEffect } from '@/components/shared/hero-effects/SatelliteConstellationEffect';
 
 const CLOUDFLARE_BASE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg';
+
+/**
+ * Scramble Counter Animation Hook
+ * Creates a slot-machine style scramble effect that counts up to a target number
+ */
+function useScrambleCounter(
+  targetNumber: number,
+  duration: number = 2000,
+  triggerOnView: boolean = true
+) {
+  const [displayValue, setDisplayValue] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const elementRef = useRef<HTMLSpanElement>(null);
+  const animationRef = useRef<number | null>(null);
+
+  const animate = useCallback(() => {
+    if (hasAnimated) return;
+
+    const startTime = performance.now();
+    const digits = targetNumber.toString().length;
+
+    const runAnimation = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      if (progress >= 1) {
+        setDisplayValue(targetNumber);
+        setHasAnimated(true);
+        animationRef.current = null;
+      } else {
+        // Eased progress for smoother counting
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const currentValue = Math.floor(targetNumber * easedProgress);
+
+        // Add scramble effect - random digits that gradually settle
+        const scrambleIntensity = 1 - progress;
+        if (Math.random() < scrambleIntensity * 0.4 && progress < 0.8) {
+          // Show a random number close to current value
+          const variance = Math.floor(targetNumber * 0.1 * scrambleIntensity);
+          const scrambledValue = Math.max(0, currentValue + Math.floor(Math.random() * variance * 2) - variance);
+          setDisplayValue(scrambledValue);
+        } else {
+          setDisplayValue(currentValue);
+        }
+
+        animationRef.current = requestAnimationFrame(runAnimation);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(runAnimation);
+  }, [targetNumber, duration, hasAnimated]);
+
+  useEffect(() => {
+    if (!triggerOnView) {
+      animate();
+      return;
+    }
+
+    const element = elementRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          animate();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [animate, triggerOnView, hasAnimated]);
+
+  return { displayValue, elementRef, hasAnimated };
+}
+
+/**
+ * Animated Stat Component with scramble effect
+ */
+function AnimatedStat({
+  prefix = '',
+  targetNumber,
+  suffix = '',
+  label
+}: {
+  prefix?: string;
+  targetNumber: number;
+  suffix?: string;
+  label: string;
+}) {
+  const { displayValue, elementRef, hasAnimated } = useScrambleCounter(targetNumber, 2000);
+
+  return (
+    <div
+      className="text-center p-6 rounded-xl"
+      style={{
+        background: 'rgba(20,20,20,0.75)',
+        border: '1px solid rgba(255,255,255,0.1)',
+      }}
+    >
+      <p className="stat-3d-text text-4xl lg:text-5xl font-bold mb-2 tabular-nums">
+        <span>{prefix}</span>
+        <span ref={elementRef}>
+          {hasAnimated ? targetNumber.toLocaleString() : displayValue.toLocaleString()}
+        </span>
+        <span>{suffix}</span>
+      </p>
+      <p className="text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
+        {label}
+      </p>
+    </div>
+  );
+}
 
 // Award text items for scrolling
 const AWARDS = [
@@ -23,10 +143,11 @@ const LOGOS = [
   { id: 'realtrends-logo', alt: 'RealTrends', src: `${CLOUDFLARE_BASE}/realtrends-logo/public` },
 ];
 
-// Reusable carousel hook with scroll boost
+// Reusable carousel hook with scroll boost - faster on mobile
 function useCarouselAnimation(trackRef: React.RefObject<HTMLDivElement | null>) {
   const animationRef = useRef<number | null>(null);
   const positionRef = useRef(0);
+  const baseVelocityRef = useRef(0.5);
   const velocityRef = useRef(0.5);
   const lastScrollY = useRef(0);
 
@@ -34,15 +155,21 @@ function useCarouselAnimation(trackRef: React.RefObject<HTMLDivElement | null>) 
     const track = trackRef.current;
     if (!track) return;
 
+    // Faster base speed on mobile (1.2 vs 0.5)
+    const isMobile = window.innerWidth < 768;
+    const baseSpeed = isMobile ? 1.2 : 0.5;
+    baseVelocityRef.current = baseSpeed;
+    velocityRef.current = baseSpeed;
+
     const animate = () => {
       const singleSetWidth = track.scrollWidth / 2;
 
       if (singleSetWidth > 0) {
         positionRef.current += velocityRef.current;
 
-        if (velocityRef.current > 0.5) {
+        if (velocityRef.current > baseVelocityRef.current) {
           velocityRef.current *= 0.98;
-          if (velocityRef.current < 0.5) velocityRef.current = 0.5;
+          if (velocityRef.current < baseVelocityRef.current) velocityRef.current = baseVelocityRef.current;
         }
 
         if (positionRef.current >= singleSetWidth) {
@@ -61,7 +188,7 @@ function useCarouselAnimation(trackRef: React.RefObject<HTMLDivElement | null>) 
       lastScrollY.current = currentScrollY;
 
       const boost = Math.min(scrollDelta * 0.3, 8);
-      if (boost > 0.5) {
+      if (boost > baseVelocityRef.current) {
         velocityRef.current = Math.max(velocityRef.current, boost);
       }
     };
@@ -156,12 +283,156 @@ function ShadowOverlays() {
   );
 }
 
-// Stats data
+// Stats data - with prefix/suffix for proper animation
 const STATS = [
-  { value: 'S&P 600', label: 'Company' },
-  { value: '84,000+', label: 'Agents' },
-  { value: '29+', label: 'Countries' },
+  { prefix: 'S&P ', targetNumber: 600, suffix: '', label: 'Company' },
+  { prefix: '', targetNumber: 84000, suffix: '+', label: 'Agents' },
+  { prefix: '', targetNumber: 29, suffix: '+', label: 'Countries' },
 ];
+
+// Rotating Stats Component for Mobile with scramble animation
+function RotatingStats() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [displayValues, setDisplayValues] = useState<number[]>(STATS.map(() => 0));
+  const [hasAnimated, setHasAnimated] = useState<boolean[]>(STATS.map(() => false));
+  const animationRef = useRef<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Scramble animation for current stat
+  const animateCurrentStat = useCallback((index: number) => {
+    if (hasAnimated[index]) return;
+
+    const targetNumber = STATS[index].targetNumber;
+    const duration = 1500;
+    const startTime = performance.now();
+
+    const runAnimation = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      if (progress >= 1) {
+        setDisplayValues(prev => {
+          const newValues = [...prev];
+          newValues[index] = targetNumber;
+          return newValues;
+        });
+        setHasAnimated(prev => {
+          const newAnimated = [...prev];
+          newAnimated[index] = true;
+          return newAnimated;
+        });
+        animationRef.current = null;
+      } else {
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+        const currentValue = Math.floor(targetNumber * easedProgress);
+        const scrambleIntensity = 1 - progress;
+
+        let displayVal = currentValue;
+        if (Math.random() < scrambleIntensity * 0.4 && progress < 0.8) {
+          const variance = Math.floor(targetNumber * 0.1 * scrambleIntensity);
+          displayVal = Math.max(0, currentValue + Math.floor(Math.random() * variance * 2) - variance);
+        }
+
+        setDisplayValues(prev => {
+          const newValues = [...prev];
+          newValues[index] = displayVal;
+          return newValues;
+        });
+
+        animationRef.current = requestAnimationFrame(runAnimation);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(runAnimation);
+  }, [hasAnimated]);
+
+  // Rotate through stats
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCurrentIndex((prev) => {
+          const next = (prev + 1) % STATS.length;
+          // Trigger animation for new stat if not yet animated
+          if (!hasAnimated[next]) {
+            setTimeout(() => animateCurrentStat(next), 100);
+          }
+          return next;
+        });
+        setIsAnimating(false);
+      }, 300);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [hasAnimated, animateCurrentStat]);
+
+  // Trigger first animation on mount
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated[0]) {
+          animateCurrentStat(0);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [animateCurrentStat, hasAnimated]);
+
+  const currentStat = STATS[currentIndex];
+  const displayValue = hasAnimated[currentIndex]
+    ? currentStat.targetNumber.toLocaleString()
+    : displayValues[currentIndex].toLocaleString();
+
+  return (
+    <div
+      ref={containerRef}
+      className="text-center p-6 rounded-xl relative overflow-hidden"
+      style={{
+        background: 'rgba(20,20,20,0.75)',
+        border: '1px solid rgba(255,255,255,0.1)',
+        minHeight: '120px',
+      }}
+    >
+      <div
+        className={`transition-all duration-300 ease-in-out ${
+          isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
+        }`}
+      >
+        <p className="stat-3d-text text-4xl font-bold mb-2 tabular-nums">
+          {currentStat.prefix}{displayValue}{currentStat.suffix}
+        </p>
+        <p className="text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
+          {currentStat.label}
+        </p>
+      </div>
+      {/* Progress dots */}
+      <div className="flex justify-center gap-2 mt-4">
+        {STATS.map((_, idx) => (
+          <div
+            key={idx}
+            className="w-2 h-2 rounded-full transition-all duration-300"
+            style={{
+              background: idx === currentIndex ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
+              transform: idx === currentIndex ? 'scale(1.2)' : 'scale(1)',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 // Awards Ribbon Component with Glass Panel (full-width)
 function AwardsRibbon() {
@@ -169,39 +440,36 @@ function AwardsRibbon() {
   useCarouselAnimation(trackRef);
 
   return (
-    <GlassPanel variant="marigoldCrosshatch" rounded="3xl">
-      <section className="py-12 md:py-16 overflow-visible">
-        {/* Stats Cards - 3 horizontal cards with 3D text */}
-        <div className="max-w-[1900px] mx-auto px-4 md:px-8 mb-8">
-          <div className="grid grid-cols-3 gap-4 md:gap-8">
+    <GlassPanel variant="marigoldCrosshatch" rounded="3xl" opacity={0.12}>
+      <section className="py-4 md:py-6 overflow-visible">
+        {/* Stats Cards - Rotating single card on mobile, 3-column grid on desktop */}
+        <div className="max-w-[1900px] mx-auto px-4 md:px-8 mb-4">
+          {/* Mobile: Single rotating card */}
+          <div className="md:hidden">
+            <RotatingStats />
+          </div>
+          {/* Desktop: 3-column grid with animated stats */}
+          <div className="hidden md:grid grid-cols-3 gap-8">
             {STATS.map((stat, index) => (
-              <div
+              <AnimatedStat
                 key={index}
-                className="text-center p-4 md:p-6 rounded-xl"
-                style={{
-                  background: 'rgba(20,20,20,0.75)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                }}
-              >
-                <p className="stat-3d-text text-2xl md:text-4xl lg:text-5xl font-bold mb-1 md:mb-2">
-                  {stat.value}
-                </p>
-                <p className="text-xs md:text-sm uppercase tracking-wider" style={{ color: 'var(--color-body-text)', opacity: 0.8 }}>
-                  {stat.label}
-                </p>
-              </div>
+                prefix={stat.prefix}
+                targetNumber={stat.targetNumber}
+                suffix={stat.suffix}
+                label={stat.label}
+              />
             ))}
           </div>
         </div>
 
         {/* Ticker Band - full width edge to edge with proper portal edges */}
         <div className="relative w-screen -ml-[50vw] left-1/2">
-          {/* 3D Portal Edges at screen edges */}
+          {/* 3D Portal Edges at screen edges - taller than ribbon */}
           <div
             className="absolute left-0 z-20 pointer-events-none"
             style={{
-              top: '-8px',
-              bottom: '-8px',
+              top: '-16px',
+              bottom: '-16px',
               width: '12px',
               borderRadius: '0 12px 12px 0',
               background: `radial-gradient(ellipse 200% 50% at 0% 50%,
@@ -224,8 +492,8 @@ function AwardsRibbon() {
           <div
             className="absolute right-0 z-20 pointer-events-none"
             style={{
-              top: '-8px',
-              bottom: '-8px',
+              top: '-16px',
+              bottom: '-16px',
               width: '12px',
               borderRadius: '12px 0 0 12px',
               background: `radial-gradient(ellipse 200% 50% at 100% 50%,
@@ -286,7 +554,7 @@ function AwardsRibbon() {
 
         {/* Logo Bar - below the ribbon with 3D effect (spacing reduced) */}
         <div className="max-w-[1900px] mx-auto">
-          <div className="flex justify-center items-center gap-10 md:gap-16 mt-5 pb-2 px-4">
+          <div className="flex justify-center items-center gap-10 md:gap-16 mt-2 px-4">
             {LOGOS.map((logo) => (
               <Icon3D key={logo.id} size={logo.id === 'glassdoor-logo' ? 156 : 120}>
                 <img
