@@ -1398,10 +1398,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       z-index: 10;
     }
-    @media (min-width: 768px) {
-      .wyg-reveal-card.wyg-from-right .wyg-card-content {
-        text-align: right;
-      }
+    .wyg-reveal-card.wyg-from-right .wyg-card-content {
+      text-align: right;
     }
     .wyg-title-row {
       display: flex;
@@ -1415,8 +1413,6 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         align-items: center;
         gap: 0.75rem;
       }
-    }
-    @media (min-width: 768px) {
       .wyg-reveal-card.wyg-from-right .wyg-title-row {
         flex-direction: row-reverse;
       }

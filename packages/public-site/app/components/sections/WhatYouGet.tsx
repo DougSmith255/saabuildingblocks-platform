@@ -123,7 +123,7 @@ export function WhatYouGet() {
             return (
               <div
                 key={benefit.title}
-                className={`reveal-card flex flex-row items-center gap-4 md:gap-6 ${isEven ? '' : 'md:flex-row-reverse'}`}
+                className={`reveal-card flex items-center gap-4 md:gap-6 ${isEven ? 'flex-row' : 'flex-row-reverse'}`}
               >
                 {/* Icon circle - transparent with backdrop blur, smaller on mobile */}
                 <div
@@ -147,7 +147,7 @@ export function WhatYouGet() {
 
                 {/* Card content - glassmorphism with backdrop blur and background image */}
                 <div
-                  className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'md:text-right'}`}
+                  className={`flex-1 p-6 rounded-2xl relative overflow-hidden ${isEven ? '' : 'text-right'}`}
                   style={{
                     background: 'rgba(10,10,10,0.3)',
                     backdropFilter: 'blur(8px)',
@@ -170,7 +170,7 @@ export function WhatYouGet() {
                     }}
                   />
                   {/* Title row with badge - badge on icon side */}
-                  <div className={`relative z-10 flex flex-col min-[600px]:flex-row min-[600px]:items-center gap-2 min-[600px]:gap-3 mb-3 ${isEven ? '' : 'md:flex-row-reverse'}`}>
+                  <div className={`relative z-10 flex flex-col min-[600px]:flex-row min-[600px]:items-center gap-2 min-[600px]:gap-3 mb-3 ${isEven ? '' : 'min-[600px]:flex-row-reverse'}`}>
                     {/* Subtitle badge */}
                     <div
                       className="inline-block px-3 py-1 rounded-full text-xs uppercase tracking-wider w-fit"
