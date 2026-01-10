@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAA App Icon Preview</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: rgb(12, 12, 12);
+      color: #fff;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section h2 {
+      font-size: 1.25rem;
+      color: #ffd700;
+      margin-bottom: 0.5rem;
+    }
+
+    .description {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      max-width: 600px;
+    }
+
+    .icon-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+
+    .icon-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .icon-card:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-wrapper img {
+      object-fit: contain;
+    }
+
+    .icon-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: monospace;
+    }
+
+    /* Device Mockups */
+    .mockup-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    .mockup-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+    }
+
+    .mockup-card h3 {
+      font-size: 0.875rem;
+      color: #ffd700;
+      margin: 0;
+    }
+
+    .mockup-card span {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* iOS superellipse - dark bg to show transparent icon */
+    .ios-mask {
+      width: 80px;
+      height: 80px;
+      border-radius: 17.5px;
+      overflow: hidden;
+      background: rgb(30, 30, 30);
+    }
+
+    .ios-mask img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Android circle */
+    .circle-mask {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: rgb(30, 30, 30);
+    }
+
+    .circle-mask img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Android squircle */
+    .squircle-mask {
+      width: 80px;
+      height: 80px;
+      border-radius: 25%;
+      overflow: hidden;
+      background: rgb(30, 30, 30);
+    }
+
+    .squircle-mask img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Android rounded square */
+    .rounded-mask {
+      width: 80px;
+      height: 80px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgb(30, 30, 30);
+    }
+
+    .rounded-mask img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Phone mockup frame */
+    .phone-frame {
+      position: relative;
+      width: 220px;
+      height: 440px;
+      background: #1a1a1a;
+      border-radius: 36px;
+      padding: 12px;
+      box-shadow:
+        0 0 0 2px #333,
+        0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 24px;
+      background: #000;
+      border-radius: 12px;
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+      background: rgb(12, 12, 12);
+    }
+
+    /* Loading screen with glass effect */
+    .loading-screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Glass container */
+    .glass-container {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    /* Glass base with corrugated effect */
+    .glass-base {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
+        linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+        repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px);
+      filter: brightness(1.1) contrast(1.1) saturate(1.2);
+    }
+
+    /* Scan lines */
+    .glass-base::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(255, 255, 255, 0.02) 2px,
+        rgba(255, 255, 255, 0.02) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Shimmer animation */
+    .shimmer-layer {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.20) 25%,
+        rgba(255, 255, 255, 0.35) 50%,
+        rgba(255, 255, 255, 0.18) 75%,
+        rgba(255, 255, 255, 0.08) 100%
+      );
+      background-size: 400% 400%;
+      opacity: 0.5;
+      mix-blend-mode: overlay;
+      animation: shimmer 6s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; filter: brightness(1.1); }
+      50% { background-position: 100% 50%; filter: brightness(1.8); }
+    }
+
+    /* Loading content - transparent bg so glow radiates */
+    .loading-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    /* SAA logo container - transparent to let glow breathe */
+    .loading-logo-container {
+      position: relative;
+    }
+
+    .loading-logo {
+      width: 140px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Breathing glow effect behind the logo */
+    .loading-logo-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200px;
+      height: 100px;
+      background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.5) 0%, rgba(255, 215, 0, 0.2) 40%, transparent 70%);
+      filter: blur(20px);
+      animation: breatheGlow 3s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    @keyframes breatheGlow {
+      0%, 100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+      }
+    }
+
+    .loading-bar-container {
+      width: 140px;
+    }
+
+    .loading-bar-track {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loading-bar-fill {
+      height: 100%;
+      width: 30%;
+      background: linear-gradient(90deg, transparent, #ffd700, transparent);
+      animation: slide 1.5s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+
+    .loading-text {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.05em;
+      animation: textFade 2s ease-in-out infinite;
+    }
+
+    @keyframes textFade {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      position: relative;
+      background: rgb(20, 20, 20);
+      padding: 2rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      text-align: center;
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+
+    .modal-content img {
+      max-width: 100%;
+      max-height: 70vh;
+    }
+
+    .modal-content p {
+      margin-top: 1rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: monospace;
+      font-size: 0.875rem;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.5rem;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      transition: all 0.2s;
+    }
+
+    .close-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>SAA App Icon & Loading Screen Preview</h1>
+      <p>Preview all PWA icons with the S logo and the loading screen with SAA logo</p>
+    </header>
+
+    <!-- Loading Screen Preview in Phone Mockup -->
+    <section>
+      <h2>Loading Screen Preview</h2>
+      <p class="description">
+        The loading screen uses the SAA logo with a breathing glow effect on transparent background,
+        allowing the glow to radiate naturally. Glass shimmer background with corrugated effect.
+      </p>
+      <div class="phone-frame">
+        <div class="phone-screen">
+          <div class="loading-screen">
+            <div class="glass-container">
+              <div class="glass-base"></div>
+              <div class="shimmer-layer"></div>
+            </div>
+            <div class="loading-content">
+              <div class="loading-logo-container">
+                <div class="loading-logo-glow"></div>
+                <img class="loading-logo" src="/images/saa-logo-gold.png" alt="SAA Logo">
+              </div>
+              <div class="loading-bar-container">
+                <div class="loading-bar-track">
+                  <div class="loading-bar-fill"></div>
+                </div>
+              </div>
+              <div class="loading-text">Loading Portal...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Standard Icons -->
+    <section>
+      <h2>Standard App Icons (S Logo with Glow)</h2>
+      <p class="description">
+        Crisp 1000x1000 source scaled down. S logo with gold glow directly attached,
+        transparent background (no box). OS applies rounded mask automatically.
+      </p>
+      <div class="icon-grid">
+        <div class="icon-card" onclick="showModal('/icons/icon-48x48.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/icon-48x48.png" alt="48x48" width="48" height="48">
+          </div>
+          <span class="icon-label">48x48</span>
+        </div>
+        <div class="icon-card" onclick="showModal('/icons/icon-72x72.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/icon-72x72.png" alt="72x72" width="72" height="72">
+          </div>
+          <span class="icon-label">72x72</span>
+        </div>
+        <div class="icon-card" onclick="showModal('/icons/icon-96x96.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/icon-96x96.png" alt="96x96" width="96" height="96">
+          </div>
+          <span class="icon-label">96x96</span>
+        </div>
+        <div class="icon-card" onclick="showModal('/icons/icon-128x128.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/icon-128x128.png" alt="128x128" width="128" height="128">
+          </div>
+          <span class="icon-label">128x128</span>
+        </div>
+        <div class="icon-card" onclick="showModal('/icons/icon-192x192.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/icon-192x192.png" alt="192x192" width="128" height="128">
+          </div>
+          <span class="icon-label">192x192</span>
+        </div>
+        <div class="icon-card" onclick="showModal('/icons/icon-512x512.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/icon-512x512.png" alt="512x512" width="128" height="128">
+          </div>
+          <span class="icon-label">512x512</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Maskable Icons -->
+    <section>
+      <h2>Maskable Icons (Android Adaptive)</h2>
+      <p class="description">
+        S is smaller (in 80% safe zone) so it stays fully visible when Android
+        crops to circles, squircles, or other shapes.
+      </p>
+      <div class="icon-grid">
+        <div class="icon-card" onclick="showModal('/icons/maskable-192x192.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/maskable-192x192.png" alt="Maskable 192" width="128" height="128">
+          </div>
+          <span class="icon-label">maskable-192</span>
+        </div>
+        <div class="icon-card" onclick="showModal('/icons/maskable-512x512.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/maskable-512x512.png" alt="Maskable 512" width="128" height="128">
+          </div>
+          <span class="icon-label">maskable-512</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Apple Touch Icon -->
+    <section>
+      <h2>Apple Touch Icon</h2>
+      <p class="description">
+        Used when users add the PWA to their iOS home screen. 180x180.
+      </p>
+      <div class="icon-grid">
+        <div class="icon-card" onclick="showModal('/icons/apple-touch-icon.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/apple-touch-icon.png" alt="Apple Touch Icon" width="128" height="128">
+          </div>
+          <span class="icon-label">180x180</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Device Mockups -->
+    <section>
+      <h2>Device Mockups - How Icons Appear on Home Screens</h2>
+      <p class="description">
+        Preview how the S icon looks with different OS mask shapes applied.
+        Dark background simulates a typical dark home screen.
+      </p>
+      <div class="mockup-grid">
+        <div class="mockup-card">
+          <h3>iOS</h3>
+          <div class="ios-mask">
+            <img src="/icons/icon-512x512.png" alt="iOS">
+          </div>
+          <span>Superellipse</span>
+        </div>
+        <div class="mockup-card">
+          <h3>Android (Circle)</h3>
+          <div class="circle-mask">
+            <img src="/icons/maskable-512x512.png" alt="Circle">
+          </div>
+          <span>Pixel/Stock</span>
+        </div>
+        <div class="mockup-card">
+          <h3>Android (Squircle)</h3>
+          <div class="squircle-mask">
+            <img src="/icons/maskable-512x512.png" alt="Squircle">
+          </div>
+          <span>Samsung</span>
+        </div>
+        <div class="mockup-card">
+          <h3>Android (Rounded)</h3>
+          <div class="rounded-mask">
+            <img src="/icons/maskable-512x512.png" alt="Rounded">
+          </div>
+          <span>Some OEMs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Source File -->
+    <section>
+      <h2>Source File</h2>
+      <p class="description">High-quality 1000x1000 S logo used as source for all icons.</p>
+      <div class="icon-grid">
+        <div class="icon-card" onclick="showModal('/icons/s-logo-1000.png')">
+          <div class="icon-wrapper">
+            <img src="/icons/s-logo-1000.png" alt="Source 1000x1000" width="128" height="128">
+          </div>
+          <span class="icon-label">s-logo-1000.png</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" onclick="hideModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="close-btn" onclick="hideModal()">&times;</button>
+      <img id="modal-img" src="" alt="Preview">
+      <p id="modal-path"></p>
+    </div>
+  </div>
+
+  <script>
+    function showModal(src) {
+      document.getElementById('modal-img').src = src;
+      document.getElementById('modal-path').textContent = src;
+      document.getElementById('modal').classList.add('active');
+    }
+
+    function hideModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') hideModal();
+    });
+  </script>
+</body>
+</html>
