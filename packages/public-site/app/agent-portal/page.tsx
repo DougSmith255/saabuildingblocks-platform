@@ -2477,9 +2477,9 @@ function TemplatesSection() {
 
   const currentCategory = TEMPLATE_CATEGORIES.find(c => c.id === activeCategory) || TEMPLATE_CATEGORIES[0];
 
+  // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
-    <SectionWrapper>
-      <div className="space-y-6">
+    <div className="space-y-6 px-2 sm:px-4">
         {/* Header */}
         <div className="text-center pb-2">
           <p className="text-sm text-[#e5e4dd]/60">
@@ -2600,8 +2600,7 @@ function TemplatesSection() {
             <p className="text-xs text-[#e5e4dd]/60">Login with your eXp email to access and customize these templates</p>
           </div>
         </div>
-      </div>
-    </SectionWrapper>
+    </div>
   );
 }
 
