@@ -47,8 +47,23 @@ body {
 }
 
 /* Disable tap highlight on mobile - prevents grey flash on touch */
-* {
-  -webkit-tap-highlight-color: transparent;
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  tap-highlight-color: transparent !important;
+}
+
+/* Extra specificity for agent portal sections */
+[id^="agent-portal"],
+[class*="agent-portal"],
+[class*="section-content"],
+.rounded-xl,
+.GenericCard,
+[class*="GenericCard"] {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
 }
 
 /* ========================================

@@ -72,6 +72,7 @@ export function GenericCard({
   const cardContent = (
     <div
       className={`${baseClasses} ${paddingClass} ${hoverClasses} ${centerClasses} ${className}`.trim()}
+      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
     >
       {children}
     </div>
