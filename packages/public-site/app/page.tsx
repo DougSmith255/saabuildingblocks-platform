@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { CTAButton, Tagline, H1, ScrollIndicator, SecondaryButton } from '@saa/shared/components/saa';
+import { CTAButton, Tagline, H1, SecondaryButton } from '@saa/shared/components/saa';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
 import { AgentCounter, TaglineCounterSuffix } from './components/AgentCounter';
 import { FixedHeroWrapper } from '@/components/shared/FixedHeroWrapper';
@@ -183,9 +183,6 @@ export default function Home() {
 
       </section>
       </FixedHeroWrapper>
-
-      {/* Scroll Indicator - Fixed to viewport, outside FixedHeroWrapper for correct positioning */}
-      <ScrollIndicator />
 
       {/* Homepage Sections */}
       <ValuePillarsTab />

@@ -122,21 +122,21 @@ export default function BestRealEstateBrokerage() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <CyberCard padding="md" className="h-full">
-                <p className="text-h3 text-link mb-2">100%</p>
+            <div className="grid md:grid-cols-3 gap-6 text-center items-stretch">
+              <CyberCard padding="lg" className="h-full">
+                <p className="text-h3 mb-2 stat-3d-text">100%</p>
                 <p className="text-body">Commission After Cap</p>
                 <p className="text-caption mt-1">Cap at just $16,000</p>
               </CyberCard>
 
-              <CyberCard padding="md" className="h-full">
-                <p className="text-h3 text-link mb-2">$85</p>
+              <CyberCard padding="lg" className="h-full">
+                <p className="text-h3 mb-2 stat-3d-text">$85</p>
                 <p className="text-body">Monthly Fee</p>
                 <p className="text-caption mt-1">No desk or franchise fees</p>
               </CyberCard>
 
-              <CyberCard padding="md" className="h-full">
-                <p className="text-h3 text-link mb-2">4</p>
+              <CyberCard padding="lg" className="h-full">
+                <p className="text-h3 mb-2 stat-3d-text">4</p>
                 <p className="text-body">Income Streams</p>
                 <p className="text-caption mt-1">Commission, stock, rev share, referrals</p>
               </CyberCard>

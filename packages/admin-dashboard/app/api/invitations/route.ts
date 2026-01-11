@@ -18,7 +18,7 @@ import {
   listInvitations,
   createAuditLog,
 } from '@saa/shared/lib/supabase/invitation-service';
-import { sendInvitationEmail } from '@/lib/email/send';
+import { sendWelcomeEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -142,11 +142,13 @@ export async function POST(request: NextRequest) {
 
     // Send invitation email
     try {
-      const emailResult = await sendInvitationEmail({
-        to: validatedData.email,
-        full_name: validatedData.name,
-        activationToken: invitation.token,
-      });
+      const firstName = validatedData.name?.split(' ')[0] || 'Agent';
+      const emailResult = await sendWelcomeEmail(
+        validatedData.email,
+        firstName,
+        invitation.token,
+        48 // 48 hours
+      );
 
       if (!emailResult.success) {
         // Update invitation status to indicate email failed

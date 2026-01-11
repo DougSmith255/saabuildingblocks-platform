@@ -11,9 +11,9 @@ import { ConstellationMapEffect } from '@/components/shared/hero-effects/Constel
  */
 export default function Locations() {
   const stats = [
-    { value: "28+", label: "Countries" },
-    { value: "89,000+", label: "Agents Worldwide" },
-    { value: "4,000+", label: "Regus Offices" }
+    { value: "29+", label: "Countries" },
+    { value: "84,000+", label: "Agents Worldwide" },
+    { value: "10+", label: "Languages Spoken" }
   ];
 
   const regions = [
@@ -45,14 +45,14 @@ export default function Locations() {
     { title: "$85/Month Flat", description: "No desk fees. No franchise fees. No royalty fees." },
     { title: "ICON Program", description: "Hit production goals, get your $16K cap back in stock" },
     { title: "Stock Equity", description: "Earn shares in a publicly traded company" },
-    { title: "Global Referrals", description: "25% referral fee from agents in 28+ countries" }
+    { title: "Global Referrals", description: "25% referral fee from agents in 29+ countries" }
   ];
 
   const teamBenefits = [
     { title: "Zero Royalty Fees", description: "Build your brand without paying royalties" },
     { title: "2,000+ Support Staff", description: "Salaried employees dedicated to your success" },
     { title: "Cloud Infrastructure", description: "No brick-and-mortar overhead costs" },
-    { title: "International Expansion", description: "Grow your team across 28+ countries" }
+    { title: "International Expansion", description: "Grow your team across 29+ countries" }
   ];
 
   return (
@@ -73,10 +73,10 @@ export default function Locations() {
       {/* Stats Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
         <div className="max-w-[1900px] mx-auto">
-          <div className="grid md:grid-cols-3 gap-6 text-center">
+          <div className="grid md:grid-cols-3 gap-6 text-center items-stretch">
             {stats.map((stat, index) => (
-              <CyberCard key={index} padding="lg">
-                <div className="text-h2 text-[#ffd700] mb-2">{stat.value}</div>
+              <CyberCard key={index} padding="lg" className="h-full">
+                <p className="text-h2 mb-2 stat-3d-text">{stat.value}</p>
                 <p className="text-body">{stat.label}</p>
               </CyberCard>
             ))}

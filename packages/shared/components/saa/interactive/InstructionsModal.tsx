@@ -154,18 +154,8 @@ export function InstructionsModal({
             </div>
           </div>
 
-          <div style={styles.instructionItem}>
-            <div style={styles.instructionNumber}>4</div>
-            <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Activate Your Agent Portal</strong>
-              <p style={styles.instructionText}>
-                Once your license transfers, you&apos;ll receive an email to activate your Smart Agent Alliance portal with all your onboarding materials and resources.
-              </p>
-            </div>
-          </div>
-
           <div style={{...styles.instructionItem, marginBottom: 0}}>
-            <div style={styles.instructionNumber}>5</div>
+            <div style={styles.instructionNumber}>4</div>
             <div style={styles.instructionContent}>
               <strong style={styles.instructionTitle}>eXp Realty Support</strong>
               <p style={styles.instructionText}>

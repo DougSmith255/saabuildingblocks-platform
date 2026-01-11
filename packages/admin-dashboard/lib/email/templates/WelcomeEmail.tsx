@@ -33,7 +33,7 @@ export function WelcomeEmail({
 }: WelcomeEmailProps) {
   return (
     <EmailLayout preview="Welcome to Smart Agent Alliance - Activate your account">
-      <EmailGreeting>Welcome, {firstName}!</EmailGreeting>
+      <EmailGreeting>Hi {firstName},</EmailGreeting>
 
       <EmailHeading>Activate Your Account</EmailHeading>
 
@@ -88,11 +88,7 @@ export function WelcomeEmail({
         </EmailLink>
       </EmailParagraph>
 
-      <EmailSignature
-        name="The SAA Team"
-        title="Smart Agent Alliance"
-        email="team@smartagentalliance.com"
-      />
+      <EmailSignature />
     </EmailLayout>
   );
 }

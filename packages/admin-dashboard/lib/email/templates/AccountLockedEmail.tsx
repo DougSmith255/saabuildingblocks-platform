@@ -14,7 +14,7 @@ import {
   EmailHighlightBox,
   EmailAlert,
   EmailDivider,
-  EmailListItem,
+  EmailNumberedStep,
   EmailLink,
   EmailSignature,
   BRAND_COLORS,
@@ -126,10 +126,10 @@ export function AccountLockedEmail({
         What Should You Do?
       </Text>
 
-      <EmailListItem bullet="1.">Wait for the automatic unlock time</EmailListItem>
-      <EmailListItem bullet="2.">Review your recent account activity</EmailListItem>
-      <EmailListItem bullet="3.">Change your password if you suspect unauthorized access</EmailListItem>
-      <EmailListItem bullet="4.">Enable two-factor authentication for added security</EmailListItem>
+      <EmailNumberedStep number={1}>Wait for the automatic unlock time</EmailNumberedStep>
+      <EmailNumberedStep number={2}>Review your recent account activity</EmailNumberedStep>
+      <EmailNumberedStep number={3}>Change your password if you suspect unauthorized access</EmailNumberedStep>
+      <EmailNumberedStep number={4}>Enable two-factor authentication for added security</EmailNumberedStep>
 
       <EmailAlert type="warning">
         Didn&apos;t trigger this? If you didn&apos;t attempt to access your account, someone else
@@ -148,11 +148,7 @@ export function AccountLockedEmail({
         </EmailLink>
       </EmailParagraph>
 
-      <EmailSignature
-        name="Security Team"
-        title="Smart Agent Alliance"
-        email="team@smartagentalliance.com"
-      />
+      <EmailSignature />
     </EmailLayout>
   );
 }

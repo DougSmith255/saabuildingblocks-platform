@@ -183,12 +183,23 @@ export default function StarBackgroundCanvas() {
 
   return (
     <>
-      {/* Mobile fix for address bar hide/show:
-          - Use bottom: 0 to anchor to bottom of viewport
-          - Use height: 100lvh (largest viewport) so it's always tall enough
-          - When address bar hides, viewport grows from top, but background stays anchored at bottom
-          - This prevents the "jumping" appearance */}
+      {/*
+        STACKING ORDER (back to front):
+        1. html background (rgb(12,12,12)) - for rubber banding
+        2. .star-gradient (z-index: -2) - radial gradient
+        3. .star-canvas (z-index: -1) - animated stars
+        4. body (transparent) - lets gradient/stars show through
+        5. main content (z-index: 1) - page content
+      */}
       <style jsx>{`
+        .star-gradient {
+          position: fixed;
+          inset: 0;
+          z-index: -2;
+          pointer-events: none;
+          background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
+          background-color: rgb(12, 12, 12);
+        }
         .star-canvas {
           position: fixed;
           left: 0;
@@ -208,6 +219,9 @@ export default function StarBackgroundCanvas() {
           }
         }
       `}</style>
+      {/* Gradient background layer */}
+      <div className="star-gradient" aria-hidden="true" />
+      {/* Star canvas layer */}
       <canvas
         ref={canvasRef}
         aria-hidden="true"

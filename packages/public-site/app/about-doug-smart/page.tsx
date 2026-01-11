@@ -87,9 +87,8 @@ export default function AboutDougSmart() {
 
             <div className="space-y-6 text-body">
               <p>
-                Doug is the architect behind Smart Agent Alliance's entire digital infrastructure. This website,
-                the automation systems, agent webpages, and the technology stack that gives our agents an
-                <strong className="text-[#ffd700]"> unfair advantage</strong> in their markets—he built it all.
+                Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and
+                automations powering production workflows and attraction tools across the organization.
               </p>
 
               <p>
@@ -124,25 +123,6 @@ export default function AboutDougSmart() {
                 </CyberCard>
               ))}
             </div>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* Contact Section */}
-      <LazySection height={300}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto text-center">
-            <div className="text-center mb-12">
-              <H2>Get in Touch</H2>
-            </div>
-            <CyberCard padding="lg" className="max-w-[450px] mx-auto">
-              <div className="text-center">
-                <h3 className="text-h5 mb-4">Contact Info</h3>
-                <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
-                  team@smartagentalliance.com
-                </a>
-              </div>
-            </CyberCard>
           </div>
         </section>
       </LazySection>

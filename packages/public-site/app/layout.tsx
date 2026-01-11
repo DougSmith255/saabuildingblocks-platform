@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import StarBackground from '@/components/shared/StarBackgroundCanvas';
-import ScrollProgress from '@/components/shared/ScrollProgress';
 import ScrollToTop from '@/components/shared/ScrollToTop';
 import LayoutWrapper from './components/LayoutWrapper';
 import PerformanceHints from './components/PerformanceHints';
@@ -334,10 +333,10 @@ export default async function RootLayout({
       >
         {/* Public-site package: Always static export with baked-in CSS */}
         {/* SmoothScroll moved to LayoutWrapper for dynamic import */}
+        {/* ScrollProgress moved to LayoutWrapper to hide in embed mode */}
         <ScrollToTop />
         <SkipLink />
         <StarBackground />
-        <ScrollProgress />
         <LayoutWrapper>{children}</LayoutWrapper>
 
 

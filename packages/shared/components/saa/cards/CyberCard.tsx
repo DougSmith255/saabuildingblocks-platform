@@ -7,8 +7,8 @@ export interface CyberCardProps {
   children: React.ReactNode;
   /** Optional className for the container */
   className?: string;
-  /** Padding size: 'sm' (p-4), 'md' (p-6), 'lg' (p-8), 'xl' (p-10) */
-  padding?: 'sm' | 'md' | 'lg' | 'xl';
+  /** Padding size: 'sm' (p-4), 'md' (p-6), 'lg' (p-8), 'xl' (p-10), '2xl' (p-12 pt-16 for 3D numbers) */
+  padding?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   /** Center the content */
   centered?: boolean;
   /** Link URL - wraps card in anchor tag and enables interactive styling */
@@ -22,6 +22,7 @@ const paddingClasses = {
   md: 'p-6',
   lg: 'p-8',
   xl: 'p-10',
+  '2xl': 'p-12 pt-20', // Extra top padding for 3D transformed numbers (80px top)
 };
 
 /**
@@ -72,6 +73,19 @@ export function CyberCard({
           display: block;
         }
 
+        /* When h-full is applied, propagate to inner elements */
+        .cyber-card-3d.h-full {
+          height: 100%;
+        }
+        .cyber-card-3d.h-full .cyber-card-plate {
+          height: 100%;
+        }
+        .cyber-card-3d.h-full .cyber-card-content {
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+
         .cyber-card-plate {
           position: relative;
           /* 3D effect without angle */
@@ -88,6 +102,9 @@ export function CyberCard({
 
           /* Rounded corners */
           border-radius: 12px;
+
+          /* CRITICAL: Allow 3D transformed content to overflow the border-radius */
+          overflow: visible;
 
           /* Beveled edge effect - lighter top/left for raised look */
           border-top: 2px solid rgba(180,180,180,0.45);
@@ -161,6 +178,8 @@ export function CyberCard({
           /* Ensure content tilts with the card */
           transform-style: preserve-3d;
           transform: translateZ(0);
+          /* Allow 3D transformed children to overflow */
+          overflow: visible;
         }
 
         /* Yellow color for headings inside CyberCard (no glow) */

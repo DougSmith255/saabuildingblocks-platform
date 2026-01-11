@@ -18,7 +18,8 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
-import { sendInvitationEmail } from '@/lib/email/send';
+// TODO: Create sendInvitationEmail function when invitation system is implemented
+// import { sendInvitationEmail } from '@/lib/email/send';
 
 // GoHighLevel webhook verification public key
 // This should be obtained from GoHighLevel dashboard
@@ -280,19 +281,18 @@ async function handleContactTagUpdate(event: WebhookEvent): Promise<void> {
       name,
     });
 
-    // Send invitation email
-    try {
-      await sendInvitationEmail({
-        to: email,
-        full_name: name || email,
-        activationToken: invitationToken,
-      });
-
-      console.log('✅ Invitation email sent successfully to:', email);
-    } catch (emailError) {
-      console.error('❌ Failed to send invitation email:', emailError);
-      // Don't throw - invitation is created, email can be retried
-    }
+    // TODO: Send invitation email when sendInvitationEmail is implemented
+    // try {
+    //   await sendInvitationEmail({
+    //     to: email,
+    //     full_name: name || email,
+    //     activationToken: invitationToken,
+    //   });
+    //   console.log('✅ Invitation email sent successfully to:', email);
+    // } catch (emailError) {
+    //   console.error('❌ Failed to send invitation email:', emailError);
+    // }
+    console.log('📧 Invitation created for:', email, '- Email sending not yet implemented');
   }
 
   // Check for account activation tag

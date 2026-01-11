@@ -72,6 +72,16 @@ function AnimatedNumber({ value, prefix = '$', duration = 500 }: { value: number
 // How It Works Dropdown Component
 function HowItWorksDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleToggle = () => {
+    const newState = !isOpen;
+    setIsOpen(newState);
+    // Notify parent window (if embedded in iframe) to scroll modal
+    if (newState && window.parent !== window) {
+      window.parent.postMessage({ type: 'scrollToBottom', modal: 'calculator' }, '*');
+    }
+  };
+
   return (
     <div
       className="relative -mt-[1px]"
@@ -84,7 +94,7 @@ function HowItWorksDropdown() {
       }}
     >
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
         className="w-full flex items-center justify-between px-4 sm:px-6 py-3 text-left transition-all hover:bg-white/[0.02]"
         style={{ borderTop: '1px solid rgba(255,215,0,0.1)' }}
       >

@@ -18,6 +18,7 @@ import {
   Hr,
   Img,
 } from '@react-email/components';
+import { EmailNumberedStep } from './components/Layout';
 
 interface ApplyInstructionsEmailProps {
   recipientFirstName: string;
@@ -59,95 +60,60 @@ export function ApplyInstructionsEmail({
               How to Join Smart Agent Alliance at eXp
             </Heading>
 
-            {/* Step 1 */}
-            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
-              <tr>
-                <td style={stepNumberCellStyle}>
-                  <div style={stepNumberStyle}>1</div>
-                </td>
-                <td style={stepTextCellStyle}>
-                  <strong style={{color: '#fff'}}>Start Your Application</strong>
-                  <br />
-                  <span style={subTextStyle}>
-                    Visit{' '}
-                    <Link href="https://joinapp.exprealty.com/" style={linkStyle}>
-                      joinapp.exprealty.com
-                    </Link>{' '}
-                    to begin your eXp Realty application.
-                  </span>
-                </td>
-              </tr>
-            </table>
+            <EmailNumberedStep number={1}>
+              <strong style={{color: '#e5e4dd'}}>Start Your Application</strong>
+              <br />
+              <span style={subTextStyle}>
+                Visit{' '}
+                <Link href="https://joinapp.exprealty.com/" style={linkStyle}>
+                  joinapp.exprealty.com
+                </Link>{' '}
+                to begin your eXp Realty application.
+              </span>
+            </EmailNumberedStep>
 
-            {/* Step 2 */}
-            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
-              <tr>
-                <td style={stepNumberCellStyle}>
-                  <div style={stepNumberStyle}>2</div>
-                </td>
-                <td style={stepTextCellStyle}>
-                  <strong style={{color: '#fff'}}>Search for Your Sponsor</strong>
-                  <br />
-                  <span style={subTextStyle}>
-                    Enter <strong style={{color: '#ffd700'}}>{agentEmail}</strong> and click Search.
-                    Select <strong style={{color: '#ffd700'}}>{agentName}</strong> as your sponsor.
-                  </span>
-                </td>
-              </tr>
-            </table>
+            <EmailNumberedStep number={2}>
+              <strong style={{color: '#e5e4dd'}}>Search for Your Sponsor</strong>
+              <br />
+              <span style={subTextStyle}>
+                Enter <strong style={{color: '#ffd700'}}>{agentEmail}</strong> and click Search.
+                Select <strong style={{color: '#ffd700'}}>{agentName}</strong> as your sponsor.
+              </span>
+            </EmailNumberedStep>
 
-            {/* Step 3 */}
-            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
-              <tr>
-                <td style={stepNumberCellStyle}>
-                  <div style={stepNumberStyle}>3</div>
-                </td>
-                <td style={stepTextCellStyle}>
-                  <strong style={{color: '#fff'}}>Complete Your Application</strong>
-                  <br />
-                  <span style={subTextStyle}>
-                    Fill out the application form and submit. You&apos;ll receive a confirmation email from eXp.
-                  </span>
-                </td>
-              </tr>
-            </table>
+            <EmailNumberedStep number={3}>
+              <strong style={{color: '#e5e4dd'}}>Complete Your Application</strong>
+              <br />
+              <span style={subTextStyle}>
+                Fill out the application form and submit. You&apos;ll receive a confirmation email from eXp.
+              </span>
+            </EmailNumberedStep>
 
-            {/* Step 4 */}
-            <table cellPadding="0" cellSpacing="0" style={stepTableStyle}>
-              <tr>
-                <td style={stepNumberCellStyle}>
-                  <div style={stepNumberStyle}>4</div>
-                </td>
-                <td style={stepTextCellStyle}>
-                  <strong style={{color: '#fff'}}>eXp Realty Support</strong>
-                  <br />
-                  <span style={subTextStyle}>
-                    For application issues, call <strong style={{color: '#fff'}}>833-303-0610</strong> or email{' '}
-                    <Link href="mailto:expertcare@exprealty.com" style={linkStyle}>
-                      expertcare@exprealty.com
-                    </Link>
-                  </span>
-                </td>
-              </tr>
-            </table>
+            <EmailNumberedStep number={4}>
+              <strong style={{color: '#e5e4dd'}}>eXp Realty Support</strong>
+              <br />
+              <span style={subTextStyle}>
+                For application issues, call <strong style={{color: '#e5e4dd'}}>833-303-0610</strong> or email{' '}
+                <Link href="mailto:expertcare@exprealty.com" style={linkStyle}>
+                  expertcare@exprealty.com
+                </Link>
+              </span>
+            </EmailNumberedStep>
 
             <Hr style={dividerStyle} />
 
             <Text style={closingStyle}>
-              Looking forward to working with you,
-              <br />
-              <br />
-              <strong>Doug & Karrie</strong>
-              <br />
-              Team Leaders, Smart Agent Alliance
+              Best regards,
             </Text>
-
-            <Text style={{...paragraphStyle, marginTop: '20px'}}>
-              Questions? Email us at{' '}
-              <Link href="mailto:team@smartagentalliance.com" style={linkStyle}>
-                team@smartagentalliance.com
-              </Link>
+            <Text style={{...goldTextStyle, marginTop: '8px'}}>
+              The SAA Team
             </Text>
+            <Text style={{...paragraphStyle, margin: '4px 0'}}>
+              Smart Agent Alliance
+            </Text>
+            <Link href="mailto:team@smartagentalliance.com" style={linkStyle}>
+              team@smartagentalliance.com
+            </Link>
           </Section>
 
           {/* Footer */}
@@ -196,7 +162,7 @@ const headerStyle: React.CSSProperties = {
 };
 
 const headerBrandTextStyle: React.CSSProperties = {
-  color: '#ffd700',
+  color: '#ffffff',
   fontSize: '20px',
   fontWeight: 700,
   margin: 0,
@@ -208,7 +174,7 @@ const contentStyle: React.CSSProperties = {
 };
 
 const greetingStyle: React.CSSProperties = {
-  color: '#ffd700',
+  color: '#ffffff',
   fontSize: '20px',
   fontWeight: 600,
   margin: '0 0 16px 0',
@@ -247,16 +213,15 @@ const stepNumberCellStyle: React.CSSProperties = {
 };
 
 const stepNumberStyle: React.CSSProperties = {
-  color: '#ffd700',
+  color: '#1a1a1a',
   fontSize: '14px',
   fontWeight: 700,
   width: '28px',
   height: '28px',
   borderRadius: '50%',
-  backgroundColor: 'rgba(255, 215, 0, 0.15)',
-  border: '1px solid rgba(255, 215, 0, 0.3)',
+  backgroundColor: '#ffd700',
   textAlign: 'center',
-  lineHeight: '26px',
+  lineHeight: '28px',
   display: 'block',
 };
 
@@ -282,7 +247,7 @@ const highlightBoxStyle: React.CSSProperties = {
 };
 
 const highlightHeadingStyle: React.CSSProperties = {
-  color: '#ffd700',
+  color: '#ffffff',
   fontSize: '18px',
   fontWeight: 600,
   margin: '0 0 12px 0',

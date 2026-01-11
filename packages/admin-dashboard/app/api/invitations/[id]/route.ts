@@ -17,7 +17,7 @@ import {
   createAuditLog,
   getUserById,
 } from '@saa/shared/lib/supabase/invitation-service';
-import { sendInvitationEmail } from '@/lib/email/send';
+import { sendWelcomeEmail } from '@/lib/email/send';
 import { ZodError } from 'zod';
 
 export const dynamic = 'force-dynamic';
@@ -208,11 +208,12 @@ export async function PATCH(
 
       // Resend invitation email
       try {
-        const emailResult = await sendInvitationEmail({
-          to: invitation.email,
-          full_name: user.full_name,
-          activationToken: invitation.token,
-        });
+        const emailResult = await sendWelcomeEmail(
+          invitation.email,
+          (user as any).first_name || user.full_name?.split(' ')[0] || 'Agent',
+          invitation.token,
+          48 // 48 hours
+        );
 
         if (!emailResult.success) {
           return NextResponse.json(

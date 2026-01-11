@@ -136,9 +136,8 @@ export function ProvenAtScale() {
         <div className="grid md:grid-cols-12 gap-8 items-center">
           {/* Left - Content (8 columns) */}
           <div className="md:col-span-8">
-            <RevealFromLeft>
-              <H2 className="text-center md:text-left" style={{ justifyContent: 'flex-start' }}>{HEADLINE}</H2>
-            </RevealFromLeft>
+            {/* H2 - always visible, no animation */}
+            <H2 className="text-center md:text-left" style={{ justifyContent: 'flex-start' }}>{HEADLINE}</H2>
 
             <div className="space-y-4 mb-8">
               {STATS.map((stat, i) => {

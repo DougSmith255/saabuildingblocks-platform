@@ -10,7 +10,6 @@ import { PasswordResetEmail } from './templates/PasswordResetEmail';
 import { UsernameReminderEmail } from './templates/UsernameReminderEmail';
 import { WelcomeEmail } from './templates/WelcomeEmail';
 import { AccountLockedEmail } from './templates/AccountLockedEmail';
-import { InvitationEmail } from './templates/InvitationEmail';
 import { ApplyInstructionsEmail } from './templates/ApplyInstructionsEmail';
 
 /**
@@ -261,112 +260,6 @@ export async function sendEmailChangeConfirmation(
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
-    };
-  }
-}
-
-/**
- * Send invitation email to new user with activation link
- *
- * @param to - Recipient email address
- * @param first_name - Invitee's first name (preferred)
- * @param last_name - Invitee's last name (preferred)
- * @param full_name - Invitee's full name (backward compatibility)
- * @param activationToken - Secure activation token
- * @param inviterName - Optional name of person who sent invitation
- * @param role - User role (for customized messaging)
- * @param expiresInDays - Days until invitation expires (default: 7)
- */
-export async function sendInvitationEmail({
-  to,
-  first_name,
-  last_name,
-  full_name,
-  activationToken,
-  inviterName,
-  role = 'user',
-  expiresInDays = 7,
-}: {
-  to: string;
-  first_name?: string;
-  last_name?: string;
-  full_name?: string;
-  activationToken: string;
-  inviterName?: string;
-  role?: string;
-  expiresInDays?: number;
-}): Promise<EmailResult> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://saabuildingblocks.pages.dev';
-  const activationLink = `${baseUrl}/agent-portal/activate?token=${activationToken}`;
-  const expiresIn = expiresInDays === 1 ? '24 hours' : `${expiresInDays} days`;
-
-  // Determine full name for email template
-  const recipientFullName = full_name || (first_name && last_name ? `${first_name} ${last_name}` : first_name || 'User');
-
-  // Comprehensive logging before sending
-  console.log('📧 [INVITATION EMAIL] Preparing to send invitation:', {
-    recipient: to,
-    recipientName: recipientFullName,
-    role,
-    inviterName: inviterName || 'System',
-    expiresInDays,
-    timestamp: new Date().toISOString(),
-  });
-
-  try {
-    const result = await sendEmail({
-      to,
-      subject: inviterName
-        ? `${inviterName} invited you to SAA Building Blocks`
-        : 'Your SAA Building Blocks Invitation',
-      react: InvitationEmail({
-        full_name: recipientFullName,
-        activationLink,
-        expiresIn,
-        inviterName,
-        role,
-      }),
-      tags: [
-        { name: 'category', value: 'invitation' },
-        { name: 'role', value: role },
-        // Note: Removed name-based tags as they can contain spaces/special chars
-        // which violate Resend's tag constraint (ASCII letters, numbers, _, - only)
-      ],
-    });
-
-    // Log detailed success information
-    if (result.success) {
-      console.log('✅ [INVITATION EMAIL] Successfully sent:', {
-        messageId: result.messageId,
-        recipient: to,
-        recipientName: recipientFullName,
-        timestamp: result.timestamp,
-        serviceProvider: result.serviceProvider,
-        attempts: result.attempts,
-      });
-    } else {
-      console.error('❌ [INVITATION EMAIL] Failed to send:', {
-        recipient: to,
-        error: result.error,
-        timestamp: result.timestamp,
-        attempts: result.attempts,
-      });
-    }
-
-    return result;
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('❌ [INVITATION EMAIL] Exception during send:', {
-      recipient: to,
-      error: errorMessage,
-      timestamp: new Date().toISOString(),
-    });
-
-    return {
-      success: false,
-      error: errorMessage,
-      timestamp: new Date().toISOString(),
-      recipient: to,
     };
   }
 }

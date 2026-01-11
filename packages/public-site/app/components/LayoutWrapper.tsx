@@ -68,12 +68,13 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   ], []);
 
   // Routes where header/footer should be hidden, but NOT sub-routes
-  const exactNoHeaderFooterRoutes = useMemo(() => [
-    '/agent-portal', // Main portal - no header/footer
+  const exactNoHeaderFooterRoutes = useMemo((): string[] => [
+    '/agent-portal', // Agent portal has its own header with SAA logo
   ], []);
 
   // Routes where only footer should be hidden (header stays)
   const noFooterRoutes = useMemo(() => [
+    '/agent-portal',       // Main portal - has its own mobile nav
     '/agent-portal/login', // Login page - header yes, footer no
   ], []);
 
@@ -81,10 +82,8 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   // These are pages with a header but no meaningful content to scroll to
   // Format: prefix-based routes (matches /route and /route/*)
   const noScrollIndicatorPrefixes = useMemo(() => [
-    '/agent-portal/login',      // Login page - single viewport, no scroll content
-    '/agent-portal/activate',   // Account activation - single viewport form
-    '/agent-portal/forgot',     // Forgot password/username (future routes)
-    '/agent-portal/reset',      // Password reset (future routes)
+    '/agent-portal',            // All agent portal pages - has its own navigation
+    '/download',                // Download page - single viewport
   ], []);
 
   // Check for embed mode via URL search params

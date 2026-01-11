@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, CyberCardGold, NeonGoldText } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { QuantumGridEffect } from '@/components/shared/hero-effects/QuantumGridEffect';
@@ -55,12 +55,6 @@ export default function Awards() {
     { name: "Loran Coleman", award: "2023 HousingWire Woman of Influence" },
     { name: "Michael Valdes", award: "HousingWire Vanguard 2023" },
     { name: "Multiple Executives", award: "2024 Swanepoel Power 200 List (4 featured)" }
-  ];
-
-  const wolfPackAwards = [
-    { title: "Highest Net Growth", description: "Highest net growth group at eXp Realty" },
-    { title: "#1 Retention Rate", description: "Best retention rate company-wide" },
-    { title: "Top Team Leaders", description: "Top-performing in personal attraction and investor channels" }
   ];
 
   return (
@@ -142,29 +136,6 @@ export default function Awards() {
                   <h3 className="text-h6 mb-2">{exec.name}</h3>
                   <p className="text-link" style={{ fontSize: 'var(--font-size-caption)' }}>{exec.award}</p>
                 </GenericCard>
-              ))}
-            </div>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* Wolf Pack Awards */}
-      <LazySection height={350}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <div className="text-center mb-12">
-              <H2>Wolf Pack Supremacy</H2>
-              <p className="text-body mt-4 max-w-2xl mx-auto">
-                Inside eXp, the Wolf Pack leads the pack. Here's why agents stay.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-6">
-              {wolfPackAwards.map((award, index) => (
-                <CyberCard key={index} padding="md" className="h-full">
-                  <h3 className="text-h5 text-link mb-3">{award.title}</h3>
-                  <p className="text-body">{award.description}</p>
-                </CyberCard>
               ))}
             </div>
           </div>

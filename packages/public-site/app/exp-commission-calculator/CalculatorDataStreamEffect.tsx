@@ -124,8 +124,8 @@ export function CalculatorDataStreamEffect() {
     speed: 0.5 + (i % 4) * 0.3,
     length: 5 + (i % 6),
     delay: (i * 0.02) % 0.4,
-    // Binary characters instead of Katakana
-    chars: [...Array(22)].map(() => Math.random() > 0.5 ? '1' : '0'),
+    // Deterministic binary pattern to avoid hydration mismatch
+    chars: [...Array(22)].map((_, j) => ((i + j) % 2 === 0 ? '1' : '0')),
   }));
 
   return (

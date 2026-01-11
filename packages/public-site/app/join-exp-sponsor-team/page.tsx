@@ -1,10 +1,12 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { useState } from 'react';
+import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, FAQ, ProfileCyberFrame, JoinModal, InstructionsModal } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
 import { GreenLaserGridEffect } from '@/components/shared/hero-effects/GreenLaserGridEffect';
+import { WatchAndDecide } from '@/app/components/sections/WatchAndDecide';
 
 // Profile images from Cloudflare Images CDN
 const KARRIE_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/4e2a3c105e488654-Karrie-Profile-Picture.png/public';
@@ -14,10 +16,22 @@ const DOUG_PROFILE_IMAGE = 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/55d
  * Join Our eXp Realty Sponsor Team Page
  */
 export default function JoinExpSponsorTeam() {
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  const handleJoinSuccess = (data: { firstName: string }) => {
+    setUserName(data.firstName);
+    setShowJoinModal(false);
+    setTimeout(() => {
+      setShowInstructions(true);
+    }, 300);
+  };
+
   const faqs = [
     {
       question: "What is the Purpose of a Video Call with Karrie or Doug?",
-      answer: "This is not a sales call. The call is to answer your questions and discuss whether eXp Realty and the Wolf Pack are a good fit for you. What problems are you hoping to solve? Do we offer resources for that issue? If it seems like potentially a good fit, we will point you in the direction of next steps for you to take so that you can understand more about what eXp Realty and the Wolf Pack offer."
+      answer: "This is not a sales call. The call is to answer your questions and discuss whether eXp Realty and Smart Agent Alliance are a good fit for you. What problems are you hoping to solve? Do we offer resources for that issue? If it seems like potentially a good fit, we will point you in the direction of next steps for you to take so that you can understand more about what eXp Realty and Smart Agent Alliance offer."
     },
     {
       question: "What kind of training does eXp Realty provide?",
@@ -36,28 +50,12 @@ export default function JoinExpSponsorTeam() {
       answer: "Yes, eXp Realty's revenue share program is available internationally, allowing you to earn income from agents recruited not only all over the United States but also in 24 other countries."
     },
     {
-      question: "What sets the Wolf Pack apart from other real estate teams?",
-      answer: "First, it's not a team that takes any part of your commissions. The Wolf Pack is a completely free team that stands out from other real estate teams because of its extraordinary value-packed resources and its strong sense of community, friendship, and collaboration. Members of the Wolf Pack can leverage each other's strengths and overcome challenges more effectively."
-    },
-    {
       question: "What is the difference between an eXp sponsor and mentor?",
       answer: "Sponsors are chosen by agents when they sign up to join eXp. Agents do not pay their sponsor any split or fee. Sponsors are paid out of eXp's company dollar. Mentors are assigned to new agents after they become an agent with eXp. Mentors help with a new agent's first 3 transactions. New agents pay an additional 20% fee for their first 3 transactions to cover the associated costs of the mentorship program."
     },
     {
       question: "Can I join eXp Realty part-time?",
       answer: "Yes! One of the great advantages of joining eXp Realty is its flexibility. Whether you're looking for full-time or part-time opportunities in real estate, they welcome agents with different schedules and commitments. You can work at your own pace and create a schedule that suits your needs."
-    },
-    {
-      question: "How do I join eXp Realty & the Wolf Pack?",
-      answer: "Joining the eXp Realty Wolf Pack is easy! Simply reach out to us or explore our website to learn more about the benefits and opportunities. We'll guide you through the process and help you get started on your journey towards meeting your highest potential."
-    },
-    {
-      question: "Are there any costs associated with participating in the revenue share program?",
-      answer: "No, there are no additional costs or fees associated with participating in eXp Realty's revenue share program. It is completely free for all agents to participate and start earning revenue share income."
-    },
-    {
-      question: "How many Realtors are part of The Pack?",
-      answer: "The Wolf Pack at eXp Realty consists of over 2,900+ Realtors who are all committed to supporting one another's success. This vast network provides an invaluable opportunity for collaboration, mentorship, and growth within the real estate industry. The Wolf Pack has the highest retention rate of all teams at eXp and it is one of the fastest growing too."
     },
     {
       question: "Why Do Some Agents Leave eXp Realty?",
@@ -67,32 +65,48 @@ export default function JoinExpSponsorTeam() {
 
   return (
     <main id="main-content">
-      {/* Hero Section */}
-      <StickyHeroWrapper>
+      {/* Hero Section - fadeSpeed 1.5 = fades out 50% faster */}
+      <StickyHeroWrapper fadeSpeed={1.5}>
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
             <H1>JOIN SMART AGENT ALLIANCE</H1>
-            {/* Tagline with dark vignette behind for readability over green lasers */}
-            <div className="relative mt-4">
+            {/* Dark vignette behind Tagline only for readability over green lasers */}
+            <div className="relative inline-block mt-4">
               <div
                 className="absolute pointer-events-none"
                 style={{
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: '200%',
-                  height: '150px',
-                  background: 'radial-gradient(ellipse 50% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+                  width: '120%',
+                  height: '120px',
+                  background: 'radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+                  zIndex: -1,
                 }}
               />
               <Tagline>
                 Your first step to more
               </Tagline>
             </div>
+            {/* Hero CTA Button */}
+            <div className="mt-8">
+              <CTAButton
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowJoinModal(true);
+                }}
+              >
+                Join The Alliance
+              </CTAButton>
+            </div>
           </div>
         </section>
       </StickyHeroWrapper>
+
+      {/* The Only Video You Need Section */}
+      <WatchAndDecide />
 
       {/* Contact Cards Section */}
       <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
@@ -114,14 +128,7 @@ export default function JoinExpSponsorTeam() {
                 />
               </ProfileCyberFrame>
               <h3 className="text-h5 mb-2">Karrie Hill</h3>
-              <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
-              <div className="space-y-2 text-body">
-                <p>
-                  <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
-                    team@smartagentalliance.com
-                  </a>
-                </p>
-              </div>
+              <p className="text-link">Co-Founder, Smart Agent Alliance</p>
             </GenericCard>
 
             {/* Doug Smart Card */}
@@ -136,20 +143,13 @@ export default function JoinExpSponsorTeam() {
                 />
               </ProfileCyberFrame>
               <h3 className="text-h5 mb-2">Doug Smart</h3>
-              <p className="text-link mb-4">Co-Founder, Smart Agent Alliance</p>
-              <div className="space-y-2 text-body">
-                <p>
-                  <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
-                    team@smartagentalliance.com
-                  </a>
-                </p>
-              </div>
+              <p className="text-link">Co-Founder, Smart Agent Alliance</p>
             </GenericCard>
           </div>
 
           <div className="text-center mt-12">
-            <CTAButton href="https://join.exprealty.com/">
-              Start Your Application
+            <CTAButton href="mailto:team@smartagentalliance.com">
+              Contact Us
             </CTAButton>
           </div>
         </div>
@@ -163,23 +163,23 @@ export default function JoinExpSponsorTeam() {
               <H2>Why Join The Alliance?</H2>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              <CyberCard padding="md">
-                <div className="text-4xl mb-4 text-[#ffd700]">2,900+</div>
-                <h3 className="text-h6 mb-2">Realtors Strong</h3>
-                <p className="text-body">Join a community of over 2,900 Realtors committed to supporting one another's success.</p>
+            <div className="grid md:grid-cols-3 gap-6 items-stretch">
+              <CyberCard padding="lg" className="h-full">
+                <p className="text-h2 mb-4 stat-3d-text">3,700+</p>
+                <h3 className="text-h6 mb-2" style={{ color: 'var(--color-header-text)' }}>Realtors Strong</h3>
+                <p className="text-body">Join a community of over 3,700 Realtors committed to supporting one another's success.</p>
               </CyberCard>
 
-              <CyberCard padding="md">
-                <div className="text-4xl mb-4 text-[#ffd700]">100%</div>
-                <h3 className="text-h6 mb-2">Free Resources</h3>
-                <p className="text-body">No commission splits or fees. The Wolf Pack provides extraordinary value at no cost to you.</p>
+              <CyberCard padding="lg" className="h-full">
+                <p className="text-h2 mb-4 stat-3d-text">100%</p>
+                <h3 className="text-h6 mb-2" style={{ color: 'var(--color-header-text)' }}>Free Resources</h3>
+                <p className="text-body">No commission splits or fees. Smart Agent Alliance provides extraordinary value at no cost to you.</p>
               </CyberCard>
 
-              <CyberCard padding="md">
-                <div className="text-4xl mb-4 text-[#ffd700]">#1</div>
-                <h3 className="text-h6 mb-2">Retention Rate</h3>
-                <p className="text-body">The Wolf Pack has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
+              <CyberCard padding="lg" className="h-full">
+                <p className="text-h2 mb-4 stat-3d-text">#1</p>
+                <h3 className="text-h6 mb-2" style={{ color: 'var(--color-header-text)' }}>Retention Rate</h3>
+                <p className="text-body">Smart Agent Alliance has the highest retention rate of all teams at eXp and is one of the fastest growing.</p>
               </CyberCard>
             </div>
           </div>
@@ -207,8 +207,14 @@ export default function JoinExpSponsorTeam() {
               Join the Smart Agent Alliance team at eXp Realty and start your journey towards a more successful real estate career.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <CTAButton href="https://join.exprealty.com/">
-                Apply Now
+              <CTAButton
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowJoinModal(true);
+                }}
+              >
+                Join The Alliance
               </CTAButton>
               <CTAButton href="/exp-realty-sponsor/">
                 Learn About Our Value
@@ -217,6 +223,21 @@ export default function JoinExpSponsorTeam() {
           </div>
         </section>
       </LazySection>
+
+      {/* Join Modal */}
+      <JoinModal
+        isOpen={showJoinModal}
+        onClose={() => setShowJoinModal(false)}
+        onSuccess={handleJoinSuccess}
+        sponsorName={null}
+      />
+
+      {/* Instructions Modal - shown after successful join */}
+      <InstructionsModal
+        isOpen={showInstructions}
+        onClose={() => setShowInstructions(false)}
+        userName={userName}
+      />
     </main>
   );
 }

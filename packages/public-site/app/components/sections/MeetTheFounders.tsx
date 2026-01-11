@@ -62,13 +62,8 @@ export function MeetTheFounders() {
       `}</style>
       <section ref={ref} className="py-16 md:py-24 px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1500px' }}>
-        <div
-          className="text-center transition-all duration-700 mb-12"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          }}
-        >
+        {/* H2 - always visible, no animation */}
+        <div className="text-center mb-12">
           <H2>Meet SAA's Founders</H2>
         </div>
 

@@ -49,8 +49,10 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
   ];
 
   const mediaLogosHTML = [...MEDIA_LOGOS, ...MEDIA_LOGOS].map((logo, index) => `
-    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; height: clamp(80px, 6vw, 56px); min-width: clamp(180px, 15vw, 200px);">
-      <img src="${CLOUDFLARE_BASE}/${logo.id}/public" alt="${escapeHTML(logo.alt)}" loading="eager" style="height: 100%; width: auto; object-fit: contain; max-width: clamp(200px, 18vw, 240px); opacity: 0.9;" />
+    <div class="logo-item" style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; min-width: clamp(180px, 15vw, 200px);">
+      <span class="logo-3d-wrapper">
+        <img src="${CLOUDFLARE_BASE}/${logo.id}/public" alt="${escapeHTML(logo.alt)}" loading="eager" class="logo-img" />
+      </span>
     </div>
   `).join('');
 
@@ -233,6 +235,25 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
       font-feature-settings: "ss01" 1;
       text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8);
       filter: drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6));
+    }
+
+    /* Tagline ellipse gradient background for readability */
+    .tagline-backdrop {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tagline-backdrop::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120%;
+      height: 140px;
+      background: radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+      z-index: -1;
+      pointer-events: none;
     }
 
     /* CTA Button */
@@ -738,6 +759,32 @@ export function generateAttractionPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     @media (min-width: 768px) { .logo-track { gap: 64px; } }
+
+    /* 3D Logo Effect */
+    .logo-3d-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #c4a94d;
+      filter: drop-shadow(-1px -1px 0 #e6d99a) drop-shadow(1px 1px 0 #756429) drop-shadow(3px 3px 0 #2a2a1d) drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5));
+      transform: perspective(500px) rotateX(8deg);
+      width: 120px;
+      height: 120px;
+    }
+
+    .logo-img {
+      height: 70px;
+      width: auto;
+      object-fit: contain;
+      max-width: clamp(200px, 18vw, 300px);
+      filter: brightness(0) invert(0.8);
+    }
+
+    @media (min-width: 768px) {
+      .logo-img {
+        height: 72px;
+      }
+    }
 
     /* Video Player */
     .video-player-container { width: 100%; }

@@ -25,7 +25,7 @@ export const dynamic = 'force-dynamic';
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { sendInvitationEmail } from '@/lib/email/send';
+import { sendWelcomeEmail } from '@/lib/email/send';
 import { getEmailServiceHealth } from '@/lib/email/email-service';
 
 // Rate limiting (simple in-memory implementation)
@@ -93,14 +93,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Send invitation email
-    const result = await sendInvitationEmail({
-      to: body.to,
-      first_name: body.firstName,
-      activationToken: body.activationToken,
-      inviterName: body.inviterName,
-      role: body.role,
-      expiresInDays: body.expiresInDays,
-    });
+    const expiresInHours = body.expiresInDays ? body.expiresInDays * 24 : 48;
+    const result = await sendWelcomeEmail(
+      body.to,
+      body.firstName,
+      body.activationToken,
+      expiresInHours
+    );
 
     // Return appropriate status code
     if (result.success) {

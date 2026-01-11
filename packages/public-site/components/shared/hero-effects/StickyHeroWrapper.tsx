@@ -125,9 +125,17 @@ export function StickyHeroWrapper({ children, className = '', fadeSpeed = 1 }: S
       if (progress >= 1) {
         section.style.visibility = 'hidden';
         section.style.opacity = '0';
+        section.style.pointerEvents = 'none';
       } else {
         section.style.visibility = 'visible';
         section.style.opacity = '1';
+        section.style.pointerEvents = 'auto';
+      }
+
+      // Also disable pointer events on the wrapper's inner div when scrolled past
+      const wrapperInner = wrapperRef.current?.querySelector('.pointer-events-auto') as HTMLElement;
+      if (wrapperInner) {
+        wrapperInner.style.pointerEvents = progress >= 1 ? 'none' : 'auto';
       }
     };
 

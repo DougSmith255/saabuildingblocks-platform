@@ -28,7 +28,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { createInvitation } from '@saa/shared/lib/supabase/invitation-service';
-import { sendInvitationEmail } from '@/lib/email/send';
+import { sendWelcomeEmail } from '@/lib/email/send';
 
 export const dynamic = 'force-dynamic';
 
@@ -238,16 +238,12 @@ export async function POST(request: NextRequest) {
 
     // Send activation email
     try {
-      const emailResult = await sendInvitationEmail({
-        to: email,
-        first_name: firstName,
-        last_name: lastName,
-        full_name: fullName,
-        activationToken: invitation.token,
-        inviterName: 'Smart Agent Alliance',
-        role: 'user',
-        expiresInDays: 7,
-      });
+      const emailResult = await sendWelcomeEmail(
+        email,
+        firstName,
+        invitation.token,
+        168 // 7 days in hours
+      );
 
       if (emailResult.success) {
         console.log('✅ [GHL WEBHOOK] Activation email sent:', emailResult.messageId);

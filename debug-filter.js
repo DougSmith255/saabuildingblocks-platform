@@ -1,0 +1,42 @@
+const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox']
+  });
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1920, height: 1080 });
+  
+  await page.goto('https://saabuildingblocks.pages.dev/best-real-estate-brokerage/?t=' + Date.now(), { 
+    waitUntil: 'networkidle0' 
+  });
+  
+  // Scroll to load lazy sections
+  for (let i = 0; i < 3; i++) {
+    await page.evaluate(() => window.scrollBy(0, 800));
+    await new Promise(r => setTimeout(r, 500));
+  }
+  
+  await new Promise(r => setTimeout(r, 500));
+  
+  // Remove the filter and transform from numbers to see if that's the issue
+  await page.evaluate(() => {
+    const numbers = document.querySelectorAll('.text-h3, .text-h2');
+    numbers.forEach(el => {
+      el.style.filter = 'none';
+      el.style.transform = 'none';
+    });
+  });
+  
+  await new Promise(r => setTimeout(r, 500));
+  
+  await page.screenshot({ 
+    path: '/var/www/html/screenshots/exp-edge-no-filter.png',
+    fullPage: false
+  });
+  
+  console.log('Screenshot saved without filter/transform');
+  
+  await browser.close();
+})();

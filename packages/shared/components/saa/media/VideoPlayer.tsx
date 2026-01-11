@@ -745,22 +745,26 @@ export function VideoPlayer({
           margin-top: 1.5rem;
         }
 
+        /* 3D Plasma Tube Progress Bar */
         .progress-bar {
           width: 100%;
           max-width: 400px;
-          height: 6px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 3px;
+          height: 12px;
+          background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
+          border: 1px solid rgba(245, 245, 240, 0.25);
+          border-radius: 9999px;
           margin: 0 auto 1rem;
           overflow: hidden;
+          box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);
         }
 
         .progress-fill {
           height: 100%;
           width: 0%;
-          background: linear-gradient(90deg, #ffd700, #00ff88);
-          border-radius: 3px;
+          background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%);
+          border-radius: 9999px;
           transition: width 0.3s ease;
+          box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255, 215, 0, 0.4), inset 0 1px 2px rgba(255,255,255,0.4);
         }
 
         .progress-text {

@@ -115,31 +115,12 @@ async function sendWelcomeEmail(firstName, email, sponsorName, resendApiKey) {
               </table>
 
               <!-- Step 4 -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
-                <tr>
-                  <td width="40" valign="top">
-                    <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
-                      <tr>
-                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">4</td>
-                      </tr>
-                    </table>
-                  </td>
-                  <td style="padding-left: 12px;">
-                    <strong style="color: #ffffff; display: block; margin-bottom: 4px;">Activate Your Agent Portal</strong>
-                    <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin: 0; line-height: 1.5;">
-                      Once your license transfers, you'll receive an email to activate your Smart Agent Alliance portal with all your onboarding materials and resources.
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Step 5 -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td width="40" valign="top">
                     <table width="32" height="32" cellpadding="0" cellspacing="0" style="background-color: #ffd700; border-radius: 50%;">
                       <tr>
-                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">5</td>
+                        <td align="center" valign="middle" style="color: #1a1a1a; font-size: 14px; font-weight: 700; line-height: 32px;">4</td>
                       </tr>
                     </table>
                   </td>

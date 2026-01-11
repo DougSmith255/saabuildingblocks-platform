@@ -12,7 +12,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
 import { randomBytes, timingSafeEqual } from 'crypto';
 import { syncInvitationSent } from '@/lib/gohighlevel/index';
-import { sendInvitationEmail } from '@/lib/email/send';
+import { sendWelcomeEmail } from '@/lib/email/send';
 import { z } from 'zod';
 import { checkRateLimit } from '@/lib/security/rate-limiter';
 
@@ -261,13 +261,12 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-      const emailResult = await sendInvitationEmail({
-        to: email,
-        first_name: firstName,
-        last_name: lastName,
-        full_name: fullName, // Include for backward compatibility
-        activationToken: invitationToken,
-      });
+      const emailResult = await sendWelcomeEmail(
+        email,
+        firstName,
+        invitationToken,
+        48 // 48 hours
+      );
 
       // Track email status for response
       emailStatus = {

@@ -65,11 +65,7 @@ export function UsernameReminderEmail({
         </EmailLink>
       </EmailParagraph>
 
-      <EmailSignature
-        name="The SAA Team"
-        title="Smart Agent Alliance"
-        email="team@smartagentalliance.com"
-      />
+      <EmailSignature />
     </EmailLayout>
   );
 }

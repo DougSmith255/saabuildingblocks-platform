@@ -1357,7 +1357,15 @@ export default function AgentPortal() {
           </aside>
 
           {/* Main Content Area */}
-          <div className="flex-1 min-w-0">
+          <div
+            className="flex-1 min-w-0"
+            style={{
+              WebkitTapHighlightColor: 'transparent',
+              WebkitTouchCallout: 'none',
+              WebkitUserSelect: 'none',
+              userSelect: 'none',
+            } as React.CSSProperties}
+          >
             {/* Dashboard View */}
             {activeSection === 'dashboard' && (
               <DashboardView onNavigate={setActiveSection} />
@@ -4790,7 +4798,12 @@ function SectionWrapper({ title, children }: { title?: string; children: React.R
   return (
     <div
       className="section-content rounded-xl p-6 sm:p-8 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/10"
-      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+      style={{
+        WebkitTapHighlightColor: 'transparent',
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
+      } as React.CSSProperties}
     >
       {title && (
         <div className="mb-[50px]">

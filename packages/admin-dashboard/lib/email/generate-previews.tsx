@@ -13,7 +13,7 @@ import * as path from 'path';
 // Import all email templates
 import { PasswordResetEmail } from './templates/PasswordResetEmail';
 import { WelcomeEmail } from './templates/WelcomeEmail';
-import { InvitationEmail } from './templates/InvitationEmail';
+// InvitationEmail removed - using WelcomeEmail for all invitations
 import { AccountLockedEmail } from './templates/AccountLockedEmail';
 import { UsernameReminderEmail } from './templates/UsernameReminderEmail';
 import { ApplyInstructionsEmail } from './templates/ApplyInstructionsEmail';
@@ -46,16 +46,7 @@ async function generatePreviews() {
         expiresInHours: 24,
       }),
     },
-    {
-      name: 'invitation',
-      component: InvitationEmail({
-        full_name: 'John Doe',
-        activationLink: 'https://smartagentalliance.com/agent-portal/activate?token=abc123',
-        expiresIn: '7 days',
-        inviterName: 'Doug Smith',
-        role: 'user',
-      }),
-    },
+    // Invitation preview removed - using WelcomeEmail for all invitations
     {
       name: 'account-locked',
       component: AccountLockedEmail({

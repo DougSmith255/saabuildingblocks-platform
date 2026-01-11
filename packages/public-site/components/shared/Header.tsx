@@ -252,7 +252,7 @@ export default function Header() {
               width: '100%',
               maxWidth: '100%',
               margin: '0',
-              padding: '8px 32px',
+              padding: '8px 20px', // Reduced from 32px for tighter mobile spacing
               boxSizing: 'border-box',
               display: 'flex',
               alignItems: 'center',
@@ -631,8 +631,8 @@ export default function Header() {
           will-change: transform;
           /* Vertical alignment via transform instead of top */
           transform: translateY(2px) translateZ(0);
-          /* Fixed right margin for consistent spacing */
-          margin-right: -12px;
+          /* Fixed right margin for consistent spacing - reduced to match left logo spacing */
+          margin-right: -5px;
         }
 
         /* Prevent color change on hover */
@@ -716,6 +716,14 @@ export default function Header() {
 
         /* Ensure header container maintains flexbox on desktop */
         @media (min-width: 100rem) {
+          .header-container {
+            padding-left: 32px !important;
+            padding-right: 32px !important;
+          }
+        }
+
+        /* Restore padding for tablets and up */
+        @media (min-width: 768px) {
           .header-container {
             padding-left: 32px !important;
             padding-right: 32px !important;

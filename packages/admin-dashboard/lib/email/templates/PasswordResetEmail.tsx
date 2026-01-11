@@ -15,6 +15,7 @@ import {
   EmailAlert,
   EmailDivider,
   EmailLink,
+  EmailSignature,
   BRAND_COLORS,
 } from './components/Layout';
 import { Text, Section } from '@react-email/components';
@@ -88,6 +89,8 @@ export function PasswordResetEmail({
           team@smartagentalliance.com
         </EmailLink>
       </EmailParagraph>
+
+      <EmailSignature />
     </EmailLayout>
   );
 }

@@ -97,12 +97,26 @@ export function FAQ({
             >
               {item.question}
             </span>
-            <ChevronDown
-              className={`w-5 h-5 flex-shrink-0 transition-transform duration-300 ${
+            <span
+              className={`flex-shrink-0 transition-transform duration-300 ${
                 isOpen(index) ? 'rotate-180' : ''
               }`}
-              style={{ color: 'var(--faq-icon-color, #ffd700)' }}
-            />
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--faq-icon-color, #ffd700)',
+                filter: `
+                  drop-shadow(-1px -1px 0 #ffe680)
+                  drop-shadow(1px 1px 0 #8a7a3d)
+                  drop-shadow(2px 2px 0 #2a2a1d)
+                  drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5))
+                `,
+                transform: 'perspective(500px) rotateX(8deg)',
+              }}
+            >
+              <ChevronDown className="w-5 h-5" />
+            </span>
           </button>
 
           {/* Answer */}

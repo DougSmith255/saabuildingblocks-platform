@@ -192,19 +192,33 @@ function Tooltip({ children, content, isVisible }: { children: React.ReactNode; 
 }
 
 const scenarios = [
-  { name: 'Starter', desc: 'First recruits, building foundation', tierCounts: [6, 3, 1, 1, 0, 0, 0], avgGCI: 80000 },
-  { name: 'Growing', desc: 'Team taking shape, tiers unlocking', tierCounts: [12, 18, 14, 6, 3, 0, 0], avgGCI: 90000 },
-  { name: 'Established', desc: 'Compounding kicks in across all tiers', tierCounts: [28, 45, 72, 85, 48, 22, 0], avgGCI: 100000 },
-  { name: 'Momentum', desc: 'Self-sustaining growth, network effect', tierCounts: [60, 110, 200, 300, 380, 400, 280], avgGCI: 100000 },
-  { name: 'Empire Builder', desc: 'Legacy organization, deep network', tierCounts: [120, 250, 500, 900, 1400, 1800, 2200], avgGCI: 100000 },
+  // Starter: 5 T1 agents, early growth (~1.85x multiplier, some haven't recruited yet)
+  { name: 'Starter', desc: 'First recruits, building foundation', tierCounts: [5, 7, 10, 0, 0, 0, 0], avgGCI: 80000 },
+  // Growing: 10 T1 agents, ~1.85x growth per tier, tiers 4-5 starting to unlock
+  { name: 'Growing', desc: 'Team taking shape, tiers unlocking', tierCounts: [10, 18, 34, 63, 58, 0, 0], avgGCI: 90000 },
+  // Established: 20 T1 agents, exponential growth visible, all tiers unlocking
+  { name: 'Established', desc: 'Compounding kicks in across all tiers', tierCounts: [20, 37, 68, 126, 234, 216, 0], avgGCI: 100000 },
+  // Momentum: 30 T1 agents, strong exponential - lower tiers much larger
+  { name: 'Momentum', desc: 'Self-sustaining growth, network effect', tierCounts: [30, 56, 103, 190, 351, 650, 600], avgGCI: 100000 },
+  // Empire Builder: 40 T1 agents (max), full ~1.85x exponential - reaches $5M+
+  { name: 'Empire Builder', desc: 'Legacy organization, deep network', tierCounts: [40, 74, 137, 253, 468, 866, 1700], avgGCI: 100000 },
 ];
 
 function DisclaimerSection() {
   const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
 
+  const handleToggle = () => {
+    const newState = !isMethodologyOpen;
+    setIsMethodologyOpen(newState);
+    // Notify parent window (if embedded in iframe) to scroll modal
+    if (newState && window.parent !== window) {
+      window.parent.postMessage({ type: 'scrollToBottom', modal: 'revshare' }, '*');
+    }
+  };
+
   return (
     <div
-      className="relative -mt-[1px]"
+      className="relative -mt-[1px] disclaimer-section"
       style={{
         background: 'rgba(10,10,10,0.75)',
         backdropFilter: 'blur(12px)',
@@ -217,8 +231,8 @@ function DisclaimerSection() {
     >
       {/* Always visible disclaimer */}
       <div
-        className="px-4 sm:px-6 py-4 text-xs text-[#9a9890]"
-        style={{ borderTop: '1px solid rgba(255,215,0,0.1)' }}
+        className="px-4 sm:px-6 py-4 text-[#9a9890]"
+        style={{ borderTop: '1px solid rgba(255,215,0,0.1)', fontSize: '14px' }}
       >
         <p>
           Applies only to residential agents in the U.S. and Canada. International varies. These figures are not a guarantee, representation or projection of earnings or profits you can or should expect. eXp Realty makes no guarantee of financial success.{' '}
@@ -238,7 +252,7 @@ function DisclaimerSection() {
 
       {/* Methodology dropdown */}
       <button
-        onClick={() => setIsMethodologyOpen(!isMethodologyOpen)}
+        onClick={handleToggle}
         className="w-full flex items-center justify-between px-4 sm:px-6 py-3 text-left transition-all hover:bg-white/[0.02]"
         style={{ borderTop: '1px solid rgba(255,215,0,0.1)' }}
       >
@@ -372,6 +386,7 @@ function RevenueShareVisualization({
   setIsAutoPlaying,
   setIsPaused,
   setPulsingTier,
+  isEmbed = false,
 }: {
   selectedScenario: number;
   setSelectedScenario: (i: number) => void;
@@ -380,6 +395,7 @@ function RevenueShareVisualization({
   setIsAutoPlaying: (v: boolean) => void;
   setIsPaused: (v: boolean) => void;
   setPulsingTier: (v: number) => void;
+  isEmbed?: boolean;
 }) {
   const currentScenario = scenarios[selectedScenario];
   const adjustedResults = calculateTotalRevShare(currentScenario.tierCounts, currentScenario.avgGCI);
@@ -407,12 +423,12 @@ function RevenueShareVisualization({
 
   return (
     <div
-      className="rounded-t-2xl overflow-hidden relative"
+      className={isEmbed ? 'overflow-hidden relative' : 'rounded-t-2xl overflow-hidden relative'}
       style={{
-        background: 'rgba(10,10,10,0.75)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255,215,0,0.2)',
+        background: isEmbed ? '#0a0a0a' : 'rgba(10,10,10,0.75)',
+        backdropFilter: isEmbed ? 'none' : 'blur(12px)',
+        WebkitBackdropFilter: isEmbed ? 'none' : 'blur(12px)',
+        border: isEmbed ? 'none' : '1px solid rgba(255,215,0,0.2)',
         borderBottom: 'none',
       }}
     >
@@ -796,7 +812,38 @@ function RevenueShareCalculatorContent() {
     setIsAutoPlaying,
     setIsPaused,
     setPulsingTier,
+    isEmbed,
   };
+
+  const embedRef = useRef<HTMLDivElement>(null);
+
+  // Send height to parent window when in embed mode
+  useEffect(() => {
+    if (!isEmbed || !embedRef.current) return;
+
+    const sendHeight = () => {
+      if (embedRef.current && window.parent !== window) {
+        const height = embedRef.current.scrollHeight;
+        window.parent.postMessage({ type: 'setHeight', modal: 'revshare', height }, '*');
+      }
+    };
+
+    // Send initial height after a short delay to ensure content is rendered
+    setTimeout(sendHeight, 100);
+
+    // Observe size changes
+    const observer = new ResizeObserver(sendHeight);
+    observer.observe(embedRef.current);
+
+    // Also send on any DOM changes (for dropdown open/close)
+    const mutationObserver = new MutationObserver(sendHeight);
+    mutationObserver.observe(embedRef.current, { childList: true, subtree: true, attributes: true });
+
+    return () => {
+      observer.disconnect();
+      mutationObserver.disconnect();
+    };
+  }, [isEmbed]);
 
   // Embed mode: just the visualization component - solid background fills iframe
   if (isEmbed) {
@@ -808,8 +855,9 @@ function RevenueShareCalculatorContent() {
             background: #0a0a0a !important;
             margin: 0 !important;
             padding: 0 !important;
-            height: 100% !important;
-            min-height: 100% !important;
+            height: auto !important;
+            min-height: auto !important;
+            overflow: hidden !important;
           }
           /* Hide star background canvas in embed mode */
           canvas {
@@ -822,16 +870,19 @@ function RevenueShareCalculatorContent() {
           /* Ensure the Next.js wrapper also has background */
           #__next, [data-nextjs-scroll-focus-boundary] {
             background: #0a0a0a !important;
-            min-height: 100% !important;
+            height: auto !important;
+            min-height: auto !important;
+          }
+          /* Remove inner border-radius and borders in embed mode - parent modal provides these */
+          .rounded-t-2xl, .disclaimer-section {
+            border-radius: 0 !important;
+            border: none !important;
           }
           ${pulseKeyframes}
         `}</style>
-        <div style={{ background: '#0a0a0a', minHeight: '100vh' }} ref={cardRef}>
-          {/* Override the rounded-t-2xl to full rounding for embed */}
-          <div style={{ borderRadius: '1rem', overflow: 'hidden' }}>
-            <RevenueShareVisualization {...sharedProps} />
-            <DisclaimerSection />
-          </div>
+        <div ref={embedRef} style={{ background: '#0a0a0a' }}>
+          <RevenueShareVisualization {...sharedProps} />
+          <DisclaimerSection />
         </div>
       </>
     );

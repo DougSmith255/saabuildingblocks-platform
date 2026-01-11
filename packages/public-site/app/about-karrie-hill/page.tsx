@@ -1,6 +1,6 @@
 'use client';
 
-import { H1, H2, Tagline, CTAButton, GenericCard, CyberCard, ProfileCyberFrame } from '@saa/shared/components/saa';
+import { H1, H2, Tagline, CTAButton, GenericCard, ProfileCyberFrame } from '@saa/shared/components/saa';
 import { LazySection } from '@/components/shared/LazySection';
 import Image from 'next/image';
 import { StickyHeroWrapper } from '@/components/shared/hero-effects/StickyHeroWrapper';
@@ -153,25 +153,6 @@ export default function AboutKarrieHill() {
                 </GenericCard>
               ))}
             </div>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* Contact Section */}
-      <LazySection height={300}>
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto text-center">
-            <div className="text-center mb-12">
-              <H2>Get in Touch</H2>
-            </div>
-            <CyberCard padding="lg" className="max-w-[450px] mx-auto">
-              <div className="text-center">
-                <h3 className="text-h5 mb-4">Contact Info</h3>
-                <a href="mailto:team@smartagentalliance.com" className="text-link transition-colors">
-                  team@smartagentalliance.com
-                </a>
-              </div>
-            </CyberCard>
           </div>
         </section>
       </LazySection>
