@@ -16,18 +16,37 @@ const shakeKeyframes = `
   80% { transform: translateX(2px); }
 }
 
-/* Disable tap highlight on all elements within agent portal to prevent grey flash on touch/drag */
-#main-content, #main-content * {
+/* Disable tap highlight on ALL elements in agent portal to prevent grey flash on touch/drag */
+.agent-portal-root,
+.agent-portal-root *,
+#main-content,
+#main-content *,
+.section-content,
+.section-content * {
   -webkit-tap-highlight-color: transparent !important;
-  -webkit-touch-callout: none;
+  -webkit-touch-callout: none !important;
+  tap-highlight-color: transparent !important;
 }
 
-/* Prevent header container from darkening on touch - disable user-select and highlight */
+/* Prevent header container from darkening on touch */
 .header-bg-container, .header-bg-container * {
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
   user-select: none !important;
+}
+
+/* Ensure all clickable/interactive elements have no highlight */
+.agent-portal-root button,
+.agent-portal-root a,
+.agent-portal-root [role="button"],
+.agent-portal-root input,
+.agent-portal-root textarea,
+.agent-portal-root select,
+.agent-portal-root div[onclick],
+.agent-portal-root iframe {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
 }
 `;
 
@@ -1018,7 +1037,7 @@ export default function AgentPortal() {
   }
 
   return (
-    <main id="main-content" className="min-h-screen">
+    <main id="main-content" className="agent-portal-root min-h-screen">
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
       {/* Slides up off screen when any popup is open, slides down on entry from login */}
       <header
@@ -4765,7 +4784,7 @@ function AgentPagesSection({
 // ============================================================================
 function SectionWrapper({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl p-6 sm:p-8 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/10">
+    <div className="section-content rounded-xl p-6 sm:p-8 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/10">
       {title && (
         <div className="mb-[50px]">
           <H2>{title}</H2>
