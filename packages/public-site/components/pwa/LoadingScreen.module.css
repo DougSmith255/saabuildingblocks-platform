@@ -1,0 +1,222 @@
+/**
+ * PWA Loading Screen
+ * Matches the app's glass shimmer aesthetic with SAA branding
+ */
+
+.loadingScreen {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(12, 12, 12);
+}
+
+/* Glass shimmer container - matches header effect */
+.glassContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Glass Background - matches GlassShimmer.module.css */
+.glassBase {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Radial vignette */
+    radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
+    /* Glass gradient */
+    linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+    /* Gold grid pattern (corrugated effect) */
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px);
+  filter: brightness(1.1) contrast(1.1) saturate(1.2);
+}
+
+/* Horizontal scan lines */
+.glassBase::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.02) 2px,
+    rgba(255, 255, 255, 0.02) 4px
+  );
+  pointer-events: none;
+}
+
+/* Radar shimmer animation - matches header */
+.shimmerLayer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.20) 25%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(255, 255, 255, 0.18) 75%,
+    rgba(255, 255, 255, 0.08) 100%
+  );
+  background-size: 400% 400%;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  animation: radarShimmer 6s ease-in-out infinite;
+}
+
+@keyframes radarShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(1.1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.8);
+  }
+}
+
+/* Content container */
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* Logo container - transparent to let glow breathe */
+.logoContainer {
+  position: relative;
+}
+
+/* Breathing glow effect behind the logo */
+.logoGlow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 120px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 215, 0, 0.5) 0%,
+    rgba(255, 215, 0, 0.2) 40%,
+    transparent 70%
+  );
+  filter: blur(25px);
+  animation: breatheGlow 3s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes breatheGlow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+
+.logo {
+  position: relative;
+  z-index: 1;
+  width: 200px;
+  height: auto;
+}
+
+/* Loading bar */
+.loadingBarContainer {
+  width: 200px;
+}
+
+.loadingBarTrack {
+  position: relative;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loadingBarTrack::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.loadingBarFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 30%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #ffd700 50%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  animation: loadingSlide 1.5s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5),
+              0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+@keyframes loadingSlide {
+  0% {
+    left: -30%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Loading message */
+.message {
+  font-family: var(--font-amulya, Georgia, serif);
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.05em;
+  animation: messageFade 2s ease-in-out infinite;
+}
+
+@keyframes messageFade {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .shimmerLayer,
+  .logoGlow,
+  .loadingBarFill,
+  .message {
+    animation: none;
+  }
+
+  .shimmerLayer {
+    opacity: 0.3;
+  }
+
+  .logoGlow {
+    opacity: 0.8;
+  }
+
+  .loadingBarFill {
+    width: 100%;
+    left: 0;
+    background: #ffd700;
+  }
+}
