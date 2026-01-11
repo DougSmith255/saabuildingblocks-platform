@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
@@ -117,6 +116,16 @@ export default function AgentPortal() {
   // Initialize user directly from localStorage to avoid flash
   const [user, setUser] = useState<UserData | null>(() => getInitialUser());
   const [isLoading, setIsLoading] = useState(() => typeof window === 'undefined');
+  // Minimum loading screen display time (3.5 seconds) so users can see the beautiful loading screen
+  const [minLoadTimeElapsed, setMinLoadTimeElapsed] = useState(false);
+  // Fade out animation state for the loading screen veil
+  const [isLoadingFadingOut, setIsLoadingFadingOut] = useState(false);
+  // Only show loading screen for PWA (standalone) mode, not browser
+  const [showLoadingScreen, setShowLoadingScreen] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(display-mode: standalone)').matches ||
+           (window.navigator as any).standalone === true;
+  });
   const [showEditProfile, setShowEditProfile] = useState(false);
   const [dashboardUploadStatus, setDashboardUploadStatus] = useState<string | null>(null);
   const [dashboardUploadError, setDashboardUploadError] = useState<string | null>(null);
@@ -173,6 +182,38 @@ export default function AgentPortal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Minimum loading screen display time (3.5 seconds for PWA, instant for browser)
+  useEffect(() => {
+    // Check if running as installed PWA
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true;
+
+    // Only enforce minimum time for PWA mode
+    if (isStandalone) {
+      const timer = setTimeout(() => {
+        setMinLoadTimeElapsed(true);
+      }, 3500); // 3.5 seconds minimum
+      return () => clearTimeout(timer);
+    } else {
+      // Browser mode - no minimum time
+      setMinLoadTimeElapsed(true);
+    }
+  }, []);
+
+  // Trigger fade-out animation when loading is complete
+  useEffect(() => {
+    // When all loading conditions are met, start the fade-out
+    if (!isLoading && user && minLoadTimeElapsed && showLoadingScreen && !isLoadingFadingOut) {
+      setIsLoadingFadingOut(true);
+      // After fade animation completes, hide the loading screen entirely
+      const timer = setTimeout(() => {
+        setShowLoadingScreen(false);
+      }, 800); // Match the CSS transition duration
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, user, minLoadTimeElapsed, showLoadingScreen, isLoadingFadingOut]);
 
   // Check authentication on mount - redirect if not logged in
   useEffect(() => {
@@ -801,15 +842,178 @@ export default function AgentPortal() {
     }
   };
 
-  // Show loading state only during SSR or if no user (redirecting)
+  // Show simple loading if no user (will redirect to login)
   if (isLoading || !user) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-[#ffd700]/60">Loading portal...</p>
+      <>
+        {/* Full screen loading overlay - covers everything including header */}
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgb(12, 12, 12)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {/* Glass shimmer background */}
+          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+            {/* Glass base with corrugated effect */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `
+                  radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
+                  linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+                  repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px)
+                `,
+                filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+              }}
+            />
+            {/* Scan lines */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `repeating-linear-gradient(
+                  0deg,
+                  transparent,
+                  transparent 2px,
+                  rgba(255, 255, 255, 0.02) 2px,
+                  rgba(255, 255, 255, 0.02) 4px
+                )`,
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Shimmer animation */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(
+                  45deg,
+                  rgba(255, 255, 255, 0.08) 0%,
+                  rgba(255, 255, 255, 0.20) 25%,
+                  rgba(255, 255, 255, 0.35) 50%,
+                  rgba(255, 255, 255, 0.18) 75%,
+                  rgba(255, 255, 255, 0.08) 100%
+                )`,
+                backgroundSize: '400% 400%',
+                opacity: 0.5,
+                mixBlendMode: 'overlay',
+                animation: 'shimmerSlide 6s ease-in-out infinite',
+              }}
+            />
+          </div>
+
+          {/* Content - centered */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '2rem',
+            }}
+          >
+            {/* SAA Logo with breathing glow */}
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {/* Breathing glow - centered behind logo */}
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '280px',
+                  height: '120px',
+                  background: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.5) 0%, rgba(255, 215, 0, 0.2) 40%, transparent 70%)',
+                  filter: 'blur(25px)',
+                  animation: 'breatheGlow 3s ease-in-out infinite',
+                }}
+              />
+              {/* Logo */}
+              <img
+                src="/images/saa-logo-gold.png"
+                alt="SAA Logo"
+                style={{
+                  position: 'relative',
+                  zIndex: 1,
+                  width: '200px',
+                  height: 'auto',
+                }}
+              />
+            </div>
+
+            {/* Loading bar */}
+            <div style={{ width: '200px' }}>
+              <div
+                style={{
+                  position: 'relative',
+                  height: '4px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '2px',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    height: '100%',
+                    width: '30%',
+                    borderRadius: '2px',
+                    background: 'linear-gradient(90deg, transparent 0%, #ffd700 50%, transparent 100%)',
+                    animation: 'loadingSlide 1.5s ease-in-out infinite',
+                    boxShadow: '0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3)',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Loading message */}
+            <p
+              style={{
+                fontSize: '0.875rem',
+                color: 'rgba(255, 255, 255, 0.6)',
+                letterSpacing: '0.05em',
+                animation: 'messageFade 2s ease-in-out infinite',
+              }}
+            >
+              Loading Portal...
+            </p>
+          </div>
+
+          {/* Keyframe animations */}
+          <style>{`
+            @keyframes shimmerSlide {
+              0%, 100% { background-position: 0% 50%; filter: brightness(1.1); }
+              50% { background-position: 100% 50%; filter: brightness(1.8); }
+            }
+            @keyframes breatheGlow {
+              0%, 100% { opacity: 0.6; transform: scale(1); }
+              50% { opacity: 1; transform: scale(1.2); }
+            }
+            @keyframes loadingSlide {
+              0% { left: -30%; }
+              100% { left: 100%; }
+            }
+            @keyframes messageFade {
+              0%, 100% { opacity: 0.6; }
+              50% { opacity: 1; }
+            }
+          `}</style>
         </div>
-      </main>
+      </>
     );
   }
 
@@ -845,26 +1049,17 @@ export default function AgentPortal() {
           </div>
 
           <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 md:h-[85px]">
-            {/* Logo - Same as main site */}
-            <Link
-              href="/"
-              aria-label="Smart Agent Alliance Home"
-              className="hover:scale-110 transition-transform duration-300"
-              style={{ width: '126px', height: '45px' }}
-            >
-              <svg width="100%" height="100%" viewBox="0 0 201.96256 75.736626" version="1.1" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <defs>
-                  <linearGradient id="portalLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#fff3b0', stopOpacity: 1}} />
-                    <stop offset="40%" style={{stopColor: '#ffd700', stopOpacity: 1}} />
-                    <stop offset="100%" style={{stopColor: '#e6ac00', stopOpacity: 1}} />
-                  </linearGradient>
-                </defs>
-                <g transform="translate(-5.5133704,-105.97189)">
-                  <path fill="url(#portalLogoGradient)" d="M 21.472273,180.56058 C 11.316147,178.12213 1.9355119,166.45773 6.8673475,154.38101 c 0.2284985,-0.55952 1.4152886,-0.30887 8.5218335,-0.25364 6.089186,0.0474 11.528887,-0.54887 11.563021,0.35268 0.12172,3.21493 1.548705,4.66069 2.560443,5.07358 1.092535,0.44586 18.027365,0.14064 18.956531,-0.51505 2.086142,-1.47214 2.326164,-6.74 -0.732868,-6.70809 -1.893125,0.0197 -16.677992,0.18141 -18.724365,-0.11743 -4.043916,-0.59058 -5.591737,-1.59981 -9.49172,-4.13883 -8.077325,-5.25858 -10.5671578,-12.68416 -8.96983,-21.28238 0,0 6.234294,-0.12184 10.651176,-0.37024 4.312501,-0.24253 8.14686,-0.34782 8.671149,0.65635 1.028138,1.96921 2.764824,2.67171 3.10468,3.73011 0.296847,0.92448 1.558671,0.84083 5.661272,0.85056 4.303079,0.01 9.549862,0.24636 14.627167,0.65835 6.271917,0.50893 12.606804,1.04447 18.1587,14.09205 1.256383,2.95263 -0.05146,7.82433 2.707298,0.89052 0.906748,-2.27902 1.363355,-2.02044 15.012644,-2.13873 7.507113,-0.065 13.649301,-0.23577 13.649301,-0.37936 0,-0.1436 -0.28095,-0.89482 -0.62433,-1.66938 -0.34338,-0.77455 -1.02601,-2.31327 -1.51695,-3.41938 -0.49094,-1.10612 -2.062126,-4.92722 -3.491523,-8.49135 -1.429397,-3.56413 -2.857843,-7.08356 -3.174329,-7.82097 -0.316495,-0.7374 -1.226445,-2.94962 -2.022113,-4.91605 -0.795667,-1.96641 -4.043105,-11.29798 -3.693629,-11.88325 0.458064,-0.76712 -0.18677,-0.40385 12.337194,-0.40385 9.84423,0 9.65274,0.24739 9.65274,0.24739 1.2078,1.06083 2.78957,6.78964 3.34621,8.01751 0.55721,1.22913 1.27686,2.83788 1.59864,3.57529 0.60465,1.38564 1.79312,3.9863 4.28898,9.38518 0.79543,1.72061 2.34948,5.13949 3.45345,7.59751 2.67446,5.95472 3.04484,6.75259 5.91254,12.73702 2.46283,5.1395 2.46283,5.1395 3.20091,3.24636 2.23698,-5.73776 1.98186,-5.7611 4.28454,-5.95219 1.54958,-0.1286 24.51316,0.54777 24.82611,0.0215 0,0 -3.59658,-6.2074 -5.83995,-10.49576 -8.26158,-15.79266 -13.92752,-27.26401 -13.81355,-28.2205 0.0424,-0.35537 5.59171,-0.19826 13.73661,-0.17244 11.92585,0.0378 11.19138,0.12582 11.45775,0.44068 0.7756,0.9168 5.56816,10.25269 6.3956,11.61578 0.82745,1.36309 2.32581,3.98669 3.32968,5.83019 1.00389,1.84351 2.17996,3.95518 2.61353,4.69258 0.43356,0.7374 1.35628,2.34629 2.0505,3.5753 0.6942,1.22901 3.48408,6.15623 6.19971,10.94936 2.71564,4.79315 6.57201,11.63091 8.5697,15.19503 1.99772,3.56414 3.98079,6.98302 4.40686,7.59753 1.75557,2.53202 7.19727,12.85738 7.19727,13.65646 0,1.35047 -1.83096,1.53856 -14.97656,1.53856 -15.12194,0 -11.00005,0.41867 -13.10487,-0.35263 -2.71179,-0.99372 -7.4667,-12.35312 -8.24465,-13.49738 -0.5144,-0.75665 -20.11115,-0.50211 -20.85813,0.10747 -0.30114,0.24573 -4.74222,12.87268 -5.21806,13.18149 -0.51253,0.33263 1.56565,0.31373 -13.12083,0.46948 -14.37638,0.15246 -12.92516,-0.20864 -13.7378,-0.46876 -1.39249,-0.44578 -3.05836,-6.3221 -3.28223,-6.8137 -0.2239,-0.4916 -1.69614,-6.08358 -2.6942,-7.30424 -0.46821,-0.57263 -22.000524,-0.10018 -22.427167,0.30027 -0.495999,0.46555 -2.403531,4.97746 -3.536292,7.45088 -3.647579,7.96455 -0.798091,6.48322 -14.189162,6.21687 -7.764148,-0.15444 -10.944164,0.0682 -12.663388,-0.49314 -2.370345,-0.7739 -1.493164,-2.84033 -1.713395,-2.39718 -2.970363,5.97706 -32.338174,3.84174 -36.236923,2.90565 z m 12.24087,-53.49377 c -0.644922,-0.55276 -1.868417,-1.61286 -2.718877,-2.35578 C 28.5887,122.6096 17.54033,106.32825 20.700077,106.24689 c 18.520277,-0.47684 31.530155,-0.22018 43.622587,-0.0695 12.878883,18.49983 14.110357,21.6067 12.221476,21.31699 -20.587891,-5.5e-4 -41.658407,0.57749 -42.830997,-0.42752 z" />
-                </g>
-              </svg>
-            </Link>
+            {/* SAA Logo */}
+            <a href="/" className="flex-shrink-0">
+              <img
+                src="/images/saa-logo-gold.png"
+                alt="Smart Agent Alliance"
+                style={{
+                  width: 'clamp(100px, calc(80px + 3vw), 140px)',
+                  height: 'auto',
+                }}
+              />
+            </a>
 
             {/* Desktop: AGENT PORTAL title - centered in header, uses H1 component styling */}
             <div className="hidden md:block absolute left-1/2 -translate-x-1/2">
@@ -1733,6 +1928,174 @@ export default function AgentPortal() {
         </div>
       )}
 
+      {/* Loading Screen Overlay - Fades out like a veil lifting to reveal the dashboard */}
+      {showLoadingScreen && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 99999,
+            background: 'rgb(12, 12, 12)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: isLoadingFadingOut ? 0 : 1,
+            transition: 'opacity 0.8s ease-out',
+            pointerEvents: isLoadingFadingOut ? 'none' : 'auto',
+          }}
+        >
+          {/* Glass shimmer background */}
+          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+            {/* Glass base with corrugated effect */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `
+                  radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
+                  linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+                  repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px)
+                `,
+                filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+              }}
+            />
+            {/* Scan lines */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `repeating-linear-gradient(
+                  0deg,
+                  transparent,
+                  transparent 2px,
+                  rgba(255, 255, 255, 0.02) 2px,
+                  rgba(255, 255, 255, 0.02) 4px
+                )`,
+                pointerEvents: 'none',
+              }}
+            />
+            {/* Shimmer animation */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(
+                  45deg,
+                  rgba(255, 255, 255, 0.08) 0%,
+                  rgba(255, 255, 255, 0.20) 25%,
+                  rgba(255, 255, 255, 0.35) 50%,
+                  rgba(255, 255, 255, 0.18) 75%,
+                  rgba(255, 255, 255, 0.08) 100%
+                )`,
+                backgroundSize: '400% 400%',
+                opacity: 0.5,
+                mixBlendMode: 'overlay',
+                animation: 'shimmerSlide 6s ease-in-out infinite',
+              }}
+            />
+          </div>
+
+          {/* Content - centered */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '2rem',
+            }}
+          >
+            {/* Logo with breathing glow */}
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {/* Breathing glow behind logo */}
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '280px',
+                  height: '140px',
+                  background: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.1) 40%, transparent 70%)',
+                  filter: 'blur(20px)',
+                  animation: 'breatheGlow 3s ease-in-out infinite',
+                }}
+              />
+              {/* SAA Logo */}
+              <img
+                src="/images/saa-logo-gold.png"
+                alt="SAA Logo"
+                style={{
+                  position: 'relative',
+                  width: '200px',
+                  height: 'auto',
+                }}
+              />
+            </div>
+
+            {/* Loading bar */}
+            <div
+              style={{
+                width: '200px',
+                height: '4px',
+                background: 'rgba(255, 255, 255, 0.1)',
+                borderRadius: '2px',
+                overflow: 'hidden',
+                position: 'relative',
+              }}
+            >
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '30%',
+                  height: '100%',
+                  background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
+                  animation: 'loadingSlide 1.5s ease-in-out infinite',
+                }}
+              />
+            </div>
+
+            {/* Loading message */}
+            <p
+              style={{
+                color: 'rgba(255, 255, 255, 0.6)',
+                fontSize: '14px',
+                fontWeight: 300,
+                letterSpacing: '0.1em',
+                animation: 'messageFade 2s ease-in-out infinite',
+              }}
+            >
+              Loading Portal...
+            </p>
+          </div>
+
+          <style>{`
+            @keyframes shimmerSlide {
+              0% { background-position: 0% 0%; }
+              50% { background-position: 100% 100%; }
+              100% { background-position: 0% 0%; }
+            }
+            @keyframes breatheGlow {
+              0%, 100% { opacity: 0.6; transform: scale(1); }
+              50% { opacity: 1; transform: scale(1.2); }
+            }
+            @keyframes loadingSlide {
+              0% { left: -30%; }
+              100% { left: 100%; }
+            }
+            @keyframes messageFade {
+              0%, 100% { opacity: 0.6; }
+              50% { opacity: 1; }
+            }
+          `}</style>
+        </div>
+      )}
+
     </main>
   );
 }
@@ -1914,6 +2277,7 @@ interface Template {
   format: string;
   variant?: 'W' | 'B'; // White or Black theme
   url: string;
+  preview?: string; // Preview image filename
 }
 
 interface TemplateCategory {
@@ -1931,32 +2295,32 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '🏠',
     description: 'Announce your new listings',
     templates: [
-      { name: 'Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGY8fRazVA/AqNxJq9sXpqwXAPH4y8tXg/view?utm_content=DAGY8fRazVA&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGY8V-Dwu0/wtm_KEk7uaXJqHDp5APRjQ/view?utm_content=DAGY8V-Dwu0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGYkkt2O44/aA7NyhWsP5QQdCetJSMUSQ/view?utm_content=DAGYkkt2O44&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGYiauChPM/ee1KE3N2m9DMnZEHOBiCqg/view?utm_content=DAGYiauChPM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Wide', format: 'Wide', variant: 'W', url: 'https://www.canva.com/design/DAGY8Lm44Zo/7HPZgn51JPWlv70ErP1AeA/view?utm_content=DAGY8Lm44Zo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Wide', format: 'Wide', variant: 'B', url: 'https://www.canva.com/design/DAGY8Cvopes/FcRy6gCzBi48cKr7uttcAA/view?utm_content=DAGY8Cvopes&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Carousel', format: 'Carousel', variant: 'W', url: 'https://www.canva.com/design/DAGY8FXv0WQ/CyljT4QVZ09jiwvCDEM8ww/view?utm_content=DAGY8FXv0WQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Carousel', format: 'Carousel', variant: 'B', url: 'https://www.canva.com/design/DAGY8ff2B3M/KzUnGG1CNE-nDaMJ9m_mVg/view?utm_content=DAGY8ff2B3M&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 1-Sided Cobranded', format: 'Flyer', variant: 'W', url: 'https://www.canva.com/design/DAGZA8rgwfI/tAisgHFDbFetE6hU3OO_rg/view?utm_content=DAGZA8rgwfI&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 1-Sided Cobranded', format: 'Flyer', variant: 'B', url: 'https://www.canva.com/design/DAGZBK2K2po/-0sn_Y5lE8xTYQhlPaGf1w/view?utm_content=DAGZBK2K2po&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 1-Sided', format: 'Flyer', variant: 'W', url: 'https://www.canva.com/design/DAGZA9fkjEM/QvrrgrVg3vVONx4RoCjLJw/view?utm_content=DAGZA9fkjEM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 1-Sided', format: 'Flyer', variant: 'B', url: 'https://www.canva.com/design/DAGZA3l9wP0/KMx8ymAKhvRMPk6tm4ohMA/view?utm_content=DAGZA3l9wP0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 2-Sided Cobranded', format: 'Flyer', variant: 'W', url: 'https://www.canva.com/design/DAGZAzs5sl0/tiaFa_5UCtWWroEHkptJtw/view?utm_content=DAGZAzs5sl0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 2-Sided Cobranded', format: 'Flyer', variant: 'B', url: 'https://www.canva.com/design/DAGZA7FJICQ/ZZWd-8ITcHodf9VW9JyIJQ/view?utm_content=DAGZA7FJICQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 2-Sided', format: 'Flyer', variant: 'W', url: 'https://www.canva.com/design/DAGZA2WPeEU/-RBF7w4twEMwGjj5L6LaKw/view?utm_content=DAGZA2WPeEU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Flyer 2-Sided', format: 'Flyer', variant: 'B', url: 'https://www.canva.com/design/DAGZA9JYnho/RFriMXQH_vhzFkxoMDgmLA/view?utm_content=DAGZA9JYnho&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Postcard', format: 'Print', variant: 'W', url: 'https://www.canva.com/design/DAGZBGjA9lU/-pR_-c2L-hLLSbaZBHa_9Q/view?utm_content=DAGZBGjA9lU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Postcard Alt', format: 'Print', variant: 'W', url: 'https://www.canva.com/design/DAGZBMs2k2c/aOQXCl38olqUQvywfd4l2Q/view?utm_content=DAGZBMs2k2c&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 1', format: 'Brochure', variant: 'W', url: 'https://www.canva.com/design/DAGZGgX4ewU/tKNO6nN5guJObfCLoq-nsw/view?utm_content=DAGZGgX4ewU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 1', format: 'Brochure', variant: 'B', url: 'https://www.canva.com/design/DAGZG7Fhvas/HN3R6U5Hdf5PPaKiSP0yQg/view?utm_content=DAGZG7Fhvas&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 2', format: 'Brochure', variant: 'W', url: 'https://www.canva.com/design/DAGZGnDTnhU/y2JoxXYW5xB6T-43UwFzqw/view?utm_content=DAGZGnDTnhU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 2', format: 'Brochure', variant: 'B', url: 'https://www.canva.com/design/DAGZGmjKdI0/K6ggDNNDKrIcxS9DVe2bGw/view?utm_content=DAGZGmjKdI0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 3', format: 'Brochure', variant: 'W', url: 'https://www.canva.com/design/DAGZGqLoN2o/5GemAJm5AAwHcXva18V8pQ/view?utm_content=DAGZGqLoN2o&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 3', format: 'Brochure', variant: 'B', url: 'https://www.canva.com/design/DAGZGqpn97w/_f3dA6LCwWShuGHPrIzuZg/view?utm_content=DAGZGqpn97w&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 4', format: 'Brochure', variant: 'W', url: 'https://www.canva.com/design/DAGZGVcMwm0/0rLRvzFxlWJ-LWrgjg4L2A/view?utm_content=DAGZGVcMwm0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Brochure Option 4', format: 'Brochure', variant: 'B', url: 'https://www.canva.com/design/DAGZGSYpnfw/MeFVMGCXVZ-Ok4dWYicwJA/view?utm_content=DAGZGSYpnfw&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Story', format: 'Story', variant: 'W', preview: 'new-listing-story-w', url: 'https://www.canva.com/design/DAGY8fRazVA/AqNxJq9sXpqwXAPH4y8tXg/view?utm_content=DAGY8fRazVA&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Story', format: 'Story', variant: 'B', preview: 'new-listing-story-b', url: 'https://www.canva.com/design/DAGY8V-Dwu0/wtm_KEk7uaXJqHDp5APRjQ/view?utm_content=DAGY8V-Dwu0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Square', format: 'Square', variant: 'W', preview: 'new-listing-square-w', url: 'https://www.canva.com/design/DAGYkkt2O44/aA7NyhWsP5QQdCetJSMUSQ/view?utm_content=DAGYkkt2O44&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Square', format: 'Square', variant: 'B', preview: 'new-listing-square-b', url: 'https://www.canva.com/design/DAGYiauChPM/ee1KE3N2m9DMnZEHOBiCqg/view?utm_content=DAGYiauChPM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Wide', format: 'Wide', variant: 'W', preview: 'new-listing-wide-w', url: 'https://www.canva.com/design/DAGY8Lm44Zo/7HPZgn51JPWlv70ErP1AeA/view?utm_content=DAGY8Lm44Zo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Wide', format: 'Wide', variant: 'B', preview: 'new-listing-wide-b', url: 'https://www.canva.com/design/DAGY8Cvopes/FcRy6gCzBi48cKr7uttcAA/view?utm_content=DAGY8Cvopes&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Carousel', format: 'Carousel', variant: 'W', preview: 'new-listing-carousel-w', url: 'https://www.canva.com/design/DAGY8FXv0WQ/CyljT4QVZ09jiwvCDEM8ww/view?utm_content=DAGY8FXv0WQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Carousel', format: 'Carousel', variant: 'B', preview: 'new-listing-carousel-b', url: 'https://www.canva.com/design/DAGY8ff2B3M/KzUnGG1CNE-nDaMJ9m_mVg/view?utm_content=DAGY8ff2B3M&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 1-Sided Cobranded', format: 'Flyer', variant: 'W', preview: 'new-listing-flyer-1sided-cobranded-w', url: 'https://www.canva.com/design/DAGZA8rgwfI/tAisgHFDbFetE6hU3OO_rg/view?utm_content=DAGZA8rgwfI&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 1-Sided Cobranded', format: 'Flyer', variant: 'B', preview: 'new-listing-flyer-1sided-cobranded-b', url: 'https://www.canva.com/design/DAGZBK2K2po/-0sn_Y5lE8xTYQhlPaGf1w/view?utm_content=DAGZBK2K2po&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 1-Sided', format: 'Flyer', variant: 'W', preview: 'new-listing-flyer-1sided-w', url: 'https://www.canva.com/design/DAGZA9fkjEM/QvrrgrVg3vVONx4RoCjLJw/view?utm_content=DAGZA9fkjEM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 1-Sided', format: 'Flyer', variant: 'B', preview: 'new-listing-flyer-1sided-b', url: 'https://www.canva.com/design/DAGZA3l9wP0/KMx8ymAKhvRMPk6tm4ohMA/view?utm_content=DAGZA3l9wP0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 2-Sided Cobranded', format: 'Flyer', variant: 'W', preview: 'new-listing-flyer-2sided-cobranded-w', url: 'https://www.canva.com/design/DAGZAzs5sl0/tiaFa_5UCtWWroEHkptJtw/view?utm_content=DAGZAzs5sl0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 2-Sided Cobranded', format: 'Flyer', variant: 'B', preview: 'new-listing-flyer-2sided-cobranded-b', url: 'https://www.canva.com/design/DAGZA7FJICQ/ZZWd-8ITcHodf9VW9JyIJQ/view?utm_content=DAGZA7FJICQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 2-Sided', format: 'Flyer', variant: 'W', preview: 'new-listing-flyer-2sided-w', url: 'https://www.canva.com/design/DAGZA2WPeEU/-RBF7w4twEMwGjj5L6LaKw/view?utm_content=DAGZA2WPeEU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Flyer 2-Sided', format: 'Flyer', variant: 'B', preview: 'new-listing-flyer-2sided-b', url: 'https://www.canva.com/design/DAGZA9JYnho/RFriMXQH_vhzFkxoMDgmLA/view?utm_content=DAGZA9JYnho&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Postcard', format: 'Print', variant: 'W', preview: 'new-listing-postcard-w', url: 'https://www.canva.com/design/DAGZBGjA9lU/-pR_-c2L-hLLSbaZBHa_9Q/view?utm_content=DAGZBGjA9lU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Postcard Alt', format: 'Print', variant: 'W', preview: 'new-listing-postcard-alt-w', url: 'https://www.canva.com/design/DAGZBMs2k2c/aOQXCl38olqUQvywfd4l2Q/view?utm_content=DAGZBMs2k2c&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 1', format: 'Brochure', variant: 'W', preview: 'new-listing-brochure-1-w', url: 'https://www.canva.com/design/DAGZGgX4ewU/tKNO6nN5guJObfCLoq-nsw/view?utm_content=DAGZGgX4ewU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 1', format: 'Brochure', variant: 'B', preview: 'new-listing-brochure-1-b', url: 'https://www.canva.com/design/DAGZG7Fhvas/HN3R6U5Hdf5PPaKiSP0yQg/view?utm_content=DAGZG7Fhvas&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 2', format: 'Brochure', variant: 'W', preview: 'new-listing-brochure-2-w', url: 'https://www.canva.com/design/DAGZGnDTnhU/y2JoxXYW5xB6T-43UwFzqw/view?utm_content=DAGZGnDTnhU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 2', format: 'Brochure', variant: 'B', preview: 'new-listing-brochure-2-b', url: 'https://www.canva.com/design/DAGZGmjKdI0/K6ggDNNDKrIcxS9DVe2bGw/view?utm_content=DAGZGmjKdI0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 3', format: 'Brochure', variant: 'W', preview: 'new-listing-brochure-3-w', url: 'https://www.canva.com/design/DAGZGqLoN2o/5GemAJm5AAwHcXva18V8pQ/view?utm_content=DAGZGqLoN2o&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 3', format: 'Brochure', variant: 'B', preview: 'new-listing-brochure-3-b', url: 'https://www.canva.com/design/DAGZGqpn97w/_f3dA6LCwWShuGHPrIzuZg/view?utm_content=DAGZGqpn97w&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 4', format: 'Brochure', variant: 'W', preview: 'new-listing-brochure-4-w', url: 'https://www.canva.com/design/DAGZGVcMwm0/0rLRvzFxlWJ-LWrgjg4L2A/view?utm_content=DAGZGVcMwm0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Brochure Option 4', format: 'Brochure', variant: 'B', preview: 'new-listing-brochure-4-b', url: 'https://www.canva.com/design/DAGZGSYpnfw/MeFVMGCXVZ-Ok4dWYicwJA/view?utm_content=DAGZGSYpnfw&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -1965,7 +2329,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '🚪',
     description: 'Everything for your open house',
     templates: [
-      { name: 'Sign-In Sheets', format: 'Print', url: 'https://www.canva.com/design/DAGiYencGxg/SL6_rJR3hFb9t7G477qPxg/view?utm_content=DAGiYencGxg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Sign-In Sheets', format: 'Print', preview: 'open-house-sign-in-sheets', url: 'https://www.canva.com/design/DAGiYencGxg/SL6_rJR3hFb9t7G477qPxg/view?utm_content=DAGiYencGxg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -1974,20 +2338,20 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '🎉',
     description: 'Celebrate your wins',
     templates: [
-      { name: 'Under Contract Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGYorjDUr8/mtimDGnh35hHUwdQcVhWdQ/view?utm_content=DAGYorjDUr8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Under Contract Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGYoFxPhd8/HVlnNq4N5g_SUL2pxOqU5w/view?utm_content=DAGYoFxPhd8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Under Contract Wide', format: 'Wide', variant: 'W', url: 'https://www.canva.com/design/DAGYwquWFs4/82w_ihajb9JnqJjEEYfNCA/view?utm_content=DAGYwquWFs4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Under Contract Wide', format: 'Wide', variant: 'B', url: 'https://www.canva.com/design/DAGYwvD7aZg/v0aj0ULJ-Fix-V_roBdMVA/view?utm_content=DAGYwvD7aZg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Under Contract Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGYw5elAAM/0_Xw4lMe5vps9HmTlcq-WQ/view?utm_content=DAGYw5elAAM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Under Contract Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGYxHgOLG4/kLxsbK5oGtbIxkftjZMSRg/view?utm_content=DAGYxHgOLG4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Testimonial Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGY8gn68Oc/F_jb_NK8J_xc2qOgZcQMkQ/view?utm_content=DAGY8gn68Oc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Testimonial Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGY8jLY3Cg/RBzPM7moaW4CrrOcuJ3t-A/view?utm_content=DAGY8jLY3Cg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Testimonial Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGY8nIZPu8/P3dL_cJGYeLtqmVPIFXQ4Q/view?utm_content=DAGY8nIZPu8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Testimonial Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGY8tpb8hY/xuAbY3mUiDscEurwennY4g/view?utm_content=DAGY8tpb8hY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Listing Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGY8uxzoTU/wQvjlRDObiLKSiygqjgYww/view?utm_content=DAGY8uxzoTU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Listing Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGY8ohevZw/csDzAeKkFKExdKXpnMK_Bw/view?utm_content=DAGY8ohevZw&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Listing Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGY8p2KTek/cFmUqTVdDH-3cFFEZ4C-SQ/view?utm_content=DAGY8p2KTek&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Just Sold Listing Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGY8iAL5cI/wiOEaNAdLbW0Qj153zbdow/view?utm_content=DAGY8iAL5cI&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Under Contract Story', format: 'Story', variant: 'W', preview: 'just-sold-under-contract-story-w', url: 'https://www.canva.com/design/DAGYorjDUr8/mtimDGnh35hHUwdQcVhWdQ/view?utm_content=DAGYorjDUr8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Under Contract Story', format: 'Story', variant: 'B', preview: 'just-sold-under-contract-story-b', url: 'https://www.canva.com/design/DAGYoFxPhd8/HVlnNq4N5g_SUL2pxOqU5w/view?utm_content=DAGYoFxPhd8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Under Contract Wide', format: 'Wide', variant: 'W', preview: 'just-sold-under-contract-wide-w', url: 'https://www.canva.com/design/DAGYwquWFs4/82w_ihajb9JnqJjEEYfNCA/view?utm_content=DAGYwquWFs4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Under Contract Wide', format: 'Wide', variant: 'B', preview: 'just-sold-under-contract-wide-b', url: 'https://www.canva.com/design/DAGYwvD7aZg/v0aj0ULJ-Fix-V_roBdMVA/view?utm_content=DAGYwvD7aZg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Under Contract Square', format: 'Square', variant: 'W', preview: 'just-sold-under-contract-square-w', url: 'https://www.canva.com/design/DAGYw5elAAM/0_Xw4lMe5vps9HmTlcq-WQ/view?utm_content=DAGYw5elAAM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Under Contract Square', format: 'Square', variant: 'B', preview: 'just-sold-under-contract-square-b', url: 'https://www.canva.com/design/DAGYxHgOLG4/kLxsbK5oGtbIxkftjZMSRg/view?utm_content=DAGYxHgOLG4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Testimonial Story', format: 'Story', variant: 'W', preview: 'just-sold-testimonial-story-w', url: 'https://www.canva.com/design/DAGY8gn68Oc/F_jb_NK8J_xc2qOgZcQMkQ/view?utm_content=DAGY8gn68Oc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Testimonial Story', format: 'Story', variant: 'B', preview: 'just-sold-testimonial-story-b', url: 'https://www.canva.com/design/DAGY8jLY3Cg/RBzPM7moaW4CrrOcuJ3t-A/view?utm_content=DAGY8jLY3Cg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Testimonial Square', format: 'Square', variant: 'W', preview: 'just-sold-testimonial-square-w', url: 'https://www.canva.com/design/DAGY8nIZPu8/P3dL_cJGYeLtqmVPIFXQ4Q/view?utm_content=DAGY8nIZPu8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Testimonial Square', format: 'Square', variant: 'B', preview: 'just-sold-testimonial-square-b', url: 'https://www.canva.com/design/DAGY8tpb8hY/xuAbY3mUiDscEurwennY4g/view?utm_content=DAGY8tpb8hY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Listing Story', format: 'Story', variant: 'W', preview: 'just-sold-listing-story-w', url: 'https://www.canva.com/design/DAGY8uxzoTU/wQvjlRDObiLKSiygqjgYww/view?utm_content=DAGY8uxzoTU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Listing Story', format: 'Story', variant: 'B', preview: 'just-sold-listing-story-b', url: 'https://www.canva.com/design/DAGY8ohevZw/csDzAeKkFKExdKXpnMK_Bw/view?utm_content=DAGY8ohevZw&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Listing Square', format: 'Square', variant: 'W', preview: 'just-sold-listing-square-w', url: 'https://www.canva.com/design/DAGY8p2KTek/cFmUqTVdDH-3cFFEZ4C-SQ/view?utm_content=DAGY8p2KTek&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Just Sold Listing Square', format: 'Square', variant: 'B', preview: 'just-sold-listing-square-b', url: 'https://www.canva.com/design/DAGY8iAL5cI/wiOEaNAdLbW0Qj153zbdow/view?utm_content=DAGY8iAL5cI&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -1996,22 +2360,22 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '⭐',
     description: 'Personal branding & testimonials',
     templates: [
-      { name: 'Testimonial Wide', format: 'Wide', variant: 'W', url: 'https://www.canva.com/design/DAGZG9ZNSv8/kjABmfnlmjGElz2SdjTvHw/view?utm_content=DAGZG9ZNSv8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Testimonial Wide', format: 'Wide', variant: 'B', url: 'https://www.canva.com/design/DAGZGyMhLl8/BCcUbjWFxa2UCXGOVyj0Gg/view?utm_content=DAGZGyMhLl8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Testimonial Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGZHEoBIJ4/W73p-1HUDIi1OD7gp9qKgQ/view?utm_content=DAGZHEoBIJ4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Testimonial Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGZGwnS6tM/qT1R6bp4dUO-pqLGnBlfFw/view?utm_content=DAGZGwnS6tM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Testimonial Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGZHFAya08/1QoTPITh_jFK7ZlNVY34pQ/view?utm_content=DAGZHFAya08&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Testimonial Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGZHO8pnvc/6oPWhD1XnsFC_AvJySgzvA/view?utm_content=DAGZHO8pnvc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Self Promo Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGY6jVW0ek/KCgA0kf1DT4umDho4fapwg/view?utm_content=DAGY6jVW0ek&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Self Promo Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGY6t2wkVE/JLZRGtoFU2U8s4Id7QrOmQ/view?utm_content=DAGY6t2wkVE&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Self Promo Wide', format: 'Wide', variant: 'W', url: 'https://www.canva.com/design/DAGY6bONDl0/ibhKhqXZPkrPRIqYfBxfMA/view?utm_content=DAGY6bONDl0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Self Promo Wide', format: 'Wide', variant: 'B', url: 'https://www.canva.com/design/DAGY6iPwh0Y/o9zrMdUEnCywOqUVEIfPUA/view?utm_content=DAGY6iPwh0Y&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Self Promo Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGY6p0HboU/r8sNnAtwbK7TgIuddpZHAg/view?utm_content=DAGY6p0HboU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Self Promo Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGY6sLEmFo/3E-w3zl8QEE4-tWMeSarFQ/view?utm_content=DAGY6sLEmFo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Postcard 8.5x5.5', format: 'Print', variant: 'W', url: 'https://www.canva.com/design/DAGZBB_24UE/hNKTgs49R28NOrR-De0_FA/view?utm_content=DAGZBB_24UE&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Postcard 8.5x5.5', format: 'Print', variant: 'B', url: 'https://www.canva.com/design/DAGZBEECdck/8voOAU3gkZbiQRK04ROrpg/view?utm_content=DAGZBEECdck&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Postcard 5.5x4.25', format: 'Print', variant: 'W', url: 'https://www.canva.com/design/DAGZBP6xAME/R4ehD5amL3eIlsx5ydwfuQ/view?utm_content=DAGZBP6xAME&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Postcard 5.5x4.25', format: 'Print', variant: 'B', url: 'https://www.canva.com/design/DAGZBHmtit0/FPzHu12G8oZCDisQDRazrA/view?utm_content=DAGZBHmtit0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Testimonial Wide', format: 'Wide', variant: 'W', preview: 'self-promo-testimonial-wide-w', url: 'https://www.canva.com/design/DAGZG9ZNSv8/kjABmfnlmjGElz2SdjTvHw/view?utm_content=DAGZG9ZNSv8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Testimonial Wide', format: 'Wide', variant: 'B', preview: 'self-promo-testimonial-wide-b', url: 'https://www.canva.com/design/DAGZGyMhLl8/BCcUbjWFxa2UCXGOVyj0Gg/view?utm_content=DAGZGyMhLl8&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Testimonial Square', format: 'Square', variant: 'W', preview: 'self-promo-testimonial-square-w', url: 'https://www.canva.com/design/DAGZHEoBIJ4/W73p-1HUDIi1OD7gp9qKgQ/view?utm_content=DAGZHEoBIJ4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Testimonial Square', format: 'Square', variant: 'B', preview: 'self-promo-testimonial-square-b', url: 'https://www.canva.com/design/DAGZGwnS6tM/qT1R6bp4dUO-pqLGnBlfFw/view?utm_content=DAGZGwnS6tM&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Testimonial Story', format: 'Story', variant: 'W', preview: 'self-promo-testimonial-story-w', url: 'https://www.canva.com/design/DAGZHFAya08/1QoTPITh_jFK7ZlNVY34pQ/view?utm_content=DAGZHFAya08&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Testimonial Story', format: 'Story', variant: 'B', preview: 'self-promo-testimonial-story-b', url: 'https://www.canva.com/design/DAGZHO8pnvc/6oPWhD1XnsFC_AvJySgzvA/view?utm_content=DAGZHO8pnvc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Self Promo Square', format: 'Square', variant: 'W', preview: 'self-promo-square-w', url: 'https://www.canva.com/design/DAGY6jVW0ek/KCgA0kf1DT4umDho4fapwg/view?utm_content=DAGY6jVW0ek&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Self Promo Square', format: 'Square', variant: 'B', preview: 'self-promo-square-b', url: 'https://www.canva.com/design/DAGY6t2wkVE/JLZRGtoFU2U8s4Id7QrOmQ/view?utm_content=DAGY6t2wkVE&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Self Promo Wide', format: 'Wide', variant: 'W', preview: 'self-promo-wide-w', url: 'https://www.canva.com/design/DAGY6bONDl0/ibhKhqXZPkrPRIqYfBxfMA/view?utm_content=DAGY6bONDl0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Self Promo Wide', format: 'Wide', variant: 'B', preview: 'self-promo-wide-b', url: 'https://www.canva.com/design/DAGY6iPwh0Y/o9zrMdUEnCywOqUVEIfPUA/view?utm_content=DAGY6iPwh0Y&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Self Promo Story', format: 'Story', variant: 'W', preview: 'self-promo-story-w', url: 'https://www.canva.com/design/DAGY6p0HboU/r8sNnAtwbK7TgIuddpZHAg/view?utm_content=DAGY6p0HboU&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Self Promo Story', format: 'Story', variant: 'B', preview: 'self-promo-story-b', url: 'https://www.canva.com/design/DAGY6sLEmFo/3E-w3zl8QEE4-tWMeSarFQ/view?utm_content=DAGY6sLEmFo&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Postcard 8.5x5.5', format: 'Print', variant: 'W', preview: 'self-promo-postcard-8.5x5.5-w', url: 'https://www.canva.com/design/DAGZBB_24UE/hNKTgs49R28NOrR-De0_FA/view?utm_content=DAGZBB_24UE&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Postcard 8.5x5.5', format: 'Print', variant: 'B', preview: 'self-promo-postcard-8.5x5.5-b', url: 'https://www.canva.com/design/DAGZBEECdck/8voOAU3gkZbiQRK04ROrpg/view?utm_content=DAGZBEECdck&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Postcard 5.5x4.25', format: 'Print', variant: 'W', preview: 'self-promo-postcard-5.5x4.25-w', url: 'https://www.canva.com/design/DAGZBP6xAME/R4ehD5amL3eIlsx5ydwfuQ/view?utm_content=DAGZBP6xAME&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Postcard 5.5x4.25', format: 'Print', variant: 'B', preview: 'self-promo-postcard-5.5x4.25-b', url: 'https://www.canva.com/design/DAGZBHmtit0/FPzHu12G8oZCDisQDRazrA/view?utm_content=DAGZBHmtit0&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -2020,13 +2384,13 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '💬',
     description: 'Boost audience interaction',
     templates: [
-      { name: 'This or That', format: 'Interactive', url: 'https://www.canva.com/design/DAG9-31Bilg/k1JVE9ThGFrunUkHUAkj9A/view?utm_content=DAG9-31Bilg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Market Snapshot Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGYozvRki4/Xce7VT38hQye9pwX4-Uitw/view?utm_content=DAGYozvRki4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Market Snapshot Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGYo6OSECQ/CMlf2kTGYtOJDOKfsbFmlw/view?utm_content=DAGYo6OSECQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Market Snapshot Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGYpmfx9s4/ytj108rP4HiqBjTWbKjENg/view?utm_content=DAGYpmfx9s4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Market Snapshot Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGYpkJH4p4/7azhbvS6GOlDN2HlSbhpNw/view?utm_content=DAGYpkJH4p4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Facebook Ad', format: 'Ad', variant: 'W', url: 'https://www.canva.com/design/DAGYpiwO4ug/VUcW3LCzuSOPGNjY8HFn8A/view?utm_content=DAGYpiwO4ug&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Facebook Ad', format: 'Ad', variant: 'B', url: 'https://www.canva.com/design/DAGYpsUaDIg/3vOOoGBFg9Ba8WWFgT739w/view?utm_content=DAGYpsUaDIg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'This or That', format: 'Interactive', preview: 'engagement-this-or-that', url: 'https://www.canva.com/design/DAG9-31Bilg/k1JVE9ThGFrunUkHUAkj9A/view?utm_content=DAG9-31Bilg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Market Snapshot Square', format: 'Square', variant: 'W', preview: 'engagement-market-snapshot-square-w', url: 'https://www.canva.com/design/DAGYozvRki4/Xce7VT38hQye9pwX4-Uitw/view?utm_content=DAGYozvRki4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Market Snapshot Square', format: 'Square', variant: 'B', preview: 'engagement-market-snapshot-square-b', url: 'https://www.canva.com/design/DAGYo6OSECQ/CMlf2kTGYtOJDOKfsbFmlw/view?utm_content=DAGYo6OSECQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Market Snapshot Story', format: 'Story', variant: 'W', preview: 'engagement-market-snapshot-story-w', url: 'https://www.canva.com/design/DAGYpmfx9s4/ytj108rP4HiqBjTWbKjENg/view?utm_content=DAGYpmfx9s4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Market Snapshot Story', format: 'Story', variant: 'B', preview: 'engagement-market-snapshot-story-b', url: 'https://www.canva.com/design/DAGYpkJH4p4/7azhbvS6GOlDN2HlSbhpNw/view?utm_content=DAGYpkJH4p4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Facebook Ad', format: 'Ad', variant: 'W', preview: 'engagement-facebook-ad-w', url: 'https://www.canva.com/design/DAGYpiwO4ug/VUcW3LCzuSOPGNjY8HFn8A/view?utm_content=DAGYpiwO4ug&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Facebook Ad', format: 'Ad', variant: 'B', preview: 'engagement-facebook-ad-b', url: 'https://www.canva.com/design/DAGYpsUaDIg/3vOOoGBFg9Ba8WWFgT739w/view?utm_content=DAGYpsUaDIg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -2035,8 +2399,8 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '✨',
     description: 'Motivational content',
     templates: [
-      { name: 'Inspirational Square', format: 'Square', url: 'https://www.canva.com/design/DAGiYYA8jhQ/VvrdLksT3_B-lET2ognZeg/view?utm_content=DAGiYYA8jhQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Inspirational Story', format: 'Story', url: 'https://www.canva.com/design/DAGiYesF_xY/dGErivOFGWrjBqmjkIRRbA/view?utm_content=DAGiYesF_xY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Inspirational Square', format: 'Square', preview: 'inspiration-square', url: 'https://www.canva.com/design/DAGiYYA8jhQ/VvrdLksT3_B-lET2ognZeg/view?utm_content=DAGiYYA8jhQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Inspirational Story', format: 'Story', preview: 'inspiration-story', url: 'https://www.canva.com/design/DAGiYesF_xY/dGErivOFGWrjBqmjkIRRbA/view?utm_content=DAGiYesF_xY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -2045,16 +2409,16 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '📋',
     description: 'Presentations, guides & tips',
     templates: [
-      { name: 'Seller Guide 8.5x11', format: 'Guide', url: 'https://www.canva.com/design/DAGdm8zi7B4/NBRJkZgcGMteta3PePu4WQ/view?utm_content=DAGdm8zi7B4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Seller Guide 11x8.5', format: 'Guide', url: 'https://www.canva.com/design/DAGdnEdYt5k/ukBWlpNsBrA0D4aOmkgl_Q/view?utm_content=DAGdnEdYt5k&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Presentation 8.5x11', format: 'Slides', url: 'https://www.canva.com/design/DAGdoVQqZHs/jWnIzjcSSuyzJMIuvx5bVg/view?utm_content=DAGdoVQqZHs&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Presentation 11x8.5', format: 'Slides', url: 'https://www.canva.com/design/DAGdoyTS-0k/bQ1NK0QCqXfcp56p49HFGQ/view?utm_content=DAGdoyTS-0k&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Tips Story', format: 'Story', variant: 'W', url: 'https://www.canva.com/design/DAGZfL9yo3M/0xjUydOG-bOETpQETonTNA/view?utm_content=DAGZfL9yo3M&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Tips Story', format: 'Story', variant: 'B', url: 'https://www.canva.com/design/DAGZZbkeqEE/PY7o9jyruluaImo7sHouFg/view?utm_content=DAGZZbkeqEE&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Tips Square', format: 'Square', variant: 'W', url: 'https://www.canva.com/design/DAGYpGJRHsk/i86ZBGgejRFw-fbwSVgnmw/view?utm_content=DAGYpGJRHsk&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Tips Square', format: 'Square', variant: 'B', url: 'https://www.canva.com/design/DAGYpGcZuvc/lTWYCFjUFPRQ9FseVVSFyA/view?utm_content=DAGYpGcZuvc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Tips Wide', format: 'Wide', variant: 'W', url: 'https://www.canva.com/design/DAGYqwYPV-k/XdDzXcgRvFC1PZmOY2KfRg/view?utm_content=DAGYqwYPV-k&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
-      { name: 'Buyer Tips Wide', format: 'Wide', variant: 'B', url: 'https://www.canva.com/design/DAGYq_tzO3I/r8WAKRkVw013t_lNm1_fOg/view?utm_content=DAGYq_tzO3I&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Seller Guide 8.5x11', format: 'Guide', preview: 'buyer-seller-guide-8.5x11', url: 'https://www.canva.com/design/DAGdm8zi7B4/NBRJkZgcGMteta3PePu4WQ/view?utm_content=DAGdm8zi7B4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Seller Guide 11x8.5', format: 'Guide', preview: 'buyer-seller-guide-11x8.5', url: 'https://www.canva.com/design/DAGdnEdYt5k/ukBWlpNsBrA0D4aOmkgl_Q/view?utm_content=DAGdnEdYt5k&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Presentation 8.5x11', format: 'Slides', preview: 'buyer-seller-presentation-8.5x11', url: 'https://www.canva.com/design/DAGdoVQqZHs/jWnIzjcSSuyzJMIuvx5bVg/view?utm_content=DAGdoVQqZHs&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Presentation 11x8.5', format: 'Slides', preview: 'buyer-seller-presentation-11x8.5', url: 'https://www.canva.com/design/DAGdoyTS-0k/bQ1NK0QCqXfcp56p49HFGQ/view?utm_content=DAGdoyTS-0k&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Tips Story', format: 'Story', variant: 'W', preview: 'buyer-seller-tips-story-w', url: 'https://www.canva.com/design/DAGZfL9yo3M/0xjUydOG-bOETpQETonTNA/view?utm_content=DAGZfL9yo3M&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Tips Story', format: 'Story', variant: 'B', preview: 'buyer-seller-tips-story-b', url: 'https://www.canva.com/design/DAGZZbkeqEE/PY7o9jyruluaImo7sHouFg/view?utm_content=DAGZZbkeqEE&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Tips Square', format: 'Square', variant: 'W', preview: 'buyer-seller-tips-square-w', url: 'https://www.canva.com/design/DAGYpGJRHsk/i86ZBGgejRFw-fbwSVgnmw/view?utm_content=DAGYpGJRHsk&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Tips Square', format: 'Square', variant: 'B', preview: 'buyer-seller-tips-square-b', url: 'https://www.canva.com/design/DAGYpGcZuvc/lTWYCFjUFPRQ9FseVVSFyA/view?utm_content=DAGYpGcZuvc&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Tips Wide', format: 'Wide', variant: 'W', preview: 'buyer-seller-tips-wide-w', url: 'https://www.canva.com/design/DAGYqwYPV-k/XdDzXcgRvFC1PZmOY2KfRg/view?utm_content=DAGYqwYPV-k&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Buyer Tips Wide', format: 'Wide', variant: 'B', preview: 'buyer-seller-tips-wide-b', url: 'https://www.canva.com/design/DAGYq_tzO3I/r8WAKRkVw013t_lNm1_fOg/view?utm_content=DAGYq_tzO3I&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -2063,7 +2427,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '📰',
     description: 'Keep your sphere informed',
     templates: [
-      { name: 'Monthly Statistics', format: 'Newsletter', url: 'https://www.canva.com/design/DAGiYW1qs5w/5JEnfUAxiYepG89s8PF-4A/view?utm_content=DAGiYW1qs5w&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Monthly Statistics', format: 'Newsletter', preview: 'newsletter-monthly-statistics', url: 'https://www.canva.com/design/DAGiYW1qs5w/5JEnfUAxiYepG89s8PF-4A/view?utm_content=DAGiYW1qs5w&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
   {
@@ -2072,7 +2436,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '🎨',
     description: 'Custom frames & branding',
     templates: [
-      { name: 'Custom Realtor Frames', format: 'Frame', url: 'https://www.canva.com/design/DAGdsVLZkWY/QCwmhNVeEp9wf_8lle2A_w/view?utm_content=DAGdsVLZkWY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: 'Custom Realtor Frames', format: 'Frame', preview: 'branding-custom-realtor-frames', url: 'https://www.canva.com/design/DAGdsVLZkWY/QCwmhNVeEp9wf_8lle2A_w/view?utm_content=DAGdsVLZkWY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
     ]
   },
 ];
@@ -2132,11 +2496,27 @@ function TemplatesSection() {
               rel="noopener noreferrer"
               className="group block rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
             >
-              {/* Icon Preview (Canva thumbnails blocked by Cloudflare) */}
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden flex items-center justify-center">
-                <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
-                  {getFormatIcon(template.format)}
-                </span>
+              {/* Template Preview Image */}
+              <div className="relative aspect-[7/6] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden">
+                {template.preview ? (
+                  <img
+                    src={`https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile`}
+                    srcSet={`
+                      https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile 400w,
+                      https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/tablet 800w
+                    `}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    alt={template.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                      {getFormatIcon(template.format)}
+                    </span>
+                  </div>
+                )}
 
                 {/* Format Badge */}
                 <div className="absolute top-2 left-2 flex gap-1">

@@ -1,0 +1,782 @@
+{
+  "branding-custom-realtor-frames.png": {
+    "id": "template-branding-custom-realtor-frames",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-branding-custom-realtor-frames",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-branding-custom-realtor-frames/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-branding-custom-realtor-frames/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-branding-custom-realtor-frames/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-branding-custom-realtor-frames/desktop"
+    ]
+  },
+  "buyer-seller-guide-11x8.5.png": {
+    "id": "template-buyer-seller-guide-11x8.5",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-11x8.5",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-11x8.5/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-11x8.5/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-11x8.5/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-11x8.5/public"
+    ]
+  },
+  "buyer-seller-guide-8.5x11.png": {
+    "id": "template-buyer-seller-guide-8.5x11",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-8.5x11",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-8.5x11/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-8.5x11/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-8.5x11/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-guide-8.5x11/mobile"
+    ]
+  },
+  "buyer-seller-presentation-11x8.5.png": {
+    "id": "template-buyer-seller-presentation-11x8.5",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-11x8.5",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-11x8.5/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-11x8.5/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-11x8.5/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-11x8.5/mobile"
+    ]
+  },
+  "buyer-seller-presentation-8.5x11.png": {
+    "id": "template-buyer-seller-presentation-8.5x11",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-8.5x11",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-8.5x11/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-8.5x11/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-8.5x11/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-presentation-8.5x11/tablet"
+    ]
+  },
+  "buyer-seller-tips-square-b.png": {
+    "id": "template-buyer-seller-tips-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-b/desktop"
+    ]
+  },
+  "buyer-seller-tips-square-w.png": {
+    "id": "template-buyer-seller-tips-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-square-w/desktop"
+    ]
+  },
+  "buyer-seller-tips-story-b.png": {
+    "id": "template-buyer-seller-tips-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-b/desktop"
+    ]
+  },
+  "buyer-seller-tips-story-w.png": {
+    "id": "template-buyer-seller-tips-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-story-w/desktop"
+    ]
+  },
+  "buyer-seller-tips-wide-b.png": {
+    "id": "template-buyer-seller-tips-wide-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-b/tablet"
+    ]
+  },
+  "buyer-seller-tips-wide-w.png": {
+    "id": "template-buyer-seller-tips-wide-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-buyer-seller-tips-wide-w/desktop"
+    ]
+  },
+  "engagement-facebook-ad-b.png": {
+    "id": "template-engagement-facebook-ad-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-b/desktop"
+    ]
+  },
+  "engagement-facebook-ad-w.png": {
+    "id": "template-engagement-facebook-ad-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-facebook-ad-w/desktop"
+    ]
+  },
+  "engagement-market-snapshot-square-b.png": {
+    "id": "template-engagement-market-snapshot-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-b/tablet"
+    ]
+  },
+  "engagement-market-snapshot-square-w.png": {
+    "id": "template-engagement-market-snapshot-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-square-w/desktop"
+    ]
+  },
+  "engagement-market-snapshot-story-b.png": {
+    "id": "template-engagement-market-snapshot-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-b/public"
+    ]
+  },
+  "engagement-market-snapshot-story-w.png": {
+    "id": "template-engagement-market-snapshot-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-market-snapshot-story-w/desktop"
+    ]
+  },
+  "engagement-this-or-that.png": {
+    "id": "template-engagement-this-or-that",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-this-or-that",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-this-or-that/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-this-or-that/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-this-or-that/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-engagement-this-or-that/mobile"
+    ]
+  },
+  "inspiration-square.png": {
+    "id": "template-inspiration-square",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-square",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-square/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-square/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-square/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-square/public"
+    ]
+  },
+  "inspiration-story.png": {
+    "id": "template-inspiration-story",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-story",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-story/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-story/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-story/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-inspiration-story/tablet"
+    ]
+  },
+  "just-sold-listing-square-b.png": {
+    "id": "template-just-sold-listing-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-b/mobile"
+    ]
+  },
+  "just-sold-listing-square-w.png": {
+    "id": "template-just-sold-listing-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-square-w/tablet"
+    ]
+  },
+  "just-sold-listing-story-b.png": {
+    "id": "template-just-sold-listing-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-b/public"
+    ]
+  },
+  "just-sold-listing-story-w.png": {
+    "id": "template-just-sold-listing-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-listing-story-w/desktop"
+    ]
+  },
+  "just-sold-testimonial-square-b.png": {
+    "id": "template-just-sold-testimonial-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-b/mobile"
+    ]
+  },
+  "just-sold-testimonial-square-w.png": {
+    "id": "template-just-sold-testimonial-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-square-w/mobile"
+    ]
+  },
+  "just-sold-testimonial-story-b.png": {
+    "id": "template-just-sold-testimonial-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-b/tablet"
+    ]
+  },
+  "just-sold-testimonial-story-w.png": {
+    "id": "template-just-sold-testimonial-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-testimonial-story-w/public"
+    ]
+  },
+  "just-sold-under-contract-square-b.png": {
+    "id": "template-just-sold-under-contract-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-b/mobile"
+    ]
+  },
+  "just-sold-under-contract-square-w.png": {
+    "id": "template-just-sold-under-contract-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-square-w/public"
+    ]
+  },
+  "just-sold-under-contract-story-b.png": {
+    "id": "template-just-sold-under-contract-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-b/mobile"
+    ]
+  },
+  "just-sold-under-contract-story-w.png": {
+    "id": "template-just-sold-under-contract-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-story-w/tablet"
+    ]
+  },
+  "just-sold-under-contract-wide-b.png": {
+    "id": "template-just-sold-under-contract-wide-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-b/mobile"
+    ]
+  },
+  "just-sold-under-contract-wide-w.png": {
+    "id": "template-just-sold-under-contract-wide-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-just-sold-under-contract-wide-w/desktop"
+    ]
+  },
+  "new-listing-brochure-1-b.png": {
+    "id": "template-new-listing-brochure-1-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-b/mobile"
+    ]
+  },
+  "new-listing-brochure-1-w.png": {
+    "id": "template-new-listing-brochure-1-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-1-w/desktop"
+    ]
+  },
+  "new-listing-brochure-2-b.png": {
+    "id": "template-new-listing-brochure-2-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-b/desktop"
+    ]
+  },
+  "new-listing-brochure-2-w.png": {
+    "id": "template-new-listing-brochure-2-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-2-w/mobile"
+    ]
+  },
+  "new-listing-brochure-3-b.png": {
+    "id": "template-new-listing-brochure-3-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-b/desktop"
+    ]
+  },
+  "new-listing-brochure-3-w.png": {
+    "id": "template-new-listing-brochure-3-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-3-w/public"
+    ]
+  },
+  "new-listing-brochure-4-b.png": {
+    "id": "template-new-listing-brochure-4-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-b/desktop"
+    ]
+  },
+  "new-listing-brochure-4-w.png": {
+    "id": "template-new-listing-brochure-4-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-brochure-4-w/tablet"
+    ]
+  },
+  "new-listing-carousel-b.png": {
+    "id": "template-new-listing-carousel-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-b/mobile"
+    ]
+  },
+  "new-listing-carousel-w.png": {
+    "id": "template-new-listing-carousel-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-carousel-w/public"
+    ]
+  },
+  "new-listing-flyer-1sided-b.png": {
+    "id": "template-new-listing-flyer-1sided-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-b/mobile"
+    ]
+  },
+  "new-listing-flyer-1sided-cobranded-b.png": {
+    "id": "template-new-listing-flyer-1sided-cobranded-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-b/mobile"
+    ]
+  },
+  "new-listing-flyer-1sided-cobranded-w.png": {
+    "id": "template-new-listing-flyer-1sided-cobranded-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-cobranded-w/desktop"
+    ]
+  },
+  "new-listing-flyer-1sided-w.png": {
+    "id": "template-new-listing-flyer-1sided-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-1sided-w/mobile"
+    ]
+  },
+  "new-listing-flyer-2sided-b.png": {
+    "id": "template-new-listing-flyer-2sided-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-b/desktop"
+    ]
+  },
+  "new-listing-flyer-2sided-cobranded-b.png": {
+    "id": "template-new-listing-flyer-2sided-cobranded-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-b/tablet"
+    ]
+  },
+  "new-listing-flyer-2sided-cobranded-w.png": {
+    "id": "template-new-listing-flyer-2sided-cobranded-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-cobranded-w/public"
+    ]
+  },
+  "new-listing-flyer-2sided-w.png": {
+    "id": "template-new-listing-flyer-2sided-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-flyer-2sided-w/mobile"
+    ]
+  },
+  "new-listing-postcard-alt-w.png": {
+    "id": "template-new-listing-postcard-alt-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-alt-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-alt-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-alt-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-alt-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-alt-w/mobile"
+    ]
+  },
+  "new-listing-postcard-w.png": {
+    "id": "template-new-listing-postcard-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-postcard-w/public"
+    ]
+  },
+  "new-listing-square-b.png": {
+    "id": "template-new-listing-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-b/tablet"
+    ]
+  },
+  "new-listing-square-w.png": {
+    "id": "template-new-listing-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-square-w/mobile"
+    ]
+  },
+  "new-listing-story-b.png": {
+    "id": "template-new-listing-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-b/mobile"
+    ]
+  },
+  "new-listing-story-w.png": {
+    "id": "template-new-listing-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-story-w/desktop"
+    ]
+  },
+  "new-listing-wide-b.png": {
+    "id": "template-new-listing-wide-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-b/mobile"
+    ]
+  },
+  "new-listing-wide-w.png": {
+    "id": "template-new-listing-wide-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-new-listing-wide-w/desktop"
+    ]
+  },
+  "newsletter-monthly-statistics.png": {
+    "id": "template-newsletter-monthly-statistics",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-newsletter-monthly-statistics",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-newsletter-monthly-statistics/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-newsletter-monthly-statistics/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-newsletter-monthly-statistics/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-newsletter-monthly-statistics/tablet"
+    ]
+  },
+  "open-house-sign-in-sheets.png": {
+    "id": "template-open-house-sign-in-sheets",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-open-house-sign-in-sheets",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-open-house-sign-in-sheets/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-open-house-sign-in-sheets/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-open-house-sign-in-sheets/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-open-house-sign-in-sheets/tablet"
+    ]
+  },
+  "self-promo-postcard-5.5x4.25-b.png": {
+    "id": "template-self-promo-postcard-5.5x4.25-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-b/mobile"
+    ]
+  },
+  "self-promo-postcard-5.5x4.25-w.png": {
+    "id": "template-self-promo-postcard-5.5x4.25-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-5.5x4.25-w/mobile"
+    ]
+  },
+  "self-promo-postcard-8.5x5.5-b.png": {
+    "id": "template-self-promo-postcard-8.5x5.5-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-b/tablet"
+    ]
+  },
+  "self-promo-postcard-8.5x5.5-w.png": {
+    "id": "template-self-promo-postcard-8.5x5.5-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-postcard-8.5x5.5-w/desktop"
+    ]
+  },
+  "self-promo-square-b.png": {
+    "id": "template-self-promo-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-b/public"
+    ]
+  },
+  "self-promo-square-w.png": {
+    "id": "template-self-promo-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-square-w/desktop"
+    ]
+  },
+  "self-promo-story-b.png": {
+    "id": "template-self-promo-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-b/tablet"
+    ]
+  },
+  "self-promo-story-w.png": {
+    "id": "template-self-promo-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-story-w/public"
+    ]
+  },
+  "self-promo-testimonial-square-b.png": {
+    "id": "template-self-promo-testimonial-square-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-b/tablet"
+    ]
+  },
+  "self-promo-testimonial-square-w.png": {
+    "id": "template-self-promo-testimonial-square-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-square-w/public"
+    ]
+  },
+  "self-promo-testimonial-story-b.png": {
+    "id": "template-self-promo-testimonial-story-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-b/public"
+    ]
+  },
+  "self-promo-testimonial-story-w.png": {
+    "id": "template-self-promo-testimonial-story-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-story-w/public"
+    ]
+  },
+  "self-promo-testimonial-wide-b.png": {
+    "id": "template-self-promo-testimonial-wide-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-b/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-b/tablet"
+    ]
+  },
+  "self-promo-testimonial-wide-w.png": {
+    "id": "template-self-promo-testimonial-wide-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-w/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-testimonial-wide-w/mobile"
+    ]
+  },
+  "self-promo-wide-b.png": {
+    "id": "template-self-promo-wide-b",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-b",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-b/desktop",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-b/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-b/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-b/mobile"
+    ]
+  },
+  "self-promo-wide-w.png": {
+    "id": "template-self-promo-wide-w",
+    "url": "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-w",
+    "variants": [
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-w/tablet",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-w/mobile",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-w/public",
+      "https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-self-promo-wide-w/desktop"
+    ]
+  }
+}
