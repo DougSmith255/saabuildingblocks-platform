@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
+import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -84,16 +85,16 @@ const navItems: NavItem[] = [
   { id: 'new-agents', label: 'New Agents', icon: '◠' },
 ];
 
-// Dashboard quick access cards
-const dashboardCards = [
-  { id: 'start-here' as SectionId, title: 'Start Here', description: 'New to the team? Start here', icon: '🚀' },
-  { id: 'calls' as SectionId, title: 'Team Calls & More', description: 'Live and recorded team calls', icon: '📹' },
-  { id: 'templates' as SectionId, title: 'Exclusive Templates', description: 'Marketing templates and more', icon: '📢' },
-  { id: 'courses' as SectionId, title: 'Elite Courses', description: 'Social Agent Academy, Flipping Houses, etc.', icon: '🎓' },
-  { id: 'production' as SectionId, title: 'Quickstart Production', description: 'Landing Pages and Email Drips', icon: '👥' },
-  { id: 'revshare' as SectionId, title: 'Quickstart RevShare', description: 'Grow your downline, no experience needed', icon: '💰' },
-  { id: 'exp-links' as SectionId, title: 'eXp Links & Questions', description: 'Have an eXp question? Start here', icon: '🔗' },
-  { id: 'new-agents' as SectionId, title: 'New Agents', description: 'Information tailored for you', icon: '🏃' },
+// Dashboard quick access cards with Lucide icons for 3D effect
+const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }> }[] = [
+  { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket },
+  { id: 'calls', title: 'Team Calls & More', description: 'Live and recorded team calls', icon: Video },
+  { id: 'templates', title: 'Exclusive Templates', description: 'Marketing templates and more', icon: Megaphone },
+  { id: 'courses', title: 'Elite Courses', description: 'Social Agent Academy, Flipping Houses, etc.', icon: GraduationCap },
+  { id: 'production', title: 'Quickstart Production', description: 'Landing Pages and Email Drips', icon: Users },
+  { id: 'revshare', title: 'Quickstart RevShare', description: 'Grow your downline, no experience needed', icon: DollarSign },
+  { id: 'exp-links', title: 'eXp Links & Questions', description: 'Have an eXp question? Start here', icon: Link2 },
+  { id: 'new-agents', title: 'New Agents', description: 'Information tailored for you', icon: PersonStanding },
 ];
 
 // Rewrite asset URLs to use CDN for edge caching
@@ -2138,25 +2139,30 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-        {dashboardCards.map((card) => (
-          <button
-            key={card.id}
-            onClick={() => onNavigate(card.id)}
-            className="text-left group"
-          >
-            <GenericCard className="h-full" hover padding="md">
-              <div className="space-y-3">
-                <span className="text-4xl">{card.icon}</span>
-                <h3 className="text-h5 group-hover:text-[#ffd700] transition-colors">
-                  {card.title}
-                </h3>
-                <p className="text-body opacity-70">
-                  {card.description}
-                </p>
-              </div>
-            </GenericCard>
-          </button>
-        ))}
+        {dashboardCards.map((card) => {
+          const IconComponent = card.icon;
+          return (
+            <button
+              key={card.id}
+              onClick={() => onNavigate(card.id)}
+              className="text-left group"
+            >
+              <GenericCard className="h-full" hover padding="md">
+                <div className="space-y-3">
+                  <Icon3D>
+                    <IconComponent className="w-10 h-10" />
+                  </Icon3D>
+                  <h3 className="text-h5 group-hover:text-[#ffd700] transition-colors">
+                    {card.title}
+                  </h3>
+                  <p className="text-body opacity-70">
+                    {card.description}
+                  </p>
+                </div>
+              </GenericCard>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
