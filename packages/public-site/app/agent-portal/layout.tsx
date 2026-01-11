@@ -2,11 +2,29 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+// Global styles to disable tap highlight on ALL elements in agent portal
+const globalTapHighlightFix = `
+  /* Disable tap highlight completely for agent portal */
+  #agent-portal-wrapper,
+  #agent-portal-wrapper * {
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    tap-highlight-color: transparent !important;
+  }
+`;
+
+// Dynamic import for PWA loading screen (only loads in standalone mode)
+const PWALoadingScreen = dynamic(
+  () => import('@/components/pwa/PWALoadingScreen').then(mod => mod.PWALoadingScreen),
+  { ssr: false }
+);
 
 /**
  * Agent Portal Layout
- * Provides a persistent transition overlay that covers page navigations
- * When navigating from login to dashboard, shows a reveal animation
+ * - Shows PWA loading screen on app launch (standalone mode)
+ * - Provides transition overlay for login -> dashboard navigation
  */
 export default function AgentPortalLayout({
   children,
@@ -15,7 +33,32 @@ export default function AgentPortalLayout({
 }) {
   const pathname = usePathname();
   const [showReveal, setShowReveal] = useState(false);
+  const [showPWALoading, setShowPWALoading] = useState(false);
+  const [isPWA, setIsPWA] = useState(false);
   const prevPathRef = useRef(pathname);
+  const hasShownPWALoadingRef = useRef(false);
+
+  // Detect PWA standalone mode and show loading screen on first launch
+  useEffect(() => {
+    // Check if running as installed PWA
+    const isStandalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true;
+
+    setIsPWA(isStandalone);
+
+    // Only show loading screen once per session in PWA mode
+    // and only on the main portal page (not login, activate, etc.)
+    if (isStandalone && !hasShownPWALoadingRef.current && pathname === '/agent-portal') {
+      // Check if we've already shown loading this session
+      const hasShownThisSession = sessionStorage.getItem('pwa_loading_shown');
+      if (!hasShownThisSession) {
+        setShowPWALoading(true);
+        hasShownPWALoadingRef.current = true;
+        sessionStorage.setItem('pwa_loading_shown', 'true');
+      }
+    }
+  }, [pathname]);
 
   // Detect navigation from login to dashboard
   useEffect(() => {
@@ -35,13 +78,36 @@ export default function AgentPortalLayout({
     setShowReveal(false);
   };
 
+  // Handle PWA loading complete
+  const handlePWALoadComplete = () => {
+    setShowPWALoading(false);
+  };
+
+  // Inject tap highlight fix CSS on mount
+  useEffect(() => {
+    const styleId = 'agent-portal-tap-highlight-fix';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = globalTapHighlightFix;
+      document.head.appendChild(style);
+    }
+  }, []);
+
   return (
-    <>
+    <div id="agent-portal-wrapper">
       {children}
       {showReveal && (
         <RevealOverlay onComplete={handleRevealComplete} />
       )}
-    </>
+      {showPWALoading && (
+        <PWALoadingScreen
+          minDisplayTime={3500}
+          maxDisplayTime={8000}
+          onLoadComplete={handlePWALoadComplete}
+        />
+      )}
+    </div>
   );
 }
 

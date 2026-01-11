@@ -1037,7 +1037,11 @@ export default function AgentPortal() {
   }
 
   return (
-    <main id="main-content" className="agent-portal-root min-h-screen">
+    <main
+      id="main-content"
+      className="agent-portal-root min-h-screen"
+      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+    >
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
       {/* Slides up off screen when any popup is open, slides down on entry from login */}
       <header
@@ -4784,7 +4788,10 @@ function AgentPagesSection({
 // ============================================================================
 function SectionWrapper({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <div className="section-content rounded-xl p-6 sm:p-8 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/10">
+    <div
+      className="section-content rounded-xl p-6 sm:p-8 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/10"
+      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+    >
       {title && (
         <div className="mb-[50px]">
           <H2>{title}</H2>
