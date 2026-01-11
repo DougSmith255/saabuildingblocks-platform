@@ -2480,126 +2480,105 @@ function TemplatesSection() {
   // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
     <div className="space-y-6 px-2 sm:px-4">
-        {/* Header */}
-        <div className="text-center pb-2">
-          <p className="text-sm text-[#e5e4dd]/60">
-            Use your eXp credentials to access Canva templates
-          </p>
-        </div>
+      {/* Header */}
+      <div className="text-center pb-2">
+        <p className="text-sm text-[#e5e4dd]/60">
+          Use your eXp credentials to access Canva templates
+        </p>
+      </div>
 
-        {/* Category Grid - All visible, no scrolling */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-          {TEMPLATE_CATEGORIES.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                activeCategory === category.id
-                  ? 'bg-[#ffd700] text-black shadow-lg shadow-[#ffd700]/20'
-                  : 'bg-black/40 border border-white/10 text-[#e5e4dd]/80 hover:border-[#ffd700]/30 hover:text-[#ffd700] hover:bg-black/60'
-              }`}
-            >
-              <span className="text-base">{category.icon}</span>
-              <span className="truncate">{category.label}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ml-auto ${
-                activeCategory === category.id
-                  ? 'bg-black/20 text-black'
-                  : 'bg-white/10 text-[#e5e4dd]/60'
-              }`}>
-                {category.templates.length}
-              </span>
-            </button>
-          ))}
-        </div>
+      {/* Category Buttons - Horizontal scroll on mobile, wrap on larger screens */}
+      <div className="flex flex-wrap gap-2 justify-center">
+        {TEMPLATE_CATEGORIES.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => setActiveCategory(category.id)}
+            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+              activeCategory === category.id
+                ? 'bg-[#ffd700] text-black shadow-lg shadow-[#ffd700]/20'
+                : 'bg-black/40 border border-white/10 text-[#e5e4dd]/80 hover:border-[#ffd700]/30 hover:text-[#ffd700]'
+            }`}
+          >
+            <span>{category.icon}</span>
+            <span>{category.label}</span>
+          </button>
+        ))}
+      </div>
 
-        {/* Category Description */}
-        <div className="text-center">
-          <p className="text-sm text-[#e5e4dd]/50">{currentCategory.description}</p>
-        </div>
+      {/* Category Description */}
+      <div className="text-center">
+        <p className="text-sm text-[#e5e4dd]/50">{currentCategory.description}</p>
+      </div>
 
-        {/* Templates Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-          {currentCategory.templates.map((template, index) => (
-            <a
-              key={`${template.name}-${template.variant || ''}-${index}`}
-              href={template.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
-            >
-              {/* Template Preview Image */}
-              <div className="relative aspect-[7/6] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden">
-                {template.preview ? (
-                  <img
-                    src={`https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile`}
-                    srcSet={`
-                      https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile 400w,
-                      https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/tablet 800w
-                    `}
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    alt={template.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
-                      {getFormatIcon(template.format)}
-                    </span>
-                  </div>
-                )}
-
-                {/* Format Badge */}
-                <div className="absolute top-2 left-2 flex gap-1">
-                  <span className="px-2 py-0.5 text-xs font-medium rounded bg-black/70 text-[#e5e4dd] backdrop-blur-sm">
-                    {template.format}
-                  </span>
-                  {template.variant && (
-                    <span className={`px-1.5 py-0.5 text-xs font-bold rounded backdrop-blur-sm ${
-                      template.variant === 'W'
-                        ? 'bg-white/90 text-black'
-                        : 'bg-black/90 text-white border border-white/20'
-                    }`}>
-                      {template.variant}
-                    </span>
-                  )}
-                </div>
-
-                {/* Hover overlay */}
-                <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                  <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
-                    Open in Canva
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" />
-                      <line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
+      {/* Templates Grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+        {currentCategory.templates.map((template, index) => (
+          <a
+            key={`${template.name}-${template.variant || ''}-${index}`}
+            href={template.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            className="group block rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
+          >
+            {/* Template Preview Image */}
+            <div className="relative aspect-[7/6] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden">
+              {template.preview ? (
+                <img
+                  src={`https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile`}
+                  srcSet={`
+                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile 400w,
+                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/tablet 800w
+                  `}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  alt={template.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+                    {getFormatIcon(template.format)}
                   </span>
                 </div>
-              </div>
+              )}
 
-              {/* Template Name */}
-              <div className="px-3 py-2">
-                <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors">
-                  {template.name}
-                </p>
+              {/* Hover overlay */}
+              <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+                <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
+                  Open in Canva
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                </span>
               </div>
-            </a>
-          ))}
-        </div>
+            </div>
 
-        {/* Canva Login Reminder */}
-        <div className="mt-6 p-4 rounded-xl bg-[#00c4cc]/10 border border-[#00c4cc]/20 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#00c4cc]/20 flex items-center justify-center flex-shrink-0">
-            <svg className="w-5 h-5 text-[#00c4cc]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-            </svg>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-[#00c4cc]">Canva Access</p>
-            <p className="text-xs text-[#e5e4dd]/60">Login with your eXp email to access and customize these templates</p>
-          </div>
+            {/* Template Name - shows full name including format */}
+            <div className="px-3 py-2">
+              <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors">
+                {template.name}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {/* Canva Login Reminder */}
+      <div className="mt-6 p-4 rounded-xl bg-[#00c4cc]/10 border border-[#00c4cc]/20 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-[#00c4cc]/20 flex items-center justify-center flex-shrink-0">
+          <svg className="w-5 h-5 text-[#00c4cc]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
         </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-[#00c4cc]">Canva Access</p>
+          <p className="text-xs text-[#e5e4dd]/60">Login with your eXp email to access and customize these templates</p>
+        </div>
+      </div>
     </div>
   );
 }
