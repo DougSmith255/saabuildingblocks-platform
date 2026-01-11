@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ } from '@saa/shared/components/saa';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
@@ -2311,12 +2311,60 @@ interface Template {
   preview?: string; // Preview image filename
 }
 
+// Combined template that groups W and B variants together
+interface CombinedTemplate {
+  name: string;
+  format: string;
+  // White variant
+  urlW?: string;
+  previewW?: string;
+  // Black variant
+  urlB?: string;
+  previewB?: string;
+  // For templates without variants
+  url?: string;
+  preview?: string;
+}
+
 interface TemplateCategory {
   id: string;
   label: string;
   icon: string;
   description: string;
   templates: Template[];
+}
+
+// Helper function to combine W/B variants into single entries
+function combineTemplateVariants(templates: Template[]): CombinedTemplate[] {
+  const combined: Map<string, CombinedTemplate> = new Map();
+
+  for (const template of templates) {
+    // Create a unique key based on name + format (but not variant)
+    const key = `${template.name}-${template.format}`;
+
+    if (!combined.has(key)) {
+      combined.set(key, {
+        name: template.name,
+        format: template.format,
+      });
+    }
+
+    const entry = combined.get(key)!;
+
+    if (template.variant === 'W') {
+      entry.urlW = template.url;
+      entry.previewW = template.preview;
+    } else if (template.variant === 'B') {
+      entry.urlB = template.url;
+      entry.previewB = template.preview;
+    } else {
+      // No variant - single template
+      entry.url = template.url;
+      entry.preview = template.preview;
+    }
+  }
+
+  return Array.from(combined.values());
 }
 
 const TEMPLATE_CATEGORIES: TemplateCategory[] = [
@@ -2472,10 +2520,126 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
   },
 ];
 
+// Template Card component with W/B toggle for combined variants
+function TemplateCard({ template }: { template: CombinedTemplate }) {
+  const hasVariants = !!(template.urlW && template.urlB);
+  const [selectedVariant, setSelectedVariant] = useState<'W' | 'B'>('W');
+
+  // Get current preview and URL based on selection
+  const getCurrentPreview = () => {
+    if (hasVariants) {
+      return selectedVariant === 'W' ? template.previewW : template.previewB;
+    }
+    // Single variant or no variant - check what's available
+    return template.previewW || template.previewB || template.preview;
+  };
+
+  const getCurrentUrl = () => {
+    if (hasVariants) {
+      return selectedVariant === 'W' ? template.urlW : template.urlB;
+    }
+    return template.urlW || template.urlB || template.url;
+  };
+
+  const currentPreview = getCurrentPreview();
+  const currentUrl = getCurrentUrl();
+
+  return (
+    <div
+      className="group rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
+      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+    >
+      {/* Template Preview Image */}
+      <a
+        href={currentUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block relative aspect-[7/6] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden"
+        style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+      >
+        {currentPreview ? (
+          <img
+            src={`https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${currentPreview}/mobile`}
+            srcSet={`
+              https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${currentPreview}/mobile 400w,
+              https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${currentPreview}/tablet 800w
+            `}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            alt={template.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
+              {getFormatIcon(template.format)}
+            </span>
+          </div>
+        )}
+
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
+            Open in Canva
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </span>
+        </div>
+      </a>
+
+      {/* Template Name and W/B Toggle */}
+      <div className="px-3 py-2 flex items-center justify-between gap-2">
+        <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors flex-1">
+          {template.name}
+        </p>
+        {/* W/B Toggle - only show if template has both variants */}
+        {hasVariants && (
+          <div
+            className="flex gap-0.5 flex-shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedVariant('W')}
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              className={`w-5 h-5 rounded text-[10px] font-bold transition-all ${
+                selectedVariant === 'W'
+                  ? 'bg-white text-black'
+                  : 'bg-white/10 text-white/50 hover:bg-white/20'
+              }`}
+            >
+              W
+            </button>
+            <button
+              onClick={() => setSelectedVariant('B')}
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              className={`w-5 h-5 rounded text-[10px] font-bold transition-all ${
+                selectedVariant === 'B'
+                  ? 'bg-black text-white border border-white/30'
+                  : 'bg-white/10 text-white/50 hover:bg-white/20'
+              }`}
+            >
+              B
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function TemplatesSection() {
   const [activeCategory, setActiveCategory] = useState(TEMPLATE_CATEGORIES[0].id);
 
   const currentCategory = TEMPLATE_CATEGORIES.find(c => c.id === activeCategory) || TEMPLATE_CATEGORIES[0];
+
+  // Combine W/B variants into single entries
+  const combinedTemplates = useMemo(
+    () => combineTemplateVariants(currentCategory.templates),
+    [currentCategory.templates]
+  );
 
   // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
@@ -2511,59 +2675,10 @@ function TemplatesSection() {
         <p className="text-sm text-[#e5e4dd]/50">{currentCategory.description}</p>
       </div>
 
-      {/* Templates Grid */}
+      {/* Templates Grid - Now with combined cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-        {currentCategory.templates.map((template, index) => (
-          <a
-            key={`${template.name}-${template.variant || ''}-${index}`}
-            href={template.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            className="group block rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
-          >
-            {/* Template Preview Image */}
-            <div className="relative aspect-[7/6] bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] overflow-hidden">
-              {template.preview ? (
-                <img
-                  src={`https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile`}
-                  srcSet={`
-                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/mobile 400w,
-                    https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${template.preview}/tablet 800w
-                  `}
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                  alt={template.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-5xl opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300">
-                    {getFormatIcon(template.format)}
-                  </span>
-                </div>
-              )}
-
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
-                  Open in Canva
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
-                  </svg>
-                </span>
-              </div>
-            </div>
-
-            {/* Template Name - shows full name including format */}
-            <div className="px-3 py-2">
-              <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors">
-                {template.name}
-              </p>
-            </div>
-          </a>
+        {combinedTemplates.map((template, index) => (
+          <TemplateCard key={`${template.name}-${template.format}-${index}`} template={template} />
         ))}
       </div>
 
