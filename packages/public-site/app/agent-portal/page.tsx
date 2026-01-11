@@ -2218,9 +2218,9 @@ Simply offering an MLS automatic search isn't enough these days. Instead, focus 
   ];
 
   return (
-    <SectionWrapper>
+    <div className="px-2 sm:px-4">
       <FAQ items={faqItems} allowMultiple defaultOpenIndex={0} />
-    </SectionWrapper>
+    </div>
   );
 }
 
@@ -2229,7 +2229,7 @@ Simply offering an MLS automatic search isn't enough these days. Instead, focus 
 // ============================================================================
 function TeamCallsSection() {
   return (
-    <SectionWrapper>
+    <div className="space-y-8 px-2 sm:px-4">
       <div className="space-y-8">
         <h3 className="text-h3 text-center mb-6">Mastermind Calls</h3>
 
@@ -2274,7 +2274,7 @@ function TeamCallsSection() {
           </GenericCard>
         </div>
       </div>
-    </SectionWrapper>
+    </div>
   );
 }
 
@@ -2609,7 +2609,7 @@ function TemplatesSection() {
 // ============================================================================
 function CoursesSection() {
   return (
-    <SectionWrapper>
+    <div className="space-y-6 px-2 sm:px-4">
       <p className="text-center text-body mb-8">Refer to Wolf Pack emails to find login details</p>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -2637,7 +2637,7 @@ function CoursesSection() {
           </div>
         </GenericCard>
       </div>
-    </SectionWrapper>
+    </div>
   );
 }
 
@@ -2678,39 +2678,37 @@ Referral Networks to consider:
   ];
 
   return (
-    <SectionWrapper>
-      <div className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <GenericCard padding="md">
-            <div className="space-y-4">
-              <span className="text-4xl">🏗️</span>
-              <h3 className="text-h5 text-[#ffd700]">Build Landing Pages (Bold Trail)</h3>
-              <p className="text-body">How to build them</p>
-            </div>
-          </GenericCard>
-
-          <GenericCard padding="md">
-            <div className="space-y-4">
-              <span className="text-4xl">#️⃣</span>
-              <h3 className="text-h5 text-[#ffd700]">Landing Page Hashtags & Links</h3>
-              <p className="text-body">Be sure to watch the how-to video first</p>
-            </div>
-          </GenericCard>
-        </div>
-
+    <div className="space-y-8 px-2 sm:px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <GenericCard padding="md">
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">✉️</span>
-              <h3 className="text-h5 text-[#ffd700]">Email Campaigns for Lead Magnets</h3>
-            </div>
-            <p className="text-body">Automate your nurturing of leads</p>
+            <span className="text-4xl">🏗️</span>
+            <h3 className="text-h5 text-[#ffd700]">Build Landing Pages (Bold Trail)</h3>
+            <p className="text-body">How to build them</p>
           </div>
         </GenericCard>
 
-        <FAQ items={certificationFaq} allowMultiple />
+        <GenericCard padding="md">
+          <div className="space-y-4">
+            <span className="text-4xl">#️⃣</span>
+            <h3 className="text-h5 text-[#ffd700]">Landing Page Hashtags & Links</h3>
+            <p className="text-body">Be sure to watch the how-to video first</p>
+          </div>
+        </GenericCard>
       </div>
-    </SectionWrapper>
+
+      <GenericCard padding="md">
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">✉️</span>
+            <h3 className="text-h5 text-[#ffd700]">Email Campaigns for Lead Magnets</h3>
+          </div>
+          <p className="text-body">Automate your nurturing of leads</p>
+        </div>
+      </GenericCard>
+
+      <FAQ items={certificationFaq} allowMultiple />
+    </div>
   );
 }
 
@@ -2738,20 +2736,18 @@ Tips for getting started:
   ];
 
   return (
-    <SectionWrapper>
-      <div className="space-y-6">
-        <GenericCard padding="lg" centered>
-          <div className="text-center space-y-4 py-4">
-            <span className="text-6xl">💰</span>
-            <h3 className="text-h3 text-[#ffd700]">Grow Your Downline</h3>
-            <p className="text-body">No experience needed</p>
-            <p className="text-body">Learn how to build passive income through eXp's revenue share program</p>
-          </div>
-        </GenericCard>
+    <div className="space-y-6 px-2 sm:px-4">
+      <GenericCard padding="lg" centered>
+        <div className="text-center space-y-4 py-4">
+          <span className="text-6xl">💰</span>
+          <h3 className="text-h3 text-[#ffd700]">Grow Your Downline</h3>
+          <p className="text-body">No experience needed</p>
+          <p className="text-body">Learn how to build passive income through eXp's revenue share program</p>
+        </div>
+      </GenericCard>
 
-        <FAQ items={revShareFaq} allowMultiple />
-      </div>
-    </SectionWrapper>
+      <FAQ items={revShareFaq} allowMultiple />
+    </div>
   );
 }
 
@@ -2760,8 +2756,7 @@ Tips for getting started:
 // ============================================================================
 function ExpLinksSection() {
   return (
-    <SectionWrapper>
-      <div className="space-y-8">
+    <div className="space-y-8 px-2 sm:px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <GenericCard padding="md">
             <div className="space-y-4">
@@ -2838,8 +2833,7 @@ function ExpLinksSection() {
             ))}
           </div>
         </div>
-      </div>
-    </SectionWrapper>
+    </div>
   );
 }
 
@@ -2848,8 +2842,7 @@ function ExpLinksSection() {
 // ============================================================================
 function NewAgentsSection() {
   return (
-    <SectionWrapper>
-      <div className="space-y-6">
+    <div className="space-y-6 px-2 sm:px-4">
         <GenericCard padding="lg">
           <div className="space-y-6">
             <div className="text-center">
@@ -2886,17 +2879,16 @@ function NewAgentsSection() {
           </div>
         </GenericCard>
 
-        <div className="text-center">
-          <p className="text-body mb-4">Questions? Reach out to your sponsor or contact us:</p>
-          <a
-            href="mailto:doug@smartagentalliance.com"
-            className="inline-block px-6 py-3 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"
-          >
-            Contact Support
-          </a>
-        </div>
+      <div className="text-center">
+        <p className="text-body mb-4">Questions? Reach out to your sponsor or contact us:</p>
+        <a
+          href="mailto:doug@smartagentalliance.com"
+          className="inline-block px-6 py-3 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"
+        >
+          Contact Support
+        </a>
       </div>
-    </SectionWrapper>
+    </div>
   );
 }
 
@@ -3453,11 +3445,11 @@ function AgentPagesSection({
 
   if (isLoading) {
     return (
-      <SectionWrapper>
+      <div className="px-2 sm:px-4">
         <div className="flex items-center justify-center py-12">
           <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
         </div>
-      </SectionWrapper>
+      </div>
     );
   }
 
@@ -3519,7 +3511,7 @@ function AgentPagesSection({
 
   if (!pageData) {
     return (
-      <SectionWrapper>
+      <div className="px-2 sm:px-4">
         <GenericCard padding="lg" centered>
           <div className="text-center space-y-4 py-8">
             <span className="text-6xl">🚀</span>
@@ -3540,7 +3532,7 @@ function AgentPagesSection({
             </button>
           </div>
         </GenericCard>
-      </SectionWrapper>
+      </div>
     );
   }
 
@@ -3549,9 +3541,8 @@ function AgentPagesSection({
   const linktreeUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}-links`;
 
   return (
-    <SectionWrapper>
-      <div className="space-y-6">
-        {/* Error/Success Messages */}
+    <div className="space-y-6 px-2 sm:px-4">
+      {/* Error/Success Messages */}
         {error && (
           <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
             {error}
@@ -4785,13 +4776,12 @@ function AgentPagesSection({
             </div>
           </div>
         </div>
-      </div>
-    </SectionWrapper>
+    </div>
   );
 }
 
 // ============================================================================
-// Section Wrapper Component
+// Section Wrapper Component (kept for reference but no longer used)
 // ============================================================================
 function SectionWrapper({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
