@@ -4024,6 +4024,7 @@ function AgentPagesSection({
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showStylesModal, setShowStylesModal] = useState(false);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
 
   // Tab navigation state for new UI - uses initialTab from props
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
@@ -4771,11 +4772,12 @@ function AgentPagesSection({
           </div>
         )}
 
-        {/* Desktop: 4-column layout - Profile | Design/Links | Links | Preview. Mobile: stacked */}
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_200px] xl:grid-cols-[240px_1fr_1fr_200px] 2xl:grid-cols-[260px_1fr_1fr_220px] gap-4 xl:gap-5">
+        {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_240px] xl:grid-cols-[1fr_260px] gap-6">
 
-          {/* PREVIEW COLUMN - Narrow sticky phone mockup on far right */}
-          <div className="lg:col-start-3 xl:col-start-4 lg:row-span-3 lg:sticky lg:top-4 lg:self-start order-first lg:order-last">
+          {/* PREVIEW COLUMN - Desktop only, sticky on right */}
+          <div className="hidden lg:block lg:col-start-2 lg:row-start-1 lg:row-span-4">
+            <div className="sticky top-4">
             <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
               {/* Preview Header */}
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
@@ -4984,10 +4986,11 @@ function AgentPagesSection({
                   </div>
                 </div>
             </div>
+            </div> {/* End sticky wrapper */}
           </div>
 
-          {/* PROFILE COLUMN - Fixed width on left */}
-          <div className="lg:col-start-1 order-last lg:order-first">
+          {/* SETTINGS COLUMN - All settings here, single column on mobile */}
+          <div className="lg:col-start-1 lg:row-start-1">
             {/* Page Status & Link */}
             {pageData.activated && (
               <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
@@ -5011,8 +5014,8 @@ function AgentPagesSection({
               </div>
             )}
 
-            {/* Tab Navigation - Mobile only */}
-            <div className="border-b border-white/10 mb-6 lg:hidden">
+            {/* Tab Navigation - Mobile only, sticky at top */}
+            <div className="sticky top-0 z-20 bg-[#191919]/95 backdrop-blur-sm border-b border-white/10 mb-4 lg:hidden -mx-2 sm:-mx-4 px-2 sm:px-4">
               <div className="flex">
                 <button
                   onClick={() => setActiveTab('profile')}
@@ -5270,12 +5273,9 @@ function AgentPagesSection({
                     </div>
                   </div>
             </div> {/* End PROFILE SECTION */}
-          </div> {/* End PROFILE COLUMN */}
 
-          {/* DESIGN & LINKS COLUMN - Middle column(s) */}
-          <div className="xl:col-start-2 xl:col-span-2 lg:col-start-2 space-y-4">
             {/* DESIGN SECTION */}
-            <div className={`space-y-3 ${activeTab === 'design' ? '' : 'hidden lg:block'}`}>
+            <div className={`space-y-3 mt-6 ${activeTab === 'design' ? '' : 'hidden lg:block'}`}>
               {/* Section Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                 <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -5477,7 +5477,7 @@ function AgentPagesSection({
             </div> {/* End of Design section */}
 
             {/* LINKS SECTION */}
-            <div className={`space-y-3 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
+            <div className={`space-y-3 mt-6 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
               {/* Section Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                 <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -5707,10 +5707,9 @@ function AgentPagesSection({
                 </div>
               </div>
             </div> {/* End of LINKS SECTION */}
-          </div> {/* End of DESIGN & LINKS COLUMN */}
 
-          {/* Action Buttons - Moved to bottom spanning full width */}
-          <div className="lg:col-span-3 xl:col-span-4 flex flex-wrap gap-3 justify-end pt-4 border-t border-white/10">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3 justify-end pt-4 mt-6 border-t border-white/10">
               {hasUnsavedChanges && (
                 <button
                   onClick={handleSave}
@@ -5736,8 +5735,179 @@ function AgentPagesSection({
                   Activate Pages
                 </button>
               )}
-          </div>
+            </div>
+          </div> {/* End of SETTINGS COLUMN */}
         </div>
+
+        {/* MOBILE PREVIEW BUTTON - Fixed at bottom, full width */}
+        <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+          <button
+            onClick={() => setShowMobilePreview(true)}
+            className="w-full py-4 bg-gradient-to-r from-[#22c55e] to-[#16a34a] text-white font-semibold text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg shadow-[#22c55e]/20"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            Preview Linktree
+          </button>
+        </div>
+
+        {/* MOBILE PREVIEW MODAL */}
+        {showMobilePreview && (
+          <div className="fixed inset-0 z-[100] lg:hidden">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setShowMobilePreview(false)}
+            />
+
+            {/* Modal Content */}
+            <div className="absolute inset-4 sm:inset-8 flex flex-col bg-gradient-to-b from-[#0a0a0a] to-[#151515] rounded-2xl border border-white/10 overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-black/30 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-[#e5e4dd]">Live Preview</span>
+                  <span className="text-xs text-[#22c55e]">Linktree</span>
+                </div>
+                <button
+                  onClick={() => setShowMobilePreview(false)}
+                  className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <svg className="w-5 h-5 text-[#e5e4dd]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Preview Content - Scrollable */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto">
+                  {/* Profile Photo */}
+                  <div
+                    className="w-24 h-24 rounded-full border-3 flex items-center justify-center overflow-hidden"
+                    style={{ borderColor: linksSettings.accentColor, borderWidth: '3px', backgroundColor: 'rgba(0,0,0,0.5)' }}
+                  >
+                    {getProfileImageUrl() ? (
+                      <img
+                        src={getProfileImageUrl() || ''}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-4xl">👤</span>
+                    )}
+                  </div>
+
+                  {/* Name */}
+                  <span
+                    className="font-bold text-xl text-center"
+                    style={{
+                      color: linksSettings.accentColor,
+                      fontFamily: 'var(--font-taskor, sans-serif)',
+                    }}
+                  >
+                    {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
+                  </span>
+
+                  {/* Bio */}
+                  {linksSettings.bio && (
+                    <p className="text-sm text-center text-[#e5e4dd]/70 max-w-[240px]">
+                      {linksSettings.bio}
+                    </p>
+                  )}
+
+                  {/* Social Icons */}
+                  {filledSocialLinks > 0 && (
+                    <div className="flex gap-2 flex-wrap justify-center">
+                      {formData.facebook_url && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
+                        </div>
+                      )}
+                      {formData.instagram_url && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
+                        </div>
+                      )}
+                      {formData.twitter_url && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </div>
+                      )}
+                      {formData.youtube_url && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
+                        </div>
+                      )}
+                      {formData.tiktok_url && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
+                        </div>
+                      )}
+                      {formData.linkedin_url && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Phone Number */}
+                  {formData.show_phone && formData.phone && (
+                    <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/80">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      <span>{formData.phone}</span>
+                      {formData.phone_text_only && <span className="text-xs text-[#e5e4dd]/50">(Text Only)</span>}
+                    </div>
+                  )}
+
+                  {/* Sample Buttons */}
+                  <div className="w-full space-y-2 mt-2">
+                    {(() => {
+                      const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
+                      const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
+                      const allLinkIds = [...linkOrder];
+                      customLinks.forEach(link => {
+                        if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
+                      });
+                      if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+                      if (!allLinkIds.includes('learn-about')) {
+                        const joinIndex = allLinkIds.indexOf('join-team');
+                        allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+                      }
+
+                      return allLinkIds.map((linkId) => {
+                        const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                        const customLink = customLinkMap.get(linkId);
+                        if (!isDefault && !customLink) return null;
+
+                        return (
+                          <div
+                            key={linkId}
+                            className="w-full py-3 px-4 rounded-lg text-sm font-medium text-center"
+                            style={{
+                              backgroundColor: linksSettings.accentColor,
+                              color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                              fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                            }}
+                          >
+                            {isDefault ? (linkId === 'join-team' ? 'Join my Team' : 'Learn About my Team') : customLink?.label}
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Spacer for fixed bottom button on mobile */}
+        <div className="h-16 lg:hidden" />
     </div>
   );
 }
