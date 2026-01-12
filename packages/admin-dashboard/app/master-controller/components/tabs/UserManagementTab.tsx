@@ -17,6 +17,7 @@ interface User {
   created_at: string;
   exp_email?: string; // Agent's eXp Realty email
   legal_name?: string; // Agent's official legal name for sponsor search
+  gender?: 'male' | 'female'; // Controls which team calls the user sees
 }
 
 interface UserStats {
@@ -386,6 +387,31 @@ export function UserManagementTab() {
     }
   };
 
+  // Handle toggle gender
+  const handleToggleGender = async (user: User) => {
+    const newGender = user.gender === 'female' ? 'male' : 'female';
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ gender: newGender }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update gender');
+      }
+
+      // Update local state immediately for responsive UI
+      setUsers(prev => prev.map(u =>
+        u.id === user.id ? { ...u, gender: newGender } : u
+      ));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to update gender');
+    }
+  };
+
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -543,6 +569,19 @@ export function UserManagementTab() {
                     </td>
                     <td className="py-4 px-4 text-right">
                       <div className="flex items-center justify-end gap-2">
+                        {/* Gender Toggle */}
+                        <button
+                          onClick={() => handleToggleGender(user)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded transition-colors ${
+                            user.gender === 'female'
+                              ? 'bg-pink-500/10 text-pink-400 hover:bg-pink-500/20'
+                              : 'bg-blue-500/10 text-blue-400 hover:bg-blue-500/20'
+                          }`}
+                          title={`Currently: ${user.gender === 'female' ? 'Female' : 'Male'} - Click to toggle`}
+                        >
+                          <span className="text-base">{user.gender === 'female' ? '♀' : '♂'}</span>
+                          <span className="text-xs">{user.gender === 'female' ? 'F' : 'M'}</span>
+                        </button>
                         <button
                           onClick={() => handleEditUser(user)}
                           className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-[#ffd700] hover:bg-[#ffd700]/10 rounded transition-colors"
