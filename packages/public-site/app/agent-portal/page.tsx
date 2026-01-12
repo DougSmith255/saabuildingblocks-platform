@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -97,7 +97,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages' | 'support';
+type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages' | 'support' | 'profile';
 
 interface NavItem {
   id: SectionId;
@@ -1165,6 +1165,7 @@ export default function AgentPortal() {
                 {activeSection === 'revshare' && 'RevShare'}
                 {activeSection === 'exp-links' && 'eXp Links'}
                 {activeSection === 'new-agents' && 'New Agents'}
+                {activeSection === 'profile' && 'My Profile'}
               </span>
               {/* Desktop: Logout Button - uses button text size clamp from master controller */}
               <button
@@ -1203,24 +1204,16 @@ export default function AgentPortal() {
         >
           {[
             { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
-            { id: 'agent-pages' as SectionId, label: 'Pages', Icon: FileUser },
+            { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
             { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
-            { id: 'courses' as SectionId, label: 'Courses', Icon: GraduationCap },
-            { id: 'more' as const, label: 'More', Icon: Menu },
+            { id: 'agent-pages' as SectionId, label: 'Pages', Icon: FileUser },
+            { id: 'profile' as SectionId, label: 'Profile', Icon: User },
           ].map((item, index, arr) => {
-            const isMore = item.id === 'more';
-            const isActive = isMore ? sidebarOpen : (activeSection === item.id && !sidebarOpen);
+            const isActive = activeSection === item.id;
             return (
               <div key={item.id} className="flex items-center flex-1 h-full">
                 <button
-                  onClick={() => {
-                    if (isMore) {
-                      setSidebarOpen(!sidebarOpen);
-                    } else {
-                      setActiveSection(item.id as SectionId);
-                      setSidebarOpen(false);
-                    }
-                  }}
+                  onClick={() => setActiveSection(item.id)}
                   className="relative flex flex-col items-center justify-center w-full h-[52px] mx-0.5 rounded-lg transition-all duration-200"
                   style={{
                     WebkitTapHighlightColor: 'transparent',
@@ -1235,7 +1228,7 @@ export default function AgentPortal() {
                 >
                   {/* Icon with glow effect when active */}
                   <div
-                    className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'} ${isMore && sidebarOpen ? 'rotate-90' : ''}`}
+                    className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                     style={{
                       filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
                       color: isActive ? '#ffd700' : 'rgba(229,228,221,0.5)',
@@ -1265,124 +1258,6 @@ export default function AgentPortal() {
           })}
         </div>
       </nav>
-
-      {/* Mobile More Menu Overlay - Premium glassmorphism design */}
-      {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-40 overflow-y-auto pb-20">
-          {/* Background with subtle gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/98 to-black" />
-
-          <div className="relative p-4 pt-20">
-            {/* User Profile Card - Enhanced glassmorphism */}
-            <div className="relative flex items-center gap-4 p-4 rounded-2xl overflow-hidden mb-6">
-              {/* Glass background */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm" />
-              <div className="absolute inset-0 border border-[#ffd700]/20 rounded-2xl" />
-              {/* Subtle shine */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none rounded-2xl" />
-
-              <button
-                onClick={() => { handleProfilePictureClick(); setSidebarOpen(false); }}
-                className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#ffd700]/30 ring-offset-2 ring-offset-black/50"
-              >
-                {user.profilePictureUrl && !profileImageError ? (
-                  <img
-                    src={user.profilePictureUrl}
-                    alt=""
-                    className="w-full h-full object-cover"
-                    loading="eager"
-                    decoding="async"
-                    fetchPriority="high"
-                    onError={() => setProfileImageError(true)}
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-[#ffd700]/20 to-[#ffd700]/10 flex items-center justify-center">
-                    <span className="text-2xl text-[#ffd700] font-semibold">{user.firstName?.charAt(0) || '?'}</span>
-                  </div>
-                )}
-              </button>
-              <div className="relative flex-1 min-w-0">
-                <h3 className="text-[#ffd700] font-semibold truncate">{user.firstName} {user.lastName}</h3>
-                <p className="text-[#e5e4dd]/60 text-sm truncate">{user.email}</p>
-              </div>
-              <button
-                onClick={() => { handleOpenEditProfile(); setSidebarOpen(false); }}
-                className="relative p-2.5 rounded-xl bg-white/5 border border-white/10 text-[#e5e4dd]/60 hover:bg-white/10 hover:text-[#ffd700] transition-all duration-300"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Section Label */}
-            <p className="text-xs text-[#e5e4dd]/40 font-medium uppercase tracking-wider mb-3 px-1">More Options</p>
-
-            {/* Navigation Grid - Enhanced with icons in containers */}
-            <div className="grid grid-cols-2 gap-3">
-              {navItems.filter(item => !['dashboard', 'agent-pages', 'calls', 'courses'].includes(item.id)).map((item) => {
-                const IconComponent = item.icon;
-                const isActive = activeSection === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveSection(item.id);
-                      setSidebarOpen(false);
-                    }}
-                    className={`relative flex flex-col items-center justify-center p-4 rounded-xl overflow-hidden transition-all duration-300 active:scale-95 ${
-                      isActive
-                        ? 'text-[#ffd700]'
-                        : 'text-[#e5e4dd]/70'
-                    }`}
-                    style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-                  >
-                    {/* Background */}
-                    <div className={`absolute inset-0 transition-colors duration-300 ${
-                      isActive
-                        ? 'bg-gradient-to-br from-[#ffd700]/15 to-[#ffd700]/5'
-                        : 'bg-white/5'
-                    }`} />
-                    {/* Border */}
-                    <div className={`absolute inset-0 border rounded-xl transition-colors duration-300 ${
-                      isActive
-                        ? 'border-[#ffd700]/40'
-                        : 'border-white/10'
-                    }`} />
-
-                    {/* Icon container */}
-                    <div className={`relative p-2 rounded-lg mb-2 transition-all duration-300 ${
-                      isActive
-                        ? 'bg-[#ffd700]/10'
-                        : 'bg-white/5'
-                    }`}>
-                      <IconComponent className="w-5 h-5" />
-                    </div>
-                    <span className="relative text-sm font-medium text-center">{item.label}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Logout Button - Enhanced */}
-            <button
-              onClick={handleLogout}
-              className="relative w-full mt-6 flex items-center justify-center gap-2 p-4 rounded-xl overflow-hidden active:scale-[0.98] transition-transform duration-200"
-            >
-              {/* Background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/5" />
-              <div className="absolute inset-0 border border-red-500/30 rounded-xl" />
-
-              <span className="relative text-red-400 font-medium">Logout</span>
-              <svg className="relative w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Main Dashboard Layout */}
       <div className="max-w-[2500px] mx-auto px-4 sm:px-8 md:px-12 pb-20 md:pb-8 pt-20 md:pt-28">
@@ -1565,6 +1440,89 @@ export default function AgentPortal() {
 
             {/* New Agents */}
             {activeSection === 'new-agents' && <NewAgentsSection />}
+
+            {/* Profile Section (Mobile) */}
+            {activeSection === 'profile' && (
+              <div className="space-y-6 px-1 sm:px-2">
+                {/* Profile Header */}
+                <div className="text-center">
+                  <h1 className="text-2xl font-bold text-[#ffd700] mb-2">My Profile</h1>
+                  <p className="text-[#e5e4dd]/60 text-sm">Manage your account settings</p>
+                </div>
+
+                {/* Profile Picture */}
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={handleProfilePictureClick}
+                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors mb-4"
+                    title="Click to change profile picture"
+                  >
+                    {user.profilePictureUrl && !profileImageError ? (
+                      <img
+                        src={user.profilePictureUrl}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
+                        onError={() => setProfileImageError(true)}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
+                        <span className="text-4xl text-[#ffd700]">
+                          {user.firstName?.charAt(0) || user.email?.charAt(0) || '?'}
+                        </span>
+                      </div>
+                    )}
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                      <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </div>
+                  </button>
+
+                  <h2 className="text-xl font-semibold text-[#ffd700]">
+                    {user.firstName} {user.lastName}
+                  </h2>
+                  <p className="text-[#e5e4dd]/60 text-sm">{user.email}</p>
+                </div>
+
+                {/* Upload Status */}
+                {dashboardUploadStatus && (
+                  <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                    <span>{dashboardUploadStatus}</span>
+                  </div>
+                )}
+                {dashboardUploadError && (
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                    {dashboardUploadError}
+                  </div>
+                )}
+
+                {/* Edit Profile Button */}
+                <button
+                  onClick={handleOpenEditProfile}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[#e5e4dd] bg-white/5 hover:bg-[#ffd700]/10 border border-white/[0.08] hover:border-[#ffd700]/30 transition-all"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span className="font-medium">Edit Profile</span>
+                </button>
+
+                {/* Logout Button */}
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 transition-all"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span className="font-medium">Logout</span>
+                </button>
+              </div>
+            )}
 
             {/* My Agent Pages */}
             {activeSection === 'agent-pages' && (
