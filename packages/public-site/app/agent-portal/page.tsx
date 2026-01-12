@@ -1392,7 +1392,8 @@ export default function AgentPortal() {
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
-              <div className="rounded-xl p-4 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
+              {/* Profile Section - No container on desktop */}
+              <div className="p-4 md:p-0 md:mb-4">
                 {/* Hidden file input for profile picture upload */}
                 {/* Using specific MIME types + extensions for cross-platform compatibility */}
                 <input
@@ -1407,7 +1408,7 @@ export default function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors mb-3"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors mb-3"
                     title="Click to change profile picture"
                   >
                     {user.profilePictureUrl && !profileImageError ? (
@@ -1458,7 +1459,7 @@ export default function AgentPortal() {
                   {/* Edit Profile Button */}
                   <button
                     onClick={handleOpenEditProfile}
-                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 hover:text-[#ffd700] bg-white/5 hover:bg-[#ffd700]/10 border border-white/10 hover:border-[#ffd700]/30 transition-all"
+                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 hover:text-[#ffd700] bg-white/5 hover:bg-[#ffd700]/10 border border-white/[0.08] hover:border-[#ffd700]/30 transition-all"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -1468,8 +1469,8 @@ export default function AgentPortal() {
                 </div>
               </div>
 
-              {/* Navigation Menu - 3D Button Style */}
-              <nav className="rounded-xl p-3 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
+              {/* Navigation Menu - 3D Button Style, no container on desktop */}
+              <nav className="md:space-y-1">
               {navItems.map((item, index) => {
                 const IconComponent = item.icon;
                 const isActive = activeSection === item.id;
@@ -1516,10 +1517,6 @@ export default function AgentPortal() {
                         {item.label}
                       </span>
                     </button>
-                    {/* Separator line between buttons (not after last) */}
-                    {index < navItems.length - 1 && (
-                      <div className="h-[1px] mx-3 my-1 bg-white/10" />
-                    )}
                   </div>
                 );
               })}
