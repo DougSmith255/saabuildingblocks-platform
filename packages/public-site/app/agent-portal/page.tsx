@@ -1357,8 +1357,12 @@ export default function AgentPortal() {
           </div>
 
           <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 md:h-[85px]">
-            {/* SAA Logo */}
-            <a href="/" className="flex-shrink-0">
+            {/* SAA Logo - links to dashboard */}
+            <button
+              onClick={() => setActiveSection('dashboard')}
+              className="flex-shrink-0 cursor-pointer"
+              title="Go to Dashboard"
+            >
               <img
                 src="/images/saa-logo-gold.png"
                 alt="Smart Agent Alliance"
@@ -1367,7 +1371,7 @@ export default function AgentPortal() {
                   height: 'auto',
                 }}
               />
-            </a>
+            </button>
 
             {/* Desktop: AGENT PORTAL title - centered in header, uses H1 component styling */}
             <div className="hidden md:block absolute left-1/2 -translate-x-1/2">
@@ -4792,10 +4796,28 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Preview Content - Linktree preview */}
-              <div className="p-3 pb-4">
+              {/* Preview Content - Linktree preview with star background */}
+              <div className="p-3 pb-4 relative overflow-hidden">
+                  {/* Static star dots for preview */}
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    background: `
+                      radial-gradient(1px 1px at 20px 30px, white, transparent),
+                      radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.6), transparent),
+                      radial-gradient(1px 1px at 130px 80px, white, transparent),
+                      radial-gradient(1px 1px at 160px 30px, rgba(255,255,255,0.7), transparent),
+                      radial-gradient(0.5px 0.5px at 70px 100px, rgba(255,255,255,0.5), transparent),
+                      radial-gradient(0.5px 0.5px at 100px 150px, rgba(255,255,255,0.4), transparent),
+                      radial-gradient(1px 1px at 50px 200px, rgba(255,255,255,0.6), transparent),
+                      radial-gradient(0.5px 0.5px at 180px 120px, rgba(255,255,255,0.5), transparent),
+                      radial-gradient(1px 1px at 25px 280px, rgba(255,255,255,0.7), transparent),
+                      radial-gradient(0.5px 0.5px at 140px 250px, rgba(255,255,255,0.4), transparent),
+                      radial-gradient(1px 1px at 80px 320px, rgba(255,255,255,0.6), transparent)
+                    `,
+                    opacity: 0.6
+                  }} />
                   {/* Linktree Preview */}
-                  <div className="flex flex-col items-center gap-3 max-w-[180px] mx-auto">
+                  <div className="flex flex-col items-center gap-3 max-w-[180px] mx-auto relative z-10">
                     {/* Profile Photo */}
                     <div
                       className="w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden"
@@ -5842,11 +5864,31 @@ function AgentPagesSection({
             <span className="text-sm text-[#22c55e]">Linktree</span>
           </div>
 
-          {/* Preview Content */}
-          <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto">
+          {/* Preview Content with star background */}
+          <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto relative">
+            {/* Static star dots for preview */}
+            <div className="absolute inset-0 -inset-x-8 pointer-events-none" style={{
+              background: `
+                radial-gradient(1.5px 1.5px at 30px 40px, white, transparent),
+                radial-gradient(1px 1px at 60px 90px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1.5px 1.5px at 140px 50px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 200px 100px, white, transparent),
+                radial-gradient(1px 1px at 250px 40px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(0.5px 0.5px at 100px 130px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 180px 180px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1.5px 1.5px at 70px 250px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 230px 200px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(1px 1px at 40px 350px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(0.5px 0.5px at 200px 320px, rgba(255,255,255,0.4), transparent),
+                radial-gradient(1.5px 1.5px at 120px 400px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 260px 380px, rgba(255,255,255,0.5), transparent),
+                radial-gradient(0.5px 0.5px at 80px 450px, rgba(255,255,255,0.4), transparent)
+              `,
+              opacity: 0.5
+            }} />
             {/* Profile Photo */}
             <div
-              className="w-24 h-24 rounded-full border-3 flex items-center justify-center overflow-hidden"
+              className="w-24 h-24 rounded-full border-3 flex items-center justify-center overflow-hidden relative z-10"
               style={{ borderColor: linksSettings.accentColor, borderWidth: '3px', backgroundColor: 'rgba(0,0,0,0.5)' }}
             >
               {getProfileImageUrl() ? (

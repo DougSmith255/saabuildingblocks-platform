@@ -5774,7 +5774,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         let dimensions = { width: 0, height: 0 };
 
         function resize(forceRegenerate) {
-          const dpr = window.devicePixelRatio || 1;
+          // In iframes with CSS transform scaling, use dpr=1 to avoid rendering glitches
+          const isInIframe = window !== window.parent;
+          const dpr = isInIframe ? 1 : (window.devicePixelRatio || 1);
           const width = window.innerWidth;
           const height = window.innerHeight;
 
@@ -5787,7 +5789,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           canvas.height = stableHeight * dpr;
           canvas.style.width = width + 'px';
           canvas.style.height = stableHeight + 'px';
-          ctx.scale(dpr, dpr);
+          // Reset transform before scaling to prevent compounding
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
           if (forceRegenerate || stars.length === 0) {
             initStars(width, stableHeight);
@@ -6614,7 +6617,9 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       let dimensions = { width: 0, height: 0 };
 
       function resize(forceRegenerate) {
-        const dpr = window.devicePixelRatio || 1;
+        // In iframes with CSS transform scaling, use dpr=1 to avoid rendering glitches
+        const isInIframe = window !== window.parent;
+        const dpr = isInIframe ? 1 : (window.devicePixelRatio || 1);
         const width = window.innerWidth;
         const height = window.innerHeight;
 
@@ -6627,7 +6632,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         canvas.height = stableHeight * dpr;
         canvas.style.width = width + 'px';
         canvas.style.height = stableHeight + 'px';
-        ctx.scale(dpr, dpr);
+        // Reset transform before scaling to prevent compounding
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
         if (forceRegenerate || stars.length === 0) {
           initStars(width, stableHeight);
