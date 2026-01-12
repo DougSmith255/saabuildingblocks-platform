@@ -220,6 +220,7 @@ export default function AgentPortal() {
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null);
   const [profileImageError, setProfileImageError] = useState(false); // Track if profile image failed to load
+  const [profileImageLoading, setProfileImageLoading] = useState(true); // Track if profile image is loading
   const [pendingBgRemovedUrl, setPendingBgRemovedUrl] = useState<string | null>(null);
   const [isRemovingBackground, setIsRemovingBackground] = useState(false);
   const [bgRemovalProgress, setBgRemovalProgress] = useState(0);
@@ -756,6 +757,7 @@ export default function AgentPortal() {
       const updatedUser = { ...user, profilePictureUrl: toCdnUrl(dashboardData.url) };
       setUser(updatedUser);
       setProfileImageError(false); // Reset error state for new image
+      setProfileImageLoading(true); // Reset loading state for new image
       localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
 
       // Step 5: Upload same to attraction page (B&W version)
@@ -887,6 +889,7 @@ export default function AgentPortal() {
         const updatedUser = { ...user!, profilePictureUrl: toCdnUrl(dashboardData.url) };
         setUser(updatedUser);
         setProfileImageError(false); // Reset error state for new image
+        setProfileImageLoading(true); // Reset loading state for new image
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       }
 
@@ -1296,15 +1299,27 @@ export default function AgentPortal() {
                     title="Click to change profile picture"
                   >
                     {user.profilePictureUrl && !profileImageError ? (
-                      <img
-                        src={user.profilePictureUrl}
-                        alt=""
-                        className="w-full h-full object-cover"
-                        loading="eager"
-                        decoding="async"
-                        fetchPriority="high"
-                        onError={() => setProfileImageError(true)}
-                      />
+                      <>
+                        {/* Loading spinner - shows while image is loading */}
+                        {profileImageLoading && (
+                          <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
+                            <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                          </div>
+                        )}
+                        <img
+                          src={user.profilePictureUrl}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          loading="eager"
+                          decoding="async"
+                          fetchPriority="high"
+                          onLoad={() => setProfileImageLoading(false)}
+                          onError={() => {
+                            setProfileImageError(true);
+                            setProfileImageLoading(false);
+                          }}
+                        />
+                      </>
                     ) : (
                       <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
                         <span className="text-3xl text-[#ffd700]">
@@ -1458,15 +1473,27 @@ export default function AgentPortal() {
                     className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
                   >
                     {user.profilePictureUrl && !profileImageError ? (
-                      <img
-                        src={user.profilePictureUrl}
-                        alt=""
-                        className="w-full h-full object-cover"
-                        loading="eager"
-                        decoding="async"
-                        fetchPriority="high"
-                        onError={() => setProfileImageError(true)}
-                      />
+                      <>
+                        {/* Loading spinner - shows while image is loading */}
+                        {profileImageLoading && (
+                          <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
+                            <div className="w-8 h-8 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                          </div>
+                        )}
+                        <img
+                          src={user.profilePictureUrl}
+                          alt=""
+                          className="w-full h-full object-cover"
+                          loading="eager"
+                          decoding="async"
+                          fetchPriority="high"
+                          onLoad={() => setProfileImageLoading(false)}
+                          onError={() => {
+                            setProfileImageError(true);
+                            setProfileImageLoading(false);
+                          }}
+                        />
+                      </>
                     ) : (
                       <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
                         <span className="text-4xl text-[#ffd700]">
@@ -1772,15 +1799,27 @@ export default function AgentPortal() {
                   className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
                 >
                   {user.profilePictureUrl && !profileImageError ? (
-                    <img
-                      src={user.profilePictureUrl}
-                      alt=""
-                      className="w-full h-full object-cover"
-                      loading="eager"
-                      decoding="async"
-                      fetchPriority="high"
-                      onError={() => setProfileImageError(true)}
-                    />
+                    <>
+                      {/* Loading spinner - shows while image is loading */}
+                      {profileImageLoading && (
+                        <div className="absolute inset-0 bg-[#0a0a0a] flex items-center justify-center z-10">
+                          <div className="w-10 h-10 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                        </div>
+                      )}
+                      <img
+                        src={user.profilePictureUrl}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        loading="eager"
+                        decoding="async"
+                        fetchPriority="high"
+                        onLoad={() => setProfileImageLoading(false)}
+                        onError={() => {
+                          setProfileImageError(true);
+                          setProfileImageLoading(false);
+                        }}
+                      />
+                    </>
                   ) : (
                     <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
                       <span className="text-4xl text-[#ffd700]">
