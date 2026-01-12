@@ -123,7 +123,7 @@ const navItems: NavItem[] = [
 type CardSize = 'featured' | 'standard' | 'compact';
 const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string }[] = [
   { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket, size: 'featured', gradient: 'from-amber-500/20 to-orange-600/10' },
-  { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-purple-500/20 to-pink-600/10' },
+  { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-emerald-500/20 to-[#00ff88]/10' },
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard' },
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard' },
   { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard' },
@@ -1166,17 +1166,17 @@ export default function AgentPortal() {
       </header>
 
 
-      {/* Mobile Bottom Navigation - Premium app-like experience */}
+      {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
         className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
-        {/* Glassmorphism background with gradient border */}
-        <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
+        {/* Solid background - no transparency to prevent color shifting */}
+        <div className="absolute inset-0 bg-[#0a0a0a]" />
+        <div className="absolute inset-x-0 top-0 h-[1px] bg-[#ffd700]/30" />
 
         <div
-          className="relative flex justify-around items-center h-16 px-2"
+          className="relative flex items-center h-16 px-1"
           style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
         >
           {[
@@ -1184,72 +1184,63 @@ export default function AgentPortal() {
             { id: 'agent-pages' as SectionId, label: 'Pages', Icon: FileUser },
             { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
             { id: 'courses' as SectionId, label: 'Courses', Icon: GraduationCap },
-          ].map((item) => {
-            const isActive = activeSection === item.id && !sidebarOpen;
+            { id: 'more' as const, label: 'More', Icon: Menu },
+          ].map((item, index, arr) => {
+            const isMore = item.id === 'more';
+            const isActive = isMore ? sidebarOpen : (activeSection === item.id && !sidebarOpen);
             return (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveSection(item.id);
-                  setSidebarOpen(false);
-                }}
-                className={`relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
-                  isActive ? 'text-[#ffd700]' : 'text-[#e5e4dd]/50 active:text-[#e5e4dd]/70'
-                }`}
-                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-              >
-                {/* Active indicator pill */}
-                {isActive && (
-                  <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-[#ffd700] nav-indicator-active" />
+              <div key={item.id} className="flex items-center flex-1 h-full">
+                <button
+                  onClick={() => {
+                    if (isMore) {
+                      setSidebarOpen(!sidebarOpen);
+                    } else {
+                      setActiveSection(item.id as SectionId);
+                      setSidebarOpen(false);
+                    }
+                  }}
+                  className="relative flex flex-col items-center justify-center w-full h-[52px] mx-0.5 rounded-lg transition-all duration-200"
+                  style={{
+                    WebkitTapHighlightColor: 'transparent',
+                    background: isActive
+                      ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
+                      : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
+                    boxShadow: isActive
+                      ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
+                      : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
+                    border: isActive ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                  } as React.CSSProperties}
+                >
+                  {/* Icon with glow effect when active */}
+                  <div
+                    className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'} ${isMore && sidebarOpen ? 'rotate-90' : ''}`}
+                    style={{
+                      filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
+                      color: isActive ? '#ffd700' : 'rgba(229,228,221,0.5)',
+                    }}
+                  >
+                    <item.Icon className="w-5 h-5" />
+                  </div>
+
+                  {/* Label with glow effect when active */}
+                  <span
+                    className="text-[10px] font-medium mt-1 transition-all duration-200"
+                    style={{
+                      color: isActive ? '#ffd700' : 'rgba(229,228,221,0.5)',
+                      textShadow: isActive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                    }}
+                  >
+                    {item.label}
+                  </span>
+                </button>
+
+                {/* Separator line between buttons (not after last) */}
+                {index < arr.length - 1 && (
+                  <div className="w-[1px] h-8 bg-white/10 flex-shrink-0" />
                 )}
-
-                {/* Icon with scale animation */}
-                <div className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`}>
-                  <item.Icon className="w-5 h-5" />
-                </div>
-
-                {/* Label with fade effect */}
-                <span className={`text-[10px] font-medium mt-0.5 transition-opacity duration-300 ${
-                  isActive ? 'opacity-100' : 'opacity-70'
-                }`}>
-                  {item.label}
-                </span>
-
-                {/* Active glow effect */}
-                {isActive && (
-                  <div className="absolute inset-0 bg-[#ffd700]/5 rounded-xl pointer-events-none" />
-                )}
-              </button>
+              </div>
             );
           })}
-
-          {/* More button */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className={`relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
-              sidebarOpen ? 'text-[#ffd700]' : 'text-[#e5e4dd]/50 active:text-[#e5e4dd]/70'
-            }`}
-            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-          >
-            {/* Active indicator pill for More */}
-            {sidebarOpen && (
-              <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-[#ffd700] nav-indicator-active" />
-            )}
-
-            <div className={`transition-transform duration-300 ${sidebarOpen ? 'scale-110 rotate-90' : 'scale-100'}`}>
-              <Menu className="w-5 h-5" />
-            </div>
-            <span className={`text-[10px] font-medium mt-0.5 transition-opacity duration-300 ${
-              sidebarOpen ? 'opacity-100' : 'opacity-70'
-            }`}>
-              More
-            </span>
-
-            {/* Active glow effect */}
-            {sidebarOpen && (
-              <div className="absolute inset-0 bg-[#ffd700]/5 rounded-xl pointer-events-none" />
-            )}
-          </button>
         </div>
       </nav>
 
@@ -2287,18 +2278,19 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
               <div className={`
                 relative p-5 sm:p-6 rounded-2xl border border-white/10
                 bg-gradient-to-br ${card.gradient || 'from-white/10 to-white/5'}
-                backdrop-blur-sm
                 transition-all duration-300 ease-out
                 hover:border-[#ffd700]/40 hover:shadow-lg hover:shadow-[#ffd700]/10
                 hover:scale-[1.02]
                 group-active:scale-[0.98]
-              `}>
-                {/* Subtle glass shine effect */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none" />
+              `}
+              style={{ backgroundColor: 'rgba(10,10,10,0.95)' }}
+              >
+                {/* Subtle shine effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
 
                 <div className="relative flex flex-col items-center text-center space-y-3">
                   {/* Icon container with glow */}
-                  <div className="relative p-4 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 group-hover:border-[#ffd700]/30 transition-all duration-300">
+                  <div className="relative p-4 rounded-xl bg-black/40 border border-white/10 group-hover:border-[#ffd700]/30 transition-all duration-300">
                     <Icon3D>
                       <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform duration-300" />
                     </Icon3D>
@@ -2332,15 +2324,17 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
               className="text-left group"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <div className="
-                relative p-4 rounded-xl border border-white/10 bg-white/5
-                backdrop-blur-sm
-                transition-all duration-300 ease-out
-                hover:bg-white/10 hover:border-[#ffd700]/30 hover:shadow-md hover:shadow-[#ffd700]/5
-                hover:scale-[1.02]
-                group-active:scale-[0.98]
-                h-full
-              ">
+              <div
+                className="
+                  relative p-4 rounded-xl border border-white/10
+                  transition-all duration-300 ease-out
+                  hover:border-[#ffd700]/30 hover:shadow-md hover:shadow-[#ffd700]/5
+                  hover:scale-[1.02]
+                  group-active:scale-[0.98]
+                  h-full
+                "
+                style={{ backgroundColor: 'rgba(20,20,20,0.95)' }}
+              >
                 <div className="flex flex-col items-center text-center space-y-2.5">
                   {/* Centered icon with subtle background */}
                   <div className="p-2.5 rounded-lg bg-[#ffd700]/5 group-hover:bg-[#ffd700]/10 transition-colors duration-300">
@@ -2364,7 +2358,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
         })}
       </div>
 
-      {/* Compact Cards Row - 3 columns horizontal strip */}
+      {/* Compact Cards Row - 3 columns horizontal strip with equal heights */}
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {compactCards.map((card) => {
           const IconComponent = card.icon;
@@ -2372,16 +2366,20 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
             <button
               key={card.id}
               onClick={() => onNavigate(card.id)}
-              className="text-left group"
+              className="text-left group h-full"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <div className="
-                relative p-3 sm:p-4 rounded-lg border border-white/10 bg-white/[0.03]
-                transition-all duration-300 ease-out
-                hover:bg-white/10 hover:border-[#ffd700]/30
-                hover:scale-[1.02]
-                group-active:scale-[0.98]
-              ">
+              <div
+                className="
+                  relative p-3 sm:p-4 rounded-lg border border-white/10
+                  transition-all duration-300 ease-out
+                  hover:border-[#ffd700]/30
+                  hover:scale-[1.02]
+                  group-active:scale-[0.98]
+                  h-full flex flex-col justify-center
+                "
+                style={{ backgroundColor: 'rgba(15,15,15,0.95)' }}
+              >
                 <div className="flex flex-col items-center text-center space-y-1.5">
                   <Icon3D>
                     <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
@@ -2575,7 +2573,7 @@ function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | nul
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">
               <span className="text-2xl sm:text-3xl">📹</span>
-              <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#a855f7] leading-tight">Mike Sherrard Mastermind</h4>
+              <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#00ff88] leading-tight">Mike Sherrard Mastermind</h4>
             </div>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Production-based discussions and teachings</p>
             <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Tuesdays</strong> at {localTimes.mike || '11:00 AM PST'}</p>
@@ -2583,7 +2581,7 @@ function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | nul
               href="https://us02web.zoom.us/j/83687612648"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#a855f7]/10 border border-[#a855f7]/30 rounded-lg text-[#a855f7] text-xs sm:text-sm hover:bg-[#a855f7]/20 transition-colors"
+              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-lg text-[#00ff88] text-xs sm:text-sm hover:bg-[#00ff88]/20 transition-colors"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               Join Zoom Call
@@ -2930,8 +2928,8 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
       </a>
 
       {/* Template Name and W/B Toggle */}
-      <div className="px-3 py-2 flex items-center justify-between gap-2">
-        <p className="text-xs text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors flex-1">
+      <div className="px-3 py-2.5 flex items-center justify-between gap-2">
+        <p className="text-[#e5e4dd]/80 truncate group-hover:text-[#ffd700] transition-colors flex-1" style={{ fontSize: '16px' }}>
           {template.name}
         </p>
         {/* W/B Toggle - only show if template has both variants */}
