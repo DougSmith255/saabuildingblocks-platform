@@ -202,6 +202,26 @@ export async function POST(request: NextRequest) {
     // Update username if provided
     const username = validatedData.username || user.username;
 
+    // Update email if provided (this is the login/notification email, separate from exp_email)
+    const userEmail = validatedData.email || user.email;
+
+    // Check if new email is already taken by another user
+    if (userEmail !== user.email) {
+      const { data: existingEmailUser } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', userEmail)
+        .neq('id', user.id)
+        .single();
+
+      if (existingEmailUser) {
+        return NextResponse.json(
+          { error: 'Email address is already in use by another account' },
+          { status: 409, headers: CORS_HEADERS }
+        );
+      }
+    }
+
     // Check if username is already taken (if different from current)
     if (username !== user.username) {
       const { data: existingUser } = await supabase
@@ -218,7 +238,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Update user with password, first_name, last_name, and active status
+    // Update user with password, first_name, last_name, email, and active status
     const fullName = `${validatedData.first_name} ${validatedData.last_name}`;
     const { data: updatedUser, error: updateUserError } = await supabase
       .from('users')
@@ -226,6 +246,7 @@ export async function POST(request: NextRequest) {
         first_name: validatedData.first_name,
         last_name: validatedData.last_name,
         full_name: fullName,
+        email: userEmail, // Update login/notification email (exp_email stays unchanged)
         username,
         password_hash: hashedPassword,
         status: 'active',

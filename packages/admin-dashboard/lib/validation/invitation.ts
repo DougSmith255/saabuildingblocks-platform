@@ -52,6 +52,11 @@ export const acceptInvitationSchema = z.object({
   last_name: z.string()
     .min(1, 'Last name is required')
     .max(100, 'Last name must not exceed 100 characters'),
+  email: z.string()
+    .email('Invalid email format')
+    .min(5, 'Email must be at least 5 characters')
+    .max(255, 'Email must not exceed 255 characters')
+    .optional(), // Optional - uses existing email if not provided
   password: z.string()
     .min(8, 'Password must be at least 8 characters')
     .max(128, 'Password must not exceed 128 characters')

@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3 } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -97,7 +97,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages' | 'support' | 'profile';
+type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages' | 'support' | 'profile';
 
 interface NavItem {
   id: SectionId;
@@ -108,7 +108,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
-  { id: 'start-here', label: 'Start Here', icon: Rocket },
+  { id: 'market-stats', label: 'Market Stats', icon: BarChart3 },
   { id: 'agent-pages', label: 'My SAA Pages', icon: FileUser },
   { id: 'calls', label: 'Team Calls', icon: Video },
   { id: 'templates', label: 'Templates', icon: Megaphone },
@@ -123,9 +123,9 @@ const navItems: NavItem[] = [
 // size: 'featured' = large card (spans 2 cols), 'standard' = normal card, 'compact' = smaller card
 // 'hero' = extra prominent card for support
 type CardSize = 'hero' | 'featured' | 'standard' | 'compact';
-const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string; accentColor?: string }[] = [
+const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string; accentColor?: string; comingSoon?: boolean }[] = [
   { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15', accentColor: '#ffd700' },
-  { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7' },
+  { id: 'market-stats', title: 'Market Stats', description: 'Custom market stats for emails', icon: BarChart3, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7', comingSoon: true },
   { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard', accentColor: '#ffd700' },
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
@@ -1103,6 +1103,15 @@ export default function AgentPortal() {
       className="agent-portal-root min-h-screen"
       style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
     >
+      {/* Global hidden file input for profile picture upload - shared by desktop and mobile */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
+        onChange={handleProfilePictureChange}
+        className="hidden"
+      />
+
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
       {/* Slides up off screen when any popup is open, slides down on entry from login */}
       <header
@@ -1270,16 +1279,6 @@ export default function AgentPortal() {
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
               <div className="rounded-xl p-4 border border-white/[0.08]">
-                {/* Hidden file input for profile picture upload */}
-                {/* Using specific MIME types + extensions for cross-platform compatibility */}
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png,image/gif,image/webp,.jpg,.jpeg,.png,.gif,.webp"
-                  onChange={handleProfilePictureChange}
-                  className="hidden"
-                />
-
                 {/* Profile Picture */}
                 <div className="flex flex-col items-center mb-4">
                   <button
@@ -2469,34 +2468,41 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
         {featuredCards.map((card) => {
           const IconComponent = card.icon;
           const accent = card.accentColor || '#ffd700';
+          const isComingSoon = card.comingSoon;
           return (
             <button
               key={card.id}
-              onClick={() => onNavigate(card.id)}
-              className="text-left group relative"
+              onClick={() => !isComingSoon && onNavigate(card.id)}
+              className={`text-left group relative ${isComingSoon ? 'cursor-default' : ''}`}
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              disabled={isComingSoon}
             >
               <div
                 className={`
                   relative p-5 sm:p-6 rounded-2xl
                   bg-gradient-to-br ${card.gradient || 'from-white/10 to-white/5'}
                   transition-all duration-300 ease-out
-                  hover:scale-[1.02]
-                  group-active:scale-[0.98]
+                  ${isComingSoon ? '' : 'hover:scale-[1.02] group-active:scale-[0.98]'}
                   overflow-hidden
                 `}
                 style={{
                   backgroundColor: 'rgba(10,10,10,0.95)',
-                  border: `1px solid ${accent}30`,
-                  boxShadow: `0 0 0 1px ${accent}10`,
+                  border: `1px solid ${isComingSoon ? '#666' : accent}30`,
+                  boxShadow: `0 0 0 1px ${isComingSoon ? '#666' : accent}10`,
+                  filter: isComingSoon ? 'grayscale(100%)' : 'none',
+                  opacity: isComingSoon ? 0.6 : 1,
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.border = `1px solid ${accent}60`;
-                  e.currentTarget.style.boxShadow = `0 8px 32px ${accent}20`;
+                  if (!isComingSoon) {
+                    e.currentTarget.style.border = `1px solid ${accent}60`;
+                    e.currentTarget.style.boxShadow = `0 8px 32px ${accent}20`;
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.border = `1px solid ${accent}30`;
-                  e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}10`;
+                  if (!isComingSoon) {
+                    e.currentTarget.style.border = `1px solid ${accent}30`;
+                    e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}10`;
+                  }
                 }}
               >
                 {/* Subtle shine effect */}
@@ -2507,19 +2513,19 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                   <div
                     className="relative p-4 rounded-xl transition-all duration-300"
                     style={{
-                      backgroundColor: `${accent}15`,
-                      border: `1px solid ${accent}30`,
+                      backgroundColor: `${isComingSoon ? '#666' : accent}15`,
+                      border: `1px solid ${isComingSoon ? '#666' : accent}30`,
                     }}
                   >
-                    <Icon3D color={accent}>
-                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform duration-300" />
+                    <Icon3D color={isComingSoon ? '#666' : accent}>
+                      <IconComponent className={`w-8 h-8 sm:w-10 sm:h-10 ${isComingSoon ? '' : 'group-hover:scale-110'} transition-transform duration-300`} />
                     </Icon3D>
                   </div>
 
                   <div className="space-y-1">
                     <h3
                       className="text-base sm:text-lg font-semibold transition-colors duration-300"
-                      style={{ color: accent }}
+                      style={{ color: isComingSoon ? '#888' : accent }}
                     >
                       {card.title}
                     </h3>
@@ -2528,6 +2534,15 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                     </p>
                   </div>
                 </div>
+
+                {/* Coming Soon Overlay */}
+                {isComingSoon && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/40">
+                    <span className="px-4 py-2 bg-black/70 rounded-full text-sm font-semibold text-white/90 border border-white/20">
+                      Coming Soon
+                    </span>
+                  </div>
+                )}
               </div>
             </button>
           );
