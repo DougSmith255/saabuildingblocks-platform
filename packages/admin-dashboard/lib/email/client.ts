@@ -21,7 +21,7 @@ let emailConfigCache: {
   replyTo: string;
   initialized: boolean;
 } = {
-  from: 'Agent Portal <noreply@smartagentalliance.com>',
+  from: 'Smart Agent Alliance <team@smartagentalliance.com>',
   replyTo: 'team@smartagentalliance.com',
   initialized: false,
 };
@@ -71,7 +71,7 @@ async function loadEmailConfig(): Promise<typeof emailConfigCache> {
     ]);
 
     emailConfigCache = {
-      from: from || process.env.EMAIL_FROM || 'Agent Portal <noreply@smartagentalliance.com>',
+      from: from || process.env.EMAIL_FROM || 'Smart Agent Alliance <team@smartagentalliance.com>',
       replyTo: replyTo || process.env.EMAIL_REPLY_TO || 'team@smartagentalliance.com',
       initialized: true,
     };
@@ -79,7 +79,7 @@ async function loadEmailConfig(): Promise<typeof emailConfigCache> {
   } catch (error) {
     console.warn('[Email] Failed to load config from Infisical, using defaults:', error);
     emailConfigCache = {
-      from: process.env.EMAIL_FROM || 'Agent Portal <noreply@smartagentalliance.com>',
+      from: process.env.EMAIL_FROM || 'Smart Agent Alliance <team@smartagentalliance.com>',
       replyTo: process.env.EMAIL_REPLY_TO || 'team@smartagentalliance.com',
       initialized: true,
     };
