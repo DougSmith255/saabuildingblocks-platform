@@ -1469,32 +1469,59 @@ export default function AgentPortal() {
                 </div>
               </div>
 
-              {/* Navigation Menu */}
-              <nav className="rounded-xl p-4 space-y-2 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
-              {navItems.map((item) => {
+              {/* Navigation Menu - 3D Button Style */}
+              <nav className="rounded-xl p-3 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
+              {navItems.map((item, index) => {
                 const IconComponent = item.icon;
+                const isActive = activeSection === item.id;
                 return (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveSection(item.id);
-                      setSidebarOpen(false);
-                      // Trigger shake animation
-                      setShakingItem(item.id);
-                      setTimeout(() => setShakingItem(null), 300);
-                    }}
-                    className={`
-                      w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200
-                      ${activeSection === item.id
-                        ? 'bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/30'
-                        : 'text-body hover:text-[#e5e4dd] hover:bg-white/5 border border-transparent'
-                      }
-                    `}
-                    style={shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : undefined}
-                  >
-                    <IconComponent className="w-5 h-5" />
-                    <span className="font-medium font-taskor text-sm">{item.label}</span>
-                  </button>
+                  <div key={item.id}>
+                    <button
+                      onClick={() => {
+                        setActiveSection(item.id);
+                        setSidebarOpen(false);
+                        // Trigger shake animation
+                        setShakingItem(item.id);
+                        setTimeout(() => setShakingItem(null), 300);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200"
+                      style={{
+                        background: isActive
+                          ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
+                          : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
+                        boxShadow: isActive
+                          ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
+                          : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
+                        border: isActive ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                        ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
+                      }}
+                    >
+                      {/* Icon with glow effect when active */}
+                      <div
+                        className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
+                        style={{
+                          filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
+                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.6)',
+                        }}
+                      >
+                        <IconComponent className="w-5 h-5" />
+                      </div>
+                      {/* Label with glow effect when active */}
+                      <span
+                        className="font-medium font-taskor text-sm transition-all duration-200"
+                        style={{
+                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.8)',
+                          textShadow: isActive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                        }}
+                      >
+                        {item.label}
+                      </span>
+                    </button>
+                    {/* Separator line between buttons (not after last) */}
+                    {index < navItems.length - 1 && (
+                      <div className="h-[1px] mx-3 my-1 bg-white/10" />
+                    )}
+                  </div>
                 );
               })}
               </nav>
