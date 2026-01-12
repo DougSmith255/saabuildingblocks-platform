@@ -1099,7 +1099,7 @@ export default function AgentPortal() {
     <main
       id="main-content"
       className="agent-portal-root min-h-screen"
-      style={{ WebkitTapHighlightColor: 'transparent', backgroundColor: '#191919' } as React.CSSProperties}
+      style={{ WebkitTapHighlightColor: 'transparent', backgroundColor: 'rgba(25, 25, 25, 0.85)' } as React.CSSProperties}
     >
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
       {/* Slides up off screen when any popup is open, slides down on entry from login */}
@@ -1267,8 +1267,7 @@ export default function AgentPortal() {
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
-              {/* Profile Section - No container on desktop */}
-              <div className="p-4 md:p-0 md:mb-4">
+              <div className="rounded-xl p-4 border border-white/[0.08]">
                 {/* Hidden file input for profile picture upload */}
                 {/* Using specific MIME types + extensions for cross-platform compatibility */}
                 <input
