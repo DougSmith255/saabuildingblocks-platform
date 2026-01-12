@@ -905,9 +905,9 @@ function RevenueShareCalculatorContent() {
                   top: '50%',
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
-                  width: '200%',
+                  width: '150%',
                   height: '150px',
-                  background: 'radial-gradient(ellipse 50% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
+                  background: 'radial-gradient(ellipse 90% 80% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
                 }}
               />
               <Tagline>
