@@ -19,6 +19,52 @@ const shakeKeyframes = `
   80% { transform: translateX(2px); }
 }
 
+@keyframes confetti {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) rotate(360deg) scale(0);
+    opacity: 0;
+  }
+}
+
+.animate-confetti {
+  animation: confetti 1s ease-out forwards;
+}
+
+/* Custom checkbox styling - muted when unchecked, gold when checked */
+.agent-portal-root input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: #bfbdb0;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.agent-portal-root input[type="checkbox"]:checked {
+  background-color: #ffd700;
+  border-color: #ffd700;
+}
+
+.agent-portal-root input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid black;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
 /* Disable tap highlight on ALL elements in agent portal to prevent grey flash on touch/drag */
 .agent-portal-root,
 .agent-portal-root *,
@@ -4003,6 +4049,7 @@ function AgentPagesSection({
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
   const [isSaving, setIsSaving] = useState(false);
+  const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -4222,6 +4269,9 @@ function AgentPagesSection({
         setPageData(data.page);
         setHasUnsavedChanges(false);
         setSuccessMessage('Changes saved successfully!');
+        // Trigger success animation with confetti
+        setShowSaveSuccess(true);
+        setTimeout(() => setShowSaveSuccess(false), 2000);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to save changes');
@@ -5055,7 +5105,7 @@ function AgentPagesSection({
           </div>
 
           {/* SETTINGS COLUMN - All settings here, single column on mobile */}
-          <div className="lg:col-start-1 lg:row-start-1">
+          <div className="lg:col-start-1 lg:row-start-1 lg:max-w-2xl">
             {/* Page Status & Link */}
             {pageData.activated && (
               <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
@@ -5063,30 +5113,39 @@ function AgentPagesSection({
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-xs font-medium text-green-400">Linktree Live</span>
                 </div>
-                <a
-                  href={linktreeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(linktreeUrl);
+                    // Show brief visual feedback
+                    const btn = document.getElementById('copy-linktree-btn');
+                    if (btn) {
+                      btn.textContent = 'Copied!';
+                      setTimeout(() => { btn.textContent = 'Copy Linktree URL'; }, 1500);
+                    }
+                  }}
+                  id="copy-linktree-btn"
                   className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
                 >
                   <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                    <polyline points="15 3 21 3 21 9" />
-                    <line x1="10" y1="14" x2="21" y2="3" />
+                    <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                   </svg>
-                  View Page
-                </a>
+                  Copy Linktree URL
+                </button>
               </div>
             )}
 
             {/* Tab Navigation - Mobile only, sticky at top */}
-            <div className="sticky top-0 z-20 bg-[#191919]/95 backdrop-blur-sm border-b border-white/10 mb-4 lg:hidden -mx-2 sm:-mx-4 px-2 sm:px-4">
+            <div
+              className="sticky top-0 z-20 bg-[#191919]/95 backdrop-blur-sm border border-white/10 rounded-xl mb-4 lg:hidden overflow-hidden"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
               <div className="flex">
                 <button
                   onClick={() => setActiveTab('profile')}
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                   className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'profile'
-                      ? 'text-[#22c55e]'
+                      ? 'text-[#22c55e] bg-[#22c55e]/10'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
@@ -5097,9 +5156,10 @@ function AgentPagesSection({
                 </button>
                 <button
                   onClick={() => setActiveTab('connect')}
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                   className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'connect'
-                      ? 'text-[#22c55e]'
+                      ? 'text-[#22c55e] bg-[#22c55e]/10'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
@@ -5110,9 +5170,10 @@ function AgentPagesSection({
                 </button>
                 <button
                   onClick={() => setActiveTab('links')}
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
                   className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'links'
-                      ? 'text-[#22c55e]'
+                      ? 'text-[#22c55e] bg-[#22c55e]/10'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
@@ -5149,8 +5210,8 @@ function AgentPagesSection({
                           <img
                             src={pageData.profile_image_url || user.profilePictureUrl || ''}
                             alt="Profile"
-                            className="w-full h-full object-cover"
-                            style={{ filter: `contrast(${contrastLevel / 130})` }}
+                            className="w-full h-full object-cover transition-all duration-300"
+                            style={{ filter: `contrast(${contrastLevel / 130}) ${!linksSettings.showColorPhoto ? 'grayscale(1)' : 'grayscale(0)'}` }}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
@@ -5368,18 +5429,18 @@ function AgentPagesSection({
               {/* Phone */}
               <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                 <h4 className="text-sm font-medium text-[#ffd700] mb-2">Phone</h4>
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                  placeholder="(555) 123-4567"
-                />
-                {formData.phone && (
-                  <div className="mt-3 space-y-2">
-                    <p className="text-xs text-[#e5e4dd]/60">Show buttons for:</p>
-                    <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
+                {/* Phone input with inline checkboxes on mobile */}
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                  <input
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    className="flex-1 min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    placeholder="(555) 123-4567"
+                  />
+                  {formData.phone && (
+                    <div className="flex gap-3 flex-shrink-0">
+                      <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
                         <input
                           type="checkbox"
                           checked={formData.show_call_button}
@@ -5388,7 +5449,7 @@ function AgentPagesSection({
                         />
                         <span className="text-xs text-[#e5e4dd]">Call</span>
                       </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
+                      <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
                         <input
                           type="checkbox"
                           checked={formData.show_text_button}
@@ -5398,8 +5459,8 @@ function AgentPagesSection({
                         <span className="text-xs text-[#e5e4dd]">Text</span>
                       </label>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div> {/* End CONNECT SECTION */}
 
@@ -5483,36 +5544,6 @@ function AgentPagesSection({
                           title={color}
                         />
                       ))}
-                    </div>
-
-                    {/* Button Sample Preview */}
-                    <div className="mt-3 pt-3 border-t border-white/10">
-                      <p className="text-[10px] text-[#e5e4dd]/40 mb-2">Button Preview</p>
-                      <div className="flex flex-col gap-2">
-                        <div
-                          className="w-full py-2 px-3 rounded-lg text-center text-sm font-medium transition-all"
-                          style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}
-                        >
-                          Sample Link Button
-                        </div>
-                        <div className="flex gap-2 justify-center">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: linksSettings.accentColor }}>
-                            <svg className="w-5 h-5" fill={linksSettings.iconStyle === 'light' ? '#fff' : '#000'} viewBox="0 0 24 24">
-                              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                            </svg>
-                          </div>
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: linksSettings.accentColor }}>
-                            <svg className="w-5 h-5" fill={linksSettings.iconStyle === 'light' ? '#fff' : '#000'} viewBox="0 0 24 24">
-                              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-                            </svg>
-                          </div>
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: linksSettings.accentColor }}>
-                            <svg className="w-5 h-5" fill={linksSettings.iconStyle === 'light' ? '#fff' : '#000'} viewBox="0 0 24 24">
-                              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -5609,7 +5640,7 @@ function AgentPagesSection({
                 }
 
                 return (
-                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-2">
                     {allLinkIds.map((linkId, index) => {
                       const isDefault = linkId === 'join-team' || linkId === 'learn-about';
                       const defaultButton = DEFAULT_BUTTONS.find(b => b.id === linkId);
@@ -5808,18 +5839,9 @@ function AgentPagesSection({
               </div>
             </div> {/* End of LINKS SECTION */}
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-end pt-4 mt-6 border-t border-white/10">
-              {hasUnsavedChanges && (
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className="px-5 py-2.5 rounded-lg font-medium bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isSaving ? 'Saving...' : 'Save Changes'}
-                </button>
-              )}
-              {!pageData.activated && (
+            {/* Action Buttons - Desktop only, Activate button */}
+            {!pageData.activated && (
+              <div className="hidden lg:flex flex-wrap gap-3 justify-end pt-4 mt-6 border-t border-white/10">
                 <button
                   onClick={handleActivate}
                   disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
@@ -5834,28 +5856,93 @@ function AgentPagesSection({
                 >
                   Activate Pages
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div> {/* End of SETTINGS COLUMN */}
         </div>
 
-        {/* MOBILE PREVIEW BUTTON - Fixed above menu bar with rounded corners and 3D effect */}
-        <div className="fixed bottom-[62px] left-2 right-2 z-40 lg:hidden">
-          <button
-            onClick={() => setShowMobilePreview(true)}
-            className="w-full py-3 rounded-xl text-white font-semibold text-sm uppercase tracking-wider flex items-center justify-center gap-2"
-            style={{
-              background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
-              boxShadow: 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)',
-            }}
-          >
-            <svg className="w-5 h-5 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            <span className="text-[#ffd700]">Preview Linktree</span>
-          </button>
+        {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
+        <div className="fixed bottom-[79px] left-2 right-2 z-40 lg:hidden">
+          <div className="flex gap-2">
+            {/* Preview Linktree Button - shrinks when Save appears */}
+            <button
+              onClick={() => setShowMobilePreview(true)}
+              className={`py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out ${
+                hasUnsavedChanges ? 'flex-1' : 'w-full'
+              }`}
+              style={{
+                background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
+                border: '1px solid rgba(255, 215, 0, 0.3)',
+                boxShadow: 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)',
+                WebkitTapHighlightColor: 'transparent',
+              } as React.CSSProperties}
+            >
+              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span className="text-[#ffd700]">Preview</span>
+            </button>
+
+            {/* Save Changes Button - slides in from right */}
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className={`py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 ease-out ${
+                hasUnsavedChanges
+                  ? 'flex-1 opacity-100'
+                  : 'w-0 opacity-0 p-0 border-0'
+              } ${
+                showSaveSuccess
+                  ? 'bg-[#22c55e] text-white'
+                  : 'text-black'
+              }`}
+              style={{
+                background: showSaveSuccess
+                  ? '#22c55e'
+                  : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
+                border: hasUnsavedChanges ? '1px solid rgba(255, 215, 0, 0.5)' : 'none',
+                boxShadow: hasUnsavedChanges
+                  ? 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 2px rgba(0,0,0,0.2), 0 0 12px rgba(255,215,0,0.2)'
+                  : 'none',
+                WebkitTapHighlightColor: 'transparent',
+              } as React.CSSProperties}
+            >
+              {showSaveSuccess ? (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Saved!</span>
+                </>
+              ) : (
+                <>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                  </svg>
+                  <span>{isSaving ? 'Saving...' : 'Save'}</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Confetti Effect */}
+          {showSaveSuccess && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {[...Array(20)].map((_, i) => (
+                <div
+                  key={i}
+                  className="absolute w-2 h-2 rounded-full animate-confetti"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    backgroundColor: ['#ffd700', '#22c55e', '#fff', '#ff6b6b', '#45b7d1'][Math.floor(Math.random() * 5)],
+                    animationDelay: `${Math.random() * 0.3}s`,
+                    animationDuration: `${0.8 + Math.random() * 0.4}s`,
+                  }}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         {/* MOBILE PREVIEW MODAL - Using base Modal component */}
