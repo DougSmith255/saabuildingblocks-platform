@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
+import { preloadAppData } from '@/components/pwa/PreloadService';
 import { SketchPicker, ColorResult } from 'react-color';
 
 // Shake animation styles + mobile tap highlight fix
@@ -94,6 +95,7 @@ interface UserData {
   role: 'admin' | 'user';
   profilePictureUrl: string | null;
   gender?: 'male' | 'female' | null;
+  isLeader?: boolean | null;
 }
 
 // Section types
@@ -199,8 +201,10 @@ export default function AgentPortal() {
   const [minLoadTimeElapsed, setMinLoadTimeElapsed] = useState(false);
   // Fade out animation state for the loading screen veil
   const [isLoadingFadingOut, setIsLoadingFadingOut] = useState(false);
-  // Only show loading screen for PWA (standalone) mode, not browser
-  const [showLoadingScreen, setShowLoadingScreen] = useState(() => {
+  // Show loading screen for all users (PWA and browser) to load everything upfront
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+  // Detect if running as installed PWA (hide download button if true)
+  const [isRunningAsPWA, setIsRunningAsPWA] = useState(() => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia('(display-mode: standalone)').matches ||
            (window.navigator as any).standalone === true;
@@ -263,24 +267,43 @@ export default function AgentPortal() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Minimum loading screen display time (3.5 seconds for PWA, instant for browser)
+  // Minimum loading screen display time (3 seconds for all users)
   useEffect(() => {
-    // Check if running as installed PWA
-    const isStandalone =
-      window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true;
-
-    // Only enforce minimum time for PWA mode
-    if (isStandalone) {
-      const timer = setTimeout(() => {
-        setMinLoadTimeElapsed(true);
-      }, 3500); // 3.5 seconds minimum
-      return () => clearTimeout(timer);
-    } else {
-      // Browser mode - no minimum time
+    const timer = setTimeout(() => {
       setMinLoadTimeElapsed(true);
-    }
+    }, 3000); // 3 seconds minimum for all users
+    return () => clearTimeout(timer);
   }, []);
+
+  // Preload all app data during loading screen
+  useEffect(() => {
+    if (showLoadingScreen) {
+      preloadAppData().then((result) => {
+        if (result.userData) {
+          // Update user state with fresh data from API
+          const freshUserData = {
+            id: result.userData.id,
+            email: result.userData.email,
+            username: result.userData.username,
+            firstName: result.userData.first_name || result.userData.firstName || '',
+            lastName: result.userData.last_name || result.userData.lastName || '',
+            fullName: result.userData.full_name || result.userData.fullName || '',
+            role: result.userData.role,
+            profilePictureUrl: toCdnUrl(result.userData.profile_picture_url || result.userData.profilePictureUrl),
+            gender: result.userData.gender || 'male',
+            isLeader: result.userData.is_leader || false,
+          };
+          setUser(freshUserData);
+          // Also update localStorage
+          localStorage.setItem('agent_portal_user', JSON.stringify(freshUserData));
+        }
+        setIsLoading(false);
+      }).catch(() => {
+        // Even if preload fails, we should still stop loading
+        setIsLoading(false);
+      });
+    }
+  }, []); // Only run once on mount
 
   // Trigger fade-out animation when loading is complete
   useEffect(() => {
@@ -1420,6 +1443,39 @@ export default function AgentPortal() {
                 );
               })}
               </nav>
+
+              {/* Download App Button - Only show when not running as PWA */}
+              {!isRunningAsPWA && (
+                <div className="mt-4 pt-4 border-t border-white/[0.08]">
+                  <a
+                    href="/download"
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 hover:scale-[1.02]"
+                    style={{
+                      background: 'linear-gradient(180deg, #1a1a0a 0%, #0d0d05 100%)',
+                      boxShadow: 'inset 0 1px 0 rgba(255,215,0,0.15), inset 0 -1px 2px rgba(0,0,0,0.3), 0 0 8px rgba(255,215,0,0.1)',
+                      border: '1px solid rgba(255,215,0,0.2)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.6))',
+                        color: '#ffd700',
+                      }}
+                    >
+                      <Download className="w-5 h-5" />
+                    </div>
+                    <span
+                      className="font-medium font-taskor text-sm"
+                      style={{
+                        color: '#ffd700',
+                        textShadow: '0 0 6px rgba(255,215,0,0.4)',
+                      }}
+                    >
+                      Download App
+                    </span>
+                  </a>
+                </div>
+              )}
             </div>
           </aside>
 
@@ -1442,7 +1498,7 @@ export default function AgentPortal() {
             {activeSection === 'support' && <SupportSection />}
 
             {/* Team Calls */}
-            {activeSection === 'calls' && <TeamCallsSection userGender={user?.gender} />}
+            {activeSection === 'calls' && <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />}
 
             {/* Templates */}
             {activeSection === 'templates' && <TemplatesSection />}
@@ -1694,6 +1750,17 @@ export default function AgentPortal() {
                   <LogOut className="w-5 h-5" />
                   <span className="font-medium">Logout</span>
                 </button>
+
+                {/* Download App Button - Mobile only, hidden when running as PWA */}
+                {!isRunningAsPWA && (
+                  <a
+                    href="/download"
+                    className="md:hidden w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[#ffd700] bg-[#ffd700]/10 hover:bg-[#ffd700]/20 border border-[#ffd700]/30 hover:border-[#ffd700]/50 transition-all"
+                  >
+                    <Download className="w-5 h-5" />
+                    <span className="font-medium">Download App</span>
+                  </a>
+                )}
               </div>
             )}
 
@@ -2941,7 +3008,7 @@ function formatTimeInLocalTimezone(hour: number, minute: number, dayOfWeek: stri
   });
 }
 
-function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | null }) {
+function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'female' | null; isLeader?: boolean | null }) {
   // Get times in user's local timezone
   const [localTimes, setLocalTimes] = useState<Record<string, string>>({});
 
@@ -2951,10 +3018,12 @@ function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | nul
       connor: formatTimeInLocalTimezone(8, 0, 'Monday'),
       mike: formatTimeInLocalTimezone(11, 0, 'Tuesday'),
       women: formatTimeInLocalTimezone(11, 0, 'Wednesday'),
+      leaders: formatTimeInLocalTimezone(10, 0, 'Thursday'),
     });
   }, []);
 
   const showWomensCall = userGender === 'female';
+  const showLeadersCall = isLeader === true;
 
   return (
     <div className="space-y-4 sm:space-y-6 px-2 sm:px-4">
@@ -3020,6 +3089,29 @@ function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | nul
               >
                 Join Zoom Call
               </a>
+            </div>
+          </GenericCard>
+        )}
+
+        {showLeadersCall && (
+          <GenericCard padding="sm">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="text-2xl sm:text-3xl">👑</span>
+                <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Leaders Mastermind</h4>
+              </div>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Exclusive call for alliance leaders</p>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Thursdays</strong> at {localTimes.leaders || '10:00 AM PST'}</p>
+              <a
+                href="https://zoom.us/j/4919666038"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] text-xs sm:text-sm hover:bg-[#ffd700]/20 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                Join Zoom Call
+              </a>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]/70">Password: <span className="font-mono">487789</span></p>
             </div>
           </GenericCard>
         )}

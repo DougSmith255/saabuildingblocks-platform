@@ -281,6 +281,8 @@ export async function POST(request: NextRequest) {
           profile_picture_url: user.profile_picture_url,
           emailVerified: user.email_verified,
           lastLoginAt: new Date().toISOString(),
+          gender: user.gender || 'male',
+          is_leader: user.is_leader || false,
         },
         accessToken,
         expiresIn,

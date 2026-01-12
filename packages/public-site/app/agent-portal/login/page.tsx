@@ -139,6 +139,8 @@ function AgentPortalLoginContent() {
         fullName: data.data.user.fullName || `${data.data.user.first_name || ''} ${data.data.user.last_name || ''}`.trim(),
         role: data.data.user.role,
         profilePictureUrl: data.data.user.profile_picture_url || null,
+        gender: data.data.user.gender || 'male',
+        isLeader: data.data.user.is_leader || false,
       };
 
       localStorage.setItem('agent_portal_user', JSON.stringify(userData));

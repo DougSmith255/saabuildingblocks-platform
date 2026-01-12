@@ -18,6 +18,7 @@ interface User {
   exp_email?: string; // Agent's eXp Realty email
   legal_name?: string; // Agent's official legal name for sponsor search
   gender?: 'male' | 'female'; // Controls which team calls the user sees
+  is_leader?: boolean; // Controls whether user sees leaders-only calls
 }
 
 interface UserStats {
@@ -412,6 +413,31 @@ export function UserManagementTab() {
     }
   };
 
+  // Handle toggle leader status
+  const handleToggleLeader = async (user: User) => {
+    const newIsLeader = !user.is_leader;
+
+    try {
+      const response = await fetch(`/api/users/${user.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_leader: newIsLeader }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to update leader status');
+      }
+
+      // Update local state immediately for responsive UI
+      setUsers(prev => prev.map(u =>
+        u.id === user.id ? { ...u, is_leader: newIsLeader } : u
+      ));
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to update leader status');
+    }
+  };
+
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     const now = new Date();
@@ -581,6 +607,19 @@ export function UserManagementTab() {
                         >
                           <span className="text-base">{user.gender === 'female' ? '♀' : '♂'}</span>
                           <span className="text-xs">{user.gender === 'female' ? 'F' : 'M'}</span>
+                        </button>
+                        {/* Leader Toggle */}
+                        <button
+                          onClick={() => handleToggleLeader(user)}
+                          className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-sm rounded transition-colors ${
+                            user.is_leader
+                              ? 'bg-[#ffd700]/10 text-[#ffd700] hover:bg-[#ffd700]/20'
+                              : 'bg-[#404040]/30 text-[#dcdbd5]/60 hover:bg-[#404040]/50'
+                          }`}
+                          title={`Currently: ${user.is_leader ? 'Leader' : 'Follower'} - Click to toggle`}
+                        >
+                          <span className="text-base">{user.is_leader ? '👑' : '👤'}</span>
+                          <span className="text-xs">{user.is_leader ? 'L' : 'F'}</span>
                         </button>
                         <button
                           onClick={() => handleEditUser(user)}

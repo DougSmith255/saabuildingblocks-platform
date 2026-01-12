@@ -103,11 +103,12 @@ export async function PUT(
       status,
       exp_email,
       legal_name,
-      gender
+      gender,
+      is_leader
     } = body;
 
     // Build update object with only provided fields
-    const updates: Record<string, string> = {
+    const updates: Record<string, string | boolean> = {
       updated_at: new Date().toISOString(),
     };
 
@@ -137,6 +138,7 @@ export async function PUT(
     if (exp_email !== undefined) updates.exp_email = exp_email;
     if (legal_name !== undefined) updates.legal_name = legal_name;
     if (gender !== undefined) updates.gender = gender;
+    if (is_leader !== undefined) updates.is_leader = is_leader;
 
     // Hash new password if provided
     if (password) {
