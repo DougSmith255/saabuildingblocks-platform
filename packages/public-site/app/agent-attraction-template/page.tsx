@@ -45,7 +45,7 @@ const AGENT_IMAGE_SRCSET = `
   ${CLOUDFLARE_BASE}/doug-and-karrie-co-founders/tablet 768w,
   ${CLOUDFLARE_BASE}/doug-and-karrie-co-founders/desktop 1280w
 `;
-const AGENT_TAGLINE = `Join ${AGENT_DISPLAY_NAME}'s Team (3700+ Agents)`;
+const AGENT_TAGLINE = `Join ${AGENT_DISPLAY_NAME}'s Team`;
 const AGENT_CTA_HREF = "#watch-and-decide";
 const AGENT_CTA_TEXT = "WATCH & DECIDE";
 
@@ -823,12 +823,11 @@ function AgentCounter() {
 }
 
 function TaglineCounterSuffix() {
-  const { hasMounted, isCounterDesktop } = useViewport();
-  const isVisible = hasMounted && !isCounterDesktop;
+  const { hasMounted } = useViewport();
   return (
-    <span className="tagline-counter-suffix" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 0, opacity: isVisible ? 1 : 0, transition: 'opacity 0.2s ease-in' }}>
+    <span className="tagline-counter-suffix" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 0, opacity: hasMounted ? 1 : 0, transition: 'opacity 0.2s ease-in' }}>
       <span style={{ display: 'inline', color: '#bfbdb0', fontFamily: 'var(--font-synonym), monospace', fontWeight: 300, fontSize: '1em', textShadow: 'none' }}>
-        <span>(</span><span className="counter-digit">3</span><span className="counter-digit">7</span><span className="counter-digit">0</span><span className="counter-digit">0</span><span>+ </span>
+        <span> (</span><span className="counter-digit">3</span><span className="counter-digit">7</span><span className="counter-digit">0</span><span className="counter-digit">0</span><span>+ </span>
       </span>
       <span style={{ color: '#bfbdb0', fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em' }}>AGENTS)</span>
     </span>
@@ -2911,7 +2910,6 @@ export default function AgentAttractionTemplate2() {
             aria-label="Hero"
             style={{ maxWidth: '3000px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
           >
-            <AgentCounter />
             <RevealMaskEffect />
 
             <div className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0" style={{ maxWidth: '3000px' }}>
@@ -2931,7 +2929,7 @@ export default function AgentAttractionTemplate2() {
               <div className="w-full px-4 sm:px-8 md:px-12 text-center pointer-events-auto z-[2]" style={{ maxWidth: '3000px', marginTop: 'calc(min(clamp(400px, 47.37vw, 900px) / 7.2, 12.5dvh) * -1)' }}>
                 <div style={{ perspective: '1000px' }}>
                   <H1 id="hero-heading" style={{ fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)', marginBottom: '3px' }}>{AGENT_NAME}</H1>
-                  <Tagline className="hero-tagline-mobile-spacing">{AGENT_TAGLINE}</Tagline>
+                  <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>{AGENT_TAGLINE}</Tagline>
                 </div>
                 <div className="hero-cta-buttons flex justify-center items-center" style={{ marginTop: '14px' }}>
                   <CTAButton href={AGENT_CTA_HREF}>{AGENT_CTA_TEXT}</CTAButton>

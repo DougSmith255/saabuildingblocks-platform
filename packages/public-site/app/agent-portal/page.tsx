@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -49,6 +49,38 @@ const shakeKeyframes = `
   -webkit-tap-highlight-color: transparent !important;
   -webkit-touch-callout: none !important;
 }
+
+/* Mobile bottom nav - ensure no tap highlight anywhere */
+.mobile-bottom-nav,
+.mobile-bottom-nav *,
+.mobile-bottom-nav button {
+  -webkit-tap-highlight-color: transparent !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+/* Bottom nav sliding indicator animation */
+@keyframes nav-indicator-slide {
+  0% { transform: scaleX(0.8); opacity: 0.5; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+.nav-indicator-active {
+  animation: nav-indicator-slide 0.2s ease-out forwards;
+}
+
+/* Bento card hover lift effect */
+@keyframes card-hover-glow {
+  0% { box-shadow: 0 0 0 rgba(255, 215, 0, 0); }
+  100% { box-shadow: 0 8px 32px rgba(255, 215, 0, 0.15); }
+}
+
+/* Icon bounce animation on hover */
+@keyframes icon-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
 `;
 
 // User type from stored session
@@ -61,6 +93,7 @@ interface UserData {
   fullName: string;
   role: 'admin' | 'user';
   profilePictureUrl: string | null;
+  gender?: 'male' | 'female' | null;
 }
 
 // Section types
@@ -69,32 +102,35 @@ type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' 
 interface NavItem {
   id: SectionId;
   label: string;
-  icon: string;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 const navItems: NavItem[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: '⬡' },
-  { id: 'start-here', label: 'Start Here', icon: '◈' },
-  { id: 'agent-pages', label: 'My SAA Pages', icon: '◇' },
-  { id: 'calls', label: 'Team Calls', icon: '◉' },
-  { id: 'templates', label: 'Templates', icon: '◫' },
-  { id: 'courses', label: 'Elite Courses', icon: '◬' },
-  { id: 'production', label: 'Production', icon: '◭' },
-  { id: 'revshare', label: 'RevShare', icon: '◮' },
-  { id: 'exp-links', label: 'eXp Links', icon: '◯' },
-  { id: 'new-agents', label: 'New Agents', icon: '◠' },
+  { id: 'dashboard', label: 'Dashboard', icon: Home },
+  { id: 'start-here', label: 'Start Here', icon: Rocket },
+  { id: 'agent-pages', label: 'My SAA Pages', icon: FileUser },
+  { id: 'calls', label: 'Team Calls', icon: Video },
+  { id: 'templates', label: 'Templates', icon: Megaphone },
+  { id: 'courses', label: 'Elite Courses', icon: GraduationCap },
+  { id: 'production', label: 'Production', icon: Users },
+  { id: 'revshare', label: 'RevShare', icon: DollarSign },
+  { id: 'exp-links', label: 'eXp Links', icon: Link2 },
+  { id: 'new-agents', label: 'New Agents', icon: PersonStanding },
 ];
 
 // Dashboard quick access cards with Lucide icons for 3D effect
-const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }> }[] = [
-  { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket },
-  { id: 'calls', title: 'Team Calls & More', description: 'Live and recorded team calls', icon: Video },
-  { id: 'templates', title: 'Exclusive Templates', description: 'Marketing templates and more', icon: Megaphone },
-  { id: 'courses', title: 'Elite Courses', description: 'Social Agent Academy, Flipping Houses, etc.', icon: GraduationCap },
-  { id: 'production', title: 'Quickstart Production', description: 'Landing Pages and Email Drips', icon: Users },
-  { id: 'revshare', title: 'Quickstart RevShare', description: 'Grow your downline, no experience needed', icon: DollarSign },
-  { id: 'exp-links', title: 'eXp Links & Questions', description: 'Have an eXp question? Start here', icon: Link2 },
-  { id: 'new-agents', title: 'New Agents', description: 'Information tailored for you', icon: PersonStanding },
+// size: 'featured' = large card (spans 2 cols), 'standard' = normal card, 'compact' = smaller card
+type CardSize = 'featured' | 'standard' | 'compact';
+const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string }[] = [
+  { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket, size: 'featured', gradient: 'from-amber-500/20 to-orange-600/10' },
+  { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-purple-500/20 to-pink-600/10' },
+  { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard' },
+  { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard' },
+  { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard' },
+  { id: 'production', title: 'Production', description: 'Landing pages & drips', icon: Users, size: 'standard' },
+  { id: 'revshare', title: 'RevShare', description: 'Grow your downline', icon: DollarSign, size: 'compact' },
+  { id: 'exp-links', title: 'eXp Links', description: 'Questions & resources', icon: Link2, size: 'compact' },
+  { id: 'new-agents', title: 'New Agents', description: 'Info for new agents', icon: PersonStanding, size: 'compact' },
 ];
 
 // Rewrite asset URLs to use CDN for edge caching
@@ -1130,52 +1166,111 @@ export default function AgentPortal() {
       </header>
 
 
-      {/* Mobile Bottom Navigation - App-like experience */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-black border-t border-[#ffd700]/20 pb-safe">
-        <div className="flex justify-around items-center h-16">
+      {/* Mobile Bottom Navigation - Premium app-like experience */}
+      <nav
+        className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe"
+        style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
+      >
+        {/* Glassmorphism background with gradient border */}
+        <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" />
+        <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
+
+        <div
+          className="relative flex justify-around items-center h-16 px-2"
+          style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+        >
           {[
-            { id: 'dashboard' as SectionId, label: 'Home', icon: '⬡' },
-            { id: 'agent-pages' as SectionId, label: 'Pages', icon: '◇' },
-            { id: 'calls' as SectionId, label: 'Calls', icon: '◉' },
-            { id: 'courses' as SectionId, label: 'Courses', icon: '◬' },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActiveSection(item.id);
-                setSidebarOpen(false);
-              }}
-              className={`flex flex-col items-center justify-center flex-1 h-full pt-1 transition-colors ${
-                activeSection === item.id
-                  ? 'text-[#ffd700]'
-                  : 'text-[#e5e4dd]/50'
-              }`}
-            >
-              <span className="text-xl mb-0.5">{item.icon}</span>
-              <span className="text-[10px] font-medium">{item.label}</span>
-            </button>
-          ))}
+            { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
+            { id: 'agent-pages' as SectionId, label: 'Pages', Icon: FileUser },
+            { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
+            { id: 'courses' as SectionId, label: 'Courses', Icon: GraduationCap },
+          ].map((item) => {
+            const isActive = activeSection === item.id && !sidebarOpen;
+            return (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveSection(item.id);
+                  setSidebarOpen(false);
+                }}
+                className={`relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
+                  isActive ? 'text-[#ffd700]' : 'text-[#e5e4dd]/50 active:text-[#e5e4dd]/70'
+                }`}
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                {/* Active indicator pill */}
+                {isActive && (
+                  <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-[#ffd700] nav-indicator-active" />
+                )}
+
+                {/* Icon with scale animation */}
+                <div className={`transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-100'}`}>
+                  <item.Icon className="w-5 h-5" />
+                </div>
+
+                {/* Label with fade effect */}
+                <span className={`text-[10px] font-medium mt-0.5 transition-opacity duration-300 ${
+                  isActive ? 'opacity-100' : 'opacity-70'
+                }`}>
+                  {item.label}
+                </span>
+
+                {/* Active glow effect */}
+                {isActive && (
+                  <div className="absolute inset-0 bg-[#ffd700]/5 rounded-xl pointer-events-none" />
+                )}
+              </button>
+            );
+          })}
+
+          {/* More button */}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className={`flex flex-col items-center justify-center flex-1 h-full pt-1 transition-colors ${
-              sidebarOpen ? 'text-[#ffd700]' : 'text-[#e5e4dd]/50'
+            className={`relative flex flex-col items-center justify-center flex-1 h-full transition-all duration-300 ${
+              sidebarOpen ? 'text-[#ffd700]' : 'text-[#e5e4dd]/50 active:text-[#e5e4dd]/70'
             }`}
+            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
           >
-            <span className="text-xl mb-0.5">☰</span>
-            <span className="text-[10px] font-medium">More</span>
+            {/* Active indicator pill for More */}
+            {sidebarOpen && (
+              <div className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-[#ffd700] nav-indicator-active" />
+            )}
+
+            <div className={`transition-transform duration-300 ${sidebarOpen ? 'scale-110 rotate-90' : 'scale-100'}`}>
+              <Menu className="w-5 h-5" />
+            </div>
+            <span className={`text-[10px] font-medium mt-0.5 transition-opacity duration-300 ${
+              sidebarOpen ? 'opacity-100' : 'opacity-70'
+            }`}>
+              More
+            </span>
+
+            {/* Active glow effect */}
+            {sidebarOpen && (
+              <div className="absolute inset-0 bg-[#ffd700]/5 rounded-xl pointer-events-none" />
+            )}
           </button>
         </div>
       </nav>
 
-      {/* Mobile More Menu Overlay */}
+      {/* Mobile More Menu Overlay - Premium glassmorphism design */}
       {sidebarOpen && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black overflow-y-auto pb-20">
-          <div className="p-4 pt-20">
-            {/* User Profile Card */}
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-[#ffd700]/20 mb-6">
+        <div className="md:hidden fixed inset-0 z-40 overflow-y-auto pb-20">
+          {/* Background with subtle gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/98 to-black" />
+
+          <div className="relative p-4 pt-20">
+            {/* User Profile Card - Enhanced glassmorphism */}
+            <div className="relative flex items-center gap-4 p-4 rounded-2xl overflow-hidden mb-6">
+              {/* Glass background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm" />
+              <div className="absolute inset-0 border border-[#ffd700]/20 rounded-2xl" />
+              {/* Subtle shine */}
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none rounded-2xl" />
+
               <button
                 onClick={() => { handleProfilePictureClick(); setSidebarOpen(false); }}
-                className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#ffd700]/30 flex-shrink-0"
+                className="relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 ring-2 ring-[#ffd700]/30 ring-offset-2 ring-offset-black/50"
               >
                 {user.profilePictureUrl && !profileImageError ? (
                   <img
@@ -1188,18 +1283,18 @@ export default function AgentPortal() {
                     onError={() => setProfileImageError(true)}
                   />
                 ) : (
-                  <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
-                    <span className="text-2xl text-[#ffd700]">{user.firstName?.charAt(0) || '?'}</span>
+                  <div className="w-full h-full bg-gradient-to-br from-[#ffd700]/20 to-[#ffd700]/10 flex items-center justify-center">
+                    <span className="text-2xl text-[#ffd700] font-semibold">{user.firstName?.charAt(0) || '?'}</span>
                   </div>
                 )}
               </button>
-              <div className="flex-1 min-w-0">
+              <div className="relative flex-1 min-w-0">
                 <h3 className="text-[#ffd700] font-semibold truncate">{user.firstName} {user.lastName}</h3>
                 <p className="text-[#e5e4dd]/60 text-sm truncate">{user.email}</p>
               </div>
               <button
                 onClick={() => { handleOpenEditProfile(); setSidebarOpen(false); }}
-                className="p-2 rounded-lg bg-white/5 text-[#e5e4dd]/60"
+                className="relative p-2.5 rounded-xl bg-white/5 border border-white/10 text-[#e5e4dd]/60 hover:bg-white/10 hover:text-[#ffd700] transition-all duration-300"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -1207,34 +1302,66 @@ export default function AgentPortal() {
               </button>
             </div>
 
-            {/* Navigation Grid */}
+            {/* Section Label */}
+            <p className="text-xs text-[#e5e4dd]/40 font-medium uppercase tracking-wider mb-3 px-1">More Options</p>
+
+            {/* Navigation Grid - Enhanced with icons in containers */}
             <div className="grid grid-cols-2 gap-3">
-              {navItems.filter(item => !['dashboard', 'agent-pages', 'calls', 'courses'].includes(item.id)).map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`flex flex-col items-center justify-center p-4 rounded-2xl transition-all ${
-                    activeSection === item.id
-                      ? 'bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700]'
-                      : 'bg-white/5 border border-white/10 text-[#e5e4dd]/70'
-                  }`}
-                >
-                  <span className="text-2xl mb-2">{item.icon}</span>
-                  <span className="text-sm font-medium text-center">{item.label}</span>
-                </button>
-              ))}
+              {navItems.filter(item => !['dashboard', 'agent-pages', 'calls', 'courses'].includes(item.id)).map((item) => {
+                const IconComponent = item.icon;
+                const isActive = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveSection(item.id);
+                      setSidebarOpen(false);
+                    }}
+                    className={`relative flex flex-col items-center justify-center p-4 rounded-xl overflow-hidden transition-all duration-300 active:scale-95 ${
+                      isActive
+                        ? 'text-[#ffd700]'
+                        : 'text-[#e5e4dd]/70'
+                    }`}
+                    style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                  >
+                    {/* Background */}
+                    <div className={`absolute inset-0 transition-colors duration-300 ${
+                      isActive
+                        ? 'bg-gradient-to-br from-[#ffd700]/15 to-[#ffd700]/5'
+                        : 'bg-white/5'
+                    }`} />
+                    {/* Border */}
+                    <div className={`absolute inset-0 border rounded-xl transition-colors duration-300 ${
+                      isActive
+                        ? 'border-[#ffd700]/40'
+                        : 'border-white/10'
+                    }`} />
+
+                    {/* Icon container */}
+                    <div className={`relative p-2 rounded-lg mb-2 transition-all duration-300 ${
+                      isActive
+                        ? 'bg-[#ffd700]/10'
+                        : 'bg-white/5'
+                    }`}>
+                      <IconComponent className="w-5 h-5" />
+                    </div>
+                    <span className="relative text-sm font-medium text-center">{item.label}</span>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Logout Button */}
+            {/* Logout Button - Enhanced */}
             <button
               onClick={handleLogout}
-              className="w-full mt-6 flex items-center justify-center gap-2 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-red-400"
+              className="relative w-full mt-6 flex items-center justify-center gap-2 p-4 rounded-xl overflow-hidden active:scale-[0.98] transition-transform duration-200"
             >
-              <span>Logout</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              {/* Background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/5" />
+              <div className="absolute inset-0 border border-red-500/30 rounded-xl" />
+
+              <span className="relative text-red-400 font-medium">Logout</span>
+              <svg className="relative w-4 h-4 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                 <polyline points="16 17 21 12 16 7" />
                 <line x1="21" y1="12" x2="9" y2="12" />
@@ -1245,7 +1372,7 @@ export default function AgentPortal() {
       )}
 
       {/* Main Dashboard Layout */}
-      <div className="max-w-[2500px] mx-auto px-4 sm:px-8 md:px-12 pb-24 md:pb-20 pt-20 md:pt-28">
+      <div className="max-w-[2500px] mx-auto px-4 sm:px-8 md:px-12 pb-20 md:pb-8 pt-20 md:pt-28">
         <div className="flex flex-col lg:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only */}
@@ -1330,29 +1457,32 @@ export default function AgentPortal() {
 
               {/* Navigation Menu */}
               <nav className="rounded-xl p-4 space-y-2 bg-black/80 md:bg-black/30 md:backdrop-blur-sm border border-[#ffd700]/15">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveSection(item.id);
-                    setSidebarOpen(false);
-                    // Trigger shake animation
-                    setShakingItem(item.id);
-                    setTimeout(() => setShakingItem(null), 300);
-                  }}
-                  className={`
-                    w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200
-                    ${activeSection === item.id
-                      ? 'bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/30'
-                      : 'text-body hover:text-[#e5e4dd] hover:bg-white/5 border border-transparent'
-                    }
-                  `}
-                  style={shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : undefined}
-                >
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="font-medium font-taskor text-sm">{item.label}</span>
-                </button>
-              ))}
+              {navItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveSection(item.id);
+                      setSidebarOpen(false);
+                      // Trigger shake animation
+                      setShakingItem(item.id);
+                      setTimeout(() => setShakingItem(null), 300);
+                    }}
+                    className={`
+                      w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors duration-200
+                      ${activeSection === item.id
+                        ? 'bg-[#ffd700]/10 text-[#ffd700] border border-[#ffd700]/30'
+                        : 'text-body hover:text-[#e5e4dd] hover:bg-white/5 border border-transparent'
+                      }
+                    `}
+                    style={shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : undefined}
+                  >
+                    <IconComponent className="w-5 h-5" />
+                    <span className="font-medium font-taskor text-sm">{item.label}</span>
+                  </button>
+                );
+              })}
               </nav>
             </div>
           </aside>
@@ -1376,7 +1506,7 @@ export default function AgentPortal() {
             {activeSection === 'start-here' && <StartHereSection />}
 
             {/* Team Calls */}
-            {activeSection === 'calls' && <TeamCallsSection />}
+            {activeSection === 'calls' && <TeamCallsSection userGender={user?.gender} />}
 
             {/* Templates */}
             {activeSection === 'templates' && <TemplatesSection />}
@@ -2136,30 +2266,131 @@ export default function AgentPortal() {
 // Dashboard View - Quick Access Cards
 // ============================================================================
 function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) {
+  // Separate cards by size for bento layout
+  const featuredCards = dashboardCards.filter(c => c.size === 'featured');
+  const standardCards = dashboardCards.filter(c => c.size === 'standard');
+  const compactCards = dashboardCards.filter(c => c.size === 'compact');
+
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
-        {dashboardCards.map((card) => {
+    <div className="space-y-4 px-1 sm:px-2">
+      {/* Featured Cards Row - Large cards with gradients */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        {featuredCards.map((card) => {
+          const IconComponent = card.icon;
+          return (
+            <button
+              key={card.id}
+              onClick={() => onNavigate(card.id)}
+              className="text-left group relative overflow-hidden"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <div className={`
+                relative p-5 sm:p-6 rounded-2xl border border-white/10
+                bg-gradient-to-br ${card.gradient || 'from-white/10 to-white/5'}
+                backdrop-blur-sm
+                transition-all duration-300 ease-out
+                hover:border-[#ffd700]/40 hover:shadow-lg hover:shadow-[#ffd700]/10
+                hover:scale-[1.02]
+                group-active:scale-[0.98]
+              `}>
+                {/* Subtle glass shine effect */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 via-transparent to-transparent opacity-50 pointer-events-none" />
+
+                <div className="relative flex flex-col items-center text-center space-y-3">
+                  {/* Icon container with glow */}
+                  <div className="relative p-4 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 group-hover:border-[#ffd700]/30 transition-all duration-300">
+                    <Icon3D>
+                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform duration-300" />
+                    </Icon3D>
+                    {/* Icon glow */}
+                    <div className="absolute inset-0 rounded-xl bg-[#ffd700]/0 group-hover:bg-[#ffd700]/5 transition-colors duration-300" />
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="text-base sm:text-lg font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#e5e4dd]/60 leading-snug">
+                      {card.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Standard Cards Grid - 2x2 on mobile, 4 cols on desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {standardCards.map((card) => {
           const IconComponent = card.icon;
           return (
             <button
               key={card.id}
               onClick={() => onNavigate(card.id)}
               className="text-left group"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <GenericCard className="h-full" hover padding="md">
-                <div className="space-y-3">
+              <div className="
+                relative p-4 rounded-xl border border-white/10 bg-white/5
+                backdrop-blur-sm
+                transition-all duration-300 ease-out
+                hover:bg-white/10 hover:border-[#ffd700]/30 hover:shadow-md hover:shadow-[#ffd700]/5
+                hover:scale-[1.02]
+                group-active:scale-[0.98]
+                h-full
+              ">
+                <div className="flex flex-col items-center text-center space-y-2.5">
+                  {/* Centered icon with subtle background */}
+                  <div className="p-2.5 rounded-lg bg-[#ffd700]/5 group-hover:bg-[#ffd700]/10 transition-colors duration-300">
+                    <Icon3D>
+                      <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform duration-300" />
+                    </Icon3D>
+                  </div>
+
+                  <div className="space-y-0.5">
+                    <h3 className="text-sm font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300 leading-tight">
+                      {card.title}
+                    </h3>
+                    <p className="text-[11px] text-[#e5e4dd]/50 leading-tight hidden sm:block">
+                      {card.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Compact Cards Row - 3 columns horizontal strip */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+        {compactCards.map((card) => {
+          const IconComponent = card.icon;
+          return (
+            <button
+              key={card.id}
+              onClick={() => onNavigate(card.id)}
+              className="text-left group"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <div className="
+                relative p-3 sm:p-4 rounded-lg border border-white/10 bg-white/[0.03]
+                transition-all duration-300 ease-out
+                hover:bg-white/10 hover:border-[#ffd700]/30
+                hover:scale-[1.02]
+                group-active:scale-[0.98]
+              ">
+                <div className="flex flex-col items-center text-center space-y-1.5">
                   <Icon3D>
-                    <IconComponent className="w-10 h-10" />
+                    <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
                   </Icon3D>
-                  <h3 className="text-h5 group-hover:text-[#ffd700] transition-colors">
+                  <h3 className="text-xs sm:text-sm font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300 leading-tight">
                     {card.title}
                   </h3>
-                  <p className="text-body opacity-70">
-                    {card.description}
-                  </p>
                 </div>
-              </GenericCard>
+              </div>
             </button>
           );
         })}
@@ -2233,52 +2464,121 @@ Simply offering an MLS automatic search isn't enough these days. Instead, focus 
 // ============================================================================
 // Team Calls Section
 // ============================================================================
-function TeamCallsSection() {
+// Helper to convert PST time to user's local timezone
+function formatTimeInLocalTimezone(hour: number, minute: number, dayOfWeek: string): string {
+  // Create a date object for the next occurrence of the given day
+  // PST is UTC-8 (standard) or UTC-7 (daylight saving)
+  const now = new Date();
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const targetDayIndex = days.findIndex(d => d.toLowerCase().startsWith(dayOfWeek.toLowerCase().slice(0, 3)));
+
+  // Create date in PST (using Los Angeles timezone)
+  const pstDate = new Date();
+  const currentDay = pstDate.getDay();
+  const daysUntilTarget = (targetDayIndex - currentDay + 7) % 7 || 7;
+  pstDate.setDate(pstDate.getDate() + daysUntilTarget);
+
+  // Set the time in PST by creating the date string
+  const pstString = pstDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+  const [month, day, year] = pstString.split('/');
+  const dateTimeString = `${year}-${month}-${day}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
+
+  // Create date in PST timezone and convert to local
+  const pstDateTime = new Date(dateTimeString + ' PST');
+
+  // Format in user's local timezone
+  const localTime = pstDateTime.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZoneName: 'short'
+  });
+
+  return localTime;
+}
+
+function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | null }) {
+  // Get times in user's local timezone
+  const [localTimes, setLocalTimes] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    // Calculate local times on client side
+    setLocalTimes({
+      connor: formatTimeInLocalTimezone(8, 0, 'Monday'),
+      mike: formatTimeInLocalTimezone(11, 0, 'Tuesday'),
+      women: formatTimeInLocalTimezone(11, 0, 'Wednesday'),
+    });
+  }, []);
+
+  const showWomensCall = userGender === 'female';
+
   return (
-    <div className="space-y-8 px-2 sm:px-4">
-      <div className="space-y-8">
-        <h3 className="text-h3 text-center mb-6">Mastermind Calls</h3>
+    <div className="space-y-4 sm:space-y-6 px-2 sm:px-4">
+      <h3 className="text-lg sm:text-xl lg:text-h3 text-center font-semibold">Mastermind Calls</h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <GenericCard padding="md">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">📹</span>
-                <h4 className="text-h5 text-[#ffd700]">Connor Steinbrook Mastermind</h4>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
+        <GenericCard padding="sm">
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-2xl sm:text-3xl">📹</span>
+              <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Connor Steinbrook Mastermind</h4>
+            </div>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Mindset-based discussions and teachings</p>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Mondays</strong> at {localTimes.connor || '8:00 AM PST'}</p>
+            <a
+              href="https://zoom.us/j/4919666038?pwd=487789"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] text-xs sm:text-sm hover:bg-[#ffd700]/20 transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              Join Zoom Call
+            </a>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/70">Password: <span className="font-mono">487789</span></p>
+          </div>
+        </GenericCard>
+
+        <GenericCard padding="sm">
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-2xl sm:text-3xl">📹</span>
+              <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#a855f7] leading-tight">Mike Sherrard Mastermind</h4>
+            </div>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Production-based discussions and teachings</p>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Tuesdays</strong> at {localTimes.mike || '11:00 AM PST'}</p>
+            <a
+              href="https://us02web.zoom.us/j/83687612648"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#a855f7]/10 border border-[#a855f7]/30 rounded-lg text-[#a855f7] text-xs sm:text-sm hover:bg-[#a855f7]/20 transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              Join Zoom Call
+            </a>
+          </div>
+        </GenericCard>
+
+        {showWomensCall && (
+          <GenericCard padding="sm">
+            <div className="space-y-2 sm:space-y-3">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <span className="text-2xl sm:text-3xl">👩</span>
+                <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ec4899] leading-tight">Women's Mastermind</h4>
               </div>
-              <p className="text-body">Mindset-based discussions and teachings</p>
-              <p className="text-body"><strong>Mondays</strong> at 8:00 am (PST)</p>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Exclusive call for women in the alliance</p>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Wednesdays</strong> at {localTimes.women || '11:00 AM PST'}</p>
               <a
-                href="https://zoom.us/j/4919666038?pwd=487789"
+                href="https://us06web.zoom.us/j/86896266944"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-4 py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ec4899]/10 border border-[#ec4899]/30 rounded-lg text-[#ec4899] text-xs sm:text-sm hover:bg-[#ec4899]/20 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
               >
                 Join Zoom Call
               </a>
-              <p className="text-caption">Password: 487789</p>
             </div>
           </GenericCard>
-
-          <GenericCard padding="md">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl">📹</span>
-                <h4 className="text-h5 text-[#8300E9]">Mike Sherrard Mastermind</h4>
-              </div>
-              <p className="text-body">Production-based discussions and teachings</p>
-              <p className="text-body"><strong>Tuesdays</strong> at 2:00 pm (PST)</p>
-              <a
-                href="https://us02web.zoom.us/j/88399766561"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-4 py-2 bg-[#8300E9]/10 border border-[#8300E9]/30 rounded-lg text-[#8300E9] hover:bg-[#8300E9]/20 transition-colors"
-              >
-                Join Zoom Call
-              </a>
-            </div>
-          </GenericCard>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -2709,31 +3009,31 @@ function TemplatesSection() {
 // ============================================================================
 function CoursesSection() {
   return (
-    <div className="space-y-6 px-2 sm:px-4">
-      <p className="text-center text-body mb-8">Refer to Wolf Pack emails to find login details</p>
+    <div className="space-y-4 sm:space-y-6 px-1 sm:px-2">
+      <p className="text-center text-sm sm:text-base text-[#e5e4dd]/80 mb-4 sm:mb-8">Refer to Wolf Pack emails to find login details</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <GenericCard padding="md" centered>
-          <div className="text-center space-y-4">
-            <span className="text-5xl">🐺</span>
-            <h3 className="text-h5 text-[#ffd700]">Wolf Pack Skool Portal & HUB</h3>
-            <p className="text-body">Access the Wolfpack HUB in courses</p>
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+        <GenericCard padding="sm" centered>
+          <div className="text-center space-y-2 sm:space-y-4">
+            <span className="text-3xl sm:text-4xl lg:text-5xl">🐺</span>
+            <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Wolf Pack Skool Portal & HUB</h3>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">Access the Wolfpack HUB in courses</p>
           </div>
         </GenericCard>
 
-        <GenericCard padding="md" centered>
-          <div className="text-center space-y-4">
-            <span className="text-5xl">📱</span>
-            <h3 className="text-h5 text-[#ffd700]">Social Agent Academy</h3>
-            <p className="text-body">Learn how to dominate online</p>
+        <GenericCard padding="sm" centered>
+          <div className="text-center space-y-2 sm:space-y-4">
+            <span className="text-3xl sm:text-4xl lg:text-5xl">📱</span>
+            <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Social Agent Academy</h3>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">Learn how to dominate online</p>
           </div>
         </GenericCard>
 
-        <GenericCard padding="md" centered>
-          <div className="text-center space-y-4">
-            <span className="text-5xl">🏠</span>
-            <h3 className="text-h5 text-[#ffd700]">Investor Army</h3>
-            <p className="text-body">Learn to flip houses</p>
+        <GenericCard padding="sm" centered>
+          <div className="text-center space-y-2 sm:space-y-4">
+            <span className="text-3xl sm:text-4xl lg:text-5xl">🏠</span>
+            <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Investor Army</h3>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">Learn to flip houses</p>
           </div>
         </GenericCard>
       </div>
@@ -3670,34 +3970,38 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Preview Content - Attraction Page preview */}
+              {/* Preview Content - Attraction Page preview (scaled mobile view) */}
               {activeTab === 'attraction' && (
                 <div className="relative w-full overflow-hidden" style={{ height: '600px' }}>
                   {pageData.activated && (generatedSlug || pageData.slug) ? (
-                    <iframe
-                      src={pageUrl}
-                      className="border-0"
-                      style={{
-                        transform: 'scale(0.35)',
-                        transformOrigin: 'top left',
-                        width: '286%',
-                        height: '286%',
-                        pointerEvents: 'none',
-                      }}
-                      title="Attraction Page Preview"
-                    />
+                    <div className="flex justify-center pt-2 pb-6">
+                      <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '320px', height: '570px' }}>
+                        <iframe
+                          src={pageUrl}
+                          className="border-0 absolute top-0 left-0"
+                          style={{
+                            width: '430px',
+                            height: '760px',
+                            transform: 'scale(0.75)',
+                            transformOrigin: 'top left',
+                            pointerEvents: 'none',
+                          }}
+                          title="Attraction Page Preview"
+                        />
+                      </div>
+                    </div>
                   ) : (
                     <div className="flex items-center justify-center h-full text-[#e5e4dd]/50 text-sm">
                       Activate your page to see preview
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-transparent" />
+                  <div className="absolute inset-0 bg-transparent pointer-events-none" />
                 </div>
               )}
 
               {/* Preview Content - Linktree preview for Profile/Design/Links tabs */}
               {activeTab !== 'attraction' && (
-                <div className="p-0">
+                <div className="p-4 pb-6">
                   {/* Linktree Preview */}
                   <div className="flex flex-col items-center gap-4 max-w-[260px] mx-auto">
                     {/* Profile Photo */}
@@ -3938,12 +4242,12 @@ function AgentPagesSection({
               </div>
             )}
 
-            {/* Tab Navigation - Mobile-first with horizontal scroll */}
-            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
-              <div className="flex border-b border-white/10 mb-6 min-w-max sm:min-w-0">
+            {/* Tab Navigation - Mobile-first, fits on one line */}
+            <div className="border-b border-white/10 mb-6">
+              <div className="flex">
                 <button
                   onClick={() => setActiveTab('profile')}
-                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'profile'
                       ? 'text-[#4ecdc4]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
@@ -3956,7 +4260,7 @@ function AgentPagesSection({
                 </button>
                 <button
                   onClick={() => setActiveTab('design')}
-                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'design'
                       ? 'text-[#4ecdc4]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
@@ -3969,7 +4273,7 @@ function AgentPagesSection({
                 </button>
                 <button
                   onClick={() => setActiveTab('links')}
-                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'links'
                       ? 'text-[#4ecdc4]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
@@ -3977,7 +4281,7 @@ function AgentPagesSection({
                 >
                   Links
                   {customLinks.length > 0 && (
-                    <span className="ml-1.5 px-1.5 py-0.5 text-xs rounded-full bg-[#4ecdc4]/20 text-[#4ecdc4]">
+                    <span className="ml-1 px-1 py-0.5 text-[10px] sm:text-xs rounded-full bg-[#4ecdc4]/20 text-[#4ecdc4]">
                       {customLinks.length}
                     </span>
                   )}
@@ -3987,7 +4291,7 @@ function AgentPagesSection({
                 </button>
                 <button
                   onClick={() => setActiveTab('attraction')}
-                  className={`flex-1 sm:flex-initial px-3 sm:px-4 py-3 text-sm font-medium transition-colors relative whitespace-nowrap ${
+                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'attraction'
                       ? 'text-[#ffd700]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
