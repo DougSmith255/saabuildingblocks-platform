@@ -2466,35 +2466,68 @@ Simply offering an MLS automatic search isn't enough these days. Instead, focus 
 // ============================================================================
 // Helper to convert PST time to user's local timezone
 function formatTimeInLocalTimezone(hour: number, minute: number, dayOfWeek: string): string {
-  // Create a date object for the next occurrence of the given day
-  // PST is UTC-8 (standard) or UTC-7 (daylight saving)
-  const now = new Date();
+  // Convert a time in America/Los_Angeles (PST/PDT) to user's local timezone
+  // This properly handles daylight saving time automatically
+
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const targetDayIndex = days.findIndex(d => d.toLowerCase().startsWith(dayOfWeek.toLowerCase().slice(0, 3)));
 
-  // Create date in PST (using Los Angeles timezone)
-  const pstDate = new Date();
-  const currentDay = pstDate.getDay();
+  // Find the next occurrence of this day
+  const now = new Date();
+  const currentDay = now.getDay();
   const daysUntilTarget = (targetDayIndex - currentDay + 7) % 7 || 7;
-  pstDate.setDate(pstDate.getDate() + daysUntilTarget);
 
-  // Set the time in PST by creating the date string
-  const pstString = pstDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-  const [month, day, year] = pstString.split('/');
-  const dateTimeString = `${year}-${month}-${day}T${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
+  // Create a date for the target day
+  const targetDate = new Date(now);
+  targetDate.setDate(targetDate.getDate() + daysUntilTarget);
 
-  // Create date in PST timezone and convert to local
-  const pstDateTime = new Date(dateTimeString + ' PST');
+  // Format date parts
+  const year = targetDate.getFullYear();
+  const month = String(targetDate.getMonth() + 1).padStart(2, '0');
+  const day = String(targetDate.getDate()).padStart(2, '0');
+  const hourStr = String(hour).padStart(2, '0');
+  const minuteStr = String(minute).padStart(2, '0');
+
+  // Use a trick: create an Intl formatter for LA timezone to find the UTC offset
+  // Then we can create the correct UTC time
+  const testDate = new Date(`${year}-${month}-${day}T12:00:00Z`);
+
+  // Get LA timezone offset by comparing formatted times
+  const laFormatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Los_Angeles',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  });
+  const utcFormatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'UTC',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', hour12: false
+  });
+
+  const laStr = laFormatter.format(testDate);
+  const utcStr = utcFormatter.format(testDate);
+
+  // Parse hours from both
+  const laHour = parseInt(laStr.split(', ')[1]?.split(':')[0] || '0');
+  const utcHour = parseInt(utcStr.split(', ')[1]?.split(':')[0] || '0');
+
+  // LA offset from UTC (negative means behind UTC)
+  let offsetHours = laHour - utcHour;
+  if (offsetHours > 12) offsetHours -= 24;
+  if (offsetHours < -12) offsetHours += 24;
+
+  // Create UTC time from LA time
+  // If LA is at -8 (PST) or -7 (PDT), we add that many hours to get UTC
+  const utcHourForCall = hour - offsetHours;
+  const callTimeUTC = new Date(Date.UTC(year, targetDate.getMonth(), parseInt(day), utcHourForCall, minute, 0));
 
   // Format in user's local timezone
-  const localTime = pstDateTime.toLocaleTimeString('en-US', {
+  return callTimeUTC.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
     timeZoneName: 'short'
   });
-
-  return localTime;
 }
 
 function TeamCallsSection({ userGender }: { userGender?: 'male' | 'female' | null }) {
