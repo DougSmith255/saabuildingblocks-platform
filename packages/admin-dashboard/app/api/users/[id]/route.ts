@@ -144,7 +144,9 @@ export async function PUT(
           { status: 400 }
         );
       }
-      updates.password_hash = await bcryptjs.hash(password, BCRYPT_ROUNDS);
+      const hashedPassword = await bcryptjs.hash(password, BCRYPT_ROUNDS);
+      updates.password_hash = hashedPassword;
+      console.log(`🔐 Password update for user ${id}: hash generated (${hashedPassword.substring(0, 20)}...)`);
     }
 
     // Update user
@@ -161,6 +163,12 @@ export async function PUT(
         { error: 'Failed to update user', details: updateError?.message },
         { status: updateError?.code === 'PGRST116' ? 404 : 500 }
       );
+    }
+
+    // Log successful update including whether password was changed
+    console.log(`✅ User ${id} updated successfully. Fields updated:`, Object.keys(updates).join(', '));
+    if (updates.password_hash) {
+      console.log(`🔐 Password was updated for user ${id}`);
     }
 
     // Remove password_hash from response
