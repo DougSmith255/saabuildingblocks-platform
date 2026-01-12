@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3 } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -97,7 +97,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages' | 'support' | 'profile';
+type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile';
 
 interface NavItem {
   id: SectionId;
@@ -108,8 +108,8 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
-  { id: 'market-stats', label: 'Market Stats', icon: BarChart3 },
-  { id: 'agent-pages', label: 'My SAA Pages', icon: FileUser },
+  { id: 'agent-page', label: 'Agent Page', icon: UserCircle },
+  { id: 'linktree', label: 'Linktree', icon: LinkIcon },
   { id: 'calls', label: 'Team Calls', icon: Video },
   { id: 'templates', label: 'Templates', icon: Megaphone },
   { id: 'courses', label: 'Elite Courses', icon: GraduationCap },
@@ -125,8 +125,8 @@ const navItems: NavItem[] = [
 type CardSize = 'hero' | 'featured' | 'standard' | 'compact';
 const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string; accentColor?: string; comingSoon?: boolean }[] = [
   { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15', accentColor: '#ffd700' },
-  { id: 'market-stats', title: 'Market Stats', description: 'Custom market stats for emails', icon: BarChart3, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7', comingSoon: true },
-  { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
+  { id: 'agent-page', title: 'Agent Page', description: 'Your personal recruitment page', icon: UserCircle, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7' },
+  { id: 'linktree', title: 'Linktree', description: 'Your customizable link page', icon: LinkIcon, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard', accentColor: '#ffd700' },
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
   { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard', accentColor: '#ffd700' },
@@ -1167,10 +1167,10 @@ export default function AgentPortal() {
               <span className="md:hidden text-[#ffd700] font-semibold text-sm">
                 {activeSection === 'dashboard' && 'Home'}
                 {activeSection === 'support' && 'Get Support'}
-                {activeSection === 'agent-pages' && 'My Pages'}
+                {activeSection === 'agent-page' && 'Agent Page'}
+                {activeSection === 'linktree' && 'Linktree'}
                 {activeSection === 'calls' && 'Team Calls'}
                 {activeSection === 'courses' && 'Courses'}
-                {activeSection === 'start-here' && 'Start Here'}
                 {activeSection === 'templates' && 'Templates'}
                 {activeSection === 'production' && 'Production'}
                 {activeSection === 'revshare' && 'RevShare'}
@@ -1217,7 +1217,7 @@ export default function AgentPortal() {
             { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
             { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
             { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
-            { id: 'agent-pages' as SectionId, label: 'Pages', Icon: FileUser },
+            { id: 'linktree' as SectionId, label: 'Linktree', Icon: LinkIcon },
             { id: 'profile' as SectionId, label: 'Profile', Icon: User },
           ].map((item, index, arr) => {
             const isActive = activeSection === item.id;
@@ -1664,8 +1664,8 @@ export default function AgentPortal() {
               </div>
             )}
 
-            {/* My Agent Pages */}
-            {activeSection === 'agent-pages' && (
+            {/* Agent Page Section */}
+            {activeSection === 'agent-page' && (
               <AgentPagesSection
                 user={user}
                 setUser={setUser}
@@ -1689,6 +1689,36 @@ export default function AgentPortal() {
                 attractionUploadError={attractionUploadError}
                 setAttractionUploadStatus={setAttractionUploadStatus}
                 setAttractionUploadError={setAttractionUploadError}
+                initialTab="attraction"
+              />
+            )}
+
+            {/* Linktree Section */}
+            {activeSection === 'linktree' && (
+              <AgentPagesSection
+                user={user}
+                setUser={setUser}
+                contrastLevel={contrastLevel}
+                setContrastLevel={setContrastLevel}
+                applyBWContrastFilter={applyBWContrastFilter}
+                originalImageFile={originalImageFile}
+                setOriginalImageFile={setOriginalImageFile}
+                setPendingImageFile={setPendingImageFile}
+                setPendingImageUrl={setPendingImageUrl}
+                setPendingImageDimensions={setPendingImageDimensions}
+                setPreviewContrastLevel={setPreviewContrastLevel}
+                setCropArea={setCropArea}
+                setShowImageEditor={setShowImageEditor}
+                setDashboardUploadStatus={setDashboardUploadStatus}
+                setPendingBgRemovedUrl={setPendingBgRemovedUrl}
+                setIsRemovingBackground={setIsRemovingBackground}
+                setBgRemovalProgress={setBgRemovalProgress}
+                setUploadSource={setUploadSource}
+                attractionUploadStatus={attractionUploadStatus}
+                attractionUploadError={attractionUploadError}
+                setAttractionUploadStatus={setAttractionUploadStatus}
+                setAttractionUploadError={setAttractionUploadError}
+                initialTab="design"
               />
             )}
           </div>
@@ -3803,6 +3833,9 @@ interface AgentPageData {
   activated_at: string | null;
 }
 
+// Tab types for agent pages section
+type AgentPagesTabId = 'profile' | 'design' | 'links' | 'attraction';
+
 interface AgentPagesSectionProps {
   user: UserData;
   setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
@@ -3827,6 +3860,7 @@ interface AgentPagesSectionProps {
   attractionUploadError: string | null;
   setAttractionUploadStatus: React.Dispatch<React.SetStateAction<string | null>>;
   setAttractionUploadError: React.Dispatch<React.SetStateAction<string | null>>;
+  initialTab?: AgentPagesTabId;
 }
 
 function AgentPagesSection({
@@ -3852,6 +3886,7 @@ function AgentPagesSection({
   attractionUploadError,
   setAttractionUploadStatus,
   setAttractionUploadError,
+  initialTab = 'profile',
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -3889,9 +3924,8 @@ function AgentPagesSection({
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showStylesModal, setShowStylesModal] = useState(false);
 
-  // Tab navigation state for new UI
-  type TabId = 'profile' | 'design' | 'links' | 'attraction';
-  const [activeTab, setActiveTab] = useState<TabId>('profile');
+  // Tab navigation state for new UI - uses initialTab from props
+  const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
 
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'attraction' | null>(null);
