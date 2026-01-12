@@ -123,17 +123,17 @@ const navItems: NavItem[] = [
 // size: 'featured' = large card (spans 2 cols), 'standard' = normal card, 'compact' = smaller card
 // 'hero' = extra prominent card for support
 type CardSize = 'hero' | 'featured' | 'standard' | 'compact';
-const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string }[] = [
-  { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15' },
-  { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket, size: 'featured', gradient: 'from-amber-500/20 to-orange-600/10' },
-  { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-emerald-500/20 to-[#00ff88]/10' },
-  { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard' },
-  { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard' },
-  { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard' },
-  { id: 'production', title: 'Production', description: 'Landing pages & drips', icon: Users, size: 'standard' },
-  { id: 'revshare', title: 'RevShare', description: 'Grow your downline', icon: DollarSign, size: 'compact' },
-  { id: 'exp-links', title: 'eXp Links', description: 'Questions & resources', icon: Link2, size: 'compact' },
-  { id: 'new-agents', title: 'New Agents', description: 'Info for new agents', icon: PersonStanding, size: 'compact' },
+const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string; accentColor?: string }[] = [
+  { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15', accentColor: '#ffd700' },
+  { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7' },
+  { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
+  { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard', accentColor: '#ffd700' },
+  { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
+  { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard', accentColor: '#ffd700' },
+  { id: 'production', title: 'Production', description: 'Landing pages & drips', icon: Users, size: 'standard', accentColor: '#ffd700' },
+  { id: 'revshare', title: 'RevShare', description: 'Grow your downline', icon: DollarSign, size: 'compact', accentColor: '#ffd700' },
+  { id: 'exp-links', title: 'eXp Links', description: 'Questions & resources', icon: Link2, size: 'compact', accentColor: '#ffd700' },
+  { id: 'new-agents', title: 'New Agents', description: 'Info for new agents', icon: PersonStanding, size: 'compact', accentColor: '#ffd700' },
 ];
 
 // Rewrite asset URLs to use CDN for edge caching
@@ -1194,9 +1194,9 @@ export default function AgentPortal() {
         className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
-        {/* Solid background - no transparency to prevent color shifting */}
-        <div className="absolute inset-0 bg-[#0a0a0a]" />
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-[#ffd700]/30" />
+        {/* Solid background with rounded top corners */}
+        <div className="absolute inset-0 bg-[#0a0a0a] rounded-t-2xl" />
+        <div className="absolute inset-x-0 top-0 h-[1px] bg-[#ffd700]/30 rounded-t-2xl" />
 
         <div
           className="relative flex items-center h-16 px-1"
@@ -2369,10 +2369,11 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
         </button>
       )}
 
-      {/* Featured Cards Row - Large cards with gradients */}
+      {/* Featured Cards Row - Large cards with gradients and custom accent colors */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {featuredCards.map((card) => {
           const IconComponent = card.icon;
+          const accent = card.accentColor || '#ffd700';
           return (
             <button
               key={card.id}
@@ -2380,32 +2381,51 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
               className="text-left group relative"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <div className={`
-                relative p-5 sm:p-6 rounded-2xl border border-white/10
-                bg-gradient-to-br ${card.gradient || 'from-white/10 to-white/5'}
-                transition-all duration-300 ease-out
-                hover:border-[#ffd700]/40 hover:shadow-lg hover:shadow-[#ffd700]/10
-                hover:scale-[1.02]
-                group-active:scale-[0.98]
-                overflow-hidden
-              `}
-              style={{ backgroundColor: 'rgba(10,10,10,0.95)' }}
+              <div
+                className={`
+                  relative p-5 sm:p-6 rounded-2xl
+                  bg-gradient-to-br ${card.gradient || 'from-white/10 to-white/5'}
+                  transition-all duration-300 ease-out
+                  hover:scale-[1.02]
+                  group-active:scale-[0.98]
+                  overflow-hidden
+                `}
+                style={{
+                  backgroundColor: 'rgba(10,10,10,0.95)',
+                  border: `1px solid ${accent}30`,
+                  boxShadow: `0 0 0 1px ${accent}10`,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.border = `1px solid ${accent}60`;
+                  e.currentTarget.style.boxShadow = `0 8px 32px ${accent}20`;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.border = `1px solid ${accent}30`;
+                  e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}10`;
+                }}
               >
                 {/* Subtle shine effect */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
 
                 <div className="relative flex flex-col items-center text-center space-y-3">
-                  {/* Icon container with glow */}
-                  <div className="relative p-4 rounded-xl bg-black/40 border border-white/10 group-hover:border-[#ffd700]/30 transition-all duration-300">
-                    <Icon3D>
+                  {/* Icon container with accent color glow */}
+                  <div
+                    className="relative p-4 rounded-xl transition-all duration-300"
+                    style={{
+                      backgroundColor: `${accent}15`,
+                      border: `1px solid ${accent}30`,
+                    }}
+                  >
+                    <Icon3D color={accent}>
                       <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 group-hover:scale-110 transition-transform duration-300" />
                     </Icon3D>
-                    {/* Icon glow */}
-                    <div className="absolute inset-0 rounded-xl bg-[#ffd700]/0 group-hover:bg-[#ffd700]/5 transition-colors duration-300" />
                   </div>
 
                   <div className="space-y-1">
-                    <h3 className="text-base sm:text-lg font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300">
+                    <h3
+                      className="text-base sm:text-lg font-semibold transition-colors duration-300"
+                      style={{ color: accent }}
+                    >
                       {card.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#e5e4dd]/60 leading-snug">
@@ -2423,6 +2443,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {standardCards.map((card) => {
           const IconComponent = card.icon;
+          const accent = card.accentColor || '#ffd700';
           return (
             <button
               key={card.id}
@@ -2444,7 +2465,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                 <div className="flex flex-col items-center text-center space-y-2.5">
                   {/* Centered icon with subtle background */}
                   <div className="p-2.5 rounded-lg bg-[#ffd700]/5 group-hover:bg-[#ffd700]/10 transition-colors duration-300">
-                    <Icon3D>
+                    <Icon3D color={accent}>
                       <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform duration-300" />
                     </Icon3D>
                   </div>
@@ -2468,6 +2489,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
       <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {compactCards.map((card) => {
           const IconComponent = card.icon;
+          const accent = card.accentColor || '#ffd700';
           return (
             <button
               key={card.id}
@@ -2487,7 +2509,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                 style={{ backgroundColor: 'rgba(15,15,15,0.95)' }}
               >
                 <div className="flex flex-col items-center text-center space-y-1.5">
-                  <Icon3D>
+                  <Icon3D color={accent}>
                     <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
                   </Icon3D>
                   <h3 className="text-xs sm:text-sm font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300 leading-tight">
