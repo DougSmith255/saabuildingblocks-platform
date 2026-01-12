@@ -18,8 +18,8 @@
 import { useState, useEffect, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Lock, Rocket, Gauge, Mail, Zap, Users } from 'lucide-react';
-import { useUserRole, RoleBadge, canAccessTokenVault } from '@/lib/rbac';
+import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Rocket, Zap, Users } from 'lucide-react';
+import { useUserRole, RoleBadge } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
 const TypographyTab = dynamicImport(() => import('./components/tabs/TypographyTab').then(mod => ({ default: mod.TypographyTab })), {
@@ -47,24 +47,9 @@ const TemplatesTab = dynamicImport(() => import('./components/tabs/TemplatesTab'
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Templates tab...</div>
 });
 
-const TokenVaultTab = dynamicImport(() => import('./components/TokenVault/TokenVaultTab').then(mod => ({ default: mod.TokenVaultTab })), {
-  ssr: false,
-  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Token Vault tab...</div>
-});
-
 const DeploymentTab = dynamicImport(() => import('./components/tabs/DeploymentTab').then(mod => ({ default: mod.DeploymentTab })), {
   ssr: false,
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Deployment tab...</div>
-});
-
-const WebPerformanceTab = dynamicImport(() => import('./components/tabs/WebPerformanceTab').then(mod => ({ default: mod.WebPerformanceTab })), {
-  ssr: false,
-  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Web Performance tab...</div>
-});
-
-const EmailAutomationsTab = dynamicImport(() => import('./components/tabs/EmailAutomationsTab').then(mod => ({ default: mod.EmailAutomationsTab })), {
-  ssr: false,
-  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Email Automations tab...</div>
 });
 
 const AutomationsTab = dynamicImport(() => import('./components/tabs/AutomationsTab').then(mod => ({ default: mod.AutomationsTab })), {
@@ -82,7 +67,7 @@ import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
 
-type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'vault' | 'deployment' | 'performance' | 'email-automations' | 'automations' | 'users';
+type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'deployment' | 'automations' | 'users';
 
 function MasterControllerContent() {
   const router = useRouter();
@@ -91,7 +76,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'typography'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'vault', 'deployment', 'performance', 'email-automations', 'automations', 'users'];
+    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'deployment', 'automations', 'users'];
     return (tabParam && validTabs.includes(tabParam as TabId)) ? tabParam as TabId : 'typography';
   });
 
@@ -116,11 +101,8 @@ function MasterControllerContent() {
     { id: 'spacing' as TabId, label: 'Spacing', icon: LayoutGrid },
     { id: 'templates' as TabId, label: 'Templates', icon: FileCode },
     { id: 'components' as TabId, label: 'Components', icon: Layers },
-    { id: 'email-automations' as TabId, label: 'Email Automations', icon: Mail },
     { id: 'automations' as TabId, label: 'Automations', icon: Zap },
-    { id: 'vault' as TabId, label: 'Token Vault', icon: Lock },
     { id: 'deployment' as TabId, label: 'Deployment', icon: Rocket },
-    { id: 'performance' as TabId, label: 'Web Performance', icon: Gauge },
     { id: 'users' as TabId, label: 'Users', icon: Users },
   ];
 
@@ -137,7 +119,7 @@ function MasterControllerContent() {
         </div>
         <p className="text-[#dcdbd5]">
           {role === 'admin'
-            ? 'Full admin access: Control typography, colors, spacing, templates, and Token Vault.'
+            ? 'Full admin access: Control typography, colors, spacing, templates, and deployments.'
             : 'Read-only access: View Master Controller settings. Contact admin for edit access.'}
         </p>
       </div>
@@ -233,15 +215,9 @@ function MasterControllerContent() {
 
         {activeTab === 'components' && <ComponentsTab />}
 
-        {activeTab === 'email-automations' && <EmailAutomationsTab />}
-
         {activeTab === 'automations' && <AutomationsTab />}
 
-        {activeTab === 'vault' && <TokenVaultTab />}
-
         {activeTab === 'deployment' && <DeploymentTab />}
-
-        {activeTab === 'performance' && <WebPerformanceTab />}
 
         {activeTab === 'users' && <UserManagementTab />}
       </div>
