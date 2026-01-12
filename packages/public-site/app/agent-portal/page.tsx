@@ -3380,6 +3380,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
 function TemplateCard({ template }: { template: CombinedTemplate }) {
   const hasVariants = !!(template.urlW && template.urlB);
   const [selectedVariant, setSelectedVariant] = useState<'W' | 'B'>('W');
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Get current preview and URL based on selection
   const getCurrentPreview = () => {
@@ -3399,6 +3400,11 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
 
   const currentPreview = getCurrentPreview();
   const currentUrl = getCurrentUrl();
+
+  // Reset loaded state when variant changes
+  useEffect(() => {
+    setImageLoaded(false);
+  }, [selectedVariant]);
 
   return (
     <div
@@ -3422,8 +3428,11 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
             `}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             alt={template.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-300 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
             loading="lazy"
+            onLoad={() => setImageLoaded(true)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
