@@ -1129,6 +1129,179 @@ export default function AgentPortal() {
   }
 
   return (
+    <>
+    {/* Loading Screen - Must be OUTSIDE main to not inherit visibility:hidden */}
+    {showLoadingScreen && (
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100vw',
+          height: '100dvh',
+          zIndex: 99999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: isLoadingFadingOut ? 0 : 1,
+          transition: 'opacity 0.8s ease-out',
+          pointerEvents: isLoadingFadingOut ? 'none' : 'auto',
+        }}
+      >
+        {/* Glass shimmer background - full screen */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+          {/* Glass base with corrugated effect */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `
+                radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
+                linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px)
+              `,
+              filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
+            }}
+          />
+          {/* Scan lines */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 255, 255, 0.02) 2px,
+                rgba(255, 255, 255, 0.02) 4px
+              )`,
+              pointerEvents: 'none',
+            }}
+          />
+          {/* Shimmer animation */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: `linear-gradient(
+                45deg,
+                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.20) 25%,
+                rgba(255, 255, 255, 0.35) 50%,
+                rgba(255, 255, 255, 0.18) 75%,
+                rgba(255, 255, 255, 0.08) 100%
+              )`,
+              backgroundSize: '400% 400%',
+              opacity: 0.5,
+              mixBlendMode: 'overlay',
+              animation: 'loadingShimmer 6s ease-in-out infinite',
+            }}
+          />
+        </div>
+
+        {/* Content - centered */}
+        <div
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '2rem',
+          }}
+        >
+          {/* Logo with breathing glow */}
+          <div
+            style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            {/* Breathing glow behind logo */}
+            <div
+              style={{
+                position: 'absolute',
+                width: '280px',
+                height: '140px',
+                background: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.1) 40%, transparent 70%)',
+                filter: 'blur(20px)',
+                animation: 'loadingBreathe 3s ease-in-out infinite',
+              }}
+            />
+            {/* SAA Logo */}
+            <img
+              src="/images/saa-logo-gold.png"
+              alt="SAA Logo"
+              style={{
+                position: 'relative',
+                width: '200px',
+                height: 'auto',
+              }}
+            />
+          </div>
+
+          {/* Loading bar */}
+          <div
+            style={{
+              width: '200px',
+              height: '4px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '2px',
+              overflow: 'hidden',
+              position: 'relative',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                width: '30%',
+                height: '100%',
+                background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
+                animation: 'loadingBar 1.5s ease-in-out infinite',
+              }}
+            />
+          </div>
+
+          {/* Loading message */}
+          <p
+            style={{
+              color: 'rgba(255, 255, 255, 0.6)',
+              fontSize: '14px',
+              fontWeight: 300,
+              letterSpacing: '0.1em',
+              animation: 'loadingMessage 2s ease-in-out infinite',
+            }}
+          >
+            Loading Portal...
+          </p>
+        </div>
+
+        <style>{`
+          @keyframes loadingShimmer {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+          }
+          @keyframes loadingBreathe {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+          }
+          @keyframes loadingBar {
+            0% { left: -30%; }
+            100% { left: 100%; }
+          }
+          @keyframes loadingMessage {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+          }
+        `}</style>
+      </div>
+    )}
+
     <main
       id="main-content"
       className="agent-portal-root min-h-screen"
@@ -2372,180 +2545,8 @@ export default function AgentPortal() {
         </div>
       )}
 
-      {/* Loading Screen Overlay - Fades out like a veil lifting to reveal the dashboard */}
-      {showLoadingScreen && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100vw',
-            height: '100dvh',
-            zIndex: 99999,
-            background: 'rgb(12, 12, 12)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            opacity: isLoadingFadingOut ? 0 : 1,
-            transition: 'opacity 0.8s ease-out',
-            pointerEvents: isLoadingFadingOut ? 'none' : 'auto',
-          }}
-        >
-          {/* Glass shimmer background */}
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-            {/* Glass base with corrugated effect */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `
-                  radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
-                  linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
-                  repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px)
-                `,
-                filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
-              }}
-            />
-            {/* Scan lines */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `repeating-linear-gradient(
-                  0deg,
-                  transparent,
-                  transparent 2px,
-                  rgba(255, 255, 255, 0.02) 2px,
-                  rgba(255, 255, 255, 0.02) 4px
-                )`,
-                pointerEvents: 'none',
-              }}
-            />
-            {/* Shimmer animation */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `linear-gradient(
-                  45deg,
-                  rgba(255, 255, 255, 0.08) 0%,
-                  rgba(255, 255, 255, 0.20) 25%,
-                  rgba(255, 255, 255, 0.35) 50%,
-                  rgba(255, 255, 255, 0.18) 75%,
-                  rgba(255, 255, 255, 0.08) 100%
-                )`,
-                backgroundSize: '400% 400%',
-                opacity: 0.5,
-                mixBlendMode: 'overlay',
-                animation: 'shimmerSlide 6s ease-in-out infinite',
-              }}
-            />
-          </div>
-
-          {/* Content - centered */}
-          <div
-            style={{
-              position: 'relative',
-              zIndex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '2rem',
-            }}
-          >
-            {/* Logo with breathing glow */}
-            <div
-              style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {/* Breathing glow behind logo */}
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '280px',
-                  height: '140px',
-                  background: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.1) 40%, transparent 70%)',
-                  filter: 'blur(20px)',
-                  animation: 'breatheGlow 3s ease-in-out infinite',
-                }}
-              />
-              {/* SAA Logo */}
-              <img
-                src="/images/saa-logo-gold.png"
-                alt="SAA Logo"
-                style={{
-                  position: 'relative',
-                  width: '200px',
-                  height: 'auto',
-                }}
-              />
-            </div>
-
-            {/* Loading bar */}
-            <div
-              style={{
-                width: '200px',
-                height: '4px',
-                background: 'rgba(255, 255, 255, 0.1)',
-                borderRadius: '2px',
-                overflow: 'hidden',
-                position: 'relative',
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '30%',
-                  height: '100%',
-                  background: 'linear-gradient(90deg, transparent, #ffd700, transparent)',
-                  animation: 'loadingSlide 1.5s ease-in-out infinite',
-                }}
-              />
-            </div>
-
-            {/* Loading message */}
-            <p
-              style={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                fontSize: '14px',
-                fontWeight: 300,
-                letterSpacing: '0.1em',
-                animation: 'messageFade 2s ease-in-out infinite',
-              }}
-            >
-              Loading Portal...
-            </p>
-          </div>
-
-          <style>{`
-            @keyframes shimmerSlide {
-              0% { background-position: 0% 0%; }
-              50% { background-position: 100% 100%; }
-              100% { background-position: 0% 0%; }
-            }
-            @keyframes breatheGlow {
-              0%, 100% { opacity: 0.6; transform: scale(1); }
-              50% { opacity: 1; transform: scale(1.2); }
-            }
-            @keyframes loadingSlide {
-              0% { left: -30%; }
-              100% { left: 100%; }
-            }
-            @keyframes messageFade {
-              0%, 100% { opacity: 0.6; }
-              50% { opacity: 1; }
-            }
-          `}</style>
-        </div>
-      )}
-
     </main>
+    </>
   );
 }
 
