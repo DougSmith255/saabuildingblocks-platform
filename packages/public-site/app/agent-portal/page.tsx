@@ -4771,11 +4771,11 @@ function AgentPagesSection({
           </div>
         )}
 
-        {/* Desktop: 3-column layout with preview on right. Mobile: stacked with preview on top */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_280px] lg:grid-cols-[1fr_280px] gap-6">
+        {/* Desktop: 4-column layout - Profile | Design/Links | Links | Preview. Mobile: stacked */}
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_200px] xl:grid-cols-[240px_1fr_1fr_200px] 2xl:grid-cols-[260px_1fr_1fr_220px] gap-4 xl:gap-5">
 
-          {/* PREVIEW COLUMN - Sticky phone mockup on right for desktop, top for mobile */}
-          <div className="xl:col-start-3 lg:col-start-2 xl:row-span-2 lg:sticky lg:top-6 lg:self-start order-first lg:order-last">
+          {/* PREVIEW COLUMN - Narrow sticky phone mockup on far right */}
+          <div className="lg:col-start-3 xl:col-start-4 lg:row-span-3 lg:sticky lg:top-4 lg:self-start order-first lg:order-last">
             <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
               {/* Preview Header */}
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
@@ -4786,12 +4786,12 @@ function AgentPagesSection({
               </div>
 
               {/* Preview Content - Linktree preview */}
-              <div className="p-4 pb-6">
+              <div className="p-3 pb-4">
                   {/* Linktree Preview */}
-                  <div className="flex flex-col items-center gap-4 max-w-[260px] mx-auto">
+                  <div className="flex flex-col items-center gap-3 max-w-[180px] mx-auto">
                     {/* Profile Photo */}
                     <div
-                      className="w-24 h-24 rounded-full border-2 flex items-center justify-center overflow-hidden"
+                      className="w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden"
                       style={{ borderColor: linksSettings.accentColor, backgroundColor: 'rgba(0,0,0,0.5)' }}
                     >
                       {getProfileImageUrl() ? (
@@ -4801,13 +4801,13 @@ function AgentPagesSection({
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <span className="text-4xl">👤</span>
+                        <span className="text-2xl">👤</span>
                       )}
                     </div>
 
                     {/* Name with Neon Effect - matches H1 glow framework from master controller */}
                     <span
-                      className="font-bold text-xl text-center"
+                      className="font-bold text-sm text-center"
                       style={{
                         color: linksSettings.accentColor,
                         fontFamily: 'var(--font-taskor, sans-serif)',
@@ -4842,37 +4842,37 @@ function AgentPagesSection({
                       </p>
                     )}
 
-                    {/* Social Icons */}
+                    {/* Social Icons - Compact */}
                     {filledSocialLinks > 0 && (
-                      <div className="flex gap-2 flex-wrap justify-center">
+                      <div className="flex gap-1.5 flex-wrap justify-center">
                         {formData.facebook_url && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
                           </div>
                         )}
                         {formData.instagram_url && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
                           </div>
                         )}
                         {formData.twitter_url && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                           </div>
                         )}
                         {formData.youtube_url && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
                           </div>
                         )}
                         {formData.tiktok_url && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
                           </div>
                         )}
                         {formData.linkedin_url && (
-                          <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-3.5 h-3.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
                           </div>
                         )}
                       </div>
@@ -4892,7 +4892,7 @@ function AgentPagesSection({
                     )}
 
                     {/* Sample Buttons */}
-                    <div className="w-full space-y-2">
+                    <div className="w-full space-y-1.5">
                       {/* Render buttons in linkOrder */}
                       {(() => {
                         const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
@@ -4919,20 +4919,20 @@ function AgentPagesSection({
                             return (
                               <div
                                 key="join-team"
-                                className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
+                                className="w-full py-1.5 px-3 rounded text-[10px] font-medium relative"
                                 style={{
                                   backgroundColor: linksSettings.accentColor,
                                   color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                                   fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
                                 }}
                               >
-                                <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-2.5 h-2.5 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                                   <circle cx="9" cy="7" r="4" />
                                   <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
                                   <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                                 </svg>
-                                <span className="block text-center text-xs">Join my Team</span>
+                                <span className="block text-center">Join my Team</span>
                               </div>
                             );
                           }
@@ -4941,19 +4941,19 @@ function AgentPagesSection({
                             return (
                               <div
                                 key="learn-about"
-                                className="w-full py-2 px-4 rounded-lg text-sm font-medium relative"
+                                className="w-full py-1.5 px-3 rounded text-[10px] font-medium relative"
                                 style={{
                                   backgroundColor: linksSettings.accentColor,
                                   color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                                   fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
                                 }}
                               >
-                                <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-2.5 h-2.5 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <circle cx="12" cy="12" r="10" />
                                   <path d="M12 16v-4" />
                                   <path d="M12 8h.01" />
                                 </svg>
-                                <span className="block text-center text-xs">Learn About my Team</span>
+                                <span className="block text-center">Learn About Team</span>
                               </div>
                             );
                           }
@@ -4963,7 +4963,7 @@ function AgentPagesSection({
                           return (
                             <div
                               key={linkId}
-                              className="w-full py-2 px-4 rounded-lg text-xs font-medium relative"
+                              className="w-full py-1.5 px-3 rounded text-[10px] font-medium relative"
                               style={{
                                 backgroundColor: linksSettings.accentColor,
                                 color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
@@ -4971,7 +4971,7 @@ function AgentPagesSection({
                               }}
                             >
                               {iconPath && (
-                                <svg className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <svg className="w-2.5 h-2.5 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d={iconPath} />
                                 </svg>
                               )}
@@ -4986,30 +4986,28 @@ function AgentPagesSection({
             </div>
           </div>
 
-          {/* SETTINGS COLUMNS - Spans 2 columns on XL, 1 on LG */}
-          <div className="xl:col-span-2 lg:col-span-1 order-last lg:order-first">
+          {/* PROFILE COLUMN - Fixed width on left */}
+          <div className="lg:col-start-1 order-last lg:order-first">
             {/* Page Status & Link */}
             {pageData.activated && (
-              <div className="mb-6 p-4 rounded-xl bg-green-500/5 border border-green-500/20">
-                <div className="flex items-center justify-between flex-wrap gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-sm font-medium text-green-400">Your Linktree is live</span>
-                  </div>
-                  <a
-                    href={linktreeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-sm font-medium hover:scale-[1.02]"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" />
-                      <line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
-                    View Linktree
-                  </a>
+              <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-xs font-medium text-green-400">Linktree Live</span>
                 </div>
+                <a
+                  href={linktreeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                    <polyline points="15 3 21 3 21 9" />
+                    <line x1="10" y1="14" x2="21" y2="3" />
+                  </svg>
+                  View Page
+                </a>
               </div>
             )}
 
@@ -5063,17 +5061,15 @@ function AgentPagesSection({
               </div>
             </div>
 
-            {/* Tab Content - Desktop: 2-column grid for settings, Mobile: tabs */}
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-              {/* PROFILE SECTION */}
-              <div className={`space-y-4 ${activeTab === 'profile' ? '' : 'hidden lg:block'}`}>
-                {/* Section Header */}
-                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-                  <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  <h3 className="text-sm font-semibold text-[#22c55e]">Profile</h3>
-                </div>
+            {/* PROFILE SECTION - stays in this column on desktop */}
+            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden lg:block'}`}>
+              {/* Section Header */}
+              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Profile</h3>
+              </div>
                   {/* Profile Image - Compact */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                     <div className="flex items-start gap-4">
@@ -5222,571 +5218,499 @@ function AgentPagesSection({
                     )}
                   </div>
 
-                  {/* Social Links - Collapsible */}
-                  <div className="rounded-lg bg-black/20 border border-white/10 overflow-hidden">
-                    <button
-                      type="button"
-                      onClick={() => toggleSection('socialLinks')}
-                      className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
-                    >
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium text-[#ffd700]">Social Links</h4>
-                        <span className="text-xs text-[#e5e4dd]/40">{filledSocialLinks} of 6</span>
-                      </div>
-                      <svg
-                        className={`w-4 h-4 text-[#e5e4dd]/40 transition-transform ${expandedSections.socialLinks ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                    {expandedSections.socialLinks && (
-                      <div className="px-4 pb-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Facebook</label>
-                          <input
-                            type="url"
-                            value={formData.facebook_url}
-                            onChange={(e) => handleInputChange('facebook_url', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                            placeholder="https://facebook.com/..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Instagram</label>
-                          <input
-                            type="url"
-                            value={formData.instagram_url}
-                            onChange={(e) => handleInputChange('instagram_url', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                            placeholder="https://instagram.com/..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">X (Twitter)</label>
-                          <input
-                            type="url"
-                            value={formData.twitter_url}
-                            onChange={(e) => handleInputChange('twitter_url', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                            placeholder="https://x.com/..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">YouTube</label>
-                          <input
-                            type="url"
-                            value={formData.youtube_url}
-                            onChange={(e) => handleInputChange('youtube_url', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                            placeholder="https://youtube.com/@..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">TikTok</label>
-                          <input
-                            type="url"
-                            value={formData.tiktok_url}
-                            onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                            placeholder="https://tiktok.com/@..."
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">LinkedIn</label>
-                          <input
-                            type="url"
-                            value={formData.linkedin_url}
-                            onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                            placeholder="https://linkedin.com/in/..."
+                  {/* Social Links - Always visible grid */}
+                  <div className="p-3 rounded-lg bg-black/20 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <h4 className="text-xs font-medium text-[#ffd700]">Social Links</h4>
+                      <span className="text-[10px] text-[#e5e4dd]/40">{filledSocialLinks}/6</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input
+                        type="url"
+                        value={formData.facebook_url}
+                        onChange={(e) => handleInputChange('facebook_url', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="Facebook URL"
+                      />
+                      <input
+                        type="url"
+                        value={formData.instagram_url}
+                        onChange={(e) => handleInputChange('instagram_url', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="Instagram URL"
+                      />
+                      <input
+                        type="url"
+                        value={formData.twitter_url}
+                        onChange={(e) => handleInputChange('twitter_url', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="X (Twitter) URL"
+                      />
+                      <input
+                        type="url"
+                        value={formData.youtube_url}
+                        onChange={(e) => handleInputChange('youtube_url', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="YouTube URL"
+                      />
+                      <input
+                        type="url"
+                        value={formData.tiktok_url}
+                        onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="TikTok URL"
+                      />
+                      <input
+                        type="url"
+                        value={formData.linkedin_url}
+                        onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
+                        className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="LinkedIn URL"
+                      />
+                    </div>
+                  </div>
+            </div> {/* End PROFILE SECTION */}
+          </div> {/* End PROFILE COLUMN */}
+
+          {/* DESIGN & LINKS COLUMN - Middle column(s) */}
+          <div className="xl:col-start-2 xl:col-span-2 lg:col-start-2 space-y-4">
+            {/* DESIGN SECTION */}
+            <div className={`space-y-3 ${activeTab === 'design' ? '' : 'hidden lg:block'}`}>
+              {/* Section Header */}
+              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Design</h3>
+              </div>
+              {/* Bio + Color + Style in a responsive grid */}
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
+                {/* Bio */}
+                <div className="p-3 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-xs font-medium text-[#22c55e] mb-1.5">Bio</h4>
+                  <div className="relative">
+                    <textarea
+                      value={linksSettings.bio}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 80) {
+                          setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                          setHasUnsavedChanges(true);
+                        }
+                      }}
+                      className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#22c55e]/50 focus:outline-none transition-colors resize-none"
+                      rows={3}
+                      placeholder="Short description..."
+                    />
+                    <span className={`absolute bottom-1 right-1.5 text-[10px] ${
+                      linksSettings.bio.length >= 80 ? 'text-red-400' :
+                      linksSettings.bio.length >= 60 ? 'text-yellow-400' :
+                      'text-[#e5e4dd]/30'
+                    }`}>
+                      {linksSettings.bio.length}/80
+                    </span>
+                  </div>
+                </div>
+
+                {/* Accent Color */}
+                <div className="p-3 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-xs font-medium text-[#22c55e] mb-1.5">Accent Color</h4>
+                  <div className="space-y-2">
+                    {/* Color Preview & Hex Input */}
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowColorPicker(!showColorPicker)}
+                        className="w-8 h-8 rounded cursor-pointer border border-white/20 transition-all hover:border-white/40 hover:scale-105"
+                        style={{ backgroundColor: linksSettings.accentColor }}
+                        title="Open picker"
+                      />
+                      <input
+                        type="text"
+                        value={linksSettings.accentColor}
+                        onChange={(e) => {
+                          const hex = e.target.value;
+                          if (/^#[0-9A-Fa-f]{0,6}$/.test(hex) || hex === '') {
+                            setLinksSettings(prev => ({ ...prev, accentColor: hex || '#' }));
+                            setHasUnsavedChanges(true);
+                          }
+                        }}
+                        className="flex-1 px-2 py-1 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs font-mono focus:border-[#22c55e]/50 focus:outline-none transition-colors"
+                        placeholder="#ffd700"
+                      />
+                    </div>
+
+                    {/* Full Color Picker */}
+                    {showColorPicker && (
+                      <div className="relative">
+                        <div className="fixed inset-0 z-40" onClick={() => setShowColorPicker(false)} />
+                        <div className="relative z-50 rounded overflow-hidden shadow-xl border border-white/20">
+                          <ChromePicker
+                            color={linksSettings.accentColor}
+                            onChange={(color: ColorResult) => {
+                              setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
+                              setHasUnsavedChanges(true);
+                            }}
+                            disableAlpha={true}
+                            styles={{
+                              default: {
+                                picker: { background: '#1a1a1a', boxShadow: 'none', width: '100%' },
+                                body: { padding: '8px' },
+                              },
+                            }}
                           />
                         </div>
                       </div>
                     )}
-                  </div>
-              </div>
 
-              {/* DESIGN SECTION */}
-              <div className={`space-y-4 ${activeTab === 'design' ? '' : 'hidden lg:block'}`}>
-                {/* Section Header */}
-                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-                  <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
-                  </svg>
-                  <h3 className="text-sm font-semibold text-[#22c55e]">Design</h3>
-                </div>
-                  {/* Bio */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#22c55e] mb-2">Bio</h4>
-                    <p className="text-xs text-[#e5e4dd]/50 mb-2">Short description below your name</p>
-                    <div className="relative">
-                      <textarea
-                        value={linksSettings.bio}
-                        onChange={(e) => {
-                          if (e.target.value.length <= 80) {
-                            setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                    {/* Quick Presets - 2 rows */}
+                    <div className="flex flex-wrap gap-1">
+                      {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81', '#f472b6', '#38bdf8', '#fb923c', '#4ade80'].map(color => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => {
+                            setLinksSettings(prev => ({ ...prev, accentColor: color }));
                             setHasUnsavedChanges(true);
-                          }
-                        }}
-                        className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#22c55e]/50 focus:outline-none transition-colors resize-none"
-                        rows={2}
-                        placeholder="Real estate agent helping families find their dream homes..."
-                      />
-                      <span className={`absolute bottom-2 right-2 text-xs ${
-                        linksSettings.bio.length >= 80 ? 'text-red-400' :
-                        linksSettings.bio.length >= 60 ? 'text-yellow-400' :
-                        'text-[#e5e4dd]/30'
-                      }`}>
-                        {linksSettings.bio.length}/80
-                      </span>
+                          }}
+                          className={`w-5 h-5 rounded transition-all ${
+                            linksSettings.accentColor === color ? 'ring-2 ring-white scale-110' : 'hover:scale-110'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
                     </div>
                   </div>
+                </div>
 
-                  {/* Accent Color */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#22c55e] mb-3">Accent Color</h4>
-                    <div className="space-y-3">
-                      {/* Color Preview & Hex Input */}
-                      <div className="flex items-center gap-3">
+                {/* Style Options - Compact */}
+                <div className="p-3 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-xs font-medium text-[#22c55e] mb-2">Style</h4>
+                  <div className="space-y-2">
+                    {/* Icon Style */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-[#e5e4dd]/50 w-12">Icons</span>
+                      <div className="flex gap-1 flex-1">
                         <button
                           type="button"
-                          onClick={() => setShowColorPicker(!showColorPicker)}
-                          className="w-12 h-12 rounded-xl cursor-pointer border-2 border-white/20 transition-all hover:border-white/40 hover:scale-105 shadow-lg"
-                          style={{ backgroundColor: linksSettings.accentColor }}
-                          title="Click to open color picker"
-                        />
-                        <div className="flex-1">
-                          <label className="block text-xs text-[#e5e4dd]/50 mb-1">Hex Value</label>
-                          <input
-                            type="text"
-                            value={linksSettings.accentColor}
-                            onChange={(e) => {
-                              const hex = e.target.value;
-                              if (/^#[0-9A-Fa-f]{0,6}$/.test(hex) || hex === '') {
-                                setLinksSettings(prev => ({ ...prev, accentColor: hex || '#' }));
-                                setHasUnsavedChanges(true);
-                              }
-                            }}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#22c55e]/50 focus:outline-none transition-colors"
-                            placeholder="#ffd700"
-                          />
-                        </div>
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-2 py-1 rounded text-[10px] border transition-colors ${
+                            linksSettings.iconStyle === 'light'
+                              ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-2 py-1 rounded text-[10px] border transition-colors ${
+                            linksSettings.iconStyle === 'dark'
+                              ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Dark
+                        </button>
                       </div>
+                    </div>
+                    {/* Photo Style */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-[#e5e4dd]/50 w-12">Photo</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-2 py-1 rounded text-[10px] border transition-colors ${
+                            !linksSettings.showColorPhoto
+                              ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          B&W
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-2 py-1 rounded text-[10px] border transition-colors ${
+                            linksSettings.showColorPhoto
+                              ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Color
+                        </button>
+                      </div>
+                    </div>
+                    {/* Font */}
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] text-[#e5e4dd]/50 w-12">Font</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-2 py-1 rounded text-[10px] border transition-colors ${
+                            linksSettings.font === 'synonym'
+                              ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Synonym
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-2 py-1 rounded text-[10px] border transition-colors ${
+                            linksSettings.font === 'taskor'
+                              ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Taskor
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> {/* End of Bio/Color/Style grid */}
+            </div> {/* End of Design section */}
 
-                      {/* Full Color Picker */}
-                      {showColorPicker && (
-                        <div className="relative">
-                          <div className="fixed inset-0 z-40" onClick={() => setShowColorPicker(false)} />
-                          <div className="relative z-50 rounded-xl overflow-hidden shadow-2xl border border-white/20">
-                            <ChromePicker
-                              color={linksSettings.accentColor}
-                              onChange={(color: ColorResult) => {
-                                setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
-                                setHasUnsavedChanges(true);
-                              }}
-                              disableAlpha={true}
-                              styles={{
-                                default: {
-                                  picker: {
-                                    background: '#1a1a1a',
-                                    boxShadow: 'none',
-                                    width: '100%',
-                                  },
-                                  body: {
-                                    padding: '12px',
-                                  },
-                                },
-                              }}
-                            />
-                          </div>
-                        </div>
-                      )}
+            {/* LINKS SECTION */}
+            <div className={`space-y-3 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
+              {/* Section Header */}
+              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Button Links</h3>
+              </div>
+              {/* Unified Links List - 2-column grid on larger screens */}
+              {(() => {
+                // Build ordered list of all links
+                const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
 
-                      {/* Quick Presets */}
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/50 mb-2">Quick Presets</label>
-                        <div className="flex flex-wrap gap-2">
-                          {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81', '#f472b6', '#38bdf8', '#fb923c', '#4ade80'].map(color => (
+                // Create lookup for custom links
+                const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
+
+                // Build ordered array with all links
+                const allLinkIds = [...linkOrder];
+                // Add any custom links not in linkOrder
+                customLinks.forEach(link => {
+                  if (!allLinkIds.includes(link.id)) {
+                    allLinkIds.push(link.id);
+                  }
+                });
+                // Ensure default buttons are included
+                if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+                if (!allLinkIds.includes('learn-about')) {
+                  const joinIndex = allLinkIds.indexOf('join-team');
+                  allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+                }
+
+                return (
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-2">
+                    {allLinkIds.map((linkId, index) => {
+                      const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                      const defaultButton = DEFAULT_BUTTONS.find(b => b.id === linkId);
+                      const customLink = customLinkMap.get(linkId);
+
+                      if (!isDefault && !customLink) return null;
+
+                      const label = isDefault ? defaultButton?.label : customLink?.label;
+                      const url = isDefault ? (linkId === 'join-team' ? 'Join form' : 'Your page') : customLink?.url;
+
+                      return (
+                        <div
+                          key={linkId}
+                          className={`flex items-center gap-1.5 p-2 rounded group ${
+                            isDefault
+                              ? 'bg-[#22c55e]/10 border border-[#22c55e]/30'
+                              : 'bg-black/20 border border-white/10'
+                          }`}
+                        >
+                          {/* Reorder buttons */}
+                          <div className="flex flex-col">
                             <button
-                              key={color}
                               type="button"
                               onClick={() => {
-                                setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                                if (index > 0) {
+                                  const newOrder = [...allLinkIds];
+                                  [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+                                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                                  setHasUnsavedChanges(true);
+                                }
+                              }}
+                              disabled={index === 0}
+                              className="p-0.5 hover:bg-white/10 disabled:opacity-20"
+                            >
+                              <svg className="w-2.5 h-2.5 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (index < allLinkIds.length - 1) {
+                                  const newOrder = [...allLinkIds];
+                                  [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
+                                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                                  setHasUnsavedChanges(true);
+                                }
+                              }}
+                              disabled={index === allLinkIds.length - 1}
+                              className="p-0.5 hover:bg-white/10 disabled:opacity-20"
+                            >
+                              <svg className="w-2.5 h-2.5 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          </div>
+
+                          {/* Icon */}
+                          {isDefault ? (
+                            <div className="w-5 h-5 rounded bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0">
+                              <svg className="w-2.5 h-2.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={linkId === 'join-team' ? 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'} />
+                              </svg>
+                            </div>
+                          ) : customLink?.icon && (
+                            <div className="w-5 h-5 rounded bg-[#22c55e]/10 flex items-center justify-center flex-shrink-0">
+                              <svg className="w-2.5 h-2.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={LINK_ICONS.find(i => i.name === customLink.icon)?.path || ''} />
+                              </svg>
+                            </div>
+                          )}
+
+                          {/* Label */}
+                          <div className="flex-1 min-w-0">
+                            <div className={`text-xs truncate ${isDefault ? 'text-[#22c55e]' : 'text-[#e5e4dd]'}`}>
+                              {label}
+                              {isDefault && <span className="ml-1 text-[10px] text-[#22c55e]/50">(default)</span>}
+                            </div>
+                            <div className="text-[10px] text-[#e5e4dd]/30 truncate">{url}</div>
+                          </div>
+
+                          {/* Delete - custom links only */}
+                          {!isDefault && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCustomLinks(prev => prev.filter(l => l.id !== linkId));
+                                setLinksSettings(prev => ({
+                                  ...prev,
+                                  linkOrder: prev.linkOrder.filter(id => id !== linkId)
+                                }));
                                 setHasUnsavedChanges(true);
                               }}
-                              className={`w-8 h-8 rounded-lg border-2 transition-all shadow-sm ${
-                                linksSettings.accentColor === color ? 'border-white scale-110 shadow-md' : 'border-white/10 hover:scale-105 hover:border-white/30'
+                              className="p-1 rounded text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+
+              {/* Add New Link - Compact inline form */}
+              <div className="p-3 rounded-lg bg-black/20 border border-white/10 mt-3">
+                <div className="flex flex-wrap items-end gap-2">
+                  <div className="flex-1 min-w-[120px]">
+                    <label className="block text-[10px] text-[#e5e4dd]/50 mb-1">Label</label>
+                    <input
+                      type="text"
+                      value={newLinkLabel}
+                      onChange={(e) => setNewLinkLabel(e.target.value)}
+                      className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#22c55e]/50 focus:outline-none"
+                      placeholder="Button text"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[120px]">
+                    <label className="block text-[10px] text-[#e5e4dd]/50 mb-1">URL</label>
+                    <input
+                      type="url"
+                      value={newLinkUrl}
+                      onChange={(e) => setNewLinkUrl(e.target.value)}
+                      className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#22c55e]/50 focus:outline-none"
+                      placeholder="https://..."
+                    />
+                  </div>
+                  <div className="relative">
+                    <button
+                      type="button"
+                      onClick={() => setShowIconPicker(!showIconPicker)}
+                      className="flex items-center gap-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-xs hover:border-[#22c55e]/30"
+                    >
+                      {newLinkIcon ? (
+                        <svg className="w-3 h-3 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
+                        </svg>
+                      ) : (
+                        <span className="text-[#e5e4dd]/50">Icon</span>
+                      )}
+                    </button>
+                    {showIconPicker && (
+                      <div className="absolute z-10 bottom-full mb-1 left-0 w-48 max-h-32 overflow-y-auto rounded bg-[#1a1a1a] border border-white/20 shadow-xl">
+                        <div className="grid grid-cols-6 gap-0.5 p-1">
+                          {LINK_ICONS.map(icon => (
+                            <button
+                              key={icon.name}
+                              type="button"
+                              onClick={() => { setNewLinkIcon(icon.name); setShowIconPicker(false); }}
+                              className={`p-1.5 rounded transition-colors ${
+                                newLinkIcon === icon.name ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
                               }`}
-                              style={{ backgroundColor: color }}
-                              title={color}
-                            />
+                              title={icon.label}
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={icon.path} />
+                              </svg>
+                            </button>
                           ))}
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
-
-                  {/* Style Options - Compact Grid */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#22c55e] mb-3">Style Options</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                      {/* Icon Style */}
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-2">Button Icons</label>
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
-                              linksSettings.iconStyle === 'light'
-                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                            }`}
-                          >
-                            <span className="w-3 h-3 rounded-full bg-white" />
-                            Light
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
-                              linksSettings.iconStyle === 'dark'
-                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                            }`}
-                          >
-                            <span className="w-3 h-3 rounded-full bg-[#1a1a1a] border border-gray-600" />
-                            Dark
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Photo Style */}
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-2">Profile Photo</label>
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
-                              !linksSettings.showColorPhoto
-                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                            }`}
-                          >
-                            B&W
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                            className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
-                              linksSettings.showColorPhoto
-                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                            }`}
-                          >
-                            Color
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Button Font */}
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-2">Button Font</label>
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                            className={`flex-1 px-2 py-1.5 rounded text-xs border transition-colors ${
-                              linksSettings.font === 'synonym'
-                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                            }`}
-                            style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-                          >
-                            Synonym
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                            className={`flex-1 px-2 py-1.5 rounded text-xs border transition-colors ${
-                              linksSettings.font === 'taskor'
-                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                            }`}
-                            style={{ fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 'bold' }}
-                          >
-                            Taskor
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-
-              {/* LINKS SECTION - Full width on XL screens */}
-              <div className={`space-y-4 xl:col-span-2 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
-                {/* Section Header */}
-                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-                  <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                  </svg>
-                  <h3 className="text-sm font-semibold text-[#22c55e]">Button Links</h3>
-                </div>
-                  {/* Unified Links List - Default buttons (yellow) + Custom links */}
-                  {(() => {
-                    // Build ordered list of all links
-                    const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
-
-                    // Create lookup for custom links
-                    const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
-
-                    // Build ordered array with all links
-                    const allLinkIds = [...linkOrder];
-                    // Add any custom links not in linkOrder
-                    customLinks.forEach(link => {
-                      if (!allLinkIds.includes(link.id)) {
-                        allLinkIds.push(link.id);
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (newLinkLabel.trim() && newLinkUrl.trim()) {
+                        const newLinkId = `link-${Date.now()}`;
+                        const newLink: CustomLink = {
+                          id: newLinkId,
+                          label: newLinkLabel.trim(),
+                          url: newLinkUrl.trim(),
+                          icon: newLinkIcon || undefined,
+                          order: customLinks.length,
+                        };
+                        setCustomLinks(prev => [...prev, newLink]);
+                        setLinksSettings(prev => ({
+                          ...prev,
+                          linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLinkId]
+                        }));
+                        setNewLinkLabel('');
+                        setNewLinkUrl('');
+                        setNewLinkIcon(null);
+                        setHasUnsavedChanges(true);
                       }
-                    });
-                    // Ensure default buttons are included
-                    if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
-                    if (!allLinkIds.includes('learn-about')) {
-                      const joinIndex = allLinkIds.indexOf('join-team');
-                      allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
-                    }
-
-                    return (
-                      <div className="space-y-2">
-                        {allLinkIds.map((linkId, index) => {
-                          const isDefault = linkId === 'join-team' || linkId === 'learn-about';
-                          const defaultButton = DEFAULT_BUTTONS.find(b => b.id === linkId);
-                          const customLink = customLinkMap.get(linkId);
-
-                          if (!isDefault && !customLink) return null;
-
-                          const label = isDefault ? defaultButton?.label : customLink?.label;
-                          const url = isDefault ? (linkId === 'join-team' ? 'Opens join form' : 'Links to your page') : customLink?.url;
-
-                          return (
-                            <div
-                              key={linkId}
-                              className={`flex items-center gap-2 p-3 rounded-lg group ${
-                                isDefault
-                                  ? 'bg-[#22c55e]/10 border border-[#22c55e]/30'
-                                  : 'bg-black/20 border border-white/10'
-                              }`}
-                            >
-                              {/* Reorder buttons */}
-                              <div className="flex flex-col gap-0.5">
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (index > 0) {
-                                      const newOrder = [...allLinkIds];
-                                      [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-                                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                                      setHasUnsavedChanges(true);
-                                    }
-                                  }}
-                                  disabled={index === 0}
-                                  className="p-0.5 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
-                                >
-                                  <svg className="w-3 h-3 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                                  </svg>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    if (index < allLinkIds.length - 1) {
-                                      const newOrder = [...allLinkIds];
-                                      [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-                                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                                      setHasUnsavedChanges(true);
-                                    }
-                                  }}
-                                  disabled={index === allLinkIds.length - 1}
-                                  className="p-0.5 rounded hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
-                                >
-                                  <svg className="w-3 h-3 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                  </svg>
-                                </button>
-                              </div>
-
-                              {/* Icon for default or custom */}
-                              {isDefault ? (
-                                <div className="w-7 h-7 rounded bg-[#22c55e]/20 border border-[#22c55e]/40 flex items-center justify-center flex-shrink-0">
-                                  <svg className="w-3.5 h-3.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path d={linkId === 'join-team' ? 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'} />
-                                  </svg>
-                                </div>
-                              ) : customLink?.icon && (
-                                <div className="w-7 h-7 rounded bg-[#22c55e]/10 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
-                                  <svg className="w-3.5 h-3.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path d={LINK_ICONS.find(i => i.name === customLink.icon)?.path || ''} />
-                                  </svg>
-                                </div>
-                              )}
-
-                              {/* Label and description */}
-                              <div className="flex-1 min-w-0">
-                                <div className={`text-sm truncate ${isDefault ? 'text-[#22c55e]' : 'text-[#e5e4dd]'}`}>
-                                  {label}
-                                  {isDefault && <span className="ml-2 text-xs text-[#22c55e]/60">(default)</span>}
-                                </div>
-                                <div className="text-xs text-[#e5e4dd]/40 truncate">{url}</div>
-                              </div>
-
-                              {/* Delete button - only for custom links */}
-                              {!isDefault && (
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setCustomLinks(prev => prev.filter(l => l.id !== linkId));
-                                    setLinksSettings(prev => ({
-                                      ...prev,
-                                      linkOrder: prev.linkOrder.filter(id => id !== linkId)
-                                    }));
-                                    setHasUnsavedChanges(true);
-                                  }}
-                                  className="p-1.5 rounded text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                  </svg>
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    );
-                  })()}
-
-                  {/* Add New Link */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10 space-y-3 mt-4">
-                    <h4 className="text-sm font-medium text-[#22c55e]">Add Custom Button</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">Label</label>
-                        <input
-                          type="text"
-                          value={newLinkLabel}
-                          onChange={(e) => setNewLinkLabel(e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#22c55e]/50 focus:outline-none"
-                          placeholder="e.g., Book a Call"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">URL</label>
-                        <input
-                          type="url"
-                          value={newLinkUrl}
-                          onChange={(e) => setNewLinkUrl(e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#22c55e]/50 focus:outline-none"
-                          placeholder="https://..."
-                        />
-                      </div>
-                    </div>
-
-                    {/* Icon Picker */}
-                    <div>
-                      <label className="block text-xs text-[#e5e4dd]/60 mb-1">Icon (optional)</label>
-                      <div className="relative">
-                        <button
-                          type="button"
-                          onClick={() => setShowIconPicker(!showIconPicker)}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm hover:border-[#22c55e]/30 transition-colors"
-                        >
-                          {newLinkIcon ? (
-                            <>
-                              <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
-                              </svg>
-                              <span>{LINK_ICONS.find(i => i.name === newLinkIcon)?.label}</span>
-                            </>
-                          ) : (
-                            <span className="text-[#e5e4dd]/50">Select icon...</span>
-                          )}
-                        </button>
-                        {showIconPicker && (
-                          <div className="absolute z-10 mt-2 w-full max-h-48 overflow-y-auto rounded-lg bg-[#1a1a1a] border border-white/20 shadow-xl">
-                            <div className="grid grid-cols-5 gap-1 p-2">
-                              {LINK_ICONS.map(icon => (
-                                <button
-                                  key={icon.name}
-                                  type="button"
-                                  onClick={() => { setNewLinkIcon(icon.name); setShowIconPicker(false); }}
-                                  className={`flex flex-col items-center gap-1 p-2 rounded transition-colors ${
-                                    newLinkIcon === icon.name ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
-                                  }`}
-                                  title={icon.label}
-                                >
-                                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path d={icon.path} />
-                                  </svg>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (newLinkLabel.trim() && newLinkUrl.trim()) {
-                          const newLinkId = `link-${Date.now()}`;
-                          const newLink: CustomLink = {
-                            id: newLinkId,
-                            label: newLinkLabel.trim(),
-                            url: newLinkUrl.trim(),
-                            icon: newLinkIcon || undefined,
-                            order: customLinks.length,
-                          };
-                          setCustomLinks(prev => [...prev, newLink]);
-                          // Add to linkOrder
-                          setLinksSettings(prev => ({
-                            ...prev,
-                            linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLinkId]
-                          }));
-                          setNewLinkLabel('');
-                          setNewLinkUrl('');
-                          setNewLinkIcon(null);
-                          setHasUnsavedChanges(true);
-                        }
-                      }}
-                      disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
-                      className="w-full px-4 py-2 rounded-lg text-sm font-medium bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                      + Add Button
-                    </button>
-                  </div>
-
-                  {/* Legend */}
-                  <div className="flex items-center gap-4 text-xs text-[#e5e4dd]/50 mt-2">
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-3 h-3 rounded bg-yellow-500/20 border border-yellow-500/40"></div>
-                      <span>Default buttons (cannot be deleted)</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <div className="w-3 h-3 rounded bg-black/20 border border-white/10"></div>
-                      <span>Custom buttons</span>
-                    </div>
-                  </div>
+                    }}
+                    disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
+                    className="px-3 py-1.5 rounded text-xs font-medium bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    + Add
+                  </button>
+                </div>
               </div>
+            </div> {/* End of LINKS SECTION */}
+          </div> {/* End of DESIGN & LINKS COLUMN */}
 
-            </div>
-
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-end mt-6 pt-4 border-t border-white/10">
+          {/* Action Buttons - Moved to bottom spanning full width */}
+          <div className="lg:col-span-3 xl:col-span-4 flex flex-wrap gap-3 justify-end pt-4 border-t border-white/10">
               {hasUnsavedChanges && (
                 <button
                   onClick={handleSave}
@@ -5812,7 +5736,6 @@ function AgentPagesSection({
                   Activate Pages
                 </button>
               )}
-            </div>
           </div>
         </div>
     </div>
