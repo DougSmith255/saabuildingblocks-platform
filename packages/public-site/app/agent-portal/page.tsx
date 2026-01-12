@@ -5173,6 +5173,36 @@ function AgentPagesSection({
                         {attractionUploadError && (
                           <div className="mt-2 text-xs text-red-400">{attractionUploadError}</div>
                         )}
+                        {/* Photo Style Toggle - B&W or Color */}
+                        <div className="mt-3 pt-3 border-t border-white/10">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-[#e5e4dd]/60">Style:</span>
+                            <div className="flex gap-1">
+                              <button
+                                type="button"
+                                onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                                className={`px-3 py-1 rounded text-xs border transition-colors ${
+                                  !linksSettings.showColorPhoto
+                                    ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                                    : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
+                                }`}
+                              >
+                                B&W
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
+                                className={`px-3 py-1 rounded text-xs border transition-colors ${
+                                  linksSettings.showColorPhoto
+                                    ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                                    : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
+                                }`}
+                              >
+                                Color
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -5423,6 +5453,36 @@ function AgentPagesSection({
                         />
                       ))}
                     </div>
+
+                    {/* Button Sample Preview */}
+                    <div className="mt-3 pt-3 border-t border-white/10">
+                      <p className="text-[10px] text-[#e5e4dd]/40 mb-2">Button Preview</p>
+                      <div className="flex flex-col gap-2">
+                        <div
+                          className="w-full py-2 px-3 rounded-lg text-center text-sm font-medium transition-all"
+                          style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}
+                        >
+                          Sample Link Button
+                        </div>
+                        <div className="flex gap-2 justify-center">
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: linksSettings.accentColor }}>
+                            <svg className="w-5 h-5" fill={linksSettings.iconStyle === 'light' ? '#fff' : '#000'} viewBox="0 0 24 24">
+                              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                            </svg>
+                          </div>
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: linksSettings.accentColor }}>
+                            <svg className="w-5 h-5" fill={linksSettings.iconStyle === 'light' ? '#fff' : '#000'} viewBox="0 0 24 24">
+                              <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                            </svg>
+                          </div>
+                          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: linksSettings.accentColor }}>
+                            <svg className="w-5 h-5" fill={linksSettings.iconStyle === 'light' ? '#fff' : '#000'} viewBox="0 0 24 24">
+                              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -5455,34 +5515,6 @@ function AgentPagesSection({
                           }`}
                         >
                           Dark
-                        </button>
-                      </div>
-                    </div>
-                    {/* Photo Style */}
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 w-16">Photo</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            !linksSettings.showColorPhoto
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          B&W
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.showColorPhoto
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Color
                         </button>
                       </div>
                     </div>
@@ -5777,7 +5809,7 @@ function AgentPagesSection({
         </div>
 
         {/* MOBILE PREVIEW BUTTON - Fixed above menu bar with rounded corners and 3D effect */}
-        <div className="fixed bottom-[72px] left-3 right-3 z-40 lg:hidden">
+        <div className="fixed bottom-[62px] left-2 right-2 z-40 lg:hidden">
           <button
             onClick={() => setShowMobilePreview(true)}
             className="w-full py-3 rounded-xl text-white font-semibold text-sm uppercase tracking-wider flex items-center justify-center gap-2"
