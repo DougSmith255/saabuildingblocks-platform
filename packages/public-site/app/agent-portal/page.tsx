@@ -458,11 +458,13 @@ export default function AgentPortal() {
           newPassword: '',
           confirmPassword: '',
         }));
-        // Close the modal after a brief delay so user sees success message
+        // Clear success message after delay (close modal only if in modal mode)
         setTimeout(() => {
-          setShowEditProfile(false);
+          if (showEditProfile) {
+            setShowEditProfile(false);
+          }
           setEditFormSuccess('');
-        }, 1500);
+        }, 2000);
       } else {
         setEditFormError(data.message || 'Failed to update profile');
       }
@@ -1192,11 +1194,11 @@ export default function AgentPortal() {
 
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
-        className="mobile-bottom-nav md:hidden fixed bottom-2 left-2 right-2 z-50"
+        className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
-        {/* Solid background with fully rounded corners matching button style */}
-        <div className="absolute inset-0 bg-[#0a0a0a] rounded-2xl border border-white/[0.08]" />
+        {/* Solid background with rounded top corners and top border only */}
+        <div className="absolute inset-0 bg-[#0a0a0a] rounded-t-2xl border-t border-white/[0.08]" />
 
         <div
           className="relative flex items-center h-16 px-1"
@@ -1440,21 +1442,15 @@ export default function AgentPortal() {
             {/* New Agents */}
             {activeSection === 'new-agents' && <NewAgentsSection />}
 
-            {/* Profile Section (Mobile) */}
+            {/* Profile Section (Mobile) - Inline Edit Form */}
             {activeSection === 'profile' && (
-              <div className="space-y-6 px-1 sm:px-2">
-                {/* Profile Header */}
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold text-[#ffd700] mb-2">My Profile</h1>
-                  <p className="text-[#e5e4dd]/60 text-sm">Manage your account settings</p>
-                </div>
-
-                {/* Profile Picture */}
+              <div className="space-y-6 px-1 sm:px-2 pb-8">
+                {/* Profile Picture Section */}
                 <div className="flex flex-col items-center">
                   <button
+                    type="button"
                     onClick={handleProfilePictureClick}
-                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors mb-4"
-                    title="Click to change profile picture"
+                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
                   >
                     {user.profilePictureUrl && !profileImageError ? (
                       <img
@@ -1473,7 +1469,6 @@ export default function AgentPortal() {
                         </span>
                       </div>
                     )}
-                    {/* Hover overlay */}
                     <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -1481,36 +1476,183 @@ export default function AgentPortal() {
                       </svg>
                     </div>
                   </button>
+                  <p className="mt-2 text-sm text-[#e5e4dd]/60">Tap to change photo</p>
 
-                  <h2 className="text-xl font-semibold text-[#ffd700]">
-                    {user.firstName} {user.lastName}
-                  </h2>
-                  <p className="text-[#e5e4dd]/60 text-sm">{user.email}</p>
+                  {/* Upload Status */}
+                  {dashboardUploadStatus && (
+                    <div className="mt-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs flex items-center gap-2 w-full">
+                      <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+                      <span className="truncate">{dashboardUploadStatus}</span>
+                    </div>
+                  )}
+                  {dashboardUploadError && (
+                    <div className="mt-3 p-2 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs w-full">
+                      {dashboardUploadError}
+                    </div>
+                  )}
                 </div>
 
-                {/* Upload Status */}
-                {dashboardUploadStatus && (
-                  <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-sm flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                    <span>{dashboardUploadStatus}</span>
+                {/* Edit Form */}
+                <form onSubmit={handleEditProfileSubmit} className="space-y-5">
+                  {/* Display Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                      Display Name
+                    </label>
+                    <p className="text-xs text-[#e5e4dd]/50 mb-3">This name will appear on your Agent Attraction Page</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        value={editFormData.displayFirstName}
+                        onChange={(e) => setEditFormData({ ...editFormData, displayFirstName: e.target.value })}
+                        className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                        placeholder="First Name"
+                      />
+                      <input
+                        type="text"
+                        value={editFormData.displayLastName}
+                        onChange={(e) => setEditFormData({ ...editFormData, displayLastName: e.target.value })}
+                        className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                        placeholder="Last Name"
+                      />
+                    </div>
                   </div>
-                )}
-                {dashboardUploadError && (
-                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-                    {dashboardUploadError}
-                  </div>
-                )}
 
-                {/* Edit Profile Button */}
-                <button
-                  onClick={handleOpenEditProfile}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[#e5e4dd] bg-white/5 hover:bg-[#ffd700]/10 border border-white/[0.08] hover:border-[#ffd700]/30 transition-all"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                  <span className="font-medium">Edit Profile</span>
-                </button>
+                  {/* Email */}
+                  <div>
+                    <label className="block text-sm font-medium text-[#e5e4dd]/80 mb-2">
+                      Email Address
+                    </label>
+                    <p className="text-xs text-[#e5e4dd]/50 mb-3">Used for login and communications</p>
+                    <input
+                      type="email"
+                      value={editFormData.email}
+                      onChange={(e) => setEditFormData({ ...editFormData, email: e.target.value })}
+                      className="w-full px-4 py-3 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+
+                  {/* Password Change Section */}
+                  <div className="pt-4 border-t border-white/10">
+                    <p className="text-sm font-medium text-[#e5e4dd]/80 mb-4">Change Password (optional)</p>
+
+                    {/* New Password */}
+                    <div className="mb-4">
+                      <label className="block text-sm text-[#e5e4dd]/60 mb-2">
+                        New Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showNewPassword ? 'text' : 'password'}
+                          value={editFormData.newPassword}
+                          onChange={(e) => setEditFormData({ ...editFormData, newPassword: e.target.value })}
+                          autoComplete="new-password"
+                          className="w-full px-4 py-3 pr-12 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                          placeholder="Enter new password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowNewPassword(!showNewPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
+                          aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showNewPassword ? (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                      {/* Password requirements - only show when user starts typing */}
+                      {editFormData.newPassword && (
+                        <div className="text-xs text-[#e5e4dd]/50 space-y-1 pt-2">
+                          <p className={editFormData.newPassword.length >= 8 ? 'text-green-400' : ''}>
+                            {editFormData.newPassword.length >= 8 ? '✓' : '○'} At least 8 characters
+                          </p>
+                          <p className={/[A-Z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                            {/[A-Z]/.test(editFormData.newPassword) ? '✓' : '○'} One uppercase letter
+                          </p>
+                          <p className={/[a-z]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                            {/[a-z]/.test(editFormData.newPassword) ? '✓' : '○'} One lowercase letter
+                          </p>
+                          <p className={/[0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                            {/[0-9]/.test(editFormData.newPassword) ? '✓' : '○'} One number
+                          </p>
+                          <p className={/[^A-Za-z0-9]/.test(editFormData.newPassword) ? 'text-green-400' : ''}>
+                            {/[^A-Za-z0-9]/.test(editFormData.newPassword) ? '✓' : '○'} One special character
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Confirm New Password */}
+                    <div>
+                      <label className="block text-sm text-[#e5e4dd]/60 mb-2">
+                        Confirm New Password
+                      </label>
+                      <div className="relative">
+                        <input
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          value={editFormData.confirmPassword}
+                          onChange={(e) => setEditFormData({ ...editFormData, confirmPassword: e.target.value })}
+                          autoComplete="new-password"
+                          className="w-full px-4 py-3 pr-12 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] focus:border-[#ffd700]/50 focus:outline-none focus:ring-1 focus:ring-[#ffd700]/30 transition-colors"
+                          placeholder="Confirm new password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-[#e5e4dd]/50 hover:text-[#ffd700] transition-colors"
+                          aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                        >
+                          {showConfirmPassword ? (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                            </svg>
+                          ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                          )}
+                        </button>
+                      </div>
+                      {/* Password match indicator */}
+                      {editFormData.confirmPassword && (
+                        <p className={`text-xs pt-2 ${editFormData.newPassword === editFormData.confirmPassword ? 'text-green-400' : 'text-red-400'}`}>
+                          {editFormData.newPassword === editFormData.confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Error/Success Messages */}
+                  {editFormError && (
+                    <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                      {editFormError}
+                    </div>
+                  )}
+                  {editFormSuccess && (
+                    <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
+                      {editFormSuccess}
+                    </div>
+                  )}
+
+                  {/* Save Button */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full px-4 py-3 rounded-xl text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    {isSubmitting ? 'Saving...' : 'Save Changes'}
+                  </button>
+                </form>
 
                 {/* Logout Button */}
                 <button
