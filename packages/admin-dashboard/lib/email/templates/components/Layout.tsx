@@ -655,16 +655,6 @@ export const EmailSignature = () => (
         margin: '0 0 4px',
       }}
     >
-      The SAA Team
-    </Text>
-    <Text
-      style={{
-        color: BRAND_COLORS.textSecondary,
-        fontSize: '14px',
-        lineHeight: '20px',
-        margin: '0 0 4px',
-      }}
-    >
       Smart Agent Alliance
     </Text>
     <Link

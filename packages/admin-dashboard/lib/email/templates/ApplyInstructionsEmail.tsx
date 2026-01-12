@@ -106,9 +106,6 @@ export function ApplyInstructionsEmail({
               Best regards,
             </Text>
             <Text style={{...goldTextStyle, marginTop: '8px'}}>
-              The SAA Team
-            </Text>
-            <Text style={{...paragraphStyle, margin: '4px 0'}}>
               Smart Agent Alliance
             </Text>
             <Link href="mailto:team@smartagentalliance.com" style={linkStyle}>
