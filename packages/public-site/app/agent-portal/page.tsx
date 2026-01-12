@@ -140,6 +140,27 @@ function toCdnUrl(url: string | null | undefined): string | null {
   return url.replace('assets.saabuildingblocks.com', 'cdn.saabuildingblocks.com');
 }
 
+// Aggressively preload profile image using link preload tag (highest priority)
+function preloadProfileImage(url: string) {
+  if (typeof window === 'undefined' || !url) return;
+
+  // Check if preload link already exists
+  const existingPreload = document.querySelector(`link[rel="preload"][href="${url}"]`);
+  if (existingPreload) return;
+
+  // Add preload link to head (highest browser priority)
+  const link = document.createElement('link');
+  link.rel = 'preload';
+  link.as = 'image';
+  link.href = url;
+  link.fetchPriority = 'high';
+  document.head.appendChild(link);
+
+  // Also start Image() preload as backup
+  const img = new Image();
+  img.src = url;
+}
+
 // Helper to get initial user from localStorage (runs only on client)
 // Also starts preloading the profile image immediately via CDN
 function getInitialUser(): UserData | null {
@@ -151,9 +172,8 @@ function getInitialUser(): UserData | null {
       // Rewrite URL to use CDN
       if (user.profilePictureUrl) {
         user.profilePictureUrl = toCdnUrl(user.profilePictureUrl);
-        // Start preloading profile image immediately via CDN
-        const img = new Image();
-        img.src = user.profilePictureUrl;
+        // Start preloading profile image immediately with highest priority
+        preloadProfileImage(user.profilePictureUrl);
       }
       return user;
     }
@@ -280,11 +300,10 @@ export default function AgentPortal() {
     }
   }, [user, router]);
 
-  // Preload profile image for faster display
+  // Preload profile image for faster display (in case it wasn't preloaded during init)
   useEffect(() => {
     if (user?.profilePictureUrl) {
-      const img = new Image();
-      img.src = user.profilePictureUrl;
+      preloadProfileImage(user.profilePictureUrl);
     }
   }, [user?.profilePictureUrl]);
 
