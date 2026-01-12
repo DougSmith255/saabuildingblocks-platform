@@ -6,7 +6,7 @@ import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/compone
 import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
-import { SketchPicker, ColorResult } from 'react-color';
+import { ChromePicker, ColorResult } from 'react-color';
 
 // Shake animation styles + mobile tap highlight fix
 const shakeKeyframes = `
@@ -4771,11 +4771,11 @@ function AgentPagesSection({
           </div>
         )}
 
-        {/* Two-Column Layout: Preview (Left) + Settings (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+        {/* Desktop: 3-column layout with preview on right. Mobile: stacked with preview on top */}
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1fr_280px] lg:grid-cols-[1fr_280px] gap-6">
 
-          {/* LEFT COLUMN: Live Preview (Sticky on Desktop) */}
-          <div className="lg:sticky lg:top-6 lg:self-start order-2 lg:order-1">
+          {/* PREVIEW COLUMN - Sticky phone mockup on right for desktop, top for mobile */}
+          <div className="xl:col-start-3 lg:col-start-2 xl:row-span-2 lg:sticky lg:top-6 lg:self-start order-first lg:order-last">
             <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
               {/* Preview Header */}
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
@@ -4986,21 +4986,21 @@ function AgentPagesSection({
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Settings with Tabs */}
-          <div className="order-1 lg:order-2">
-            {/* Page Link Section - Above Tabs */}
+          {/* SETTINGS COLUMNS - Spans 2 columns on XL, 1 on LG */}
+          <div className="xl:col-span-2 lg:col-span-1 order-last lg:order-first">
+            {/* Page Status & Link */}
             {pageData.activated && (
-              <div className="mb-6 pb-4 border-b border-white/10">
-                <div className="flex items-center justify-between">
+              <div className="mb-6 p-4 rounded-xl bg-green-500/5 border border-green-500/20">
+                <div className="flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-sm text-green-400">Your Linktree is live</span>
+                    <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-sm font-medium text-green-400">Your Linktree is live</span>
                   </div>
                   <a
                     href={linktreeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-sm font-medium hover:scale-[1.02]"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -5063,12 +5063,17 @@ function AgentPagesSection({
               </div>
             </div>
 
-            {/* Tab Content - On desktop (lg:) show all sections, on mobile show by tab */}
-            <div className="space-y-4">
+            {/* Tab Content - Desktop: 2-column grid for settings, Mobile: tabs */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
               {/* PROFILE SECTION */}
               <div className={`space-y-4 ${activeTab === 'profile' ? '' : 'hidden lg:block'}`}>
-                {/* Section Header - Desktop only */}
-                <h3 className="hidden lg:block text-sm font-medium text-[#22c55e] border-b border-white/10 pb-2 mb-4">Profile Settings</h3>
+                {/* Section Header */}
+                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                  <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-[#22c55e]">Profile</h3>
+                </div>
                   {/* Profile Image - Compact */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                     <div className="flex items-start gap-4">
@@ -5306,8 +5311,13 @@ function AgentPagesSection({
 
               {/* DESIGN SECTION */}
               <div className={`space-y-4 ${activeTab === 'design' ? '' : 'hidden lg:block'}`}>
-                {/* Section Header - Desktop only */}
-                <h3 className="hidden lg:block text-sm font-medium text-[#22c55e] border-b border-white/10 pb-2 mb-4 mt-6">Design Settings</h3>
+                {/* Section Header */}
+                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                  <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-[#22c55e]">Design</h3>
+                </div>
                   {/* Bio */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                     <h4 className="text-sm font-medium text-[#22c55e] mb-2">Bio</h4>
@@ -5337,48 +5347,85 @@ function AgentPagesSection({
 
                   {/* Accent Color */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#22c55e] mb-2">Accent Color</h4>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <div className="relative">
+                    <h4 className="text-sm font-medium text-[#22c55e] mb-3">Accent Color</h4>
+                    <div className="space-y-3">
+                      {/* Color Preview & Hex Input */}
+                      <div className="flex items-center gap-3">
                         <button
                           type="button"
                           onClick={() => setShowColorPicker(!showColorPicker)}
-                          className="w-10 h-10 rounded-lg cursor-pointer border-2 border-white/20 transition-all hover:border-white/40"
+                          className="w-12 h-12 rounded-xl cursor-pointer border-2 border-white/20 transition-all hover:border-white/40 hover:scale-105 shadow-lg"
                           style={{ backgroundColor: linksSettings.accentColor }}
+                          title="Click to open color picker"
                         />
-                        {showColorPicker && (
-                          <div className="absolute z-50 mt-2 left-0">
-                            <div className="fixed inset-0" onClick={() => setShowColorPicker(false)} />
-                            <div className="relative">
-                              <SketchPicker
-                                color={linksSettings.accentColor}
-                                onChange={(color: ColorResult) => {
-                                  setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
-                                  setHasUnsavedChanges(true);
-                                }}
-                                presetColors={['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81']}
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81'].map(color => (
-                          <button
-                            key={color}
-                            type="button"
-                            onClick={() => {
-                              setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                              setHasUnsavedChanges(true);
+                        <div className="flex-1">
+                          <label className="block text-xs text-[#e5e4dd]/50 mb-1">Hex Value</label>
+                          <input
+                            type="text"
+                            value={linksSettings.accentColor}
+                            onChange={(e) => {
+                              const hex = e.target.value;
+                              if (/^#[0-9A-Fa-f]{0,6}$/.test(hex) || hex === '') {
+                                setLinksSettings(prev => ({ ...prev, accentColor: hex || '#' }));
+                                setHasUnsavedChanges(true);
+                              }
                             }}
-                            className={`w-6 h-6 rounded-full border-2 transition-all ${
-                              linksSettings.accentColor === color ? 'border-white scale-110' : 'border-transparent hover:scale-105'
-                            }`}
-                            style={{ backgroundColor: color }}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#22c55e]/50 focus:outline-none transition-colors"
+                            placeholder="#ffd700"
                           />
-                        ))}
+                        </div>
                       </div>
-                      <span className="text-xs text-[#e5e4dd]/40">{linksSettings.accentColor}</span>
+
+                      {/* Full Color Picker */}
+                      {showColorPicker && (
+                        <div className="relative">
+                          <div className="fixed inset-0 z-40" onClick={() => setShowColorPicker(false)} />
+                          <div className="relative z-50 rounded-xl overflow-hidden shadow-2xl border border-white/20">
+                            <ChromePicker
+                              color={linksSettings.accentColor}
+                              onChange={(color: ColorResult) => {
+                                setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
+                                setHasUnsavedChanges(true);
+                              }}
+                              disableAlpha={true}
+                              styles={{
+                                default: {
+                                  picker: {
+                                    background: '#1a1a1a',
+                                    boxShadow: 'none',
+                                    width: '100%',
+                                  },
+                                  body: {
+                                    padding: '12px',
+                                  },
+                                },
+                              }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Quick Presets */}
+                      <div>
+                        <label className="block text-xs text-[#e5e4dd]/50 mb-2">Quick Presets</label>
+                        <div className="flex flex-wrap gap-2">
+                          {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81', '#f472b6', '#38bdf8', '#fb923c', '#4ade80'].map(color => (
+                            <button
+                              key={color}
+                              type="button"
+                              onClick={() => {
+                                setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                                setHasUnsavedChanges(true);
+                              }}
+                              className={`w-8 h-8 rounded-lg border-2 transition-all shadow-sm ${
+                                linksSettings.accentColor === color ? 'border-white scale-110 shadow-md' : 'border-white/10 hover:scale-105 hover:border-white/30'
+                              }`}
+                              style={{ backgroundColor: color }}
+                              title={color}
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -5480,10 +5527,15 @@ function AgentPagesSection({
                   </div>
               </div>
 
-              {/* LINKS SECTION */}
-              <div className={`space-y-4 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
-                {/* Section Header - Desktop only */}
-                <h3 className="hidden lg:block text-sm font-medium text-[#22c55e] border-b border-white/10 pb-2 mb-4 mt-6">Button Links</h3>
+              {/* LINKS SECTION - Full width on XL screens */}
+              <div className={`space-y-4 xl:col-span-2 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
+                {/* Section Header */}
+                <div className="flex items-center gap-2 pb-2 border-b border-white/10">
+                  <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                  <h3 className="text-sm font-semibold text-[#22c55e]">Button Links</h3>
+                </div>
                   {/* Unified Links List - Default buttons (yellow) + Custom links */}
                   {(() => {
                     // Build ordered list of all links

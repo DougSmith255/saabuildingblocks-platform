@@ -86,6 +86,14 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     '/download',                // Download page - single viewport
   ], []);
 
+  // Routes where scroll progress bar should be hidden
+  // The yellow scroll progress bar should only show on main website, not in app/portal
+  const noScrollProgressPrefixes = useMemo(() => [
+    '/agent-portal',            // Agent portal - app interface
+    '/download',                // Download page
+    '/master-controller',       // Admin interface
+  ], []);
+
   // Check for embed mode via URL search params
   const [isEmbedMode, setIsEmbedMode] = useState(false);
 
@@ -138,6 +146,15 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     );
   }, [pathname, noScrollIndicatorPrefixes]);
 
+  // Check if scroll progress bar should be hidden (app/portal pages)
+  const shouldHideScrollProgress = useMemo(() => {
+    if (!pathname) return false;
+    const normalizedPath = pathname.replace(/\/$/, '');
+    return noScrollProgressPrefixes.some(prefix =>
+      normalizedPath === prefix || normalizedPath.startsWith(prefix + '/')
+    );
+  }, [pathname, noScrollProgressPrefixes]);
+
   // Embed mode: minimal wrapper, just the content
   if (isEmbedMode) {
     return <>{children}</>;
@@ -146,7 +163,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   return (
     <ViewportProvider>
       <SmoothScroll />
-      <ScrollProgress />
+      {!shouldHideScrollProgress && <ScrollProgress />}
       {!shouldHideHeaderFooter && !shouldHideScrollIndicator && <ScrollIndicator />}
       <ExternalLinkHandler />
       <ScrollPerformanceOptimizer />
