@@ -1099,7 +1099,7 @@ export default function AgentPortal() {
     <main
       id="main-content"
       className="agent-portal-root min-h-screen"
-      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+      style={{ WebkitTapHighlightColor: 'transparent', backgroundColor: '#191919' } as React.CSSProperties}
     >
       {/* Fixed Header Bar - Uses same glass styling as main site header */}
       {/* Slides up off screen when any popup is open, slides down on entry from login */}
