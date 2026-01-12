@@ -1497,7 +1497,7 @@ export default function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors mb-3"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700]/50 transition-colors mb-3"
                     title="Click to change profile picture"
                   >
                     {user.profilePictureUrl && !profileImageError ? (
@@ -1705,7 +1705,7 @@ export default function AgentPortal() {
                   <button
                     type="button"
                     onClick={handleProfilePictureClick}
-                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
+                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700] transition-colors"
                   >
                     {user.profilePictureUrl && !profileImageError ? (
                       <>
@@ -1943,8 +1943,8 @@ export default function AgentPortal() {
               </div>
             )}
 
-            {/* Agent Page Section */}
-            {activeSection === 'agent-page' && (
+            {/* Agent Page Section - kept mounted to avoid re-loading */}
+            <div className={activeSection === 'agent-page' ? '' : 'hidden'}>
               <AgentPagesSection
                 user={user}
                 setUser={setUser}
@@ -1972,10 +1972,10 @@ export default function AgentPortal() {
                 mode="agent-page"
                 preloadedPageData={preloadedAgentPageData}
               />
-            )}
+            </div>
 
-            {/* Linktree Section */}
-            {activeSection === 'linktree' && (
+            {/* Linktree Section - kept mounted to avoid re-loading */}
+            <div className={activeSection === 'linktree' ? '' : 'hidden'}>
               <AgentPagesSection
                 user={user}
                 setUser={setUser}
@@ -2003,7 +2003,7 @@ export default function AgentPortal() {
                 mode="linktree"
                 preloadedPageData={preloadedAgentPageData}
               />
-            )}
+            </div>
           </div>
         </div>
       </div>
@@ -2044,7 +2044,7 @@ export default function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#ffd700]/30 hover:border-[#ffd700] transition-colors"
+                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700] transition-colors"
                 >
                   {user.profilePictureUrl && !profileImageError ? (
                     <>
@@ -4080,6 +4080,29 @@ function AgentPagesSection({
     .replace(/--+/g, '-')
     .replace(/^-|-$/g, '');
 
+  // Update state when preloadedPageData becomes available (e.g., after initial mount)
+  useEffect(() => {
+    if (preloadedPageData?.page) {
+      setPageData(preloadedPageData.page);
+      setFormData({
+        display_first_name: preloadedPageData.page.display_first_name || '',
+        display_last_name: preloadedPageData.page.display_last_name || '',
+        phone: preloadedPageData.page.phone || '',
+        show_phone: preloadedPageData.page.show_phone || false,
+        phone_text_only: preloadedPageData.page.phone_text_only || false,
+        facebook_url: preloadedPageData.page.facebook_url || '',
+        instagram_url: preloadedPageData.page.instagram_url || '',
+        twitter_url: preloadedPageData.page.twitter_url || '',
+        youtube_url: preloadedPageData.page.youtube_url || '',
+        tiktok_url: preloadedPageData.page.tiktok_url || '',
+        linkedin_url: preloadedPageData.page.linkedin_url || '',
+      });
+      setCustomLinks(preloadedPageData.page.custom_links || []);
+      setLinksSettings(preloadedPageData.page.links_settings || DEFAULT_LINKS_SETTINGS);
+      setIsLoading(false);
+    }
+  }, [preloadedPageData]);
+
   // Fetch agent page data - skip if we have preloaded data
   useEffect(() => {
     // If we have preloaded data, don't fetch again
@@ -4627,12 +4650,12 @@ function AgentPagesSection({
             <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
             <div className="space-y-4 text-sm text-[#e5e4dd]/80">
               <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#4ecdc4]/20 border border-[#4ecdc4]/30 flex items-center justify-center flex-shrink-0">
-                  <span className="text-[#4ecdc4] font-bold text-xs">1</span>
+                <div className="w-8 h-8 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
+                  <span className="text-[#22c55e] font-bold text-xs">1</span>
                 </div>
                 <div>
                   <p className="font-medium text-[#e5e4dd] mb-1">Share Your Linktree Everywhere</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">Your Linktree is your <strong className="text-[#4ecdc4]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
+                  <p className="text-[#e5e4dd]/60 text-xs">Your Linktree is your <strong className="text-[#22c55e]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
                 </div>
               </div>
               <div className="flex gap-3">
@@ -4700,7 +4723,7 @@ function AgentPagesSection({
                 { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', label: 'Presentations' },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2 text-[#e5e4dd]/70 p-2 rounded-lg bg-black/20">
-                  <svg className="w-4 h-4 text-[#4ecdc4] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
                     <path d={item.icon} />
                   </svg>
                   <span>{item.label}</span>
@@ -4758,7 +4781,7 @@ function AgentPagesSection({
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                  <span className="text-xs text-[#4ecdc4]">Linktree</span>
+                  <span className="text-xs text-[#22c55e]">Linktree</span>
                 </div>
               </div>
 
@@ -4965,32 +4988,19 @@ function AgentPagesSection({
 
           {/* RIGHT COLUMN: Settings with Tabs */}
           <div className="order-1 lg:order-2">
-            {/* Page Links Section - Above Tabs */}
+            {/* Page Link Section - Above Tabs */}
             {pageData.activated && (
               <div className="mb-6 pb-4 border-b border-white/10">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="w-2 h-2 rounded-full bg-green-500" />
-                  <span className="text-sm text-green-400">Your pages are live</span>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <a
-                    href={pageUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm font-medium"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                      <polyline points="15 3 21 3 21 9" />
-                      <line x1="10" y1="14" x2="21" y2="3" />
-                    </svg>
-                    View Attraction Page
-                  </a>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500" />
+                    <span className="text-sm text-green-400">Your Linktree is live</span>
+                  </div>
                   <a
                     href={linktreeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 text-[#4ecdc4] hover:bg-[#4ecdc4]/20 transition-colors text-sm font-medium"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-colors text-sm font-medium"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
@@ -5003,61 +5013,62 @@ function AgentPagesSection({
               </div>
             )}
 
-            {/* Tab Navigation - Mobile-first, fits on one line */}
-            <div className="border-b border-white/10 mb-6">
+            {/* Tab Navigation - Mobile only */}
+            <div className="border-b border-white/10 mb-6 lg:hidden">
               <div className="flex">
                 <button
                   onClick={() => setActiveTab('profile')}
                   className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'profile'
-                      ? 'text-[#4ecdc4]'
+                      ? 'text-[#22c55e]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
                   Profile
                   {activeTab === 'profile' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#22c55e]" />
                   )}
                 </button>
                 <button
                   onClick={() => setActiveTab('design')}
                   className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'design'
-                      ? 'text-[#4ecdc4]'
+                      ? 'text-[#22c55e]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
                   Design
                   {activeTab === 'design' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#22c55e]" />
                   )}
                 </button>
                 <button
                   onClick={() => setActiveTab('links')}
                   className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
                     activeTab === 'links'
-                      ? 'text-[#4ecdc4]'
+                      ? 'text-[#22c55e]'
                       : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
                   }`}
                 >
                   Links
                   {customLinks.length > 0 && (
-                    <span className="ml-1 px-1 py-0.5 text-[10px] sm:text-xs rounded-full bg-[#4ecdc4]/20 text-[#4ecdc4]">
+                    <span className="ml-1 px-1 py-0.5 text-[10px] sm:text-xs rounded-full bg-[#22c55e]/20 text-[#22c55e]">
                       {customLinks.length}
                     </span>
                   )}
                   {activeTab === 'links' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#4ecdc4]" />
+                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#22c55e]" />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Tab Content */}
+            {/* Tab Content - On desktop (lg:) show all sections, on mobile show by tab */}
             <div className="space-y-4">
-              {/* PROFILE TAB */}
-              {activeTab === 'profile' && (
-                <>
+              {/* PROFILE SECTION */}
+              <div className={`space-y-4 ${activeTab === 'profile' ? '' : 'hidden lg:block'}`}>
+                {/* Section Header - Desktop only */}
+                <h3 className="hidden lg:block text-sm font-medium text-[#22c55e] border-b border-white/10 pb-2 mb-4">Profile Settings</h3>
                   {/* Profile Image - Compact */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                     <div className="flex items-start gap-4">
@@ -5291,15 +5302,15 @@ function AgentPagesSection({
                       </div>
                     )}
                   </div>
-                </>
-              )}
+              </div>
 
-              {/* DESIGN TAB */}
-              {activeTab === 'design' && (
-                <>
+              {/* DESIGN SECTION */}
+              <div className={`space-y-4 ${activeTab === 'design' ? '' : 'hidden lg:block'}`}>
+                {/* Section Header - Desktop only */}
+                <h3 className="hidden lg:block text-sm font-medium text-[#22c55e] border-b border-white/10 pb-2 mb-4 mt-6">Design Settings</h3>
                   {/* Bio */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#4ecdc4] mb-2">Bio</h4>
+                    <h4 className="text-sm font-medium text-[#22c55e] mb-2">Bio</h4>
                     <p className="text-xs text-[#e5e4dd]/50 mb-2">Short description below your name</p>
                     <div className="relative">
                       <textarea
@@ -5310,7 +5321,7 @@ function AgentPagesSection({
                             setHasUnsavedChanges(true);
                           }
                         }}
-                        className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#4ecdc4]/50 focus:outline-none transition-colors resize-none"
+                        className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#22c55e]/50 focus:outline-none transition-colors resize-none"
                         rows={2}
                         placeholder="Real estate agent helping families find their dream homes..."
                       />
@@ -5326,7 +5337,7 @@ function AgentPagesSection({
 
                   {/* Accent Color */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#4ecdc4] mb-2">Accent Color</h4>
+                    <h4 className="text-sm font-medium text-[#22c55e] mb-2">Accent Color</h4>
                     <div className="flex flex-wrap items-center gap-3">
                       <div className="relative">
                         <button
@@ -5345,14 +5356,14 @@ function AgentPagesSection({
                                   setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
                                   setHasUnsavedChanges(true);
                                 }}
-                                presetColors={['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81']}
+                                presetColors={['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81']}
                               />
                             </div>
                           </div>
                         )}
                       </div>
                       <div className="flex flex-wrap gap-1.5">
-                        {['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81'].map(color => (
+                        {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81'].map(color => (
                           <button
                             key={color}
                             type="button"
@@ -5373,7 +5384,7 @@ function AgentPagesSection({
 
                   {/* Style Options - Compact Grid */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#4ecdc4] mb-3">Style Options</h4>
+                    <h4 className="text-sm font-medium text-[#22c55e] mb-3">Style Options</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       {/* Icon Style */}
                       <div>
@@ -5384,7 +5395,7 @@ function AgentPagesSection({
                             onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
                             className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
                               linksSettings.iconStyle === 'light'
-                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
                                 : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                             }`}
                           >
@@ -5396,7 +5407,7 @@ function AgentPagesSection({
                             onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
                             className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
                               linksSettings.iconStyle === 'dark'
-                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
                                 : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                             }`}
                           >
@@ -5415,7 +5426,7 @@ function AgentPagesSection({
                             onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
                             className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
                               !linksSettings.showColorPhoto
-                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
                                 : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                             }`}
                           >
@@ -5426,7 +5437,7 @@ function AgentPagesSection({
                             onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
                             className={`flex-1 flex items-center justify-center gap-1.5 px-2 py-1.5 rounded text-xs border transition-colors ${
                               linksSettings.showColorPhoto
-                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
                                 : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                             }`}
                           >
@@ -5444,7 +5455,7 @@ function AgentPagesSection({
                             onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
                             className={`flex-1 px-2 py-1.5 rounded text-xs border transition-colors ${
                               linksSettings.font === 'synonym'
-                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
                                 : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                             }`}
                             style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
@@ -5456,7 +5467,7 @@ function AgentPagesSection({
                             onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
                             className={`flex-1 px-2 py-1.5 rounded text-xs border transition-colors ${
                               linksSettings.font === 'taskor'
-                                ? 'bg-[#4ecdc4]/20 border-[#4ecdc4] text-[#4ecdc4]'
+                                ? 'bg-[#22c55e]/20 border-[#22c55e] text-[#22c55e]'
                                 : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                             }`}
                             style={{ fontFamily: 'var(--font-taskor, sans-serif)', fontWeight: 'bold' }}
@@ -5467,12 +5478,12 @@ function AgentPagesSection({
                       </div>
                     </div>
                   </div>
-                </>
-              )}
+              </div>
 
-              {/* LINKS TAB */}
-              {activeTab === 'links' && (
-                <>
+              {/* LINKS SECTION */}
+              <div className={`space-y-4 ${activeTab === 'links' ? '' : 'hidden lg:block'}`}>
+                {/* Section Header - Desktop only */}
+                <h3 className="hidden lg:block text-sm font-medium text-[#22c55e] border-b border-white/10 pb-2 mb-4 mt-6">Button Links</h3>
                   {/* Unified Links List - Default buttons (yellow) + Custom links */}
                   {(() => {
                     // Build ordered list of all links
@@ -5513,7 +5524,7 @@ function AgentPagesSection({
                               key={linkId}
                               className={`flex items-center gap-2 p-3 rounded-lg group ${
                                 isDefault
-                                  ? 'bg-[#4ecdc4]/10 border border-[#4ecdc4]/30'
+                                  ? 'bg-[#22c55e]/10 border border-[#22c55e]/30'
                                   : 'bg-black/20 border border-white/10'
                               }`}
                             >
@@ -5557,14 +5568,14 @@ function AgentPagesSection({
 
                               {/* Icon for default or custom */}
                               {isDefault ? (
-                                <div className="w-7 h-7 rounded bg-[#4ecdc4]/20 border border-[#4ecdc4]/40 flex items-center justify-center flex-shrink-0">
-                                  <svg className="w-3.5 h-3.5 text-[#4ecdc4]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <div className="w-7 h-7 rounded bg-[#22c55e]/20 border border-[#22c55e]/40 flex items-center justify-center flex-shrink-0">
+                                  <svg className="w-3.5 h-3.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d={linkId === 'join-team' ? 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'} />
                                   </svg>
                                 </div>
                               ) : customLink?.icon && (
-                                <div className="w-7 h-7 rounded bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 flex items-center justify-center flex-shrink-0">
-                                  <svg className="w-3.5 h-3.5 text-[#4ecdc4]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <div className="w-7 h-7 rounded bg-[#22c55e]/10 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
+                                  <svg className="w-3.5 h-3.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                     <path d={LINK_ICONS.find(i => i.name === customLink.icon)?.path || ''} />
                                   </svg>
                                 </div>
@@ -5572,9 +5583,9 @@ function AgentPagesSection({
 
                               {/* Label and description */}
                               <div className="flex-1 min-w-0">
-                                <div className={`text-sm truncate ${isDefault ? 'text-[#4ecdc4]' : 'text-[#e5e4dd]'}`}>
+                                <div className={`text-sm truncate ${isDefault ? 'text-[#22c55e]' : 'text-[#e5e4dd]'}`}>
                                   {label}
-                                  {isDefault && <span className="ml-2 text-xs text-[#4ecdc4]/60">(default)</span>}
+                                  {isDefault && <span className="ml-2 text-xs text-[#22c55e]/60">(default)</span>}
                                 </div>
                                 <div className="text-xs text-[#e5e4dd]/40 truncate">{url}</div>
                               </div>
@@ -5607,7 +5618,7 @@ function AgentPagesSection({
 
                   {/* Add New Link */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10 space-y-3 mt-4">
-                    <h4 className="text-sm font-medium text-[#4ecdc4]">Add Custom Button</h4>
+                    <h4 className="text-sm font-medium text-[#22c55e]">Add Custom Button</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs text-[#e5e4dd]/60 mb-1">Label</label>
@@ -5615,7 +5626,7 @@ function AgentPagesSection({
                           type="text"
                           value={newLinkLabel}
                           onChange={(e) => setNewLinkLabel(e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#4ecdc4]/50 focus:outline-none"
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#22c55e]/50 focus:outline-none"
                           placeholder="e.g., Book a Call"
                         />
                       </div>
@@ -5625,7 +5636,7 @@ function AgentPagesSection({
                           type="url"
                           value={newLinkUrl}
                           onChange={(e) => setNewLinkUrl(e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#4ecdc4]/50 focus:outline-none"
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#22c55e]/50 focus:outline-none"
                           placeholder="https://..."
                         />
                       </div>
@@ -5638,11 +5649,11 @@ function AgentPagesSection({
                         <button
                           type="button"
                           onClick={() => setShowIconPicker(!showIconPicker)}
-                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm hover:border-[#4ecdc4]/30 transition-colors"
+                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm hover:border-[#22c55e]/30 transition-colors"
                         >
                           {newLinkIcon ? (
                             <>
-                              <svg className="w-4 h-4 text-[#4ecdc4]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
                               </svg>
                               <span>{LINK_ICONS.find(i => i.name === newLinkIcon)?.label}</span>
@@ -5660,7 +5671,7 @@ function AgentPagesSection({
                                   type="button"
                                   onClick={() => { setNewLinkIcon(icon.name); setShowIconPicker(false); }}
                                   className={`flex flex-col items-center gap-1 p-2 rounded transition-colors ${
-                                    newLinkIcon === icon.name ? 'bg-[#4ecdc4]/20 text-[#4ecdc4]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
+                                    newLinkIcon === icon.name ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
                                   }`}
                                   title={icon.label}
                                 >
@@ -5700,7 +5711,7 @@ function AgentPagesSection({
                         }
                       }}
                       disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
-                      className="w-full px-4 py-2 rounded-lg text-sm font-medium bg-[#4ecdc4]/10 border border-[#4ecdc4]/30 text-[#4ecdc4] hover:bg-[#4ecdc4]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                      className="w-full px-4 py-2 rounded-lg text-sm font-medium bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                       + Add Button
                     </button>
@@ -5717,8 +5728,7 @@ function AgentPagesSection({
                       <span>Custom buttons</span>
                     </div>
                   </div>
-                </>
-              )}
+              </div>
 
             </div>
 
@@ -5793,7 +5803,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
         </span>
       )}
       {pages.includes('linktree') && (
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#4ecdc4]/10 text-[#4ecdc4] border border-[#4ecdc4]/20">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">
           Linktree
         </span>
       )}

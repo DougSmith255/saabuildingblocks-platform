@@ -66,8 +66,11 @@ export async function GET(request: NextRequest) {
         username,
         email,
         full_name,
+        first_name,
+        last_name,
         display_name,
         avatar_url,
+        profile_picture_url,
         bio,
         role,
         permissions,
@@ -76,7 +79,9 @@ export async function GET(request: NextRequest) {
         is_active,
         created_at,
         last_login_at,
-        metadata
+        metadata,
+        gender,
+        is_leader
       `)
       .eq('id', payload.sub)
       .single();
@@ -112,8 +117,13 @@ export async function GET(request: NextRequest) {
         username: user.username,
         email: user.email,
         fullName: user.full_name,
+        full_name: user.full_name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
+        profile_picture_url: user.profile_picture_url,
+        profilePictureUrl: user.profile_picture_url,
         bio: user.bio,
         role: user.role,
         permissions: user.permissions || [],
@@ -123,6 +133,8 @@ export async function GET(request: NextRequest) {
         createdAt: user.created_at,
         lastLoginAt: user.last_login_at,
         metadata: user.metadata || {},
+        gender: user.gender || 'male',
+        is_leader: user.is_leader || false,
       },
     });
   } catch (error) {

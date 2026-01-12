@@ -4,7 +4,7 @@
   "description": "Smart Agent Alliance Agent Portal - Your hub for resources, training, and team management",
   "start_url": "/agent-portal",
   "display": "standalone",
-  "background_color": "#0c0c0c",
+  "background_color": "#191919",
   "theme_color": "#ffd700",
   "orientation": "portrait-primary",
   "scope": "/",

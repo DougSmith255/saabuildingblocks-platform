@@ -246,12 +246,19 @@ export default async function RootLayout({
 
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#ffd700" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191919" />
+
+        {/* PWA meta tags for iOS */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="SAA Portal" />
+        <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body
         className="font-sans antialiased"
         style={{
-          background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%)',
-          backgroundColor: 'rgb(12, 12, 12)',
+          background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(25, 25, 25) 100%)',
+          backgroundColor: '#191919',
           margin: 0,
           padding: 0,
         }}

@@ -218,7 +218,7 @@ export default async function RootLayout({
 
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#ffd700" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0a0a" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#191919" />
 
         {/* PWA meta tags for iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -324,8 +324,8 @@ export default async function RootLayout({
       <body
         className="font-sans antialiased"
         style={{
-          background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%)',
-          backgroundColor: 'rgb(12, 12, 12)',
+          background: 'radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(25, 25, 25) 100%)',
+          backgroundColor: '#191919',
           margin: 0,
           padding: 0,
         }}

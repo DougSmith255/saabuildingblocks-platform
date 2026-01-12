@@ -79,7 +79,22 @@ export default function DownloadPage() {
   // If already installed, show success message
   if (isStandalone) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0a0a0a] p-4">
+        {/* Back Button */}
+        <div className="sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur-sm">
+          <div className="max-w-md mx-auto py-3">
+            <a
+              href="/agent-portal"
+              className="inline-flex items-center gap-2 text-[#e5e4dd]/70 hover:text-[#ffd700] transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Back to Agent Portal</span>
+            </a>
+          </div>
+        </div>
+        <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
         <div className="max-w-md w-full text-center">
           <div className="w-24 h-24 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-[#ffd700]/20 to-[#ffd700]/5 border border-[#ffd700]/30 flex items-center justify-center">
             <svg className="w-12 h-12 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -97,14 +112,30 @@ export default function DownloadPage() {
             Open Agent Portal
           </a>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#e5e4dd]">
+      {/* Back Button */}
+      <div className="sticky top-0 z-10 bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-white/5">
+        <div className="max-w-2xl mx-auto px-4 py-3">
+          <a
+            href="/agent-portal"
+            className="inline-flex items-center gap-2 text-[#e5e4dd]/70 hover:text-[#ffd700] transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span>Back to Agent Portal</span>
+          </a>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a] border-b border-[#ffd700]/20">
+      <div className="bg-gradient-to-b from-[#1a1a1a] to-[#0a0a0a]">
         <div className="max-w-2xl mx-auto px-4 py-8 text-center">
           {/* App Icon */}
           <div className="w-24 h-24 mx-auto mb-6 rounded-2xl overflow-hidden shadow-2xl shadow-[#ffd700]/20 border border-[#ffd700]/30">

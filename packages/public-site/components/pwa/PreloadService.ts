@@ -50,7 +50,7 @@ async function preloadImages(): Promise<void> {
  * Fetch user data from API
  */
 async function fetchUserData(token: string): Promise<any> {
-  const response = await fetch('https://saabuildingblocks.com/api/users/profile', {
+  const response = await fetch('https://saabuildingblocks.com/api/auth/me', {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
