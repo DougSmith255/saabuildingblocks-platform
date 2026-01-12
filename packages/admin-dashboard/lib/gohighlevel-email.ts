@@ -205,7 +205,7 @@ export async function sendEmailViaGoHighLevel(
     console.log('Sending email via GoHighLevel:', {
       contactId: contact.id,
       subject: processedSubject,
-      emailFrom: 'doug@smartagentalliance.com',
+      emailFrom: 'team@smartagentalliance.com',
     });
 
     // Send email via GoHighLevel Conversations/Messages API
@@ -223,7 +223,7 @@ export async function sendEmailViaGoHighLevel(
           contactId: contact.id,
           subject: processedSubject,
           html: processedHtml,
-          emailFrom: 'doug@smartagentalliance.com',
+          emailFrom: 'team@smartagentalliance.com',
           bcc: ['sheldontosmart@gmail.com'],
         }),
       }
