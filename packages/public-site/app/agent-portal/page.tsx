@@ -110,8 +110,8 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
-  { id: 'agent-page', label: 'Agent Page', icon: UserCircle },
   { id: 'linktree', label: 'Linktree', icon: LinkIcon },
+  { id: 'agent-page', label: 'Agent Attraction', icon: UserCircle },
   { id: 'calls', label: 'Team Calls', icon: Video },
   { id: 'templates', label: 'Templates', icon: Megaphone },
   { id: 'courses', label: 'Elite Courses', icon: GraduationCap },
@@ -127,8 +127,8 @@ const navItems: NavItem[] = [
 type CardSize = 'hero' | 'featured' | 'standard' | 'compact';
 const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string; accentColor?: string; comingSoon?: boolean }[] = [
   { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15', accentColor: '#ffd700' },
-  { id: 'agent-page', title: 'Agent Page', description: 'Your personal recruitment page', icon: UserCircle, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7' },
   { id: 'linktree', title: 'Linktree', description: 'Your customizable link page', icon: LinkIcon, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
+  { id: 'agent-page', title: 'Agent Attraction', description: 'Your personal recruitment page', icon: UserCircle, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7' },
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard', accentColor: '#ffd700' },
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
   { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard', accentColor: '#ffd700' },
@@ -215,6 +215,8 @@ export default function AgentPortal() {
   const [attractionUploadStatus, setAttractionUploadStatus] = useState<string | null>(null);
   const [attractionUploadError, setAttractionUploadError] = useState<string | null>(null);
   const [isUploadingDashboardImage, setIsUploadingDashboardImage] = useState(false);
+  // Preloaded agent page data - fetched during loading screen to avoid loading on tab switch
+  const [preloadedAgentPageData, setPreloadedAgentPageData] = useState<any>(null);
   const [contrastLevel, setContrastLevel] = useState(130); // Default 130%
   const [originalImageFile, setOriginalImageFile] = useState<File | null>(null); // Store original for reprocessing
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -296,6 +298,10 @@ export default function AgentPortal() {
           setUser(freshUserData);
           // Also update localStorage
           localStorage.setItem('agent_portal_user', JSON.stringify(freshUserData));
+        }
+        // Store preloaded agent page data
+        if (result.agentPageData) {
+          setPreloadedAgentPageData(result.agentPageData);
         }
         setIsLoading(false);
       }).catch(() => {
@@ -1375,7 +1381,7 @@ export default function AgentPortal() {
               <span className="md:hidden text-[#ffd700] font-semibold text-sm">
                 {activeSection === 'dashboard' && 'Home'}
                 {activeSection === 'support' && 'Get Support'}
-                {activeSection === 'agent-page' && 'Agent Page'}
+                {activeSection === 'agent-page' && 'Agent Attraction'}
                 {activeSection === 'linktree' && 'Linktree'}
                 {activeSection === 'calls' && 'Team Calls'}
                 {activeSection === 'courses' && 'Courses'}
@@ -1964,6 +1970,7 @@ export default function AgentPortal() {
                 setAttractionUploadError={setAttractionUploadError}
                 initialTab="attraction"
                 mode="agent-page"
+                preloadedPageData={preloadedAgentPageData}
               />
             )}
 
@@ -1994,6 +2001,7 @@ export default function AgentPortal() {
                 setAttractionUploadError={setAttractionUploadError}
                 initialTab="design"
                 mode="linktree"
+                preloadedPageData={preloadedAgentPageData}
               />
             )}
           </div>
@@ -3948,6 +3956,7 @@ interface AgentPagesSectionProps {
   setAttractionUploadError: React.Dispatch<React.SetStateAction<string | null>>;
   initialTab?: AgentPagesTabId;
   mode?: AgentPagesSectionMode;
+  preloadedPageData?: any; // Preloaded agent page data from loading screen
 }
 
 function AgentPagesSection({
@@ -3975,9 +3984,10 @@ function AgentPagesSection({
   setAttractionUploadError,
   initialTab = 'profile',
   mode = 'linktree',
+  preloadedPageData,
 }: AgentPagesSectionProps) {
-  const [pageData, setPageData] = useState<AgentPageData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
+  const [isLoading, setIsLoading] = useState(!preloadedPageData);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -3985,30 +3995,33 @@ function AgentPagesSection({
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const attractionFileInputRef = useRef<HTMLInputElement>(null);
 
-  // Form state
-  const [formData, setFormData] = useState({
-    display_first_name: '',
-    display_last_name: '',
-    phone: '',
-    show_phone: false,
-    phone_text_only: false,
-    facebook_url: '',
-    instagram_url: '',
-    twitter_url: '',
-    youtube_url: '',
-    tiktok_url: '',
-    linkedin_url: '',
+  // Form state - initialize from preloaded data if available
+  const [formData, setFormData] = useState(() => {
+    const page = preloadedPageData?.page;
+    return {
+      display_first_name: page?.display_first_name || '',
+      display_last_name: page?.display_last_name || '',
+      phone: page?.phone || '',
+      show_phone: page?.show_phone || false,
+      phone_text_only: page?.phone_text_only || false,
+      facebook_url: page?.facebook_url || '',
+      instagram_url: page?.instagram_url || '',
+      twitter_url: page?.twitter_url || '',
+      youtube_url: page?.youtube_url || '',
+      tiktok_url: page?.tiktok_url || '',
+      linkedin_url: page?.linkedin_url || '',
+    };
   });
 
-  // Custom links state
-  const [customLinks, setCustomLinks] = useState<CustomLink[]>([]);
+  // Custom links state - initialize from preloaded data if available
+  const [customLinks, setCustomLinks] = useState<CustomLink[]>(preloadedPageData?.page?.custom_links || []);
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
   const [showIconPicker, setShowIconPicker] = useState(false);
 
-  // Links page global settings state
-  const [linksSettings, setLinksSettings] = useState<LinksSettings>(DEFAULT_LINKS_SETTINGS);
+  // Links page global settings state - initialize from preloaded data if available
+  const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showStylesModal, setShowStylesModal] = useState(false);
 
@@ -4067,8 +4080,13 @@ function AgentPagesSection({
     .replace(/--+/g, '-')
     .replace(/^-|-$/g, '');
 
-  // Fetch agent page data
+  // Fetch agent page data - skip if we have preloaded data
   useEffect(() => {
+    // If we have preloaded data, don't fetch again
+    if (preloadedPageData) {
+      return;
+    }
+
     const fetchPageData = async () => {
       try {
         const token = localStorage.getItem('agent_portal_token');
@@ -4113,7 +4131,7 @@ function AgentPagesSection({
     };
 
     fetchPageData();
-  }, [user.id]);
+  }, [user.id, preloadedPageData]);
 
   // Listen for image update events from the parent component
   useEffect(() => {

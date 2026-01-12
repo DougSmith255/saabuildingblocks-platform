@@ -619,7 +619,7 @@ export function UserManagementTab() {
                           title={`Currently: ${user.is_leader ? 'Leader' : 'Follower'} - Click to toggle`}
                         >
                           <span className="text-base">{user.is_leader ? '👑' : '👤'}</span>
-                          <span className="text-xs">{user.is_leader ? 'L' : 'F'}</span>
+                          <span className="text-xs">{user.is_leader ? 'Leader' : 'Follower'}</span>
                         </button>
                         <button
                           onClick={() => handleEditUser(user)}
