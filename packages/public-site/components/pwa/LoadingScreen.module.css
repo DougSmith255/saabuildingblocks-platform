@@ -5,12 +5,23 @@
 
 .loadingScreen {
   position: fixed;
-  inset: 0;
-  z-index: 9999;
+  /* Use viewport units for complete coverage including safe areas */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Extend beyond safe areas on iOS */
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh; /* Dynamic viewport height - accounts for browser UI */
+  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
   background: rgb(12, 12, 12);
+  /* Cover safe areas on notched devices */
+  padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  box-sizing: border-box;
 }
 
 /* Glass shimmer container - matches header effect */

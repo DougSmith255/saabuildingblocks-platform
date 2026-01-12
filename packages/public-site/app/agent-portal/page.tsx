@@ -926,11 +926,16 @@ export default function AgentPortal() {
   if (isLoading || !user) {
     return (
       <>
-        {/* Full screen loading overlay - covers everything including header */}
+        {/* Full screen loading overlay - covers everything including header and safe areas */}
         <div
           style={{
             position: 'fixed',
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100dvh',
             zIndex: 99999,
             background: 'rgb(12, 12, 12)',
             display: 'flex',
@@ -1101,7 +1106,11 @@ export default function AgentPortal() {
     <main
       id="main-content"
       className="agent-portal-root min-h-screen"
-      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+      style={{
+        WebkitTapHighlightColor: 'transparent',
+        // Hide content while loading screen is visible (prevents flash)
+        visibility: (showLoadingScreen && !isLoadingFadingOut) ? 'hidden' : 'visible',
+      } as React.CSSProperties}
     >
       {/* Global hidden file input for profile picture upload - shared by desktop and mobile */}
       <input
@@ -1206,8 +1215,8 @@ export default function AgentPortal() {
         className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
-        {/* Solid background with rounded top corners and top border only */}
-        <div className="absolute inset-0 bg-[#0a0a0a] rounded-t-2xl border-t border-white/[0.08]" />
+        {/* Solid background - edge to edge, no rounded corners */}
+        <div className="absolute inset-0 bg-[#0a0a0a] border-t border-white/[0.08]" />
 
         <div
           className="relative flex items-center h-16 px-1"
@@ -2262,7 +2271,12 @@ export default function AgentPortal() {
         <div
           style={{
             position: 'fixed',
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100dvh',
             zIndex: 99999,
             background: 'rgb(12, 12, 12)',
             display: 'flex',
