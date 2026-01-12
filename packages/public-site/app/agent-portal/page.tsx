@@ -1191,12 +1191,11 @@ export default function AgentPortal() {
 
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
-        className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50 pb-safe"
+        className="mobile-bottom-nav md:hidden fixed bottom-2 left-2 right-2 z-50"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
-        {/* Solid background with rounded top corners */}
-        <div className="absolute inset-0 bg-[#0a0a0a] rounded-t-2xl" />
-        <div className="absolute inset-x-0 top-0 h-[1px] bg-[#ffd700]/30 rounded-t-2xl" />
+        {/* Solid background with fully rounded corners matching button style */}
+        <div className="absolute inset-0 bg-[#0a0a0a] rounded-2xl border border-white/[0.08]" />
 
         <div
           className="relative flex items-center h-16 px-1"
