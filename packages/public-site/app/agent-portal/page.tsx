@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { SketchPicker, ColorResult } from 'react-color';
 
@@ -97,7 +97,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages';
+type SectionId = 'dashboard' | 'start-here' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-pages' | 'support';
 
 interface NavItem {
   id: SectionId;
@@ -107,6 +107,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
+  { id: 'support', label: 'Get Support', icon: LifeBuoy },
   { id: 'start-here', label: 'Start Here', icon: Rocket },
   { id: 'agent-pages', label: 'My SAA Pages', icon: FileUser },
   { id: 'calls', label: 'Team Calls', icon: Video },
@@ -120,8 +121,10 @@ const navItems: NavItem[] = [
 
 // Dashboard quick access cards with Lucide icons for 3D effect
 // size: 'featured' = large card (spans 2 cols), 'standard' = normal card, 'compact' = smaller card
-type CardSize = 'featured' | 'standard' | 'compact';
+// 'hero' = extra prominent card for support
+type CardSize = 'hero' | 'featured' | 'standard' | 'compact';
 const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string }[] = [
+  { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15' },
   { id: 'start-here', title: 'Start Here', description: 'New to the team? Start here', icon: Rocket, size: 'featured', gradient: 'from-amber-500/20 to-orange-600/10' },
   { id: 'agent-pages', title: 'My SAA Pages', description: 'Your attraction & linktree pages', icon: FileUser, size: 'featured', gradient: 'from-emerald-500/20 to-[#00ff88]/10' },
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard' },
@@ -1152,6 +1155,7 @@ export default function AgentPortal() {
               {/* Mobile: Current section title */}
               <span className="md:hidden text-[#ffd700] font-semibold text-sm">
                 {activeSection === 'dashboard' && 'Home'}
+                {activeSection === 'support' && 'Get Support'}
                 {activeSection === 'agent-pages' && 'My Pages'}
                 {activeSection === 'calls' && 'Team Calls'}
                 {activeSection === 'courses' && 'Courses'}
@@ -1511,6 +1515,9 @@ export default function AgentPortal() {
             {activeSection === 'dashboard' && (
               <DashboardView onNavigate={setActiveSection} />
             )}
+
+            {/* Get Support */}
+            {activeSection === 'support' && <SupportSection />}
 
             {/* Start Here */}
             {activeSection === 'start-here' && <StartHereSection />}
@@ -2277,12 +2284,64 @@ export default function AgentPortal() {
 // ============================================================================
 function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) {
   // Separate cards by size for bento layout
+  const heroCard = dashboardCards.find(c => c.size === 'hero');
   const featuredCards = dashboardCards.filter(c => c.size === 'featured');
   const standardCards = dashboardCards.filter(c => c.size === 'standard');
   const compactCards = dashboardCards.filter(c => c.size === 'compact');
 
   return (
     <div className="space-y-4 px-1 sm:px-2">
+      {/* Hero Card - Get Support (most prominent) */}
+      {heroCard && (
+        <button
+          onClick={() => onNavigate(heroCard.id)}
+          className="w-full text-left group relative"
+          style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+        >
+          <div
+            className={`
+              relative p-5 sm:p-6 rounded-2xl
+              bg-gradient-to-br ${heroCard.gradient || 'from-[#ffd700]/20 to-amber-600/10'}
+              border-2 border-[#ffd700]/40
+              transition-all duration-300 ease-out
+              hover:border-[#ffd700]/70 hover:shadow-xl hover:shadow-[#ffd700]/20
+              hover:scale-[1.01]
+              group-active:scale-[0.99]
+              overflow-hidden
+            `}
+            style={{ backgroundColor: 'rgba(10,10,10,0.95)' }}
+          >
+            {/* Animated glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-[#ffd700]/0 via-[#ffd700]/10 to-[#ffd700]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            <div className="relative flex items-center gap-4 sm:gap-6">
+              {/* Icon container with gold glow */}
+              <div className="relative p-4 sm:p-5 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 group-hover:bg-[#ffd700]/15 transition-all duration-300">
+                <Icon3D color="#ffd700">
+                  <heroCard.icon className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] group-hover:scale-110 transition-transform duration-300" />
+                </Icon3D>
+              </div>
+
+              <div className="flex-1">
+                <h3 className="text-lg sm:text-xl font-bold text-[#ffd700] group-hover:text-[#ffe55c] transition-colors duration-300">
+                  {heroCard.title}
+                </h3>
+                <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1">
+                  {heroCard.description}
+                </p>
+              </div>
+
+              {/* Arrow indicator */}
+              <div className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full bg-[#ffd700]/10 group-hover:bg-[#ffd700]/20 transition-colors duration-300">
+                <svg className="w-5 h-5 text-[#ffd700] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </button>
+      )}
+
       {/* Featured Cards Row - Large cards with gradients */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
         {featuredCards.map((card) => {
@@ -2291,7 +2350,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
             <button
               key={card.id}
               onClick={() => onNavigate(card.id)}
-              className="text-left group relative overflow-hidden"
+              className="text-left group relative"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <div className={`
@@ -2301,6 +2360,7 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                 hover:border-[#ffd700]/40 hover:shadow-lg hover:shadow-[#ffd700]/10
                 hover:scale-[1.02]
                 group-active:scale-[0.98]
+                overflow-hidden
               `}
               style={{ backgroundColor: 'rgba(10,10,10,0.95)' }}
               >
@@ -2411,6 +2471,161 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
             </button>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Support Section - Contact categories for different types of help
+// ============================================================================
+function SupportSection() {
+  const supportCategories = [
+    {
+      id: 'saa-tech',
+      title: 'SAA Tech Support',
+      description: 'Issues with your SAA pages, portal, or tools',
+      icon: Wrench,
+      color: '#ffd700',
+      contacts: [
+        { type: 'Email', value: 'tech@smartagentalliance.com', href: 'mailto:tech@smartagentalliance.com' },
+      ],
+    },
+    {
+      id: 'saa-questions',
+      title: 'SAA General Questions',
+      description: 'Questions about Smart Agent Alliance, team resources, or training',
+      icon: MessageCircleQuestion,
+      color: '#00ff88',
+      contacts: [
+        { type: 'Email', value: 'support@smartagentalliance.com', href: 'mailto:support@smartagentalliance.com' },
+      ],
+    },
+    {
+      id: 'exp-tech',
+      title: 'eXp Tech Support',
+      description: 'Issues with eXp World, BoldTrail, Skyslope, or other eXp tools',
+      icon: Headphones,
+      color: '#3b82f6',
+      contacts: [
+        { type: 'eXp World', value: 'Visit Tech Support Room', href: null },
+        { type: 'Email', value: 'techsupport@exprealty.com', href: 'mailto:techsupport@exprealty.com' },
+      ],
+    },
+    {
+      id: 'exp-general',
+      title: 'eXp General Support',
+      description: 'General questions about eXp policies, commissions, or benefits',
+      icon: Building2,
+      color: '#8b5cf6',
+      contacts: [
+        { type: 'eXp World', value: 'Visit Expert Care Room', href: null },
+        { type: 'Email', value: 'agentsupport@exprealty.com', href: 'mailto:agentsupport@exprealty.com' },
+      ],
+    },
+    {
+      id: 'exp-broker',
+      title: 'State Broker Questions',
+      description: 'Production questions, transaction issues, or compliance matters',
+      icon: Users,
+      color: '#f59e0b',
+      contacts: [
+        { type: 'eXp World', value: "Visit Your State Broker's Room", href: null },
+      ],
+    },
+  ];
+
+  return (
+    <div className="space-y-6 px-2 sm:px-4">
+      {/* Header */}
+      <div className="text-center mb-6">
+        <p className="text-sm sm:text-base text-[#e5e4dd]/70 max-w-2xl mx-auto">
+          Find the right contact for your question. Click on a category below to see contact options.
+        </p>
+      </div>
+
+      {/* Support Categories Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {supportCategories.map((category) => {
+          const IconComponent = category.icon;
+          return (
+            <div
+              key={category.id}
+              className="rounded-xl border border-white/10 overflow-hidden transition-all duration-300 hover:border-white/20"
+              style={{ backgroundColor: 'rgba(15,15,15,0.95)' }}
+            >
+              {/* Category Header */}
+              <div
+                className="p-4 flex items-center gap-3"
+                style={{ borderBottom: `1px solid ${category.color}30` }}
+              >
+                <div
+                  className="p-2.5 rounded-lg"
+                  style={{ backgroundColor: `${category.color}15` }}
+                >
+                  <IconComponent
+                    className="w-6 h-6"
+                    style={{ color: category.color }}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3
+                    className="font-semibold text-base"
+                    style={{ color: category.color }}
+                  >
+                    {category.title}
+                  </h3>
+                  <p className="text-xs text-[#e5e4dd]/50 line-clamp-1">
+                    {category.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Contact Options */}
+              <div className="p-4 space-y-2">
+                {category.contacts.map((contact, idx) => (
+                  <div key={idx} className="flex items-center justify-between gap-2">
+                    <span className="text-xs text-[#e5e4dd]/50">{contact.type}:</span>
+                    {contact.href ? (
+                      <a
+                        href={contact.href}
+                        className="text-sm text-[#e5e4dd] hover:text-[#ffd700] transition-colors truncate"
+                      >
+                        {contact.value}
+                      </a>
+                    ) : (
+                      <span className="text-sm text-[#e5e4dd]/80 truncate">
+                        {contact.value}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Quick Tips */}
+      <div className="mt-8 p-4 rounded-xl bg-[#ffd700]/5 border border-[#ffd700]/20">
+        <h4 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
+          <LifeBuoy className="w-5 h-5" />
+          Quick Tips
+        </h4>
+        <ul className="space-y-2 text-sm text-[#e5e4dd]/70">
+          <li className="flex items-start gap-2">
+            <span className="text-[#ffd700]">•</span>
+            <span>For eXp World issues, access eXp World and visit the appropriate support room</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#ffd700]">•</span>
+            <span>Production questions should go to your State Broker first</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-[#ffd700]">•</span>
+            <span>For SAA-specific tools and pages, contact SAA Tech Support</span>
+          </li>
+        </ul>
       </div>
     </div>
   );
