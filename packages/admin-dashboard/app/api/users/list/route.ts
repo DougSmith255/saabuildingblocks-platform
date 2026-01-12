@@ -23,6 +23,8 @@ interface User {
   updated_at: string;
   exp_email?: string; // Agent's eXp Realty email
   legal_name?: string; // Agent's official legal name
+  gender?: 'male' | 'female'; // Controls which team calls the user sees
+  is_leader?: boolean; // Controls whether user sees leaders-only calls
 }
 
 /**
@@ -94,6 +96,8 @@ async function fetchUsers(request: NextRequest) {
       updated_at: user.updated_at,
       exp_email: user.exp_email,
       legal_name: user.legal_name,
+      gender: user.gender || 'male',
+      is_leader: user.is_leader || false,
     };
   });
 
