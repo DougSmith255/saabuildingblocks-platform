@@ -1,8 +1,9 @@
 /**
  * PWA Preload Service
  *
- * Preloads critical assets and data during the loading screen
- * to make the app feel snappy once the user enters.
+ * Preloads ALL critical assets and data during the loading screen.
+ * The loading screen will NOT disappear until everything is loaded.
+ * No loading spinners should appear in the UI after the loading screen.
  */
 
 export interface PreloadResult {
@@ -14,7 +15,7 @@ export interface PreloadResult {
 }
 
 /**
- * Critical images to preload
+ * Critical static images to preload
  */
 const CRITICAL_IMAGES = [
   '/images/saa-logo-gold.png',
@@ -22,27 +23,35 @@ const CRITICAL_IMAGES = [
 ];
 
 /**
- * Preload a single image
+ * Preload a single image with timeout
+ * Returns true if loaded successfully, false otherwise
  */
-function preloadImage(src: string): Promise<void> {
-  return new Promise((resolve, reject) => {
+function preloadImage(src: string, timeoutMs: number = 10000): Promise<boolean> {
+  return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => resolve();
-    img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+    const timeout = setTimeout(() => {
+      console.warn(`Image preload timeout: ${src}`);
+      resolve(false);
+    }, timeoutMs);
+
+    img.onload = () => {
+      clearTimeout(timeout);
+      resolve(true);
+    };
+    img.onerror = () => {
+      clearTimeout(timeout);
+      console.warn(`Image preload failed: ${src}`);
+      resolve(false);
+    };
     img.src = src;
   });
 }
 
 /**
- * Preload all critical images
+ * Preload all critical static images
  */
-async function preloadImages(): Promise<void> {
-  const promises = CRITICAL_IMAGES.map(src =>
-    preloadImage(src).catch(err => {
-      console.warn('Image preload failed:', err);
-      // Don't fail the whole preload for one image
-    })
-  );
+async function preloadStaticImages(): Promise<void> {
+  const promises = CRITICAL_IMAGES.map(src => preloadImage(src));
   await Promise.all(promises);
 }
 
@@ -82,27 +91,18 @@ async function fetchAgentPageData(token: string, userId: string): Promise<any> {
 }
 
 /**
- * Preload user's profile picture if available
- */
-async function preloadProfilePicture(profilePictureUrl?: string): Promise<void> {
-  if (profilePictureUrl) {
-    await preloadImage(profilePictureUrl).catch(() => {
-      // Profile picture might not be accessible, ignore
-    });
-  }
-}
-
-/**
  * Main preload function
  * Call this during the loading screen to preload all critical data
+ * Loading screen will NOT disappear until this completes
  */
 export async function preloadAppData(): Promise<PreloadResult> {
   const errors: string[] = [];
   let userData: any = null;
   let agentPageData: any = null;
+  const imagePreloadPromises: Promise<boolean>[] = [];
 
-  // Start image preloading immediately
-  const imagePromise = preloadImages();
+  // Start static image preloading immediately
+  const staticImagesPromise = preloadStaticImages();
 
   // Get auth token
   const token = typeof localStorage !== 'undefined'
@@ -119,9 +119,10 @@ export async function preloadAppData(): Promise<PreloadResult> {
         // Cache user data in localStorage for faster subsequent loads
         localStorage.setItem('agent_portal_user', JSON.stringify(userData));
 
-        // Preload profile picture
-        if (userData.profilePictureUrl) {
-          preloadProfilePicture(userData.profilePictureUrl);
+        // Queue profile picture for preloading (WAIT for it)
+        if (userData.profilePictureUrl || userData.profile_picture_url) {
+          const profileUrl = userData.profilePictureUrl || userData.profile_picture_url;
+          imagePreloadPromises.push(preloadImage(profileUrl));
         }
 
         // Fetch agent page data
@@ -129,6 +130,16 @@ export async function preloadAppData(): Promise<PreloadResult> {
           const pageResponse = await fetchAgentPageData(token, userData.id);
           if (pageResponse) {
             agentPageData = pageResponse;
+
+            // Queue Linktree profile image for preloading if different from main profile
+            if (pageResponse.page?.profile_image_url) {
+              const linktreeProfileUrl = pageResponse.page.profile_image_url;
+              // Only preload if it's different from the main profile picture
+              const mainProfileUrl = userData.profilePictureUrl || userData.profile_picture_url;
+              if (linktreeProfileUrl !== mainProfileUrl) {
+                imagePreloadPromises.push(preloadImage(linktreeProfileUrl));
+              }
+            }
           }
         } catch (err) {
           // Agent page fetch failed, not critical
@@ -141,8 +152,9 @@ export async function preloadAppData(): Promise<PreloadResult> {
     }
   }
 
-  // Wait for images to finish
-  await imagePromise;
+  // Wait for ALL images to finish loading (static + profile + linktree)
+  await staticImagesPromise;
+  await Promise.all(imagePreloadPromises);
 
   return {
     success: errors.length === 0,

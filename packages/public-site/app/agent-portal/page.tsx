@@ -227,7 +227,7 @@ export default function AgentPortal() {
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
   const [pendingImageUrl, setPendingImageUrl] = useState<string | null>(null);
   const [profileImageError, setProfileImageError] = useState(false); // Track if profile image failed to load
-  const [profileImageLoading, setProfileImageLoading] = useState(true); // Track if profile image is loading
+  const [profileImageLoading, setProfileImageLoading] = useState(false); // Images are preloaded during loading screen
   const [pendingBgRemovedUrl, setPendingBgRemovedUrl] = useState<string | null>(null);
   const [isRemovingBackground, setIsRemovingBackground] = useState(false);
   const [bgRemovalProgress, setBgRemovalProgress] = useState(0);
