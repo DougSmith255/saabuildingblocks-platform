@@ -2845,155 +2845,135 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
 }
 
 // ============================================================================
-// Support Section - Contact categories for different types of help
+// Support Section - Two main contact points: SAA and eXp
 // ============================================================================
 function SupportSection() {
-  const supportCategories = [
-    {
-      id: 'saa-tech',
-      title: 'SAA Tech Support',
-      description: 'Issues with your SAA pages, portal, or tools',
-      icon: Wrench,
-      color: '#ffd700',
-      contacts: [
-        { type: 'Email', value: 'tech@smartagentalliance.com', href: 'mailto:tech@smartagentalliance.com' },
-      ],
-    },
-    {
-      id: 'saa-questions',
-      title: 'SAA General Questions',
-      description: 'Questions about Smart Agent Alliance, team resources, or training',
-      icon: MessageCircleQuestion,
-      color: '#00ff88',
-      contacts: [
-        { type: 'Email', value: 'support@smartagentalliance.com', href: 'mailto:support@smartagentalliance.com' },
-      ],
-    },
-    {
-      id: 'exp-tech',
-      title: 'eXp Tech Support',
-      description: 'Issues with eXp World, BoldTrail, Skyslope, or other eXp tools',
-      icon: Headphones,
-      color: '#3b82f6',
-      contacts: [
-        { type: 'eXp World', value: 'Visit Tech Support Room', href: null },
-        { type: 'Email', value: 'techsupport@exprealty.com', href: 'mailto:techsupport@exprealty.com' },
-      ],
-    },
-    {
-      id: 'exp-general',
-      title: 'eXp General Support',
-      description: 'General questions about eXp policies, commissions, or benefits',
-      icon: Building2,
-      color: '#8b5cf6',
-      contacts: [
-        { type: 'eXp World', value: 'Visit Expert Care Room', href: null },
-        { type: 'Email', value: 'agentsupport@exprealty.com', href: 'mailto:agentsupport@exprealty.com' },
-      ],
-    },
-    {
-      id: 'exp-broker',
-      title: 'State Broker Questions',
-      description: 'Production questions, transaction issues, or compliance matters',
-      icon: Users,
-      color: '#f59e0b',
-      contacts: [
-        { type: 'eXp World', value: "Visit Your State Broker's Room", href: null },
-      ],
-    },
-  ];
-
   return (
-    <div className="space-y-6 px-2 sm:px-4">
+    <div className="space-y-6 px-2 sm:px-4 max-w-3xl mx-auto">
       {/* Header */}
-      <div className="text-center mb-6">
-        <p className="text-sm sm:text-base text-[#e5e4dd]/70 max-w-2xl mx-auto">
-          Find the right contact for your question. Click on a category below to see contact options.
+      <div className="text-center mb-8">
+        <p className="text-sm sm:text-base text-[#e5e4dd]/70">
+          Need help? Choose the right support channel below.
         </p>
       </div>
 
-      {/* Support Categories Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {supportCategories.map((category) => {
-          const IconComponent = category.icon;
-          return (
-            <div
-              key={category.id}
-              className="rounded-xl border border-white/10 overflow-hidden transition-all duration-300 hover:border-white/20"
-              style={{ backgroundColor: 'rgba(15,15,15,0.95)' }}
-            >
-              {/* Category Header */}
-              <div
-                className="p-4 flex items-center gap-3"
-                style={{ borderBottom: `1px solid ${category.color}30` }}
-              >
-                <div
-                  className="p-2.5 rounded-lg"
-                  style={{ backgroundColor: `${category.color}15` }}
-                >
-                  <IconComponent
-                    className="w-6 h-6"
-                    style={{ color: category.color }}
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3
-                    className="font-semibold text-base"
-                    style={{ color: category.color }}
-                  >
-                    {category.title}
-                  </h3>
-                  <p className="text-xs text-[#e5e4dd]/50 line-clamp-1">
-                    {category.description}
-                  </p>
-                </div>
+      {/* Support Cards - 2 column grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* SAA Support Card */}
+        <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
+          {/* Header */}
+          <div className="p-5 border-b border-[#ffd700]/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 rounded-xl bg-[#ffd700]/20">
+                <LifeBuoy className="w-7 h-7 text-[#ffd700]" />
               </div>
-
-              {/* Contact Options */}
-              <div className="p-4 space-y-2">
-                {category.contacts.map((contact, idx) => (
-                  <div key={idx} className="flex items-center justify-between gap-2">
-                    <span className="text-xs text-[#e5e4dd]/50">{contact.type}:</span>
-                    {contact.href ? (
-                      <a
-                        href={contact.href}
-                        className="text-sm text-[#e5e4dd] hover:text-[#ffd700] transition-colors truncate"
-                      >
-                        {contact.value}
-                      </a>
-                    ) : (
-                      <span className="text-sm text-[#e5e4dd]/80 truncate">
-                        {contact.value}
-                      </span>
-                    )}
-                  </div>
-                ))}
+              <div>
+                <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
+                <p className="text-xs text-[#e5e4dd]/60">Smart Agent Alliance Team</p>
               </div>
             </div>
-          );
-        })}
-      </div>
+          </div>
 
-      {/* Quick Tips */}
-      <div className="mt-8 p-4 rounded-xl bg-[#ffd700]/5 border border-[#ffd700]/20">
-        <h4 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
-          <LifeBuoy className="w-5 h-5" />
-          Quick Tips
-        </h4>
-        <ul className="space-y-2 text-sm text-[#e5e4dd]/70">
-          <li className="flex items-start gap-2">
-            <span className="text-[#ffd700]">•</span>
-            <span>For eXp World issues, access eXp World and visit the appropriate support room</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[#ffd700]">•</span>
-            <span>Production questions should go to your State Broker first</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <span className="text-[#ffd700]">•</span>
-            <span>For SAA-specific tools and pages, contact SAA Tech Support</span>
-          </li>
-        </ul>
+          {/* Contact Options */}
+          <div className="p-5 space-y-4">
+            {/* Email Button */}
+            <a
+              href="mailto:team@smartagentalliance.com"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#ffd700] text-black font-semibold hover:bg-[#ffe55c] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              team@smartagentalliance.com
+            </a>
+
+            {/* Urgent Contact Info */}
+            <div className="p-4 rounded-xl bg-black/30 border border-white/10">
+              <p className="text-xs text-[#e5e4dd]/60 mb-3 text-center">For time-sensitive issues, text:</p>
+              <div className="space-y-2">
+                <a
+                  href="sms:4153205606"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                >
+                  <span className="text-sm text-[#e5e4dd]">Doug</span>
+                  <span className="text-sm text-[#ffd700] font-medium">(415) 320-5606</span>
+                </a>
+                <a
+                  href="sms:4152380922"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                >
+                  <span className="text-sm text-[#e5e4dd]">Karrie</span>
+                  <span className="text-sm text-[#ffd700] font-medium">(415) 238-0922</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* eXp Support Card */}
+        <div className="rounded-2xl border border-[#3b82f6]/30 overflow-hidden bg-gradient-to-b from-[#3b82f6]/10 to-transparent">
+          {/* Header */}
+          <div className="p-5 border-b border-[#3b82f6]/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 rounded-xl bg-[#3b82f6]/20">
+                <Headphones className="w-7 h-7 text-[#3b82f6]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[#3b82f6]">eXp Support</h3>
+                <p className="text-xs text-[#e5e4dd]/60">eXp Realty Expert Care</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Options */}
+          <div className="p-5 space-y-4">
+            {/* Phone */}
+            <a
+              href="tel:8333030610"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#3b82f6] text-white font-semibold hover:bg-[#5b9aff] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              (833) 303-0610
+            </a>
+
+            {/* Email */}
+            <a
+              href="mailto:expexpertcare@exprealty.net"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-black/30 border border-[#3b82f6]/30 text-[#3b82f6] font-semibold hover:bg-[#3b82f6]/10 transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              expexpertcare@exprealty.net
+            </a>
+
+            {/* eXp World Link */}
+            <a
+              href="https://exp.world/expertcare"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-black/30 border border-white/10 text-[#e5e4dd] font-medium hover:border-[#3b82f6]/30 hover:text-[#3b82f6] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+              eXp World Expert Care
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
