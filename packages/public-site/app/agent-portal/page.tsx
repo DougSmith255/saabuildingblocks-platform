@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
-import { Rocket, Video, Megaphone, GraduationCap, Users, DollarSign, Link2, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { ChromePicker, ColorResult } from 'react-color';
@@ -143,10 +143,11 @@ interface UserData {
   profilePictureUrl: string | null;
   gender?: 'male' | 'female' | null;
   isLeader?: boolean | null;
+  state?: string | null;
 }
 
 // Section types
-type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'revshare' | 'exp-links' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile';
+type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile';
 
 interface NavItem {
   id: SectionId;
@@ -162,9 +163,7 @@ const navItems: NavItem[] = [
   { id: 'calls', label: 'Team Calls', icon: Video },
   { id: 'templates', label: 'Templates', icon: Megaphone },
   { id: 'courses', label: 'Elite Courses', icon: GraduationCap },
-  { id: 'production', label: 'Production', icon: Users },
-  { id: 'revshare', label: 'RevShare', icon: DollarSign },
-  { id: 'exp-links', label: 'eXp Links', icon: Link2 },
+  { id: 'production', label: 'Landing Pages', icon: Users },
   { id: 'new-agents', label: 'New Agents', icon: PersonStanding },
 ];
 
@@ -179,9 +178,7 @@ const dashboardCards: { id: SectionId; title: string; description: string; icon:
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard', accentColor: '#ffd700' },
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
   { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard', accentColor: '#ffd700' },
-  { id: 'production', title: 'Production', description: 'Landing pages & drips', icon: Users, size: 'standard', accentColor: '#ffd700' },
-  { id: 'revshare', title: 'RevShare', description: 'Grow your downline', icon: DollarSign, size: 'compact', accentColor: '#ffd700' },
-  { id: 'exp-links', title: 'eXp Links', description: 'Questions & resources', icon: Link2, size: 'compact', accentColor: '#ffd700' },
+  { id: 'production', title: 'Landing Pages', description: 'Landing pages & drips', icon: Users, size: 'standard', accentColor: '#ffd700' },
   { id: 'new-agents', title: 'New Agents', description: 'Info for new agents', icon: PersonStanding, size: 'compact', accentColor: '#ffd700' },
 ];
 
@@ -1437,9 +1434,7 @@ export default function AgentPortal() {
                 {activeSection === 'calls' && 'Team Calls'}
                 {activeSection === 'courses' && 'Courses'}
                 {activeSection === 'templates' && 'Templates'}
-                {activeSection === 'production' && 'Production'}
-                {activeSection === 'revshare' && 'RevShare'}
-                {activeSection === 'exp-links' && 'eXp Links'}
+                {activeSection === 'production' && 'Landing Pages'}
                 {activeSection === 'new-agents' && 'New Agents'}
                 {activeSection === 'profile' && 'My Profile'}
               </span>
@@ -1725,7 +1720,7 @@ export default function AgentPortal() {
             )}
 
             {/* Get Support */}
-            {activeSection === 'support' && <SupportSection />}
+            {activeSection === 'support' && <SupportSection userState={user?.state} />}
 
             {/* Team Calls */}
             {activeSection === 'calls' && <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />}
@@ -1738,12 +1733,6 @@ export default function AgentPortal() {
 
             {/* Production */}
             {activeSection === 'production' && <ProductionSection />}
-
-            {/* RevShare */}
-            {activeSection === 'revshare' && <RevShareSection />}
-
-            {/* eXp Links */}
-            {activeSection === 'exp-links' && <ExpLinksSection />}
 
             {/* New Agents */}
             {activeSection === 'new-agents' && <NewAgentsSection />}
@@ -2847,7 +2836,19 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
 // ============================================================================
 // Support Section - Two main contact points: SAA and eXp
 // ============================================================================
-function SupportSection() {
+// State Broker Support URLs - mapping state abbreviations to broker support links
+const STATE_BROKER_URLS: Record<string, { name: string; url: string }> = {
+  // URLs to be provided by user - placeholder structure
+  // Example: 'CA': { name: 'California Broker', url: 'https://...' }
+};
+
+interface SupportSectionProps {
+  userState?: string | null;
+}
+
+function SupportSection({ userState }: SupportSectionProps) {
+  const brokerInfo = userState ? STATE_BROKER_URLS[userState.toUpperCase()] : null;
+
   return (
     <div className="space-y-6 px-2 sm:px-4 max-w-3xl mx-auto">
       {/* Header */}
@@ -2857,8 +2858,8 @@ function SupportSection() {
         </p>
       </div>
 
-      {/* Support Cards - 2 column grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Support Cards - responsive grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* SAA Support Card */}
         <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
           {/* Header */}
@@ -2974,7 +2975,83 @@ function SupportSection() {
             </a>
           </div>
         </div>
+
+        {/* Wolf Pack Support Card */}
+        <div className="rounded-2xl border border-[#22c55e]/30 overflow-hidden bg-gradient-to-b from-[#22c55e]/10 to-transparent">
+          {/* Header */}
+          <div className="p-5 border-b border-[#22c55e]/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 rounded-xl bg-[#22c55e]/20">
+                <Users className="w-7 h-7 text-[#22c55e]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[#22c55e]">Wolf Pack Support</h3>
+                <p className="text-xs text-[#e5e4dd]/60">Mike Sherrard's Team</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Options */}
+          <div className="p-5 space-y-3">
+            <a
+              href="mailto:support@mikesherrard.com"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#22c55e] text-white font-semibold hover:bg-[#16a34a] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              support@mikesherrard.com
+            </a>
+            <a
+              href="mailto:connor.steinbrook@exprealty.com"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-black/30 border border-[#22c55e]/30 text-[#22c55e] font-semibold hover:bg-[#22c55e]/10 transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              connor.steinbrook@exprealty.com
+            </a>
+          </div>
+        </div>
       </div>
+
+      {/* State Broker Support Card - Only shows if user has state set and broker URL exists */}
+      {brokerInfo && (
+        <div className="rounded-2xl border border-[#22c55e]/30 overflow-hidden bg-gradient-to-b from-[#22c55e]/10 to-transparent">
+          {/* Header */}
+          <div className="p-5 border-b border-[#22c55e]/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 rounded-xl bg-[#22c55e]/20">
+                <MapPin className="w-7 h-7 text-[#22c55e]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[#22c55e]">State Broker</h3>
+                <p className="text-xs text-[#e5e4dd]/60">{brokerInfo.name}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Button */}
+          <div className="p-5">
+            <a
+              href={brokerInfo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#22c55e] text-white font-semibold hover:bg-[#16a34a] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Contact {userState?.toUpperCase()} Broker Support
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -3078,15 +3155,26 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
             </div>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Mindset-based discussions and teachings</p>
             <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Mondays</strong> at {localTimes.connor || '8:00 AM PST'}</p>
-            <a
-              href="https://zoom.us/j/4919666038?pwd=487789"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] text-xs sm:text-sm hover:bg-[#ffd700]/20 transition-colors"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              Join Zoom Call
-            </a>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="https://zoom.us/j/4919666038?pwd=487789"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] text-xs sm:text-sm hover:bg-[#ffd700]/20 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                Join Zoom Call
+              </a>
+              <a
+                href="https://info-investorarmy.clickfunnels.com/membership-access1657133817882?page_id=55297245&page_key=alw6d6glxkyzckyo&login_redirect=1"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-white/5 border border-white/20 rounded-lg text-[#e5e4dd] text-xs sm:text-sm hover:bg-white/10 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                Past Calls
+              </a>
+            </div>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/70">Password: <span className="font-mono">487789</span></p>
           </div>
         </GenericCard>
@@ -3099,15 +3187,26 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
             </div>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Production-based discussions and teachings</p>
             <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Tuesdays</strong> at {localTimes.mike || '11:00 AM PST'}</p>
-            <a
-              href="https://us02web.zoom.us/j/83687612648"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-lg text-[#00ff88] text-xs sm:text-sm hover:bg-[#00ff88]/20 transition-colors"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              Join Zoom Call
-            </a>
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="https://us02web.zoom.us/j/83687612648"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-lg text-[#00ff88] text-xs sm:text-sm hover:bg-[#00ff88]/20 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                Join Zoom Call
+              </a>
+              <a
+                href="https://www.skool.com/wolf-pack-6238/classroom/2104dbf1?md=3b98371d516b406a85e6f3ec9429334"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-white/5 border border-white/20 rounded-lg text-[#e5e4dd] text-xs sm:text-sm hover:bg-white/10 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                Past Calls
+              </a>
+            </div>
           </div>
         </GenericCard>
 
@@ -3120,15 +3219,26 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
               </div>
               <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Exclusive call for women in the alliance</p>
               <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Wednesdays</strong> at {localTimes.women || '11:00 AM PST'}</p>
-              <a
-                href="https://us06web.zoom.us/j/86896266944"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ec4899]/10 border border-[#ec4899]/30 rounded-lg text-[#ec4899] text-xs sm:text-sm hover:bg-[#ec4899]/20 transition-colors"
-                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-              >
-                Join Zoom Call
-              </a>
+              <div className="flex flex-wrap gap-2">
+                <a
+                  href="https://us06web.zoom.us/j/86896266944"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ec4899]/10 border border-[#ec4899]/30 rounded-lg text-[#ec4899] text-xs sm:text-sm hover:bg-[#ec4899]/20 transition-colors"
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                >
+                  Join Zoom Call
+                </a>
+                <a
+                  href="https://docs.google.com/spreadsheets/d/1qXs1h7KUroxV3LPbW3xsTThslVFoO1MP43LeLngB11o/edit?gid=0#gid=0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-white/5 border border-white/20 rounded-lg text-[#e5e4dd] text-xs sm:text-sm hover:bg-white/10 transition-colors"
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                >
+                  Past Calls
+                </a>
+              </div>
             </div>
           </GenericCard>
         )}
@@ -3138,7 +3248,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3">
                 <span className="text-2xl sm:text-3xl">👑</span>
-                <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Leaders Mastermind</h4>
+                <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#38bdf8] leading-tight">Leaders Mastermind</h4>
               </div>
               <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Exclusive call for alliance leaders</p>
               <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Thursdays</strong> at {localTimes.leaders || '10:00 AM PST'}</p>
@@ -3146,7 +3256,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 href="https://zoom.us/j/4919666038"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] text-xs sm:text-sm hover:bg-[#ffd700]/20 transition-colors"
+                className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-[#38bdf8]/10 border border-[#38bdf8]/30 rounded-lg text-[#38bdf8] text-xs sm:text-sm hover:bg-[#38bdf8]/20 transition-colors"
                 style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
               >
                 Join Zoom Call
@@ -3345,7 +3455,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     icon: '💬',
     description: 'Boost audience interaction',
     templates: [
-      { name: 'This or That', format: 'Interactive', preview: 'engagement-this-or-that', url: 'https://www.canva.com/design/DAG9-31Bilg/k1JVE9ThGFrunUkHUAkj9A/view?utm_content=DAG9-31Bilg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
+      { name: '22 This or That Posts', format: 'Interactive', preview: 'engagement-this-or-that', url: 'https://www.canva.com/design/DAG9-31Bilg/k1JVE9ThGFrunUkHUAkj9A/view?utm_content=DAG9-31Bilg&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
       { name: 'Market Snapshot Square', format: 'Square', variant: 'W', preview: 'engagement-market-snapshot-square-w', url: 'https://www.canva.com/design/DAGYozvRki4/Xce7VT38hQye9pwX4-Uitw/view?utm_content=DAGYozvRki4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
       { name: 'Market Snapshot Square', format: 'Square', variant: 'B', preview: 'engagement-market-snapshot-square-b', url: 'https://www.canva.com/design/DAGYo6OSECQ/CMlf2kTGYtOJDOKfsbFmlw/view?utm_content=DAGYo6OSECQ&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
       { name: 'Market Snapshot Story', format: 'Story', variant: 'W', preview: 'engagement-market-snapshot-story-w', url: 'https://www.canva.com/design/DAGYpmfx9s4/ytj108rP4HiqBjTWbKjENg/view?utm_content=DAGYpmfx9s4&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink&mode=preview' },
@@ -3693,131 +3803,6 @@ Referral Networks to consider:
       </GenericCard>
 
       <FAQ items={certificationFaq} allowMultiple />
-    </div>
-  );
-}
-
-// ============================================================================
-// RevShare Section
-// ============================================================================
-function RevShareSection() {
-  const revShareFaq = [
-    {
-      question: 'How RevShare Works',
-      answer: `eXp Realty's revenue share program allows you to earn passive income by attracting other agents to eXp. When agents you sponsor close transactions, you earn a percentage of the company's revenue from those transactions.
-
-This is NOT a referral fee - it's a true revenue share that continues as long as those agents remain with eXp and are producing.`
-    },
-    {
-      question: 'Getting Started with RevShare',
-      answer: `The key to building a successful revenue share organization is to focus on attracting quality agents who are committed to production.
-
-Tips for getting started:
-• Share your genuine experience with eXp
-• Focus on the value proposition for the agent, not just RevShare
-• Use SAA resources to help your attracted agents succeed
-• Participate in team calls and trainings`
-    }
-  ];
-
-  return (
-    <div className="space-y-6 px-2 sm:px-4">
-      <GenericCard padding="lg" centered>
-        <div className="text-center space-y-4 py-4">
-          <span className="text-6xl">💰</span>
-          <h3 className="text-h3 text-[#ffd700]">Grow Your Downline</h3>
-          <p className="text-body">No experience needed</p>
-          <p className="text-body">Learn how to build passive income through eXp's revenue share program</p>
-        </div>
-      </GenericCard>
-
-      <FAQ items={revShareFaq} allowMultiple />
-    </div>
-  );
-}
-
-// ============================================================================
-// eXp Links Section
-// ============================================================================
-function ExpLinksSection() {
-  return (
-    <div className="space-y-8 px-2 sm:px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <GenericCard padding="md">
-            <div className="space-y-4">
-              <h3 className="text-h5 text-[#ffd700]">For Production Questions:</h3>
-              <p className="text-body">Go to eXp World and visit your State Broker's room</p>
-              <a
-                href="https://exp.world/welcome"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-4 py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"
-              >
-                Go to eXp World
-              </a>
-            </div>
-          </GenericCard>
-
-          <GenericCard padding="md">
-            <div className="space-y-4">
-              <h3 className="text-h5 text-[#ffd700]">For Other Questions:</h3>
-              <p className="text-body">Visit Expert Care in eXp World</p>
-              <a
-                href="https://exp.world/expertcare"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block px-4 py-2 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"
-              >
-                Go to Expert Care
-              </a>
-            </div>
-          </GenericCard>
-        </div>
-
-        <GenericCard padding="md">
-          <div className="space-y-4">
-            <h3 className="text-h5 text-[#ffd700]">Still can't find the answer?</h3>
-            <p className="text-body">Contact us directly:</p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="mailto:doug@smartagentalliance.com"
-                className="inline-block px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[#e5e4dd] hover:bg-white/10 transition-colors"
-              >
-                doug@smartagentalliance.com
-              </a>
-              <a
-                href="mailto:karrie@smartagentalliance.com"
-                className="inline-block px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-[#e5e4dd] hover:bg-white/10 transition-colors"
-              >
-                karrie@smartagentalliance.com
-              </a>
-            </div>
-          </div>
-        </GenericCard>
-
-        <div>
-          <h3 className="text-h5 mb-4">Quick Links</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { label: 'eXp Realty US', url: 'https://us.exprealty.com/' },
-              { label: 'BoldTrail (kvCore)', url: 'https://app.boldtrail.com/' },
-              { label: 'Skyslope', url: 'https://app.skyslope.com/LoginIntegrated.aspx' },
-              { label: 'Workplace', url: 'https://exprealty.workplace.com/' },
-              { label: 'RPR (CMA)', url: 'https://auth.narrpr.com/' },
-              { label: 'eXp Agent Healthcare', url: 'https://solutions.exprealty.com/professional-solutions/clearwater-benefits/' },
-            ].map((link) => (
-              <a
-                key={link.label}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-[#e5e4dd] hover:bg-[#ffd700]/10 hover:border-[#ffd700]/30 hover:text-[#ffd700] transition-all"
-              >
-                {link.label} →
-              </a>
-            ))}
-          </div>
-        </div>
     </div>
   );
 }

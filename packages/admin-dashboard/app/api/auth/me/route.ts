@@ -81,7 +81,8 @@ export async function GET(request: NextRequest) {
         last_login_at,
         metadata,
         gender,
-        is_leader
+        is_leader,
+        state
       `)
       .eq('id', payload.sub)
       .single();
@@ -135,6 +136,7 @@ export async function GET(request: NextRequest) {
         metadata: user.metadata || {},
         gender: user.gender || 'male',
         is_leader: user.is_leader || false,
+        state: user.state || null,
       },
     });
   } catch (error) {
