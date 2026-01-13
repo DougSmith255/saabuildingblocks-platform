@@ -52,10 +52,25 @@ export default function BestRealEstateBrokerage() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <AsteroidBeltEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>KNOW THE NUMBERS</H1>
-            <Tagline className="mt-4">
-              Facts over feelings
-            </Tagline>
+            {/* Dark elliptical vignette behind text for readability */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '120%',
+                height: '200%',
+                background: 'radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%)',
+                zIndex: 0,
+              }}
+            />
+            <div className="relative z-10">
+              <H1>KNOW THE NUMBERS</H1>
+              <Tagline className="mt-4">
+                Facts over feelings
+              </Tagline>
+            </div>
           </div>
         </section>
       </StickyHeroWrapper>

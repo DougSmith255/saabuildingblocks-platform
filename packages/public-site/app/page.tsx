@@ -154,19 +154,34 @@ export default function Home() {
             }}
           >
             {/* Headline Group */}
-            <div style={{ perspective: '1000px' }}>
-              <H1
-                id="hero-heading"
+            <div style={{ perspective: '1000px' }} className="relative">
+              {/* Dark elliptical vignette behind text for readability */}
+              <div
+                className="absolute pointer-events-none"
                 style={{
-                  fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
-                  marginBottom: '3px',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '120%',
+                  height: '200%',
+                  background: 'radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%)',
+                  zIndex: 0,
                 }}
-              >
-                SMART AGENT ALLIANCE
-              </H1>
-              <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
-                For All Agents Who Want More
-              </Tagline>
+              />
+              <div className="relative z-10">
+                <H1
+                  id="hero-heading"
+                  style={{
+                    fontSize: 'clamp(50px, calc(30px + 4vw + 0.3vh), 150px)',
+                    marginBottom: '3px',
+                  }}
+                >
+                  SMART AGENT ALLIANCE
+                </H1>
+                <Tagline className="hero-tagline-mobile-spacing" counterSuffix={<TaglineCounterSuffix />}>
+                  For All Agents Who Want More
+                </Tagline>
+              </div>
             </div>
 
             {/* CTA Button */}

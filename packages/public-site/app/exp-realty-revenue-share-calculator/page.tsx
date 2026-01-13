@@ -896,21 +896,22 @@ function RevenueShareCalculatorContent() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <GreenLaserGridEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>7 TIERS OF OPPORTUNITY</H1>
-            {/* Tagline with dark vignette behind for readability over green lasers */}
-            <div className="relative mt-4">
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: '150%',
-                  height: '150px',
-                  background: 'radial-gradient(ellipse 90% 80% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%)',
-                }}
-              />
-              <Tagline>
+            {/* Dark elliptical vignette behind text for readability */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '120%',
+                height: '200%',
+                background: 'radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%)',
+                zIndex: 0,
+              }}
+            />
+            <div className="relative z-10">
+              <H1>7 TIERS OF OPPORTUNITY</H1>
+              <Tagline className="mt-4">
                 How eXp's revenue share compounds into real wealth
               </Tagline>
             </div>

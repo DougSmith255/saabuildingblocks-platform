@@ -585,13 +585,28 @@ export default function AboutExpRealty() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <SatelliteConstellationEffect />
           <div className="max-w-[1900px] mx-auto w-full text-center relative z-10">
-            <H1>ABOUT EXP REALTY</H1>
-            <Tagline className="mt-4">
-              World&apos;s #1 independent brokerage.
-            </Tagline>
-            <p className="text-body mt-4" style={{ opacity: 0.9 }}>
-              Production-focused. Future-proofed.
-            </p>
+            {/* Dark elliptical vignette behind text for readability */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: '120%',
+                height: '200%',
+                background: 'radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%)',
+                zIndex: 0,
+              }}
+            />
+            <div className="relative z-10">
+              <H1>ABOUT EXP REALTY</H1>
+              <Tagline className="mt-4">
+                World&apos;s #1 independent brokerage.
+              </Tagline>
+              <p className="text-body mt-4" style={{ opacity: 0.9 }}>
+                Production-focused. Future-proofed.
+              </p>
+            </div>
           </div>
         </section>
       </StickyHeroWrapper>
