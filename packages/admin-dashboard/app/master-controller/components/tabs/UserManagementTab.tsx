@@ -19,7 +19,64 @@ interface User {
   legal_name?: string; // Agent's official legal name for sponsor search
   gender?: 'male' | 'female'; // Controls which team calls the user sees
   is_leader?: boolean; // Controls whether user sees leaders-only calls
+  state?: string; // US state abbreviation for broker support
 }
+
+// US States list for dropdown
+const US_STATES = [
+  { value: '', label: 'Select State' },
+  { value: 'AL', label: 'Alabama' },
+  { value: 'AK', label: 'Alaska' },
+  { value: 'AZ', label: 'Arizona' },
+  { value: 'AR', label: 'Arkansas' },
+  { value: 'CA', label: 'California' },
+  { value: 'CO', label: 'Colorado' },
+  { value: 'CT', label: 'Connecticut' },
+  { value: 'DE', label: 'Delaware' },
+  { value: 'DC', label: 'Washington DC' },
+  { value: 'FL', label: 'Florida' },
+  { value: 'GA', label: 'Georgia' },
+  { value: 'HI', label: 'Hawaii' },
+  { value: 'ID', label: 'Idaho' },
+  { value: 'IL', label: 'Illinois' },
+  { value: 'IN', label: 'Indiana' },
+  { value: 'IA', label: 'Iowa' },
+  { value: 'KS', label: 'Kansas' },
+  { value: 'KY', label: 'Kentucky' },
+  { value: 'LA', label: 'Louisiana' },
+  { value: 'ME', label: 'Maine' },
+  { value: 'MD', label: 'Maryland' },
+  { value: 'MA', label: 'Massachusetts' },
+  { value: 'MI', label: 'Michigan' },
+  { value: 'MN', label: 'Minnesota' },
+  { value: 'MS', label: 'Mississippi' },
+  { value: 'MO', label: 'Missouri' },
+  { value: 'MT', label: 'Montana' },
+  { value: 'NE', label: 'Nebraska' },
+  { value: 'NV', label: 'Nevada' },
+  { value: 'NH', label: 'New Hampshire' },
+  { value: 'NJ', label: 'New Jersey' },
+  { value: 'NM', label: 'New Mexico' },
+  { value: 'NY', label: 'New York' },
+  { value: 'NC', label: 'North Carolina' },
+  { value: 'ND', label: 'North Dakota' },
+  { value: 'OH', label: 'Ohio' },
+  { value: 'OK', label: 'Oklahoma' },
+  { value: 'OR', label: 'Oregon' },
+  { value: 'PA', label: 'Pennsylvania' },
+  { value: 'RI', label: 'Rhode Island' },
+  { value: 'SC', label: 'South Carolina' },
+  { value: 'SD', label: 'South Dakota' },
+  { value: 'TN', label: 'Tennessee' },
+  { value: 'TX', label: 'Texas' },
+  { value: 'UT', label: 'Utah' },
+  { value: 'VT', label: 'Vermont' },
+  { value: 'VA', label: 'Virginia' },
+  { value: 'WA', label: 'Washington' },
+  { value: 'WV', label: 'West Virginia' },
+  { value: 'WI', label: 'Wisconsin' },
+  { value: 'WY', label: 'Wyoming' },
+];
 
 interface UserStats {
   totalUsers: number;
@@ -67,7 +124,8 @@ export function UserManagementTab() {
     role: 'user' as 'admin' | 'user',
     status: 'active' as 'active' | 'pending' | 'suspended',
     exp_email: '',
-    legal_name: ''
+    legal_name: '',
+    state: ''
   });
   const [editUserLoading, setEditUserLoading] = useState(false);
   const [editUserError, setEditUserError] = useState<string | null>(null);
@@ -307,7 +365,8 @@ export function UserManagementTab() {
       role: user.role,
       status: user.status,
       exp_email: user.exp_email || '',
-      legal_name: user.legal_name || ''
+      legal_name: user.legal_name || '',
+      state: user.state || ''
     });
     setEditUserError(null);
     setShowEditUserModal(true);
@@ -347,6 +406,7 @@ export function UserManagementTab() {
         status: editUserForm.status,
         exp_email: editUserForm.exp_email,
         legal_name: editUserForm.legal_name,
+        state: editUserForm.state,
       };
 
       // Only include password if user entered a new one
@@ -970,6 +1030,25 @@ export function UserManagementTab() {
                     disabled={editUserLoading}
                   />
                   <p className="text-xs text-[#dcdbd5]/50 mt-1">Official legal name for sponsor selection</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
+                    State (for Broker Support)
+                  </label>
+                  <select
+                    value={editUserForm.state}
+                    onChange={(e) => setEditUserForm({ ...editUserForm, state: e.target.value })}
+                    className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
+                    disabled={editUserLoading}
+                  >
+                    {US_STATES.map((state) => (
+                      <option key={state.value} value={state.value}>
+                        {state.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-[#dcdbd5]/50 mt-1">Agent's state for broker support links in portal</p>
                 </div>
               </div>
 

@@ -104,7 +104,8 @@ export async function PUT(
       exp_email,
       legal_name,
       gender,
-      is_leader
+      is_leader,
+      state
     } = body;
 
     // Build update object with only provided fields
@@ -139,6 +140,7 @@ export async function PUT(
     if (legal_name !== undefined) updates.legal_name = legal_name;
     if (gender !== undefined) updates.gender = gender;
     if (is_leader !== undefined) updates.is_leader = is_leader;
+    if (state !== undefined) updates.state = state;
 
     // Hash new password if provided
     if (password) {

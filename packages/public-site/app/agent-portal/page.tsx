@@ -2837,9 +2837,58 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
 // Support Section - Two main contact points: SAA and eXp
 // ============================================================================
 // State Broker Support URLs - mapping state abbreviations to broker support links
-const STATE_BROKER_URLS: Record<string, { name: string; url: string }> = {
-  // URLs to be provided by user - placeholder structure
-  // Example: 'CA': { name: 'California Broker', url: 'https://...' }
+const STATE_BROKER_URLS: Record<string, { name: string; url: string; phone: string }> = {
+  'AL': { name: 'Alabama', url: 'https://exp.world/albrokerroom#welcome', phone: '888-235-5547' },
+  'AK': { name: 'Alaska', url: 'https://exp.world/akbrokerroom#welcome', phone: '907-519-0095' },
+  'AZ': { name: 'Arizona', url: 'https://exp.world/azbrokerroom#welcome', phone: '480-378-3555' },
+  'AR': { name: 'Arkansas', url: 'https://exp.world/arbrokerroom#welcome', phone: '866-720-5056' },
+  'CA': { name: 'California', url: 'https://exp.world/cabrokerroom#welcome', phone: '888-584-9427' },
+  'CO': { name: 'Colorado', url: 'https://exp.world/cobrokerroom#welcome', phone: '888-440-2724' },
+  'CT': { name: 'Connecticut', url: 'https://exp.world/ctbrokerroom#welcome', phone: '855-966-1397' },
+  'DC': { name: 'Washington DC', url: 'https://exp.world/dcbrokerroom#welcome', phone: '833-335-7433' },
+  'DE': { name: 'Delaware', url: 'https://exp.world/debrokerroom#welcome', phone: '888-543-4829' },
+  'FL': { name: 'Florida', url: 'https://exp.world/flbrokerroom#welcome', phone: '888-883-8509' },
+  'GA': { name: 'Georgia', url: 'https://exp.world/gabrokerroom#welcome', phone: '888-959-9461' },
+  'HI': { name: 'Hawaii', url: 'https://exp.world/hibrokerroom#welcome', phone: '808-725-2794' },
+  'ID': { name: 'Idaho', url: 'https://exp.world/idbrokerroom#welcome', phone: '888-452-7689' },
+  'IL': { name: 'Illinois', url: 'https://exp.world/ilbrokerroom#welcome', phone: '888-574-9405' },
+  'IN': { name: 'Indiana', url: 'https://exp.world/inbrokerroom#welcome', phone: '888-611-3912' },
+  'IA': { name: 'Iowa', url: 'https://exp.world/iabrokerroom#welcome', phone: '833-835-5566' },
+  'KS': { name: 'Kansas', url: 'https://exp.world/ksmobrokerroom#welcome', phone: '866-224-1761' },
+  'KY': { name: 'Kentucky', url: 'https://exp.world/kybrokerroom#welcome', phone: '888-624-6448' },
+  'LA': { name: 'Louisiana', url: 'https://exp.world/labrokerroom#welcome', phone: '337-522-7554' },
+  'ME': { name: 'Maine', url: 'https://exp.world/nhvtmebrokerroom#welcome', phone: '888-398-7062' },
+  'MD': { name: 'Maryland', url: 'https://exp.world/mdbrokerroom#welcome', phone: '888-860-7369' },
+  'MA': { name: 'Massachusetts', url: 'https://exp.world/mabrokerroom#welcome', phone: '888-854-7493' },
+  'MI': { name: 'Michigan', url: 'https://exp.world/mibrokerroom#welcome', phone: '269-600-4397' },
+  'MN': { name: 'Minnesota', url: 'https://exp.world/mnndbrokerroom#welcome', phone: '833-671-9502' },
+  'MS': { name: 'Mississippi', url: 'https://exp.world/msbrokerroom#welcome', phone: '833-607-7471' },
+  'MO': { name: 'Missouri', url: 'https://exp.world/ksmobrokerroom#welcome', phone: '866-224-1761' },
+  'MT': { name: 'Montana', url: 'https://exp.world/mtbrokerroom#welcome', phone: '833-303-0610' },
+  'NE': { name: 'Nebraska', url: 'https://exp.world/nebrokerroom#welcome', phone: '833-303-0610' },
+  'NV': { name: 'Nevada', url: 'https://exp.world/nvbrokerroom#welcome', phone: '702-727-1050' },
+  'NH': { name: 'New Hampshire', url: 'https://exp.world/nhvtmebrokerroom#welcome', phone: '888-398-7062' },
+  'NJ': { name: 'New Jersey', url: 'https://exp.world/njbrokerroom#welcome', phone: '866-201-6210' },
+  'NM': { name: 'New Mexico', url: 'https://exp.world/nmbrokerroom#welcome', phone: '505-554-3873' },
+  'NY': { name: 'New York', url: 'https://exp.world/nybrokerroom#welcome', phone: '833-303-0610' },
+  'NC': { name: 'North Carolina', url: 'https://exp.world/ncbrokerroom#welcome', phone: '833-303-0610' },
+  'ND': { name: 'North Dakota', url: 'https://exp.world/mnndbrokerroom#welcome', phone: '833-471-3629' },
+  'OH': { name: 'Ohio', url: 'https://exp.world/ohbrokerroom#welcome', phone: '866-212-4991' },
+  'OK': { name: 'Oklahoma', url: 'https://exp.world/okbrokerroom#welcome', phone: '833-303-0610' },
+  'OR': { name: 'Oregon', url: 'https://exp.world/orbrokerroom#welcome', phone: '888-814-9613' },
+  'PA': { name: 'Pennsylvania', url: 'https://exp.world/pabrokerroom#welcome', phone: '888-397-7352' },
+  'RI': { name: 'Rhode Island', url: 'https://exp.world/ribrokerroom#welcome', phone: '888-315-3445' },
+  'SC': { name: 'South Carolina', url: 'https://exp.world/scbrokerroom#welcome', phone: '888-440-2798' },
+  'SD': { name: 'South Dakota', url: 'https://exp.world/sdbrokerroom#welcome', phone: '800-674-6089' },
+  'TN': { name: 'Tennessee', url: 'https://exp.world/tnbrokerroom#welcome', phone: '833-303-0610' },
+  'TX': { name: 'Texas', url: 'https://exp.world/txbrokerroom#welcome', phone: '888-519-7431' },
+  'UT': { name: 'Utah', url: 'https://exp.world/utbrokerroom#welcome', phone: '801-528-6076' },
+  'VT': { name: 'Vermont', url: 'https://exp.world/nhvtmebrokerroom#welcome', phone: '888-398-7062' },
+  'VA': { name: 'Virginia', url: 'https://exp.world/vabrokerroom#welcome', phone: '866-825-7169' },
+  'WA': { name: 'Washington', url: 'https://exp.world/wabrokerroom#welcome', phone: '888-317-5197' },
+  'WV': { name: 'West Virginia', url: 'https://exp.world/wvbrokerroom#welcome', phone: '877-477-1901' },
+  'WI': { name: 'Wisconsin', url: 'https://exp.world/wibrokerroom#welcome', phone: '866-848-6990' },
+  'WY': { name: 'Wyoming', url: 'https://exp.world/wybrokerroom#welcome', phone: '866-873-0565' },
 };
 
 interface SupportSectionProps {
@@ -2850,7 +2899,7 @@ function SupportSection({ userState }: SupportSectionProps) {
   const brokerInfo = userState ? STATE_BROKER_URLS[userState.toUpperCase()] : null;
 
   return (
-    <div className="space-y-6 px-2 sm:px-4 max-w-3xl mx-auto">
+    <div className="space-y-6 px-2 sm:px-4 max-w-5xl mx-auto">
       {/* Header */}
       <div className="text-center mb-8">
         <p className="text-sm sm:text-base text-[#e5e4dd]/70">
@@ -2859,7 +2908,7 @@ function SupportSection({ userState }: SupportSectionProps) {
       </div>
 
       {/* Support Cards - responsive grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* SAA Support Card */}
         <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
           {/* Header */}
@@ -2880,13 +2929,13 @@ function SupportSection({ userState }: SupportSectionProps) {
             {/* Email Button */}
             <a
               href="mailto:team@smartagentalliance.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#ffd700] text-black font-semibold hover:bg-[#ffe55c] transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#ffd700] text-[#1a1a1a] font-semibold hover:bg-[#ffe55c] transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              team@smartagentalliance.com
+              <span className="truncate">team@smartagentalliance.com</span>
             </a>
 
             {/* Urgent Contact Info */}
@@ -2934,10 +2983,10 @@ function SupportSection({ userState }: SupportSectionProps) {
             {/* Phone */}
             <a
               href="tel:8333030610"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#3b82f6] text-white font-semibold hover:bg-[#5b9aff] transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#3b82f6] text-[#1a1a1a] font-semibold hover:bg-[#5b9aff] transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
               (833) 303-0610
@@ -2946,13 +2995,13 @@ function SupportSection({ userState }: SupportSectionProps) {
             {/* Email */}
             <a
               href="mailto:expexpertcare@exprealty.net"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-black/30 border border-[#3b82f6]/30 text-[#3b82f6] font-semibold hover:bg-[#3b82f6]/10 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#3b82f6]/30 text-[#3b82f6] font-semibold hover:bg-[#3b82f6]/10 transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              expexpertcare@exprealty.net
+              <span className="truncate">expexpertcare@exprealty.net</span>
             </a>
 
             {/* eXp World Link */}
@@ -2995,23 +3044,23 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 space-y-3">
             <a
               href="mailto:support@mikesherrard.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#22c55e] text-white font-semibold hover:bg-[#16a34a] transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#22c55e] text-[#1a1a1a] font-semibold hover:bg-[#16a34a] transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              support@mikesherrard.com
+              <span className="truncate">support@mikesherrard.com</span>
             </a>
             <a
               href="mailto:connor.steinbrook@exprealty.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-black/30 border border-[#22c55e]/30 text-[#22c55e] font-semibold hover:bg-[#22c55e]/10 transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#22c55e]/30 text-[#22c55e] font-semibold hover:bg-[#22c55e]/10 transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              connor.steinbrook@exprealty.com
+              <span className="truncate">connor.steinbrook@exprealty.com</span>
             </a>
           </div>
         </div>
@@ -3019,35 +3068,50 @@ function SupportSection({ userState }: SupportSectionProps) {
 
       {/* State Broker Support Card - Only shows if user has state set and broker URL exists */}
       {brokerInfo && (
-        <div className="rounded-2xl border border-[#22c55e]/30 overflow-hidden bg-gradient-to-b from-[#22c55e]/10 to-transparent">
+        <div className="rounded-2xl border border-[#a855f7]/30 overflow-hidden bg-gradient-to-b from-[#a855f7]/10 to-transparent">
           {/* Header */}
-          <div className="p-5 border-b border-[#22c55e]/20">
+          <div className="p-5 border-b border-[#a855f7]/20">
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 rounded-xl bg-[#22c55e]/20">
-                <MapPin className="w-7 h-7 text-[#22c55e]" />
+              <div className="p-3 rounded-xl bg-[#a855f7]/20">
+                <MapPin className="w-7 h-7 text-[#a855f7]" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-[#22c55e]">State Broker</h3>
-                <p className="text-xs text-[#e5e4dd]/60">{brokerInfo.name}</p>
+                <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
+                <p className="text-xs text-[#e5e4dd]/60">State Broker Support</p>
               </div>
             </div>
           </div>
 
-          {/* Contact Button */}
-          <div className="p-5">
+          {/* Contact Options */}
+          <div className="p-5 space-y-3">
+            {/* Phone */}
+            <a
+              href={`tel:${brokerInfo.phone.replace(/-/g, '')}`}
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#a855f7] text-[#1a1a1a] font-semibold hover:bg-[#c084fc] transition-colors text-sm"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              {brokerInfo.phone}
+            </a>
+            {/* Broker Room Link */}
             <a
               href={brokerInfo.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#22c55e] text-white font-semibold hover:bg-[#16a34a] transition-colors"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#a855f7]/30 text-[#a855f7] font-semibold hover:bg-[#a855f7]/10 transition-colors text-sm"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+              <span className="truncate">eXp World Broker Room</span>
+              <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
                 <line x1="10" y1="14" x2="21" y2="3" />
               </svg>
-              Contact {userState?.toUpperCase()} Broker Support
             </a>
           </div>
         </div>
