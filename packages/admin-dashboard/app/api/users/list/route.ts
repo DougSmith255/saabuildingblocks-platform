@@ -25,6 +25,7 @@ interface User {
   legal_name?: string; // Agent's official legal name
   gender?: 'male' | 'female'; // Controls which team calls the user sees
   is_leader?: boolean; // Controls whether user sees leaders-only calls
+  state?: string; // US state abbreviation for broker support
 }
 
 /**
@@ -98,6 +99,7 @@ async function fetchUsers(request: NextRequest) {
       legal_name: user.legal_name,
       gender: user.gender || 'male',
       is_leader: user.is_leader || false,
+      state: user.state || '',
     };
   });
 

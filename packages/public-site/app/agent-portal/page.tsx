@@ -3227,7 +3227,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 Join Zoom Call
               </a>
               <a
-                href="https://www.skool.com/wolf-pack-6238/classroom/2104dbf1?md=3b98371d516b406a85e6f3ec9429334"
+                href="https://www.skool.com/wolf-pack-6238/classroom"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-3 py-1.5 sm:px-4 sm:py-2 bg-white/5 border border-white/20 rounded-lg text-[#e5e4dd] text-xs sm:text-sm hover:bg-white/10 transition-colors"

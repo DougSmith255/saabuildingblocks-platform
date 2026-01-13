@@ -868,7 +868,7 @@ export function UserManagementTab() {
       {/* Edit User Modal */}
       {showEditUserModal && editingUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#191818] border border-[#404040] rounded-lg p-6 max-w-md w-full">
+          <div className="bg-[#191818] border border-[#404040] rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold text-[#ffd700]">Edit User</h2>
               <button
@@ -1033,18 +1033,19 @@ export function UserManagementTab() {
                   <p className="text-xs text-[#dcdbd5]/50 mt-1">Official legal name for sponsor selection</p>
                 </div>
 
-                <div>
+                <div className="mt-4">
                   <label className="block text-sm font-medium text-[#dcdbd5] mb-2">
                     State (for Broker Support)
                   </label>
                   <select
                     value={editUserForm.state}
                     onChange={(e) => setEditUserForm({ ...editUserForm, state: e.target.value })}
-                    className="w-full px-4 py-2 bg-[#404040]/30 border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
+                    className="w-full px-4 py-2 bg-[#2a2a2a] border border-[#404040] rounded-lg text-[#dcdbd5] focus:border-[#ffd700] focus:outline-none"
+                    style={{ colorScheme: 'dark' }}
                     disabled={editUserLoading}
                   >
                     {US_STATES.map((state) => (
-                      <option key={state.value} value={state.value}>
+                      <option key={state.value} value={state.value} className="bg-[#2a2a2a] text-[#dcdbd5]">
                         {state.label}
                       </option>
                     ))}
