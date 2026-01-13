@@ -388,15 +388,15 @@ function AgentPortal() {
       // Phase 1: Content (logo, bar) blurs and fades first
       setIsLoadingFadingOut(true);
 
-      // Phase 2: Background blurs and fades with slight delay
+      // Phase 2: Background blurs and fades with slight delay (150ms)
       const bgTimer = setTimeout(() => {
         setIsBackgroundFadingOut(true);
-      }, 200);
+      }, 150);
 
       // After all animations complete, hide the loading screen entirely
       const hideTimer = setTimeout(() => {
         setShowLoadingScreen(false);
-      }, 900); // Content: 500ms + Background delay: 200ms + Background fade: 400ms = ~900ms total
+      }, 700); // Shorter total time
 
       return () => {
         clearTimeout(bgTimer);
@@ -4851,7 +4851,7 @@ function AgentPagesSection({
         )}
 
         {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
-        <div className="grid grid-cols-1 min-[1000px]:grid-cols-[1fr_240px] xl:grid-cols-[1fr_260px] gap-6">
+        <div className="grid grid-cols-1 min-[1000px]:grid-cols-[1fr_256px] gap-6">
 
           {/* PREVIEW COLUMN - Desktop only, sticky on right */}
           <div className="hidden min-[1000px]:block min-[1000px]:col-start-2 min-[1000px]:row-start-1 min-[1000px]:row-span-4">
@@ -5115,7 +5115,7 @@ function AgentPagesSection({
           </div>
 
           {/* SETTINGS COLUMN - All settings here, single column on mobile */}
-          <div className="min-[1000px]:col-start-1 min-[1000px]:row-start-1 min-[1000px]:max-w-2xl">
+          <div className="min-[1000px]:col-start-1 min-[1000px]:row-start-1">
             {/* Page Status & Link */}
             {pageData.activated && (
               <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
@@ -5200,6 +5200,10 @@ function AgentPagesSection({
               </div>
             </div>
 
+            {/* Desktop: Two-column layout for Profile+Connect (left) and Links (right) */}
+            <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 min-[1000px]:gap-6">
+              {/* LEFT COLUMN - Profile and Connect */}
+              <div className="space-y-6">
             {/* PROFILE SECTION - Photo, Name, Bio */}
             <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1000px]:block'}`}>
               {/* Section Header */}
@@ -5309,54 +5313,57 @@ function AgentPagesSection({
                     </div>
                   </div>
 
-                  {/* Display Name - Compact */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#ffd700] mb-3">Display Name</h4>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">First Name</label>
-                        <input
-                          type="text"
-                          value={formData.display_first_name}
-                          onChange={(e) => handleInputChange('display_first_name', e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs text-[#e5e4dd]/60 mb-1">Last Name</label>
-                        <input
-                          type="text"
-                          value={formData.display_last_name}
-                          onChange={(e) => handleInputChange('display_last_name', e.target.value)}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                        />
+                  {/* Display Name + Bio Row - Side by side on desktop */}
+                  <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 gap-3">
+                    {/* Display Name */}
+                    <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                      <h4 className="text-sm font-medium text-[#ffd700] mb-3">Display Name</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">First Name</label>
+                          <input
+                            type="text"
+                            value={formData.display_first_name}
+                            onChange={(e) => handleInputChange('display_first_name', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Last Name</label>
+                          <input
+                            type="text"
+                            value={formData.display_last_name}
+                            onChange={(e) => handleInputChange('display_last_name', e.target.value)}
+                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Bio */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <h4 className="text-sm font-medium text-[#ffd700] mb-2">Bio</h4>
-                    <div className="relative">
-                      <textarea
-                        value={linksSettings.bio}
-                        onChange={(e) => {
-                          if (e.target.value.length <= 80) {
-                            setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
-                            setHasUnsavedChanges(true);
-                          }
-                        }}
-                        className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors resize-none"
-                        rows={3}
-                        placeholder="Short description about yourself..."
-                      />
-                      <span className={`absolute bottom-2 right-2 text-[10px] ${
-                        linksSettings.bio.length >= 80 ? 'text-red-400' :
-                        linksSettings.bio.length >= 60 ? 'text-yellow-400' :
-                        'text-[#e5e4dd]/30'
-                      }`}>
-                        {linksSettings.bio.length}/80
-                      </span>
+                    {/* Bio */}
+                    <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                      <h4 className="text-sm font-medium text-[#ffd700] mb-2">Bio</h4>
+                      <div className="relative">
+                        <textarea
+                          value={linksSettings.bio}
+                          onChange={(e) => {
+                            if (e.target.value.length <= 80) {
+                              setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                              setHasUnsavedChanges(true);
+                            }
+                          }}
+                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors resize-none"
+                          rows={3}
+                          placeholder="Short description about yourself..."
+                        />
+                        <span className={`absolute bottom-2 right-2 text-[10px] ${
+                          linksSettings.bio.length >= 80 ? 'text-red-400' :
+                          linksSettings.bio.length >= 60 ? 'text-yellow-400' :
+                          'text-[#e5e4dd]/30'
+                        }`}>
+                          {linksSettings.bio.length}/80
+                        </span>
+                      </div>
                     </div>
                   </div>
             </div> {/* End PROFILE SECTION */}
@@ -5423,59 +5430,64 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email */}
-              <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                  placeholder="your@email.com"
-                />
-                <p className="text-xs text-[#e5e4dd]/40 mt-1">Shows as email button on your page</p>
-              </div>
-
-              {/* Phone */}
-              <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                <h4 className="text-sm font-medium text-[#ffd700] mb-2">Phone</h4>
-                {/* Phone input with inline checkboxes on mobile */}
-                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+              {/* Email + Phone Row - Side by side on desktop */}
+              <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 gap-3">
+                {/* Email */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
                   <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className="flex-1 min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                    placeholder="(555) 123-4567"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    placeholder="your@email.com"
                   />
-                  {formData.phone && (
-                    <div className="flex gap-3 flex-shrink-0">
-                      <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
-                        <input
-                          type="checkbox"
-                          checked={formData.show_call_button}
-                          onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
-                          className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
-                        />
-                        <span className="text-xs text-[#e5e4dd]">Call</span>
-                      </label>
-                      <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
-                        <input
-                          type="checkbox"
-                          checked={formData.show_text_button}
-                          onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
-                          className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
-                        />
-                        <span className="text-xs text-[#e5e4dd]">Text</span>
-                      </label>
-                    </div>
-                  )}
+                  <p className="text-xs text-[#e5e4dd]/40 mt-1">Shows as email button on your page</p>
+                </div>
+
+                {/* Phone */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Phone</h4>
+                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      className="flex-1 min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                      placeholder="(555) 123-4567"
+                    />
+                    {formData.phone && (
+                      <div className="flex gap-3 flex-shrink-0">
+                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
+                          <input
+                            type="checkbox"
+                            checked={formData.show_call_button}
+                            onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
+                          />
+                          <span className="text-xs text-[#e5e4dd]">Call</span>
+                        </label>
+                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
+                          <input
+                            type="checkbox"
+                            checked={formData.show_text_button}
+                            onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
+                          />
+                          <span className="text-xs text-[#e5e4dd]">Text</span>
+                        </label>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div> {/* End CONNECT SECTION */}
+              </div> {/* End LEFT COLUMN */}
 
+              {/* RIGHT COLUMN - Links */}
+              <div>
             {/* LINKS SECTION - Accent Color, Style, Button Links */}
-            <div className={`space-y-3 mt-6 ${activeTab === 'links' ? '' : 'hidden min-[1000px]:block'}`}>
+            <div className={`space-y-3 mt-6 min-[1000px]:mt-0 ${activeTab === 'links' ? '' : 'hidden min-[1000px]:block'}`}>
               {/* Section Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                 <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -5848,6 +5860,8 @@ function AgentPagesSection({
                 </div>
               </div>
             </div> {/* End of LINKS SECTION */}
+              </div> {/* End RIGHT COLUMN */}
+            </div> {/* End Desktop Two-Column Grid */}
 
             {/* Action Buttons - Desktop only, Activate button */}
             {!pageData.activated && (
