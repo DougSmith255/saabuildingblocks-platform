@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin } from 'lucide-react';
@@ -147,7 +147,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile';
+type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile' | 'download';
 
 interface NavItem {
   id: SectionId;
@@ -165,6 +165,7 @@ const navItems: NavItem[] = [
   { id: 'courses', label: 'Elite Courses', icon: GraduationCap },
   { id: 'production', label: 'Landing Pages', icon: Users },
   { id: 'new-agents', label: 'New Agents', icon: PersonStanding },
+  { id: 'download', label: 'Download App', icon: Download },
 ];
 
 // Dashboard quick access cards with Lucide icons for 3D effect
@@ -235,6 +236,7 @@ function getInitialUser(): UserData | null {
 
 export default function AgentPortal() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
   const [shakingItem, setShakingItem] = useState<SectionId | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -320,6 +322,14 @@ export default function AgentPortal() {
     }, 3000); // 3 seconds minimum for all users
     return () => clearTimeout(timer);
   }, []);
+
+  // Handle section query parameter for deep linking (e.g., /agent-portal?section=download)
+  useEffect(() => {
+    const sectionParam = searchParams.get('section');
+    if (sectionParam && navItems.some(item => item.id === sectionParam)) {
+      setActiveSection(sectionParam as SectionId);
+    }
+  }, [searchParams]);
 
   // Preload all app data during loading screen
   useEffect(() => {
@@ -1436,6 +1446,7 @@ export default function AgentPortal() {
                 {activeSection === 'templates' && 'Templates'}
                 {activeSection === 'production' && 'Landing Pages'}
                 {activeSection === 'new-agents' && 'New Agents'}
+                {activeSection === 'download' && 'Download App'}
                 {activeSection === 'profile' && 'My Profile'}
               </span>
               {/* Desktop: Logout Button - uses button text size clamp from master controller */}
@@ -1736,6 +1747,9 @@ export default function AgentPortal() {
 
             {/* New Agents */}
             {activeSection === 'new-agents' && <NewAgentsSection />}
+
+            {/* Download App */}
+            {activeSection === 'download' && <DownloadSection />}
 
             {/* Profile Section (Mobile) - Inline Edit Form */}
             {activeSection === 'profile' && (
@@ -6173,6 +6187,249 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
           Linktree
         </span>
       )}
+    </div>
+  );
+}
+
+// ============================================================================
+// Download App Section
+// ============================================================================
+
+function DownloadSection() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [installStatus, setInstallStatus] = useState<'idle' | 'installing' | 'installed'>('idle');
+
+  useEffect(() => {
+    // Detect platform
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroidDevice = /android/.test(userAgent);
+
+    setIsIOS(isIOSDevice);
+    setIsAndroid(isAndroidDevice);
+
+    // Check if already installed (standalone mode)
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true;
+    setIsStandalone(isInStandaloneMode);
+
+    // Listen for the beforeinstallprompt event (Android/Chrome)
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+
+    // Listen for successful install
+    window.addEventListener('appinstalled', () => {
+      setInstallStatus('installed');
+      setDeferredPrompt(null);
+      setIsInstallable(false);
+    });
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) {
+      // If no prompt available but on Android, show manual instructions
+      if (isAndroid) {
+        alert('To install: tap the menu (⋮) in your browser and select "Install app" or "Add to Home screen"');
+      }
+      return;
+    }
+
+    setInstallStatus('installing');
+
+    try {
+      await deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+
+      if (outcome === 'accepted') {
+        setInstallStatus('installed');
+      } else {
+        setInstallStatus('idle');
+      }
+    } catch (error) {
+      console.error('Install error:', error);
+      setInstallStatus('idle');
+    }
+
+    setDeferredPrompt(null);
+  };
+
+  // If already installed, show success message
+  if (isStandalone) {
+    return (
+      <div className="space-y-6 px-2 sm:px-4">
+        <GenericCard padding="lg">
+          <div className="text-center">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#22c55e]/20 to-[#22c55e]/5 border border-[#22c55e]/30 flex items-center justify-center">
+              <svg className="w-10 h-10 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-h4 text-[#22c55e] mb-2">App Already Installed!</h3>
+            <p className="text-body text-[#e5e4dd]/70">
+              You&apos;re already using the SAA Portal as an app.
+            </p>
+          </div>
+        </GenericCard>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 px-2 sm:px-4">
+      {/* App Info Card */}
+      <GenericCard padding="lg">
+        <div className="text-center mb-6">
+          {/* App Icon */}
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden shadow-xl shadow-[#ffd700]/20 border border-[#ffd700]/30">
+            <img
+              src="/icons/icon-512x512.png"
+              alt="SAA Portal"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <h3 className="text-h4 text-[#ffd700] mb-1">SAA Portal App</h3>
+          <p className="text-sm text-[#e5e4dd]/60">Smart Agent Alliance</p>
+        </div>
+
+        {/* Install Button - Android/Desktop */}
+        {(isAndroid || (!isIOS && !isAndroid)) && (
+          <div className="mb-6">
+            <button
+              onClick={handleInstallClick}
+              disabled={installStatus === 'installing'}
+              className={`w-full py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 ${
+                installStatus === 'installed'
+                  ? 'bg-[#22c55e] text-white'
+                  : installStatus === 'installing'
+                  ? 'bg-[#ffd700]/50 text-black cursor-wait'
+                  : 'bg-[#ffd700] text-black hover:bg-[#ffed4a]'
+              }`}
+            >
+              {installStatus === 'installed' ? (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  Installed!
+                </>
+              ) : installStatus === 'installing' ? (
+                <>
+                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Installing...
+                </>
+              ) : (
+                <>
+                  <Download className="w-5 h-5" />
+                  Install App
+                </>
+              )}
+            </button>
+
+            {!isInstallable && isAndroid && (
+              <p className="text-center text-xs text-[#e5e4dd]/50 mt-2">
+                If the button doesn&apos;t work, tap the browser menu (⋮) and select &quot;Install app&quot;
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* iOS Instructions */}
+        {isIOS && (
+          <div className="space-y-4">
+            <div className="text-center mb-4">
+              <p className="text-sm text-[#e5e4dd]/70">Follow these steps to install on your iPhone or iPad:</p>
+            </div>
+
+            {/* Step 1 */}
+            <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                1
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-[#e5e4dd] text-sm">Tap the Share button</p>
+                <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                  At the bottom of Safari (square with arrow up)
+                </p>
+              </div>
+              <svg className="w-6 h-6 text-[#007AFF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
+              </svg>
+            </div>
+
+            {/* Step 2 */}
+            <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                2
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add to Home Screen&quot;</p>
+                <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                  Scroll down in the share menu to find it
+                </p>
+              </div>
+              <div className="w-6 h-6 rounded bg-[#333] flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                3
+              </div>
+              <div className="flex-1">
+                <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add&quot;</p>
+                <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                  The app icon will appear on your home screen
+                </p>
+              </div>
+              <svg className="w-6 h-6 text-[#22c55e] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+        )}
+      </GenericCard>
+
+      {/* Features */}
+      <GenericCard padding="md">
+        <h4 className="text-sm font-semibold text-[#e5e4dd]/50 uppercase tracking-wider mb-4">Why Install the App?</h4>
+        <div className="grid gap-3">
+          {[
+            { icon: '⚡', title: 'Instant Access', desc: 'Launch directly from your home screen' },
+            { icon: '📴', title: 'Works Offline', desc: 'Access cached content without internet' },
+            { icon: '🔔', title: 'Notifications', desc: 'Get notified about team updates' },
+            { icon: '🚀', title: 'Faster Loading', desc: 'App loads faster than the browser' },
+          ].map((feature, i) => (
+            <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5">
+              <span className="text-xl">{feature.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-[#e5e4dd] text-sm">{feature.title}</p>
+                <p className="text-xs text-[#e5e4dd]/50 truncate">{feature.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </GenericCard>
     </div>
   );
 }
