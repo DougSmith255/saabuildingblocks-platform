@@ -1646,6 +1646,8 @@ function AgentPortal() {
               {navItems.map((item, index) => {
                 const IconComponent = item.icon;
                 const isActive = activeSection === item.id;
+                const isDownload = item.id === 'download';
+                const isHighlighted = isActive || isDownload;
                 return (
                   <div key={item.id}>
                     <button
@@ -1658,32 +1660,32 @@ function AgentPortal() {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200"
                       style={{
-                        background: isActive
+                        background: isHighlighted
                           ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
                           : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
-                        boxShadow: isActive
+                        boxShadow: isHighlighted
                           ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
                           : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
-                        border: isActive ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                        border: isHighlighted ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >
-                      {/* Icon with glow effect when active */}
+                      {/* Icon with glow effect when active or download */}
                       <div
                         className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                         style={{
-                          filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
-                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.6)',
+                          filter: isHighlighted ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
+                          color: isHighlighted ? '#ffd700' : 'rgba(229,228,221,0.6)',
                         }}
                       >
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      {/* Label with glow effect when active */}
+                      {/* Label with glow effect when active or download */}
                       <span
                         className="font-medium font-taskor text-sm transition-all duration-200"
                         style={{
-                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.8)',
-                          textShadow: isActive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                          color: isHighlighted ? '#ffd700' : 'rgba(229,228,221,0.8)',
+                          textShadow: isHighlighted ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
                         }}
                       >
                         {item.label}
@@ -1694,38 +1696,6 @@ function AgentPortal() {
               })}
               </nav>
 
-              {/* Download App Button - Only show when not running as PWA */}
-              {!isRunningAsPWA && (
-                <div className="mt-4 pt-4 border-t border-white/[0.08]">
-                  <a
-                    href="/download"
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 hover:scale-[1.02]"
-                    style={{
-                      background: 'linear-gradient(180deg, #1a1a0a 0%, #0d0d05 100%)',
-                      boxShadow: 'inset 0 1px 0 rgba(255,215,0,0.15), inset 0 -1px 2px rgba(0,0,0,0.3), 0 0 8px rgba(255,215,0,0.1)',
-                      border: '1px solid rgba(255,215,0,0.2)',
-                    }}
-                  >
-                    <div
-                      style={{
-                        filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.6))',
-                        color: '#ffd700',
-                      }}
-                    >
-                      <Download className="w-5 h-5" />
-                    </div>
-                    <span
-                      className="font-medium font-taskor text-sm"
-                      style={{
-                        color: '#ffd700',
-                        textShadow: '0 0 6px rgba(255,215,0,0.4)',
-                      }}
-                    >
-                      Download App
-                    </span>
-                  </a>
-                </div>
-              )}
             </div>
           </aside>
 
@@ -2900,62 +2870,8 @@ function SupportSection({ userState }: SupportSectionProps) {
         </p>
       </div>
 
-      {/* Support Cards - grid with auto-fill, min 300px, equal widths */}
-      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))' }}>
-        {/* SAA Support Card */}
-        <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
-          {/* Header */}
-          <div className="p-5 border-b border-[#ffd700]/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 rounded-xl bg-[#ffd700]/20">
-                <LifeBuoy className="w-7 h-7 text-[#ffd700]" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
-                <p className="text-xs text-[#e5e4dd]/60">Smart Agent Alliance Team</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Options */}
-          <div className="p-5 space-y-4">
-            {/* Email Button */}
-            <a
-              href="mailto:team@smartagentalliance.com"
-              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#ffd700] text-[#1a1a1a] font-semibold hover:bg-[#ffe55c] transition-colors text-sm"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span className="truncate">team@smartagentalliance.com</span>
-            </a>
-
-            {/* Urgent Contact Info */}
-            <div className="p-4 rounded-xl bg-black/30 border border-white/10">
-              <p className="text-xs text-[#e5e4dd]/60 mb-3 text-center">For time-sensitive issues, text:</p>
-              <div className="space-y-2">
-                <a
-                  href="sms:4153205606"
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
-                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-                >
-                  <span className="text-sm text-[#e5e4dd]">Doug</span>
-                  <span className="text-sm text-[#ffd700] font-medium">(415) 320-5606</span>
-                </a>
-                <a
-                  href="sms:4152380922"
-                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
-                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-                >
-                  <span className="text-sm text-[#e5e4dd]">Karrie</span>
-                  <span className="text-sm text-[#ffd700] font-medium">(415) 238-0922</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      {/* Support Cards - grid with auto-fit, min 300px, equal widths */}
+      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
         {/* eXp Support Card */}
         <div className="rounded-2xl border border-[#3b82f6]/30 overflow-hidden bg-gradient-to-b from-[#3b82f6]/10 to-transparent">
           {/* Header */}
@@ -2966,7 +2882,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#3b82f6]">eXp Support</h3>
-                <p className="text-xs text-[#e5e4dd]/60">eXp Realty Expert Care</p>
+                <p className="text-xs text-[#e5e4dd]/60">eXp Realty questions, issues & tech support</p>
               </div>
             </div>
           </div>
@@ -3018,6 +2934,60 @@ function SupportSection({ userState }: SupportSectionProps) {
           </div>
         </div>
 
+        {/* SAA Support Card */}
+        <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
+          {/* Header */}
+          <div className="p-5 border-b border-[#ffd700]/20">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-3 rounded-xl bg-[#ffd700]/20">
+                <LifeBuoy className="w-7 h-7 text-[#ffd700]" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
+                <p className="text-xs text-[#e5e4dd]/60">SAA questions, issues & tech support</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Options */}
+          <div className="p-5 space-y-4">
+            {/* Email Button */}
+            <a
+              href="mailto:team@smartagentalliance.com"
+              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#ffd700] text-[#1a1a1a] font-semibold hover:bg-[#ffe55c] transition-colors text-sm"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+              <span className="truncate">team@smartagentalliance.com</span>
+            </a>
+
+            {/* Urgent Contact Info */}
+            <div className="p-4 rounded-xl bg-black/30 border border-white/10">
+              <p className="text-xs text-[#e5e4dd]/60 mb-3 text-center">For time-sensitive issues, text:</p>
+              <div className="space-y-2">
+                <a
+                  href="sms:4153205606"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                >
+                  <span className="text-sm text-[#e5e4dd]">Doug</span>
+                  <span className="text-sm text-[#ffd700] font-medium">(415) 320-5606</span>
+                </a>
+                <a
+                  href="sms:4152380922"
+                  className="flex items-center justify-between p-2 rounded-lg hover:bg-white/5 transition-colors"
+                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+                >
+                  <span className="text-sm text-[#e5e4dd]">Karrie</span>
+                  <span className="text-sm text-[#ffd700] font-medium">(415) 238-0922</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Wolf Pack Support Card */}
         <div className="rounded-2xl border border-[#22c55e]/30 overflow-hidden bg-gradient-to-b from-[#22c55e]/10 to-transparent">
           {/* Header */}
@@ -3028,7 +2998,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#22c55e]">Wolf Pack Support</h3>
-                <p className="text-xs text-[#e5e4dd]/60">Mike Sherrard's Team</p>
+                <p className="text-xs text-[#e5e4dd]/60">Wolf Pack questions, issues & tech support</p>
               </div>
             </div>
           </div>
@@ -3069,7 +3039,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
-                <p className="text-xs text-[#e5e4dd]/60">State Broker Support</p>
+                <p className="text-xs text-[#e5e4dd]/60">Agent production questions & issues</p>
               </div>
             </div>
           </div>
@@ -6364,8 +6334,8 @@ function DownloadSection() {
           </div>
         )}
 
-        {/* iOS Instructions */}
-        {isIOS && (
+        {/* iOS/Safari Instructions - Show for iOS or as additional info for all users */}
+        {isIOS ? (
           <div className="space-y-4">
             <div className="text-center mb-4">
               <p className="text-sm text-[#e5e4dd]/70">Follow these steps to install on your iPhone or iPad:</p>
@@ -6421,6 +6391,64 @@ function DownloadSection() {
               </svg>
             </div>
           </div>
+        ) : (
+          /* Show iOS instructions as collapsible section for non-iOS users */
+          <details className="mt-4">
+            <summary className="text-sm text-[#e5e4dd]/70 cursor-pointer hover:text-[#e5e4dd] transition-colors">
+              Using iPhone, iPad, or Safari on Mac? Click here for instructions
+            </summary>
+            <div className="space-y-4 mt-4">
+              {/* Step 1 */}
+              <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                  1
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-[#e5e4dd] text-sm">Tap the Share button</p>
+                  <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                    At the bottom of Safari (square with arrow up)
+                  </p>
+                </div>
+                <svg className="w-6 h-6 text-[#007AFF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
+                </svg>
+              </div>
+
+              {/* Step 2 */}
+              <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                  2
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add to Home Screen&quot;</p>
+                  <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                    Scroll down in the share menu to find it
+                  </p>
+                </div>
+                <div className="w-6 h-6 rounded bg-[#333] flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                  3
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add&quot;</p>
+                  <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                    The app icon will appear on your home screen or dock
+                  </p>
+                </div>
+                <svg className="w-6 h-6 text-[#22c55e] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+          </details>
         )}
       </GenericCard>
 
