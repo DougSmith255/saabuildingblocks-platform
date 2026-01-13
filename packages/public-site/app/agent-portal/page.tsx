@@ -179,7 +179,7 @@ const dashboardCards: { id: SectionId; title: string; description: string; icon:
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
   { id: 'courses', title: 'Elite Courses', description: 'Academy & courses', icon: GraduationCap, size: 'standard', accentColor: '#ffd700' },
   { id: 'production', title: 'Landing Pages', description: 'Landing pages & drips', icon: Users, size: 'standard', accentColor: '#ffd700' },
-  { id: 'new-agents', title: 'New Agents', description: 'Info for new agents', icon: PersonStanding, size: 'compact', accentColor: '#ffd700' },
+  { id: 'new-agents', title: 'New Agents', description: 'Info for new agents', icon: PersonStanding, size: 'standard', accentColor: '#ffd700' },
 ];
 
 // Rewrite asset URLs to use CDN for edge caching
@@ -2747,16 +2747,18 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
         })}
       </div>
 
-      {/* Standard Cards Grid - 2x2 on mobile, 4 cols on desktop */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {standardCards.map((card) => {
+      {/* Standard Cards Grid - 2 cols on mobile (5th spans full), 5 cols on desktop */}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+        {standardCards.map((card, index) => {
           const IconComponent = card.icon;
           const accent = card.accentColor || '#ffd700';
+          // On 2-column layout, the 5th card (index 4) should span full width
+          const isLastOdd = index === standardCards.length - 1 && standardCards.length % 2 === 1;
           return (
             <button
               key={card.id}
               onClick={() => onNavigate(card.id)}
-              className="text-left group"
+              className={`text-left group ${isLastOdd ? 'col-span-2 lg:col-span-1' : ''}`}
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <div
@@ -2786,43 +2788,6 @@ function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) 
                       {card.description}
                     </p>
                   </div>
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Compact Cards Row - 3 columns horizontal strip with equal heights */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        {compactCards.map((card) => {
-          const IconComponent = card.icon;
-          const accent = card.accentColor || '#ffd700';
-          return (
-            <button
-              key={card.id}
-              onClick={() => onNavigate(card.id)}
-              className="text-left group h-full"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <div
-                className="
-                  relative p-3 sm:p-4 rounded-lg border border-white/10
-                  transition-all duration-300 ease-out
-                  hover:border-[#ffd700]/30
-                  hover:scale-[1.02]
-                  group-active:scale-[0.98]
-                  h-full flex flex-col justify-center
-                "
-                style={{ backgroundColor: 'rgba(15,15,15,0.95)' }}
-              >
-                <div className="flex flex-col items-center text-center space-y-1.5">
-                  <Icon3D color={accent}>
-                    <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform duration-300" />
-                  </Icon3D>
-                  <h3 className="text-xs sm:text-sm font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300 leading-tight">
-                    {card.title}
-                  </h3>
                 </div>
               </div>
             </button>
