@@ -2888,13 +2888,6 @@ function SupportSection({ userState }: SupportSectionProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <p className="text-sm sm:text-base text-[#e5e4dd]/70">
-          Need help? Choose the right support channel below.
-        </p>
-      </div>
-
       {/* Support Cards - grid with auto-fit, min 300px, equal widths */}
       <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
         {/* eXp Support Card */}
@@ -2907,7 +2900,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#3b82f6]">eXp Support</h3>
-                <p className="text-xs text-[#e5e4dd]/60">eXp Realty questions, issues & tech support</p>
+                <p className="text-sm text-[#e5e4dd]/60">eXp Realty questions, issues & tech support</p>
               </div>
             </div>
           </div>
@@ -2969,7 +2962,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
-                <p className="text-xs text-[#e5e4dd]/60">SAA questions, issues & tech support</p>
+                <p className="text-sm text-[#e5e4dd]/60">SAA questions, issues & tech support</p>
               </div>
             </div>
           </div>
@@ -3023,7 +3016,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#22c55e]">Wolf Pack Support</h3>
-                <p className="text-xs text-[#e5e4dd]/60">Wolf Pack questions, issues & tech support</p>
+                <p className="text-sm text-[#e5e4dd]/60">Wolf Pack questions, issues & tech support</p>
               </div>
             </div>
           </div>
@@ -3064,7 +3057,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
-                <p className="text-xs text-[#e5e4dd]/60">Agent production questions & issues</p>
+                <p className="text-sm text-[#e5e4dd]/60">Agent production questions & issues</p>
               </div>
             </div>
           </div>
@@ -6212,6 +6205,7 @@ function DownloadSection() {
   const [isAndroid, setIsAndroid] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
   const [installStatus, setInstallStatus] = useState<'idle' | 'installing' | 'installed'>('idle');
+  const [showIOSInstructions, setShowIOSInstructions] = useState(false);
 
   useEffect(() => {
     // Detect platform
@@ -6314,167 +6308,136 @@ function DownloadSection() {
           <p className="text-sm text-[#e5e4dd]/60">Smart Agent Alliance</p>
         </div>
 
-        {/* Install Button - Android/Desktop */}
-        {(isAndroid || (!isIOS && !isAndroid)) && (
-          <div className="mb-6">
-            <button
-              onClick={handleInstallClick}
-              disabled={installStatus === 'installing'}
-              className={`w-full py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 ${
-                installStatus === 'installed'
-                  ? 'bg-[#22c55e] text-white'
-                  : installStatus === 'installing'
-                  ? 'bg-[#ffd700]/50 text-black cursor-wait'
-                  : 'bg-[#ffd700] text-black hover:bg-[#ffed4a]'
-              }`}
-            >
-              {installStatus === 'installed' ? (
-                <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Installed!
-                </>
-              ) : installStatus === 'installing' ? (
-                <>
-                  <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                  </svg>
-                  Installing...
-                </>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  Install App
-                </>
-              )}
-            </button>
-
-            {!isInstallable && isAndroid && (
-              <p className="text-center text-xs text-[#e5e4dd]/50 mt-2">
-                If the button doesn&apos;t work, tap the browser menu (⋮) and select &quot;Install app&quot;
-              </p>
-            )}
-          </div>
-        )}
-
-        {/* iOS/Safari Instructions - Show for iOS or as additional info for all users */}
-        {isIOS ? (
-          <div className="space-y-4">
-            <div className="text-center mb-4">
-              <p className="text-sm text-[#e5e4dd]/70">Follow these steps to install on your iPhone or iPad:</p>
-            </div>
-
-            {/* Step 1 */}
-            <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-              <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                1
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-[#e5e4dd] text-sm">Tap the Share button</p>
-                <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                  At the bottom of Safari (square with arrow up)
-                </p>
-              </div>
-              <svg className="w-6 h-6 text-[#007AFF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
-              </svg>
-            </div>
-
-            {/* Step 2 */}
-            <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-              <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                2
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add to Home Screen&quot;</p>
-                <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                  Scroll down in the share menu to find it
-                </p>
-              </div>
-              <div className="w-6 h-6 rounded bg-[#333] flex items-center justify-center flex-shrink-0">
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-              <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                3
-              </div>
-              <div className="flex-1">
-                <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add&quot;</p>
-                <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                  The app icon will appear on your home screen
-                </p>
-              </div>
-              <svg className="w-6 h-6 text-[#22c55e] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          </div>
-        ) : (
-          /* Show iOS instructions as collapsible section for non-iOS users */
-          <details className="mt-4">
-            <summary className="text-sm text-[#e5e4dd]/70 cursor-pointer hover:text-[#e5e4dd] transition-colors">
-              Using iPhone, iPad, or Safari on Mac? Click here for instructions
-            </summary>
-            <div className="space-y-4 mt-4">
-              {/* Step 1 */}
-              <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                  1
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-[#e5e4dd] text-sm">Tap the Share button</p>
-                  <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                    At the bottom of Safari (square with arrow up)
-                  </p>
-                </div>
-                <svg className="w-6 h-6 text-[#007AFF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
-                </svg>
-              </div>
-
-              {/* Step 2 */}
-              <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                  2
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add to Home Screen&quot;</p>
-                  <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                    Scroll down in the share menu to find it
-                  </p>
-                </div>
-                <div className="w-6 h-6 rounded bg-[#333] flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="flex gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                <div className="w-8 h-8 rounded-full bg-[#ffd700] text-black font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                  3
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add&quot;</p>
-                  <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                    The app icon will appear on your home screen or dock
-                  </p>
-                </div>
-                <svg className="w-6 h-6 text-[#22c55e] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        {/* Two Install Buttons */}
+        <div className="space-y-3">
+          {/* PC/Android Install Button - Yellow */}
+          <button
+            onClick={handleInstallClick}
+            disabled={installStatus === 'installing'}
+            className={`w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 ${
+              installStatus === 'installed'
+                ? 'bg-[#22c55e] text-white'
+                : installStatus === 'installing'
+                ? 'bg-[#ffd700]/50 text-black cursor-wait'
+                : 'bg-[#ffd700] text-black hover:bg-[#ffed4a]'
+            }`}
+          >
+            {installStatus === 'installed' ? (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
+                Installed!
+              </>
+            ) : installStatus === 'installing' ? (
+              <>
+                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Installing...
+              </>
+            ) : (
+              <>
+                <Download className="w-5 h-5" />
+                Install PC / Android App
+              </>
+            )}
+          </button>
+
+          {!isInstallable && !isIOS && (
+            <p className="text-center text-xs text-[#e5e4dd]/50">
+              {isAndroid
+                ? 'If the button doesn\'t work, tap the browser menu (\u22EE) and select "Install app"'
+                : 'Use Chrome or Edge browser for one-click install'}
+            </p>
+          )}
+
+          {/* iOS/Mac Install Button - Green with dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowIOSInstructions(!showIOSInstructions)}
+              className="w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 bg-[#22c55e] text-white hover:bg-[#16a34a]"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 18.75l-2.5-2.5m0 0l-2.5-2.5m2.5 2.5L13.25 13.25m2.5 2.5L18.25 18.25M9 3v5.25A2.25 2.25 0 0111.25 10.5h5.25M9 3H6.75A2.25 2.25 0 004.5 5.25v13.5A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V10.5M9 3l6 6" />
+              </svg>
+              Install iOS / Mac App
+              <svg
+                className={`w-5 h-5 transition-transform ${showIOSInstructions ? 'rotate-180' : ''}`}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {/* iOS Instructions Dropdown */}
+            {showIOSInstructions && (
+              <div className="mt-3 p-4 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/30 space-y-4">
+                <p className="text-sm text-[#e5e4dd]/80 text-center font-medium">
+                  Follow these steps in Safari:
+                </p>
+
+                {/* Step 1 */}
+                <div className="flex gap-3 p-3 rounded-xl bg-black/20 border border-white/10">
+                  <div className="w-8 h-8 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                    1
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#e5e4dd] text-sm">Tap the Share button</p>
+                    <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                      Square with arrow pointing up (bottom of Safari)
+                    </p>
+                  </div>
+                  <svg className="w-6 h-6 text-[#007AFF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
+                  </svg>
+                </div>
+
+                {/* Step 2 */}
+                <div className="flex gap-3 p-3 rounded-xl bg-black/20 border border-white/10">
+                  <div className="w-8 h-8 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                    2
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add to Home Screen&quot;</p>
+                    <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                      Scroll down in the share menu to find it
+                    </p>
+                  </div>
+                  <div className="w-6 h-6 rounded bg-[#333] flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                </div>
+
+                {/* Step 3 */}
+                <div className="flex gap-3 p-3 rounded-xl bg-black/20 border border-white/10">
+                  <div className="w-8 h-8 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">
+                    3
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add&quot;</p>
+                    <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
+                      The app will appear on your home screen or dock
+                    </p>
+                  </div>
+                  <svg className="w-6 h-6 text-[#22c55e] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+
+                <p className="text-xs text-[#e5e4dd]/50 text-center">
+                  Note: On Mac, use Safari and select &quot;Add to Dock&quot; from the File menu
+                </p>
               </div>
-            </div>
-          </details>
-        )}
+            )}
+          </div>
+        </div>
       </GenericCard>
 
       {/* Features */}
