@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
@@ -234,7 +234,20 @@ function getInitialUser(): UserData | null {
   return null;
 }
 
-export default function AgentPortal() {
+// Wrapper component to handle Suspense boundary for useSearchParams
+export default function AgentPortalPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-[#191919]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#ffd700]" />
+      </div>
+    }>
+      <AgentPortal />
+    </Suspense>
+  );
+}
+
+function AgentPortal() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
