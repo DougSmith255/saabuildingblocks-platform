@@ -2872,8 +2872,8 @@ function SupportSection({ userState }: SupportSectionProps) {
         </p>
       </div>
 
-      {/* Support Cards - responsive grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Support Cards - responsive grid: 1 col mobile, 2 col tablet, 3 col desktop */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* SAA Support Card */}
         <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
           {/* Header */}

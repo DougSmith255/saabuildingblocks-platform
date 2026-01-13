@@ -439,6 +439,7 @@ export function UserManagementTab() {
         status: 'active',
         exp_email: '',
         legal_name: '',
+        state: '',
       });
       setShowEmailChangeConfirm(false);
     } catch (err) {
