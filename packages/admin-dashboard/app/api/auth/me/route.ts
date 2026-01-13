@@ -13,6 +13,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseClient } from '@/app/master-controller/lib/supabaseClient';
 import { verifyAccessToken } from '@/lib/auth/jwt';
 
+// CORS headers for cross-origin requests from public site
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Max-Age': '86400',
+};
+
+// Handle preflight requests
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 export async function GET(request: NextRequest) {
   const supabase = getSupabaseClient();
 
@@ -23,7 +36,7 @@ export async function GET(request: NextRequest) {
         error: 'SERVICE_UNAVAILABLE',
         message: 'Authentication service is not available',
       },
-      { status: 503 }
+      { status: 503, headers: CORS_HEADERS }
     );
   }
 
@@ -38,7 +51,7 @@ export async function GET(request: NextRequest) {
           error: 'AUTHENTICATION_REQUIRED',
           message: 'No access token provided',
         },
-        { status: 401 }
+        { status: 401, headers: CORS_HEADERS }
       );
     }
 
@@ -54,7 +67,7 @@ export async function GET(request: NextRequest) {
           error: 'INVALID_TOKEN',
           message: error || 'Access token is invalid or expired',
         },
-        { status: 401 }
+        { status: 401, headers: CORS_HEADERS }
       );
     }
 
@@ -94,7 +107,7 @@ export async function GET(request: NextRequest) {
           error: 'USER_NOT_FOUND',
           message: 'User account not found',
         },
-        { status: 404 }
+        { status: 404, headers: CORS_HEADERS }
       );
     }
 
@@ -106,7 +119,7 @@ export async function GET(request: NextRequest) {
           error: 'ACCOUNT_INACTIVE',
           message: 'Your account has been deactivated',
         },
-        { status: 403 }
+        { status: 403, headers: CORS_HEADERS }
       );
     }
 
@@ -138,7 +151,7 @@ export async function GET(request: NextRequest) {
         is_leader: user.is_leader || false,
         state: user.state || null,
       },
-    });
+    }, { headers: CORS_HEADERS });
   } catch (error) {
     console.error('[Get User Info API] Error:', error);
 
@@ -148,7 +161,7 @@ export async function GET(request: NextRequest) {
         error: 'INTERNAL_SERVER_ERROR',
         message: 'An unexpected error occurred while fetching user information',
       },
-      { status: 500 }
+      { status: 500, headers: CORS_HEADERS }
     );
   }
 }

@@ -109,6 +109,139 @@ ls -lh /home/claude-flow/.archive/
 
 ---
 
+## 🔒 PORT ASSIGNMENTS & PM2 (CRITICAL!)
+
+**⚠️ BEFORE STARTING ANY SERVICE OR TOUCHING PM2, READ THIS!**
+
+### Reserved Ports - DO NOT USE
+
+| Port | Service | User | Description |
+|------|---------|------|-------------|
+| **3001** | public-site | - | Cloudflare Pages (not PM2) |
+| **3002** | admin-dashboard | claude-flow | Next.js API server (PM2: `nextjs-saa`) |
+| 3306 | MariaDB | - | MySQL database |
+| 5678 | n8n | - | Workflow automation |
+| 6379 | Redis | - | Cache/session store |
+| 8000 | Docker | - | Listmonk |
+| 8200 | Docker | - | Vault |
+
+### PM2 Process Management
+
+**⚠️ CRITICAL: There are TWO PM2 daemons - one for root, one for claude-flow!**
+
+The admin-dashboard runs under **claude-flow user's PM2**, NOT root's PM2.
+
+```bash
+# ✅ CORRECT - Check/manage admin-dashboard
+sudo -u claude-flow pm2 list
+sudo -u claude-flow pm2 restart nextjs-saa
+sudo -u claude-flow pm2 logs nextjs-saa
+
+# ❌ WRONG - This is root's PM2 (empty, don't use for admin-dashboard)
+pm2 list
+pm2 start ...  # NEVER start admin-dashboard here!
+```
+
+### Before Starting ANY Service
+
+1. **Check if already running:**
+   ```bash
+   sudo -u claude-flow pm2 list
+   netstat -tlnp | grep <PORT>
+   ```
+
+2. **Check PORT_ASSIGNMENTS.md:**
+   ```bash
+   cat /home/claude-flow/PORT_ASSIGNMENTS.md
+   ```
+
+3. **Use next available port (3003+) for new services**
+
+### ⛔ NEVER DO THESE
+
+- NEVER start admin-dashboard under root's PM2
+- NEVER use ports 3001, 3002, 3306, 5678, 6379, 8000, 8200
+- NEVER assume a port is free without checking `netstat -tlnp`
+- NEVER start a duplicate PM2 process
+
+📚 **Full Port Reference:** `/home/claude-flow/PORT_ASSIGNMENTS.md`
+
+---
+
+## 🌐 DEPLOYMENT ARCHITECTURE (CRITICAL!)
+
+**⚠️ UNDERSTAND THIS BEFORE MAKING ANY CHANGES!**
+
+### Two Separate Deployments
+
+| What | Where | How |
+|------|-------|-----|
+| **Public Site** (homepage, blog, calculators, about pages) | Cloudflare Pages | `npm run build` → `wrangler pages deploy out` |
+| **Admin Dashboard** (master controller, APIs, agent portal) | VPS via PM2 | `npm run build` → `sudo -u claude-flow pm2 restart nextjs-saa` |
+
+### Package Locations
+
+```
+/home/claude-flow/packages/
+├── public-site/          # → Cloudflare Pages (saabuildingblocks.pages.dev)
+│   ├── app/              # Next.js App Router pages
+│   ├── functions/        # Cloudflare Functions (NOT Next.js API routes!)
+│   │   └── [slug].js     # Agent Attraction Page template (ALL CODE INLINED)
+│   └── out/              # Static export output
+│
+└── admin-dashboard/      # → VPS PM2 (port 3002, proxied via Apache)
+    ├── app/
+    │   ├── api/          # Next.js API routes (auth, users, agent-pages, etc.)
+    │   ├── master-controller/
+    │   └── agent-portal/ # Note: Also exists in public-site for static shell
+    └── .next/            # Server build output
+```
+
+### Cloudflare Functions (public-site/functions/)
+
+**⚠️ CRITICAL: These are Cloudflare Functions, NOT Next.js!**
+
+- `[slug].js` - Agent Attraction Page template
+  - **ALL CODE IS INLINED** (no imports, no external files)
+  - HTML template is a single string literal
+  - Fetches data from admin-dashboard API at runtime
+  - Changes require editing the single file, then redeploying
+
+- Other functions: `calculator.js`, `revshare.js`, `freebies/`, `api/`
+
+### API Routing
+
+```
+Public Site (Cloudflare Pages)
+    ↓ /api/* requests
+Apache Reverse Proxy (saabuildingblocks.com)
+    ↓ ProxyPass to 127.0.0.1:3002
+Admin Dashboard (PM2 nextjs-saa)
+    ↓ Next.js API routes
+Supabase Database
+```
+
+### Deploy Commands
+
+```bash
+# Public Site → Cloudflare Pages
+cd /home/claude-flow/packages/public-site
+npm run build && npx wrangler pages deploy out --project-name=saabuildingblocks
+
+# Admin Dashboard → VPS PM2
+cd /home/claude-flow/packages/admin-dashboard
+npm run build && sudo -u claude-flow pm2 restart nextjs-saa
+```
+
+### ⛔ COMMON MISTAKES TO AVOID
+
+- DON'T look for API routes in public-site (they're in admin-dashboard)
+- DON'T try to import modules in Cloudflare Functions (inline everything)
+- DON'T forget to restart PM2 after building admin-dashboard
+- DON'T deploy public-site changes expecting API changes to take effect
+
+---
+
 ## 🚨 PRODUCTION SAFETY (CRITICAL!)
 
 **⚠️ BEFORE ANY PRODUCTION CHANGE, REMEMBER THESE RULES:**

@@ -283,6 +283,7 @@ export async function POST(request: NextRequest) {
           lastLoginAt: new Date().toISOString(),
           gender: user.gender || 'male',
           is_leader: user.is_leader || false,
+          state: user.state || null,
         },
         accessToken,
         expiresIn,

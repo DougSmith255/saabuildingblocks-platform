@@ -671,7 +671,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       transform: translate(-50%, -50%);
       width: 120%;
       height: 140px;
-      background: radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);
+      background: radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%);
       z-index: -1;
       pointer-events: none;
     }

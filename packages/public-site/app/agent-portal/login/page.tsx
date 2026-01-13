@@ -141,6 +141,7 @@ function AgentPortalLoginContent() {
         profilePictureUrl: data.data.user.profile_picture_url || null,
         gender: data.data.user.gender || 'male',
         isLeader: data.data.user.is_leader || false,
+        state: data.data.user.state || null,
       };
 
       localStorage.setItem('agent_portal_user', JSON.stringify(userData));

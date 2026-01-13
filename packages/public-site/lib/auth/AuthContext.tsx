@@ -12,6 +12,9 @@ export interface User {
   role: 'admin' | 'user';
   profile_picture_url?: string;
   status: 'active' | 'pending' | 'suspended';
+  gender?: 'male' | 'female' | null;
+  isLeader?: boolean | null;
+  state?: string | null;
 }
 
 interface AuthContextType {
@@ -86,6 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         role: data.data.user.role,
         profile_picture_url: data.data.user.profile_picture_url,
         status: 'active',
+        state: data.data.user.state || null,
       };
 
       localStorage.setItem('agent_portal_user', JSON.stringify(userData));

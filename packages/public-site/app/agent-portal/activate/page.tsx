@@ -183,6 +183,9 @@ function ActivatePageContent() {
           fullName: data.data.user.full_name || `${data.data.user.first_name || ''} ${data.data.user.last_name || ''}`.trim(),
           role: data.data.user.role,
           profilePictureUrl: data.data.user.profile_picture_url || null,
+          gender: data.data.user.gender || 'male',
+          isLeader: data.data.user.is_leader || false,
+          state: data.data.user.state || null,
         };
 
         localStorage.setItem('agent_portal_user', JSON.stringify(userData));
@@ -217,6 +220,9 @@ function ActivatePageContent() {
             fullName: loginData.data.user.full_name || `${loginData.data.user.first_name || ''} ${loginData.data.user.last_name || ''}`.trim(),
             role: loginData.data.user.role,
             profilePictureUrl: loginData.data.user.profile_picture_url || null,
+            gender: loginData.data.user.gender || 'male',
+            isLeader: loginData.data.user.is_leader || false,
+            state: loginData.data.user.state || null,
           };
 
           localStorage.setItem('agent_portal_user', JSON.stringify(userData));
