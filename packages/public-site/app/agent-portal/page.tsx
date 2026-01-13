@@ -260,6 +260,8 @@ function AgentPortal() {
   const [minLoadTimeElapsed, setMinLoadTimeElapsed] = useState(false);
   // Fade out animation state for the loading screen veil
   const [isLoadingFadingOut, setIsLoadingFadingOut] = useState(false);
+  // Delayed background fade for blur dissolve effect
+  const [isBackgroundFadingOut, setIsBackgroundFadingOut] = useState(false);
   // Show loading screen for all users (PWA and browser) to load everything upfront
   const [showLoadingScreen, setShowLoadingScreen] = useState(true);
   // Detect if running as installed PWA (hide download button if true)
@@ -381,14 +383,25 @@ function AgentPortal() {
 
   // Trigger fade-out animation when loading is complete
   useEffect(() => {
-    // When all loading conditions are met, start the fade-out
+    // When all loading conditions are met, start the blur dissolve effect
     if (!isLoading && user && minLoadTimeElapsed && showLoadingScreen && !isLoadingFadingOut) {
+      // Phase 1: Content (logo, bar) blurs and fades first
       setIsLoadingFadingOut(true);
-      // After fade animation completes, hide the loading screen entirely
-      const timer = setTimeout(() => {
+
+      // Phase 2: Background blurs and fades with slight delay
+      const bgTimer = setTimeout(() => {
+        setIsBackgroundFadingOut(true);
+      }, 200);
+
+      // After all animations complete, hide the loading screen entirely
+      const hideTimer = setTimeout(() => {
         setShowLoadingScreen(false);
-      }, 800); // Match the CSS transition duration
-      return () => clearTimeout(timer);
+      }, 900); // Content: 500ms + Background delay: 200ms + Background fade: 400ms = ~900ms total
+
+      return () => {
+        clearTimeout(bgTimer);
+        clearTimeout(hideTimer);
+      };
     }
   }, [isLoading, user, minLoadTimeElapsed, showLoadingScreen, isLoadingFadingOut]);
 
@@ -1219,13 +1232,21 @@ function AgentPortal() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          opacity: isLoadingFadingOut ? 0 : 1,
-          transition: 'opacity 0.8s ease-out',
           pointerEvents: isLoadingFadingOut ? 'none' : 'auto',
         }}
       >
-        {/* Glass shimmer background - full screen */}
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        {/* Glass shimmer background - full screen with delayed blur dissolve */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            overflow: 'hidden',
+            opacity: isBackgroundFadingOut ? 0 : 1,
+            filter: isBackgroundFadingOut ? 'blur(20px)' : 'blur(0px)',
+            transform: isBackgroundFadingOut ? 'scale(1.1)' : 'scale(1)',
+            transition: 'opacity 0.4s ease-out, filter 0.4s ease-out, transform 0.4s ease-out',
+          }}
+        >
           {/* Glass base with corrugated effect */}
           <div
             style={{
@@ -1275,7 +1296,7 @@ function AgentPortal() {
           />
         </div>
 
-        {/* Content - centered */}
+        {/* Content - centered with blur dissolve effect (fades first) */}
         <div
           style={{
             position: 'relative',
@@ -1284,6 +1305,10 @@ function AgentPortal() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '2rem',
+            opacity: isLoadingFadingOut ? 0 : 1,
+            filter: isLoadingFadingOut ? 'blur(12px)' : 'blur(0px)',
+            transform: isLoadingFadingOut ? 'scale(0.95)' : 'scale(1)',
+            transition: 'opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out',
           }}
         >
           {/* Logo with breathing glow */}
