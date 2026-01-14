@@ -6281,6 +6281,7 @@ function DownloadSection() {
   const [isStandalone, setIsStandalone] = useState(false);
   const [installStatus, setInstallStatus] = useState<'idle' | 'installing' | 'installed'>('idle');
   const [showIOSInstructions, setShowIOSInstructions] = useState(false);
+  const [showTroubleHelp, setShowTroubleHelp] = useState(false);
 
   useEffect(() => {
     // Detect platform
