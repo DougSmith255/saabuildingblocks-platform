@@ -5404,8 +5404,8 @@ function AgentPagesSection({
                     </div>
                   </div>
 
-                  {/* Display Name + Bio Row - Side by side on desktop */}
-                  <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 gap-3">
+                  {/* Display Name + Bio Row - Side by side on wide screens only */}
+                  <div className="grid grid-cols-1 min-[1650px]:grid-cols-2 gap-3">
                     {/* Display Name */}
                     <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                       <h4 className="text-sm font-medium text-[#ffd700] mb-3">Display Name</h4>
@@ -5521,8 +5521,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email + Phone Row - Side by side on desktop */}
-              <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 gap-3">
+              {/* Email + Phone Row - Side by side on wide screens only */}
+              <div className="grid grid-cols-1 min-[1650px]:grid-cols-2 gap-3">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
@@ -5533,7 +5533,6 @@ function AgentPagesSection({
                     className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
                     placeholder="your@email.com"
                   />
-                  <p className="text-xs text-[#e5e4dd]/40 mt-1">Shows as email button on your page</p>
                 </div>
 
                 {/* Phone */}
@@ -5612,7 +5611,7 @@ function AgentPagesSection({
                             setHasUnsavedChanges(true);
                           }
                         }}
-                        className="flex-1 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        className="min-w-[90px] flex-1 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none transition-colors"
                         placeholder="#ffd700"
                       />
                     </div>
@@ -5666,8 +5665,8 @@ function AgentPagesSection({
                   <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
                   <div className="space-y-3">
                     {/* Button Text */}
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 w-16">Text</span>
+                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
+                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Text</span>
                       <div className="flex gap-1 flex-1">
                         <button
                           type="button"
@@ -5694,8 +5693,8 @@ function AgentPagesSection({
                       </div>
                     </div>
                     {/* Font */}
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 w-16">Font</span>
+                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
+                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Font</span>
                       <div className="flex gap-1 flex-1">
                         <button
                           type="button"
