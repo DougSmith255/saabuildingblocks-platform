@@ -6187,40 +6187,69 @@ function AgentPagesSection({
                   {/* Profile Image - Compact */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                     <div className="flex items-start gap-4">
-                      <label
-                        htmlFor="attraction-profile-image-upload"
-                        className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700] bg-black/30 flex-shrink-0 cursor-pointer group"
-                      >
-                        {(pageData.profile_image_url || user.profilePictureUrl) ? (
-                          <img
-                            src={pageData.profile_image_url || user.profilePictureUrl || ''}
-                            alt="Profile"
-                            className="w-full h-full object-cover transition-all duration-300"
-                            style={{ filter: `contrast(${contrastLevel / 130}) ${!linksSettings.showColorPhoto ? 'grayscale(1)' : 'grayscale(0)'}` }}
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
-                              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                      {/* Profile Image + Style Toggle Column */}
+                      <div className="flex flex-col items-center flex-shrink-0">
+                        <label
+                          htmlFor="attraction-profile-image-upload"
+                          className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700] bg-black/30 cursor-pointer group"
+                        >
+                          {(pageData.profile_image_url || user.profilePictureUrl) ? (
+                            <img
+                              src={pageData.profile_image_url || user.profilePictureUrl || ''}
+                              alt="Profile"
+                              className="w-full h-full object-cover transition-all duration-300"
+                              style={{ filter: `contrast(${contrastLevel / 130}) ${!linksSettings.showColorPhoto ? 'grayscale(1)' : 'grayscale(0)'}` }}
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
+                              <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                              </svg>
+                            </div>
+                          )}
+                          {isUploadingImage && (
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                              <div className="w-6 h-6 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" className="text-white">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                              <polyline points="17 8 12 3 7 8" />
+                              <line x1="12" y1="3" x2="12" y2="15" />
                             </svg>
                           </div>
-                        )}
-                        {isUploadingImage && (
-                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <div className="w-6 h-6 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" className="text-white">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="17 8 12 3 7 8" />
-                            <line x1="12" y1="3" x2="12" y2="15" />
-                          </svg>
+                        </label>
+                        {/* Photo Style Toggle - B&W or Color - Under the image */}
+                        <div className="mt-2 flex gap-1">
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                            className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
+                              !linksSettings.showColorPhoto
+                                ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
+                            }`}
+                          >
+                            B&W
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
+                            className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
+                              linksSettings.showColorPhoto
+                                ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
+                            }`}
+                          >
+                            Color
+                          </button>
                         </div>
-                      </label>
+                      </div>
+                      {/* Right side - title, description, upload button */}
                       <div className="flex-1 min-w-0">
                         <h4 className="text-sm font-medium text-[#ffd700] mb-1">Profile Image <span className="text-red-400">*</span></h4>
-                        <p className="text-xs text-[#e5e4dd]/50 mb-2">Background removed, B&W applied</p>
+                        <p className="text-xs text-[#e5e4dd]/50 mb-2">Background removed automatically</p>
                         <input
                           ref={attractionFileInputRef}
                           type="file"
@@ -6250,36 +6279,6 @@ function AgentPagesSection({
                         {attractionUploadError && (
                           <div className="mt-2 text-xs text-red-400">{attractionUploadError}</div>
                         )}
-                        {/* Photo Style Toggle - B&W or Color */}
-                        <div className="mt-3 pt-3 border-t border-white/10">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-[#e5e4dd]/60">Style:</span>
-                            <div className="flex gap-1">
-                              <button
-                                type="button"
-                                onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                                className={`px-3 py-1 rounded text-xs border transition-colors ${
-                                  !linksSettings.showColorPhoto
-                                    ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                                    : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
-                                }`}
-                              >
-                                B&W
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                                className={`px-3 py-1 rounded text-xs border transition-colors ${
-                                  linksSettings.showColorPhoto
-                                    ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                                    : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
-                                }`}
-                              >
-                                Color
-                              </button>
-                            </div>
-                          </div>
-                        </div>
                       </div>
                     </div>
                   </div>
