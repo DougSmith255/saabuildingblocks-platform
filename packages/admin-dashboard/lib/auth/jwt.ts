@@ -316,6 +316,13 @@ export function incrementRateLimit(
 }
 
 /**
+ * Reset rate limit counter (call after successful login)
+ */
+export function resetRateLimit(identifier: string): void {
+  rateLimitMap.delete(identifier);
+}
+
+/**
  * Timing-safe string comparison to prevent timing attacks
  */
 export function timingSafeCompare(a: string, b: string): boolean {

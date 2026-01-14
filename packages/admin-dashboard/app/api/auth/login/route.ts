@@ -18,6 +18,7 @@ import {
   logAuthEvent,
   checkRateLimit,
   incrementRateLimit,
+  resetRateLimit,
 } from '@/lib/auth/jwt';
 import { loginSchema, formatZodErrors } from '@/lib/auth/schemas';
 
@@ -254,6 +255,9 @@ export async function POST(request: NextRequest) {
         locked_until: null,
       })
       .eq('id', user.id);
+
+    // Reset in-memory rate limit for this IP on successful login
+    resetRateLimit(rateLimitKey);
 
     // Log successful login
     await logAuthEvent({
