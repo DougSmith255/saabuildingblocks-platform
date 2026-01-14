@@ -4857,7 +4857,7 @@ interface LinksSettings {
 
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   accentColor: '#ffd700',
-  iconStyle: 'light',
+  iconStyle: 'dark',
   font: 'synonym',
   bio: '',
   showColorPhoto: false, // B&W by default
@@ -5552,7 +5552,7 @@ function AgentPagesSection({
         setCustomSocialLinks(data.page.custom_social_links || []);
         setLinksSettings(data.page.links_settings || {
           accentColor: '#ffd700',
-          iconStyle: 'light',
+          iconStyle: 'dark',
           font: 'synonym',
           bio: '',
           showColorPhoto: false,
@@ -5986,40 +5986,55 @@ function AgentPagesSection({
 
                     {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
                     {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
-                      const buttonCount = (formData.email ? 1 : 0) +
-                        (formData.phone && formData.show_call_button ? 1 : 0) +
-                        (formData.phone && formData.show_text_button ? 1 : 0);
                       const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
                       const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
 
-                      // Build array of active buttons to determine position for rounding
+                      // Build array of active buttons
                       const buttons: { type: 'email' | 'call' | 'text'; label: string; icon: string }[] = [];
                       if (formData.email) buttons.push({ type: 'email', label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
                       if (formData.phone && formData.show_call_button) buttons.push({ type: 'call', label: 'Phone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
                       if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
 
+                      const buttonCount = buttons.length;
+                      // 3 buttons = icons only, 2 buttons = icons + text centered, 1 button = icon left + text centered
+                      const showText = buttonCount < 3;
+
                       return (
-                        <div className="flex w-full gap-[3px] mb-1.5">
+                        <div className="flex w-full gap-[3px]">
                           {buttons.map((btn, idx) => {
                             const isFirst = idx === 0;
                             const isLast = idx === buttons.length - 1;
-                            const isOnly = buttons.length === 1;
+                            const isOnly = buttonCount === 1;
                             // Rounding: full if only one, left-only if first, right-only if last, none if middle
                             const roundedClass = isOnly ? 'rounded' : isFirst ? 'rounded-l' : isLast ? 'rounded-r' : '';
 
                             return (
                               <div
                                 key={btn.type}
-                                className={`flex-1 py-1.5 px-3 ${roundedClass} text-[10px] font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center ${isOnly ? 'justify-start' : 'justify-center'} gap-1.5`}
+                                className={`flex-1 py-1.5 ${roundedClass} text-[10px] font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center justify-center`}
                                 style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                               >
-                                <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                                </svg>
                                 {isOnly ? (
-                                  <span className="flex-1 text-center">{btn.label}</span>
+                                  // 1 button: icon on left (absolute), text centered
+                                  <div className="relative w-full flex items-center justify-center">
+                                    <svg className="w-2.5 h-2.5 absolute left-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                                    </svg>
+                                    <span>{btn.label}</span>
+                                  </div>
+                                ) : showText ? (
+                                  // 2 buttons: icon + text centered together
+                                  <div className="flex items-center justify-center gap-1">
+                                    <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                                    </svg>
+                                    <span>{btn.label}</span>
+                                  </div>
                                 ) : (
-                                  <span>{btn.label}</span>
+                                  // 3 buttons: icon only
+                                  <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                                  </svg>
                                 )}
                               </div>
                             );
@@ -6232,44 +6247,7 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Desktop Save Button - Under preview, visible only >1650px */}
-              <div className="hidden min-[1650px]:block mt-3">
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving || !hasUnsavedChanges}
-                  className={`w-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ${
-                    !hasUnsavedChanges
-                      ? 'opacity-50 cursor-not-allowed'
-                      : ''
-                  } ${
-                    showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
-                  }`}
-                  style={{
-                    background: showSaveSuccess
-                      ? '#22c55e'
-                      : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
-                    border: '1px solid rgba(255, 215, 0, 0.5)',
-                  }}
-                >
-                  {showSaveSuccess ? (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Saved!</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                      </svg>
-                      <span>{isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
-              {/* QR Code Section - Under save button, visible only >1650px */}
+              {/* QR Code Section - visible only >1650px */}
               <div className="hidden min-[1650px]:block mt-4">
                 <div className="rounded-xl bg-white p-4 border border-white/10">
                   <div className="flex flex-col items-center gap-3">
@@ -7477,34 +7455,52 @@ function AgentPagesSection({
               const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
               const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
 
-              // Build array of active buttons to determine position for rounding
+              // Build array of active buttons
               const buttons: { type: 'email' | 'call' | 'text'; label: string; icon: string }[] = [];
               if (formData.email) buttons.push({ type: 'email', label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
               if (formData.phone && formData.show_call_button) buttons.push({ type: 'call', label: 'Phone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
               if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
+
+              const buttonCount = buttons.length;
+              // 3 buttons = icons only, 2 buttons = icons + text centered, 1 button = icon left + text centered
+              const showText = buttonCount < 3;
 
               return (
                 <div className="flex w-full gap-[3px]">
                   {buttons.map((btn, idx) => {
                     const isFirst = idx === 0;
                     const isLast = idx === buttons.length - 1;
-                    const isOnly = buttons.length === 1;
+                    const isOnly = buttonCount === 1;
                     // Rounding: full if only one, left-only if first, right-only if last, none if middle
                     const roundedClass = isOnly ? 'rounded-lg' : isFirst ? 'rounded-l-lg' : isLast ? 'rounded-r-lg' : '';
 
                     return (
                       <div
                         key={btn.type}
-                        className={`flex-1 py-3 px-4 ${roundedClass} text-sm font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center ${isOnly ? 'justify-start' : 'justify-center'} gap-2`}
+                        className={`flex-1 py-3 ${roundedClass} text-sm font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center justify-center`}
                         style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                       >
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                        </svg>
                         {isOnly ? (
-                          <span className="flex-1 text-center">{btn.label}</span>
+                          // 1 button: icon on left (absolute), text centered
+                          <div className="relative w-full flex items-center justify-center">
+                            <svg className="w-4 h-4 absolute left-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                            </svg>
+                            <span>{btn.label}</span>
+                          </div>
+                        ) : showText ? (
+                          // 2 buttons: icon + text centered together
+                          <div className="flex items-center justify-center gap-2">
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                            </svg>
+                            <span>{btn.label}</span>
+                          </div>
                         ) : (
-                          <span>{btn.label}</span>
+                          // 3 buttons: icon only
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                          </svg>
                         )}
                       </div>
                     );
@@ -7514,7 +7510,7 @@ function AgentPagesSection({
             })()}
 
             {/* Link Buttons */}
-            <div className="w-full space-y-2 mt-2">
+            <div className="w-full space-y-2">
               {(() => {
                 const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
                 const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
