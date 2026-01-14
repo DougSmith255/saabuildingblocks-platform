@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+import { useState, useEffect, useRef, useMemo, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
@@ -8,6 +8,7 @@ import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutG
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { ChromePicker, ColorResult } from 'react-color';
+import confetti from 'canvas-confetti';
 
 // Shake animation styles + mobile tap highlight fix
 const shakeKeyframes = `
@@ -17,21 +18,6 @@ const shakeKeyframes = `
   40% { transform: translateX(3px); }
   60% { transform: translateX(-2px); }
   80% { transform: translateX(2px); }
-}
-
-@keyframes confetti {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-80px) rotate(360deg) scale(0);
-    opacity: 0;
-  }
-}
-
-.animate-confetti {
-  animation: confetti 1s ease-out forwards;
 }
 
 /* Custom checkbox styling - muted when unchecked, gold when checked */
@@ -447,6 +433,39 @@ function AgentPortal() {
       style.textContent = shakeKeyframes;
       document.head.appendChild(style);
     }
+  }, []);
+
+  // Premium confetti effect for save success
+  const triggerConfetti = useCallback(() => {
+    // First burst - center
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.9 },
+      colors: ['#ffd700', '#22c55e', '#ffffff', '#ff6b6b', '#45b7d1'],
+    });
+
+    // Second burst - left side
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.9 },
+        colors: ['#ffd700', '#22c55e', '#ffffff'],
+      });
+    }, 100);
+
+    // Third burst - right side
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.9 },
+        colors: ['#ffd700', '#22c55e', '#ffffff'],
+      });
+    }, 200);
   }, []);
 
   const handleLogout = () => {
@@ -5134,6 +5153,7 @@ function AgentPagesSection({
         setSuccessMessage('Changes saved successfully!');
         // Trigger success animation with confetti
         setShowSaveSuccess(true);
+        triggerConfetti();
         setTimeout(() => setShowSaveSuccess(false), 2000);
       } else {
         const errorData = await response.json();
@@ -6965,24 +6985,6 @@ function AgentPagesSection({
               )}
             </button>
           </div>
-
-          {/* Confetti Effect */}
-          {showSaveSuccess && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              {[...Array(20)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-2 h-2 rounded-full animate-confetti"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    backgroundColor: ['#ffd700', '#22c55e', '#fff', '#ff6b6b', '#45b7d1'][Math.floor(Math.random() * 5)],
-                    animationDelay: `${Math.random() * 0.3}s`,
-                    animationDuration: `${0.8 + Math.random() * 0.4}s`,
-                  }}
-                />
-              ))}
-            </div>
-          )}
         </div>
 
         {/* MOBILE PREVIEW MODAL - Using base Modal component */}
