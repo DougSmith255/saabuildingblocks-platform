@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, Suspense, useCallback } from 'rea
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Dog, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { ChromePicker, ColorResult } from 'react-color';
@@ -3612,59 +3612,81 @@ function TemplatesSection() {
 function CoursesSection() {
   const courses = [
     {
-      icon: '🐺',
+      icon: Dog,
       title: 'Wolf Pack Skool',
-      description: 'Access the Wolf Pack community',
+      description: 'Access the Wolf Pack community and resources',
       url: 'https://www.skool.com/wolf-pack-6238',
+      color: '#a855f7', // Purple
     },
     {
-      icon: '📱',
+      icon: Smartphone,
       title: 'Social Agent Academy 2.0',
-      description: 'Learn how to dominate online',
+      description: 'Generate inbound leads through content and visibility',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
+      color: '#22c55e', // Green
     },
     {
-      icon: '🏠',
+      icon: Building,
       title: 'Investor Army',
-      description: 'Learn to flip houses',
+      description: 'Work with investor clients confidently',
       url: 'https://info-investorarmy.clickfunnels.com/membership-access18193126?page_id=18193127&page_key=caoyze5b8hg4msp3&login_redirect=1',
+      color: '#3b82f6', // Blue
     },
     {
-      icon: '🤖',
+      icon: Bot,
       title: 'AI Agent Accelerator',
-      description: 'Leverage AI in your business',
+      description: 'Automate content, follow-up, and admin tasks',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
+      color: '#f97316', // Orange
     },
     {
-      icon: '🧲',
+      icon: Target,
       title: 'Master Agent Attraction',
-      description: 'Attract more clients',
+      description: 'Attract agents into your downline for revenue share',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
+      color: '#ec4899', // Pink
     },
   ];
 
   return (
     <div className="space-y-4 sm:space-y-6 px-1 sm:px-2">
-      <p className="text-center text-sm sm:text-base text-[#e5e4dd]/80 mb-4 sm:mb-8">Refer to Wolf Pack emails to find login details</p>
-
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-        {courses.map((course, index) => (
-          <a
-            key={index}
-            href={course.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-          >
-            <GenericCard padding="sm" centered className="h-full hover:border-[#ffd700]/40 transition-colors cursor-pointer">
-              <div className="text-center space-y-2 sm:space-y-4">
-                <span className="text-3xl sm:text-4xl lg:text-5xl">{course.icon}</span>
-                <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">{course.title}</h3>
-                <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">{course.description}</p>
-              </div>
-            </GenericCard>
-          </a>
-        ))}
+        {courses.map((course, index) => {
+          const IconComponent = course.icon;
+          return (
+            <a
+              key={index}
+              href={course.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block group"
+            >
+              <GenericCard padding="sm" centered className="h-full hover:border-[#ffd700]/40 transition-colors cursor-pointer">
+                <div className="text-center flex flex-col items-center">
+                  {/* Icon with colored background */}
+                  <div
+                    className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center mb-4"
+                    style={{ backgroundColor: `${course.color}20` }}
+                  >
+                    <IconComponent
+                      className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
+                      style={{ color: course.color }}
+                      strokeWidth={1.5}
+                    />
+                  </div>
+                  {/* Title - heading color, gold on hover */}
+                  <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors leading-tight mb-2">
+                    {course.title}
+                  </h3>
+                  {/* Description - closer to title */}
+                  <p className="text-xs sm:text-sm text-[#e5e4dd]/60 hidden sm:block">
+                    {course.description}
+                  </p>
+                </div>
+              </GenericCard>
+            </a>
+          );
+        })}
       </div>
     </div>
   );
