@@ -1881,6 +1881,7 @@ function AgentPortal() {
                 initialTab="attraction"
                 mode="agent-page"
                 preloadedPageData={preloadedAgentPageData}
+                triggerConfetti={triggerConfetti}
               />
             </div>
             )}
@@ -1914,6 +1915,7 @@ function AgentPortal() {
                 initialTab="links"
                 mode="linktree"
                 preloadedPageData={preloadedAgentPageData}
+                triggerConfetti={triggerConfetti}
               />
             </div>
             )}
@@ -4899,6 +4901,7 @@ interface AgentPagesSectionProps {
   initialTab?: AgentPagesTabId;
   mode?: AgentPagesSectionMode;
   preloadedPageData?: any; // Preloaded agent page data from loading screen
+  triggerConfetti: () => void; // Confetti effect for save success
 }
 
 function AgentPagesSection({
@@ -4927,6 +4930,7 @@ function AgentPagesSection({
   initialTab = 'profile',
   mode = 'linktree',
   preloadedPageData,
+  triggerConfetti,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
