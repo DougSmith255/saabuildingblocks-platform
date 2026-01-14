@@ -3577,34 +3577,61 @@ function TemplatesSection() {
 // Elite Courses Section
 // ============================================================================
 function CoursesSection() {
+  const courses = [
+    {
+      icon: '🐺',
+      title: 'Wolf Pack Skool',
+      description: 'Access the Wolf Pack community',
+      url: 'https://www.skool.com/wolf-pack-6238',
+    },
+    {
+      icon: '📱',
+      title: 'Social Agent Academy 2.0',
+      description: 'Learn how to dominate online',
+      url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
+    },
+    {
+      icon: '🏠',
+      title: 'Investor Army',
+      description: 'Learn to flip houses',
+      url: 'https://info-investorarmy.clickfunnels.com/membership-access18193126?page_id=18193127&page_key=caoyze5b8hg4msp3&login_redirect=1',
+    },
+    {
+      icon: '🤖',
+      title: 'AI Agent Accelerator',
+      description: 'Leverage AI in your business',
+      url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
+    },
+    {
+      icon: '🧲',
+      title: 'Master Agent Attraction',
+      description: 'Attract more clients',
+      url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
+    },
+  ];
+
   return (
     <div className="space-y-4 sm:space-y-6 px-1 sm:px-2">
       <p className="text-center text-sm sm:text-base text-[#e5e4dd]/80 mb-4 sm:mb-8">Refer to Wolf Pack emails to find login details</p>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-        <GenericCard padding="sm" centered>
-          <div className="text-center space-y-2 sm:space-y-4">
-            <span className="text-3xl sm:text-4xl lg:text-5xl">🐺</span>
-            <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Wolf Pack Skool Portal & HUB</h3>
-            <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">Access the Wolfpack HUB in courses</p>
-          </div>
-        </GenericCard>
-
-        <GenericCard padding="sm" centered>
-          <div className="text-center space-y-2 sm:space-y-4">
-            <span className="text-3xl sm:text-4xl lg:text-5xl">📱</span>
-            <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Social Agent Academy</h3>
-            <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">Learn how to dominate online</p>
-          </div>
-        </GenericCard>
-
-        <GenericCard padding="sm" centered>
-          <div className="text-center space-y-2 sm:space-y-4">
-            <span className="text-3xl sm:text-4xl lg:text-5xl">🏠</span>
-            <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Investor Army</h3>
-            <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">Learn to flip houses</p>
-          </div>
-        </GenericCard>
+        {courses.map((course, index) => (
+          <a
+            key={index}
+            href={course.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+            <GenericCard padding="sm" centered className="h-full hover:border-[#ffd700]/40 transition-colors cursor-pointer">
+              <div className="text-center space-y-2 sm:space-y-4">
+                <span className="text-3xl sm:text-4xl lg:text-5xl">{course.icon}</span>
+                <h3 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">{course.title}</h3>
+                <p className="text-xs sm:text-sm text-[#e5e4dd]/70 hidden sm:block">{course.description}</p>
+              </div>
+            </GenericCard>
+          </a>
+        ))}
       </div>
     </div>
   );
@@ -3713,49 +3740,379 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
         id: 'prod-1',
         title: 'FSBO Phone Script',
         description: 'Effective scripts for For Sale By Owner calls',
-        content: '',
+        content: `FSBO – For Sale By Owners
+
+FSBOs are high-quality leads to gain because they are real sellers. Find them on Zillow – filter for FSBOs. Owner phone numbers are listed but check against the do not call list before calling.
+
+Here are ideas for how to talk to them.
+
+Idea #1
+
+Hi, I'm Karrie, I'm a realtor and I see you have a property for sale, is that right?
+
+I called you because I represent lots of home buyers.
+
+I'm going to be in your neighborhood this weekend.
+
+Can I come by to view the home so I see how it might fit my current buyers and I'll also drop off a package of some information that could help you sell the house on your own.
+
+Idea #2
+
+Hi, I'm Karrie, I'm a realtor and I see you have a property for sale, is that right?
+
+How's it going for you?
+
+And, just curious, why didn't you use a realtor?
+
+Yep, I can understand all of that.
+
+I have a seller's backup plan to ease pain points about listing. My plan:
+
+• Allows home sellers to keep doing what they are doing – trying to find a buyer
+• Significantly decreases commissions if you do find the buyer or if I represent both sides
+• Allows you to cancel the listing contract at any time, for any reason, no cost. I'll wish you well and we go our separate ways.
+• Includes global marketing for luxury homes just like yours. That includes marketing in 80 publications in over 70 key markets around the world. No other agent can match it.
+
+Can I email you a copy of my seller backup plan?
+
+What's your email address?
+
+For Appointments
+
+Provide Value – arrive to appointment with neighborhood marketing report; list of lenders, contractors, appraisers, lawyers, home inspectors, pest inspectors, roof inspectors, escrow officers, cleaners, movers, etc…
+
+Why are you moving seems like a great place?
+
+What did you think of my seller's back up plan?
+
+If your home doesn't sell in the next 30 – 45 days, would you consider my seller's backup plan then?`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - FSBO phone script.docx',
       },
       {
         id: 'prod-2',
         title: 'How to Conduct a Listing Appointment',
         description: 'Complete guide to winning listings',
-        content: '',
+        content: `Conducting a Listing Appointment
+
+Three important things have to happen during a listing appointment for you to walk away with a signed agreement:
+
+1. You have to have communicated your value.
+2. You have to have differentiated yourself from the competition.
+3. The seller has to completely trust that you are a listing expert agent.
+
+That's why having an intentional, structured listing presentation is crucial. It will guide the conversation so that your seller can't help but believe you're the right agent to sell their home.
+
+SETTING EXPECTATIONS
+
+Begin by sharing the agenda so that the client knows what to expect from the appointment. As you fulfill this agenda, it will begin to build your seller's trust in you. They'll think, "This agent promised me this, and they are making good on that promise."
+
+Very quickly after you begin your presentation, you should delve into what's happening in your local market. You can get local statistics from your MLS, board, or brokerage. Interpreting these market statistics for your clients builds trust and confidence in you as a listing expert agent! It also sets expectations that will ensure the rest of the listing presentation conversation flows smoothly.
+
+First, ask the client about their understanding of the current market. Here is a script you can use to assess their knowledge:
+
+"I know you have lived in this neighborhood for several years and have seen houses going on the market over time. How do you think the market is in your neighborhood right now?"
+
+Many people utilize large news sources to gather information about the market. These sources aren't reporting the exact statistics for local neighborhoods, which is what your client needs to understand. Use this script to help correct their understanding of the market:
+
+"I understand, I watch the news too. Unfortunately, they're not sharing what's actually happening right here, right now. So, let's take a look at what is happening right here, right now, and what this means for you and your family."
+
+PROVING YOUR COMPETENCE
+
+Once your client understands the state of their market, you should pivot to your own personal stats. Use results and statistics that paint you in the best light and show how you are outperforming your competition. If you are a newer agent, or if your personal stats aren't presentation-worthy yet, you can lean on your brokerage's performance.
+
+You can start the conversation by simply asking, "Do you like statistics?" Continue on with this script to explain why you are the agent to be hired:
+
+"I like tracking specific statistics in my own business so that I can ensure I am outperforming my competition when it comes to working for you. I'd love to share a couple of statistics with you and discuss what they mean for you."
+
+At this point, you should explain your personal statistics. Use actual numbers to show your client what this means for them. For example, if you sell their home for $450,000, they will net $15,525 more than an average agent could get them.
+
+"If you hire an average realtor, they will sell your house for 98.25% of asking price. Again, in my experience, that is a strong statistic. However, we are getting our clients 101.7% of asking price on average. This means we are demanding 3.45% more than our competition."
+
+REVEALING YOUR METHODS
+
+Now that you have impressed your prospect with your results, you'll need to show how you got them. This is all about the 3 P's of marketing.
+
+Explain to your clients that the old 3 P's of marketing were to Put the home in the MLS, Place a sign in the yard, and Pray that it sells. But in today's tough market, that is not enough! Instead, emphasize that your new 3 P's – Preparation, Promotion, and Pricing – will ensure that your clients get the results they want.
+
+You should never tell a client something that you can show them. Starting with Preparation, you can show the seller evidence of how you have prepared other homes for sale. Effective examples include before-and-after photos of a staged home and professional photography of previous homes sold.
+
+Next, you'll show the client how you will Promote their home. This should be a list of all of the marketing activities you will do to get their home the greatest exposure to the greatest number of potential buyers and their agents.
+
+Lastly, you should address your Pricing strategy. When working with sellers, pricing can be the biggest point of contention. Explaining the dangers of pricing a home incorrectly can help smooth conversations.
+
+Most sellers are not fully educated on pricing strategies. Here's a script you can use to explain the concept to them:
+
+"Homes priced outside of the market value will sit on the market for a long period of time. Homes priced just above market value will cause lowball offers. Both of these are not desirable outcomes.
+
+To get the best price, you need to make sure the home is in excellent condition and that your price is within the market. That is how we get multiple offers and demand more than asking price."
+
+At this point, the client has learned everything they need to know to choose you as their listing agent. You can review the topics you covered and transition smoothly to discuss pricing and paperwork, as well as answer any questions the client may have.`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - How to conduct a listing appointment.pdf',
       },
       {
         id: 'prod-3',
         title: 'Building a Sphere of Influence',
         description: 'Start building your network from scratch',
-        content: '',
+        content: `IF YOU'VE NEVER: IDENTIFIED AND BUILT YOUR SPHERE OF INFLUENCE
+
+Your sphere of influence includes everyone who knows you or knows of you because you're already connected in some way, whether as colleagues, family, friends, coaches, former classmates, people at places of worship or in social groups, or the people whom those people know. Working your sphere of influence is far more effective than working cold leads. If you've never built your sphere of influence before, here are some ways to start.
+
+• Build your social media presence. Post regularly about your business and your life in general so that your sphere knows what you are up to. Like and comment on other people's posts.
+
+• Talk to people. Make conversation with the grocery store cashier, the people in your fitness class, the receptionist at your doctor's office, your children's teachers or coaches, or other parents at a game. Ask them something about themselves, and share what you do.
+
+• Join a networking group. Getting to know people involved in different local businesses both expands your sphere and provides useful contacts for many situations.
+
+• Volunteer at community functions. Help plan a fundraiser, run a registration table, and contribute to your community while wearing your real estate swag and name badge.
+
+• Leave your card everywhere: at coffee shops, when you pay a restaurant bill, or take your car in for service, you never know where you'll meet someone who needs your services.
+
+• Network with other real estate agents. Other agents can be a great source of information, support, referrals, mentors and friendship.
+
+WHAT NEXT? ONCE YOU MAKE CONTACT WITH PEOPLE, GATHER THEIR INFORMATION.
+
+• Enter what you have into a customer relationship management system (CRM), such as Lone Wolf, Propertybase, or your brokerage's CRM, that will help you keep track of your contacts and schedule follow-up. Whether you have an email address, social media handle, phone number, home address or something else, it's a place to start. If your brokerage doesn't have a CRM, Excel or Google spreadsheets work, too.
+
+• Start to build profiles for each person with full contact information, how you know them, birthdays, anniversaries, names of spouses, pets or children, and whatever else is relevant to your business. Knowing these details will help you not only remember the person, but also will impress them when you ask about them during your next interaction. For example, if the last time you spoke they mentioned their pet or children, ask how they're doing and mention them by name.
+
+• Consider adding fields in your database to indicate whether a contact is a personal or professional one; lead vs. current client; local vs. out-of-town; online vs IRL; close contact vs. acquaintance; likely to buy soon vs. more long-term, etc.
+
+• Reach out to your sphere of influence. Select a few each week to call on the phone for a personal conversation. Don't rush these conversations, be genuine and cordial. Not every conversation should be about business; the idea is to keep you top of mind.
+
+• Once you've made contact, offer something of value. That could be a monthly or quarterly email or newsletter, updating your sphere on the current market. Or it could be free home valuations in exchange for email or a phone number.
+
+• Create a regular cadence of communication that works for you and your contacts, to keep building those relationships.`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never built a sphere of influence.pdf',
       },
       {
         id: 'prod-4',
         title: 'Converting FSBOs',
         description: 'Turn For Sale By Owners into listings',
-        content: '',
+        content: `IF YOU'VE NEVER: CONVERTED A FOR-SALE-BY-OWNER (FSBO)
+
+People who have decided to list their property without an agent (for-sale-by-owner, or FSBO) usually have strong opinions about not working with an agent — typically based on the commission — but if you can convince them of the service you provide and how much more money they stand to make by working with you, they can prove to be lucrative leads. Most homeowners eventually list with an agent once they see how much work goes into selling a house. The secret is to have a strong strategy.
+
+• To find FSBO listings, set up alerts on sites such as your local MLS, Realtor.com and Zillow to send you notifications when new FSBO listings are posted. Also search Craigslist, ForSaleByOwner.com, FSBOs.com, HomesbyOwner.com and other sites that list in your area.
+
+QUESTIONS TO ASK PROSPECTIVE BUYERS
+
+• Check whether they have appropriately priced the home to sell. Compare it to similar homes and the strength of the market in that area to get a sense of whether the seller is eager to sell or has higher expectations than the market bears.
+
+• Get an idea of how motivated the seller seems. Does the listing have language such as "Must sell right away"?
+
+• Ensure that the seller isn't a broker or agent. Read the listing carefully.
+
+• Develop a marketing strategy for the home with a list of comps in the area along with your reasoning for how this home compares. Compile information valuable to the seller.
+
+• While converting FSBOs to clients takes persistence, avoid being pushy, as these sellers are likely to be reluctant and require a gentle approach.
+
+WHEN YOU MAKE CONTACT
+
+• Compliment the seller on their decision to sell the home themselves, so that they know you understand what they are doing.
+
+• Preview and compliment the home. Point out benefits that would help the home sell.
+
+• Present yourself as a marketing specialist, saying something like "I have a proven marketing strategy that gets great results."
+
+• Offer free value, such as home staging tips, a free market analysis, helping them come up with a pricing strategy, offering to run an open house for them, sharing their listing with your sphere of influence, reviewing their current ad/marketing materials, or showing them some of your marketing plan. Give them some tips for how to sell the home themselves.
+
+• Help them understand feedback from potential buyers, including comments from buyers or a total lack of feedback. It can be very difficult for an FSBO seller to get real feedback from potential buyers. You could offer to call the buyers and find out what they liked about the house and what they didn't like.
+
+• After you've given some value, get an appointment. Emphasize that you're not coming to list the property, you want to offer advice or a free report, and then offer appointment options.
+
+WHEN YOU MEET
+
+• Show them the data. In most markets, homes sold by agents sell faster and for more money than FSBO listings. Show them the data for how much more money they stand to make overall if they sell with you, so that your commission would be a drop in the bucket. Most local MLSs have data that compares agent-listed properties to FSBO properties. According to the National Association of REALTORS® 2022 Profile of Home Buyers and Sellers, FSBO homes last year sold for a median of $225,000, while agent-assisted homes sold for a median of $345,000.
+
+• Explain your marketing strategy, and how you will enhance the work they have already done.`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never converted a FSBO.pdf',
       },
       {
         id: 'prod-5',
         title: 'Open House Success',
         description: 'How to run effective open houses',
-        content: '',
+        content: `IF YOU'VE NEVER: HOSTED AN OPEN HOUSE
+
+Hosting an open house for your new listing can be an effective way to promote the property and attract potential buyers you might not reach otherwise. As a new agent, you may not have hosted an open house before. Here's what to do.
+
+BEFORE
+
+• Clean, organize and touch-up entire home, including closets and appliances (inside and out) and yard. Check that all lights work, replace bulbs if needed.
+• Advise seller to lock up or remove all valuables and medications.
+• Recommend that seller not attend the open house.
+• Buy and place open house signs.
+• Email your sphere of influence.
+• Promote the open house on your social media.
+• Door-knock to invite all neighbors to the open house.
+• Prepare flyers and website, including address, features, school district, photo, etc.
+• Check with your insurance company about liability for people touring the home.
+• Create ambience: open curtains or shades, turn on lights, play light music.
+
+DURING
+
+• Have a sign-in sheet, website or QR code ready for visitors.
+• Stand to greet potential buyers and don't sit down while visitors tour the property.
+• Remain positive but also give the potential buyer their space. Offer to answer any questions they might have.
+• Park your car out of the way, to leave parking accessible for potential buyers.
+• Talk to just one potential buyer at a time and give them your full attention.
+
+AFTER
+
+• Lock up the house after inspecting all rooms, closing all curtains and turning off lights.
+• Remove open house signs.
+• Notify the seller of traffic flow and responses.
+• Follow up with all attendees. Send a thank-you email to all, and call those who show interest.
+• Add all guests to your database.
+• Send information about future open houses.
+
+STAYING SAFE
+
+• Try to have at least one other person working with you at the open house.
+• Make sure that a colleague, friend or family member knows where you are.
+• Check your cell phone's battery and signal before the open house. Have emergency numbers pre-programmed on speed dial.
+• On entering the house for the first time, check all rooms and determine several, potential escape routes.
+• Have potential clients walk in front of you while you direct them instead of leading them. "To the left is the kitchen" and gesture for them to go ahead of you.
+• Don't assume that everyone has left the home at the end of the showing. Check all rooms and the yard before locking doors.`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never done an open house.pdf',
       },
       {
         id: 'prod-6',
         title: 'Follow-Up Mastery',
         description: 'Never lose a lead with proper follow-up',
-        content: '',
+        content: `IF YOU'VE NEVER: FOLLOWED UP LEADS
+
+Once you've communicated with a potential client, the most important thing you can do is to follow up with them. Following up establishes your reputation as being dedicated and professional, and it builds the relationship. According to InsideSales.com, 50 percent of sales happen after the 5th touch, so consistent follow-up is crucial for building relationships that lead to sales. Here are some tips to help you build good follow-up habits.
+
+• Follow up immediately after interacting with a potential client. There's no such thing as too soon. If you get a lead online, respond within five minutes.
+
+• Ask your potential client how they prefer to be contacted and honor that preference. There are many ways to stay in touch: via phone, face-to-face meeting, text messages, email, traditional mail, or social media.
+
+• Follow up with active clients every day.
+
+• Be 100% reliable: if you say you're going to do something, do it. If you tell your client you'll send them new listings, return a call or get them an answer to something, follow through.
+
+• Call back if you don't reach them the first time. People don't always pick up on the first call. Many also don't answer calls from numbers they do not recognize.
+
+• Establish a communication calendar, such as eight contacts, once per week, over eight weeks.
+
+• Instead of simply asking whether someone is ready to sell/buy yet, give them useful information, such as a local market report, or tips on the process. This will keep you top of mind when they are ready.
+
+• Focus on building the relationship, not on making the sale. Instead of making a pitch, engage about family, work, personal events, and other topics.
+
+• At the end of a conversation with your contact, ask permission to follow up within a certain period of time. If they say yes, then do so.
+
+• If someone doesn't contact you back after the 6th contact, that's often a good time to check in about whether they want to stay on your contact list.
+
+• If someone asks you to stop contacting them, stop immediately.`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never followed-up.pdf',
       },
       {
         id: 'prod-7',
         title: 'New Construction Playbook',
         description: 'Complete guide to new construction sales',
-        content: '',
+        content: `NEW CONSTRUCTION PLAYBOOK
+
+You've decided to get a brand-spankin' new home for you and your family — Congratulations!
+
+But before you run out and grab a new welcome mat for your future front door, there are a few things you need to consider and beware of when purchasing a new construction home.
+
+There are a lot of pitfalls buyers fall into with new construction, often through lack of knowledge and fogginess on the process. This guide breaks down the pros and cons, the good and bad, the things to look out for and important things to consider.
+
+PROS AND CONS
+
+Pro: Brand new, never been used
+There's something special about a brand-new, never been lived in home. Everything is fresh, clean, and ready for you and your family to break it in.
+
+Pro: Fully customizable interior and exterior
+You get to choose all the elements of your home to suite your tastes - from the paint color on the siding to the placement of each electrical outlet.
+
+Pro: Updated and modern materials and designs
+Builders will use the latest and greatest in materials and design, so you won't need to worry about updates or replacements for a long time.
+
+Pro: Built to be more energy efficient
+New construction homes utilize the latest in energy efficient materials and appliances. You can also choose to go with additional energy savers like smart thermostats and dual flush toilets.
+
+Pro: Less maintenance in early years
+With new construction, the chances of needing costly repairs are very low in the first few years.
+
+Pro: Builder warranties
+New construction homes come with builder warranties and appliance warranties that will cover most, if not all, issues and repairs that come up.
+
+Con: Expensive
+On average, new construction homes can cost about 5% more than purchasing an existing home. Additional expenses can also pop up over build time that can lead to a much higher ticket price than you planned for.
+
+Con: Builder experience and quality varies
+Floor plans aren't the only thing that varies between builders. Experience, reliability, timeliness, options and more can vary greatly. Make sure you are fully evaluating each builder before making your final decision.
+
+Con: Timeline
+Unlike buying an existing home, you don't get to immediately move in once you sign off on your purchase. There can also be unexpected delays in materials or inclement weather that push your timeline out even more.
+
+Con: Limited options on customizations for many builders
+You can't expect a 'if you can dream it, we will build it' type of experience with most builders. Although you do have multiple floor plan and upgrade options, they are usually limited to the selections offered by the builder.
+
+Con: Upgrades can add up
+The base model will cost you – but the upgrades will cost you more. Make sure you are accounting for all the upgrades you may want to include when planning your budget and applying for your mortgage.
+
+Con: Highly unlikely to negotiate on price
+Unlike purchasing an existing home from a homeowner, there is not much wiggle room for negotiating price when going with new construction.
+
+Con: Sparse landscaping
+Newer neighborhoods lack the big, older trees and greenery that established or older communities have.
+
+Con: Higher taxes
+New construction communities can often come with additional property taxes.
+
+COSTLY MISTAKES TO AVOID
+
+Not comparing lenders
+Many builders offer a mortgage lender in-house – but easy doesn't always mean the best. You could be getting a way better rate with just a little looking around.
+
+Forgetting to budget for necessary (or desired) add-ons
+New construction doesn't come with lush green grass and a cute tree in the back... and that can be expensive.
+
+Waiving the home inspection
+Just because it's new doesn't mean its perfect. Never skip out on the final home inspection.
+
+Being hands-off during the process
+Stay closely involved and present in your home's construction. Visiting regularly can help catch mistakes in build, materials and designs that can be corrected immediately.
+
+Not getting everything in writing
+Don't rely on a word and a handshake. Document all changes, agreements, requests, approvals.
+
+Thinking you don't need a realtor
+A great real estate agent can help you avoid some of the pitfalls that many home buyers fall into when buying new construction.
+
+Choosing costly upgrades that won't increase home value
+Not all upgrades contribute to your home's value. For example, choosing hardwood over laminate floors is an upgrade that will pay off. Opting for crown molding throughout may not.
+
+Automatically going with builder upgrades
+Shop around for some upgrades – you may be able to save by having a contractor do the work later.
+
+IMPORTANT THINGS TO CONSIDER
+
+Research builders
+Investigate how long they've been in business, how many previous projects they've had, if they have any complaints filed, and if they've had consistent issues post-build. Review their Google reviews, Customer testimonials, Social media accounts, and BBB. Check their warranty policies as well.
+
+Review multiple floor plans
+Think about your family's needs and routines, and find a floor plan that will best meet those.
+
+Tour multiple model homes
+This will allow you to see how the floor plans and designs come together. But beware! Many model homes have multiple upgrades that will drive up the cost of a base model.
+
+Account for upgrades
+Find out what the base model costs, then determine which upgrades you can't live without and work them into your budget.
+
+Location
+Is the home in an area that suits the needs of your family? In a good school district? Accessible to things like grocery stores and parks?
+
+Read the fine print
+Contracts will favor developers, so make sure you comb through the contract thoroughly – or better yet, work with an attorney to review them before you sign.
+
+Request copies of blueprints, floor plans and surveys
+If you ever want to make changes or sell, having these items on hand will save you time and money.
+
+Research and know the warranties on everything
+Most developers offer 5-10 year warranties on structural elements.`,
         downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - New Construction Playbook.pdf',
       },
     ],
@@ -3770,35 +4127,348 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
         id: 'check-1',
         title: 'Buyer Offers Checklist',
         description: 'Ensure every offer is complete',
-        content: '',
+        content: `BUYER OFFERS CHECKLIST
+
+Before writing an offer:
+
+• Email client BOBBY BUYER RPA package to read and digest. Advise that they:
+  - Read "BIA, Buyers Investigation Advisory" carefully to understand contingency coverage
+  - Talk to the lender to understand all fees & costs
+
+• Go to Skyslope forms, make a new file (with the Buyers name or address or both), add RPA
+
+• Open RPA and add MLS# to auto-populate fields
+
+GET ANSWERS that will be needed to write the RPA offer:
+
+• Contact lender – get preapproval letter at an offer price, answers for not-to-exceed rate; loan & appraisal contingencies; close of escrow; financing type; down payment
+
+• Government point of sale inspections for that town/city for Q5&6f RPA
+
+• Customary transfer fees for city and county (pct.com/city-transfer-tax.html)
+
+• Home warranty – ask of seller, give it as a gift, or they can waive it - can buy it later.
+
+What price to offer? Consider:
+• CMA
+• What other buyers are looking at – that's the true price discovery
+• Can check the Pricing history MO of Agent (Standard search with Agent ID) – maybe they always price low
+• The final offer is what the client wants
+
+PREP OFFER WITH CLIENT (open RPA from Skyslope to fill in during conversation)
+
+• Ask the Buyer to look at their Bobby Buyer RPA copy
+• Ask if they read all the forms (mostly boilerplate disclosures except for the 16-page RPA). Any questions?
+• Go through fillable RPA sections with the Buyer, starting with the desired price
+• A 3% deposit is customary.
+• How much will they put down?
+• Before determining contingency periods, let the Buyer know that we want to put down the number of days we consider to be safe but, if something happens while we are in contract, often contingencies can be pushed back with nice communication with the listing agent. Plus, contingencies don't "expire". If we don't release the contingency on time (with the CR form), the listing agent must send us a demand to perform and we have 3 days to do it.
+• Discuss and fill in the loan, appraisal contingencies, rate cap, and close of escrow (all info the lender provided).
+• Determine investigations contingency that allows Buyer an out for nearly any reason!
+• Ask their shortest safe investigatory contingency considering they should get their own inspections.
+• Discuss home warranty and any special requests.
+• Discuss which party generally pays for: The natural Hazards report, co-detectors, escrow fees, county/city taxes, etc.
+
+Prepping offer:
+
+• Ask the lender to provide a preapproval letter with the exact amount of the offer
+• Do Disclosures contain Offers Instructions? If not, plan to email to listing agent and request confirmation that they received your offer.
+• From the RPA you filled in with the client, check for accuracy and thoroughness, add the date of the offer, listings agent's name, DRE number, brokerage, brokerage DRE number, and seller's name.
+• Send an Offer to the Listing Agent – with a summary of the offer's high points and say your clients love the property. Attach RPA package, preapproval letter, and any other documents needed.
+• Ask the Lender to call the listing agent after the offer is submitted to edify clients.
+
+If the offer is accepted:
+
+• Start Skyslope file within 2 days
+• Provide the buyer with timeline checklist, provide ideas for inspectors/contractors
+• Provide buyer with a list of things to do – namely seek home insurance`,
         downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Buyer Offers Checklist.docx',
       },
       {
         id: 'check-2',
         title: 'In Contract Buyer Checklist',
         description: 'Track buyer transactions from contract to close',
-        content: '',
+        content: `CHECKLIST – OFFER ACCEPTED
+
+Email to Client:
+
+Congratulations! You are on your way to living in your dream home. This email contains items to do and a calendar of contingency dates.
+
+Sample Timeline:
+• Day 1 – Escrow should have opened
+• Day 2 – Escrow opens - deposit is due. Waiting on escrow instructions.
+• Day 5 – Sign all disclosures and preliminary title
+• Day 12 – Release inspection contingency
+• Day 14 – Release loan and appraisal contingencies
+• Close of Escrow – Escrow officer informs us when the transaction has been recorded, then I can provide the key.
+
+CLIENT TASKS:
+
+• Reread Buyers Investigation Advisory & Wire Fraud Advisor.
+• Hire inspectors
+• Source Homeowners Insurance
+• Deposit Earnest Deposit to escrow – instructions to come from escrow officer.
+• Confirm Square Footage – part of Buyers Investigation, not the appraisal contingency.
+• During investigatory period, make sure everything in home works to your satisfaction.
+• Review loan terms with lender and meet all lender needs asap to meet our loan contingency
+• Plan your move – packing, change of address, change of utilities, movers
+• Do final walk through 2 – 5 days from close of escrow
+
+AGENT CHECKLIST:
+
+• Email escrow an intro with names, emails, phone #s of buyer, seller, agents, TCs, also escrow
+• Forward escrow intro email to listing agents without Buyers contact info.
+• Email client congratulations, Important Dates, Tasks
+• Start Skyslope file within 2 days of acceptance – upload RPA, go through checklist
+• Purchase BUYER GIFT Home Warranty, Fill out EXP Commission Reduction Request – submit for signature. Then provide to escrow officer.
+• Prepare disclosures for signatures and initials – send out for signatures
+• Complete AVID agent inspection
+• Save all signed docs to "print to bullzip", opens pdf, name document type, save to transaction folder
+• Gather documents needed for skyslope checklist – RPA, counters, signed disclosures, etc…
+• Upload all signed documents into skyslope documents and add to skyslope checklist
+• Do CR Contingency Removals or request to push back timelines with listing agent
+• Provide escrow with the commission demand (eXp generates and sends to me, check for accuracy)
+• Make sure buyer & lender are set up for final signing appointment
+• Do final walk through 2 – 4 days before close (verification that property is as expected).
+• Receive FIRPTA, commission check copies from escrow and upload to skyslope checklist
+• After close & recording – meet buyer with keys
+• Upload MLS – closed transaction to skyslope
+
+Other Agent Notes:
+
+• Earnest deposit due in 3 business days
+• Other contingencies – count calendar days
+• Close of escrow – not weekends or holidays
+• Prospect - Door knock where offer is accepted. Tell them about the deal and provide neighborhood sales and pricing information.`,
         downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - In Contract Buyer Checklist.docx',
       },
       {
         id: 'check-3',
         title: 'Initial Buyer Checklist',
         description: 'Start buyer relationships right',
-        content: '',
+        content: `BUYER AGENT CHECKLIST – Earn the Business
+
+FIRST CONTACT
+
+• Send BUYER PRESENTATION
+• Make appointment, Send intake form to be returned before the appointment
+• Meet (in person or video) - ask for pre-approval letter (note any pre-approval conditions)
+• No pre-approval – Provide Lenders List
+• Immediately email THANK YOU for meeting & list what I'm doing: MLS search, please email me lender's pre-approval letter, reach out if you have any questions
+• Set MLS search & kvCore Market Report if only 1 area (ie Tiburon, not Marin)
+• Follow up - Email 1 week later – how's the search, market reports, any questions
+
+SHOWINGS
+
+• Copy MLS sheets, read agent notes, make appointments
+• Determine showings timing/route [google maps/showingtime] 20' for showing + travel time
+• Provide client clipboard with BUYER TOUR notes & snack bag (water bottles, snacks, chapstick)
+• Car trunk - toilet paper, flashlight, measuring tape
+
+At Showing:
+• Warn clients about home cameras – don't talk about an offer but it's ok to like the home
+• Know house details & area
+• Don't volunteer my opinion
+• Point out positive features (vaulted ceiling, new furnace, etc…)
+
+PROPERTIES CLIENT IS INTERESTED IN:
+
+• Get Disclosures & share with client – suggest home inspections & seller's TDS disclosure focus.
+• Do RPR CMA, download, email to client saying range is most important, condition not included
+
+Call Listing agent – be very friendly! Introduce myself, my brokerage, my client saw the house…
+• Any offers yet? If Yes – "what is the Price I need to beat?"
+• Any offer's deadline?
+• How many disclosure packages have been requested?
+• Other Agents circling?
+• Are there particular terms seller wants besides a high price and low contingencies?
+• Are there any Government Point of Sale Inspections for their area (verify this).
+• Is there anything we could do that will make our offer stronger?
+• If comps don't support the asking price – ask the agent why that property is worth more than a specific comp.
+
+If the client becomes less active - Follow up no less than once a month.
+Check-in with them and provide value – like a report of local price changes.`,
         downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Initial Buyer Checklist.docx',
       },
       {
         id: 'check-4',
         title: 'Listing Checklist - Do The Job',
         description: 'Execute listings flawlessly',
-        content: '',
+        content: `LISTING CHECKLIST – Do the Job
+
+Listing norms and needs vary in different markets. Use this as a starting guide. Add items or delete to make it best suited to your market.
+
+AFTER SIGNED LISTING AGREEMENT
+
+• Send new client thank you card and a gift.
+• Start Skyslope File – consider using Breeze for disclosures
+• If home will stay off-market, get proper forms signed and sent to your MLS
+• Coordinate a stager appointment and/or provide a checklist for sellers to prep their home for sale.
+• Email seller disclosure documents for them to fill out fully & honestly for their own protection
+• Tell any current buyer clients about the home
+• Provide seller recommendations for inspectors & set a calendar to follow up that inspections are happening.
+• Or order home, pest, roof, septic/well, sewer lateral inspections
+• Get utilities info from the seller – list of providers, typical expenses
+• Pick Escrow/Title officer and open escrow
+• Order Preliminary Title
+• Order Natural Hazard Disclosure
+• Request HOA Documents & Demand them if need be
+• Introduce team – escrow, assistants, transaction coordinators
+• Order any needed signs (street, open houses, pending, sold)
+• Get Suprabox or other box for agents to unlock the home
+• Draft description for MLS and all advertising
+• Add to MLS with Coming Soon status
+• Put yard sign up
+• After home is prepped for showings, Schedule Professional photographers, videographers when home is ready to show. Consider Home Jab – photos, video, drone, 3D & 2D plans
+• After inspections, make a list of suggested repairs and provide recommendations for the work
+• Update disclosures for repair work done
+
+AFTER PHOTOGRAPHY IS RECEIVED:
+
+• Make photo choices
+• Create e-flyer & make a QR code to it
+• Add QR code to all below:
+  - Order printed Property Flyers
+  - Create Social Media videos for: Coming Soon, Just Listed, For Sale, Pending, Sold
+  - Make a long form YouTube video
+  - Consider a Dedicated website
+
+HOME IS READY TO SHOW
+
+• Change MLS status to live and add disclosure link in private remarks
+• Post all social media and YouTube long form video
+• Schedule broker's tour and open houses on MLS
+• Send coming soon to neighbors with open house time - offer home valuation based on this recent info.
+• Better – knock on neighbor doors to invite to an open house, provide neighborhood stats and offer newsletter
+• Do agent inspection
+• Create kvCORE squeeze page to post for buyer prospects
+• Use kvCORE Property Boost for more leads
+• Start promoting across all social media platforms
+• Run YouTube ads
+
+ACTIVE LISTING
+
+• Host open houses
+• Do Facebook Live
+• Mail out postcards
+• Share flyers in local businesses, bulletin boards, brokerage offices
+• Communicate with Seller (lack of communication is the #1 customer complaint about agents)
+• Contact client every Monday with updates
+• Good offer? Reach back out to all others with any interest and provide a deadline for those offers
+• If needed – change price or modify terms
+
+UNDER CONTRACT
+
+• Update status in MLS & Skyslope
+• Email Seller with congratulations and templated timeline
+• Email sales details w/RPA to introduce title/escrow, lender, buyer's agent
+• Submit escrow reimbursement/send broker demand
+• Create contingency timeline
+• Cancel future showings
+• Request seller testimonial
+• Add PENDING to signage
+• Review title commitment and make sure clients receive it
+• Negotiate inspection & appraisal issues
+• Prepare & schedule closing
+• Coordinate possession timeline, staging removal, buyer questions
+• Follow any IDX feed rules – Might need to happen BEFORE status is changed to sold.
+
+CLOSING
+
+• Change MLS status to sold
+• Congratulate clients and send a closing gift
+• Ensure file approved in Skyslope
+• Follow up buyer's agent for key transfer
+• Remove suprabox, signage, staging, and disclosures
+• Send "Just Sold" postcards to neighbors with offer to do their home valuation.
+• Send client their complete file`,
         downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Listing Checklist - Do The Job.docx',
       },
       {
         id: 'check-5',
         title: 'Listing Checklist - Earn The Business',
         description: 'Win more listing appointments',
-        content: '',
+        content: `LISTING CHECKLIST – Earn the Business
+
+There are many ways to conduct how to get a listing. This is one way and may not include everything necessary or typically used in your market. Use it as a guideline. Add items or delete to make it a plan that you feel comfortable doing.
+
+OVERALL GOALS:
+
+• Acknowledge them by thanking them at every step and do exactly what you say you'll do (this manages their doubts and confirms that you are a good agent choice)
+• Prepare sellers for the journey but don't overwhelm them (say "I've got this, I have a plan to execute")
+• Project a vision of the future by talking about them selling their home and moving on to their next chapter
+• Pre-handle Objections – say that "things will happen we just don't know what they are yet"
+• Excite them about selling and what they will do with their proceeds.
+
+PRE-APPOINTMENT
+
+• Set an in-person meeting or a video call date and time – let them know how long the meeting should last and ask if that is ok.
+• Email link to Seller Intake Form (not always necessary, you can gather answers when you meet.)
+• Add answers to CRM database if you get them pre-appointment
+• Prepare to use your Seller's Listing Presentation in the meeting
+• Do a CMA for the home (RPR works well, print out a seller's report)
+• Study local market stats to be the expert at your listing appointment
+
+LISTING APPOINTMENT
+
+Keep in mind – the one asking the questions is in control, the one talking the most is happiest.
+
+• If not already filled out, bring Google form questions to get answered
+• Bring MLS description and property tax records and verify details
+• Bring tablet to display your seller presentation
+• Bring CMA (that hopefully has a very big price range)
+• Bring Market Stats
+• State an Agenda to make sellers comfortable - this eliminates confusion about what's going to happen
+• Greet and thank the home seller for meeting with you.
+• The Agenda – "I'd love to see your home first, after that can we sit down and discuss all the information I gathered for you?"
+• Walk Through Home – take pictures (helps with comp analysis later), ask questions & listen, be complementary about their home
+
+Suggestion: Don't provide staging tips or home change ideas at this point. Sellers may think your comments are critical and conclude that you're not the best agent to represent them. If you get the listing, discuss needed changes then.
+
+AFTER HOME VIEWING
+
+• "I've got a lot of information to share with you. To make sure I get to what's most important for you, what are your top 3 questions for me". Make sure you answer those.
+• "By the way, I've been doing this for quite a while and sometimes during this meeting, I gather that we aren't a good match. If that happens, can I tell you that upfront and not offend you?"
+• "Great, and you also might think we're not a good fit. If that happens, feel free to tell me."
+• "Of course, most of the time, it does work out, and then after this meeting I go prep the needed paperwork and email it to you."
+• "Ok, let's get to what I brought, please interrupt me anytime to ask a question."
+
+SELLER PRESENTATION – sit down to show preferably on a laptop or tablet:
+
+• Market Stats
+• Agent Seller's presentation
+• CMA – big range is best, explaining why this is not yet the best range (it doesn't include visual home differences).
+
+PRICING – all sellers want to know your opinion on price. Ways to handle this:
+
+• Ask what they think is a good price – their answer tells you about their expectations, realistic or not
+• Say "it's a disservice to give my opinion now as I need to spend a couple of hours doing analysis to provide my best estimate. I can get that done within the next 2 days."
+• Thank you - Follow up with a thank you note for meeting. Consider handwriting a note in your car before you drive off. That will separate you from what other agents do.
+
+MEET AGAIN to go over Your Conclusions about a list price:
+
+• State that the possible price range from your analysis is from $A (low end) to $Z (high end)
+• Ask "How competitive do you want to be?"
+• Price A will bring more buyers, resulting in a faster sale and potentially more than 1 buyer, maybe raising the sale price.
+• Price Z will only bring a buyer that really wants something about your home. You risk your home sitting on the market, which will drive the overall price down as buyers assume there's something wrong with it.
+• If a seller wants price Z, insist on a specific pre-plan to rapidly decrease the price if no interest shows up.
+• Discuss that the REAL value will be primarily based on what other properties are currently for sale and how the buyers that are out looking at those houses value your homes versus the other homes.
+
+EXTRA ITEMS YOU CAN EXPLAIN TO THE SELLER
+
+• Need a Listing agreement – you can allow them to cancel it at anytime as a perk that will differentiate you from other agents.
+• Seller pays staging (or any other arrangement normal to your market) because staging increases sales price an average of 18.6% and those homes sell faster
+• Seller pays for Inspections (if that's the norm in your market) and you will provide 3 recommendations.
+• Agent pays for professional photos, drones, videos, etc…
+• Agent pays for all marketing costs – from signs & flyers to social media ads and single website fees
+• Agent pays for support needed (assistants, transaction coordinators)
+• Agent pays for NHD report
+• Agent pays for any other items.
+• These are all personal agent expenses, your brokerage does not pay them.
+
+AFTER APPOINTMENT
+
+• Get a listing agreement signed`,
         downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Listing Checklist - Earn The Business.docx',
       },
     ],
@@ -3813,7 +4483,73 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
         id: 'clients-1',
         title: '8 Ways to Get Clients',
         description: 'Complete guide to client acquisition',
-        content: '',
+        content: `8 Ways to Get Clients - The ONLY ways to start earning commissions.
+
+As an agent, there's always so much to do and learn. The key is focusing on just what you need to make commissions.
+
+This document lays out the only ways to earn a commission. It's quite simple!
+
+You only need 1 to 3 of these for awesome success! Choose what you want to do and focus on learning how to best do just that.
+
+Secret to Success: Provide prospects with real value like real estate information that you can easily access but they can't, such as comparative market analysis, off-market properties, and real estate statistics.
+
+THE 8 WAYS:
+
+1. WORK YOUR SPHERE
+How: Email, socializing, phone calls
+Advantage: Know, like, trust
+Disadvantage: May know lots of agents
+Value: Home value, newsletter
+
+2. FARM A NEIGHBORHOOD
+How: Door knock, printed materials like postcards
+Advantage: Low competition, quick listing possible
+Disadvantage: Mailings expensive
+Value: Homes sold in neighborhood, newsletter
+
+3. NETWORK
+How: Attend events, collaborate with vendors
+Advantage: Can be fun
+Disadvantage: Takes a long time
+Value: Whatever you can do to help
+
+4. FSBOs/EXPIRED
+How: Door knock, call, email
+Advantage: Real sellers
+Disadvantage: None
+Value: Bring them a buyer, fix what went wrong
+
+5. OPEN HOUSES
+How: Put out signs, door knock neighbors before
+Advantage: Some real buyers, neighbors may sell
+Disadvantage: None
+Value: Neighborhood stats
+
+6. SOCIAL MEDIA
+How: Long-form video, short form video
+Advantage: Ready to hire you, inexpensive
+Disadvantage: Time-consuming, takes time to get leads
+Value: Newsletters, local information
+
+7. REFERRALS
+How: Pay on close 20-50% of commission
+Options:
+(1) Workplace Ad - Easy
+(2) Relocations, REO, express offers - High quality, qualifications needed
+(3) Bundle Select - Continuous leads, you 1st sell to companies
+(4) Opcity – realtor.com leads - New agents ok, low quality
+
+8. PAY FOR ADS
+How: Making it rain - Facebook, Google, YouTube, Magazine
+Advantage: Easy set up
+Disadvantage: Cost, must learn how
+Value: Newsletters, specific home searches
+
+NOTES:
+
+To start gaining leads and building experience, sign up with Opcity (Realtor.com) for free leads. Go to your state broker in eXp World to ask how to get started.
+
+Additionally, consider doing the Revenos courses to get leads from relocations and cash offers. Check the current qualifications needed to become certified. Also note that EXPCON regularly offers certification opportunities that are faster (3 hours generally) and free. These platforms connect you with quality potential clients and expand your business opportunities.`,
         downloadUrl: '/downloads/new-agent-resources/8 Ways to Get Clients.docx',
       },
     ],
@@ -3828,7 +4564,41 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
         id: 'mentor-1',
         title: 'Mentorship Success Guide',
         description: 'How to build a productive mentor relationship',
-        content: '',
+        content: `How to Get the Most from Your Mentor
+
+Mentors will be there to help you through your first three transactions, whether they are buying or selling transactions.
+
+Note that if you received a referral or you're working with a partner, you need to be doing at least 50% of the work to be counted toward your mentee 3 transactions. And, rentals don't count. Check these rules for any updates as the rules can change.
+
+Here are some services that will be helpful to you in evaluating your mentor. They should be:
+
+• Local - to your business location and MLS area.
+
+• Available to contact outside of normal business hours in case of an URGENT need.
+
+• Answer questions about your local rules and MLS.
+
+• Provide Local recommended resources, like:
+
+SELLER NEEDS:
+• Real Estate Interior and Drone Photographers
+• Videographers
+• 2D & 3D floor plan makers
+• Yard sign installers
+• Alternative (besides Build A Sign) Yard Sign Making People
+• Stagers
+
+BUYER NEEDS:
+• Lenders who are favored by local listing agent
+• List of Utilities – or use utilities connect
+
+BUYER & SELLER NEEDS:
+• Inspectors
+• Handyman
+• Movers – or use utilities connect
+• Any other vendor often used in your local area.
+
+Note – although it's not advertised, you can push to get a different mentor if needed. Go to eXp Onboarding. Call 833-303-0610 or email expertcare@exprealty.com`,
         downloadUrl: '/downloads/new-agent-resources/How to Get the Most From Your Mentor.docx',
       },
     ],
@@ -6619,7 +7389,7 @@ function DownloadSection() {
 
                 {/* iOS/Safari Instructions */}
                 <div className="space-y-3">
-                  <p className="text-sm text-[#22c55e] font-semibold">
+                  <p className="text-sm text-[#22c55e] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
                     iOS / Mac (Safari)
                   </p>
                   <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
@@ -6640,7 +7410,7 @@ function DownloadSection() {
 
                 {/* Android/Chrome Instructions */}
                 <div className="space-y-3">
-                  <p className="text-sm text-[#ffd700] font-semibold">
+                  <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
                     Android (Chrome)
                   </p>
                   <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
@@ -6661,7 +7431,7 @@ function DownloadSection() {
 
                 {/* PC/Windows Instructions */}
                 <div className="space-y-3">
-                  <p className="text-sm text-[#ffd700] font-semibold">
+                  <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
                     PC (Chrome / Edge)
                   </p>
                   <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
