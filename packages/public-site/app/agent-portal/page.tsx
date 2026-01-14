@@ -5180,7 +5180,7 @@ function AgentPagesSection({
 
       const QRCodeStyling = QRCodeStylingModule.default;
 
-      // Create new QR code instance
+      // Create new QR code instance with rounded styling and transparent background
       const qrCode = new QRCodeStyling({
         width: 200,
         height: 200,
@@ -5189,23 +5189,23 @@ function AgentPagesSection({
         image: '/icons/s-logo-1000.png',
         dotsOptions: {
           color: '#2a2a2a',
-          type: 'rounded',
+          type: 'dots', // Circular dots for a softer look
         },
         backgroundOptions: {
-          color: '#ffffff',
+          color: 'transparent',
         },
         imageOptions: {
           crossOrigin: 'anonymous',
-          margin: 5,
-          imageSize: 0.4,
+          margin: 8,
+          imageSize: 0.35,
         },
         cornersSquareOptions: {
           color: '#2a2a2a',
-          type: 'extra-rounded',
+          type: 'extra-rounded', // Most rounded corner squares
         },
         cornersDotOptions: {
           color: '#2a2a2a',
-          type: 'dot',
+          type: 'dot', // Circular inner corner dots
         },
       });
 
