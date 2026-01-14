@@ -358,6 +358,7 @@ function AgentPortal() {
         console.log('[Loading Screen] preloadAppData complete, result:', !!result.userData, !!result.agentPageData);
         if (result.userData) {
           // Update user state with fresh data from API
+          console.log('[PreloadAppData] Raw is_leader from API:', result.userData.is_leader);
           const freshUserData = {
             id: result.userData.id,
             email: result.userData.email,
@@ -368,9 +369,10 @@ function AgentPortal() {
             role: result.userData.role,
             profilePictureUrl: toCdnUrl(result.userData.profile_picture_url || result.userData.profilePictureUrl),
             gender: result.userData.gender || 'male',
-            isLeader: result.userData.is_leader || false,
+            isLeader: result.userData.is_leader === true,
             state: result.userData.state || null,
           };
+          console.log('[PreloadAppData] Setting isLeader to:', freshUserData.isLeader);
           setUser(freshUserData);
           // Also update localStorage
           localStorage.setItem('agent_portal_user', JSON.stringify(freshUserData));
