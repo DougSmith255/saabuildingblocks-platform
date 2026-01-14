@@ -144,7 +144,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
-  { id: 'linktree', label: 'Linktree', icon: LinkIcon },
+  { id: 'linktree', label: 'Link Page', icon: LinkIcon },
   { id: 'agent-page', label: 'Agent Attraction', icon: UserCircle },
   { id: 'calls', label: 'Team Calls', icon: Video },
   { id: 'templates', label: 'Templates', icon: Megaphone },
@@ -160,7 +160,7 @@ const navItems: NavItem[] = [
 type CardSize = 'hero' | 'featured' | 'standard' | 'compact';
 const dashboardCards: { id: SectionId; title: string; description: string; icon: React.ComponentType<{ className?: string }>; size: CardSize; gradient?: string; accentColor?: string; comingSoon?: boolean }[] = [
   { id: 'support', title: 'Get Support', description: 'Need help? Find the right contact', icon: LifeBuoy, size: 'hero', gradient: 'from-[#ffd700]/30 to-amber-600/15', accentColor: '#ffd700' },
-  { id: 'linktree', title: 'Linktree', description: 'Your customizable link page', icon: LinkIcon, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
+  { id: 'linktree', title: 'Link Page', description: 'Your customizable link page', icon: LinkIcon, size: 'featured', gradient: 'from-emerald-500/25 to-[#00ff88]/15', accentColor: '#00ff88' },
   { id: 'agent-page', title: 'Agent Attraction', description: 'Your personal recruitment page', icon: UserCircle, size: 'featured', gradient: 'from-purple-500/25 to-violet-600/15', accentColor: '#a855f7' },
   { id: 'calls', title: 'Team Calls', description: 'Live and recorded calls', icon: Video, size: 'standard', accentColor: '#ffd700' },
   { id: 'templates', title: 'Templates', description: 'Marketing templates', icon: Megaphone, size: 'standard', accentColor: '#ffd700' },
@@ -1331,7 +1331,7 @@ function AgentPortal() {
                 {activeSection === 'dashboard' && 'Home'}
                 {activeSection === 'support' && 'Get Support'}
                 {activeSection === 'agent-page' && 'Agent Attraction'}
-                {activeSection === 'linktree' && 'Linktree'}
+                {activeSection === 'linktree' && 'Link Page'}
                 {activeSection === 'calls' && 'Team Calls'}
                 {activeSection === 'courses' && 'Courses'}
                 {activeSection === 'templates' && 'Templates'}
@@ -1379,7 +1379,7 @@ function AgentPortal() {
             { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
             { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
             { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
-            { id: 'linktree' as SectionId, label: 'Linktree', Icon: LinkIcon },
+            { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
             { id: 'profile' as SectionId, label: 'Profile', Icon: User },
           ].map((item, index, arr) => {
             const isActive = activeSection === item.id;
@@ -2215,8 +2215,8 @@ function AgentPortal() {
                 </h2>
                 <p className="text-xs text-[#e5e4dd]/50 mt-0.5">
                   {imageEditorStep === 1
-                    ? '(Used for Linktree when Color Photo is enabled)'
-                    : '(Used for Agent Page and Linktree default)'}
+                    ? '(Used for Link Page when Color Photo is enabled)'
+                    : '(Used for Agent Page and Link Page default)'}
                 </p>
               </div>
               <button
@@ -5735,8 +5735,8 @@ function AgentPagesSection({
                   <span className="text-[#22c55e] font-bold text-xs">1</span>
                 </div>
                 <div>
-                  <p className="font-medium text-[#e5e4dd] mb-1">Share Your Linktree Everywhere</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">Your Linktree is your <strong className="text-[#22c55e]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
+                  <p className="font-medium text-[#e5e4dd] mb-1">Share Your Link Page Everywhere</p>
+                  <p className="text-[#e5e4dd]/60 text-xs">Your Link Page is your <strong className="text-[#22c55e]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
                 </div>
               </div>
               <div className="flex gap-3">
@@ -5745,7 +5745,7 @@ function AgentPagesSection({
                 </div>
                 <div>
                   <p className="font-medium text-[#e5e4dd] mb-1">Built-In Agent Attraction</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">Your Attraction Page is linked from your Linktree. Competitors get curious and land on your recruitment funnel.</p>
+                  <p className="text-[#e5e4dd]/60 text-xs">Your Attraction Page is linked from your Link Page. Competitors get curious and land on your recruitment funnel.</p>
                 </div>
               </div>
               <div className="flex gap-3">
@@ -5756,7 +5756,7 @@ function AgentPagesSection({
                 </div>
                 <div>
                   <p className="font-medium text-[#e5e4dd] mb-1">Passive Agent Funnel</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">The funnel works in the background - no extra effort from you. Just share your Linktree and let it do both jobs.</p>
+                  <p className="text-[#e5e4dd]/60 text-xs">The funnel works in the background - no extra effort from you. Just share your Link Page and let it do both jobs.</p>
                 </div>
               </div>
             </div>
@@ -5858,7 +5858,7 @@ function AgentPagesSection({
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                  <span className="text-xs text-[#22c55e]">Linktree</span>
+                  <span className="text-xs text-[#22c55e]">Link Page</span>
                 </div>
               </div>
 
@@ -6251,7 +6251,7 @@ function AgentPagesSection({
               <div className="hidden min-[1650px]:block mt-4">
                 <div className="rounded-xl bg-white p-4 border border-white/10">
                   <div className="flex flex-col items-center gap-3">
-                    <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Linktree QR Code</span>
+                    <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Link Page QR Code</span>
                     <div ref={qrCodeRef} className="w-[200px] h-[200px]" />
                     <button
                       onClick={downloadQRCode}
@@ -6320,12 +6320,12 @@ function AgentPagesSection({
                 </svg>
                 QR Code
               </button>
-              {/* Linktree Live (only if activated) */}
+              {/* Link Page Live (only if activated) */}
               {pageData.activated && (
                 <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-medium text-green-400">Linktree Live</span>
+                    <span className="text-xs font-medium text-green-400">Link Page Live</span>
                   </div>
                   <button
                     onClick={() => {
@@ -6333,7 +6333,7 @@ function AgentPagesSection({
                       const btn = document.getElementById('copy-linktree-btn-mid');
                       if (btn) {
                         btn.textContent = 'Copied!';
-                        setTimeout(() => { btn.textContent = 'Copy Linktree URL'; }, 1500);
+                        setTimeout(() => { btn.textContent = 'Copy Link Page URL'; }, 1500);
                       }
                     }}
                     id="copy-linktree-btn-mid"
@@ -6342,7 +6342,7 @@ function AgentPagesSection({
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                     </svg>
-                    Copy Linktree URL
+                    Copy Link Page URL
                   </button>
                 </div>
               )}
@@ -6366,12 +6366,12 @@ function AgentPagesSection({
                 </svg>
                 QR Code
               </button>
-              {/* Linktree Live (only if activated) */}
+              {/* Link Page Live (only if activated) */}
               {pageData.activated && (
                 <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-medium text-green-400">Linktree Live</span>
+                    <span className="text-xs font-medium text-green-400">Link Page Live</span>
                   </div>
                   <button
                     onClick={() => {
@@ -6379,7 +6379,7 @@ function AgentPagesSection({
                       const btn = document.getElementById('copy-linktree-btn');
                       if (btn) {
                         btn.textContent = 'Copied!';
-                        setTimeout(() => { btn.textContent = 'Copy Linktree URL'; }, 1500);
+                        setTimeout(() => { btn.textContent = 'Copy Link Page URL'; }, 1500);
                       }
                     }}
                     id="copy-linktree-btn"
@@ -6388,7 +6388,7 @@ function AgentPagesSection({
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                     </svg>
-                    Copy Linktree URL
+                    Copy Link Page URL
                   </button>
                 </div>
               )}
@@ -7274,7 +7274,7 @@ function AgentPagesSection({
             - 950-1200px: Account for desktop sidebar (left-[280px]), near bottom (bottom-4) */}
         <div className="fixed left-2 right-2 z-40 min-[1200px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px]">
           <div className="flex gap-2">
-            {/* Preview Linktree Button - Shrinks from right when Save appears */}
+            {/* Preview Link Page Button - Shrinks from right when Save appears */}
             <button
               onClick={() => setShowMobilePreview(true)}
               className="flex-1 py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
@@ -7344,7 +7344,7 @@ function AgentPagesSection({
           {/* Modal Header */}
           <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
             <span className="text-lg font-medium text-[#e5e4dd]">Live Preview</span>
-            <span className="text-sm text-[#22c55e]">Linktree</span>
+            <span className="text-sm text-[#22c55e]">Link Page</span>
           </div>
 
           {/* Preview Content with star background */}
@@ -7593,7 +7593,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
       )}
       {pages.includes('linktree') && (
         <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#22c55e]/10 text-[#22c55e] border border-[#22c55e]/20">
-          Linktree
+          Link Page
         </span>
       )}
     </div>
