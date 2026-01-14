@@ -6117,7 +6117,7 @@ function AgentPagesSection({
 
             {/* Tab Navigation - Mobile only (below 1200px), sticky at top */}
             <div
-              className="sticky top-0 z-20 bg-[#191919]/95 backdrop-blur-sm border border-white/10 rounded-xl mb-4 min-[1200px]:hidden overflow-hidden"
+              className="sticky top-0 z-20 bg-[#191919] border border-white/10 rounded-xl mb-4 min-[1200px]:hidden overflow-hidden"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <div className="flex">
@@ -6906,14 +6906,12 @@ function AgentPagesSection({
         </div>
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
-        <div className="fixed bottom-[79px] left-2 right-2 z-40 min-[1200px]:hidden">
+        <div className="fixed bottom-[74px] left-2 right-2 z-40 min-[1200px]:hidden">
           <div className="flex gap-2">
-            {/* Preview Linktree Button - shrinks when Save appears */}
+            {/* Preview Linktree Button */}
             <button
               onClick={() => setShowMobilePreview(true)}
-              className={`py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out ${
-                hasUnsavedChanges ? 'flex-1' : 'w-full'
-              }`}
+              className="flex-1 py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5"
               style={{
                 background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
                 border: '1px solid rgba(255, 215, 0, 0.3)',
@@ -6928,27 +6926,27 @@ function AgentPagesSection({
               <span className="text-[#ffd700]">Preview</span>
             </button>
 
-            {/* Save Changes Button - slides in from right */}
+            {/* Save Changes Button - Always visible, disabled when no changes */}
             <button
               onClick={handleSave}
-              disabled={isSaving}
-              className={`py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 ease-out ${
-                hasUnsavedChanges
-                  ? 'flex-1 opacity-100'
-                  : 'w-0 opacity-0 p-0 border-0'
-              } ${
+              disabled={isSaving || !hasUnsavedChanges}
+              className={`flex-1 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 ${
                 showSaveSuccess
-                  ? 'bg-[#22c55e] text-white'
-                  : 'text-black'
+                  ? 'text-white'
+                  : hasUnsavedChanges
+                    ? 'text-black'
+                    : 'text-black/50'
               }`}
               style={{
                 background: showSaveSuccess
                   ? '#22c55e'
-                  : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
-                border: hasUnsavedChanges ? '1px solid rgba(255, 215, 0, 0.5)' : 'none',
+                  : hasUnsavedChanges
+                    ? 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)'
+                    : 'linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%)',
+                border: '1px solid rgba(255, 215, 0, 0.3)',
                 boxShadow: hasUnsavedChanges
                   ? 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 2px rgba(0,0,0,0.2), 0 0 12px rgba(255,215,0,0.2)'
-                  : 'none',
+                  : 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 2px rgba(0,0,0,0.3)',
                 WebkitTapHighlightColor: 'transparent',
               } as React.CSSProperties}
             >
