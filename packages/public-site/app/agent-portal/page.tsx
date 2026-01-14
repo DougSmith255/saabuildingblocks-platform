@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { ChromePicker, ColorResult } from 'react-color';
@@ -248,6 +248,7 @@ export default function AgentPortalPage() {
 }
 
 function AgentPortal() {
+  console.log('[Loading Screen] === AgentPortal component rendering ===');
   const router = useRouter();
   const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
@@ -332,7 +333,9 @@ function AgentPortal() {
 
   // Minimum loading screen display time (3 seconds for all users)
   useEffect(() => {
+    console.log('[Loading Screen] Starting 3 second timer');
     const timer = setTimeout(() => {
+      console.log('[Loading Screen] 3 seconds elapsed, setting minLoadTimeElapsed=true');
       setMinLoadTimeElapsed(true);
     }, 3000); // 3 seconds minimum for all users
     return () => clearTimeout(timer);
@@ -348,8 +351,11 @@ function AgentPortal() {
 
   // Preload all app data during loading screen
   useEffect(() => {
+    console.log('[Loading Screen] Preload effect running, showLoadingScreen=', showLoadingScreen);
     if (showLoadingScreen) {
+      console.log('[Loading Screen] Starting preloadAppData');
       preloadAppData().then((result) => {
+        console.log('[Loading Screen] preloadAppData complete, result:', !!result.userData, !!result.agentPageData);
         if (result.userData) {
           // Update user state with fresh data from API
           const freshUserData = {
@@ -373,9 +379,11 @@ function AgentPortal() {
         if (result.agentPageData) {
           setPreloadedAgentPageData(result.agentPageData);
         }
+        console.log('[Loading Screen] Setting isLoading=false');
         setIsLoading(false);
-      }).catch(() => {
+      }).catch((err) => {
         // Even if preload fails, we should still stop loading
+        console.log('[Loading Screen] preloadAppData error, setting isLoading=false', err);
         setIsLoading(false);
       });
     }
@@ -383,27 +391,22 @@ function AgentPortal() {
 
   // Trigger fade-out animation when loading is complete
   useEffect(() => {
-    // When all loading conditions are met, start the blur dissolve effect
-    if (!isLoading && user && minLoadTimeElapsed && showLoadingScreen && !isLoadingFadingOut) {
-      // Phase 1: Content (logo, bar) blurs and fades first
+    // Start fade when minimum time has elapsed and data loading is done
+    if (!isLoading && minLoadTimeElapsed && showLoadingScreen && !isLoadingFadingOut) {
+      console.log('[Loading Screen] ✓ Starting fade-out');
+
+      // Start the fade animation
       setIsLoadingFadingOut(true);
 
-      // Phase 2: Background blurs and fades with slight delay (150ms)
-      const bgTimer = setTimeout(() => {
-        setIsBackgroundFadingOut(true);
-      }, 150);
-
-      // After all animations complete, hide the loading screen entirely
+      // Remove loading screen from DOM after animation completes (500ms transition)
       const hideTimer = setTimeout(() => {
+        console.log('[Loading Screen] ✓ Removing loading screen');
         setShowLoadingScreen(false);
-      }, 700); // Shorter total time
+      }, 600);
 
-      return () => {
-        clearTimeout(bgTimer);
-        clearTimeout(hideTimer);
-      };
+      return () => clearTimeout(hideTimer);
     }
-  }, [isLoading, user, minLoadTimeElapsed, showLoadingScreen, isLoadingFadingOut]);
+  }, [isLoading, minLoadTimeElapsed, showLoadingScreen, isLoadingFadingOut]);
 
   // Check authentication on mount - redirect if not logged in
   useEffect(() => {
@@ -1035,189 +1038,14 @@ function AgentPortal() {
     }
   };
 
-  // Show simple loading if no user (will redirect to login)
-  if (isLoading || !user) {
-    return (
-      <>
-        {/* Full screen loading overlay - covers everything including header and safe areas */}
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100vw',
-            height: '100dvh',
-            zIndex: 99999,
-            background: 'rgb(12, 12, 12)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          {/* Glass shimmer background */}
-          <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
-            {/* Glass base with corrugated effect */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `
-                  radial-gradient(ellipse at center, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%),
-                  linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83)),
-                  repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.03) 2px, rgba(255, 215, 0, 0.03) 4px)
-                `,
-                filter: 'brightness(1.1) contrast(1.1) saturate(1.2)',
-              }}
-            />
-            {/* Scan lines */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `repeating-linear-gradient(
-                  0deg,
-                  transparent,
-                  transparent 2px,
-                  rgba(255, 255, 255, 0.02) 2px,
-                  rgba(255, 255, 255, 0.02) 4px
-                )`,
-                pointerEvents: 'none',
-              }}
-            />
-            {/* Shimmer animation */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: `linear-gradient(
-                  45deg,
-                  rgba(255, 255, 255, 0.08) 0%,
-                  rgba(255, 255, 255, 0.20) 25%,
-                  rgba(255, 255, 255, 0.35) 50%,
-                  rgba(255, 255, 255, 0.18) 75%,
-                  rgba(255, 255, 255, 0.08) 100%
-                )`,
-                backgroundSize: '400% 400%',
-                opacity: 0.5,
-                mixBlendMode: 'overlay',
-                animation: 'shimmerSlide 6s ease-in-out infinite',
-              }}
-            />
-          </div>
-
-          {/* Content - centered */}
-          <div
-            style={{
-              position: 'relative',
-              zIndex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '2rem',
-            }}
-          >
-            {/* SAA Logo with breathing glow */}
-            <div
-              style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              {/* Breathing glow - centered behind logo */}
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '280px',
-                  height: '120px',
-                  background: 'radial-gradient(ellipse at center, rgba(255, 215, 0, 0.5) 0%, rgba(255, 215, 0, 0.2) 40%, transparent 70%)',
-                  filter: 'blur(25px)',
-                  animation: 'breatheGlow 3s ease-in-out infinite',
-                }}
-              />
-              {/* Logo */}
-              <img
-                src="/images/saa-logo-gold.png"
-                alt="SAA Logo"
-                style={{
-                  position: 'relative',
-                  zIndex: 1,
-                  width: '200px',
-                  height: 'auto',
-                }}
-              />
-            </div>
-
-            {/* Loading bar */}
-            <div style={{ width: '200px' }}>
-              <div
-                style={{
-                  position: 'relative',
-                  height: '4px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: '2px',
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    height: '100%',
-                    width: '30%',
-                    borderRadius: '2px',
-                    background: 'linear-gradient(90deg, transparent 0%, #ffd700 50%, transparent 100%)',
-                    animation: 'loadingSlide 1.5s ease-in-out infinite',
-                    boxShadow: '0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3)',
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Loading message */}
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: 'rgba(255, 255, 255, 0.6)',
-                letterSpacing: '0.05em',
-                animation: 'messageFade 2s ease-in-out infinite',
-              }}
-            >
-              Loading Portal...
-            </p>
-          </div>
-
-          {/* Keyframe animations */}
-          <style>{`
-            @keyframes shimmerSlide {
-              0%, 100% { background-position: 0% 50%; filter: brightness(1.1); }
-              50% { background-position: 100% 50%; filter: brightness(1.8); }
-            }
-            @keyframes breatheGlow {
-              0%, 100% { opacity: 0.6; transform: scale(1); }
-              50% { opacity: 1; transform: scale(1.2); }
-            }
-            @keyframes loadingSlide {
-              0% { left: -30%; }
-              100% { left: 100%; }
-            }
-            @keyframes messageFade {
-              0%, 100% { opacity: 0.6; }
-              50% { opacity: 1; }
-            }
-          `}</style>
-        </div>
-      </>
-    );
-  }
+  // NOTE: Removed the early return loading screen - now using a single unified loading screen
+  // that handles both the initial load state AND the fade-out animation.
+  // The main loading screen below (showLoadingScreen) handles everything.
 
   return (
     <>
-    {/* Loading Screen - Must be OUTSIDE main to not inherit visibility:hidden */}
+    {/* Loading Screen - Shows during initial load and data fetch */}
+    {/* Controlled purely by showLoadingScreen state - redirect handles no-user case separately */}
     {showLoadingScreen && (
       <div
         style={{
@@ -1233,18 +1061,19 @@ function AgentPortal() {
           alignItems: 'center',
           justifyContent: 'center',
           pointerEvents: isLoadingFadingOut ? 'none' : 'auto',
+          // ENTIRE loading screen fades out together
+          opacity: isLoadingFadingOut ? 0 : 1,
+          filter: isLoadingFadingOut ? 'blur(12px)' : 'blur(0px)',
+          transform: isLoadingFadingOut ? 'scale(0.98)' : 'scale(1)',
+          transition: 'opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out',
         }}
       >
-        {/* Glass shimmer background - full screen with delayed blur dissolve */}
+        {/* Glass shimmer background - full screen */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             overflow: 'hidden',
-            opacity: isBackgroundFadingOut ? 0 : 1,
-            filter: isBackgroundFadingOut ? 'blur(20px)' : 'blur(0px)',
-            transform: isBackgroundFadingOut ? 'scale(1.1)' : 'scale(1)',
-            transition: 'opacity 0.4s ease-out, filter 0.4s ease-out, transform 0.4s ease-out',
           }}
         >
           {/* Glass base with corrugated effect */}
@@ -1296,7 +1125,7 @@ function AgentPortal() {
           />
         </div>
 
-        {/* Content - centered with blur dissolve effect (fades first) */}
+        {/* Content - centered (parent handles the fade now) */}
         <div
           style={{
             position: 'relative',
@@ -1305,10 +1134,6 @@ function AgentPortal() {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '2rem',
-            opacity: isLoadingFadingOut ? 0 : 1,
-            filter: isLoadingFadingOut ? 'blur(12px)' : 'blur(0px)',
-            transform: isLoadingFadingOut ? 'scale(0.95)' : 'scale(1)',
-            transition: 'opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out',
           }}
         >
           {/* Logo with breathing glow */}
@@ -1406,8 +1231,8 @@ function AgentPortal() {
       className="agent-portal-root min-h-screen"
       style={{
         WebkitTapHighlightColor: 'transparent',
-        // Hide content while loading screen is visible (prevents flash)
-        visibility: (showLoadingScreen && !isLoadingFadingOut) ? 'hidden' : 'visible',
+        // Hide content while loading screen is visible OR no user (prevents flash during redirect)
+        visibility: ((showLoadingScreen && !isLoadingFadingOut) || !user) ? 'hidden' : 'visible',
       } as React.CSSProperties}
     >
       {/* Global hidden file input for profile picture upload - shared by desktop and mobile */}
@@ -1596,7 +1421,7 @@ function AgentPortal() {
                     className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700]/50 transition-colors mb-3"
                     title="Click to change profile picture"
                   >
-                    {user.profilePictureUrl && !profileImageError ? (
+                    {user?.profilePictureUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
                         {profileImageLoading && (
@@ -1605,7 +1430,7 @@ function AgentPortal() {
                           </div>
                         )}
                         <img
-                          src={user.profilePictureUrl}
+                          src={user?.profilePictureUrl}
                           alt=""
                           className="w-full h-full object-cover"
                           loading="eager"
@@ -1621,7 +1446,7 @@ function AgentPortal() {
                     ) : (
                       <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
                         <span className="text-3xl text-[#ffd700]">
-                          {user.firstName?.charAt(0) || user.email?.charAt(0) || '?'}
+                          {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                         </span>
                       </div>
                     )}
@@ -1636,9 +1461,9 @@ function AgentPortal() {
 
                   {/* User Name */}
                   <h3 className="text-[#ffd700] font-semibold text-center">
-                    {user.firstName} {user.lastName}
+                    {user?.firstName} {user?.lastName}
                   </h3>
-                  <p className="text-[#e5e4dd]/60 text-sm">{user.email}</p>
+                  <p className="text-[#e5e4dd]/60 text-sm">{user?.email}</p>
 
                   {/* Dashboard Upload Status */}
                   {dashboardUploadStatus && (
@@ -1672,7 +1497,7 @@ function AgentPortal() {
                 const IconComponent = item.icon;
                 const isActive = activeSection === item.id;
                 const isDownload = item.id === 'download';
-                const isHighlighted = isActive || isDownload;
+                const hasGlow = isActive || isDownload; // Outer glow for active OR download
                 return (
                   <div key={item.id}>
                     <button
@@ -1685,32 +1510,32 @@ function AgentPortal() {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200"
                       style={{
-                        background: isHighlighted
+                        background: hasGlow
                           ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
                           : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
-                        boxShadow: isHighlighted
+                        boxShadow: hasGlow
                           ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
                           : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
-                        border: isHighlighted ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                        border: hasGlow ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >
-                      {/* Icon with glow effect when active or download */}
+                      {/* Icon - only yellow when active, not just for download glow */}
                       <div
                         className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                         style={{
-                          filter: isHighlighted ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
-                          color: isHighlighted ? '#ffd700' : 'rgba(229,228,221,0.6)',
+                          filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
+                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.6)',
                         }}
                       >
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      {/* Label with glow effect when active or download */}
+                      {/* Label - only yellow when active, not just for download glow */}
                       <span
                         className="font-medium font-taskor text-sm transition-all duration-200"
                         style={{
-                          color: isHighlighted ? '#ffd700' : 'rgba(229,228,221,0.8)',
-                          textShadow: isHighlighted ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.8)',
+                          textShadow: isActive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
                         }}
                       >
                         {item.label}
@@ -1770,7 +1595,7 @@ function AgentPortal() {
                     onClick={handleProfilePictureClick}
                     className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700] transition-colors"
                   >
-                    {user.profilePictureUrl && !profileImageError ? (
+                    {user?.profilePictureUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
                         {profileImageLoading && (
@@ -1779,7 +1604,7 @@ function AgentPortal() {
                           </div>
                         )}
                         <img
-                          src={user.profilePictureUrl}
+                          src={user?.profilePictureUrl}
                           alt=""
                           className="w-full h-full object-cover"
                           loading="eager"
@@ -1795,7 +1620,7 @@ function AgentPortal() {
                     ) : (
                       <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
                         <span className="text-4xl text-[#ffd700]">
-                          {user.firstName?.charAt(0) || user.email?.charAt(0) || '?'}
+                          {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                         </span>
                       </div>
                     )}
@@ -2007,6 +1832,7 @@ function AgentPortal() {
             )}
 
             {/* Agent Page Section - kept mounted to avoid re-loading */}
+            {user && (
             <div className={activeSection === 'agent-page' ? '' : 'hidden'}>
               <AgentPagesSection
                 user={user}
@@ -2036,8 +1862,10 @@ function AgentPortal() {
                 preloadedPageData={preloadedAgentPageData}
               />
             </div>
+            )}
 
             {/* Linktree Section - kept mounted to avoid re-loading */}
+            {user && (
             <div className={activeSection === 'linktree' ? '' : 'hidden'}>
               <AgentPagesSection
                 user={user}
@@ -2067,6 +1895,7 @@ function AgentPortal() {
                 preloadedPageData={preloadedAgentPageData}
               />
             </div>
+            )}
           </div>
         </div>
       </div>
@@ -2109,7 +1938,7 @@ function AgentPortal() {
                   onClick={handleProfilePictureClick}
                   className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700] transition-colors"
                 >
-                  {user.profilePictureUrl && !profileImageError ? (
+                  {user?.profilePictureUrl && !profileImageError ? (
                     <>
                       {/* Loading spinner - shows while image is loading */}
                       {profileImageLoading && (
@@ -2118,7 +1947,7 @@ function AgentPortal() {
                         </div>
                       )}
                       <img
-                        src={user.profilePictureUrl}
+                        src={user?.profilePictureUrl}
                         alt=""
                         className="w-full h-full object-cover"
                         loading="eager"
@@ -2134,7 +1963,7 @@ function AgentPortal() {
                   ) : (
                     <div className="w-full h-full bg-[#ffd700]/10 flex items-center justify-center">
                       <span className="text-4xl text-[#ffd700]">
-                        {user.firstName?.charAt(0) || user.email?.charAt(0) || '?'}
+                        {user?.firstName?.charAt(0) || user?.email?.charAt(0) || '?'}
                       </span>
                     </div>
                   )}
@@ -3855,50 +3684,262 @@ Referral Networks to consider:
 // ============================================================================
 // New Agents Section
 // ============================================================================
+
+// Document/Resource data for New Agents
+interface NewAgentDocument {
+  id: string;
+  title: string;
+  description?: string;
+  content: string; // The actual text content to display in modal
+  downloadUrl?: string; // Optional download link
+}
+
+interface NewAgentCategory {
+  id: string;
+  title: string;
+  icon: string;
+  description: string;
+  documents: NewAgentDocument[];
+}
+
+const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
+  {
+    id: 'production-know-how',
+    title: 'Production Know-How',
+    icon: '📈',
+    description: 'Essential knowledge for ramping up your production',
+    documents: [
+      {
+        id: 'prod-1',
+        title: 'Getting Started with Production',
+        description: 'Foundation for building your business',
+        content: 'Document content will be added here...',
+      },
+      {
+        id: 'prod-2',
+        title: 'Lead Generation Basics',
+        description: 'How to find and nurture leads',
+        content: 'Document content will be added here...',
+      },
+    ],
+  },
+  {
+    id: 'agent-checklists',
+    title: 'Agent Checklists',
+    icon: '✅',
+    description: 'Step-by-step checklists to keep you on track',
+    documents: [
+      {
+        id: 'check-1',
+        title: 'New Agent Onboarding Checklist',
+        description: 'Everything you need to do in your first 30 days',
+        content: 'Document content will be added here...',
+      },
+      {
+        id: 'check-2',
+        title: 'Transaction Checklist',
+        description: 'Never miss a step in your transactions',
+        content: 'Document content will be added here...',
+      },
+    ],
+  },
+  {
+    id: 'get-clients',
+    title: '8 Ways to Get Clients',
+    icon: '🎯',
+    description: 'Proven strategies to grow your client base',
+    documents: [
+      {
+        id: 'clients-1',
+        title: 'Sphere of Influence Marketing',
+        description: 'Leverage your existing network',
+        content: 'Document content will be added here...',
+      },
+      {
+        id: 'clients-2',
+        title: 'Social Media Strategies',
+        description: 'Build your online presence',
+        content: 'Document content will be added here...',
+      },
+      {
+        id: 'clients-3',
+        title: 'Open House Techniques',
+        description: 'Convert visitors into clients',
+        content: 'Document content will be added here...',
+      },
+    ],
+  },
+  {
+    id: 'mentor-guide',
+    title: 'Get the Most From Your Mentor',
+    icon: '🤝',
+    description: 'Maximize your mentorship experience',
+    documents: [
+      {
+        id: 'mentor-1',
+        title: 'Mentorship Success Guide',
+        description: 'How to build a productive mentor relationship',
+        content: 'Document content will be added here...',
+      },
+    ],
+  },
+];
+
 function NewAgentsSection() {
+  const [selectedCategory, setSelectedCategory] = useState<NewAgentCategory | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<NewAgentDocument | null>(null);
+
+  const handleCategoryClick = (category: NewAgentCategory) => {
+    setSelectedCategory(category);
+    setSelectedDocument(null);
+  };
+
+  const handleDocumentClick = (doc: NewAgentDocument) => {
+    setSelectedDocument(doc);
+  };
+
+  const handleBackToCategory = () => {
+    setSelectedDocument(null);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedCategory(null);
+    setSelectedDocument(null);
+  };
+
   return (
     <div className="space-y-6 px-2 sm:px-4">
-        <GenericCard padding="lg">
-          <div className="space-y-6">
-            <div className="text-center">
-              <span className="text-6xl mb-4 block">🎯</span>
-              <h3 className="text-h3 text-[#ffd700]">Welcome to Smart Agent Alliance!</h3>
-              <p className="text-body mt-2">Information tailored specifically for new agents</p>
+      {/* Header */}
+      <div className="text-center pb-2">
+        <h3 className="text-h3 text-[#ffd700] mb-2">New Agent Resources</h3>
+        <p className="text-sm text-[#e5e4dd]/60">
+          Essential guides and checklists to jumpstart your real estate career
+        </p>
+      </div>
+
+      {/* Category Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {NEW_AGENT_CATEGORIES.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => handleCategoryClick(category)}
+            className="group text-left p-5 rounded-xl bg-black/40 border border-white/10 hover:border-[#ffd700]/40 hover:bg-black/60 transition-all duration-200"
+            style={{ WebkitTapHighlightColor: 'transparent' }}
+          >
+            <div className="flex items-start gap-4">
+              <span className="text-4xl flex-shrink-0">{category.icon}</span>
+              <div className="flex-1 min-w-0">
+                <h4 className="text-lg font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors mb-1">
+                  {category.title}
+                </h4>
+                <p className="text-sm text-[#e5e4dd]/60 line-clamp-2">
+                  {category.description}
+                </p>
+                <div className="mt-2 text-xs text-[#ffd700]/70">
+                  {category.documents.length} {category.documents.length === 1 ? 'document' : 'documents'}
+                </div>
+              </div>
+              <ChevronRight className="w-5 h-5 text-[#e5e4dd]/40 group-hover:text-[#ffd700] transition-colors flex-shrink-0 mt-1" />
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Category Modal - Shows list of documents */}
+      <Modal
+        isOpen={selectedCategory !== null && selectedDocument === null}
+        onClose={handleCloseModal}
+        size="lg"
+      >
+        {selectedCategory && (
+          <div className="space-y-4">
+            {/* Category Header */}
+            <div className="text-center pb-4 border-b border-white/10">
+              <span className="text-5xl mb-3 block">{selectedCategory.icon}</span>
+              <h3 className="text-xl font-bold text-[#ffd700]">{selectedCategory.title}</h3>
+              <p className="text-sm text-[#e5e4dd]/60 mt-1">{selectedCategory.description}</p>
             </div>
 
-            <div className="border-t border-white/10 pt-6">
-              <h4 className="text-h5 mb-4">Your First Steps:</h4>
-              <ol className="space-y-3 text-body">
-                <li className="flex gap-3">
-                  <span className="text-[#ffd700] font-bold">1.</span>
-                  <span>Complete the "Start Here" section to understand how to use SAA tools</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-[#ffd700] font-bold">2.</span>
-                  <span>Join the weekly Mastermind calls for training and community</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-[#ffd700] font-bold">3.</span>
-                  <span>Get your certifications to start receiving leads</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-[#ffd700] font-bold">4.</span>
-                  <span>Explore the Canva templates to build your marketing materials</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-[#ffd700] font-bold">5.</span>
-                  <span>Connect with your sponsor and the SAA community</span>
-                </li>
-              </ol>
+            {/* Document List */}
+            <div className="space-y-3">
+              {selectedCategory.documents.map((doc) => (
+                <button
+                  key={doc.id}
+                  onClick={() => handleDocumentClick(doc)}
+                  className="w-full text-left p-4 rounded-lg bg-white/5 border border-white/10 hover:border-[#ffd700]/40 hover:bg-white/10 transition-all group"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors">
+                        {doc.title}
+                      </h4>
+                      {doc.description && (
+                        <p className="text-sm text-[#e5e4dd]/50 mt-0.5">{doc.description}</p>
+                      )}
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-[#e5e4dd]/40 group-hover:text-[#ffd700] transition-colors flex-shrink-0" />
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
-        </GenericCard>
+        )}
+      </Modal>
 
-      <div className="text-center">
-        <p className="text-body mb-4">Questions? Reach out to your sponsor or contact us:</p>
+      {/* Document Content Modal */}
+      <Modal
+        isOpen={selectedDocument !== null}
+        onClose={handleCloseModal}
+        size="xl"
+      >
+        {selectedDocument && selectedCategory && (
+          <div className="space-y-4">
+            {/* Document Header with Back Button */}
+            <div className="flex items-center gap-3 pb-4 border-b border-white/10">
+              <button
+                onClick={handleBackToCategory}
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                <ChevronLeft className="w-5 h-5 text-[#e5e4dd]" />
+              </button>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-[#ffd700]/70 mb-0.5">{selectedCategory.title}</p>
+                <h3 className="text-lg font-bold text-[#e5e4dd]">{selectedDocument.title}</h3>
+              </div>
+            </div>
+
+            {/* Document Content */}
+            <div className="prose prose-invert prose-sm max-w-none">
+              <div className="text-[#e5e4dd]/80 whitespace-pre-wrap leading-relaxed">
+                {selectedDocument.content}
+              </div>
+            </div>
+
+            {/* Download Button */}
+            {selectedDocument.downloadUrl && (
+              <div className="pt-4 border-t border-white/10">
+                <a
+                  href={selectedDocument.downloadUrl}
+                  download
+                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm font-medium"
+                >
+                  <Download className="w-4 h-4" />
+                  Download Document
+                </a>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+
+      {/* Help Section */}
+      <div className="text-center pt-4">
+        <p className="text-sm text-[#e5e4dd]/50 mb-3">Questions? Reach out to your sponsor or contact us:</p>
         <a
           href="mailto:doug@smartagentalliance.com"
-          className="inline-block px-6 py-3 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors"
+          className="inline-block px-5 py-2.5 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm"
         >
           Contact Support
         </a>
@@ -4976,47 +5017,57 @@ function AgentPagesSection({
                       </div>
                     )}
 
-                    {/* Contact Icon Buttons Row - Email, Call, Text */}
-                    {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (
-                      <div className="flex gap-2 justify-center">
-                        {/* Email Button */}
-                        {formData.email && (
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                            style={{ backgroundColor: linksSettings.accentColor }}
-                            title="Email"
-                          >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke={linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a'} strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                            </svg>
-                          </div>
-                        )}
-                        {/* Call Button */}
-                        {formData.phone && formData.show_call_button && (
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                            style={{ backgroundColor: linksSettings.accentColor }}
-                            title="Call"
-                          >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke={linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a'} strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                            </svg>
-                          </div>
-                        )}
-                        {/* Text Button */}
-                        {formData.phone && formData.show_text_button && (
-                          <div
-                            className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                            style={{ backgroundColor: linksSettings.accentColor }}
-                            title="Text"
-                          >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke={linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a'} strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                    {/* Contact Buttons Row - Email, Call, Text */}
+                    {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
+                      // Count active buttons to determine if we show labels
+                      const buttonCount = (formData.email ? 1 : 0) +
+                        (formData.phone && formData.show_call_button ? 1 : 0) +
+                        (formData.phone && formData.show_text_button ? 1 : 0);
+                      const showLabels = buttonCount < 3;
+                      const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+                      const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
+
+                      return (
+                        <div className={`flex gap-1.5 ${buttonCount === 3 ? 'justify-center' : 'w-full'}`}>
+                          {/* Email Button */}
+                          {formData.email && (
+                            <div
+                              className={`py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                              style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                            >
+                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                              </svg>
+                              {showLabels && <span className="block text-center">Email</span>}
+                            </div>
+                          )}
+                          {/* Call Button */}
+                          {formData.phone && formData.show_call_button && (
+                            <div
+                              className={`py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                              style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                            >
+                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                              </svg>
+                              {showLabels && <span className="block text-center">Phone</span>}
+                            </div>
+                          )}
+                          {/* Text Button */}
+                          {formData.phone && formData.show_text_button && (
+                            <div
+                              className={`py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                              style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                            >
+                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                              </svg>
+                              {showLabels && <span className="block text-center">Text</span>}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
 
                     {/* Sample Buttons */}
                     <div className="w-full space-y-1.5">
@@ -6076,47 +6127,57 @@ function AgentPagesSection({
               </div>
             )}
 
-            {/* Contact Icon Buttons Row - Email, Call, Text */}
-            {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (
-              <div className="flex gap-3 justify-center">
-                {/* Email Button */}
-                {formData.email && (
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                    style={{ backgroundColor: linksSettings.accentColor }}
-                    title="Email"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke={linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a'} strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                )}
-                {/* Call Button */}
-                {formData.phone && formData.show_call_button && (
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                    style={{ backgroundColor: linksSettings.accentColor }}
-                    title="Call"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke={linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a'} strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                )}
-                {/* Text Button */}
-                {formData.phone && formData.show_text_button && (
-                  <div
-                    className="w-12 h-12 rounded-full flex items-center justify-center cursor-pointer transition-transform hover:scale-105"
-                    style={{ backgroundColor: linksSettings.accentColor }}
-                    title="Text"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke={linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a'} strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-            )}
+            {/* Contact Buttons Row - Email, Call, Text */}
+            {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
+              // Count active buttons to determine if we show labels
+              const buttonCount = (formData.email ? 1 : 0) +
+                (formData.phone && formData.show_call_button ? 1 : 0) +
+                (formData.phone && formData.show_text_button ? 1 : 0);
+              const showLabels = buttonCount < 3;
+              const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+              const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
+
+              return (
+                <div className={`flex gap-2 ${buttonCount === 3 ? 'justify-center' : 'w-full'}`}>
+                  {/* Email Button */}
+                  {formData.email && (
+                    <div
+                      className={`py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                      style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                    >
+                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                      {showLabels && <span className="block text-center">Email</span>}
+                    </div>
+                  )}
+                  {/* Call Button */}
+                  {formData.phone && formData.show_call_button && (
+                    <div
+                      className={`py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                      style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                    >
+                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      {showLabels && <span className="block text-center">Phone</span>}
+                    </div>
+                  )}
+                  {/* Text Button */}
+                  {formData.phone && formData.show_text_button && (
+                    <div
+                      className={`py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                      style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                    >
+                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      {showLabels && <span className="block text-center">Text</span>}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Link Buttons */}
             <div className="w-full space-y-2 mt-2">
@@ -6257,31 +6318,22 @@ function DownloadSection() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      // If no prompt available but on Android, show manual instructions
-      if (isAndroid) {
-        alert('To install: tap the menu (⋮) in your browser and select "Install app" or "Add to Home screen"');
-      }
-      return;
-    }
-
-    setInstallStatus('installing');
-
-    try {
-      await deferredPrompt.prompt();
+    // Try browser's native PWA install first
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-
       if (outcome === 'accepted') {
-        setInstallStatus('installed');
-      } else {
-        setInstallStatus('idle');
+        setDeferredPrompt(null);
       }
-    } catch (error) {
-      console.error('Install error:', error);
-      setInstallStatus('idle');
+    } else {
+      // No install prompt available - expand the help section
+      setShowTroubleHelp(true);
     }
+  };
 
-    setDeferredPrompt(null);
+  const handleIOSInstallClick = () => {
+    // iOS uses Safari's Add to Home Screen - expand help section
+    setShowTroubleHelp(true);
   };
 
   // If already installed, show success message
@@ -6327,58 +6379,30 @@ function DownloadSection() {
           {/* PC/Android Install Button - Yellow */}
           <button
             onClick={handleInstallClick}
-            disabled={installStatus === 'installing'}
-            className={`w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 ${
-              installStatus === 'installed'
-                ? 'bg-[#22c55e] text-white'
-                : installStatus === 'installing'
-                ? 'bg-[#ffd700]/50 text-black cursor-wait'
-                : 'bg-[#ffd700] text-black hover:bg-[#ffed4a]'
-            }`}
+            className="w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 bg-[#ffd700] text-[#2a2a2a] hover:bg-[#ffed4a]"
           >
-            {installStatus === 'installed' ? (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Installed!
-              </>
-            ) : installStatus === 'installing' ? (
-              <>
-                <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Installing...
-              </>
-            ) : (
-              <>
-                <Download className="w-5 h-5" />
-                Install PC / Android App
-              </>
-            )}
+            <Download className="w-5 h-5" />
+            Install PC / Android
           </button>
 
-          {!isInstallable && !isIOS && (
-            <p className="text-center text-xs text-[#e5e4dd]/50">
-              {isAndroid
-                ? 'If the button doesn\'t work, tap the browser menu (\u22EE) and select "Install app"'
-                : 'Use Chrome or Edge browser for one-click install'}
-            </p>
-          )}
+          {/* iOS/Mac Install Button - Green */}
+          <button
+            onClick={handleIOSInstallClick}
+            className="w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 bg-[#22c55e] text-[#2a2a2a] hover:bg-[#16a34a]"
+          >
+            <Download className="w-5 h-5" />
+            Install iOS / Mac
+          </button>
 
-          {/* iOS/Mac Install Button - Green with dropdown */}
+          {/* Having trouble? - Dropdown for Safari instructions */}
           <div className="relative">
             <button
               onClick={() => setShowIOSInstructions(!showIOSInstructions)}
-              className="w-full py-3.5 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-3 bg-[#22c55e] text-white hover:bg-[#16a34a]"
+              className="w-full py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2 bg-transparent text-[#e5e4dd]/60 hover:text-[#e5e4dd] hover:bg-white/5 border border-white/10"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 18.75l-2.5-2.5m0 0l-2.5-2.5m2.5 2.5L13.25 13.25m2.5 2.5L18.25 18.25M9 3v5.25A2.25 2.25 0 0111.25 10.5h5.25M9 3H6.75A2.25 2.25 0 004.5 5.25v13.5A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V10.5M9 3l6 6" />
-              </svg>
-              Install iOS / Mac App
+              Having trouble installing?
               <svg
-                className={`w-5 h-5 transition-transform ${showIOSInstructions ? 'rotate-180' : ''}`}
+                className={`w-4 h-4 transition-transform ${showIOSInstructions ? 'rotate-180' : ''}`}
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -6388,66 +6412,67 @@ function DownloadSection() {
               </svg>
             </button>
 
-            {/* iOS Instructions Dropdown */}
+            {/* Manual Install Instructions Dropdown */}
             {showIOSInstructions && (
-              <div className="mt-3 p-4 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/30 space-y-4">
-                <p className="text-sm text-[#e5e4dd]/80 text-center font-medium">
-                  Follow these steps in Safari:
-                </p>
+              <div className="mt-3 p-4 rounded-xl bg-white/5 border border-white/10 space-y-5">
 
-                {/* Step 1 */}
-                <div className="flex gap-3 p-3 rounded-xl bg-black/20 border border-white/10">
-                  <div className="w-8 h-8 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                    1
+                {/* iOS/Safari Instructions */}
+                <div className="space-y-3">
+                  <p className="text-sm text-[#22c55e] font-semibold">
+                    iOS / Mac (Safari)
+                  </p>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Tap the <span className="text-[#007AFF]">Share</span> button (square with arrow)</p>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] text-sm">Tap the Share button</p>
-                    <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                      Square with arrow pointing up (bottom of Safari)
-                    </p>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Select &quot;Add to Home Screen&quot;</p>
                   </div>
-                  <svg className="w-6 h-6 text-[#007AFF] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 00-2.25 2.25v9a2.25 2.25 0 002.25 2.25h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25H15m0-3l-3-3m0 0l-3 3m3-3V15" />
-                  </svg>
-                </div>
-
-                {/* Step 2 */}
-                <div className="flex gap-3 p-3 rounded-xl bg-black/20 border border-white/10">
-                  <div className="w-8 h-8 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                    2
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add to Home Screen&quot;</p>
-                    <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                      Scroll down in the share menu to find it
-                    </p>
-                  </div>
-                  <div className="w-6 h-6 rounded bg-[#333] flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Tap &quot;Add&quot; to confirm</p>
                   </div>
                 </div>
 
-                {/* Step 3 */}
-                <div className="flex gap-3 p-3 rounded-xl bg-black/20 border border-white/10">
-                  <div className="w-8 h-8 rounded-full bg-[#22c55e] text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">
-                    3
+                <div className="border-t border-white/10" />
+
+                {/* Android/Chrome Instructions */}
+                <div className="space-y-3">
+                  <p className="text-sm text-[#ffd700] font-semibold">
+                    Android (Chrome)
+                  </p>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Tap the <span className="text-[#ffd700]">menu</span> (⋮) in the top right</p>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-[#e5e4dd] text-sm">Tap &quot;Add&quot;</p>
-                    <p className="text-xs text-[#e5e4dd]/60 mt-0.5">
-                      The app will appear on your home screen or dock
-                    </p>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Select &quot;Install app&quot; or &quot;Add to Home screen&quot;</p>
                   </div>
-                  <svg className="w-6 h-6 text-[#22c55e] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Tap &quot;Install&quot; to confirm</p>
+                  </div>
                 </div>
 
-                <p className="text-xs text-[#e5e4dd]/50 text-center">
-                  Note: On Mac, use Safari and select &quot;Add to Dock&quot; from the File menu
-                </p>
+                <div className="border-t border-white/10" />
+
+                {/* PC/Windows Instructions */}
+                <div className="space-y-3">
+                  <p className="text-sm text-[#ffd700] font-semibold">
+                    PC (Chrome / Edge)
+                  </p>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Click the <span className="text-[#ffd700]">install icon</span> in the address bar (or menu → &quot;Install SAA Portal&quot;)</p>
+                  </div>
+                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
+                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
+                    <p className="text-sm text-[#e5e4dd]/80">Click &quot;Install&quot; in the popup</p>
+                  </div>
+                </div>
+
               </div>
             )}
           </div>
