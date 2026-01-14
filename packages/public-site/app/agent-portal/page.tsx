@@ -348,7 +348,9 @@ function AgentPortal() {
         console.log('[Loading Screen] preloadAppData complete, result:', !!result.userData, !!result.agentPageData);
         if (result.userData) {
           // Update user state with fresh data from API
-          console.log('[PreloadAppData] Raw is_leader from API:', result.userData.is_leader);
+          // Handle both snake_case (from API) and camelCase (from cache fallback)
+          const rawIsLeader = result.userData.is_leader ?? result.userData.isLeader;
+          console.log('[PreloadAppData] Raw is_leader:', result.userData.is_leader, 'isLeader:', result.userData.isLeader, 'resolved:', rawIsLeader);
           const freshUserData = {
             id: result.userData.id,
             email: result.userData.email,
@@ -359,7 +361,7 @@ function AgentPortal() {
             role: result.userData.role,
             profilePictureUrl: toCdnUrl(result.userData.profile_picture_url || result.userData.profilePictureUrl),
             gender: result.userData.gender || 'male',
-            isLeader: result.userData.is_leader === true,
+            isLeader: rawIsLeader === true,
             state: result.userData.state || null,
           };
           console.log('[PreloadAppData] Setting isLeader to:', freshUserData.isLeader);
