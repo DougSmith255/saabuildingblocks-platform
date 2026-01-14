@@ -6908,16 +6908,17 @@ function AgentPagesSection({
         </div>
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
-        <div className="fixed bottom-[74px] left-2 right-2 z-40 min-[1200px]:hidden">
+        <div className="fixed bottom-[79px] left-2 right-2 z-40 min-[1000px]:hidden">
           <div className="flex gap-2">
-            {/* Preview Linktree Button */}
+            {/* Preview Linktree Button - Shrinks when Save appears */}
             <button
               onClick={() => setShowMobilePreview(true)}
-              className="flex-1 py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5"
+              className={`py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out ${
+                hasUnsavedChanges ? 'flex-1' : 'w-full'
+              }`}
               style={{
                 background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
                 border: '1px solid rgba(255, 215, 0, 0.3)',
-                boxShadow: 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)',
                 WebkitTapHighlightColor: 'transparent',
               } as React.CSSProperties}
             >
@@ -6928,27 +6929,22 @@ function AgentPagesSection({
               <span className="text-[#ffd700]">Preview</span>
             </button>
 
-            {/* Save Changes Button - Always visible, disabled when no changes */}
+            {/* Save Changes Button - Slides in from right when changes exist */}
             <button
               onClick={handleSave}
-              disabled={isSaving || !hasUnsavedChanges}
-              className={`flex-1 py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-200 ${
-                showSaveSuccess
-                  ? 'text-white'
-                  : hasUnsavedChanges
-                    ? 'text-black'
-                    : 'text-black/50'
+              disabled={isSaving}
+              className={`py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 ease-out ${
+                hasUnsavedChanges
+                  ? 'flex-1 opacity-100'
+                  : 'w-0 opacity-0 p-0 border-0'
+              } ${
+                showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
               }`}
               style={{
                 background: showSaveSuccess
                   ? '#22c55e'
-                  : hasUnsavedChanges
-                    ? 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)'
-                    : 'linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%)',
-                border: '1px solid rgba(255, 215, 0, 0.3)',
-                boxShadow: hasUnsavedChanges
-                  ? 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 2px rgba(0,0,0,0.2), 0 0 12px rgba(255,215,0,0.2)'
-                  : 'inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 2px rgba(0,0,0,0.3)',
+                  : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
+                border: hasUnsavedChanges ? '1px solid rgba(255, 215, 0, 0.5)' : 'none',
                 WebkitTapHighlightColor: 'transparent',
               } as React.CSSProperties}
             >
@@ -7188,7 +7184,7 @@ function AgentPagesSection({
         </Modal>
 
         {/* Spacer for fixed bottom button on mobile */}
-        <div className="h-24 min-[1200px]:hidden" />
+        <div className="h-24 min-[1000px]:hidden" />
     </div>
   );
 }
