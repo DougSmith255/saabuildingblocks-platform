@@ -211,6 +211,10 @@ function getInitialUser(): UserData | null {
         // Start preloading profile image immediately with highest priority
         preloadProfileImage(user.profilePictureUrl);
       }
+      // Normalize isLeader field (handle both is_leader and isLeader from cache)
+      if (user.is_leader !== undefined && user.isLeader === undefined) {
+        user.isLeader = user.is_leader === true;
+      }
       return user;
     }
   } catch {
