@@ -4753,16 +4753,9 @@ function NewAgentsSection() {
               </div>
             </div>
 
-            {/* Document Content */}
-            <div className="prose prose-invert prose-sm max-w-none">
-              <div className="text-[#e5e4dd]/80 whitespace-pre-wrap leading-relaxed">
-                {selectedDocument.content}
-              </div>
-            </div>
-
-            {/* Download Button */}
+            {/* Download Button - At Top */}
             {selectedDocument.downloadUrl && (
-              <div className="pt-4 border-t border-white/10">
+              <div className="pb-4 border-b border-white/10">
                 <a
                   href={selectedDocument.downloadUrl}
                   download
@@ -4773,6 +4766,13 @@ function NewAgentsSection() {
                 </a>
               </div>
             )}
+
+            {/* Document Content */}
+            <div className="prose prose-invert prose-sm max-w-none">
+              <div className="text-[#e5e4dd]/80 whitespace-pre-wrap leading-relaxed">
+                {selectedDocument.content}
+              </div>
+            </div>
           </div>
         )}
       </Modal>
