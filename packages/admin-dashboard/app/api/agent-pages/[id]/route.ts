@@ -130,6 +130,7 @@ export async function PATCH(
       tiktok_url,
       linkedin_url,
       custom_links,
+      custom_social_links,
       links_settings,
     } = body;
 
@@ -152,6 +153,7 @@ export async function PATCH(
     if (tiktok_url !== undefined) updates.tiktok_url = tiktok_url || null;
     if (linkedin_url !== undefined) updates.linkedin_url = linkedin_url || null;
     if (custom_links !== undefined) updates.custom_links = custom_links || [];
+    if (custom_social_links !== undefined) updates.custom_social_links = custom_social_links || [];
     if (links_settings !== undefined) updates.links_settings = links_settings || {
       accentColor: '#ffd700',
       iconStyle: 'light',

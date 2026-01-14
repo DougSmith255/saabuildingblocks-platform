@@ -4878,6 +4878,13 @@ interface CustomLink {
   order: number;
 }
 
+// Custom social link (for icon-based social links beyond the built-in 6)
+interface CustomSocialLink {
+  id: string;
+  url: string;
+  icon: string; // Icon name from LINK_ICONS
+}
+
 interface AgentPageData {
   id: string;
   slug: string;
@@ -4894,6 +4901,7 @@ interface AgentPageData {
   youtube_url: string | null;
   tiktok_url: string | null;
   linkedin_url: string | null;
+  custom_social_links?: CustomSocialLink[]; // Up to 2 custom social icons
   custom_links: CustomLink[];
   links_settings: LinksSettings;
   activated: boolean;
@@ -4999,6 +5007,10 @@ function AgentPagesSection({
   const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
   const [showIconPicker, setShowIconPicker] = useState(false);
 
+  // Custom social links state (max 2 custom social icons)
+  const [customSocialLinks, setCustomSocialLinks] = useState<CustomSocialLink[]>(preloadedPageData?.page?.custom_social_links || []);
+  const [showSocialIconPicker, setShowSocialIconPicker] = useState<number | null>(null); // Index of slot being edited
+
   // Links page global settings state - initialize from preloaded data if available
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -5025,8 +5037,8 @@ function AgentPagesSection({
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Count filled social links
-  const filledSocialLinks = [
+  // Count filled social links (6 built-in + custom social links, max 6 total)
+  const filledBuiltInSocial = [
     formData.facebook_url,
     formData.instagram_url,
     formData.twitter_url,
@@ -5034,6 +5046,8 @@ function AgentPagesSection({
     formData.tiktok_url,
     formData.linkedin_url,
   ].filter(Boolean).length;
+  const filledCustomSocial = customSocialLinks.filter(link => link.url).length;
+  const filledSocialLinks = filledBuiltInSocial + filledCustomSocial;
 
   // Helper to get color version URL from B&W URL
   // B&W: .../profiles/agent-page-xxx.png -> Color: .../profiles/agent-page-xxx-color.png
@@ -5083,6 +5097,7 @@ function AgentPagesSection({
         linkedin_url: preloadedPageData.page.linkedin_url || '',
       });
       setCustomLinks(preloadedPageData.page.custom_links || []);
+      setCustomSocialLinks(preloadedPageData.page.custom_social_links || []);
       setLinksSettings(preloadedPageData.page.links_settings || DEFAULT_LINKS_SETTINGS);
       setIsLoading(false);
     }
@@ -5123,6 +5138,7 @@ function AgentPagesSection({
               linkedin_url: data.page.linkedin_url || '',
             });
             setCustomLinks(data.page.custom_links || []);
+            setCustomSocialLinks(data.page.custom_social_links || []);
             setLinksSettings(data.page.links_settings || DEFAULT_LINKS_SETTINGS);
           }
         } else if (response.status === 404) {
@@ -5249,6 +5265,7 @@ function AgentPagesSection({
           ...formData,
           slug: generatedSlug, // Auto-generated from display name
           custom_links: customLinks,
+          custom_social_links: customSocialLinks,
           links_settings: linksSettings,
         }),
       });
@@ -5532,6 +5549,7 @@ function AgentPagesSection({
           linkedin_url: data.page.linkedin_url || '',
         });
         setCustomLinks(data.page.custom_links || []);
+        setCustomSocialLinks(data.page.custom_social_links || []);
         setLinksSettings(data.page.links_settings || {
           accentColor: '#ffd700',
           iconStyle: 'light',
@@ -5952,10 +5970,21 @@ function AgentPagesSection({
                             <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
                           </div>
                         )}
+                        {/* Custom Social Links */}
+                        {customSocialLinks.filter(link => link.url).map(link => {
+                          const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
+                          return (
+                            <div key={link.id} className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                              <svg className="w-2.5 h-2.5" fill="none" stroke={linksSettings.accentColor} strokeWidth="2" viewBox="0 0 24 24">
+                                <path d={iconPath || ''} />
+                              </svg>
+                            </div>
+                          );
+                        })}
                       </div>
                     )}
 
-                    {/* Contact Buttons Row - Email, Call, Text */}
+                    {/* Contact Buttons Row - Email, Call, Text - Always full width */}
                     {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
                       // Count active buttons to determine if we show labels
                       const buttonCount = (formData.email ? 1 : 0) +
@@ -5966,14 +5995,14 @@ function AgentPagesSection({
                       const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
 
                       return (
-                        <div className={`flex gap-1.5 ${buttonCount === 3 ? 'justify-center' : 'w-full'}`}>
+                        <div className="flex gap-1.5 w-full">
                           {/* Email Button */}
                           {formData.email && (
                             <div
-                              className={`py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                              className="flex-1 py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
                               style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                             >
-                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                               </svg>
                               {showLabels && <span className="block text-center">Email</span>}
@@ -5982,10 +6011,10 @@ function AgentPagesSection({
                           {/* Call Button */}
                           {formData.phone && formData.show_call_button && (
                             <div
-                              className={`py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                              className="flex-1 py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
                               style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                             >
-                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                               </svg>
                               {showLabels && <span className="block text-center">Phone</span>}
@@ -5994,10 +6023,10 @@ function AgentPagesSection({
                           {/* Text Button */}
                           {formData.phone && formData.show_text_button && (
                             <div
-                              className={`py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                              className="flex-1 py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
                               style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                             >
-                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                               </svg>
                               {showLabels && <span className="block text-center">Text</span>}
@@ -6638,44 +6667,129 @@ function AgentPagesSection({
                     type="url"
                     value={formData.facebook_url}
                     onChange={(e) => handleInputChange('facebook_url', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    disabled={filledSocialLinks >= 6 && !formData.facebook_url}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                     placeholder="Facebook URL"
                   />
                   <input
                     type="url"
                     value={formData.instagram_url}
                     onChange={(e) => handleInputChange('instagram_url', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    disabled={filledSocialLinks >= 6 && !formData.instagram_url}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                     placeholder="Instagram URL"
                   />
                   <input
                     type="url"
                     value={formData.twitter_url}
                     onChange={(e) => handleInputChange('twitter_url', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    disabled={filledSocialLinks >= 6 && !formData.twitter_url}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                     placeholder="X (Twitter) URL"
                   />
                   <input
                     type="url"
                     value={formData.youtube_url}
                     onChange={(e) => handleInputChange('youtube_url', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    disabled={filledSocialLinks >= 6 && !formData.youtube_url}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                     placeholder="YouTube URL"
                   />
                   <input
                     type="url"
                     value={formData.tiktok_url}
                     onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    disabled={filledSocialLinks >= 6 && !formData.tiktok_url}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                     placeholder="TikTok URL"
                   />
                   <input
                     type="url"
                     value={formData.linkedin_url}
                     onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    disabled={filledSocialLinks >= 6 && !formData.linkedin_url}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                     placeholder="LinkedIn URL"
                   />
+                  {/* Custom Social Links (2 slots with icon picker) */}
+                  {[0, 1].map((slotIndex) => {
+                    const customLink = customSocialLinks[slotIndex];
+                    const isDisabled = filledSocialLinks >= 6 && !customLink?.url;
+                    return (
+                      <div key={slotIndex} className="relative flex">
+                        <button
+                          type="button"
+                          onClick={() => !isDisabled && setShowSocialIconPicker(showSocialIconPicker === slotIndex ? null : slotIndex)}
+                          disabled={isDisabled}
+                          className={`flex items-center justify-center w-10 rounded-l-lg bg-black/40 border border-r-0 border-white/10 transition-colors ${isDisabled ? 'opacity-40' : 'hover:border-[#ffd700]/30'}`}
+                        >
+                          {customLink?.icon ? (
+                            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d={LINK_ICONS.find(i => i.name === customLink.icon)?.path || ''} />
+                            </svg>
+                          ) : (
+                            <svg className="w-4 h-4 text-[#e5e4dd]/30" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                          )}
+                        </button>
+                        <input
+                          type="url"
+                          value={customLink?.url || ''}
+                          onChange={(e) => {
+                            const newUrl = e.target.value;
+                            setCustomSocialLinks(prev => {
+                              const updated = [...prev];
+                              if (updated[slotIndex]) {
+                                updated[slotIndex] = { ...updated[slotIndex], url: newUrl };
+                              } else if (newUrl) {
+                                updated[slotIndex] = { id: `social-${slotIndex}`, url: newUrl, icon: 'Globe' };
+                              }
+                              return updated.filter(link => link?.url);
+                            });
+                            setHasUnsavedChanges(true);
+                          }}
+                          disabled={isDisabled}
+                          className="flex-1 px-3 py-2 rounded-r-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
+                          placeholder={customLink?.icon ? `${LINK_ICONS.find(i => i.name === customLink.icon)?.label || 'Custom'} URL` : 'Custom URL'}
+                        />
+                        {/* Icon Picker Dropdown */}
+                        {showSocialIconPicker === slotIndex && (
+                          <div className="absolute z-20 top-full mt-1 left-0 w-48 max-h-32 overflow-y-auto rounded bg-[#1a1a1a] border border-white/20 shadow-xl">
+                            <div className="grid grid-cols-6 gap-0.5 p-1">
+                              {LINK_ICONS.map(icon => (
+                                <button
+                                  key={icon.name}
+                                  type="button"
+                                  onClick={() => {
+                                    setCustomSocialLinks(prev => {
+                                      const updated = [...prev];
+                                      if (updated[slotIndex]) {
+                                        updated[slotIndex] = { ...updated[slotIndex], icon: icon.name };
+                                      } else {
+                                        updated[slotIndex] = { id: `social-${slotIndex}`, url: '', icon: icon.name };
+                                      }
+                                      return updated;
+                                    });
+                                    setShowSocialIconPicker(null);
+                                    setHasUnsavedChanges(true);
+                                  }}
+                                  className={`p-1.5 rounded transition-colors ${
+                                    customLink?.icon === icon.name ? 'bg-[#ffd700]/20 text-[#ffd700]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
+                                  }`}
+                                  title={icon.label}
+                                >
+                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                    <path d={icon.path} />
+                                  </svg>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -7352,10 +7466,21 @@ function AgentPagesSection({
                     <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
                   </div>
                 )}
+                {/* Custom Social Links */}
+                {customSocialLinks.filter(link => link.url).map(link => {
+                  const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
+                  return (
+                    <div key={link.id} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
+                      <svg className="w-4 h-4" fill="none" stroke={linksSettings.accentColor} strokeWidth="2" viewBox="0 0 24 24">
+                        <path d={iconPath || ''} />
+                      </svg>
+                    </div>
+                  );
+                })}
               </div>
             )}
 
-            {/* Contact Buttons Row - Email, Call, Text */}
+            {/* Contact Buttons Row - Email, Call, Text - Always full width */}
             {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
               // Count active buttons to determine if we show labels
               const buttonCount = (formData.email ? 1 : 0) +
@@ -7366,14 +7491,14 @@ function AgentPagesSection({
               const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
 
               return (
-                <div className={`flex gap-2 ${buttonCount === 3 ? 'justify-center' : 'w-full'}`}>
+                <div className="flex gap-2 w-full">
                   {/* Email Button */}
                   {formData.email && (
                     <div
-                      className={`py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                      className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
                       style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                     >
-                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                       {showLabels && <span className="block text-center">Email</span>}
@@ -7382,10 +7507,10 @@ function AgentPagesSection({
                   {/* Call Button */}
                   {formData.phone && formData.show_call_button && (
                     <div
-                      className={`py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                      className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
                       style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                     >
-                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                       </svg>
                       {showLabels && <span className="block text-center">Phone</span>}
@@ -7394,10 +7519,10 @@ function AgentPagesSection({
                   {/* Text Button */}
                   {formData.phone && formData.show_text_button && (
                     <div
-                      className={`py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02] ${buttonCount === 3 ? 'flex items-center justify-center' : 'flex-1'}`}
+                      className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
                       style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                     >
-                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : ''}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                       </svg>
                       {showLabels && <span className="block text-center">Text</span>}
