@@ -5517,16 +5517,15 @@ function AgentPagesSection({
 
   // Generate QR Code for Linktree URL
   useEffect(() => {
-    if (typeof window === 'undefined' || !qrCodeRef.current || !linktreeUrl) return;
+    if (typeof window === 'undefined' || !linktreeUrl) return;
+
+    let cancelled = false;
 
     // Dynamically import qr-code-styling (browser-only library)
     import('qr-code-styling').then((QRCodeStylingModule) => {
-      const QRCodeStyling = QRCodeStylingModule.default;
+      if (cancelled) return;
 
-      // Clear previous QR code
-      if (qrCodeRef.current) {
-        qrCodeRef.current.innerHTML = '';
-      }
+      const QRCodeStyling = QRCodeStylingModule.default;
 
       // Create new QR code instance
       const qrCode = new QRCodeStyling({
@@ -5557,14 +5556,21 @@ function AgentPagesSection({
         },
       });
 
-      // Append to container
-      if (qrCodeRef.current) {
-        qrCode.append(qrCodeRef.current);
-      }
-
       // Store instance for download
       qrCodeInstanceRef.current = qrCode;
+
+      // Append to container if ref is available
+      if (qrCodeRef.current) {
+        qrCodeRef.current.innerHTML = '';
+        qrCode.append(qrCodeRef.current);
+      }
+    }).catch((err) => {
+      console.warn('QR code library failed to load:', err);
     });
+
+    return () => {
+      cancelled = true;
+    };
   }, [linktreeUrl]);
 
   // Download QR Code function
