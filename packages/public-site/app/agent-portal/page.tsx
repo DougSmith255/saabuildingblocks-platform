@@ -5202,6 +5202,116 @@ function AgentPagesSection({
                   </div>
                 </div>
             </div>
+
+              {/* Accent Color + Style - Only visible on screens < 1565px (moved from Links section) */}
+              <div className="min-[1565px]:hidden space-y-3 mt-4">
+                {/* Accent Color */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowColorPicker(!showColorPicker)}
+                        className="w-10 h-10 rounded-lg cursor-pointer border border-white/20 transition-all hover:border-white/40 hover:scale-105"
+                        style={{ backgroundColor: linksSettings.accentColor }}
+                        title="Open color picker"
+                      />
+                      <input
+                        type="text"
+                        value={linksSettings.accentColor}
+                        onChange={(e) => {
+                          const hex = e.target.value;
+                          if (/^#[0-9A-Fa-f]{0,6}$/.test(hex) || hex === '') {
+                            setLinksSettings(prev => ({ ...prev, accentColor: hex || '#' }));
+                            setHasUnsavedChanges(true);
+                          }
+                        }}
+                        className="min-w-[90px] flex-1 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                        placeholder="#ffd700"
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81', '#f472b6', '#38bdf8', '#fb923c', '#4ade80'].map(color => (
+                        <button
+                          key={color}
+                          type="button"
+                          onClick={() => {
+                            setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                            setHasUnsavedChanges(true);
+                          }}
+                          className={`w-6 h-6 rounded transition-all ${
+                            linksSettings.accentColor === color ? 'ring-2 ring-white scale-110' : 'hover:scale-110'
+                          }`}
+                          style={{ backgroundColor: color }}
+                          title={color}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Style Options */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
+                  <div className="space-y-3">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Text</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.iconStyle === 'light'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.iconStyle === 'dark'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Dark
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Font</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.font === 'synonym'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Synonym
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.font === 'taskor'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Taskor
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div> {/* End sticky wrapper */}
           </div>
 
@@ -5521,8 +5631,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email + Phone Row - Side by side on wide screens only */}
-              <div className="grid grid-cols-1 min-[1650px]:grid-cols-2 gap-3">
+              {/* Email + Phone Row - Hidden on screens < 1565px (moved to Links column) */}
+              <div className="hidden min-[1565px]:grid grid-cols-1 min-[1650px]:grid-cols-2 gap-3">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
@@ -5586,8 +5696,8 @@ function AgentPagesSection({
                 <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Links</h3>
               </div>
 
-              {/* Accent Color + Style in a grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Accent Color + Style in a grid - Hidden on screens < 1565px (moved under preview) */}
+              <div className="hidden min-[1565px]:grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -5720,6 +5830,57 @@ function AgentPagesSection({
                         </button>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email + Phone - Only visible on screens < 1565px (moved from Connect section) */}
+              <div className="min-[1565px]:hidden grid grid-cols-1 gap-3 mb-4">
+                {/* Email */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                    placeholder="your@email.com"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Phone</h4>
+                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      className="flex-1 min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
+                      placeholder="(555) 123-4567"
+                    />
+                    {formData.phone && (
+                      <div className="flex gap-3 flex-shrink-0">
+                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
+                          <input
+                            type="checkbox"
+                            checked={formData.show_call_button}
+                            onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
+                          />
+                          <span className="text-xs text-[#e5e4dd]">Call</span>
+                        </label>
+                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
+                          <input
+                            type="checkbox"
+                            checked={formData.show_text_button}
+                            onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
+                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
+                          />
+                          <span className="text-xs text-[#e5e4dd]">Text</span>
+                        </label>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
