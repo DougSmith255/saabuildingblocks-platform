@@ -1011,6 +1011,27 @@ jq -r '.mcpRouting | to_entries[] | "\(.key): \(.value.status)"' \
 
 ## 🚨 CRITICAL RULES
 
+### Website Updates - ALWAYS Push to GitHub
+**⚠️ CRITICAL: To update the live website, ALWAYS push changes to GitHub!**
+
+The website auto-deploys from GitHub. After making any code changes:
+```bash
+cd /home/claude-flow
+git add <changed-files>
+git commit -m "Description of changes
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>"
+git push
+```
+
+**This is the ONLY way to update the website.** The CI/CD pipeline automatically:
+1. Detects the push to GitHub
+2. Builds the project
+3. Deploys to Cloudflare Pages (public site)
+4. Updates go live within minutes
+
+**Never skip the git push step after making changes!**
+
 ### Concurrent Execution
 1. ALL operations in ONE message
 2. NEVER save files to root folder

@@ -1338,7 +1338,7 @@ function AgentPortal() {
 
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
-        className="mobile-bottom-nav md:hidden fixed bottom-0 left-0 right-0 z-50"
+        className="mobile-bottom-nav min-[1000px]:hidden fixed bottom-0 left-0 right-0 z-50"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
         {/* Solid background - edge to edge, no rounded corners */}
@@ -5702,10 +5702,10 @@ function AgentPagesSection({
         )}
 
         {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
-        <div className="grid grid-cols-1 min-[1000px]:grid-cols-[1fr_256px] gap-6">
+        <div className="grid grid-cols-1 min-[1200px]:grid-cols-[1fr_256px] gap-6">
 
           {/* PREVIEW COLUMN - Desktop only, sticky on right */}
-          <div className="hidden min-[1000px]:block min-[1000px]:col-start-2 min-[1000px]:row-start-1 min-[1000px]:row-span-4">
+          <div className="hidden min-[1200px]:block min-[1200px]:col-start-2 min-[1200px]:row-start-1 min-[1200px]:row-span-4">
             <div className="sticky top-4">
             <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
               {/* Preview Header */}
@@ -6086,7 +6086,7 @@ function AgentPagesSection({
           </div>
 
           {/* SETTINGS COLUMN - All settings here, single column on mobile */}
-          <div className="min-[1000px]:col-start-1 min-[1000px]:row-start-1">
+          <div className="min-[1200px]:col-start-1 min-[1200px]:row-start-1">
             {/* Page Status & Link */}
             {pageData.activated && (
               <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
@@ -6117,7 +6117,7 @@ function AgentPagesSection({
 
             {/* Tab Navigation - Mobile only (below 1200px), sticky at top */}
             <div
-              className="sticky top-0 z-20 bg-[#191919]/95 backdrop-blur-sm border border-white/10 rounded-xl mb-4 min-[1000px]:hidden overflow-hidden"
+              className="sticky top-0 z-20 bg-[#191919]/95 backdrop-blur-sm border border-white/10 rounded-xl mb-4 min-[1200px]:hidden overflow-hidden"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <div className="flex">
@@ -6172,11 +6172,11 @@ function AgentPagesSection({
             </div>
 
             {/* Desktop: Two-column layout for Profile+Connect (left) and Links (right) */}
-            <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 min-[1000px]:gap-6">
+            <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 min-[1200px]:gap-6">
               {/* LEFT COLUMN - Profile and Connect */}
               <div className="space-y-6">
             {/* PROFILE SECTION - Photo, Name, Bio */}
-            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1000px]:block'}`}>
+            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1200px]:block'}`}>
               {/* Section Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                 <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -6339,7 +6339,7 @@ function AgentPagesSection({
             </div> {/* End PROFILE SECTION */}
 
             {/* CONNECT SECTION - Social Links, Phone, Email */}
-            <div className={`space-y-3 mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1000px]:block'}`}>
+            <div className={`space-y-3 mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1200px]:block'}`}>
               {/* Section Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                 <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -6456,7 +6456,7 @@ function AgentPagesSection({
               {/* RIGHT COLUMN - Links */}
               <div>
             {/* LINKS SECTION - Accent Color, Style, Button Links */}
-            <div className={`space-y-3 mt-6 min-[1000px]:mt-0 ${activeTab === 'links' ? '' : 'hidden min-[1000px]:block'}`}>
+            <div className={`space-y-3 mt-6 min-[1200px]:mt-0 ${activeTab === 'links' ? '' : 'hidden min-[1200px]:block'}`}>
               {/* Section Header */}
               <div className="flex items-center gap-2 pb-2 border-b border-white/10">
                 <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -6885,7 +6885,7 @@ function AgentPagesSection({
 
             {/* Action Buttons - Desktop only, Activate button */}
             {!pageData.activated && (
-              <div className="hidden min-[1000px]:flex flex-wrap gap-3 justify-end pt-4 mt-6 border-t border-white/10">
+              <div className="hidden min-[1200px]:flex flex-wrap gap-3 justify-end pt-4 mt-6 border-t border-white/10">
                 <button
                   onClick={handleActivate}
                   disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
@@ -6906,7 +6906,7 @@ function AgentPagesSection({
         </div>
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
-        <div className="fixed bottom-[79px] left-2 right-2 z-40 min-[1000px]:hidden">
+        <div className="fixed bottom-[79px] left-2 right-2 z-40 min-[1200px]:hidden">
           <div className="flex gap-2">
             {/* Preview Linktree Button - shrinks when Save appears */}
             <button
@@ -7188,7 +7188,7 @@ function AgentPagesSection({
         </Modal>
 
         {/* Spacer for fixed bottom button on mobile */}
-        <div className="h-24 min-[1000px]:hidden" />
+        <div className="h-24 min-[1200px]:hidden" />
     </div>
   );
 }

@@ -57,19 +57,46 @@ async function preloadStaticImages(): Promise<void> {
 
 /**
  * Fetch user data from API
+ * Falls back to cached localStorage data if API fails
  */
 async function fetchUserData(token: string): Promise<any> {
-  const response = await fetch('https://saabuildingblocks.com/api/auth/me', {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
+  try {
+    const response = await fetch('https://saabuildingblocks.com/api/auth/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch user data');
+    if (!response.ok) {
+      // API failed, fall back to cached data
+      console.warn('[PreloadService] /api/auth/me returned', response.status, '- using cached user data');
+      return getCachedUserDataForFallback();
+    }
+
+    return response.json();
+  } catch (err) {
+    // Network error, fall back to cached data
+    console.warn('[PreloadService] /api/auth/me network error - using cached user data');
+    return getCachedUserDataForFallback();
   }
+}
 
-  return response.json();
+/**
+ * Get cached user data as fallback when API fails
+ */
+function getCachedUserDataForFallback(): any {
+  if (typeof localStorage === 'undefined') return null;
+  const cached = localStorage.getItem('agent_portal_user');
+  if (cached) {
+    try {
+      const userData = JSON.parse(cached);
+      // Wrap in expected response format
+      return { success: true, data: userData };
+    } catch {
+      return null;
+    }
+  }
+  return null;
 }
 
 /**
