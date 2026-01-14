@@ -3882,7 +3882,7 @@ function NewAgentsSection() {
                 <h4 className="text-lg font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors mb-1">
                   {category.title}
                 </h4>
-                <p className="text-sm text-[#e5e4dd]/60 line-clamp-2">
+                <p className="text-body text-[#dcdbd5] line-clamp-2">
                   {category.description}
                 </p>
                 <div className="mt-2 text-xs text-[#ffd700]/70">
@@ -3907,7 +3907,7 @@ function NewAgentsSection() {
             <div className="text-center pb-4 border-b border-white/10">
               <span className="text-5xl mb-3 block">{selectedCategory.icon}</span>
               <h3 className="text-xl font-bold text-[#ffd700]">{selectedCategory.title}</h3>
-              <p className="text-sm text-[#e5e4dd]/60 mt-1">{selectedCategory.description}</p>
+              <p className="text-body text-[#dcdbd5] mt-1">{selectedCategory.description}</p>
             </div>
 
             {/* Document List */}
@@ -3925,7 +3925,7 @@ function NewAgentsSection() {
                         {doc.title}
                       </h4>
                       {doc.description && (
-                        <p className="text-sm text-[#e5e4dd]/50 mt-0.5">{doc.description}</p>
+                        <p className="text-body text-[#dcdbd5] mt-0.5">{doc.description}</p>
                       )}
                     </div>
                     <ChevronRight className="w-5 h-5 text-[#e5e4dd]/40 group-hover:text-[#ffd700] transition-colors flex-shrink-0" />
