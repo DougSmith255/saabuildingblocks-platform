@@ -6686,7 +6686,7 @@ function AgentPagesSection({
                     const customLink = customSocialLinks[slotIndex];
                     const isDisabled = filledSocialLinks >= 6 && !customLink?.url;
                     return (
-                      <div key={slotIndex} className="relative flex">
+                      <div key={slotIndex} className="relative flex min-w-0 overflow-hidden">
                         <button
                           type="button"
                           onClick={() => !isDisabled && setShowSocialIconPicker(showSocialIconPicker === slotIndex ? null : slotIndex)}
@@ -7272,7 +7272,7 @@ function AgentPagesSection({
         {/* Shows when <1200px (mobile UI).
             - <950px: Full width (left-2 right-2), above mobile nav (bottom-[64px])
             - 950-1200px: Account for desktop sidebar (left-[280px]), near bottom (bottom-4) */}
-        <div className="fixed left-2 right-2 z-40 min-[1200px]:hidden bottom-[64px] min-[950px]:bottom-4 min-[950px]:left-[280px]">
+        <div className="fixed left-2 right-2 z-40 min-[1200px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px]">
           <div className="flex gap-2">
             {/* Preview Linktree Button - Shrinks from right when Save appears */}
             <button
