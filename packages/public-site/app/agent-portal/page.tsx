@@ -5984,54 +5984,46 @@ function AgentPagesSection({
                       </div>
                     )}
 
-                    {/* Contact Buttons Row - Email, Call, Text - Always full width */}
+                    {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
                     {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
-                      // Count active buttons to determine if we show labels
                       const buttonCount = (formData.email ? 1 : 0) +
                         (formData.phone && formData.show_call_button ? 1 : 0) +
                         (formData.phone && formData.show_text_button ? 1 : 0);
-                      const showLabels = buttonCount < 3;
                       const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
                       const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
 
+                      // Build array of active buttons to determine position for rounding
+                      const buttons: { type: 'email' | 'call' | 'text'; label: string; icon: string }[] = [];
+                      if (formData.email) buttons.push({ type: 'email', label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
+                      if (formData.phone && formData.show_call_button) buttons.push({ type: 'call', label: 'Phone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
+                      if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
+
                       return (
-                        <div className="flex gap-1.5 w-full">
-                          {/* Email Button */}
-                          {formData.email && (
-                            <div
-                              className="flex-1 py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
-                              style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                            >
-                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                              </svg>
-                              {showLabels && <span className="block text-center">Email</span>}
-                            </div>
-                          )}
-                          {/* Call Button */}
-                          {formData.phone && formData.show_call_button && (
-                            <div
-                              className="flex-1 py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
-                              style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                            >
-                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                              </svg>
-                              {showLabels && <span className="block text-center">Phone</span>}
-                            </div>
-                          )}
-                          {/* Text Button */}
-                          {formData.phone && formData.show_text_button && (
-                            <div
-                              className="flex-1 py-1.5 px-3 rounded text-[10px] font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
-                              style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                            >
-                              <svg className={`w-2.5 h-2.5 ${showLabels ? 'absolute left-2 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                              </svg>
-                              {showLabels && <span className="block text-center">Text</span>}
-                            </div>
-                          )}
+                        <div className="flex w-full gap-[3px] mb-1.5">
+                          {buttons.map((btn, idx) => {
+                            const isFirst = idx === 0;
+                            const isLast = idx === buttons.length - 1;
+                            const isOnly = buttons.length === 1;
+                            // Rounding: full if only one, left-only if first, right-only if last, none if middle
+                            const roundedClass = isOnly ? 'rounded' : isFirst ? 'rounded-l' : isLast ? 'rounded-r' : '';
+
+                            return (
+                              <div
+                                key={btn.type}
+                                className={`flex-1 py-1.5 px-3 ${roundedClass} text-[10px] font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center ${isOnly ? 'justify-start' : 'justify-center'} gap-1.5`}
+                                style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                              >
+                                <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                                </svg>
+                                {isOnly ? (
+                                  <span className="flex-1 text-center">{btn.label}</span>
+                                ) : (
+                                  <span>{btn.label}</span>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       );
                     })()}
@@ -7480,54 +7472,43 @@ function AgentPagesSection({
               </div>
             )}
 
-            {/* Contact Buttons Row - Email, Call, Text - Always full width */}
+            {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
             {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
-              // Count active buttons to determine if we show labels
-              const buttonCount = (formData.email ? 1 : 0) +
-                (formData.phone && formData.show_call_button ? 1 : 0) +
-                (formData.phone && formData.show_text_button ? 1 : 0);
-              const showLabels = buttonCount < 3;
               const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
               const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
 
+              // Build array of active buttons to determine position for rounding
+              const buttons: { type: 'email' | 'call' | 'text'; label: string; icon: string }[] = [];
+              if (formData.email) buttons.push({ type: 'email', label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
+              if (formData.phone && formData.show_call_button) buttons.push({ type: 'call', label: 'Phone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
+              if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
+
               return (
-                <div className="flex gap-2 w-full">
-                  {/* Email Button */}
-                  {formData.email && (
-                    <div
-                      className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
-                      style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                    >
-                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                      {showLabels && <span className="block text-center">Email</span>}
-                    </div>
-                  )}
-                  {/* Call Button */}
-                  {formData.phone && formData.show_call_button && (
-                    <div
-                      className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
-                      style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                    >
-                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                      </svg>
-                      {showLabels && <span className="block text-center">Phone</span>}
-                    </div>
-                  )}
-                  {/* Text Button */}
-                  {formData.phone && formData.show_text_button && (
-                    <div
-                      className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium relative cursor-pointer transition-transform hover:scale-[1.02]"
-                      style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                    >
-                      <svg className={`w-4 h-4 ${showLabels ? 'absolute left-3 top-1/2 -translate-y-1/2' : 'mx-auto'}`} fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                      </svg>
-                      {showLabels && <span className="block text-center">Text</span>}
-                    </div>
-                  )}
+                <div className="flex w-full gap-[3px]">
+                  {buttons.map((btn, idx) => {
+                    const isFirst = idx === 0;
+                    const isLast = idx === buttons.length - 1;
+                    const isOnly = buttons.length === 1;
+                    // Rounding: full if only one, left-only if first, right-only if last, none if middle
+                    const roundedClass = isOnly ? 'rounded-lg' : isFirst ? 'rounded-l-lg' : isLast ? 'rounded-r-lg' : '';
+
+                    return (
+                      <div
+                        key={btn.type}
+                        className={`flex-1 py-3 px-4 ${roundedClass} text-sm font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center ${isOnly ? 'justify-start' : 'justify-center'} gap-2`}
+                        style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
+                      >
+                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                        </svg>
+                        {isOnly ? (
+                          <span className="flex-1 text-center">{btn.label}</span>
+                        ) : (
+                          <span>{btn.label}</span>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               );
             })()}
