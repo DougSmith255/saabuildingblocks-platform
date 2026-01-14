@@ -3711,15 +3711,52 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
     documents: [
       {
         id: 'prod-1',
-        title: 'Getting Started with Production',
-        description: 'Foundation for building your business',
-        content: 'Document content will be added here...',
+        title: 'FSBO Phone Script',
+        description: 'Effective scripts for For Sale By Owner calls',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - FSBO phone script.docx',
       },
       {
         id: 'prod-2',
-        title: 'Lead Generation Basics',
-        description: 'How to find and nurture leads',
-        content: 'Document content will be added here...',
+        title: 'How to Conduct a Listing Appointment',
+        description: 'Complete guide to winning listings',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - How to conduct a listing appointment.pdf',
+      },
+      {
+        id: 'prod-3',
+        title: 'Building a Sphere of Influence',
+        description: 'Start building your network from scratch',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never built a sphere of influence.pdf',
+      },
+      {
+        id: 'prod-4',
+        title: 'Converting FSBOs',
+        description: 'Turn For Sale By Owners into listings',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never converted a FSBO.pdf',
+      },
+      {
+        id: 'prod-5',
+        title: 'Open House Success',
+        description: 'How to run effective open houses',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never done an open house.pdf',
+      },
+      {
+        id: 'prod-6',
+        title: 'Follow-Up Mastery',
+        description: 'Never lose a lead with proper follow-up',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - If you_ve never followed-up.pdf',
+      },
+      {
+        id: 'prod-7',
+        title: 'New Construction Playbook',
+        description: 'Complete guide to new construction sales',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/production-know-how/SAA Asset - New Construction Playbook.pdf',
       },
     ],
   },
@@ -3731,15 +3768,38 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
     documents: [
       {
         id: 'check-1',
-        title: 'New Agent Onboarding Checklist',
-        description: 'Everything you need to do in your first 30 days',
-        content: 'Document content will be added here...',
+        title: 'Buyer Offers Checklist',
+        description: 'Ensure every offer is complete',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Buyer Offers Checklist.docx',
       },
       {
         id: 'check-2',
-        title: 'Transaction Checklist',
-        description: 'Never miss a step in your transactions',
-        content: 'Document content will be added here...',
+        title: 'In Contract Buyer Checklist',
+        description: 'Track buyer transactions from contract to close',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - In Contract Buyer Checklist.docx',
+      },
+      {
+        id: 'check-3',
+        title: 'Initial Buyer Checklist',
+        description: 'Start buyer relationships right',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Initial Buyer Checklist.docx',
+      },
+      {
+        id: 'check-4',
+        title: 'Listing Checklist - Do The Job',
+        description: 'Execute listings flawlessly',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Listing Checklist - Do The Job.docx',
+      },
+      {
+        id: 'check-5',
+        title: 'Listing Checklist - Earn The Business',
+        description: 'Win more listing appointments',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/agent-checklists/SAA Asset - Listing Checklist - Earn The Business.docx',
       },
     ],
   },
@@ -3751,21 +3811,10 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
     documents: [
       {
         id: 'clients-1',
-        title: 'Sphere of Influence Marketing',
-        description: 'Leverage your existing network',
-        content: 'Document content will be added here...',
-      },
-      {
-        id: 'clients-2',
-        title: 'Social Media Strategies',
-        description: 'Build your online presence',
-        content: 'Document content will be added here...',
-      },
-      {
-        id: 'clients-3',
-        title: 'Open House Techniques',
-        description: 'Convert visitors into clients',
-        content: 'Document content will be added here...',
+        title: '8 Ways to Get Clients',
+        description: 'Complete guide to client acquisition',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/8 Ways to Get Clients.docx',
       },
     ],
   },
@@ -3779,7 +3828,8 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
         id: 'mentor-1',
         title: 'Mentorship Success Guide',
         description: 'How to build a productive mentor relationship',
-        content: 'Document content will be added here...',
+        content: '',
+        downloadUrl: '/downloads/new-agent-resources/How to Get the Most From Your Mentor.docx',
       },
     ],
   },
@@ -3934,16 +3984,6 @@ function NewAgentsSection() {
         )}
       </Modal>
 
-      {/* Help Section */}
-      <div className="text-center pt-4">
-        <p className="text-sm text-[#e5e4dd]/50 mb-3">Questions? Reach out to your sponsor or contact us:</p>
-        <a
-          href="mailto:doug@smartagentalliance.com"
-          className="inline-block px-5 py-2.5 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm"
-        >
-          Contact Support
-        </a>
-      </div>
     </div>
   );
 }
