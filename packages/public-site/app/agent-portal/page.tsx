@@ -5996,7 +5996,7 @@ function AgentPagesSection({
             </div>
 
               {/* Accent Color + Style - Only visible on screens < 1565px (moved from Links section) */}
-              <div className="min-[1565px]:hidden space-y-3 mt-4">
+              <div className="min-[1650px]:hidden space-y-3 mt-4">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -6422,8 +6422,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email + Phone Row - Hidden on screens < 1565px (moved to Links column) */}
-              <div className="hidden min-[1565px]:grid grid-cols-1 min-[1650px]:grid-cols-2 gap-3">
+              {/* Email + Phone Row - Hidden on screens < 1650px (moved to Links column) */}
+              <div className="hidden min-[1650px]:grid min-[1650px]:grid-cols-2 gap-3">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
@@ -6488,7 +6488,7 @@ function AgentPagesSection({
               </div>
 
               {/* Accent Color + Style in a grid - Hidden on screens < 1565px (moved under preview) */}
-              <div className="hidden min-[1565px]:grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="hidden min-[1650px]:grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -6626,7 +6626,7 @@ function AgentPagesSection({
               </div>
 
               {/* Email + Phone - Only visible on screens < 1565px (moved from Connect section) */}
-              <div className="min-[1565px]:hidden grid grid-cols-1 gap-3 mb-4">
+              <div className="min-[1650px]:hidden grid grid-cols-1 gap-3 mb-4">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
