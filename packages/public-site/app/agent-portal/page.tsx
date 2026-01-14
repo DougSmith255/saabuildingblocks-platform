@@ -6215,12 +6215,11 @@ function AgentPagesSection({
                           htmlFor="attraction-profile-image-upload"
                           className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700] bg-black/30 cursor-pointer group"
                         >
-                          {(pageData.profile_image_url || user.profilePictureUrl) ? (
+                          {getProfileImageUrl() ? (
                             <img
-                              src={pageData.profile_image_url || user.profilePictureUrl || ''}
+                              src={getProfileImageUrl() || ''}
                               alt="Profile"
                               className="w-full h-full object-cover transition-all duration-300"
-                              style={{ filter: `contrast(${contrastLevel / 130}) ${!linksSettings.showColorPhoto ? 'grayscale(1)' : 'grayscale(0)'}` }}
                             />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
