@@ -5156,6 +5156,76 @@ function AgentPagesSection({
     };
   }, [pageData]);
 
+  // Generate QR Code for Linktree URL
+  // IMPORTANT: This useEffect MUST be before any early returns to comply with React's rules of hooks
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    // Need pageData to generate the linktree URL
+    if (!pageData) return;
+
+    // Generate the linktree URL from pageData
+    const slug = `${formData.display_first_name}-${formData.display_last_name}`
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '')
+      .replace(/--+/g, '-')
+      .replace(/^-|-$/g, '') || pageData.slug;
+    const linktreeUrl = `https://saabuildingblocks.pages.dev/${slug}-links`;
+
+    let cancelled = false;
+
+    // Dynamically import qr-code-styling (browser-only library)
+    import('qr-code-styling').then((QRCodeStylingModule) => {
+      if (cancelled) return;
+
+      const QRCodeStyling = QRCodeStylingModule.default;
+
+      // Create new QR code instance
+      const qrCode = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        type: 'svg',
+        data: linktreeUrl,
+        image: '/icons/s-logo-1000.png',
+        dotsOptions: {
+          color: '#2a2a2a',
+          type: 'rounded',
+        },
+        backgroundOptions: {
+          color: '#ffffff',
+        },
+        imageOptions: {
+          crossOrigin: 'anonymous',
+          margin: 5,
+          imageSize: 0.4,
+        },
+        cornersSquareOptions: {
+          color: '#2a2a2a',
+          type: 'extra-rounded',
+        },
+        cornersDotOptions: {
+          color: '#2a2a2a',
+          type: 'dot',
+        },
+      });
+
+      // Store instance for download
+      qrCodeInstanceRef.current = qrCode;
+
+      // Append to container if ref is available
+      if (qrCodeRef.current) {
+        qrCodeRef.current.innerHTML = '';
+        qrCode.append(qrCodeRef.current);
+      }
+    }).catch((err) => {
+      console.warn('QR code library failed to load:', err);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pageData, formData.display_first_name, formData.display_last_name]);
+
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setHasUnsavedChanges(true);
@@ -5514,64 +5584,6 @@ function AgentPagesSection({
   // TODO: Change to smartagentalliance.com when domain migration is complete
   const pageUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}`;
   const linktreeUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}-links`;
-
-  // Generate QR Code for Linktree URL
-  useEffect(() => {
-    if (typeof window === 'undefined' || !linktreeUrl) return;
-
-    let cancelled = false;
-
-    // Dynamically import qr-code-styling (browser-only library)
-    import('qr-code-styling').then((QRCodeStylingModule) => {
-      if (cancelled) return;
-
-      const QRCodeStyling = QRCodeStylingModule.default;
-
-      // Create new QR code instance
-      const qrCode = new QRCodeStyling({
-        width: 200,
-        height: 200,
-        type: 'svg',
-        data: linktreeUrl,
-        image: '/icons/s-logo-1000.png',
-        dotsOptions: {
-          color: '#2a2a2a',
-          type: 'rounded',
-        },
-        backgroundOptions: {
-          color: '#ffffff',
-        },
-        imageOptions: {
-          crossOrigin: 'anonymous',
-          margin: 5,
-          imageSize: 0.4,
-        },
-        cornersSquareOptions: {
-          color: '#2a2a2a',
-          type: 'extra-rounded',
-        },
-        cornersDotOptions: {
-          color: '#2a2a2a',
-          type: 'dot',
-        },
-      });
-
-      // Store instance for download
-      qrCodeInstanceRef.current = qrCode;
-
-      // Append to container if ref is available
-      if (qrCodeRef.current) {
-        qrCodeRef.current.innerHTML = '';
-        qrCode.append(qrCodeRef.current);
-      }
-    }).catch((err) => {
-      console.warn('QR code library failed to load:', err);
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [linktreeUrl]);
 
   // Download QR Code function
   const downloadQRCode = () => {
