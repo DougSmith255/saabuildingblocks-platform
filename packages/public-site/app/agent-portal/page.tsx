@@ -1359,7 +1359,7 @@ function AgentPortal() {
 
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
-        className="mobile-bottom-nav min-[1000px]:hidden fixed bottom-0 left-0 right-0 z-50"
+        className="mobile-bottom-nav min-[950px]:hidden fixed bottom-0 left-0 right-0 z-50"
         style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
       >
         {/* Solid background - edge to edge, no rounded corners */}
@@ -1427,11 +1427,11 @@ function AgentPortal() {
       </nav>
 
       {/* Main Dashboard Layout */}
-      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[1000px]:px-12 pb-20 md:pb-8 pt-20 md:pt-28">
-        <div className="flex flex-col min-[1000px]:flex-row gap-6">
+      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-20 md:pb-8 pt-20 md:pt-28">
+        <div className="flex flex-col min-[950px]:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only (1200px+) */}
-          <aside className="hidden min-[1000px]:block w-64 flex-shrink-0">
+          <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
             <div className="sticky top-24 space-y-4">
               {/* User Profile Section */}
               <div className="rounded-xl p-4 border border-white/[0.08]">
@@ -3023,6 +3023,9 @@ function formatTimeInLocalTimezone(hour: number, minute: number, dayOfWeek: stri
 }
 
 function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'female' | null; isLeader?: boolean | null }) {
+  // Debug logging for Leaders call visibility
+  console.log('[TeamCallsSection] isLeader prop received:', isLeader, 'type:', typeof isLeader);
+
   // Get times in user's local timezone
   const [localTimes, setLocalTimes] = useState<Record<string, string>>({});
 
@@ -3038,6 +3041,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
 
   const showWomensCall = userGender === 'female';
   const showLeadersCall = isLeader === true;
+  console.log('[TeamCallsSection] showLeadersCall computed:', showLeadersCall);
 
   return (
     <div className="space-y-4 sm:space-y-6 px-2 sm:px-4">
@@ -4938,7 +4942,6 @@ function AgentPagesSection({
   const [showSaveSuccess, setShowSaveSuccess] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const attractionFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -5124,7 +5127,6 @@ function AgentPagesSection({
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     setHasUnsavedChanges(true);
-    setSuccessMessage(null);
   };
 
   const handleSave = async () => {
@@ -5132,7 +5134,6 @@ function AgentPagesSection({
 
     setIsSaving(true);
     setError(null);
-    setSuccessMessage(null);
 
     try {
       const token = localStorage.getItem('agent_portal_token');
@@ -5154,8 +5155,7 @@ function AgentPagesSection({
         const data = await response.json();
         setPageData(data.page);
         setHasUnsavedChanges(false);
-        setSuccessMessage('Changes saved successfully!');
-        // Trigger success animation with confetti
+        // Trigger success animation with confetti (button shows success state)
         setShowSaveSuccess(true);
         triggerConfetti();
         setTimeout(() => setShowSaveSuccess(false), 2000);
@@ -5210,7 +5210,7 @@ function AgentPagesSection({
       if (response.ok) {
         const data = await response.json();
         setPageData(data.page);
-        setSuccessMessage('Your attraction page is now live!');
+        // Success is indicated by the page now being activated (shown in status banner)
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to activate page');
@@ -5437,7 +5437,7 @@ function AgentPagesSection({
           bio: '',
           showColorPhoto: false,
         });
-        setSuccessMessage('Your page has been created! Start customizing it below.');
+        // Page created - UI will update to show the editing interface
       } else if (response.status === 409) {
         // Page already exists - refresh to get it
         window.location.reload();
@@ -5489,15 +5489,10 @@ function AgentPagesSection({
   if (mode === 'agent-page') {
     return (
       <div className="space-y-6 px-2 sm:px-4">
-        {/* Error/Success Messages */}
+        {/* Error Message */}
         {error && (
           <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
             {error}
-          </div>
-        )}
-        {successMessage && (
-          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
-            {successMessage}
           </div>
         )}
 
@@ -5715,15 +5710,10 @@ function AgentPagesSection({
   // ========================================================================
   return (
     <div className="space-y-6 px-2 sm:px-4">
-      {/* Error/Success Messages */}
+      {/* Error Message */}
         {error && (
           <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
             {error}
-          </div>
-        )}
-        {successMessage && (
-          <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400 text-sm">
-            {successMessage}
           </div>
         )}
 
@@ -6108,14 +6098,115 @@ function AgentPagesSection({
                   </div>
                 </div>
               </div>
+
+              {/* Desktop Save Button - Under preview, visible only >1650px */}
+              <div className="hidden min-[1650px]:block mt-3">
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving || !hasUnsavedChanges}
+                  className={`w-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ${
+                    !hasUnsavedChanges
+                      ? 'opacity-50 cursor-not-allowed'
+                      : ''
+                  } ${
+                    showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
+                  }`}
+                  style={{
+                    background: showSaveSuccess
+                      ? '#22c55e'
+                      : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
+                    border: '1px solid rgba(255, 215, 0, 0.5)',
+                  }}
+                >
+                  {showSaveSuccess ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Saved!</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                      </svg>
+                      <span>{isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div> {/* End sticky wrapper */}
           </div>
 
           {/* SETTINGS COLUMN - All settings here, single column on mobile */}
           <div className="min-[1200px]:col-start-1 min-[1200px]:row-start-1">
-            {/* Page Status & Link */}
+            {/* Desktop Save Button + Page Status - visible 1200-1650px, side by side */}
+            <div className="hidden min-[1200px]:flex min-[1650px]:hidden gap-3 mb-4">
+              {/* Save Button - Left side */}
+              <button
+                onClick={handleSave}
+                disabled={isSaving || !hasUnsavedChanges}
+                className={`flex-1 py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ${
+                  !hasUnsavedChanges
+                    ? 'opacity-50 cursor-not-allowed'
+                    : ''
+                } ${
+                  showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
+                }`}
+                style={{
+                  background: showSaveSuccess
+                    ? '#22c55e'
+                    : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.5)',
+                }}
+              >
+                {showSaveSuccess ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Saved!</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>{isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}</span>
+                  </>
+                )}
+              </button>
+              {/* Linktree Live - Right side (only if activated) */}
+              {pageData.activated && (
+                <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs font-medium text-green-400">Linktree Live</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(linktreeUrl);
+                      const btn = document.getElementById('copy-linktree-btn-mid');
+                      if (btn) {
+                        btn.textContent = 'Copied!';
+                        setTimeout(() => { btn.textContent = 'Copy Linktree URL'; }, 1500);
+                      }
+                    }}
+                    id="copy-linktree-btn-mid"
+                    className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    Copy Linktree URL
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Page Status & Link - Original, visible on mobile (<1200px) and large desktop (>1650px) */}
             {pageData.activated && (
-              <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+              <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20 min-[1200px]:hidden min-[1650px]:block">
                 <div className="flex items-center gap-2 mb-2">
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                   <span className="text-xs font-medium text-green-400">Linktree Live</span>
@@ -6931,14 +7022,15 @@ function AgentPagesSection({
         </div>
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
-        <div className="fixed bottom-[79px] left-2 right-2 z-40 min-[1000px]:hidden">
+        {/* Shows when <1200px (mobile UI).
+            - <950px: Full width (left-2 right-2), above mobile nav (bottom-[64px])
+            - 950-1200px: Account for desktop sidebar (left-[280px]), near bottom (bottom-4) */}
+        <div className="fixed left-2 right-2 z-40 min-[1200px]:hidden bottom-[64px] min-[950px]:bottom-4 min-[950px]:left-[280px]">
           <div className="flex gap-2">
-            {/* Preview Linktree Button - Shrinks when Save appears */}
+            {/* Preview Linktree Button - Shrinks from right when Save appears */}
             <button
               onClick={() => setShowMobilePreview(true)}
-              className={`py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out ${
-                hasUnsavedChanges ? 'flex-1' : 'w-full'
-              }`}
+              className="flex-1 py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
               style={{
                 background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
                 border: '1px solid rgba(255, 215, 0, 0.3)',
@@ -6952,41 +7044,44 @@ function AgentPagesSection({
               <span className="text-[#ffd700]">Preview</span>
             </button>
 
-            {/* Save Changes Button - Slides in from right when changes exist */}
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className={`py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 overflow-hidden transition-all duration-300 ease-out ${
-                hasUnsavedChanges
-                  ? 'flex-1 opacity-100'
-                  : 'w-0 opacity-0 p-0 border-0'
-              } ${
-                showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
+            {/* Save Changes Button - Expands from right (starts as 0-width line) when changes exist */}
+            <div
+              className={`overflow-hidden transition-all duration-300 ease-out ${
+                hasUnsavedChanges ? 'flex-1' : 'w-0'
               }`}
-              style={{
-                background: showSaveSuccess
-                  ? '#22c55e'
-                  : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
-                border: hasUnsavedChanges ? '1px solid rgba(255, 215, 0, 0.5)' : 'none',
-                WebkitTapHighlightColor: 'transparent',
-              } as React.CSSProperties}
             >
-              {showSaveSuccess ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span>Saved!</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                  </svg>
-                  <span>{isSaving ? 'Saving...' : 'Save'}</span>
-                </>
-              )}
-            </button>
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className={`w-full h-full py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                  showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
+                }`}
+                style={{
+                  background: showSaveSuccess
+                    ? '#22c55e'
+                    : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.5)',
+                  WebkitTapHighlightColor: 'transparent',
+                  minWidth: hasUnsavedChanges ? '120px' : '0',
+                } as React.CSSProperties}
+              >
+                {showSaveSuccess ? (
+                  <>
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Saved!</span>
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                    </svg>
+                    <span>{isSaving ? 'Saving...' : 'Save'}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -7188,8 +7283,10 @@ function AgentPagesSection({
           </div>
         </Modal>
 
-        {/* Spacer for fixed bottom button on mobile */}
-        <div className="h-24 min-[1000px]:hidden" />
+        {/* Spacer for fixed bottom buttons on mobile - needed when mobile nav is visible (<950px) */}
+        <div className="h-[110px] min-[950px]:hidden" />
+        {/* Additional spacer for 950-1200px range when Preview/Save buttons visible but no mobile nav */}
+        <div className="hidden min-[950px]:block min-[1200px]:hidden h-16" />
     </div>
   );
 }

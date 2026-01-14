@@ -140,8 +140,11 @@ export async function preloadAppData(): Promise<PreloadResult> {
     // Fetch user data
     try {
       const response = await fetchUserData(token);
+      console.log('[PreloadService] API response:', JSON.stringify(response, null, 2));
+      console.log('[PreloadService] response.data.is_leader:', response?.data?.is_leader, 'type:', typeof response?.data?.is_leader);
       if (response.success && response.data) {
         userData = response.data;
+        console.log('[PreloadService] userData.is_leader after assignment:', userData.is_leader);
 
         // Cache user data in localStorage for faster subsequent loads
         localStorage.setItem('agent_portal_user', JSON.stringify(userData));
