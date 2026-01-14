@@ -5011,6 +5011,10 @@ function AgentPagesSection({
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'attraction' | null>(null);
 
+  // QR Code state
+  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const qrCodeInstanceRef = useRef<any>(null);
+
   // Accordion expanded state
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     socialLinks: false,
@@ -5510,6 +5514,68 @@ function AgentPagesSection({
   // TODO: Change to smartagentalliance.com when domain migration is complete
   const pageUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}`;
   const linktreeUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}-links`;
+
+  // Generate QR Code for Linktree URL
+  useEffect(() => {
+    if (typeof window === 'undefined' || !qrCodeRef.current || !linktreeUrl) return;
+
+    // Dynamically import qr-code-styling (browser-only library)
+    import('qr-code-styling').then((QRCodeStylingModule) => {
+      const QRCodeStyling = QRCodeStylingModule.default;
+
+      // Clear previous QR code
+      if (qrCodeRef.current) {
+        qrCodeRef.current.innerHTML = '';
+      }
+
+      // Create new QR code instance
+      const qrCode = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        type: 'svg',
+        data: linktreeUrl,
+        image: '/icons/s-logo-1000.png',
+        dotsOptions: {
+          color: '#2a2a2a',
+          type: 'rounded',
+        },
+        backgroundOptions: {
+          color: '#ffffff',
+        },
+        imageOptions: {
+          crossOrigin: 'anonymous',
+          margin: 5,
+          imageSize: 0.4,
+        },
+        cornersSquareOptions: {
+          color: '#2a2a2a',
+          type: 'extra-rounded',
+        },
+        cornersDotOptions: {
+          color: '#2a2a2a',
+          type: 'dot',
+        },
+      });
+
+      // Append to container
+      if (qrCodeRef.current) {
+        qrCode.append(qrCodeRef.current);
+      }
+
+      // Store instance for download
+      qrCodeInstanceRef.current = qrCode;
+    });
+  }, [linktreeUrl]);
+
+  // Download QR Code function
+  const downloadQRCode = () => {
+    if (qrCodeInstanceRef.current) {
+      qrCodeInstanceRef.current.download({
+        name: `${generatedSlug || pageData.slug}-linktree-qr`,
+        extension: 'png',
+      });
+    }
+  };
 
   // ========================================================================
   // AGENT PAGE MODE - Simplified view for Agent Attraction Page
@@ -6163,14 +6229,31 @@ function AgentPagesSection({
                   )}
                 </button>
               </div>
+
+              {/* QR Code Section - Under save button, visible only >1650px */}
+              <div className="hidden min-[1650px]:block mt-4">
+                <div className="rounded-xl bg-white p-4 border border-white/10">
+                  <div className="flex flex-col items-center gap-3">
+                    <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Linktree QR Code</span>
+                    <div ref={qrCodeRef} className="w-[200px] h-[200px]" />
+                    <button
+                      onClick={downloadQRCode}
+                      className="w-full py-2 rounded-lg text-xs font-medium bg-[#2a2a2a] text-white hover:bg-[#3a3a3a] transition-colors flex items-center justify-center gap-1.5"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download QR Code
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div> {/* End sticky wrapper */}
           </div>
 
           {/* SETTINGS COLUMN - All settings here, single column on mobile */}
           <div className="min-[1200px]:col-start-1 min-[1200px]:row-start-1">
-            {/* Desktop Save Button + Page Status - visible 1200-1650px, side by side */}
+            {/* Desktop Save Button + QR Code + Page Status - visible 1200-1650px */}
             <div className="hidden min-[1200px]:flex min-[1650px]:hidden gap-3 mb-4">
-              {/* Save Button - Left side */}
+              {/* Save Button */}
               <button
                 onClick={handleSave}
                 disabled={isSaving || !hasUnsavedChanges}
@@ -6204,7 +6287,23 @@ function AgentPagesSection({
                   </>
                 )}
               </button>
-              {/* Linktree Live - Right side (only if activated) */}
+              {/* QR Code Download Button */}
+              <button
+                onClick={downloadQRCode}
+                className="px-4 py-2.5 rounded-lg text-xs font-medium bg-white text-[#2a2a2a] hover:bg-gray-100 transition-colors flex items-center justify-center gap-1.5 border border-white/20"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="3" height="3" />
+                  <rect x="18" y="14" width="3" height="3" />
+                  <rect x="14" y="18" width="3" height="3" />
+                  <rect x="18" y="18" width="3" height="3" />
+                </svg>
+                QR Code
+              </button>
+              {/* Linktree Live (only if activated) */}
               {pageData.activated && (
                 <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
                   <div className="flex items-center gap-2 mb-2">
@@ -6232,33 +6331,51 @@ function AgentPagesSection({
               )}
             </div>
 
-            {/* Page Status & Link - Original, visible on mobile (<1200px) and large desktop (>1650px) */}
-            {pageData.activated && (
-              <div className="mb-4 p-3 rounded-lg bg-green-500/5 border border-green-500/20 min-[1200px]:hidden min-[1650px]:block">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-xs font-medium text-green-400">Linktree Live</span>
+            {/* Page Status & QR Code - visible on mobile (<1200px) and large desktop (>1650px) */}
+            <div className="mb-4 flex gap-3 min-[1200px]:hidden min-[1650px]:flex">
+              {/* QR Code Download Button */}
+              <button
+                onClick={downloadQRCode}
+                className="px-4 py-3 rounded-lg text-xs font-medium bg-white text-[#2a2a2a] hover:bg-gray-100 transition-colors flex items-center justify-center gap-1.5 border border-white/20"
+              >
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1" />
+                  <rect x="14" y="3" width="7" height="7" rx="1" />
+                  <rect x="3" y="14" width="7" height="7" rx="1" />
+                  <rect x="14" y="14" width="3" height="3" />
+                  <rect x="18" y="14" width="3" height="3" />
+                  <rect x="14" y="18" width="3" height="3" />
+                  <rect x="18" y="18" width="3" height="3" />
+                </svg>
+                QR Code
+              </button>
+              {/* Linktree Live (only if activated) */}
+              {pageData.activated && (
+                <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs font-medium text-green-400">Linktree Live</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(linktreeUrl);
+                      const btn = document.getElementById('copy-linktree-btn');
+                      if (btn) {
+                        btn.textContent = 'Copied!';
+                        setTimeout(() => { btn.textContent = 'Copy Linktree URL'; }, 1500);
+                      }
+                    }}
+                    id="copy-linktree-btn"
+                    className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    Copy Linktree URL
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(linktreeUrl);
-                    // Show brief visual feedback
-                    const btn = document.getElementById('copy-linktree-btn');
-                    if (btn) {
-                      btn.textContent = 'Copied!';
-                      setTimeout(() => { btn.textContent = 'Copy Linktree URL'; }, 1500);
-                    }
-                  }}
-                  id="copy-linktree-btn"
-                  className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                >
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                  Copy Linktree URL
-                </button>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Tab Navigation - Mobile only (below 1200px), sticky at top */}
             <div
