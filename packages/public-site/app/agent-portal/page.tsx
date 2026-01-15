@@ -7,7 +7,7 @@ import { Modal } from '@saa/shared/components/saa/interactive/Modal';
 import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
-import { ChromePicker, ColorResult } from 'react-color';
+import { HexColorPicker, HexColorInput } from 'react-colorful';
 import confetti from 'canvas-confetti';
 
 // Shake animation styles + mobile tap highlight fix
@@ -5006,6 +5006,7 @@ function AgentPagesSection({
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
   const [showIconPicker, setShowIconPicker] = useState(false);
+  const [editingLinkId, setEditingLinkId] = useState<string | null>(null); // ID of link being edited
 
   // Custom social links state (max 2 custom social icons)
   const [customSocialLinks, setCustomSocialLinks] = useState<CustomSocialLink[]>(preloadedPageData?.page?.custom_social_links || []);
@@ -5266,7 +5267,11 @@ function AgentPagesSection({
           slug: generatedSlug, // Auto-generated from display name
           custom_links: customLinks,
           custom_social_links: customSocialLinks.filter(link => link && link.url),
-          links_settings: linksSettings,
+          links_settings: {
+            ...linksSettings,
+            showCallButton: formData.show_call_button,
+            showTextButton: formData.show_text_button,
+          },
         }),
       });
 
@@ -5584,7 +5589,14 @@ function AgentPagesSection({
               Click below to create your pages and start customizing!
             </p>
             {error && (
-              <p className="text-red-400 text-sm">{error}</p>
+              <div className="flex items-center justify-center gap-2 text-red-400 text-sm">
+                <span>{error}</span>
+                <button onClick={() => setError(null)} className="p-1 hover:bg-red-500/20 rounded" title="Dismiss">
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             )}
             <button
               onClick={handleCreatePage}
@@ -5621,8 +5633,17 @@ function AgentPagesSection({
       <div className="space-y-6 px-2 sm:px-4">
         {/* Error Message */}
         {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-            {error}
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center justify-between gap-2">
+            <span>{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0"
+              title="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         )}
 
@@ -5842,8 +5863,17 @@ function AgentPagesSection({
     <div className="space-y-6 px-2 sm:px-4">
       {/* Error Message */}
         {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-            {error}
+          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center justify-between gap-2">
+            <span>{error}</span>
+            <button
+              onClick={() => setError(null)}
+              className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0"
+              title="Dismiss"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         )}
 
@@ -5902,7 +5932,7 @@ function AgentPagesSection({
 
                     {/* Name with Neon Effect - matches H1 glow framework from master controller */}
                     <span
-                      className="font-bold text-sm text-center"
+                      className="font-bold text-xl text-center"
                       style={{
                         color: linksSettings.accentColor,
                         fontFamily: 'var(--font-taskor, sans-serif)',
@@ -5910,21 +5940,22 @@ function AgentPagesSection({
                         transform: 'perspective(800px) rotateX(12deg)',
                         textShadow: `
                           /* WHITE CORE */
-                          0 0 0.01em #fff,
                           0 0 0.02em #fff,
-                          0 0 0.03em rgba(255,255,255,0.8),
-                          /* COLOR GLOW */
-                          0 0 0.05em ${linksSettings.accentColor},
-                          0 0 0.09em ${linksSettings.accentColor}cc,
-                          0 0 0.13em ${linksSettings.accentColor}8c,
-                          0 0 0.18em ${linksSettings.accentColor}59,
+                          0 0 0.04em rgba(255,255,255,0.9),
+                          0 0 0.08em rgba(255,255,255,0.5),
+                          /* COLOR GLOW - more diffused, starts subtle */
+                          0 0 0.15em ${linksSettings.accentColor}40,
+                          0 0 0.3em ${linksSettings.accentColor}30,
+                          0 0 0.5em ${linksSettings.accentColor}20,
+                          0 0 0.8em ${linksSettings.accentColor}15,
+                          0 0 1.2em ${linksSettings.accentColor}10,
                           /* METAL BACKING */
                           0.03em 0.03em 0 #2a2a2a,
                           0.045em 0.045em 0 #1a1a1a,
                           0.06em 0.06em 0 #0f0f0f,
                           0.075em 0.075em 0 #080808
                         `,
-                        filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`,
+                        filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.1) drop-shadow(0 0 0.15em ${linksSettings.accentColor}25)`,
                       }}
                     >
                       {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
@@ -6918,21 +6949,27 @@ function AgentPagesSection({
                     {showColorPicker && (
                       <div className="relative">
                         <div className="fixed inset-0 z-40" onClick={() => setShowColorPicker(false)} />
-                        <div className="relative z-50 rounded overflow-hidden shadow-xl border border-white/20">
-                          <ChromePicker
+                        <div className="relative z-50 p-3 rounded-lg shadow-xl border border-white/20 bg-[#1a1a1a]">
+                          <HexColorPicker
                             color={linksSettings.accentColor}
-                            onChange={(color: ColorResult) => {
-                              setLinksSettings(prev => ({ ...prev, accentColor: color.hex }));
+                            onChange={(color) => {
+                              setLinksSettings(prev => ({ ...prev, accentColor: color }));
                               setHasUnsavedChanges(true);
                             }}
-                            disableAlpha={true}
-                            styles={{
-                              default: {
-                                picker: { background: '#1a1a1a', boxShadow: 'none', width: '100%' },
-                                body: { padding: '8px' },
-                              },
-                            }}
+                            style={{ width: '100%' }}
                           />
+                          <div className="mt-2 flex items-center gap-2">
+                            <span className="text-xs text-[#e5e4dd]/50">#</span>
+                            <HexColorInput
+                              color={linksSettings.accentColor}
+                              onChange={(color) => {
+                                setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                                setHasUnsavedChanges(true);
+                              }}
+                              prefixed={false}
+                              className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                            />
+                          </div>
                         </div>
                       </div>
                     )}
@@ -7073,8 +7110,9 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Button Links Header */}
-              <div className="flex items-center gap-2 pt-2">
+              {/* BUTTON LINKS SECTION */}
+              <div className="p-4 rounded-xl bg-black/20 border border-white/10">
+              <div className="flex items-center gap-2 mb-3">
                 <h4 className="text-sm font-medium text-[#ffd700]">Button Links</h4>
               </div>
               {/* Unified Links List - 2-column grid on larger screens */}
@@ -7115,10 +7153,12 @@ function AgentPagesSection({
                       return (
                         <div
                           key={linkId}
-                          className={`flex items-center gap-1.5 p-2 rounded group ${
-                            isDefault
-                              ? 'bg-[#22c55e]/10 border border-[#22c55e]/30'
-                              : 'bg-black/20 border border-white/10'
+                          className={`flex items-center gap-1.5 p-2 rounded group transition-colors ${
+                            editingLinkId === linkId
+                              ? 'bg-[#ffd700]/20 border border-[#ffd700]/50'
+                              : isDefault
+                                ? 'bg-[#22c55e]/10 border border-[#22c55e]/30'
+                                : 'bg-black/20 border border-white/10'
                           }`}
                         >
                           {/* Reorder buttons */}
@@ -7183,24 +7223,50 @@ function AgentPagesSection({
                             <div className="text-[10px] text-[#e5e4dd]/30 truncate">{url}</div>
                           </div>
 
-                          {/* Delete - custom links only */}
+                          {/* Edit & Delete - custom links only */}
                           {!isDefault && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setCustomLinks(prev => prev.filter(l => l.id !== linkId));
-                                setLinksSettings(prev => ({
-                                  ...prev,
-                                  linkOrder: prev.linkOrder.filter(id => id !== linkId)
-                                }));
-                                setHasUnsavedChanges(true);
-                              }}
-                              className="p-1 rounded text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
-                            >
-                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                            </button>
+                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  // Populate fields with link data
+                                  setNewLinkLabel(customLink?.label || '');
+                                  setNewLinkUrl(customLink?.url || '');
+                                  setNewLinkIcon(customLink?.icon || null);
+                                  setEditingLinkId(linkId);
+                                }}
+                                className="p-1 rounded text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+                                title="Edit link"
+                              >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setCustomLinks(prev => prev.filter(l => l.id !== linkId));
+                                  setLinksSettings(prev => ({
+                                    ...prev,
+                                    linkOrder: prev.linkOrder.filter(id => id !== linkId)
+                                  }));
+                                  setHasUnsavedChanges(true);
+                                  // Clear edit mode if deleting the link being edited
+                                  if (editingLinkId === linkId) {
+                                    setEditingLinkId(null);
+                                    setNewLinkLabel('');
+                                    setNewLinkUrl('');
+                                    setNewLinkIcon(null);
+                                  }
+                                }}
+                                className="p-1 rounded text-red-400 hover:bg-red-500/10 transition-colors"
+                                title="Delete link"
+                              >
+                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                              </button>
+                            </div>
                           )}
                         </div>
                       );
@@ -7249,6 +7315,19 @@ function AgentPagesSection({
                     {showIconPicker && (
                       <div className="absolute z-10 bottom-full mb-1 left-0 w-48 max-h-32 overflow-y-auto rounded bg-[#1a1a1a] border border-white/20 shadow-xl">
                         <div className="grid grid-cols-6 gap-0.5 p-1">
+                          {/* No Icon option */}
+                          <button
+                            type="button"
+                            onClick={() => { setNewLinkIcon(null); setShowIconPicker(false); }}
+                            className={`p-1.5 rounded transition-colors ${
+                              !newLinkIcon ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
+                            }`}
+                            title="No icon"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                            </svg>
+                          </button>
                           {LINK_ICONS.map(icon => (
                             <button
                               key={icon.name}
@@ -7272,19 +7351,30 @@ function AgentPagesSection({
                     type="button"
                     onClick={() => {
                       if (newLinkLabel.trim() && newLinkUrl.trim()) {
-                        const newLinkId = `link-${Date.now()}`;
-                        const newLink: CustomLink = {
-                          id: newLinkId,
-                          label: newLinkLabel.trim(),
-                          url: newLinkUrl.trim(),
-                          icon: newLinkIcon || undefined,
-                          order: customLinks.length,
-                        };
-                        setCustomLinks(prev => [...prev, newLink]);
-                        setLinksSettings(prev => ({
-                          ...prev,
-                          linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLinkId]
-                        }));
+                        if (editingLinkId) {
+                          // Update existing link
+                          setCustomLinks(prev => prev.map(link =>
+                            link.id === editingLinkId
+                              ? { ...link, label: newLinkLabel.trim(), url: newLinkUrl.trim(), icon: newLinkIcon || undefined }
+                              : link
+                          ));
+                          setEditingLinkId(null);
+                        } else {
+                          // Add new link
+                          const newLinkId = `link-${Date.now()}`;
+                          const newLink: CustomLink = {
+                            id: newLinkId,
+                            label: newLinkLabel.trim(),
+                            url: newLinkUrl.trim(),
+                            icon: newLinkIcon || undefined,
+                            order: customLinks.length,
+                          };
+                          setCustomLinks(prev => [...prev, newLink]);
+                          setLinksSettings(prev => ({
+                            ...prev,
+                            linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLinkId]
+                          }));
+                        }
                         setNewLinkLabel('');
                         setNewLinkUrl('');
                         setNewLinkIcon(null);
@@ -7292,12 +7382,31 @@ function AgentPagesSection({
                       }
                     }}
                     disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
-                    className="px-3 py-1.5 rounded text-xs font-medium bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className={`px-3 py-1.5 rounded text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                      editingLinkId
+                        ? 'bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30'
+                        : 'bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20'
+                    }`}
                   >
-                    + Add
+                    {editingLinkId ? 'Save' : '+ Add'}
                   </button>
+                  {editingLinkId && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingLinkId(null);
+                        setNewLinkLabel('');
+                        setNewLinkUrl('');
+                        setNewLinkIcon(null);
+                      }}
+                      className="px-2 py-1.5 rounded text-xs font-medium bg-white/5 border border-white/10 text-[#e5e4dd]/60 hover:bg-white/10 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </div>
               </div>
+              </div> {/* End of BUTTON LINKS SECTION wrapper */}
             </div> {/* End of LINKS SECTION */}
               </div> {/* End RIGHT COLUMN */}
             </div> {/* End Desktop Two-Column Grid */}

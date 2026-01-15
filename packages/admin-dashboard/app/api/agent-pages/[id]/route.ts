@@ -123,8 +123,6 @@ export async function PATCH(
       phone,
       show_phone,
       phone_text_only,
-      show_call_button,
-      show_text_button,
       profile_image_url,
       facebook_url,
       instagram_url,
@@ -149,8 +147,7 @@ export async function PATCH(
     if (phone !== undefined) updates.phone = phone || null;
     if (show_phone !== undefined) updates.show_phone = show_phone;
     if (phone_text_only !== undefined) updates.phone_text_only = phone_text_only;
-    if (show_call_button !== undefined) updates.show_call_button = show_call_button;
-    if (show_text_button !== undefined) updates.show_text_button = show_text_button;
+    // Note: show_call_button and show_text_button are stored in links_settings, not as separate columns
     if (profile_image_url !== undefined) updates.profile_image_url = profile_image_url || null;
     if (facebook_url !== undefined) updates.facebook_url = facebook_url || null;
     if (instagram_url !== undefined) updates.instagram_url = instagram_url || null;
