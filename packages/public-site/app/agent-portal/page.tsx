@@ -6263,6 +6263,43 @@ function AgentPagesSection({
                   </div>
                 </div>
               </div>
+
+              {/* Save Button - Under QR code, visible only >1650px */}
+              <div className="hidden min-[1650px]:block mt-3">
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving || !hasUnsavedChanges}
+                  className={`w-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ${
+                    !hasUnsavedChanges
+                      ? 'opacity-50 cursor-not-allowed'
+                      : ''
+                  } ${
+                    showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
+                  }`}
+                  style={{
+                    background: showSaveSuccess
+                      ? '#22c55e'
+                      : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
+                    border: '1px solid rgba(255, 215, 0, 0.5)',
+                  }}
+                >
+                  {showSaveSuccess ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Saved!</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                      </svg>
+                      <span>{isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}</span>
+                    </>
+                  )}
+                </button>
+              </div>
             </div> {/* End sticky wrapper */}
           </div>
 
@@ -6686,7 +6723,7 @@ function AgentPagesSection({
                     const customLink = customSocialLinks[slotIndex];
                     const isDisabled = filledSocialLinks >= 6 && !customLink?.url;
                     return (
-                      <div key={slotIndex} className="relative flex min-w-0 overflow-hidden">
+                      <div key={slotIndex} className="relative flex min-w-0">
                         <button
                           type="button"
                           onClick={() => !isDisabled && setShowSocialIconPicker(showSocialIconPicker === slotIndex ? null : slotIndex)}

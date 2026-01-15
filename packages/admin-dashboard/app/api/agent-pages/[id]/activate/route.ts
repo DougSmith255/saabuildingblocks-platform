@@ -109,18 +109,27 @@ export async function POST(
       activatedAt: updatedPage.activated_at,
     });
 
-    // Sync to Cloudflare KV for edge delivery
-    syncAgentPageToKV(updatedPage as AgentPageKVData)
-      .then(result => {
-        if (!result.success) {
-          console.error('KV sync failed on activate:', result.error);
-        } else {
-          console.log('Agent page synced to KV:', updatedPage.slug);
-        }
-      })
-      .catch(err => {
-        console.error('KV sync error on activate:', err);
-      });
+    // Fetch user's exp_email and legal_name for KV sync
+    const { data: userData } = await supabase
+      .from('users')
+      .select('exp_email, legal_name')
+      .eq('id', updatedPage.user_id)
+      .single();
+
+    // Merge user data with page data for KV
+    const kvData: AgentPageKVData = {
+      ...updatedPage,
+      exp_email: userData?.exp_email || null,
+      legal_name: userData?.legal_name || null,
+    };
+
+    // Sync to Cloudflare KV for edge delivery (await to ensure immediate visibility)
+    const kvSyncResult = await syncAgentPageToKV(kvData);
+    if (!kvSyncResult.success) {
+      console.error('KV sync failed on activate:', kvSyncResult.error);
+    } else {
+      console.log('Agent page synced to KV:', updatedPage.slug);
+    }
 
     return NextResponse.json({
       success: true,

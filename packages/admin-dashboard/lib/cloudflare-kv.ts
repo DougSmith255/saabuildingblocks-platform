@@ -40,6 +40,15 @@ export interface CustomLink {
   order: number;  // For drag-to-reorder
 }
 
+/**
+ * Custom social link (for social icons section)
+ */
+export interface CustomSocialLink {
+  id: string;
+  url: string;
+  icon: string;  // Icon name from LINK_ICONS
+}
+
 export interface AgentPageKVData {
   id: string;
   user_id: string;
@@ -57,7 +66,10 @@ export interface AgentPageKVData {
   tiktok_url: string | null;
   linkedin_url: string | null;
   custom_links: CustomLink[]; // Custom link buttons for links page
+  custom_social_links: CustomSocialLink[]; // Custom social icons (max 2)
   links_settings: LinksSettings; // Global settings for links page
+  show_call_button: boolean; // Show phone call button
+  show_text_button: boolean; // Show text message button
   activated: boolean; // Whether page is publicly visible
   is_active?: boolean; // Alias for compatibility
   updated_at: string;
