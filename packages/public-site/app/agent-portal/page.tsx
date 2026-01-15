@@ -3049,10 +3049,17 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
   const showLeadersCall = isLeader === true;
   console.log('[TeamCallsSection] showLeadersCall computed:', showLeadersCall);
 
+  // State for copy feedback
+  const [copiedPassword, setCopiedPassword] = useState<string | null>(null);
+
+  const copyPassword = (password: string, id: string) => {
+    navigator.clipboard.writeText(password);
+    setCopiedPassword(id);
+    setTimeout(() => setCopiedPassword(null), 2000);
+  };
+
   return (
     <div className="space-y-4 sm:space-y-6 px-2 sm:px-4">
-      <h3 className="text-lg sm:text-xl lg:text-h3 text-center font-semibold">Mastermind Calls</h3>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
         <GenericCard padding="sm">
           <div className="space-y-2 sm:space-y-3">
@@ -3082,7 +3089,19 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 Past Calls
               </a>
             </div>
-            <p className="text-xs sm:text-sm text-[#e5e4dd]/70">Password: <span className="font-mono">487789</span></p>
+            <button
+              onClick={() => copyPassword('487789', 'connor')}
+              className="flex items-center gap-2 text-xs sm:text-sm text-[#e5e4dd]/70 hover:text-[#ffd700] transition-colors group"
+            >
+              <span>Password: <span className="font-mono">487789</span></span>
+              {copiedPassword === 'connor' ? (
+                <span className="text-[#00ff88] text-xs">Copied!</span>
+              ) : (
+                <svg className="w-4 h-4 opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              )}
+            </button>
           </div>
         </GenericCard>
 
@@ -3168,7 +3187,19 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
               >
                 Join Zoom Call
               </a>
-              <p className="text-xs sm:text-sm text-[#e5e4dd]/70">Password: <span className="font-mono">487789</span></p>
+              <button
+                onClick={() => copyPassword('487789', 'leaders')}
+                className="flex items-center gap-2 text-xs sm:text-sm text-[#e5e4dd]/70 hover:text-[#38bdf8] transition-colors group"
+              >
+                <span>Password: <span className="font-mono">487789</span></span>
+                {copiedPassword === 'leaders' ? (
+                  <span className="text-[#00ff88] text-xs">Copied!</span>
+                ) : (
+                  <svg className="w-4 h-4 opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                )}
+              </button>
             </div>
           </GenericCard>
         )}
