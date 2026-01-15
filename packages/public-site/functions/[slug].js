@@ -227,8 +227,8 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
     }
 
     .profile-image-container {
-      width: 180px;
-      height: 180px;
+      width: 144px;
+      height: 144px;
       margin-bottom: 1.5rem;
       position: relative;
     }
@@ -868,10 +868,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       pointer-events: none;
       z-index: 1;
-      width: clamp(420px, 52vw, 1000px);
+      width: clamp(420px, 90vw, 1000px);
       max-width: 95vw;
       aspect-ratio: 900 / 500;
       max-height: 55dvh;
+    }
+    @media (min-width: 768px) {
+      .hero-image-container {
+        width: clamp(420px, 52vw, 1000px);
+      }
     }
 
     .hero-3d-backdrop {
@@ -6237,8 +6242,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .profile-image-container {
-      width: 150px;
-      height: 150px;
+      width: 120px;
+      height: 120px;
       margin-bottom: 1rem;
       position: relative;
     }
