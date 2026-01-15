@@ -20,6 +20,13 @@ const shakeKeyframes = `
   80% { transform: translateX(2px); }
 }
 
+@keyframes shakeHover {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  50% { transform: translateX(1px); }
+  75% { transform: translateX(-1px); }
+}
+
 /* Custom checkbox styling - muted when unchecked, gold when checked */
 .agent-portal-root input[type="checkbox"] {
   appearance: none;
@@ -1535,7 +1542,7 @@ function AgentPortal() {
                         setShakingItem(item.id);
                         setTimeout(() => setShakingItem(null), 300);
                       }}
-                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200"
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200 hover:animate-[shakeHover_0.3s_ease-in-out]"
                       style={{
                         background: isActive
                           ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
