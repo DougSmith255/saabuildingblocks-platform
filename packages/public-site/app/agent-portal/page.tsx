@@ -5151,6 +5151,7 @@ interface LinksSettings {
   accentColor: string;
   iconStyle: 'light' | 'dark';
   font: 'synonym' | 'taskor';
+  nameWeight: 'bold' | 'normal'; // Name text weight
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
   linkOrder: string[]; // Order of all links including default buttons (join-team, learn-about) and custom link IDs
@@ -5160,6 +5161,7 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   accentColor: '#ffd700',
   iconStyle: 'dark',
   font: 'synonym',
+  nameWeight: 'bold', // Bold by default
   bio: '',
   showColorPhoto: false, // B&W by default
   linkOrder: ['join-team', 'learn-about'], // Default order: default buttons first
@@ -6367,7 +6369,7 @@ function AgentPagesSection({
                       const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
                       return (
                     <span
-                      className="font-bold text-xl text-center"
+                      className={`${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'} text-xl text-center`}
                       style={{
                         color: linksSettings.accentColor,
                         fontFamily: 'var(--font-taskor, sans-serif)',
@@ -6688,6 +6690,33 @@ function AgentPagesSection({
                           }`}
                         >
                           Taskor
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Name Weight</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'bold'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Bold
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'normal'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Regular
                         </button>
                       </div>
                     </div>
@@ -7428,6 +7457,34 @@ function AgentPagesSection({
                         </button>
                       </div>
                     </div>
+                    {/* Name Weight */}
+                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
+                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Weight</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'bold'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Bold
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'normal'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Regular
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -7928,7 +7985,7 @@ function AgentPagesSection({
               const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
               return (
             <span
-              className="font-bold text-2xl text-center"
+              className={`${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'} text-2xl text-center`}
               style={{
                 color: linksSettings.accentColor,
                 fontFamily: 'var(--font-taskor, sans-serif)',

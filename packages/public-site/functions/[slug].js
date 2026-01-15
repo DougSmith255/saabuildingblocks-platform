@@ -5957,6 +5957,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const accentColor = settings.accentColor || '#ffd700';
   const iconStyle = settings.iconStyle || 'light';
   const fontChoice = settings.font || 'synonym';
+  const nameWeight = settings.nameWeight || 'bold'; // Default to bold
   const bio = settings.bio || '';
   
   // Icon color based on style
@@ -6328,7 +6329,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
       font-size: clamp(1.75rem, 5vw, 2.5rem);
-      font-weight: 400;
+      font-weight: ${nameWeight === 'bold' ? '700' : '400'};
       letter-spacing: 0em;
       color: ${accentColor};
       line-height: 1.1;
@@ -6337,16 +6338,18 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       font-feature-settings: "ss01" 1;
       /* 3D perspective for neon sign depth effect */
       transform: perspective(800px) rotateX(12deg);
+      /* Subtle dark stroke for edge definition */
+      -webkit-text-stroke: 0.5px rgba(0,0,0,0.35);
       /* Multi-layer text-shadow - uses accent color for glow */
       text-shadow:
-        /* WHITE CORE (3) */
+        /* WHITE CORE (3) - tighter for sharper appearance */
+        0 0 0.005em #fff,
         0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        /* ACCENT COLOR GLOW (4) */
-        0 0 0.05em ${accentColor},
-        0 0 0.09em rgba(${rgbString}, 0.8),
-        0 0 0.13em rgba(${rgbString}, 0.55),
+        0 0 0.02em rgba(255,255,255,0.9),
+        /* ACCENT COLOR GLOW (4) - slightly tighter blur */
+        0 0 0.04em ${accentColor},
+        0 0 0.08em rgba(${rgbString}, 0.85),
+        0 0 0.12em rgba(${rgbString}, 0.6),
         0 0 0.18em rgba(${rgbString}, 0.35),
         /* METAL BACKING (4) - increased by ~1px for sharper outline */
         0.045em 0.045em 0 #2a2a2a,
