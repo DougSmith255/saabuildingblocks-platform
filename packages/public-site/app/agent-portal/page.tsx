@@ -4849,7 +4849,6 @@ const LINK_ICONS = [
 interface LinksSettings {
   accentColor: string;
   iconStyle: 'light' | 'dark';
-  socialIconStyle: 'light' | 'dark';
   font: 'synonym' | 'taskor';
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
@@ -4859,12 +4858,67 @@ interface LinksSettings {
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   accentColor: '#ffd700',
   iconStyle: 'dark',
-  socialIconStyle: 'light',
   font: 'synonym',
   bio: '',
   showColorPhoto: false, // B&W by default
   linkOrder: ['join-team', 'learn-about'], // Default order: default buttons first
 };
+
+// Helper function to ensure social icon color is visible on dark backgrounds
+// If the accent color is too dark, lighten it while preserving the hue
+function getVisibleSocialIconColor(hexColor: string): string {
+  // Parse hex to RGB
+  const hex = hexColor.replace('#', '');
+  const r = parseInt(hex.substring(0, 2), 16) / 255;
+  const g = parseInt(hex.substring(2, 4), 16) / 255;
+  const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+  // Calculate relative luminance
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+  // If luminance is above threshold, use the original color
+  if (luminance >= 0.35) {
+    return hexColor;
+  }
+
+  // Convert to HSL to lighten while preserving hue
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+
+  // Increase lightness to make it visible (target ~55% lightness minimum)
+  const newL = Math.max(0.55, l + (0.55 - l) * 1.5);
+  // Also boost saturation slightly for dark colors
+  const newS = Math.min(1, s * 1.2);
+
+  // Convert back to RGB
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+
+  const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
+  const p = 2 * newL - q;
+  const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+  const newG = Math.round(hue2rgb(p, q, h) * 255);
+  const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+
+  return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+}
 
 // Default button definitions
 const DEFAULT_BUTTONS = [
@@ -5977,7 +6031,7 @@ function AgentPagesSection({
 
                     {/* Social Icons - Compact */}
                     {filledSocialLinks > 0 && (() => {
-                      const socialIconColor = (linksSettings.socialIconStyle || 'light') === 'light' ? '#ffffff' : '#1a1a1a';
+                      const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
                       return (
                       <div className="flex gap-1.5 flex-wrap justify-center">
                         {formData.facebook_url && (
@@ -6233,33 +6287,6 @@ function AgentPagesSection({
                           onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
                           className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
                             linksSettings.iconStyle === 'dark'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Dark
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Social Icons</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            (linksSettings.socialIconStyle || 'light') === 'light'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Light
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            (linksSettings.socialIconStyle || 'light') === 'dark'
                               ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
                               : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                           }`}
@@ -7000,34 +7027,6 @@ function AgentPagesSection({
                         </button>
                       </div>
                     </div>
-                    {/* Social Icons */}
-                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Socials</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            (linksSettings.socialIconStyle || 'light') === 'light'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Light
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            (linksSettings.socialIconStyle || 'light') === 'dark'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Dark
-                        </button>
-                      </div>
-                    </div>
                     {/* Font */}
                     <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
                       <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Font</span>
@@ -7591,7 +7590,7 @@ function AgentPagesSection({
 
             {/* Social Icons */}
             {filledSocialLinks > 0 && (() => {
-              const socialIconColor = (linksSettings.socialIconStyle || 'light') === 'light' ? '#ffffff' : '#1a1a1a';
+              const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
               return (
               <div className="flex gap-2 flex-wrap justify-center">
                 {formData.facebook_url && (
