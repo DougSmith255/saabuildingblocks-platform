@@ -6331,7 +6331,11 @@ function AgentPagesSection({
                 <div className="rounded-xl bg-white p-4 border border-white/10">
                   <div className="flex flex-col items-center gap-3">
                     <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Link Page QR Code</span>
-                    <div ref={qrCodeRef} className="w-[200px] h-[200px]" />
+                    <div className="relative w-[200px] h-[200px]">
+                      {/* Off-black rounded background behind logo - positioned under the QR center */}
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[58px] h-[58px] bg-[#1a1a1a] rounded-xl z-0" />
+                      <div ref={qrCodeRef} className="relative w-full h-full z-10" />
+                    </div>
                     <button
                       onClick={downloadQRCode}
                       className="w-full py-2 rounded-lg text-xs font-medium bg-[#2a2a2a] text-white hover:bg-[#3a3a3a] transition-colors flex items-center justify-center gap-1.5"
