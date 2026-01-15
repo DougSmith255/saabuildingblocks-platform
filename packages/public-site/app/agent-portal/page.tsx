@@ -1631,7 +1631,7 @@ function AgentPortal() {
                   <button
                     type="button"
                     onClick={handleProfilePictureClick}
-                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700] transition-colors"
+                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors"
                   >
                     {user?.profilePictureUrl && !profileImageError ? (
                       <>
@@ -1976,7 +1976,7 @@ function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-[#808080]/50 hover:border-[#ffd700] transition-colors"
+                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors"
                 >
                   {user?.profilePictureUrl && !profileImageError ? (
                     <>
