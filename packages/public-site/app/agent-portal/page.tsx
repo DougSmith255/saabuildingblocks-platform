@@ -3863,17 +3863,16 @@ To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign →
           <p className="text-body-sm text-[#bfbdb0]/80">
             Watch this complete walkthrough before creating your landing pages.
           </p>
-          {/* Video container: 95% on mobile (<430px), clamped 40%-95% between 430-800px, 40% on desktop (>800px) */}
-          <div
-            className="relative aspect-video rounded-lg overflow-hidden bg-black/50"
-            style={{ width: 'clamp(40%, 95vw - 350px, 95%)', maxWidth: '100%' }}
-          >
-            <iframe
-              src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
-              className="absolute inset-0 w-full h-full"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-              allowFullScreen
-            />
+          {/* Video container: 95% on mobile, 40% on desktop (>800px) */}
+          <div className="w-[95%] min-[800px]:w-[40%]">
+            <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
+              <iframe
+                src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
+                className="absolute inset-0 w-full h-full border-0"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       </GenericCard>
