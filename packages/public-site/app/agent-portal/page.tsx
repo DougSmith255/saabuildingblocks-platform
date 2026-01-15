@@ -5972,6 +5972,7 @@ function AgentPagesSection({
 
   // TODO: Change to smartagentalliance.com when domain migration is complete
   const pageUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}`;
+  const pageUrlPreview = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}?preview=true`;
   const linktreeUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}-links`;
 
   // Download QR Code function
@@ -6080,7 +6081,7 @@ function AgentPagesSection({
                   <div className="flex justify-center pt-2 pb-4">
                     <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
                       <iframe
-                        src={pageUrl}
+                        src={pageUrlPreview}
                         className="border-0 absolute top-0 left-0"
                         style={{
                           width: '390px',
@@ -6258,7 +6259,7 @@ function AgentPagesSection({
             {pageData.activated && (generatedSlug || pageData.slug) ? (
               <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
                 <iframe
-                  src={pageUrl}
+                  src={pageUrlPreview}
                   className="border-0 absolute top-0 left-0"
                   style={{
                     width: '390px',

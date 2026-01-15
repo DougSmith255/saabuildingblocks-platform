@@ -5837,6 +5837,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       function initStarField() {
         const canvas = document.getElementById('star-canvas');
         if (!canvas) return;
+
+        // Hide star field in preview mode (agent portal iframe)
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('preview') === 'true') {
+          canvas.style.display = 'none';
+          return;
+        }
         const ctx = canvas.getContext('2d');
         let stars = [];
         let lastTime = 0;
