@@ -119,9 +119,12 @@ export async function PATCH(
       display_first_name,
       display_last_name,
       slug,
+      email,
       phone,
       show_phone,
       phone_text_only,
+      show_call_button,
+      show_text_button,
       profile_image_url,
       facebook_url,
       instagram_url,
@@ -142,9 +145,12 @@ export async function PATCH(
 
     if (display_first_name !== undefined) updates.display_first_name = display_first_name;
     if (display_last_name !== undefined) updates.display_last_name = display_last_name;
+    if (email !== undefined) updates.email = email || null;
     if (phone !== undefined) updates.phone = phone || null;
     if (show_phone !== undefined) updates.show_phone = show_phone;
     if (phone_text_only !== undefined) updates.phone_text_only = phone_text_only;
+    if (show_call_button !== undefined) updates.show_call_button = show_call_button;
+    if (show_text_button !== undefined) updates.show_text_button = show_text_button;
     if (profile_image_url !== undefined) updates.profile_image_url = profile_image_url || null;
     if (facebook_url !== undefined) updates.facebook_url = facebook_url || null;
     if (instagram_url !== undefined) updates.instagram_url = instagram_url || null;

@@ -5265,7 +5265,7 @@ function AgentPagesSection({
           ...formData,
           slug: generatedSlug, // Auto-generated from display name
           custom_links: customLinks,
-          custom_social_links: customSocialLinks,
+          custom_social_links: customSocialLinks.filter(link => link && link.url),
           links_settings: linksSettings,
         }),
       });
@@ -6746,13 +6746,23 @@ function AgentPagesSection({
                           onChange={(e) => {
                             const newUrl = e.target.value;
                             setCustomSocialLinks(prev => {
-                              const updated = [...prev];
-                              if (updated[slotIndex]) {
-                                updated[slotIndex] = { ...updated[slotIndex], url: newUrl };
-                              } else if (newUrl) {
-                                updated[slotIndex] = { id: `social-${slotIndex}`, url: newUrl, icon: 'Globe' };
+                              // Create array with 2 slots, preserving exact positions
+                              const updated: CustomSocialLink[] = [];
+                              // Ensure we have entries for both slots
+                              for (let i = 0; i < 2; i++) {
+                                if (i === slotIndex) {
+                                  // This is the slot being edited
+                                  updated[i] = {
+                                    id: prev[i]?.id || `social-${i}`,
+                                    url: newUrl,
+                                    icon: prev[i]?.icon || 'Globe'
+                                  };
+                                } else if (prev[i]) {
+                                  // Preserve existing entry
+                                  updated[i] = prev[i];
+                                }
                               }
-                              return updated.filter(link => link?.url);
+                              return updated;
                             });
                             setHasUnsavedChanges(true);
                           }}
@@ -6770,11 +6780,20 @@ function AgentPagesSection({
                                   type="button"
                                   onClick={() => {
                                     setCustomSocialLinks(prev => {
-                                      const updated = [...prev];
-                                      if (updated[slotIndex]) {
-                                        updated[slotIndex] = { ...updated[slotIndex], icon: icon.name };
-                                      } else {
-                                        updated[slotIndex] = { id: `social-${slotIndex}`, url: '', icon: icon.name };
+                                      // Create array with 2 slots, preserving exact positions
+                                      const updated: CustomSocialLink[] = [];
+                                      for (let i = 0; i < 2; i++) {
+                                        if (i === slotIndex) {
+                                          // This is the slot being edited
+                                          updated[i] = {
+                                            id: prev[i]?.id || `social-${i}`,
+                                            url: prev[i]?.url || '',
+                                            icon: icon.name
+                                          };
+                                        } else if (prev[i]) {
+                                          // Preserve existing entry
+                                          updated[i] = prev[i];
+                                        }
                                       }
                                       return updated;
                                     });

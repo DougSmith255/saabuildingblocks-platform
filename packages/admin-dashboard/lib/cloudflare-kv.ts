@@ -55,6 +55,7 @@ export interface AgentPageKVData {
   slug: string;
   display_first_name: string;
   display_last_name: string;
+  email: string | null; // Agent's contact email for Email button
   profile_image_url: string | null;
   phone: string | null;
   show_phone: boolean;

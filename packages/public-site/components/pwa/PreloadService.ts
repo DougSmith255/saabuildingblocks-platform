@@ -56,41 +56,15 @@ async function preloadStaticImages(): Promise<void> {
 }
 
 /**
- * Fetch user data from API
- * Falls back to cached localStorage data if API fails
+ * Get user data from localStorage cache (internal use with response wrapper)
+ * Auth is handled via JWT token in localStorage, no API needed
  */
-async function fetchUserData(token: string): Promise<any> {
-  try {
-    const response = await fetch('https://saabuildingblocks.com/api/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      // API failed, fall back to cached data
-      console.warn('[PreloadService] /api/auth/me returned', response.status, '- using cached user data');
-      return getCachedUserDataForFallback();
-    }
-
-    return response.json();
-  } catch (err) {
-    // Network error, fall back to cached data
-    console.warn('[PreloadService] /api/auth/me network error - using cached user data');
-    return getCachedUserDataForFallback();
-  }
-}
-
-/**
- * Get cached user data as fallback when API fails
- */
-function getCachedUserDataForFallback(): any {
+function getCachedUserDataInternal(): { success: boolean; data: any } | null {
   if (typeof localStorage === 'undefined') return null;
   const cached = localStorage.getItem('agent_portal_user');
   if (cached) {
     try {
       const userData = JSON.parse(cached);
-      // Wrap in expected response format
       return { success: true, data: userData };
     } catch {
       return null;
@@ -100,21 +74,19 @@ function getCachedUserDataForFallback(): any {
 }
 
 /**
- * Fetch agent page data
+ * Get cached agent page data from localStorage
  */
-async function fetchAgentPageData(token: string, userId: string): Promise<any> {
-  const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${userId}`, {
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    // Agent page might not exist yet, that's okay
-    return null;
+function getCachedAgentPageData(): any {
+  if (typeof localStorage === 'undefined') return null;
+  const cached = localStorage.getItem('agent_portal_page_data');
+  if (cached) {
+    try {
+      return JSON.parse(cached);
+    } catch {
+      return null;
+    }
   }
-
-  return response.json();
+  return null;
 }
 
 /**
@@ -137,48 +109,31 @@ export async function preloadAppData(): Promise<PreloadResult> {
     : null;
 
   if (token) {
-    // Fetch user data
-    try {
-      const response = await fetchUserData(token);
-      console.log('[PreloadService] API response:', JSON.stringify(response, null, 2));
-      console.log('[PreloadService] response.data.is_leader:', response?.data?.is_leader, 'type:', typeof response?.data?.is_leader);
-      if (response.success && response.data) {
-        userData = response.data;
-        console.log('[PreloadService] userData.is_leader after assignment:', userData.is_leader);
+    // Load user data from localStorage cache (no API calls needed)
+    const response = getCachedUserDataInternal();
+    if (response?.success && response.data) {
+      userData = response.data;
 
-        // Cache user data in localStorage for faster subsequent loads
-        localStorage.setItem('agent_portal_user', JSON.stringify(userData));
+      // Queue profile picture for preloading (WAIT for it)
+      if (userData.profilePictureUrl || userData.profile_picture_url) {
+        const profileUrl = userData.profilePictureUrl || userData.profile_picture_url;
+        imagePreloadPromises.push(preloadImage(profileUrl));
+      }
 
-        // Queue profile picture for preloading (WAIT for it)
-        if (userData.profilePictureUrl || userData.profile_picture_url) {
-          const profileUrl = userData.profilePictureUrl || userData.profile_picture_url;
-          imagePreloadPromises.push(preloadImage(profileUrl));
-        }
+      // Load agent page data from cache
+      const pageResponse = getCachedAgentPageData();
+      if (pageResponse) {
+        agentPageData = pageResponse;
 
-        // Fetch agent page data
-        try {
-          const pageResponse = await fetchAgentPageData(token, userData.id);
-          if (pageResponse) {
-            agentPageData = pageResponse;
-
-            // Queue Linktree profile image for preloading if different from main profile
-            if (pageResponse.page?.profile_image_url) {
-              const linktreeProfileUrl = pageResponse.page.profile_image_url;
-              // Only preload if it's different from the main profile picture
-              const mainProfileUrl = userData.profilePictureUrl || userData.profile_picture_url;
-              if (linktreeProfileUrl !== mainProfileUrl) {
-                imagePreloadPromises.push(preloadImage(linktreeProfileUrl));
-              }
-            }
+        // Queue Linktree profile image for preloading if different from main profile
+        if (pageResponse.page?.profile_image_url) {
+          const linktreeProfileUrl = pageResponse.page.profile_image_url;
+          const mainProfileUrl = userData.profilePictureUrl || userData.profile_picture_url;
+          if (linktreeProfileUrl !== mainProfileUrl) {
+            imagePreloadPromises.push(preloadImage(linktreeProfileUrl));
           }
-        } catch (err) {
-          // Agent page fetch failed, not critical
-          errors.push('Agent page data unavailable');
         }
       }
-    } catch (err) {
-      errors.push('User data fetch failed');
-      console.warn('User data preload failed:', err);
     }
   }
 

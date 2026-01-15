@@ -5991,8 +5991,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
   // Contact buttons (Email, Phone, Text) - segmented button style
   const contactButtons = [];
-  if (agent.exp_email) {
-    contactButtons.push({ type: 'email', label: 'Email', href: `mailto:${escapeHTML(agent.exp_email)}`, icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
+  if (agent.email) {
+    contactButtons.push({ type: 'email', label: 'Email', href: `mailto:${escapeHTML(agent.email)}`, icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
   }
   if (agent.phone && agent.show_call_button) {
     contactButtons.push({ type: 'call', label: 'Phone', href: `tel:${escapeHTML(agent.phone)}`, icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
@@ -6002,7 +6002,6 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   }
 
   const contactButtonCount = contactButtons.length;
-  const showContactText = contactButtonCount < 3; // Icons only for 3 buttons
 
   const contactButtonsHTML = contactButtonCount > 0 ? `
     <div class="contact-buttons">
@@ -6014,23 +6013,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
         return `
           <a href="${btn.href}" class="contact-btn ${roundedClass}">
-            ${isOnly ? `
-              <div class="contact-btn-single">
-                <svg class="contact-icon contact-icon-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="${btn.icon}"/>
-                </svg>
-                <span>${btn.label}</span>
-              </div>
-            ` : showContactText ? `
-              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="${btn.icon}"/>
-              </svg>
-              <span>${btn.label}</span>
-            ` : `
-              <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="${btn.icon}"/>
-              </svg>
-            `}
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+              <path stroke-linecap="round" stroke-linejoin="round" d="${btn.icon}"/>
+            </svg>
+            <span>${btn.label}</span>
           </a>
         `;
       }).join('')}
@@ -6298,21 +6284,28 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .social-link {
-      width: 44px;
-      height: 44px;
-      background: ${accentColor};
+      width: 32px;
+      height: 32px;
+      background: rgba(${rgbString}, 0.13);
+      border: 1px solid rgba(${rgbString}, 0.25);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: ${iconColor};
+      color: ${accentColor};
       text-decoration: none;
       transition: all 0.2s ease;
     }
 
+    .social-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
     .social-link:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(${rgbString}, 0.4);
+      background: rgba(${rgbString}, 0.25);
+      border-color: rgba(${rgbString}, 0.4);
     }
 
     .phone-section {
@@ -6355,64 +6348,37 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       justify-content: center;
       gap: 0.5rem;
       width: 100%;
-      padding: 0.875rem 1.25rem;
-      background: rgba(255, 255, 255, 0.1);
-      color: #e5e4dd;
+      padding: 0.75rem 1rem;
+      background: ${accentColor};
+      color: ${iconColor};
       text-decoration: none;
-      border-radius: 12px;
+      border-radius: 8px;
       font-weight: 500;
-      font-size: 0.9375rem;
+      font-size: 0.875rem;
       text-align: center;
       transition: all 0.2s ease;
-      border: 1px solid rgba(${rgbString}, 0.2);
+      border: none;
       font-family: ${fontFamily};
       cursor: pointer;
     }
 
     .link-button:hover {
-      background: rgba(${rgbString}, 0.15);
-      border-color: rgba(${rgbString}, 0.4);
-      transform: translateY(-1px);
+      transform: scale(1.01);
+      filter: brightness(1.1);
     }
 
     .link-button .link-icon {
       flex-shrink: 0;
+      position: absolute;
+      left: 1rem;
     }
 
-    .link-button.custom {
-      background: ${accentColor};
-      color: ${iconColor};
-      border: none;
-      font-weight: 600;
-      box-shadow: 0 4px 15px rgba(${rgbString}, 0.3);
-    }
-
-    .link-button.custom:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(${rgbString}, 0.4);
-    }
-
-    .link-button.primary {
-      background: ${accentColor};
-      color: ${iconColor};
-      border: none;
-      font-weight: 600;
-      box-shadow: 0 4px 15px rgba(${rgbString}, 0.3);
-    }
-
-    .link-button.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(${rgbString}, 0.4);
-    }
-
+    .link-button.custom,
+    .link-button.primary,
     .link-button.secondary {
-      background: rgba(${rgbString}, 0.1);
-      border: 1px solid rgba(${rgbString}, 0.3);
-    }
-
-    .link-button.secondary:hover {
-      background: rgba(${rgbString}, 0.2);
-      border-color: rgba(${rgbString}, 0.5);
+      background: ${accentColor};
+      color: ${iconColor};
+      border: none;
     }
 
     /* Contact Buttons - Segmented Style */
@@ -6440,7 +6406,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .contact-btn:hover {
-      transform: scale(1.01);
+      filter: brightness(1.1);
     }
 
     .contact-btn.rounded-all {
@@ -6455,21 +6421,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       border-radius: 0 12px 12px 0;
     }
 
-    .contact-btn-single {
-      position: relative;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
     .contact-icon {
       flex-shrink: 0;
-    }
-
-    .contact-icon-left {
-      position: absolute;
-      left: 0.75rem;
     }
 
     .footer {
@@ -6669,7 +6622,6 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     <h1>${escapeHTML(fullName)}</h1>
     ${bioHTML}
-    <p class="subtitle">Real Estate Agent @ eXp Realty</p>
 
     ${socialLinks.length > 0 ? `
     <div class="social-links">
