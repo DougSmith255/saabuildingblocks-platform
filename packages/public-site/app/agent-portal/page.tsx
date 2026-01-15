@@ -6008,11 +6008,11 @@ function AgentPagesSection({
                           0 0 0.5em ${linksSettings.accentColor}20,
                           0 0 0.8em ${linksSettings.accentColor}15,
                           0 0 1.2em ${linksSettings.accentColor}10,
-                          /* METAL BACKING */
-                          0.03em 0.03em 0 #2a2a2a,
-                          0.045em 0.045em 0 #1a1a1a,
-                          0.06em 0.06em 0 #0f0f0f,
-                          0.075em 0.075em 0 #080808
+                          /* METAL BACKING - increased for sharper outline */
+                          0.045em 0.045em 0 #2a2a2a,
+                          0.06em 0.06em 0 #1a1a1a,
+                          0.075em 0.075em 0 #0f0f0f,
+                          0.09em 0.09em 0 #080808
                         `,
                         filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.1) drop-shadow(0 0 0.15em ${linksSettings.accentColor}25)`,
                       }}
@@ -7569,9 +7569,10 @@ function AgentPagesSection({
                   0 0 0.15em ${linksSettings.accentColor}40,
                   0 0 0.3em ${linksSettings.accentColor}30,
                   0 0 0.5em ${linksSettings.accentColor}20,
-                  0.03em 0.03em 0 #2a2a2a,
-                  0.045em 0.045em 0 #1a1a1a,
-                  0.06em 0.06em 0 #0f0f0f
+                  0.045em 0.045em 0 #2a2a2a,
+                  0.06em 0.06em 0 #1a1a1a,
+                  0.075em 0.075em 0 #0f0f0f,
+                  0.09em 0.09em 0 #080808
                 `,
                 filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.1) drop-shadow(0 0 0.15em ${linksSettings.accentColor}25)`,
               }}

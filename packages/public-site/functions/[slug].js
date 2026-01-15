@@ -5975,6 +5975,61 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const rgb = hexToRgb(accentColor);
   const rgbString = `${rgb.r}, ${rgb.g}, ${rgb.b}`;
 
+  // Auto-brighten dark accent colors for social icons
+  const getVisibleSocialIconColor = (hexColor) => {
+    const hex = hexColor.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16) / 255;
+    const g = parseInt(hex.substring(2, 4), 16) / 255;
+    const b = parseInt(hex.substring(4, 6), 16) / 255;
+
+    // Calculate relative luminance
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+
+    // If luminance is above threshold, use the original color
+    if (luminance >= 0.35) {
+      return hexColor;
+    }
+
+    // Convert to HSL to lighten while preserving hue
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h = 0, s = 0, l = (max + min) / 2;
+
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+        case g: h = ((b - r) / d + 2) / 6; break;
+        case b: h = ((r - g) / d + 4) / 6; break;
+      }
+    }
+
+    // Increase lightness to make it visible
+    const newL = Math.max(0.55, l + (0.55 - l) * 1.5);
+    const newS = Math.min(1, s * 1.2);
+
+    // Convert back to RGB
+    const hue2rgb = (p, q, t) => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1/6) return p + (q - p) * 6 * t;
+      if (t < 1/2) return q;
+      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+      return p;
+    };
+
+    const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
+    const p = 2 * newL - q;
+    const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
+    const newG = Math.round(hue2rgb(p, q, h) * 255);
+    const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
+
+    return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
+  };
+
+  const socialIconColor = getVisibleSocialIconColor(accentColor);
+
   // Curated icon set (matching dashboard)
   const LINK_ICONS = {
     'Home': 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10',
@@ -6293,11 +6348,11 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         0 0 0.09em rgba(${rgbString}, 0.8),
         0 0 0.13em rgba(${rgbString}, 0.55),
         0 0 0.18em rgba(${rgbString}, 0.35),
-        /* METAL BACKING (4) */
-        0.03em 0.03em 0 #2a2a2a,
-        0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f,
-        0.075em 0.075em 0 #080808;
+        /* METAL BACKING (4) - increased by ~1px for sharper outline */
+        0.045em 0.045em 0 #2a2a2a,
+        0.06em 0.06em 0 #1a1a1a,
+        0.075em 0.075em 0 #0f0f0f,
+        0.09em 0.09em 0 #080808;
       /* GPU-accelerated depth shadow - uses accent color */
       filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25));
       /* Glow Breathe animation - slow dramatic pulse */
@@ -6347,7 +6402,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       display: flex;
       align-items: center;
       justify-content: center;
-      color: ${accentColor};
+      color: ${socialIconColor};
       text-decoration: none;
       transition: all 0.2s ease;
     }
