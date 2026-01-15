@@ -3863,17 +3863,17 @@ To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign →
           <p className="text-body-sm text-[#bfbdb0]/80">
             Watch this complete walkthrough before creating your landing pages.
           </p>
-          <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black/50">
+          {/* Video container: 95% on mobile (<430px), clamped 40%-95% between 430-800px, 40% on desktop (>800px) */}
+          <div
+            className="relative aspect-video rounded-lg overflow-hidden bg-black/50"
+            style={{ width: 'clamp(40%, 95vw - 350px, 95%)', maxWidth: '100%' }}
+          >
             <iframe
-              src="https://customer-2twfsluc6inah5at.cloudflarestream.com/3f4e9c8a7b2d1e5f6a0c9b8d7e2f3a4b/iframe?controls=true&letterboxColor=transparent"
+              src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&letterboxColor=transparent"
               className="absolute inset-0 w-full h-full"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
               allowFullScreen
             />
-            {/* Fallback message if video doesn't load */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <p className="text-[#bfbdb0]/50 text-sm">Video: How to Collect Leads with a BoldTrail Landing Page</p>
-            </div>
           </div>
         </div>
       </GenericCard>
