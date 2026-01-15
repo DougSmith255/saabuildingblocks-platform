@@ -1222,6 +1222,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       transition: all 0.7s ease-out;
       opacity: 0;
       transform: translateY(30px);
+      overflow: hidden;
+    }
+    /* On mobile, use smaller text to prevent overflow */
+    @media (max-width: 767px) {
+      .why-exp-card p {
+        font-size: 14px !important;
+      }
     }
     .why-exp-card.visible {
       opacity: 1;
@@ -2128,7 +2135,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       z-index: 100001;
       width: auto;
       max-width: 95vw;
+      max-height: 90vh;
       margin: auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .tool-modal {
@@ -2137,7 +2147,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border: 1px solid rgba(255,215,0,0.3);
       border-radius: 16px;
       padding: 0;
-      overflow: hidden;
+      overflow: visible;
       box-sizing: border-box;
       box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
     }
@@ -2200,15 +2210,20 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
 
     @media (max-width: 768px) {
+      .tool-modal-wrapper {
+        max-height: 85vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
       #calculator-modal .tool-modal iframe {
         width: 95vw;
-        height: auto;
-        max-height: 85vh;
+        height: 80vh;
+        min-height: 600px;
       }
       #revshare-modal .tool-modal iframe {
         width: 95vw;
-        height: auto;
-        max-height: 90vh;
+        height: 85vh;
+        min-height: 700px;
       }
     }
 
@@ -2950,9 +2965,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       }
     }
     .built-future-card {
-      padding: 2rem;
+      padding: 1rem;
       border-radius: 1rem;
-      min-height: 380px;
+      min-height: 280px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -2960,6 +2975,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       overflow: hidden;
       transition: background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
+    }
+    @media (min-width: 768px) {
+      .built-future-card {
+        padding: 2rem;
+        min-height: 380px;
+      }
     }
     .built-future-card-inactive {
       background: linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98));
@@ -5463,8 +5484,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 25% on mobile, 40% on desktop (moved up so progress bar is visible)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 25%' : 'center 40%';
+        // Pin trigger: 40% on mobile, 45% on desktop
+        var pinStartHorizontal = isMobileHorizontal ? 'center 55%' : 'center 45%';
         // Shorter scroll range on mobile to reduce dead space at end
         var scrollRangeHorizontal = isMobileHorizontal ? '+=150%' : '+=300%';
         ScrollTrigger.create({

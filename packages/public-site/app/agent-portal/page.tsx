@@ -5014,7 +5014,6 @@ function AgentPagesSection({
 
   // Links page global settings state - initialize from preloaded data if available
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
-  const [showColorPicker, setShowColorPicker] = useState(false);
   const [showStylesModal, setShowStylesModal] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
 
@@ -6173,45 +6172,29 @@ function AgentPagesSection({
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
-                  <div className="space-y-3">
+                  <div className="space-y-2">
+                    <HexColorPicker
+                      color={linksSettings.accentColor}
+                      onChange={(color) => {
+                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                        setHasUnsavedChanges(true);
+                      }}
+                      style={{ width: '100%', height: '120px' }}
+                    />
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setShowColorPicker(!showColorPicker)}
-                        className="w-10 h-10 rounded-lg cursor-pointer border border-white/20 transition-all hover:border-white/40 hover:scale-105"
+                      <div
+                        className="w-8 h-8 rounded-lg border border-white/20 flex-shrink-0"
                         style={{ backgroundColor: linksSettings.accentColor }}
-                        title="Open color picker"
                       />
-                      <input
-                        type="text"
-                        value={linksSettings.accentColor}
-                        onChange={(e) => {
-                          const hex = e.target.value;
-                          if (/^#[0-9A-Fa-f]{0,6}$/.test(hex) || hex === '') {
-                            setLinksSettings(prev => ({ ...prev, accentColor: hex || '#' }));
-                            setHasUnsavedChanges(true);
-                          }
+                      <HexColorInput
+                        color={linksSettings.accentColor}
+                        onChange={(color) => {
+                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                          setHasUnsavedChanges(true);
                         }}
-                        className="min-w-[90px] flex-1 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                        placeholder="#ffd700"
+                        prefixed={true}
+                        className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
                       />
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81', '#f472b6', '#38bdf8', '#fb923c', '#4ade80'].map(color => (
-                        <button
-                          key={color}
-                          type="button"
-                          onClick={() => {
-                            setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                            setHasUnsavedChanges(true);
-                          }}
-                          className={`w-6 h-6 rounded transition-all ${
-                            linksSettings.accentColor === color ? 'ring-2 ring-white scale-110' : 'hover:scale-110'
-                          }`}
-                          style={{ backgroundColor: color }}
-                          title={color}
-                        />
-                      ))}
                     </div>
                   </div>
                 </div>
@@ -6920,77 +6903,29 @@ function AgentPagesSection({
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
-                  <div className="space-y-3">
-                    {/* Color Preview & Hex Input */}
+                  <div className="space-y-2">
+                    <HexColorPicker
+                      color={linksSettings.accentColor}
+                      onChange={(color) => {
+                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                        setHasUnsavedChanges(true);
+                      }}
+                      style={{ width: '100%', height: '120px' }}
+                    />
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setShowColorPicker(!showColorPicker)}
-                        className="w-10 h-10 rounded-lg cursor-pointer border border-white/20 transition-all hover:border-white/40 hover:scale-105"
+                      <div
+                        className="w-8 h-8 rounded-lg border border-white/20 flex-shrink-0"
                         style={{ backgroundColor: linksSettings.accentColor }}
-                        title="Open color picker"
                       />
-                      <input
-                        type="text"
-                        value={linksSettings.accentColor}
-                        onChange={(e) => {
-                          const hex = e.target.value;
-                          if (/^#[0-9A-Fa-f]{0,6}$/.test(hex) || hex === '') {
-                            setLinksSettings(prev => ({ ...prev, accentColor: hex || '#' }));
-                            setHasUnsavedChanges(true);
-                          }
+                      <HexColorInput
+                        color={linksSettings.accentColor}
+                        onChange={(color) => {
+                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                          setHasUnsavedChanges(true);
                         }}
-                        className="min-w-[90px] flex-1 px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                        placeholder="#ffd700"
+                        prefixed={true}
+                        className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
                       />
-                    </div>
-
-                    {/* Full Color Picker */}
-                    {showColorPicker && (
-                      <div className="relative">
-                        <div className="fixed inset-0 z-40" onClick={() => setShowColorPicker(false)} />
-                        <div className="relative z-50 p-3 rounded-lg shadow-xl border border-white/20 bg-[#1a1a1a]">
-                          <HexColorPicker
-                            color={linksSettings.accentColor}
-                            onChange={(color) => {
-                              setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                              setHasUnsavedChanges(true);
-                            }}
-                            style={{ width: '100%' }}
-                          />
-                          <div className="mt-2 flex items-center gap-2">
-                            <span className="text-xs text-[#e5e4dd]/50">#</span>
-                            <HexColorInput
-                              color={linksSettings.accentColor}
-                              onChange={(color) => {
-                                setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                                setHasUnsavedChanges(true);
-                              }}
-                              prefixed={false}
-                              className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Quick Presets */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {['#ffd700', '#ff6b6b', '#22c55e', '#45b7d1', '#96ceb4', '#ff9f43', '#a55eea', '#26de81', '#f472b6', '#38bdf8', '#fb923c', '#4ade80'].map(color => (
-                        <button
-                          key={color}
-                          type="button"
-                          onClick={() => {
-                            setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                            setHasUnsavedChanges(true);
-                          }}
-                          className={`w-6 h-6 rounded transition-all ${
-                            linksSettings.accentColor === color ? 'ring-2 ring-white scale-110' : 'hover:scale-110'
-                          }`}
-                          style={{ backgroundColor: color }}
-                          title={color}
-                        />
-                      ))}
                     </div>
                   </div>
                 </div>
