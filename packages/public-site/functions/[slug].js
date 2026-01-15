@@ -1567,13 +1567,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     }
     .why-only-card-stack {
       position: relative;
-      height: 280px;
+      height: 310px;
       width: 100%;
       perspective: 1200px;
     }
     @media (min-width: 768px) {
       .why-only-card-stack {
-        height: 340px;
+        height: 370px;
       }
     }
     .why-only-card {
@@ -5463,12 +5463,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 50% on mobile (was 60%, moved up 50px), 50% on desktop
-        var pinStartHorizontal = isMobileHorizontal ? 'center 50%' : 'center 50%';
+        // Pin trigger: 35% on mobile, 40% on desktop (moved up so progress bar is visible)
+        var pinStartHorizontal = isMobileHorizontal ? 'center 35%' : 'center 40%';
+        // Shorter scroll range on mobile to reduce dead space at end
+        var scrollRangeHorizontal = isMobileHorizontal ? '+=150%' : '+=300%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,
-          end: '+=300%',
+          end: scrollRangeHorizontal,
           pin: true,
           pinSpacing: true,
           scrub: 0.5,

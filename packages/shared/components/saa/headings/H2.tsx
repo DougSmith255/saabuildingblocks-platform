@@ -49,11 +49,14 @@ export default function H2({
   // NOTE: We do NOT use filter: drop-shadow() on H2 because it would affect
   // the metal backing plate (::before pseudo-element). H2 gets its visual
   // punch from the metal plate, not from an outer glow.
+  // Glow is spread out for softer, more diffused appearance (less blurry)
   const textShadow = `
     0 0 1px #fff,
     0 0 2px #fff,
-    0 0 4px rgba(255,255,255,0.8),
-    0 0 8px rgba(255,255,255,0.4)
+    0 0 8px rgba(255,255,255,0.4),
+    0 0 16px rgba(255,255,255,0.2),
+    0 0 28px rgba(255,255,255,0.1),
+    0 0 40px rgba(255,255,255,0.05)
   `;
 
   return (

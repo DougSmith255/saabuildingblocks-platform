@@ -259,14 +259,16 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: 50% on mobile (was 60%, moved up 50px), 50% on desktop
-    const pinStart = isMobile ? 'center 50%' : 'center 50%';
+    // Pin trigger: 35% on mobile, 40% on desktop (moved up so progress bar is visible)
+    const pinStart = isMobile ? 'center 35%' : 'center 40%';
+    // Shorter scroll range on mobile to reduce dead space at end
+    const scrollRange = isMobile ? '+=150%' : '+=300%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: triggerRef.current,
         start: pinStart,
-        end: '+=300%',
+        end: scrollRange,
         pin: triggerRef.current,
         pinSpacing: true,
         scrub: 0.5,
