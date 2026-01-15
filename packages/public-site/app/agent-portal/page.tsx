@@ -3863,15 +3863,26 @@ To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign →
           <p className="text-body-sm text-[#bfbdb0]/80">
             Watch this complete walkthrough before creating your landing pages.
           </p>
-          {/* Video container: 95% on mobile, 40% on desktop (>800px) */}
+          {/* Video container: 95% on mobile, 40% on desktop (>800px) with metal frame styling */}
           <div className="w-[95%] min-[800px]:w-[40%]">
-            <div className="relative aspect-video rounded-lg overflow-hidden bg-black">
-              <iframe
-                src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
-                className="absolute inset-0 w-full h-full border-0"
-                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-                allowFullScreen
-              />
+            {/* Metal frame wrapper */}
+            <div
+              className="rounded-xl overflow-hidden"
+              style={{
+                padding: '4px',
+                background: 'linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%)',
+                border: '1px solid rgba(150,150,150,0.4)',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              <div className="relative aspect-video rounded-lg overflow-hidden bg-[#1a1a1a]">
+                <iframe
+                  src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
+                  className="absolute inset-0 w-full h-full border-0"
+                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -6875,12 +6886,12 @@ function AgentPagesSection({
               <div className="space-y-6">
             {/* PROFILE SECTION - Photo, Name, Bio */}
             <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1200px]:block'}`}>
-              {/* Section Header */}
-              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-                <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              {/* Section Header - Full width background band on desktop */}
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
+                <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
-                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Profile</h3>
+                <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Profile</h3>
               </div>
                   {/* Profile Image - Compact */}
                   <div className="p-4 rounded-lg bg-black/20 border border-white/10">
@@ -7037,12 +7048,12 @@ function AgentPagesSection({
 
             {/* CONNECT SECTION - Social Links, Phone, Email */}
             <div className={`space-y-3 mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1200px]:block'}`}>
-              {/* Section Header */}
-              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-                <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              {/* Section Header - Full width background band on desktop */}
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
+                <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Connect</h3>
+                <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Connect</h3>
               </div>
 
               {/* Social Links */}
@@ -7258,12 +7269,12 @@ function AgentPagesSection({
               <div>
             {/* LINKS SECTION - Accent Color, Style, Button Links */}
             <div className={`space-y-3 mt-6 min-[1200px]:mt-0 ${activeTab === 'links' ? '' : 'hidden min-[1200px]:block'}`}>
-              {/* Section Header */}
-              <div className="flex items-center gap-2 pb-2 border-b border-white/10">
-                <svg className="w-4 h-4 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              {/* Section Header - Full width background band on desktop */}
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
+                <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
-                <h3 className="text-xs font-semibold text-[#22c55e] uppercase tracking-wide">Links</h3>
+                <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Links</h3>
               </div>
 
               {/* Accent Color + Style in a grid - Hidden on screens < 1565px (moved under preview) */}
