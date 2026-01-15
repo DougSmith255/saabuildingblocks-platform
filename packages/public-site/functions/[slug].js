@@ -2068,9 +2068,19 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       justify-content: center;
       padding: 1rem;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-container.open { display: flex; }
+
+    @media (max-width: 768px) {
+      .modal-container {
+        align-items: flex-start;
+        padding: 0.5rem;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+    }
 
     .modal-backdrop {
       position: fixed;
@@ -2135,10 +2145,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       z-index: 100001;
       width: auto;
       max-width: 95vw;
-      max-height: 90vh;
       margin: auto;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
     .tool-modal {
@@ -2147,9 +2154,17 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       border: 1px solid rgba(255,215,0,0.3);
       border-radius: 16px;
       padding: 0;
-      overflow: visible;
+      overflow: hidden;
       box-sizing: border-box;
       box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Close button for tool modals - positioned outside wrapper overflow */
+    .tool-modal-wrapper .modal-close-btn {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      z-index: 100010;
     }
 
     .tool-modal iframe {
@@ -2197,33 +2212,29 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     #calculator-modal .tool-modal iframe {
       width: 900px;
-      max-width: 95vw;
-      height: auto;
-      max-height: 85vh;
+      max-width: calc(100vw - 2rem);
+      height: 700px;
     }
 
     #revshare-modal .tool-modal iframe {
       width: 900px;
-      max-width: 95vw;
-      height: auto;
-      max-height: 85vh;
+      max-width: calc(100vw - 2rem);
+      height: 750px;
     }
 
     @media (max-width: 768px) {
       .tool-modal-wrapper {
-        max-height: 85vh;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        max-width: calc(100vw - 1rem);
       }
-      #calculator-modal .tool-modal iframe {
-        width: 95vw;
-        height: 80vh;
-        min-height: 600px;
+      .tool-modal-wrapper .modal-close-btn {
+        top: 8px;
+        right: 8px;
       }
+      #calculator-modal .tool-modal iframe,
       #revshare-modal .tool-modal iframe {
-        width: 95vw;
-        height: 85vh;
-        min-height: 700px;
+        width: 100%;
+        max-width: 100%;
+        height: calc(100vh - 100px);
       }
     }
 
