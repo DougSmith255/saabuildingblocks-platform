@@ -296,11 +296,10 @@ function H1({ children, className = '', style = {}, id, noAnimation = false }: H
           color: '#ffd700',
           transform: 'perspective(800px) rotateX(12deg)',
           fontFeatureSettings: '"ss01" 1',
-          WebkitTextStroke: '0.5px rgba(0,0,0,0.35)',
           textShadow: `
-            0 0 0.005em #fff, 0 0 0.01em #fff, 0 0 0.02em rgba(255,255,255,0.9),
-            0 0 0.04em #ffd700, 0 0 0.08em rgba(255, 215, 0, 0.85),
-            0 0 0.12em rgba(255, 215, 0, 0.6), 0 0 0.18em rgba(255, 179, 71, 0.35),
+            0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
+            0 0 0.05em #ffd700, 0 0 0.09em rgba(255, 215, 0, 0.8),
+            0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35),
             0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
             0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808
           `,

@@ -53,17 +53,15 @@ export default function H1({
           color: '#ffd700',
           transform: 'perspective(800px) rotateX(12deg)',
           fontFeatureSettings: '"ss01" 1',
-          /* Subtle dark stroke for edge definition */
-          WebkitTextStroke: '0.5px rgba(0,0,0,0.35)',
           textShadow: `
-            /* WHITE CORE (3) - tighter for sharper appearance */
-            0 0 0.005em #fff,
+            /* WHITE CORE (3) */
             0 0 0.01em #fff,
-            0 0 0.02em rgba(255,255,255,0.9),
-            /* GOLD GLOW (4) - slightly tighter blur */
-            0 0 0.04em #ffd700,
-            0 0 0.08em rgba(255, 215, 0, 0.85),
-            0 0 0.12em rgba(255, 215, 0, 0.6),
+            0 0 0.02em #fff,
+            0 0 0.03em rgba(255,255,255,0.8),
+            /* GOLD GLOW (4) - slightly reduced */
+            0 0 0.05em #ffd700,
+            0 0 0.09em rgba(255, 215, 0, 0.8),
+            0 0 0.13em rgba(255, 215, 0, 0.55),
             0 0 0.18em rgba(255, 179, 71, 0.35),
             /* METAL BACKING (4) */
             0.03em 0.03em 0 #2a2a2a,
