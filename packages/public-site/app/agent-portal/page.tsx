@@ -5572,8 +5572,8 @@ function AgentPagesSection({
         },
         imageOptions: {
           crossOrigin: 'anonymous',
-          margin: 8,
-          imageSize: 0.35,
+          margin: 4,
+          imageSize: 0.28,
         },
         cornersSquareOptions: {
           color: '#2a2a2a',
