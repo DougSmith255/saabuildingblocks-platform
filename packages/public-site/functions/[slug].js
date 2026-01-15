@@ -227,8 +227,8 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
     }
 
     .profile-image-container {
-      width: 144px;
-      height: 144px;
+      width: 180px;
+      height: 180px;
       margin-bottom: 1.5rem;
       position: relative;
     }
@@ -6237,8 +6237,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .profile-image-container {
-      width: 120px;
-      height: 120px;
+      width: 150px;
+      height: 150px;
       margin-bottom: 1rem;
       position: relative;
     }
