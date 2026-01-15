@@ -6373,11 +6373,13 @@ function AgentPagesSection({
                         fontFamily: 'var(--font-taskor, sans-serif)',
                         fontFeatureSettings: '"ss01" 1',
                         transform: 'perspective(800px) rotateX(12deg)',
+                        WebkitTextStroke: '0.5px rgba(0,0,0,0.4)',
                         textShadow: `
                           0 0 1px ${outlineColor},
-                          0 0 2px ${linksSettings.accentColor}60,
-                          0 0 4px ${linksSettings.accentColor}40,
-                          0 0 8px ${linksSettings.accentColor}20,
+                          0 0 1px ${outlineColor},
+                          0 0 2px ${linksSettings.accentColor}80,
+                          0 0 4px ${linksSettings.accentColor}50,
+                          0 0 8px ${linksSettings.accentColor}25,
                           1px 1px 0 #2a2a2a,
                           2px 2px 0 #1a1a1a
                         `,
@@ -7932,11 +7934,13 @@ function AgentPagesSection({
                 fontFamily: 'var(--font-taskor, sans-serif)',
                 fontFeatureSettings: '"ss01" 1',
                 transform: 'perspective(800px) rotateX(12deg)',
+                WebkitTextStroke: '0.5px rgba(0,0,0,0.4)',
                 textShadow: `
                   0 0 1px ${outlineColor},
-                  0 0 3px ${linksSettings.accentColor}60,
-                  0 0 6px ${linksSettings.accentColor}40,
-                  0 0 12px ${linksSettings.accentColor}20,
+                  0 0 1px ${outlineColor},
+                  0 0 3px ${linksSettings.accentColor}80,
+                  0 0 6px ${linksSettings.accentColor}50,
+                  0 0 12px ${linksSettings.accentColor}25,
                   1px 1px 0 #2a2a2a,
                   2px 2px 0 #1a1a1a,
                   3px 3px 0 #0f0f0f
