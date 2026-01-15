@@ -5915,9 +5915,9 @@ function AgentPagesSection({
         </div>
 
         {/* MOBILE PREVIEW BUTTON - Shows below 1100px */}
-        {/* - <950px: Full width (left-2 right-2), above mobile nav (bottom-[74px])
-            - 950-1100px: Account for desktop sidebar (left-[290px]), near bottom (bottom-[10px]) */}
-        <div className="fixed left-2 right-2 z-40 min-[1100px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px]">
+        {/* - <950px: Full width with 10px margins, 10px above mobile nav (64px) = bottom-[74px]
+            - 950-1100px: 10px from bottom, 10px gap from sidebar (280px) = left-[290px], 10px right margin */}
+        <div className="fixed left-[10px] right-[10px] z-40 min-[1100px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px] min-[950px]:right-[10px]">
           <button
             onClick={() => setShowAttractionPreview(true)}
             className="w-full py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
@@ -7505,9 +7505,9 @@ function AgentPagesSection({
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
         {/* Shows when <1200px (mobile UI).
-            - <950px: Full width (left-2 right-2), above mobile nav (bottom-[64px])
-            - 950-1200px: Account for desktop sidebar (left-[280px]), near bottom (bottom-4) */}
-        <div className="fixed left-2 right-2 z-40 min-[1200px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px]">
+            - <950px: Full width with 10px margins, 10px above mobile nav (64px) = bottom-[74px]
+            - 950-1200px: 10px from bottom, 10px gap from sidebar (280px) = left-[290px], 10px right margin */}
+        <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px] min-[950px]:right-[10px]">
           <div className="flex gap-2">
             {/* Preview Link Page Button - Shrinks from right when Save appears */}
             <button
