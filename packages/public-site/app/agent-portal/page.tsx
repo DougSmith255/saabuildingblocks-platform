@@ -3495,6 +3495,7 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
       >
         {currentPreview ? (
           <img
+            key={currentPreview}
             src={`https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${currentPreview}/mobile`}
             srcSet={`
               https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/template-${currentPreview}/mobile 400w,
@@ -3587,6 +3588,9 @@ function TemplatesSection() {
       <div className="text-center pb-2">
         <p className="text-sm text-[#e5e4dd]/60">
           Use your eXp credentials to access Canva templates
+        </p>
+        <p className="text-xs text-[#e5e4dd]/40 mt-1">
+          Toggle <span className="inline-block w-4 h-4 rounded bg-white text-black text-[9px] font-bold leading-4 align-middle">W</span> / <span className="inline-block w-4 h-4 rounded bg-black text-white border border-white/30 text-[9px] font-bold leading-4 align-middle">B</span> for white or black background versions
         </p>
       </div>
 
