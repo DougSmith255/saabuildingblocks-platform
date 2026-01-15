@@ -3887,157 +3887,159 @@ To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign →
   ];
 
   return (
-    <div className="space-y-6 px-2 sm:px-4">
-      {/* Video Tutorial */}
-      <GenericCard padding="md">
+    <div className="space-y-4 px-2 sm:px-4">
+      {/* Desktop: 2-column layout | Mobile: stacked */}
+      <div className="grid grid-cols-1 min-[1100px]:grid-cols-[minmax(300px,400px)_1fr] gap-4">
+        {/* LEFT COLUMN - Video + Quick Guide */}
         <div className="space-y-4">
-          <h3 className="text-h5 text-[#ffd700] flex items-center gap-2">
-            <Video className="w-5 h-5" />
-            Video Tutorial
-          </h3>
-          <p className="text-body-sm text-[#bfbdb0]/80">
-            Watch this complete walkthrough before creating your landing pages.
-          </p>
-          {/* Video container: 95% on mobile, 40% on desktop (>800px) with metal frame styling */}
-          <div className="w-[95%] min-[800px]:w-[40%]">
-            {/* Metal frame wrapper */}
-            <div
-              className="rounded-xl overflow-hidden"
-              style={{
-                padding: '4px',
-                background: 'linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%)',
-                border: '1px solid rgba(150,150,150,0.4)',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5)',
-              }}
-            >
-              <div className="relative aspect-video rounded-lg overflow-hidden bg-[#1a1a1a]">
-                <iframe
-                  src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
-                  className="absolute inset-0 w-full h-full border-0"
-                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
-                  allowFullScreen
-                />
+          {/* Video Tutorial - Compact */}
+          <GenericCard padding="sm">
+            <div className="space-y-3">
+              <h3 className="text-base font-semibold text-[#ffd700] flex items-center gap-2">
+                <Video className="w-4 h-4" />
+                Video Tutorial
+              </h3>
+              {/* Metal frame wrapper */}
+              <div
+                className="rounded-lg overflow-hidden"
+                style={{
+                  padding: '3px',
+                  background: 'linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%)',
+                  border: '1px solid rgba(150,150,150,0.4)',
+                  boxShadow: '0 10px 30px rgba(0, 0, 0, 0.4)',
+                }}
+              >
+                <div className="relative aspect-video rounded overflow-hidden bg-[#1a1a1a]">
+                  <iframe
+                    src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
+                    className="absolute inset-0 w-full h-full border-0"
+                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </GenericCard>
+          </GenericCard>
 
-      {/* Quick Guide - Collapsible Sections */}
-      <GenericCard padding="md">
-        <div className="space-y-4">
-          <h3 className="text-h5 text-[#ffd700]">Quick Guide</h3>
-          <div className="space-y-2">
-            {guideSteps.map((step) => (
-              <div key={step.id} className="border border-white/10 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => setExpandedGuide(expandedGuide === step.id ? null : step.id)}
-                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
-                >
-                  <span className="text-body font-medium text-[#bfbdb0]">{step.title}</span>
-                  <ChevronRight
-                    className={`w-4 h-4 text-[#ffd700] transition-transform ${
-                      expandedGuide === step.id ? 'rotate-90' : ''
-                    }`}
-                  />
-                </button>
-                {expandedGuide === step.id && (
-                  <div className="px-4 pb-4 text-body-sm text-[#bfbdb0]/80 whitespace-pre-line">
-                    {step.content}
+          {/* Quick Guide - Collapsible Sections */}
+          <GenericCard padding="sm">
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-[#ffd700]">Quick Guide</h3>
+              <div className="space-y-1">
+                {guideSteps.map((step) => (
+                  <div key={step.id} className="border border-white/10 rounded-lg overflow-hidden">
+                    <button
+                      onClick={() => setExpandedGuide(expandedGuide === step.id ? null : step.id)}
+                      className="w-full px-3 py-2 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                    >
+                      <span className="text-sm text-[#bfbdb0]">{step.title}</span>
+                      <ChevronRight
+                        className={`w-4 h-4 text-[#ffd700] transition-transform ${
+                          expandedGuide === step.id ? 'rotate-90' : ''
+                        }`}
+                      />
+                    </button>
+                    {expandedGuide === step.id && (
+                      <div className="px-3 pb-3 text-xs text-[#bfbdb0]/80 whitespace-pre-line">
+                        {step.content}
+                      </div>
+                    )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </GenericCard>
+            </div>
+          </GenericCard>
 
-      {/* Landing Page Examples */}
-      <GenericCard padding="md">
-        <div className="space-y-4">
-          <h3 className="text-h5 text-[#ffd700]">Landing Page Examples & Tokens</h3>
-          <p className="text-body-sm text-[#bfbdb0]/80">
-            Reference these examples when creating your own. Copy Karrie's wording and adapt for your market.
-          </p>
+          {/* Important Notes - Compact */}
+          <GenericCard padding="sm">
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-[#ffd700]">Important Notes</h3>
+              <ul className="text-xs text-[#bfbdb0]/80 space-y-1.5">
+                <li className="flex gap-1.5">
+                  <span className="text-[#ffd700]">•</span>
+                  <span>Leads are auto-added to your CRM when they fill out a form.</span>
+                </li>
+                <li className="flex gap-1.5">
+                  <span className="text-[#ffd700]">•</span>
+                  <span>For repeat requests, have them reply to email (CRM won't notify on duplicates).</span>
+                </li>
+                <li className="flex gap-1.5">
+                  <span className="text-[#ffd700]">•</span>
+                  <span>Personalize campaign emails before activating.</span>
+                </li>
+                <li className="flex gap-1.5">
+                  <span className="text-[#ffd700]">•</span>
+                  <span>Attach your guides (buyer/seller PDFs) to relevant emails.</span>
+                </li>
+              </ul>
+            </div>
+          </GenericCard>
+        </div>
+
+        {/* RIGHT COLUMN - Landing Page Examples */}
+        <GenericCard padding="sm">
           <div className="space-y-3">
-            {LANDING_PAGES.map((page) => (
-              <div key={page.hashtag} className="border border-white/10 rounded-lg p-4 space-y-3">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-[#00ff88] font-mono text-sm">{page.hashtag}</span>
-                      <span className="text-[#ffd700] font-medium">{page.title}</span>
+            <div>
+              <h3 className="text-base font-semibold text-[#ffd700]">Landing Page Examples & Tokens</h3>
+              <p className="text-xs text-[#bfbdb0]/60 mt-1">
+                Reference these examples. Copy Karrie's wording and adapt for your market.
+              </p>
+            </div>
+            <div className="space-y-2">
+              {LANDING_PAGES.map((page) => (
+                <div key={page.hashtag} className="border border-white/10 rounded-lg p-3 space-y-2">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-[#00ff88] font-mono text-xs">{page.hashtag}</span>
+                        <span className="text-[#ffd700] font-medium text-sm">{page.title}</span>
+                      </div>
+                      <p className="text-xs text-[#bfbdb0]/60 mt-0.5 line-clamp-2">{page.prep}</p>
                     </div>
-                    <p className="text-body-sm text-[#bfbdb0]/70">{page.prep}</p>
+                    <a
+                      href={page.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 px-2 py-1 bg-[#ffd700]/10 hover:bg-[#ffd700]/20 text-[#ffd700] text-[10px] rounded transition-colors"
+                    >
+                      View
+                    </a>
                   </div>
-                  <a
-                    href={page.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="shrink-0 px-3 py-1.5 bg-[#ffd700]/10 hover:bg-[#ffd700]/20 text-[#ffd700] text-xs rounded transition-colors"
-                  >
-                    View Example
-                  </a>
+                  <div className="flex flex-wrap gap-1.5 text-[10px]">
+                    {page.emailToken && (
+                      <button
+                        onClick={() => copyToClipboard(page.emailToken!, `email-${page.hashtag}`)}
+                        className={`px-1.5 py-0.5 rounded font-mono transition-colors ${
+                          copiedToken === `email-${page.hashtag}`
+                            ? 'bg-[#00ff88]/20 text-[#00ff88]'
+                            : 'bg-white/5 hover:bg-white/10 text-[#bfbdb0]/70'
+                        }`}
+                      >
+                        {copiedToken === `email-${page.hashtag}` ? '✓ Copied!' : 'Email Token'}
+                      </button>
+                    )}
+                    {page.dripToken && (
+                      <button
+                        onClick={() => copyToClipboard(page.dripToken!, `drip-${page.hashtag}`)}
+                        className={`px-1.5 py-0.5 rounded font-mono transition-colors ${
+                          copiedToken === `drip-${page.hashtag}`
+                            ? 'bg-[#00ff88]/20 text-[#00ff88]'
+                            : 'bg-white/5 hover:bg-white/10 text-[#bfbdb0]/70'
+                        }`}
+                      >
+                        {copiedToken === `drip-${page.hashtag}` ? '✓ Copied!' : 'Drip Token'}
+                      </button>
+                    )}
+                    {!page.dripToken && (
+                      <span className="px-1.5 py-0.5 text-[#bfbdb0]/40 italic">Manual follow-up</span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  {page.emailToken && (
-                    <button
-                      onClick={() => copyToClipboard(page.emailToken!, `email-${page.hashtag}`)}
-                      className={`px-2 py-1 rounded font-mono transition-colors ${
-                        copiedToken === `email-${page.hashtag}`
-                          ? 'bg-[#00ff88]/20 text-[#00ff88]'
-                          : 'bg-white/5 hover:bg-white/10 text-[#bfbdb0]/70'
-                      }`}
-                    >
-                      {copiedToken === `email-${page.hashtag}` ? '✓ Copied!' : 'Email Token'}
-                    </button>
-                  )}
-                  {page.dripToken && (
-                    <button
-                      onClick={() => copyToClipboard(page.dripToken!, `drip-${page.hashtag}`)}
-                      className={`px-2 py-1 rounded font-mono transition-colors ${
-                        copiedToken === `drip-${page.hashtag}`
-                          ? 'bg-[#00ff88]/20 text-[#00ff88]'
-                          : 'bg-white/5 hover:bg-white/10 text-[#bfbdb0]/70'
-                      }`}
-                    >
-                      {copiedToken === `drip-${page.hashtag}` ? '✓ Copied!' : 'Drip Token'}
-                    </button>
-                  )}
-                  {!page.dripToken && (
-                    <span className="px-2 py-1 text-[#bfbdb0]/40 italic">No drip (manual follow-up)</span>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </GenericCard>
-
-      {/* Important Notes */}
-      <GenericCard padding="md">
-        <div className="space-y-3">
-          <h3 className="text-h5 text-[#ffd700]">Important Notes</h3>
-          <ul className="text-body-sm text-[#bfbdb0]/80 space-y-2">
-            <li className="flex gap-2">
-              <span className="text-[#ffd700]">•</span>
-              <span>Once someone fills out a landing page, they're automatically added to your CRM.</span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-[#ffd700]">•</span>
-              <span>If they want another service later, have them reply to your email instead of filling out another form (the CRM won't notify you of duplicate entries).</span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-[#ffd700]">•</span>
-              <span>Review and personalize all campaign emails before activating them.</span>
-            </li>
-            <li className="flex gap-2">
-              <span className="text-[#ffd700]">•</span>
-              <span>Add your assets (buyer guide PDF, seller guide, etc.) to the relevant campaign emails.</span>
-            </li>
-          </ul>
-        </div>
-      </GenericCard>
+        </GenericCard>
+      </div>
     </div>
   );
 }
