@@ -5930,6 +5930,10 @@ function AgentPagesSection({
                     </div>
 
                     {/* Name with Neon Effect - matches H1 glow framework from master controller */}
+                    {(() => {
+                      const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
+                      const outlineColorRgba = linksSettings.iconStyle === 'light' ? 'rgba(255,255,255,' : 'rgba(26,26,26,';
+                      return (
                     <span
                       className="font-bold text-xl text-center"
                       style={{
@@ -5938,10 +5942,10 @@ function AgentPagesSection({
                         fontFeatureSettings: '"ss01" 1',
                         transform: 'perspective(800px) rotateX(12deg)',
                         textShadow: `
-                          /* WHITE CORE */
-                          0 0 0.02em #fff,
-                          0 0 0.04em rgba(255,255,255,0.9),
-                          0 0 0.08em rgba(255,255,255,0.5),
+                          /* CORE OUTLINE */
+                          0 0 0.02em ${outlineColor},
+                          0 0 0.04em ${outlineColorRgba}0.9),
+                          0 0 0.08em ${outlineColorRgba}0.5),
                           /* COLOR GLOW - more diffused, starts subtle */
                           0 0 0.15em ${linksSettings.accentColor}40,
                           0 0 0.3em ${linksSettings.accentColor}30,
@@ -5959,6 +5963,8 @@ function AgentPagesSection({
                     >
                       {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
                     </span>
+                      );
+                    })()}
 
                     {/* Bio */}
                     {linksSettings.bio && (
@@ -5968,51 +5974,54 @@ function AgentPagesSection({
                     )}
 
                     {/* Social Icons - Compact */}
-                    {filledSocialLinks > 0 && (
+                    {filledSocialLinks > 0 && (() => {
+                      const socialIconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+                      return (
                       <div className="flex gap-1.5 flex-wrap justify-center">
                         {formData.facebook_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
                           </div>
                         )}
                         {formData.instagram_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
                           </div>
                         )}
                         {formData.twitter_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                           </div>
                         )}
                         {formData.youtube_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
                           </div>
                         )}
                         {formData.tiktok_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
                           </div>
                         )}
                         {formData.linkedin_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                            <svg className="w-2.5 h-2.5" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
+                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
                           </div>
                         )}
                         {/* Custom Social Links */}
                         {customSocialLinks.filter(link => link.url).map(link => {
                           const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
                           return (
-                            <div key={link.id} className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                              <svg className="w-2.5 h-2.5" fill="none" stroke={linksSettings.accentColor} strokeWidth="2" viewBox="0 0 24 24">
+                            <div key={link.id} className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                              <svg className="w-2.5 h-2.5" fill="none" stroke={socialIconColor} strokeWidth="2" viewBox="0 0 24 24">
                                 <path d={iconPath || ''} />
                               </svg>
                             </div>
                           );
                         })}
                       </div>
-                    )}
+                      );
+                    })()}
 
                     {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
                     {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
@@ -6179,11 +6188,11 @@ function AgentPagesSection({
                         setLinksSettings(prev => ({ ...prev, accentColor: color }));
                         setHasUnsavedChanges(true);
                       }}
-                      style={{ width: '100%', height: '120px' }}
+                      style={{ width: '100%', height: '95px' }}
                     />
                     <div className="flex items-center gap-2">
                       <div
-                        className="w-8 h-8 rounded-lg border border-white/20 flex-shrink-0"
+                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
                         style={{ backgroundColor: linksSettings.accentColor }}
                       />
                       <HexColorInput
@@ -6781,7 +6790,7 @@ function AgentPagesSection({
                             setHasUnsavedChanges(true);
                           }}
                           disabled={isDisabled}
-                          className="flex-1 px-3 py-2 rounded-r-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
+                          className="flex-1 min-w-0 px-3 py-2 rounded-r-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
                           placeholder={customLink?.icon ? `${LINK_ICONS.find(i => i.name === customLink.icon)?.label || 'Custom'} URL` : 'Custom URL'}
                         />
                         {/* Icon Picker Dropdown */}
@@ -6910,11 +6919,11 @@ function AgentPagesSection({
                         setLinksSettings(prev => ({ ...prev, accentColor: color }));
                         setHasUnsavedChanges(true);
                       }}
-                      style={{ width: '100%', height: '120px' }}
+                      style={{ width: '100%', height: '95px' }}
                     />
                     <div className="flex items-center gap-2">
                       <div
-                        className="w-8 h-8 rounded-lg border border-white/20 flex-shrink-0"
+                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
                         style={{ backgroundColor: linksSettings.accentColor }}
                       />
                       <HexColorInput
@@ -7485,16 +7494,36 @@ function AgentPagesSection({
               )}
             </div>
 
-            {/* Name */}
+            {/* Name with Neon Effect */}
+            {(() => {
+              const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
+              const outlineColorRgba = linksSettings.iconStyle === 'light' ? 'rgba(255,255,255,' : 'rgba(26,26,26,';
+              return (
             <span
-              className="font-bold text-xl text-center"
+              className="font-bold text-2xl text-center"
               style={{
                 color: linksSettings.accentColor,
                 fontFamily: 'var(--font-taskor, sans-serif)',
+                fontFeatureSettings: '"ss01" 1',
+                transform: 'perspective(800px) rotateX(12deg)',
+                textShadow: `
+                  0 0 0.02em ${outlineColor},
+                  0 0 0.04em ${outlineColorRgba}0.9),
+                  0 0 0.08em ${outlineColorRgba}0.5),
+                  0 0 0.15em ${linksSettings.accentColor}40,
+                  0 0 0.3em ${linksSettings.accentColor}30,
+                  0 0 0.5em ${linksSettings.accentColor}20,
+                  0.03em 0.03em 0 #2a2a2a,
+                  0.045em 0.045em 0 #1a1a1a,
+                  0.06em 0.06em 0 #0f0f0f
+                `,
+                filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.1) drop-shadow(0 0 0.15em ${linksSettings.accentColor}25)`,
               }}
             >
               {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
             </span>
+              );
+            })()}
 
             {/* Bio */}
             {linksSettings.bio && (
@@ -7504,51 +7533,54 @@ function AgentPagesSection({
             )}
 
             {/* Social Icons */}
-            {filledSocialLinks > 0 && (
+            {filledSocialLinks > 0 && (() => {
+              const socialIconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+              return (
               <div className="flex gap-2 flex-wrap justify-center">
                 {formData.facebook_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                    <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
                   </div>
                 )}
                 {formData.instagram_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                    <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
                   </div>
                 )}
                 {formData.twitter_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                    <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                   </div>
                 )}
                 {formData.youtube_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                    <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
                   </div>
                 )}
                 {formData.tiktok_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                    <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
                   </div>
                 )}
                 {formData.linkedin_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                    <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
                   </div>
                 )}
                 {/* Custom Social Links */}
                 {customSocialLinks.filter(link => link.url).map(link => {
                   const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
                   return (
-                    <div key={link.id} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}>
-                      <svg className="w-4 h-4" fill="none" stroke={linksSettings.accentColor} strokeWidth="2" viewBox="0 0 24 24">
+                    <div key={link.id} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
+                      <svg className="w-4 h-4" fill="none" stroke={socialIconColor} strokeWidth="2" viewBox="0 0 24 24">
                         <path d={iconPath || ''} />
                       </svg>
                     </div>
                   );
                 })}
               </div>
-            )}
+              );
+            })()}
 
             {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
             {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {

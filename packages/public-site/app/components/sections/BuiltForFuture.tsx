@@ -260,7 +260,7 @@ export function BuiltForFuture() {
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
     // Pin trigger: 40% on mobile, 45% on desktop
-    const pinStart = isMobile ? 'center 40%' : 'center 45%';
+    const pinStart = isMobile ? 'center 55%' : 'center 45%';
     // Shorter scroll range on mobile to reduce dead space at end
     const scrollRange = isMobile ? '+=150%' : '+=300%';
 
@@ -464,7 +464,7 @@ export function BuiltForFuture() {
                               }}
                             >
                               <div
-                                className={`rounded-2xl flex flex-col items-center justify-center relative overflow-hidden ${isMobile ? 'p-4 min-h-[280px]' : 'p-8 min-h-[380px]'}`}
+                                className={`rounded-2xl flex flex-col items-center justify-center relative overflow-hidden ${isMobile ? 'p-8 min-h-[380px]' : 'p-8 min-h-[380px]'}`}
                                 style={{
                                   background: isActive ? activeBackground : inactiveBackground,
                                   border: isActive ? '2px solid rgba(180,150,50,0.5)' : `2px solid ${BRAND_YELLOW}22`,
@@ -476,7 +476,7 @@ export function BuiltForFuture() {
                               >
                                 {/* Circled Image */}
                                 <div
-                                  className={`rounded-full flex items-center justify-center overflow-hidden relative z-10 ${isMobile ? 'w-[120px] h-[120px] mb-4' : 'w-[200px] h-[200px] mb-6'}`}
+                                  className={`rounded-full flex items-center justify-center overflow-hidden relative z-10 ${isMobile ? 'w-[180px] h-[180px] mb-6' : 'w-[200px] h-[200px] mb-6'}`}
                                   style={{
                                     backgroundColor: isActive ? 'rgba(20,18,12,0.85)' : point.bgColor,
                                     border: isActive ? '3px solid rgba(40,35,20,0.8)' : `3px solid ${BRAND_YELLOW}`,
