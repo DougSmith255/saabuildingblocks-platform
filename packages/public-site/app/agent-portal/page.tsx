@@ -3143,7 +3143,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 <span className="text-2xl sm:text-3xl">👩</span>
                 <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ec4899] leading-tight">Women's Mastermind</h4>
               </div>
-              <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Exclusive call for women in the alliance</p>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]/80">For women in SAA and Wolf Pack</p>
               <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Wednesdays</strong> at {localTimes.women || '11:00 AM PST'}</p>
               <div className="flex flex-wrap gap-2">
                 <a
@@ -3176,7 +3176,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 <span className="text-2xl sm:text-3xl">👑</span>
                 <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#38bdf8] leading-tight">Leaders Mastermind</h4>
               </div>
-              <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Exclusive call for alliance leaders</p>
+              <p className="text-xs sm:text-sm text-[#e5e4dd]/80">For SAA and Wolf Pack leaders</p>
               <p className="text-xs sm:text-sm text-[#e5e4dd]"><strong>Thursdays</strong> at {localTimes.leaders || '10:00 AM PST'}</p>
               <a
                 href="https://zoom.us/j/4919666038"
