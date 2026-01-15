@@ -24,21 +24,12 @@ const STATS = [
 ];
 const CTA_TEXT = "See What Agents Say";
 
-// Scroll reveal hook - disabled on mobile for performance
+// Scroll reveal hook
 function useScrollReveal(threshold = 0.1) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if mobile - if so, skip animation entirely
-    const mobile = window.innerWidth < 768;
-    setIsMobile(mobile);
-    if (mobile) {
-      setIsVisible(true); // Show immediately on mobile
-      return;
-    }
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -56,17 +47,11 @@ function useScrollReveal(threshold = 0.1) {
     return () => observer.disconnect();
   }, [threshold]);
 
-  return { ref, isVisible, isMobile };
+  return { ref, isVisible };
 }
 
 function RevealFromLeft({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible, isMobile } = useScrollReveal(0.1);
-
-  // On mobile, render without animation wrapper
-  if (isMobile) {
-    return <div ref={ref}>{children}</div>;
-  }
-
+  const { ref, isVisible } = useScrollReveal(0.1);
   return (
     <div
       ref={ref}
@@ -82,13 +67,7 @@ function RevealFromLeft({ children, delay = 0 }: { children: React.ReactNode; de
 }
 
 function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible, isMobile } = useScrollReveal(0.1);
-
-  // On mobile, render without animation wrapper
-  if (isMobile) {
-    return <div ref={ref}>{children}</div>;
-  }
-
+  const { ref, isVisible } = useScrollReveal(0.1);
   return (
     <div
       ref={ref}

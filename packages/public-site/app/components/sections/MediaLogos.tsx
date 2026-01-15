@@ -42,20 +42,11 @@ export function MediaLogos() {
   const velocityRef = useRef(0.5); // Base velocity (px per frame)
   const lastScrollY = useRef(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
-  // Intersection Observer for entrance animation - disabled on mobile for performance
+  // Intersection Observer for entrance animation
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
-
-    // Check if mobile - if so, skip animation entirely
-    const mobile = window.innerWidth < 768;
-    setIsMobile(mobile);
-    if (mobile) {
-      setIsVisible(true); // Show immediately on mobile
-      return;
-    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -156,8 +147,8 @@ export function MediaLogos() {
 
       {/* Heading - uses master controller H2 component */}
       <div
-        className={`text-center px-4 relative z-10 ${
-          isMobile ? '' : `transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`
+        className={`text-center px-4 transition-all duration-700 ease-out relative z-10 ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
         }`}
       >
         <H2>Why eXp Realty?</H2>
@@ -171,15 +162,13 @@ export function MediaLogos() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             {/* Card 1: Profitable */}
             <div
-              className={`p-6 rounded-2xl text-center flex flex-col items-center ${isMobile ? '' : 'transition-all duration-700 ease-out'}`}
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '1px solid rgba(255,215,0,0.15)',
-                ...(isMobile ? {} : {
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: '0.2s',
-                }),
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.2s',
               }}
             >
               <div className="mb-4">
@@ -191,15 +180,13 @@ export function MediaLogos() {
 
             {/* Card 2: Cloud-Based */}
             <div
-              className={`p-6 rounded-2xl text-center flex flex-col items-center ${isMobile ? '' : 'transition-all duration-700 ease-out'}`}
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '1px solid rgba(255,215,0,0.15)',
-                ...(isMobile ? {} : {
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: '0.35s',
-                }),
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.35s',
               }}
             >
               <div className="mb-4">
@@ -211,15 +198,13 @@ export function MediaLogos() {
 
             {/* Card 3: Sponsor Choice */}
             <div
-              className={`p-6 rounded-2xl text-center flex flex-col items-center ${isMobile ? '' : 'transition-all duration-700 ease-out'}`}
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '1px solid rgba(255,215,0,0.15)',
-                ...(isMobile ? {} : {
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: '0.5s',
-                }),
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.5s',
               }}
             >
               <div className="mb-4">
@@ -234,15 +219,13 @@ export function MediaLogos() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Card 4: Commission - Green */}
             <div
-              className={`p-6 rounded-2xl text-center flex flex-col items-center ${isMobile ? '' : 'transition-all duration-700 ease-out'}`}
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '2px solid rgba(0,204,102,0.5)',
-                ...(isMobile ? {} : {
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: '0.65s',
-                }),
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.65s',
               }}
             >
               <div className="mb-4">
@@ -259,15 +242,13 @@ export function MediaLogos() {
 
             {/* Card 5: RevShare - Purple */}
             <div
-              className={`p-6 rounded-2xl text-center flex flex-col items-center ${isMobile ? '' : 'transition-all duration-700 ease-out'}`}
+              className="p-6 rounded-2xl text-center flex flex-col items-center transition-all duration-700 ease-out"
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '2px solid rgba(153,51,255,0.5)',
-                ...(isMobile ? {} : {
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-                  transitionDelay: '0.8s',
-                }),
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+                transitionDelay: '0.8s',
               }}
             >
               <div className="mb-4">
@@ -287,8 +268,8 @@ export function MediaLogos() {
 
       {/* Carousel Container - portal edges at screen edges */}
       <div
-        className={`relative z-10 ${
-          isMobile ? '' : `transition-all duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`
+        className={`relative z-10 transition-all duration-700 delay-300 ease-out ${
+          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
         }`}
       >
         {/* 3D Curved Portal Edges - raised bars that logos slide under */}
