@@ -2076,8 +2076,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     @media (max-width: 768px) {
       .modal-container {
         align-items: flex-start;
-        padding: 0.5rem;
-        padding-top: 2rem;
+        padding: 0.25rem;
+        padding-top: 1.5rem;
         padding-bottom: 2rem;
       }
     }
@@ -2144,7 +2144,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       position: relative;
       z-index: 100001;
       width: auto;
-      max-width: 95vw;
+      max-width: 98vw;
       margin: auto;
     }
 
@@ -2159,7 +2159,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
     }
 
-    /* Close button for tool modals - positioned outside wrapper overflow */
+    /* Close button for tool modals - half in, half out like base modal */
     .tool-modal-wrapper .modal-close-btn {
       position: absolute;
       top: -12px;
@@ -2212,23 +2212,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     #calculator-modal .tool-modal iframe {
       width: 900px;
-      max-width: calc(100vw - 2rem);
+      max-width: calc(100vw - 1rem);
       height: 700px;
     }
 
     #revshare-modal .tool-modal iframe {
       width: 900px;
-      max-width: calc(100vw - 2rem);
+      max-width: calc(100vw - 1rem);
       height: 750px;
     }
 
     @media (max-width: 768px) {
       .tool-modal-wrapper {
-        max-width: calc(100vw - 1rem);
+        max-width: calc(100vw - 0.5rem);
       }
+      /* Keep close button half in, half out on mobile too */
       .tool-modal-wrapper .modal-close-btn {
-        top: 8px;
-        right: 8px;
+        top: -12px;
+        right: -12px;
       }
       #calculator-modal .tool-modal iframe,
       #revshare-modal .tool-modal iframe {
@@ -5496,7 +5497,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         gsap.registerPlugin(ScrollTrigger);
 
         // Pin trigger: 40% on mobile, 45% on desktop
-        var pinStartHorizontal = isMobileHorizontal ? 'center 55%' : 'center 45%';
+        var pinStartHorizontal = isMobileHorizontal ? 'center 40%' : 'center 45%';
         // Shorter scroll range on mobile to reduce dead space at end
         var scrollRangeHorizontal = isMobileHorizontal ? '+=150%' : '+=300%';
         ScrollTrigger.create({

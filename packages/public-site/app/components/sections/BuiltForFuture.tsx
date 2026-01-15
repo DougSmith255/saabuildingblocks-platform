@@ -260,7 +260,7 @@ export function BuiltForFuture() {
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
     // Pin trigger: 40% on mobile, 45% on desktop
-    const pinStart = isMobile ? 'center 55%' : 'center 45%';
+    const pinStart = isMobile ? 'center 40%' : 'center 45%';
     // Shorter scroll range on mobile to reduce dead space at end
     const scrollRange = isMobile ? '+=150%' : '+=300%';
 
