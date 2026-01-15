@@ -259,8 +259,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: 35% on mobile, 40% on desktop (moved up so progress bar is visible)
-    const pinStart = isMobile ? 'center 35%' : 'center 40%';
+    // Pin trigger: 25% on mobile, 40% on desktop (moved up so progress bar is visible)
+    const pinStart = isMobile ? 'center 25%' : 'center 40%';
     // Shorter scroll range on mobile to reduce dead space at end
     const scrollRange = isMobile ? '+=150%' : '+=300%';
 
@@ -516,7 +516,8 @@ export function BuiltForFuture() {
               </div>
 
           {/* 3D Plasma Tube Progress Bar */}
-          <div className="flex justify-center mt-8 mb-12 px-6">
+          {/* Progress bar - moved up 40px */}
+          <div className="flex justify-center mt-2 mb-6 px-6">
             <div
               className="w-80 h-3 rounded-full overflow-hidden relative"
               style={{

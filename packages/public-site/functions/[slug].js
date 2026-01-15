@@ -642,7 +642,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: inline-block;
       position: relative;
       color: #bfbdb0;
-      text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 6px rgba(255,255,255,0.3), 0 0 12px rgba(255,255,255,0.15), 0 0 20px rgba(255,255,255,0.08), 0 0 30px rgba(255,255,255,0.04);
+      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 8px rgba(255,255,255,0.4), 0 0 16px rgba(255,255,255,0.2), 0 0 28px rgba(255,255,255,0.1), 0 0 40px rgba(255,255,255,0.05);
     }
 
     .h2-word::before {
@@ -3591,8 +3591,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     </div>
                   </div>
 
-                  <!-- Progress Bar -->
-                  <div style="display: flex; justify-content: center; margin-top: 4rem;">
+                  <!-- Progress Bar - moved up 15px -->
+                  <div style="display: flex; justify-content: center; margin-top: 3rem;">
                     <div class="why-only-progress-bar">
                       <div class="why-only-progress-fill" id="why-only-progress-fill" style="width: 0%;"></div>
                     </div>
@@ -3986,8 +3986,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             </div>
           </div>
 
-          <!-- 3D Plasma Tube Progress Bar -->
-          <div style="display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 3rem; padding-left: 1.5rem; padding-right: 1.5rem;">
+          <!-- 3D Plasma Tube Progress Bar - moved up 40px -->
+          <div style="display: flex; justify-content: center; margin-top: 0.5rem; margin-bottom: 1.5rem; padding-left: 1.5rem; padding-right: 1.5rem;">
             <div style="width: 320px; height: 12px; border-radius: 9999px; overflow: hidden; position: relative; background: linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%); border: 1px solid rgba(245, 245, 240, 0.25); box-shadow: inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05);">
               <div id="built-future-progress" style="height: 100%; border-radius: 9999px; width: 0%; background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%); box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);"></div>
             </div>
@@ -5463,8 +5463,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 35% on mobile, 40% on desktop (moved up so progress bar is visible)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 35%' : 'center 40%';
+        // Pin trigger: 25% on mobile, 40% on desktop (moved up so progress bar is visible)
+        var pinStartHorizontal = isMobileHorizontal ? 'center 25%' : 'center 40%';
         // Shorter scroll range on mobile to reduce dead space at end
         var scrollRangeHorizontal = isMobileHorizontal ? '+=150%' : '+=300%';
         ScrollTrigger.create({

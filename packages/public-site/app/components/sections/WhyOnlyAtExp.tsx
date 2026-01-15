@@ -342,8 +342,8 @@ export function WhyOnlyAtExp() {
                         })}
                   </div>
 
-                  {/* 3D Plasma Tube Progress Bar */}
-                  <div className="flex justify-center mt-16">
+                  {/* 3D Plasma Tube Progress Bar - moved up 15px */}
+                  <div className="flex justify-center mt-12">
                     <div
                       className="w-80 h-3 rounded-full overflow-hidden relative"
                       style={{
