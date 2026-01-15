@@ -3813,76 +3813,72 @@ function ProductionSection() {
     {
       id: 'what-is',
       title: 'What is a Landing Page?',
-      content: `A landing page (or "squeeze page") captures prospect contact information in exchange for something valuable. Unlike your full website, it has ONE purpose: get leads to give you their info.
+      content: `A landing page captures prospect info in exchange for something valuable. It has ONE job: collect leads.
 
-Examples of what you can offer:
-• Free home valuation report
-• Buyer or seller guides
-• Newsletter subscription
-• Coming soon listings access
-• Cash offer consultations`
+What you can offer:
+• Free home valuation
+• Buyer/seller guides
+• Newsletter signup
+• Coming soon listings
+• Cash offer info`
     },
     {
       id: 'create',
       title: 'Creating Your Landing Page',
-      content: `In BoldTrail (kvCORE), go to Marketing → Landing Pages → Create New.
+      content: `In BoldTrail: Marketing → Landing Pages → Create New
 
-1. Choose "Squeeze Page" template
-2. Pick a background image (or create custom - see next step)
-3. Write your headline and description
-4. Set the questions you want to ask (name, email, phone, etc.)
-5. Configure the "thank you" page response
+1. Select "Squeeze Page" template
+2. Choose a background from the library (or upload your own)
+3. Edit your headline and description text
+4. Configure form fields (name, email, phone, etc.)
+5. Set your thank-you message
 6. Save and publish`
     },
     {
       id: 'custom-bg',
-      title: 'Custom Background Images',
-      content: `To use your own background image, you need a public URL. Here's a free method using kvCORE's blog:
+      title: 'Using Custom Images',
+      content: `BoldTrail has a built-in image library, but you can also use your own:
 
-1. Go to Content → Blog in BoldTrail
-2. Create a new blog post (it won't be published)
-3. Upload your image to the blog post
-4. Right-click the image → Copy Image Address
-5. Use that URL as your landing page background
+• Upload directly in the landing page editor
+• Paste any public image URL (from your website, stock photo sites, etc.)
+• Use free hosting like imgur.com or imgbb.com if needed
 
-This gives you unlimited free image hosting for your landing pages.`
+Tip: Use high-quality images that match your brand.`
     },
     {
       id: 'shorten',
       title: 'Shortening Your URL',
-      content: `Landing page URLs are long and ugly. Use Bitly (free) to shorten them:
+      content: `BoldTrail URLs are long. Shorten them with Bitly (free):
 
-1. Copy your BoldTrail landing page URL
-2. Go to bitly.com and create a free account
-3. Paste your URL and create a short link
-4. Customize the back-half (e.g., bit.ly/YourNameCashOffers)
+1. Copy your published landing page URL
+2. Go to bitly.com (create free account)
+3. Paste URL and create short link
+4. Customize it (e.g., bit.ly/YourNameCashOffers)
 
-Short links are easier to share verbally, in texts, and on social media.`
+Short links are easier to share and remember.`
     },
     {
       id: 'qr',
       title: 'Creating QR Codes',
-      content: `QR codes let people scan to visit your landing page instantly. Great for:
-• Business cards
-• Open house flyers
-• Yard signs
-• Print materials
+      content: `QR codes let people scan to visit your page instantly.
 
-Use free tools like qr-code-generator.com or Canva to create QR codes from your shortened Bitly link.`
+Great for: business cards, flyers, yard signs, open house materials.
+
+Create free QR codes at qr-code-generator.com or in Canva. Use your shortened Bitly link for a cleaner QR code.`
     },
     {
       id: 'campaigns',
-      title: 'Email Campaigns Setup',
-      content: `After someone fills out your landing page, they're automatically in your CRM. Set up email campaigns to nurture them:
+      title: 'Email Campaigns',
+      content: `When someone fills out your landing page, they're auto-added to your CRM. Set up drip campaigns to nurture them.
 
-Before activating campaigns:
-1. Add a signature card for all outgoing emails
-2. Consider a free Calendly account for booking calls
-3. Add your Calendly link to campaign emails
+Setup steps:
+1. Go to Smart Campaigns → Add Campaign
+2. Enter the token from the examples below
+3. Review and personalize each email
+4. Add your assets (guides, Calendly link, signature)
+5. Activate the campaign
 
-To add campaigns: Go to Smart Campaigns → Add Campaign → Enter the token from below.
-
-To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign → Edit each action to match your tone and assets.`
+Edit anytime: Smart Campaigns → My Campaigns → Select campaign`
     },
   ];
 
