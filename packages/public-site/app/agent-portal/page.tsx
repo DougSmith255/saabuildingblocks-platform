@@ -1524,7 +1524,7 @@ function AgentPortal() {
                 const IconComponent = item.icon;
                 const isActive = activeSection === item.id;
                 const isDownload = item.id === 'download';
-                const hasGlow = isActive || isDownload; // Outer glow for active OR download
+                const isDownloadInactive = isDownload && !isActive;
                 return (
                   <div key={item.id}>
                     <button
@@ -1537,13 +1537,17 @@ function AgentPortal() {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all duration-200"
                       style={{
-                        background: hasGlow
+                        background: isActive
                           ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
+                          : isDownloadInactive
+                          ? 'linear-gradient(180deg, #252525 0%, #1a1a1a 50%, #151515 100%)'
                           : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
-                        boxShadow: hasGlow
+                        boxShadow: isActive
                           ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
+                          : isDownloadInactive
+                          ? 'inset 0 2px 0 rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)'
                           : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
-                        border: hasGlow ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                        border: isActive ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >
