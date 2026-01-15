@@ -4849,6 +4849,7 @@ const LINK_ICONS = [
 interface LinksSettings {
   accentColor: string;
   iconStyle: 'light' | 'dark';
+  socialIconStyle: 'light' | 'dark';
   font: 'synonym' | 'taskor';
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
@@ -4858,6 +4859,7 @@ interface LinksSettings {
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   accentColor: '#ffd700',
   iconStyle: 'dark',
+  socialIconStyle: 'light',
   font: 'synonym',
   bio: '',
   showColorPhoto: false, // B&W by default
@@ -5975,7 +5977,7 @@ function AgentPagesSection({
 
                     {/* Social Icons - Compact */}
                     {filledSocialLinks > 0 && (() => {
-                      const socialIconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+                      const socialIconColor = (linksSettings.socialIconStyle || 'light') === 'light' ? '#ffffff' : '#1a1a1a';
                       return (
                       <div className="flex gap-1.5 flex-wrap justify-center">
                         {formData.facebook_url && (
@@ -6213,7 +6215,7 @@ function AgentPagesSection({
                   <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
                   <div className="space-y-3">
                     <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Text</span>
+                      <span className="text-xs text-[#e5e4dd]/60">Button Text</span>
                       <div className="flex gap-1 flex-1">
                         <button
                           type="button"
@@ -6231,6 +6233,33 @@ function AgentPagesSection({
                           onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
                           className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
                             linksSettings.iconStyle === 'dark'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Dark
+                        </button>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Social Icons</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            (linksSettings.socialIconStyle || 'light') === 'light'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            (linksSettings.socialIconStyle || 'light') === 'dark'
                               ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
                               : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
                           }`}
@@ -6971,6 +7000,34 @@ function AgentPagesSection({
                         </button>
                       </div>
                     </div>
+                    {/* Social Icons */}
+                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
+                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Socials</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            (linksSettings.socialIconStyle || 'light') === 'light'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, socialIconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            (linksSettings.socialIconStyle || 'light') === 'dark'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Dark
+                        </button>
+                      </div>
+                    </div>
                     {/* Font */}
                     <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
                       <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Font</span>
@@ -7534,7 +7591,7 @@ function AgentPagesSection({
 
             {/* Social Icons */}
             {filledSocialLinks > 0 && (() => {
-              const socialIconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+              const socialIconColor = (linksSettings.socialIconStyle || 'light') === 'light' ? '#ffffff' : '#1a1a1a';
               return (
               <div className="flex gap-2 flex-wrap justify-center">
                 {formData.facebook_url && (
