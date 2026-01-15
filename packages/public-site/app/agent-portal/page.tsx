@@ -3693,72 +3693,306 @@ function CoursesSection() {
 }
 
 // ============================================================================
-// Production Section
+// Production Section - Landing Pages
 // ============================================================================
+
+// Landing page data with hashtags and URLs
+const LANDING_PAGES = [
+  {
+    hashtag: '#fixnow',
+    title: 'Fix Now, Pay at Close',
+    url: 'https://karriehill.exprealty.com/ask/be17e507321fdb1a8cac9ee6289af747',
+    prep: 'Learn about eXp Partner Curbio and verify they service your area.',
+    emailToken: 'cfa729fb-5852-45e8-8830-6aa73997d7cb',
+    dripToken: 'a515f4a0-6a6d-4778-8a8b-4f656ef6a399',
+  },
+  {
+    hashtag: '#cashoffers',
+    title: 'Cash Offers',
+    url: 'https://karriehill.exprealty.com/ask/4498fb9b49bfde246b1ef2b688149a02',
+    prep: 'Get certified with eXp Partner "Express Offers" (open to newly licensed agents).',
+    emailToken: 'fe85266e-0b64-44d3-9677-20291f59e888',
+    dripToken: null,
+  },
+  {
+    hashtag: '#homevaluation',
+    title: 'Detailed Home Valuation',
+    url: 'https://karriehill.exprealty.com/ask/938e2bb72c8cd75b2eee148eee92b983',
+    prep: 'Learn to do a CMA from your MLS or use the free RPR tool.',
+    emailToken: 'a515f4a0-6a6d-4778-8a8b-4f656ef6a399',
+    dripToken: '6fb7eedd-2afe-43c1-b1b0-596803ea3d1d',
+  },
+  {
+    hashtag: '#sellerguide',
+    title: 'Seller Guide',
+    url: 'https://karriehill.exprealty.com/ask/622893f535b5a87dd5a7b61dfa83bf65',
+    prep: 'Use templates in SAA Step 3 to make your own guide.',
+    emailToken: '371dc06a-23aa-4795-a053-a8bd6d8ed7ed',
+    dripToken: '371dc06a-23aa-4795-a053-a8bd6d8ed7ed',
+  },
+  {
+    hashtag: '#newsletter',
+    title: 'Newsletter Signup',
+    url: 'https://karriehill.exprealty.com/ask/c3e2190aeb0e6cbd8f6acb8f0fe85974',
+    prep: 'Use templates in SAA Step 3 to create your newsletter.',
+    emailToken: 'ffdf0e89-3111-422a-8f65-884f39f8286a',
+    dripToken: '8bc8e065-7ae8-4277-92e5-e7f9205b1d2a',
+  },
+  {
+    hashtag: '#buyerguide',
+    title: 'Buyer Guide',
+    url: 'https://karriehill.exprealty.com/ask/ea4ca956613d82277ef2d67d2288337a',
+    prep: 'Use templates in SAA Step 3 to make your own guide.',
+    emailToken: 'd8c486bb-a88e-4316-9172-683179dc2746',
+    dripToken: 'd8c486bb-a88e-4316-9172-683179dc2746',
+  },
+  {
+    hashtag: '#comingsoon',
+    title: 'Coming Soon Homes',
+    url: 'https://karriehill.exprealty.com/ask/af303e2a09c06f9644572158047184ab',
+    prep: 'Check if your MLS has coming soon listings not yet on Zillow.',
+    emailToken: 'b85e03d7-8ebb-4438-96e6-e1b1b8f5b862',
+    dripToken: '03dad812-58d8-4564-8b93-6f790ab38422',
+  },
+  {
+    hashtag: '#realtorreferrals',
+    title: 'Realtor Referrals',
+    url: 'https://karriehill.exprealty.com/ask/e1a72ad5fa05c6861ffd9892ed2b0c99',
+    prep: 'Understand how to use eXp\'s Referral Tool.',
+    emailToken: '89a94574-4e00-40c1-8482-6f75d6a30a02',
+    dripToken: null,
+  },
+];
+
 function ProductionSection() {
-  const certificationFaq = [
-    {
-      question: 'Get Your Certifications',
-      answer: `Yes, you should get certified so that leads drop into your lap! eXp Realty is the ONLY brokerage with a full-time staff dedicated to finding opportunities for agents to get high-quality leads. Don't miss out. Get certified!
+  const [expandedGuide, setExpandedGuide] = useState<string | null>(null);
+  const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
-• Express Offers Certification – Get easy seller leads by advertising that you provide up to multiple cash offers.
-• Making it Rain Certification – A great way to start paid advertising fast to get leads rolling in while you're doing other things.
-• All other Revenos Certifications – Agents should get all certifications so you can start collecting easy, high-quality leads.`
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedToken(id);
+    setTimeout(() => setCopiedToken(null), 2000);
+  };
+
+  const guideSteps = [
+    {
+      id: 'what-is',
+      title: 'What is a Landing Page?',
+      content: `A landing page (or "squeeze page") captures prospect contact information in exchange for something valuable. Unlike your full website, it has ONE purpose: get leads to give you their info.
+
+Examples of what you can offer:
+• Free home valuation report
+• Buyer or seller guides
+• Newsletter subscription
+• Coming soon listings access
+• Cash offer consultations`
     },
     {
-      question: 'Easy eXp Referrals in Workplace',
-      answer: `Leads come to you when you introduce yourself in the many referral threads in Workplace. Workplace is like Facebook for eXp agents. There's a "group" for nearly every special interest, including referral groups.
+      id: 'create',
+      title: 'Creating Your Landing Page',
+      content: `In BoldTrail (kvCORE), go to Marketing → Landing Pages → Create New.
 
-Simply join the groups for cities/metro areas to which you have a personal connection and when people are looking for an agent there, reach out. We recommend setting up daily or weekly digest emails from Workplace so you can quickly see when someone has posted in a group.`
+1. Choose "Squeeze Page" template
+2. Pick a background image (or create custom - see next step)
+3. Write your headline and description
+4. Set the questions you want to ask (name, email, phone, etc.)
+5. Configure the "thank you" page response
+6. Save and publish`
     },
     {
-      question: 'Gain 6 – 20 More Deals Per Year',
-      answer: `By signing up with referral networks, you can gain buyer and seller leads in your area. These are often a 25%-35% referral fee, but that beats no deal at all!
+      id: 'custom-bg',
+      title: 'Custom Background Images',
+      content: `To use your own background image, you need a public URL. Here's a free method using kvCORE's blog:
 
-Referral Networks to consider:
-• HomeLight
-• Realtor.com Connections Plus
-• Agent Pronto
-• OJO
-• Clever
-• Redfin Partner Agents
-• UpNest
-• Home Openly
-• Sold.com`
-    }
+1. Go to Content → Blog in BoldTrail
+2. Create a new blog post (it won't be published)
+3. Upload your image to the blog post
+4. Right-click the image → Copy Image Address
+5. Use that URL as your landing page background
+
+This gives you unlimited free image hosting for your landing pages.`
+    },
+    {
+      id: 'shorten',
+      title: 'Shortening Your URL',
+      content: `Landing page URLs are long and ugly. Use Bitly (free) to shorten them:
+
+1. Copy your BoldTrail landing page URL
+2. Go to bitly.com and create a free account
+3. Paste your URL and create a short link
+4. Customize the back-half (e.g., bit.ly/YourNameCashOffers)
+
+Short links are easier to share verbally, in texts, and on social media.`
+    },
+    {
+      id: 'qr',
+      title: 'Creating QR Codes',
+      content: `QR codes let people scan to visit your landing page instantly. Great for:
+• Business cards
+• Open house flyers
+• Yard signs
+• Print materials
+
+Use free tools like qr-code-generator.com or Canva to create QR codes from your shortened Bitly link.`
+    },
+    {
+      id: 'campaigns',
+      title: 'Email Campaigns Setup',
+      content: `After someone fills out your landing page, they're automatically in your CRM. Set up email campaigns to nurture them:
+
+Before activating campaigns:
+1. Add a signature card for all outgoing emails
+2. Consider a free Calendly account for booking calls
+3. Add your Calendly link to campaign emails
+
+To add campaigns: Go to Smart Campaigns → Add Campaign → Enter the token from below.
+
+To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign → Edit each action to match your tone and assets.`
+    },
   ];
 
   return (
-    <div className="space-y-8 px-2 sm:px-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <GenericCard padding="md">
-          <div className="space-y-4">
-            <span className="text-4xl">🏗️</span>
-            <h3 className="text-h5 text-[#ffd700]">Build Landing Pages (Bold Trail)</h3>
-            <p className="text-body">How to build them</p>
-          </div>
-        </GenericCard>
-
-        <GenericCard padding="md">
-          <div className="space-y-4">
-            <span className="text-4xl">#️⃣</span>
-            <h3 className="text-h5 text-[#ffd700]">Landing Page Hashtags & Links</h3>
-            <p className="text-body">Be sure to watch the how-to video first</p>
-          </div>
-        </GenericCard>
-      </div>
-
+    <div className="space-y-6 px-2 sm:px-4">
+      {/* Video Tutorial */}
       <GenericCard padding="md">
         <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <span className="text-3xl">✉️</span>
-            <h3 className="text-h5 text-[#ffd700]">Email Campaigns for Lead Magnets</h3>
+          <h3 className="text-h5 text-[#ffd700] flex items-center gap-2">
+            <Video className="w-5 h-5" />
+            Video Tutorial
+          </h3>
+          <p className="text-body-sm text-[#bfbdb0]/80">
+            Watch this complete walkthrough before creating your landing pages.
+          </p>
+          <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-black/50">
+            <iframe
+              src="https://customer-2twfsluc6inah5at.cloudflarestream.com/3f4e9c8a7b2d1e5f6a0c9b8d7e2f3a4b/iframe?controls=true&letterboxColor=transparent"
+              className="absolute inset-0 w-full h-full"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+            />
+            {/* Fallback message if video doesn't load */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <p className="text-[#bfbdb0]/50 text-sm">Video: How to Collect Leads with a BoldTrail Landing Page</p>
+            </div>
           </div>
-          <p className="text-body">Automate your nurturing of leads</p>
         </div>
       </GenericCard>
 
-      <FAQ items={certificationFaq} allowMultiple />
+      {/* Quick Guide - Collapsible Sections */}
+      <GenericCard padding="md">
+        <div className="space-y-4">
+          <h3 className="text-h5 text-[#ffd700]">Quick Guide</h3>
+          <div className="space-y-2">
+            {guideSteps.map((step) => (
+              <div key={step.id} className="border border-white/10 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setExpandedGuide(expandedGuide === step.id ? null : step.id)}
+                  className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-white/5 transition-colors"
+                >
+                  <span className="text-body font-medium text-[#bfbdb0]">{step.title}</span>
+                  <ChevronRight
+                    className={`w-4 h-4 text-[#ffd700] transition-transform ${
+                      expandedGuide === step.id ? 'rotate-90' : ''
+                    }`}
+                  />
+                </button>
+                {expandedGuide === step.id && (
+                  <div className="px-4 pb-4 text-body-sm text-[#bfbdb0]/80 whitespace-pre-line">
+                    {step.content}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </GenericCard>
+
+      {/* Landing Page Examples */}
+      <GenericCard padding="md">
+        <div className="space-y-4">
+          <h3 className="text-h5 text-[#ffd700]">Landing Page Examples & Tokens</h3>
+          <p className="text-body-sm text-[#bfbdb0]/80">
+            Reference these examples when creating your own. Copy Karrie's wording and adapt for your market.
+          </p>
+          <div className="space-y-3">
+            {LANDING_PAGES.map((page) => (
+              <div key={page.hashtag} className="border border-white/10 rounded-lg p-4 space-y-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[#00ff88] font-mono text-sm">{page.hashtag}</span>
+                      <span className="text-[#ffd700] font-medium">{page.title}</span>
+                    </div>
+                    <p className="text-body-sm text-[#bfbdb0]/70">{page.prep}</p>
+                  </div>
+                  <a
+                    href={page.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 px-3 py-1.5 bg-[#ffd700]/10 hover:bg-[#ffd700]/20 text-[#ffd700] text-xs rounded transition-colors"
+                  >
+                    View Example
+                  </a>
+                </div>
+                <div className="flex flex-wrap gap-2 text-xs">
+                  {page.emailToken && (
+                    <button
+                      onClick={() => copyToClipboard(page.emailToken!, `email-${page.hashtag}`)}
+                      className={`px-2 py-1 rounded font-mono transition-colors ${
+                        copiedToken === `email-${page.hashtag}`
+                          ? 'bg-[#00ff88]/20 text-[#00ff88]'
+                          : 'bg-white/5 hover:bg-white/10 text-[#bfbdb0]/70'
+                      }`}
+                    >
+                      {copiedToken === `email-${page.hashtag}` ? '✓ Copied!' : 'Email Token'}
+                    </button>
+                  )}
+                  {page.dripToken && (
+                    <button
+                      onClick={() => copyToClipboard(page.dripToken!, `drip-${page.hashtag}`)}
+                      className={`px-2 py-1 rounded font-mono transition-colors ${
+                        copiedToken === `drip-${page.hashtag}`
+                          ? 'bg-[#00ff88]/20 text-[#00ff88]'
+                          : 'bg-white/5 hover:bg-white/10 text-[#bfbdb0]/70'
+                      }`}
+                    >
+                      {copiedToken === `drip-${page.hashtag}` ? '✓ Copied!' : 'Drip Token'}
+                    </button>
+                  )}
+                  {!page.dripToken && (
+                    <span className="px-2 py-1 text-[#bfbdb0]/40 italic">No drip (manual follow-up)</span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </GenericCard>
+
+      {/* Important Notes */}
+      <GenericCard padding="md">
+        <div className="space-y-3">
+          <h3 className="text-h5 text-[#ffd700]">Important Notes</h3>
+          <ul className="text-body-sm text-[#bfbdb0]/80 space-y-2">
+            <li className="flex gap-2">
+              <span className="text-[#ffd700]">•</span>
+              <span>Once someone fills out a landing page, they're automatically added to your CRM.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[#ffd700]">•</span>
+              <span>If they want another service later, have them reply to your email instead of filling out another form (the CRM won't notify you of duplicate entries).</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[#ffd700]">•</span>
+              <span>Review and personalize all campaign emails before activating them.</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="text-[#ffd700]">•</span>
+              <span>Add your assets (buyer guide PDF, seller guide, etc.) to the relevant campaign emails.</span>
+            </li>
+          </ul>
+        </div>
+      </GenericCard>
     </div>
   );
 }
