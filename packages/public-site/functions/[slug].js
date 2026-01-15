@@ -642,7 +642,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: inline-block;
       position: relative;
       color: #bfbdb0;
-      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 4px rgba(255,255,255,0.8), 0 0 8px rgba(255,255,255,0.4);
+      text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 6px rgba(255,255,255,0.3), 0 0 12px rgba(255,255,255,0.15), 0 0 20px rgba(255,255,255,0.08), 0 0 30px rgba(255,255,255,0.04);
     }
 
     .h2-word::before {
@@ -2942,7 +2942,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .built-future-card-wrapper {
       flex-shrink: 0;
       width: 280px;
-      transition: transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out;
+      transition: transform 0.025s ease-out, filter 0.035s ease-out, opacity 0.035s ease-out;
     }
     @media (min-width: 640px) {
       .built-future-card-wrapper {
@@ -5337,7 +5337,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // Generate cards HTML - using inline styles (not Tailwind classes since this is vanilla HTML)
         loopedCards.forEach(function(point, loopIndex) {
           var wrapper = document.createElement('div');
-          wrapper.style.cssText = 'flex-shrink: 0; width: ' + CARD_WIDTH + 'px; transition: transform 0.1s ease-out, filter 0.15s ease-out, opacity 0.15s ease-out;';
+          wrapper.style.cssText = 'flex-shrink: 0; width: ' + CARD_WIDTH + 'px; transition: transform 0.025s ease-out, filter 0.035s ease-out, opacity 0.035s ease-out;';
           wrapper.dataset.loopIndex = loopIndex;
 
           var card = document.createElement('div');
@@ -5463,8 +5463,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         // GSAP ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
 
-        // Pin trigger: 60% on mobile, 50% on desktop (synced with home page)
-        var pinStartHorizontal = isMobileHorizontal ? 'center 60%' : 'center 50%';
+        // Pin trigger: 50% on mobile (was 60%, moved up 50px), 50% on desktop
+        var pinStartHorizontal = isMobileHorizontal ? 'center 50%' : 'center 50%';
         ScrollTrigger.create({
           trigger: trigger,
           start: pinStartHorizontal,

@@ -259,8 +259,8 @@ export function BuiltForFuture() {
 
     rafRef.current = requestAnimationFrame(animateMagnetic);
 
-    // Pin trigger: 60% on mobile, 50% on desktop (synced with agent attraction page)
-    const pinStart = isMobile ? 'center 60%' : 'center 50%';
+    // Pin trigger: 50% on mobile (was 60%, moved up 50px), 50% on desktop
+    const pinStart = isMobile ? 'center 50%' : 'center 50%';
 
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -458,7 +458,7 @@ export function BuiltForFuture() {
                                 filter: `blur(${blurAmount + blackoutOpacity * 4}px) grayscale(${blackoutOpacity * 100}%) brightness(${1 - blackoutOpacity * 0.6})`,
                                 opacity: 1 - blackoutOpacity * 0.4,
                                 willChange: 'transform, filter, opacity',
-                                transition: 'transform 0.05s ease-out, filter 0.075s ease-out, opacity 0.075s ease-out',
+                                transition: 'transform 0.025s ease-out, filter 0.035s ease-out, opacity 0.035s ease-out',
                               }}
                             >
                               <div
