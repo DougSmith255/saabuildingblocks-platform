@@ -5813,7 +5813,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           const height = window.innerHeight;
 
           // Capture initial height to prevent mobile address bar issues
-          if (initialHeight === 0) initialHeight = height;
+          // But allow growing larger (for DevTools close, rotation, etc.)
+          if (initialHeight === 0 || height > initialHeight) initialHeight = height;
           const stableHeight = Math.max(height, initialHeight);
 
           dimensions = { width, height: stableHeight };
