@@ -6061,10 +6061,9 @@ function AgentPagesSection({
                       )}
                     </div>
 
-                    {/* Name with Neon Effect - matches H1 glow framework from master controller */}
+                    {/* Name with Neon Effect - simplified for small preview to avoid blur */}
                     {(() => {
                       const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
-                      const outlineColorRgba = linksSettings.iconStyle === 'light' ? 'rgba(255,255,255,' : 'rgba(26,26,26,';
                       return (
                     <span
                       className="font-bold text-xl text-center"
@@ -6074,23 +6073,14 @@ function AgentPagesSection({
                         fontFeatureSettings: '"ss01" 1',
                         transform: 'perspective(800px) rotateX(12deg)',
                         textShadow: `
-                          /* CORE OUTLINE */
-                          0 0 0.02em ${outlineColor},
-                          0 0 0.04em ${outlineColorRgba}0.9),
-                          0 0 0.08em ${outlineColorRgba}0.5),
-                          /* COLOR GLOW - more diffused, starts subtle */
-                          0 0 0.15em ${linksSettings.accentColor}40,
-                          0 0 0.3em ${linksSettings.accentColor}30,
-                          0 0 0.5em ${linksSettings.accentColor}20,
-                          0 0 0.8em ${linksSettings.accentColor}15,
-                          0 0 1.2em ${linksSettings.accentColor}10,
-                          /* METAL BACKING - increased for sharper outline */
-                          0.045em 0.045em 0 #2a2a2a,
-                          0.06em 0.06em 0 #1a1a1a,
-                          0.075em 0.075em 0 #0f0f0f,
-                          0.09em 0.09em 0 #080808
+                          0 0 1px ${outlineColor},
+                          0 0 2px ${linksSettings.accentColor}60,
+                          0 0 4px ${linksSettings.accentColor}40,
+                          0 0 8px ${linksSettings.accentColor}20,
+                          1px 1px 0 #2a2a2a,
+                          2px 2px 0 #1a1a1a
                         `,
-                        filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.1) drop-shadow(0 0 0.15em ${linksSettings.accentColor}25)`,
+                        filter: `drop-shadow(1px 1px 2px rgba(0,0,0,0.7)) brightness(1.1)`,
                       }}
                     >
                       {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
@@ -7630,10 +7620,9 @@ function AgentPagesSection({
               )}
             </div>
 
-            {/* Name with Neon Effect */}
+            {/* Name with Neon Effect - simplified for preview to avoid blur */}
             {(() => {
               const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
-              const outlineColorRgba = linksSettings.iconStyle === 'light' ? 'rgba(255,255,255,' : 'rgba(26,26,26,';
               return (
             <span
               className="font-bold text-2xl text-center"
@@ -7643,18 +7632,15 @@ function AgentPagesSection({
                 fontFeatureSettings: '"ss01" 1',
                 transform: 'perspective(800px) rotateX(12deg)',
                 textShadow: `
-                  0 0 0.02em ${outlineColor},
-                  0 0 0.04em ${outlineColorRgba}0.9),
-                  0 0 0.08em ${outlineColorRgba}0.5),
-                  0 0 0.15em ${linksSettings.accentColor}40,
-                  0 0 0.3em ${linksSettings.accentColor}30,
-                  0 0 0.5em ${linksSettings.accentColor}20,
-                  0.045em 0.045em 0 #2a2a2a,
-                  0.06em 0.06em 0 #1a1a1a,
-                  0.075em 0.075em 0 #0f0f0f,
-                  0.09em 0.09em 0 #080808
+                  0 0 1px ${outlineColor},
+                  0 0 3px ${linksSettings.accentColor}60,
+                  0 0 6px ${linksSettings.accentColor}40,
+                  0 0 12px ${linksSettings.accentColor}20,
+                  1px 1px 0 #2a2a2a,
+                  2px 2px 0 #1a1a1a,
+                  3px 3px 0 #0f0f0f
                 `,
-                filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.1) drop-shadow(0 0 0.15em ${linksSettings.accentColor}25)`,
+                filter: `drop-shadow(1px 1px 2px rgba(0,0,0,0.7)) brightness(1.1)`,
               }}
             >
               {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
