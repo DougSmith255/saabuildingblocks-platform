@@ -7942,8 +7942,8 @@ function AgentPagesSection({
             <span className="text-sm text-[#22c55e]">Link Page</span>
           </div>
 
-          {/* Preview Content with star background */}
-          <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto relative">
+          {/* Preview Content with star background - wider to fill space */}
+          <div className="flex flex-col items-center gap-4 max-w-[320px] w-full mx-auto relative">
             {/* Static star dots for preview */}
             <div className="absolute inset-0 -inset-x-8 pointer-events-none" style={{
               background: `
@@ -8012,7 +8012,7 @@ function AgentPagesSection({
 
             {/* Bio */}
             {linksSettings.bio && (
-              <p className="text-sm text-center text-[#e5e4dd]/70 max-w-[240px]">
+              <p className="text-sm text-center text-[#e5e4dd]/70 max-w-[280px]">
                 {linksSettings.bio}
               </p>
             )}
@@ -8067,7 +8067,7 @@ function AgentPagesSection({
               );
             })()}
 
-            {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
+            {/* Contact Buttons Row - Email, Call, Text - Segmented button style (matches actual link page) */}
             {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
               const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
               const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
@@ -8079,8 +8079,6 @@ function AgentPagesSection({
               if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
 
               const buttonCount = buttons.length;
-              // 3 buttons = icons only, 2 buttons = icons + text centered, 1 button = icon left + text centered
-              const showText = buttonCount < 3;
 
               return (
                 <div className="flex w-full gap-[3px]">
@@ -8088,37 +8086,25 @@ function AgentPagesSection({
                     const isFirst = idx === 0;
                     const isLast = idx === buttons.length - 1;
                     const isOnly = buttonCount === 1;
-                    // Rounding: full if only one, left-only if first, right-only if last, none if middle
-                    const roundedClass = isOnly ? 'rounded-lg' : isFirst ? 'rounded-l-lg' : isLast ? 'rounded-r-lg' : '';
+                    // Rounding matches actual page: 8px on outer edges, 4px on inner edges
+                    const roundedStyle = isOnly
+                      ? 'rounded-lg'
+                      : isFirst
+                        ? 'rounded-l-lg rounded-r'
+                        : isLast
+                          ? 'rounded-l rounded-r-lg'
+                          : 'rounded';
 
                     return (
                       <div
                         key={btn.type}
-                        className={`flex-1 py-3 ${roundedClass} text-sm font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center justify-center`}
+                        className={`flex-1 py-3 ${roundedStyle} text-[16px] font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center justify-center gap-2`}
                         style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
                       >
-                        {isOnly ? (
-                          // 1 button: icon on left (absolute), text centered
-                          <div className="relative w-full flex items-center justify-center">
-                            <svg className="w-4 h-4 absolute left-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                            </svg>
-                            <span>{btn.label}</span>
-                          </div>
-                        ) : showText ? (
-                          // 2 buttons: icon + text centered together
-                          <div className="flex items-center justify-center gap-2">
-                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                            </svg>
-                            <span>{btn.label}</span>
-                          </div>
-                        ) : (
-                          // 3 buttons: icon only
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                          </svg>
-                        )}
+                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
+                        </svg>
+                        <span>{btn.label}</span>
                       </div>
                     );
                   })}
@@ -8149,7 +8135,7 @@ function AgentPagesSection({
                   return (
                     <div
                       key={linkId}
-                      className="w-full py-3 px-4 rounded-lg text-sm font-medium text-center"
+                      className="w-full py-3 px-4 rounded-lg text-[16px] font-medium text-center"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
