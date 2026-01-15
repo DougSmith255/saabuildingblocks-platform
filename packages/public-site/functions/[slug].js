@@ -6573,6 +6573,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .footer-logo-text {
+      color: #e5e4dd;
       opacity: 0.7;
       font-size: 0.7rem;
     }
