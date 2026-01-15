@@ -3869,7 +3869,7 @@ To edit campaigns: Go to Smart Campaigns → My Campaigns → Click campaign →
             style={{ width: 'clamp(40%, 95vw - 350px, 95%)', maxWidth: '100%' }}
           >
             <iframe
-              src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&letterboxColor=transparent"
+              src="https://customer-2twfsluc6inah5at.cloudflarestream.com/fc1f4f244e7d75e5ff25900818cad44c/iframe?controls=true&poster=https%3A%2F%2Fimagedelivery.net%2FRZBQ4dWu2c_YEpklnDDxFg%2Fboldtrail-landing-page-tutorial-thumbnail%2Fdesktop&letterboxColor=transparent"
               className="absolute inset-0 w-full h-full"
               allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
               allowFullScreen
