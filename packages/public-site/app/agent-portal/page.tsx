@@ -8315,39 +8315,18 @@ function DownloadSection() {
 
                 <div className="border-t border-white/10" />
 
-                {/* Android/Chrome Instructions */}
+                {/* Android/PC Chrome/Edge Instructions */}
                 <div className="space-y-3">
                   <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                    Android (Chrome)
+                    Android / PC (Chrome / Edge)
                   </p>
                   <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
                     <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Tap the <span className="text-[#ffd700]">menu</span> (⋮) in the top right</p>
+                    <p className="text-sm text-[#e5e4dd]/80">Click the <span className="text-[#ffd700]">install icon</span> in the address bar, or tap <span className="text-[#ffd700]">menu</span> (⋮) → &quot;Install app&quot;</p>
                   </div>
                   <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
                     <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Select &quot;Install app&quot; or &quot;Add to Home screen&quot;</p>
-                  </div>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">3</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Tap &quot;Install&quot; to confirm</p>
-                  </div>
-                </div>
-
-                <div className="border-t border-white/10" />
-
-                {/* PC/Windows Instructions */}
-                <div className="space-y-3">
-                  <p className="text-sm text-[#ffd700] font-semibold" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                    PC (Chrome / Edge)
-                  </p>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">1</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Click the <span className="text-[#ffd700]">install icon</span> in the address bar (or menu → &quot;Install SAA Portal&quot;)</p>
-                  </div>
-                  <div className="flex gap-3 p-2.5 rounded-lg bg-black/20 border border-white/10">
-                    <div className="w-6 h-6 rounded-full bg-[#ffd700] text-[#2a2a2a] font-bold flex items-center justify-center flex-shrink-0 text-xs">2</div>
-                    <p className="text-sm text-[#e5e4dd]/80">Click &quot;Install&quot; in the popup</p>
+                    <p className="text-sm text-[#e5e4dd]/80">Click &quot;Install&quot; to confirm</p>
                   </div>
                 </div>
 
