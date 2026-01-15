@@ -3095,7 +3095,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
             >
               <span>Password: <span className="font-mono">487789</span></span>
               {copiedPassword === 'connor' ? (
-                <span className="text-[#00ff88] text-xs">Copied!</span>
+                <span className="text-[#ffd700] text-xs">Copied!</span>
               ) : (
                 <svg className="w-4 h-4 opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -3193,7 +3193,7 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
               >
                 <span>Password: <span className="font-mono">487789</span></span>
                 {copiedPassword === 'leaders' ? (
-                  <span className="text-[#00ff88] text-xs">Copied!</span>
+                  <span className="text-[#38bdf8] text-xs">Copied!</span>
                 ) : (
                   <svg className="w-4 h-4 opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
