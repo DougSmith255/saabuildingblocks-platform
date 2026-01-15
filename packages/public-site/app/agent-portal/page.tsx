@@ -5072,6 +5072,7 @@ function AgentPagesSection({
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
   const [showStylesModal, setShowStylesModal] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
+  const [showAttractionPreview, setShowAttractionPreview] = useState(false);
 
   // Tab navigation state for new UI - uses initialTab from props
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
@@ -5702,211 +5703,286 @@ function AgentPagesSection({
           </div>
         )}
 
-        {/* Mobile-First Layout */}
-        <div className="space-y-6">
-          {/* Status Banner */}
-          {pageData.activated ? (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
-              <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-sm text-green-400 font-medium">Your Agent Attraction Page is live!</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-              <span className="text-sm text-yellow-400 font-medium">Complete your profile to activate</span>
-            </div>
-          )}
+        {/* Status Banner */}
+        {pageData.activated ? (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-sm text-green-400 font-medium">Your Agent Attraction Page is live!</span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+            <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
+            <span className="text-sm text-yellow-400 font-medium">Complete your profile to activate</span>
+          </div>
+        )}
 
-          {/* Copy Link Buttons - Mobile First */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button
-              onClick={() => {
-                navigator.clipboard.writeText(pageUrl);
-                setCopiedLink('attraction');
-                setTimeout(() => setCopiedLink(null), 2000);
-              }}
-              disabled={!pageData.activated}
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-            >
-              {copiedLink === 'attraction' ? (
-                <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                  </svg>
-                  Copy Attraction Page Link
-                </>
-              )}
-            </button>
-            {pageData.activated && (
-              <a
-                href={pageUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/5 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/10 transition-colors text-sm font-medium"
-              >
+        {/* Copy Link Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(pageUrl);
+              setCopiedLink('attraction');
+              setTimeout(() => setCopiedLink(null), 2000);
+            }}
+            disabled={!pageData.activated}
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+          >
+            {copiedLink === 'attraction' ? (
+              <>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                  <polyline points="15 3 21 3 21 9" />
-                  <line x1="10" y1="14" x2="21" y2="3" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                Open Page
-              </a>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                Copy Attraction Page Link
+              </>
             )}
-          </div>
-
-          {/* Preview Section */}
-          <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-[#ffd700]/20 overflow-hidden">
-            <div className="px-4 py-3 border-b border-white/10 bg-black/30">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-[#ffd700]">Page Preview</span>
-                <span className="text-xs text-[#e5e4dd]/50">Agent Attraction Page</span>
-              </div>
-            </div>
-            <div className="relative w-full overflow-hidden" style={{ height: '500px' }}>
-              {pageData.activated && (generatedSlug || pageData.slug) ? (
-                <div className="flex justify-center pt-2 pb-4">
-                  <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
-                    <iframe
-                      src={pageUrl}
-                      className="border-0 absolute top-0 left-0"
-                      style={{
-                        width: '390px',
-                        height: '680px',
-                        transform: 'scale(0.71)',
-                        transformOrigin: 'top left',
-                        pointerEvents: 'none',
-                      }}
-                      title="Attraction Page Preview"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full text-center px-6">
-                  <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                    <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                    </svg>
-                  </div>
-                  <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
-                  <p className="text-[#e5e4dd]/40 text-xs">Upload a profile image and activate your page to see the preview</p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* How It Works Section */}
-          <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
-            <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
-            <div className="space-y-4 text-sm text-[#e5e4dd]/80">
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
-                  <span className="text-[#22c55e] font-bold text-xs">1</span>
-                </div>
-                <div>
-                  <p className="font-medium text-[#e5e4dd] mb-1">Share Your Link Page Everywhere</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">Your Link Page is your <strong className="text-[#22c55e]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
-                  <span className="text-[#ffd700] font-bold text-xs">2</span>
-                </div>
-                <div>
-                  <p className="font-medium text-[#e5e4dd] mb-1">Built-In Agent Attraction</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">Your Attraction Page is linked from your Link Page. Competitors get curious and land on your recruitment funnel.</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </div>
-                <div>
-                  <p className="font-medium text-[#e5e4dd] mb-1">Passive Agent Funnel</p>
-                  <p className="text-[#e5e4dd]/60 text-xs">The funnel works in the background - no extra effort from you. Just share your Link Page and let it do both jobs.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* What Happens Section */}
-          <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
-            <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Act</h3>
-            <div className="space-y-3 text-sm">
-              <div className="p-3 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">When someone books a call</p>
-                    <p className="text-[#e5e4dd]/60 text-xs"><strong className="text-[#ffd700]">SAA handles the closing</strong>. Joining is optional.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                  </svg>
-                  <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">When someone clicks Join</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">They enter <strong className="text-green-400">your name</strong> as sponsor. You get credit.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Where to Share */}
-          <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
-            <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share</h3>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              {[
-                { icon: 'M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z', label: 'Email signature' },
-                { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z', label: 'Social media bio' },
-                { icon: 'M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z', label: 'Facebook groups' },
-                { icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z', label: 'Business cards' },
-                { icon: 'M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z', label: 'Direct messages' },
-                { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', label: 'Presentations' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 text-[#e5e4dd]/70 p-2 rounded-lg bg-black/20">
-                  <svg className="w-4 h-4 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                    <path d={item.icon} />
-                  </svg>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Activate Button (if not activated) */}
-          {!pageData.activated && (
-            <button
-              onClick={handleActivate}
-              disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
-              className="w-full px-5 py-3 rounded-xl font-medium bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              title={
-                hasUnsavedChanges
-                  ? 'Save changes first'
-                  : (!pageData.profile_image_url && !user.profilePictureUrl)
-                    ? 'Upload a profile image first'
-                    : 'Activate your page'
-              }
+          </button>
+          {pageData.activated && (
+            <a
+              href={pageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/5 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/10 transition-colors text-sm font-medium"
             >
-              Activate Your Pages
-            </button>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Open Page
+            </a>
           )}
         </div>
+
+        {/* Main Content - 2 column on large screens */}
+        <div className="flex flex-col min-[1100px]:flex-row gap-6">
+          {/* Left Column - Preview (hidden on mobile, visible on 1100px+) */}
+          <div className="hidden min-[1100px]:block min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
+            <div className="sticky top-4 rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-[#ffd700]/20 overflow-hidden">
+              <div className="px-4 py-3 border-b border-white/10 bg-black/30">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-[#ffd700]">Page Preview</span>
+                  <span className="text-xs text-[#e5e4dd]/50">Agent Attraction Page</span>
+                </div>
+              </div>
+              <div className="relative w-full overflow-hidden" style={{ height: '500px' }}>
+                {pageData.activated && (generatedSlug || pageData.slug) ? (
+                  <div className="flex justify-center pt-2 pb-4">
+                    <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
+                      <iframe
+                        src={pageUrl}
+                        className="border-0 absolute top-0 left-0"
+                        style={{
+                          width: '390px',
+                          height: '680px',
+                          transform: 'scale(0.71)',
+                          transformOrigin: 'top left',
+                          pointerEvents: 'none',
+                        }}
+                        title="Attraction Page Preview"
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-center px-6">
+                    <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
+                      <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
+                    <p className="text-[#e5e4dd]/40 text-xs">Upload a profile image and activate your page to see the preview</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Info sections */}
+          <div className="flex-1 space-y-6">
+            {/* How It Works Section */}
+            <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+              <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
+              <div className="space-y-4 text-sm text-[#e5e4dd]/80">
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#22c55e] font-bold text-xs">1</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Share Your Link Page Everywhere</p>
+                    <p className="text-[#e5e4dd]/60 text-xs">Your Link Page is your <strong className="text-[#22c55e]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#ffd700] font-bold text-xs">2</span>
+                  </div>
+                  <div>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Built-In Agent Attraction</p>
+                    <p className="text-[#e5e4dd]/60 text-xs">Your Attraction Page is linked from your Link Page. Competitors get curious and land on your recruitment funnel.</p>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
+                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Passive Agent Funnel</p>
+                    <p className="text-[#e5e4dd]/60 text-xs">The funnel works in the background - no extra effort from you. Just share your Link Page and let it do both jobs.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* What Happens Section */}
+            <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+              <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Act</h3>
+              <div className="space-y-3 text-sm">
+                <div className="p-3 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <div>
+                      <p className="font-medium text-[#e5e4dd] mb-1">When someone books a call</p>
+                      <p className="text-[#e5e4dd]/60 text-xs"><strong className="text-[#ffd700]">SAA handles the closing</strong>. Joining is optional.</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                  <div className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                    </svg>
+                    <div>
+                      <p className="font-medium text-[#e5e4dd] mb-1">When someone clicks Join</p>
+                      <p className="text-[#e5e4dd]/60 text-xs">They enter <strong className="text-green-400">your name</strong> as sponsor. You get credit.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Where to Share */}
+            <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share</h3>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                {[
+                  { icon: 'M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z', label: 'Email signature' },
+                  { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z', label: 'Social media bio' },
+                  { icon: 'M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z', label: 'Facebook groups' },
+                  { icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z', label: 'Business cards' },
+                  { icon: 'M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z', label: 'Direct messages' },
+                  { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', label: 'Presentations' },
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2 text-[#e5e4dd]/70 p-2 rounded-lg bg-black/20">
+                    <svg className="w-4 h-4 text-[#22c55e] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                      <path d={item.icon} />
+                    </svg>
+                    <span>{item.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Activate Button (if not activated) */}
+            {!pageData.activated && (
+              <button
+                onClick={handleActivate}
+                disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
+                className="w-full px-5 py-3 rounded-xl font-medium bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                title={
+                  hasUnsavedChanges
+                    ? 'Save changes first'
+                    : (!pageData.profile_image_url && !user.profilePictureUrl)
+                      ? 'Upload a profile image first'
+                      : 'Activate your page'
+                }
+              >
+                Activate Your Pages
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* MOBILE PREVIEW BUTTON - Shows below 1100px */}
+        {/* - <950px: Full width (left-2 right-2), above mobile nav (bottom-[74px])
+            - 950-1100px: Account for desktop sidebar (left-[290px]), near bottom (bottom-[10px]) */}
+        <div className="fixed left-2 right-2 z-40 min-[1100px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px]">
+          <button
+            onClick={() => setShowAttractionPreview(true)}
+            className="w-full py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
+            style={{
+              background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.3)',
+              WebkitTapHighlightColor: 'transparent',
+            } as React.CSSProperties}
+          >
+            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+            <span className="text-[#ffd700]">Preview</span>
+          </button>
+        </div>
+
+        {/* MOBILE PREVIEW MODAL */}
+        <Modal
+          isOpen={showAttractionPreview}
+          onClose={() => setShowAttractionPreview(false)}
+          size="lg"
+          showCloseButton={true}
+          closeOnBackdropClick={true}
+          closeOnEscape={true}
+        >
+          {/* Modal Header */}
+          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
+            <span className="text-lg font-medium text-[#e5e4dd]">Live Preview</span>
+            <span className="text-sm text-[#ffd700]">Agent Attraction Page</span>
+          </div>
+
+          {/* Preview Content */}
+          <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto relative">
+            {pageData.activated && (generatedSlug || pageData.slug) ? (
+              <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
+                <iframe
+                  src={pageUrl}
+                  className="border-0 absolute top-0 left-0"
+                  style={{
+                    width: '390px',
+                    height: '680px',
+                    transform: 'scale(0.71)',
+                    transformOrigin: 'top left',
+                    pointerEvents: 'none',
+                  }}
+                  title="Attraction Page Preview"
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-[300px] text-center px-6">
+                <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
+                  <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                  </svg>
+                </div>
+                <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
+                <p className="text-[#e5e4dd]/40 text-xs">Upload a profile image and activate your page to see the preview</p>
+              </div>
+            )}
+          </div>
+        </Modal>
+
+        {/* Bottom spacer for mobile nav and preview button */}
+        <div className="h-24 min-[950px]:h-16 min-[1100px]:h-0" />
       </div>
     );
   }
