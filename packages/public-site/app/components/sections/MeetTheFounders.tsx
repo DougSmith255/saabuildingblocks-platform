@@ -22,11 +22,21 @@ const FOUNDERS = [
   },
 ];
 
+// Scroll reveal hook - disabled on mobile for performance
 function useScrollReveal(threshold = 0.15) {
   const ref = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile - if so, skip animation entirely
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    if (mobile) {
+      setIsVisible(true); // Show immediately on mobile
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -41,11 +51,11 @@ function useScrollReveal(threshold = 0.15) {
     return () => observer.disconnect();
   }, [threshold]);
 
-  return { ref, isVisible };
+  return { ref, isVisible, isMobile };
 }
 
 export function MeetTheFounders() {
-  const { ref, isVisible } = useScrollReveal();
+  const { ref, isVisible, isMobile } = useScrollReveal();
 
   return (
     <GlassPanel variant="marigoldCrosshatch">
@@ -71,8 +81,8 @@ export function MeetTheFounders() {
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left column - Doug */}
           <div
-            className="transition-all duration-700"
-            style={{
+            className={isMobile ? '' : 'transition-all duration-700'}
+            style={isMobile ? {} : {
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
               transitionDelay: '0.3s',
@@ -127,8 +137,8 @@ export function MeetTheFounders() {
 
           {/* Right column - Karrie + CTA */}
           <div
-            className="transition-all duration-700 flex flex-col gap-6"
-            style={{
+            className={isMobile ? 'flex flex-col gap-6' : 'transition-all duration-700 flex flex-col gap-6'}
+            style={isMobile ? {} : {
               opacity: isVisible ? 1 : 0,
               transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
               transitionDelay: '0.5s',

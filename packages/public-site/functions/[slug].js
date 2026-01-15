@@ -642,7 +642,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       display: inline-block;
       position: relative;
       color: #bfbdb0;
-      text-shadow: 0 0 2px rgba(255,255,255,0.5), 0 0 6px rgba(255,255,255,0.3), 0 0 12px rgba(255,255,255,0.15), 0 0 20px rgba(255,255,255,0.08), 0 0 30px rgba(255,255,255,0.04);
+      text-shadow: 0 0 1px #fff, 0 0 2px #fff, 0 0 8px rgba(255,255,255,0.4), 0 0 16px rgba(255,255,255,0.2), 0 0 28px rgba(255,255,255,0.1), 0 0 40px rgba(255,255,255,0.05);
     }
 
     .h2-word::before {
@@ -2534,7 +2534,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .max-w-2xl { max-width: 42rem; }
     .max-w-4xl { max-width: 56rem; }
 
-    /* Scroll reveal animation */
+    /* Scroll reveal animation - disabled on mobile for performance */
     .scroll-reveal {
       opacity: 0;
       transform: translateY(30px);
@@ -2544,6 +2544,32 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .scroll-reveal.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    /* On mobile, disable scroll reveal animations for better performance */
+    @media (max-width: 767px) {
+      .scroll-reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+      /* What You Get cards - show fully on mobile */
+      .wyg-icon-circle {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .wyg-card-content {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      /* Why SAA expand reveal - show fully on mobile */
+      .expand-reveal-element {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      [id$="-frame"] {
+        clip-path: none !important;
+      }
     }
 
     /* Cyber Card Gold */
@@ -4692,8 +4718,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         handleScroll();
       }
 
-      // Scroll reveal
+      // Scroll reveal - disabled on mobile for performance
       function setupScrollReveal() {
+        // Skip on mobile - CSS already shows elements
+        if (window.innerWidth < 768) return;
+
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -4892,8 +4921,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         requestAnimationFrame(animate);
       }
 
-      // What You Get - Clip-Path Reveal Cards (alternating left/right)
+      // What You Get - Clip-Path Reveal Cards (alternating left/right) - disabled on mobile for performance
       function setupWhatYouGetClipReveal() {
+        // Skip on mobile for performance
+        if (window.innerWidth < 768) return;
+
         var cards = document.querySelectorAll('.wyg-reveal-card');
         if (!cards.length) return;
 
@@ -4948,8 +4980,11 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         });
       }
 
-      // Why SAA - Expand Reveal Animation (cards open from edges with rounded corners)
+      // Why SAA - Expand Reveal Animation (cards open from edges with rounded corners) - disabled on mobile for performance
       function setupWhySAAClipReveal() {
+        // Skip on mobile for performance
+        if (window.innerWidth < 768) return;
+
         var elements = document.querySelectorAll('.expand-reveal-element');
         if (!elements.length) return;
 
@@ -5739,7 +5774,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         requestAnimationFrame(animate);
       }
 
-      // Initialize BuiltForFuture circle animations
+      // Initialize BuiltForFuture circle animations - disabled on mobile for performance
       function initBuiltForFutureAnimations() {
         const section = document.getElementById('built-for-future');
         if (!section) return;
@@ -5749,6 +5784,30 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         const circles = section.querySelectorAll('.future-circle');
         const texts = section.querySelectorAll('.future-text');
         const line = document.getElementById('future-line');
+
+        // Skip observer on mobile - just show everything
+        if (window.innerWidth < 768) {
+          if (header) {
+            header.style.opacity = '1';
+            header.style.transform = 'translateY(0)';
+          }
+          if (subline) {
+            subline.style.opacity = '0.7';
+          }
+          circles.forEach(circle => {
+            circle.style.opacity = '1';
+            circle.style.transform = 'scale(1)';
+            circle.style.boxShadow = '0 0 30px rgba(255,215,0,0.4)';
+          });
+          texts.forEach(text => {
+            text.style.opacity = '1';
+            text.style.transform = 'translateY(0)';
+          });
+          if (line) {
+            line.classList.add('animate');
+          }
+          return;
+        }
 
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {

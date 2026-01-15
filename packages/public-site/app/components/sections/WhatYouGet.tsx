@@ -53,6 +53,7 @@ const BENEFITS = [
 
 export function WhatYouGet() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const [revealProgress, setRevealProgress] = useState<number[]>(
     new Array(BENEFITS.length).fill(0)
   );
@@ -60,6 +61,15 @@ export function WhatYouGet() {
   const revealedRef = useRef<boolean[]>(new Array(BENEFITS.length).fill(false));
 
   useEffect(() => {
+    // Check if mobile - if so, skip animation entirely
+    const mobile = window.innerWidth < 768;
+    setIsMobile(mobile);
+    if (mobile) {
+      // Set all cards to fully revealed on mobile
+      setRevealProgress(new Array(BENEFITS.length).fill(1));
+      return;
+    }
+
     const cards = sectionRef.current?.querySelectorAll('.reveal-card');
     if (!cards) return;
 
@@ -134,9 +144,11 @@ export function WhatYouGet() {
                     WebkitBackdropFilter: 'blur(8px)',
                     border: `2px solid ${BRAND_YELLOW}`,
                     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                    transform: `scale(${0.8 + cardProgress * 0.2})`,
-                    opacity: 0.3 + cardProgress * 0.7,
-                    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+                    ...(isMobile ? {} : {
+                      transform: `scale(${0.8 + cardProgress * 0.2})`,
+                      opacity: 0.3 + cardProgress * 0.7,
+                      transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+                    }),
                   }}
                 >
                   {/* Icon - responsive size */}
@@ -154,9 +166,11 @@ export function WhatYouGet() {
                     WebkitBackdropFilter: 'blur(8px)',
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
-                    opacity: 0.4 + cardProgress * 0.6,
-                    transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
-                    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+                    ...(isMobile ? {} : {
+                      opacity: 0.4 + cardProgress * 0.6,
+                      transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
+                      transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
+                    }),
                   }}
                 >
                   {/* Background image */}
