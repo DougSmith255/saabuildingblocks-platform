@@ -3204,6 +3204,19 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
           </GenericCard>
         )}
       </div>
+
+      {/* Referral Tip */}
+      <div className="mt-4 p-4 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
+        <div className="flex items-start gap-3">
+          <span className="text-xl">💡</span>
+          <div>
+            <h4 className="text-sm font-semibold text-[#ffd700] mb-1">Pro Tip: Easy Referrals</h4>
+            <p className="text-xs sm:text-sm text-[#e5e4dd]/80">
+              Add your location to your Zoom display name (e.g., "Jane Smith - Austin, TX"). When other agents on the call have a lead in your area, they'll see your name and location instantly — making it easy for them to send you a referral. It's a simple change that can lead to extra deals.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
