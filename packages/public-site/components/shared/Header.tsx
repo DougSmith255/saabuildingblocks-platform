@@ -215,7 +215,7 @@ export default function Header() {
         {/* First load: slides down from off-screen; After: normal scroll hide/show */}
         {/* Fades out when mobile menu is open */}
         <div
-          className={`header-bg-container ${hasMounted ? 'transition-all duration-300' : ''} ease-in-out`}
+          className={`header-bg-container ${hasMounted ? 'transition-transform duration-300' : ''} ease-in-out`}
           style={{
             width: '100%',
             maxWidth: '100%',
@@ -233,6 +233,9 @@ export default function Header() {
             pointerEvents: isHidden ? 'none' : 'auto',
             // Prevent tap highlight color change on mobile
             WebkitTapHighlightColor: 'transparent',
+            // Prevent touch-induced visual changes
+            WebkitUserSelect: 'none',
+            userSelect: 'none',
           }}
         >
           {/* Glass Background - 3 layers only - Fades when mobile menu opens */}
