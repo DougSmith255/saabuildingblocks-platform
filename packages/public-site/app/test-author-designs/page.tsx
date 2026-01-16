@@ -273,10 +273,225 @@ function AuthorDesign5({ author }: { author: typeof authors.doug }) {
   );
 }
 
+// =============================================================================
+// H1 ALTERNATIVE DESIGNS - Sharper with Neon Glow
+// =============================================================================
+
+// H1 Design 1: Crisp Edge with Tight Core Glow
+function H1Design1() {
+  return (
+    <div className="text-center py-8">
+      <h1
+        style={{
+          fontFamily: 'var(--font-taskor, sans-serif)',
+          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+          fontWeight: 700,
+          color: '#ffd700',
+          fontFeatureSettings: '"ss01" 1',
+          transform: 'perspective(800px) rotateX(12deg)',
+          // Tight white core for crisp center
+          textShadow: `
+            0 0 1px #fff,
+            0 0 2px #fff,
+            0 0 4px rgba(255,255,255,0.9),
+            0 0 8px #ffd700,
+            0 0 16px rgba(255,215,0,0.7),
+            0 0 32px rgba(255,215,0,0.4),
+            0 0 48px rgba(255,215,0,0.2),
+            2px 2px 0 #2a2a2a,
+            3px 3px 0 #1a1a1a,
+            4px 4px 0 #0f0f0f
+          `,
+          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))',
+          letterSpacing: '0.02em',
+        }}
+      >
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 1: Tight white core, layered gold glow</p>
+    </div>
+  );
+}
+
+// H1 Design 2: Sharp Edge with Subtle Stroke
+function H1Design2() {
+  return (
+    <div className="text-center py-8">
+      <h1
+        style={{
+          fontFamily: 'var(--font-taskor, sans-serif)',
+          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+          fontWeight: 700,
+          color: '#ffd700',
+          fontFeatureSettings: '"ss01" 1',
+          transform: 'perspective(800px) rotateX(12deg)',
+          // Thin dark stroke for edge definition
+          WebkitTextStroke: '0.5px rgba(0,0,0,0.5)',
+          textShadow: `
+            0 0 2px #fff,
+            0 0 4px rgba(255,255,255,0.8),
+            0 0 10px #ffd700,
+            0 0 20px rgba(255,215,0,0.6),
+            0 0 40px rgba(255,215,0,0.3),
+            3px 3px 0 #2a2a2a,
+            4px 4px 0 #1a1a1a
+          `,
+          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.7))',
+          letterSpacing: '0.02em',
+        }}
+      >
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 2: Subtle dark stroke for edge definition</p>
+    </div>
+  );
+}
+
+// H1 Design 3: High Contrast with Bold Metal Backing
+function H1Design3() {
+  return (
+    <div className="text-center py-8">
+      <h1
+        style={{
+          fontFamily: 'var(--font-taskor, sans-serif)',
+          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+          fontWeight: 700,
+          color: '#ffeaa0', // Slightly brighter gold
+          fontFeatureSettings: '"ss01" 1',
+          transform: 'perspective(800px) rotateX(12deg)',
+          textShadow: `
+            0 0 1px #fff,
+            0 0 3px #fff,
+            0 0 6px rgba(255,255,255,0.7),
+            0 0 12px #ffd700,
+            0 0 24px rgba(255,215,0,0.5),
+            0 0 48px rgba(255,215,0,0.25),
+            3px 3px 0 #1f1f1f,
+            5px 5px 0 #141414,
+            7px 7px 0 #0a0a0a
+          `,
+          filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9)) contrast(1.1)',
+          letterSpacing: '0.03em',
+        }}
+      >
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 3: Brighter gold, bolder metal backing, high contrast</p>
+    </div>
+  );
+}
+
+// H1 Design 4: Neon Tube Style with Inner Glow
+function H1Design4() {
+  return (
+    <div className="text-center py-8">
+      <h1
+        style={{
+          fontFamily: 'var(--font-taskor, sans-serif)',
+          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+          fontWeight: 700,
+          color: '#fff8e0', // Near-white gold for hot center
+          fontFeatureSettings: '"ss01" 1',
+          transform: 'perspective(800px) rotateX(12deg)',
+          textShadow: `
+            0 0 2px #fff,
+            0 0 4px #fff,
+            0 0 8px #ffd700,
+            0 0 12px #ffd700,
+            0 0 20px rgba(255,215,0,0.8),
+            0 0 35px rgba(255,215,0,0.5),
+            0 0 50px rgba(255,180,0,0.3),
+            2px 2px 0 #3a3a3a,
+            3px 3px 0 #2a2a2a,
+            4px 4px 0 #1a1a1a
+          `,
+          filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.8))',
+          letterSpacing: '0.02em',
+        }}
+      >
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 4: Hot white-gold center, neon tube effect</p>
+    </div>
+  );
+}
+
+// H1 Design 5: Sharp with Chromatic Edge Highlight
+function H1Design5() {
+  return (
+    <div className="text-center py-8">
+      <h1
+        style={{
+          fontFamily: 'var(--font-taskor, sans-serif)',
+          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+          fontWeight: 700,
+          color: '#ffd700',
+          fontFeatureSettings: '"ss01" 1',
+          transform: 'perspective(800px) rotateX(12deg)',
+          // Light top edge, dark bottom for 3D pop
+          textShadow: `
+            0 -1px 0 rgba(255,255,255,0.4),
+            0 1px 0 rgba(0,0,0,0.4),
+            0 0 2px #fff,
+            0 0 6px rgba(255,255,255,0.6),
+            0 0 12px #ffd700,
+            0 0 24px rgba(255,215,0,0.6),
+            0 0 40px rgba(255,215,0,0.3),
+            2px 2px 0 #2a2a2a,
+            4px 4px 0 #1a1a1a,
+            5px 5px 0 #0f0f0f
+          `,
+          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.7))',
+          letterSpacing: '0.02em',
+        }}
+      >
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 5: Chromatic edge highlight (light top, dark bottom)</p>
+    </div>
+  );
+}
+
 export default function TestAuthorDesignsPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] py-24 px-4 sm:px-8">
       <div className="max-w-4xl mx-auto">
+        {/* H1 DESIGNS SECTION */}
+        <h1
+          className="text-4xl font-bold text-[#ffd700] mb-4 text-center"
+          style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
+        >
+          H1 Sharper Neon Designs
+        </h1>
+        <p className="text-[#bfbdb0] text-center mb-8">
+          5 alternative H1 styles - sharper edges while keeping the neon glow effect
+        </p>
+
+        <div className="border border-[#333]/50 rounded-xl mb-20 overflow-hidden">
+          <H1Design1 />
+          <div className="h-px bg-[#333]/50" />
+          <H1Design2 />
+          <div className="h-px bg-[#333]/50" />
+          <H1Design3 />
+          <div className="h-px bg-[#333]/50" />
+          <H1Design4 />
+          <div className="h-px bg-[#333]/50" />
+          <H1Design5 />
+        </div>
+
+        {/* H1 Summary */}
+        <div className="mb-20 p-6 rounded-xl bg-[#151515] border border-[#ffd700]/10">
+          <h3 className="text-lg font-bold text-[#ffd700] mb-3">H1 Design Summary</h3>
+          <ul className="space-y-2 text-sm text-[#bfbdb0]">
+            <li><strong className="text-[#e5e4dd]">Design 1:</strong> Tight white core creates crisp center, layered gold glow radiates outward</li>
+            <li><strong className="text-[#e5e4dd]">Design 2:</strong> Subtle dark stroke (0.5px) defines edges without being visible</li>
+            <li><strong className="text-[#e5e4dd]">Design 3:</strong> Brighter gold (#ffeaa0), bolder metal backing, contrast filter boost</li>
+            <li><strong className="text-[#e5e4dd]">Design 4:</strong> Hot white-gold center (#fff8e0) mimics real neon tube heat</li>
+            <li><strong className="text-[#e5e4dd]">Design 5:</strong> Chromatic edge (light top, dark bottom) adds 3D definition</li>
+          </ul>
+        </div>
+
+        {/* AUTHOR DESIGNS SECTION */}
         <h1
           className="text-4xl font-bold text-[#ffd700] mb-4 text-center"
           style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
