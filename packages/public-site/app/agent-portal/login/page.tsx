@@ -440,7 +440,7 @@ function AgentPortalLoginContent() {
         >
           {/* Heading - full width */}
           <div className="text-center mb-8">
-            <H1>ACCESS PORTAL</H1>
+            <H1 disableCloseGlow>ACCESS PORTAL</H1>
           </div>
 
         {/* Login Form - using base FormCard */}

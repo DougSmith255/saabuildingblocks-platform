@@ -269,7 +269,7 @@ function ActivatePageContent() {
         <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
           <div className="flex flex-col items-center pt-[15vh]">
             <div className="text-center mb-8">
-              <H1 className="mb-2">INVITATION ERROR</H1>
+              <H1 className="mb-2" disableCloseGlow>INVITATION ERROR</H1>
             </div>
             <FormCard maxWidth="md">
               <div style={{ textAlign: 'center', padding: '1rem 0' }}>
@@ -357,7 +357,7 @@ function ActivatePageContent() {
       <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4">
         <div className="flex flex-col items-center pt-[15vh]">
           <div className="text-center mb-8 px-4">
-            <H1 className="mb-2">WELCOME TO THE ALLIANCE</H1>
+            <H1 className="mb-2" disableCloseGlow>WELCOME TO THE ALLIANCE</H1>
             <p className="text-body" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               {userName ? `Hello ${userName}! ` : ''}Set your password to get started
             </p>

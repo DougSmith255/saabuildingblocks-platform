@@ -1326,7 +1326,7 @@ function AgentPortal() {
 
             {/* Desktop: AGENT PORTAL title - centered in header, uses H1 component styling */}
             <div className="hidden md:block absolute left-1/2 -translate-x-1/2">
-              <H1 className="whitespace-nowrap" style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
+              <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
                 AGENT PORTAL
               </H1>
             </div>
