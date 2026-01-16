@@ -8013,9 +8013,9 @@ function AgentPagesSection({
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
         {/* Shows when <1200px (mobile UI).
-            - <950px: Full width with 10px margins, 35px above mobile nav (64px) = bottom-[99px]
-            - 950-1200px: 35px from bottom, 10px gap from sidebar (280px) = left-[290px], 10px right margin */}
-        <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[99px] min-[950px]:bottom-[35px] min-[950px]:left-[290px] min-[950px]:right-[10px]">
+            - <950px: Full width with 10px margins, positioned above mobile nav (64px) = bottom-[49px]
+            - 950-1200px: Positioned at bottom of screen = bottom-0 */}
+        <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[49px] min-[950px]:bottom-0 min-[950px]:left-[290px] min-[950px]:right-[10px]">
           <div className="flex gap-2">
             {/* Preview Link Page Button - Shrinks from right when Save appears */}
             <button
