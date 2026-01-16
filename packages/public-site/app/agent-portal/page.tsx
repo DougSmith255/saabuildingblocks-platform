@@ -6844,23 +6844,36 @@ function AgentPagesSection({
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     <span className="text-xs font-medium text-green-400">Link Page Live</span>
                   </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(linktreeUrl);
-                      const btn = document.getElementById('copy-linktree-btn-mid');
-                      if (btn) {
-                        btn.textContent = 'Copied!';
-                        setTimeout(() => { btn.textContent = 'Copy Link Page URL'; }, 1500);
-                      }
-                    }}
-                    id="copy-linktree-btn-mid"
-                    className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    Copy Link Page URL
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(linktreeUrl);
+                        const btn = document.getElementById('copy-linktree-btn-mid');
+                        if (btn) {
+                          btn.textContent = 'Copied!';
+                          setTimeout(() => { btn.textContent = 'Copy URL'; }, 1500);
+                        }
+                      }}
+                      id="copy-linktree-btn-mid"
+                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                      Copy URL
+                    </button>
+                    <a
+                      href={linktreeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Open Page
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
@@ -6890,23 +6903,36 @@ function AgentPagesSection({
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     <span className="text-xs font-medium text-green-400">Link Page Live</span>
                   </div>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(linktreeUrl);
-                      const btn = document.getElementById('copy-linktree-btn');
-                      if (btn) {
-                        btn.textContent = 'Copied!';
-                        setTimeout(() => { btn.textContent = 'Copy Link Page URL'; }, 1500);
-                      }
-                    }}
-                    id="copy-linktree-btn"
-                    className="flex items-center justify-center gap-1.5 w-full px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                  >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                    Copy Link Page URL
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(linktreeUrl);
+                        const btn = document.getElementById('copy-linktree-btn');
+                        if (btn) {
+                          btn.textContent = 'Copied!';
+                          setTimeout(() => { btn.textContent = 'Copy URL'; }, 1500);
+                        }
+                      }}
+                      id="copy-linktree-btn"
+                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                      </svg>
+                      Copy URL
+                    </button>
+                    <a
+                      href={linktreeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                    >
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Open Page
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
