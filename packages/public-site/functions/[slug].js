@@ -596,13 +596,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-family: var(--font-taskor), system-ui, sans-serif;
     }
 
-    /* H1 Neon Sign Effect - layer 4 (0.05em #ffd700) removed for better readability */
+    /* H1 Neon Sign Effect - layers 4 & 5 removed for better readability */
     .h1-neon {
       color: #ffd700;
       transform: perspective(800px) rotateX(12deg);
       font-feature-settings: "ss01" 1;
       text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-        0 0 0.09em rgba(255, 215, 0, 0.8),
         0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35),
         0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
         0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
@@ -6333,7 +6332,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     /* Neon Sign H1 Effect - uses agent's accent color */
-    /* Layer 4 (0.05em close glow) removed for better readability */
+    /* Layers 4 & 5 removed for better readability */
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
       font-size: clamp(1.75rem, 5vw, 2.5rem);
@@ -6352,8 +6351,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         0 0 0.01em #fff,
         0 0 0.02em #fff,
         0 0 0.03em rgba(255,255,255,0.8),
-        /* ACCENT COLOR GLOW - layer 4 (0.05em) removed for readability */
-        0 0 0.09em rgba(${rgbString}, 0.8),
+        /* ACCENT COLOR GLOW - layers 4 & 5 removed for readability */
         0 0 0.13em rgba(${rgbString}, 0.55),
         0 0 0.18em rgba(${rgbString}, 0.35),
         /* METAL BACKING (4) - increased by ~1px for sharper outline */

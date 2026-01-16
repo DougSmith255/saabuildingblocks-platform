@@ -6378,7 +6378,6 @@ function AgentPagesSection({
                         transform: 'perspective(800px) rotateX(12deg)',
                         textShadow: `
                           0 0 1px ${outlineColor},
-                          0 0 2px ${linksSettings.accentColor}60,
                           0 0 4px ${linksSettings.accentColor}40,
                           0 0 8px ${linksSettings.accentColor}20,
                           1px 1px 0 #2a2a2a,
@@ -8142,7 +8141,6 @@ function AgentPagesSection({
                 transform: 'perspective(800px) rotateX(12deg)',
                 textShadow: `
                   0 0 1px ${outlineColor},
-                  0 0 3px ${linksSettings.accentColor}60,
                   0 0 6px ${linksSettings.accentColor}40,
                   0 0 12px ${linksSettings.accentColor}20,
                   1px 1px 0 #2a2a2a,
