@@ -182,16 +182,17 @@ function AuthorDesign2({ author }: { author: typeof authors.doug }) {
 // - 3D icon effect on arrow (2x size)
 // - Shared ProfileCyberFrame component (size="lg" = 192px)
 // - No set width - fills container
+// - Glow effect matches H2 styling (text-shadow only, no drop-shadow filter)
 function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; index?: number }) {
-  // Tagline text styling (matches Master Controller Tagline component)
+  // Tagline text styling - matches H2 glow approach (text-shadow only, no filter)
+  // White core glow that spreads out gradually for softer, more diffused appearance
   const taglineTextShadow = `
-    0 0 0.01em #fff,
-    0 0 0.02em #fff,
-    0 0 0.03em rgba(255,255,255,0.8)
-  `;
-  const taglineFilter = `
-    drop-shadow(0 0 0.04em #bfbdb0)
-    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 8px rgba(255,255,255,0.4),
+    0 0 16px rgba(255,255,255,0.2),
+    0 0 28px rgba(255,255,255,0.1),
+    0 0 40px rgba(255,255,255,0.05)
   `;
 
   return (
@@ -221,7 +222,7 @@ function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; ind
         {/* Content */}
         <div className="flex-1 text-center sm:text-left">
           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
-            {/* Name with Tagline styling and sizing */}
+            {/* Name with Tagline styling and H2-style glow */}
             <h3
               style={{
                 fontFamily: 'var(--font-taskor, sans-serif)',
@@ -231,7 +232,6 @@ function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; ind
                 fontFeatureSettings: '"ss01" 1',
                 color: '#bfbdb0',
                 textShadow: taglineTextShadow,
-                filter: taglineFilter.trim(),
                 textTransform: 'uppercase',
               }}
             >

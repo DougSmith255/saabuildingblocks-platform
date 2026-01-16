@@ -381,14 +381,21 @@ interface TaglineProps {
 }
 
 function Tagline({ children, className = '', style = {}, counterSuffix }: TaglineProps) {
-  const textShadow = `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8)`;
-  const filter = `drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6))`;
+  // H2-style glow: text-shadow only, no filter (softer, more diffused appearance)
+  const textShadow = `
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 8px rgba(255,255,255,0.4),
+    0 0 16px rgba(255,255,255,0.2),
+    0 0 28px rgba(255,255,255,0.1),
+    0 0 40px rgba(255,255,255,0.05)
+  `;
   return (
     <p
       className={`text-tagline ${className}`}
       style={{
         textAlign: 'center', transform: 'rotateX(15deg)', position: 'relative',
-        color: '#bfbdb0', fontFeatureSettings: '"ss01" 1', textShadow, filter: filter.trim(), ...style
+        color: '#bfbdb0', fontFeatureSettings: '"ss01" 1', textShadow: textShadow.trim(), ...style
       }}
     >
       {children} {counterSuffix}
@@ -804,8 +811,15 @@ function RevealMaskEffect() {
 // =============================================================================
 function AgentCounter() {
   const { isCounterDesktop } = useViewport();
-  const textShadow = `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8)`;
-  const filter = `drop-shadow(0 0 0.04em #bfbdb0) drop-shadow(0 0 0.08em rgba(191,189,176,0.6))`;
+  // H2-style glow: text-shadow only, no filter (softer, more diffused appearance)
+  const textShadow = `
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 8px rgba(255,255,255,0.4),
+    0 0 16px rgba(255,255,255,0.2),
+    0 0 28px rgba(255,255,255,0.1),
+    0 0 40px rgba(255,255,255,0.05)
+  `;
 
   if (isCounterDesktop) {
     return (
@@ -814,7 +828,7 @@ function AgentCounter() {
           <span style={{ display: 'inline', color: '#bfbdb0', fontFamily: 'var(--font-synonym), monospace', fontWeight: 300, fontSize: 'calc(1em + 10px)', textShadow: 'none' }}>
             <span className="counter-digit">3</span><span className="counter-digit">7</span><span className="counter-digit">0</span><span className="counter-digit">0</span><span>+</span>
           </span>
-          <span style={{ color: '#bfbdb0', fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: textShadow.trim(), filter: filter.trim() }}>AGENTS</span>
+          <span style={{ color: '#bfbdb0', fontFamily: 'var(--font-taskor), sans-serif', fontFeatureSettings: '"ss01" 1', textTransform: 'uppercase', letterSpacing: '0.05em', textShadow: textShadow.trim() }}>AGENTS</span>
         </span>
       </div>
     );
