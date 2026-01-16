@@ -521,9 +521,24 @@ function AuthorDesign5({ author }: { author: typeof authors.doug }) {
 
 // =============================================================================
 // H1 ALTERNATIVE DESIGNS - Sharper with Neon Glow
+// Variations modify only the TOP LAYER surrounding glow (drop-shadow filter)
+// Base text-shadow remains the same for consistent neon effect
 // =============================================================================
 
-// H1 Design 1: Crisp Edge with Tight Core Glow
+// Base text shadow for all designs (inner glow layers)
+const baseTextShadow = `
+  0 0 1px #fff,
+  0 0 2px #fff,
+  0 0 4px rgba(255,255,255,0.8),
+  0 0 8px #ffd700,
+  0 0 16px rgba(255,215,0,0.6),
+  0 0 32px rgba(255,215,0,0.3),
+  2px 2px 0 #2a2a2a,
+  3px 3px 0 #1a1a1a,
+  4px 4px 0 #0f0f0f
+`;
+
+// H1 Design 1: NO top layer glow (removed drop-shadow)
 function H1Design1() {
   return (
     <div className="text-center py-8">
@@ -535,31 +550,19 @@ function H1Design1() {
           color: '#ffd700',
           fontFeatureSettings: '"ss01" 1',
           transform: 'perspective(800px) rotateX(12deg)',
-          // Tight white core for crisp center
-          textShadow: `
-            0 0 1px #fff,
-            0 0 2px #fff,
-            0 0 4px rgba(255,255,255,0.9),
-            0 0 8px #ffd700,
-            0 0 16px rgba(255,215,0,0.7),
-            0 0 32px rgba(255,215,0,0.4),
-            0 0 48px rgba(255,215,0,0.2),
-            2px 2px 0 #2a2a2a,
-            3px 3px 0 #1a1a1a,
-            4px 4px 0 #0f0f0f
-          `,
-          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8))',
+          textShadow: baseTextShadow,
+          // NO drop-shadow filter - crisp edges
           letterSpacing: '0.02em',
         }}
       >
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 1: Tight white core, layered gold glow</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 1: No top layer glow (drop-shadow removed)</p>
     </div>
   );
 }
 
-// H1 Design 2: Sharp Edge with Subtle Stroke
+// H1 Design 2: DIFFUSED top layer glow (larger blur radius, lower opacity)
 function H1Design2() {
   return (
     <div className="text-center py-8">
@@ -571,29 +574,20 @@ function H1Design2() {
           color: '#ffd700',
           fontFeatureSettings: '"ss01" 1',
           transform: 'perspective(800px) rotateX(12deg)',
-          // Thin dark stroke for edge definition
-          WebkitTextStroke: '0.5px rgba(0,0,0,0.5)',
-          textShadow: `
-            0 0 2px #fff,
-            0 0 4px rgba(255,255,255,0.8),
-            0 0 10px #ffd700,
-            0 0 20px rgba(255,215,0,0.6),
-            0 0 40px rgba(255,215,0,0.3),
-            3px 3px 0 #2a2a2a,
-            4px 4px 0 #1a1a1a
-          `,
-          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.7))',
+          textShadow: baseTextShadow,
+          // More diffused: larger blur (12px vs 4px), lower opacity (0.3 vs 0.8)
+          filter: 'drop-shadow(0 0 12px rgba(255,215,0,0.3))',
           letterSpacing: '0.02em',
         }}
       >
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 2: Subtle dark stroke for edge definition</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 2: Diffused top layer (12px blur, 0.3 opacity)</p>
     </div>
   );
 }
 
-// H1 Design 3: High Contrast with Bold Metal Backing
+// H1 Design 3: DARKENED top layer glow (darker color)
 function H1Design3() {
   return (
     <div className="text-center py-8">
@@ -602,32 +596,23 @@ function H1Design3() {
           fontFamily: 'var(--font-taskor, sans-serif)',
           fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
           fontWeight: 700,
-          color: '#ffeaa0', // Slightly brighter gold
+          color: '#ffd700',
           fontFeatureSettings: '"ss01" 1',
           transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: `
-            0 0 1px #fff,
-            0 0 3px #fff,
-            0 0 6px rgba(255,255,255,0.7),
-            0 0 12px #ffd700,
-            0 0 24px rgba(255,215,0,0.5),
-            0 0 48px rgba(255,215,0,0.25),
-            3px 3px 0 #1f1f1f,
-            5px 5px 0 #141414,
-            7px 7px 0 #0a0a0a
-          `,
-          filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9)) contrast(1.1)',
-          letterSpacing: '0.03em',
+          textShadow: baseTextShadow,
+          // Darkened: using amber/brown tint instead of gold
+          filter: 'drop-shadow(0 0 6px rgba(180,140,0,0.6))',
+          letterSpacing: '0.02em',
         }}
       >
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 3: Brighter gold, bolder metal backing, high contrast</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 3: Darkened top layer (amber tint, 6px blur)</p>
     </div>
   );
 }
 
-// H1 Design 4: Neon Tube Style with Inner Glow
+// H1 Design 4: DARKENED + DIFFUSED top layer glow
 function H1Design4() {
   return (
     <div className="text-center py-8">
@@ -636,33 +621,23 @@ function H1Design4() {
           fontFamily: 'var(--font-taskor, sans-serif)',
           fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
           fontWeight: 700,
-          color: '#fff8e0', // Near-white gold for hot center
+          color: '#ffd700',
           fontFeatureSettings: '"ss01" 1',
           transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: `
-            0 0 2px #fff,
-            0 0 4px #fff,
-            0 0 8px #ffd700,
-            0 0 12px #ffd700,
-            0 0 20px rgba(255,215,0,0.8),
-            0 0 35px rgba(255,215,0,0.5),
-            0 0 50px rgba(255,180,0,0.3),
-            2px 2px 0 #3a3a3a,
-            3px 3px 0 #2a2a2a,
-            4px 4px 0 #1a1a1a
-          `,
-          filter: 'drop-shadow(2px 2px 3px rgba(0,0,0,0.8))',
+          textShadow: baseTextShadow,
+          // Darkened + Diffused: darker color AND larger blur
+          filter: 'drop-shadow(0 0 16px rgba(160,120,0,0.25))',
           letterSpacing: '0.02em',
         }}
       >
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 4: Hot white-gold center, neon tube effect</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 4: Darkened + Diffused (dark amber, 16px blur, 0.25 opacity)</p>
     </div>
   );
 }
 
-// H1 Design 5: Sharp with Chromatic Edge Highlight
+// H1 Design 5: ORIGINAL for comparison (standard top layer glow)
 function H1Design5() {
   return (
     <div className="text-center py-8">
@@ -674,26 +649,15 @@ function H1Design5() {
           color: '#ffd700',
           fontFeatureSettings: '"ss01" 1',
           transform: 'perspective(800px) rotateX(12deg)',
-          // Light top edge, dark bottom for 3D pop
-          textShadow: `
-            0 -1px 0 rgba(255,255,255,0.4),
-            0 1px 0 rgba(0,0,0,0.4),
-            0 0 2px #fff,
-            0 0 6px rgba(255,255,255,0.6),
-            0 0 12px #ffd700,
-            0 0 24px rgba(255,215,0,0.6),
-            0 0 40px rgba(255,215,0,0.3),
-            2px 2px 0 #2a2a2a,
-            4px 4px 0 #1a1a1a,
-            5px 5px 0 #0f0f0f
-          `,
-          filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.7))',
+          textShadow: baseTextShadow,
+          // Original top layer glow for comparison
+          filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.8))',
           letterSpacing: '0.02em',
         }}
       >
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 5: Chromatic edge highlight (light top, dark bottom)</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 5: Original (4px blur, 0.8 opacity gold glow)</p>
     </div>
   );
 }
@@ -728,12 +692,13 @@ export default function TestAuthorDesignsPage() {
         {/* H1 Summary */}
         <div className="mb-20 p-6 rounded-xl bg-[#151515] border border-[#ffd700]/10">
           <h3 className="text-lg font-bold text-[#ffd700] mb-3">H1 Design Summary</h3>
+          <p className="text-sm text-[#bfbdb0]/70 mb-3">All designs share the same base text-shadow. Only the TOP LAYER glow (drop-shadow filter) varies:</p>
           <ul className="space-y-2 text-sm text-[#bfbdb0]">
-            <li><strong className="text-[#e5e4dd]">Design 1:</strong> Tight white core creates crisp center, layered gold glow radiates outward</li>
-            <li><strong className="text-[#e5e4dd]">Design 2:</strong> Subtle dark stroke (0.5px) defines edges without being visible</li>
-            <li><strong className="text-[#e5e4dd]">Design 3:</strong> Brighter gold (#ffeaa0), bolder metal backing, contrast filter boost</li>
-            <li><strong className="text-[#e5e4dd]">Design 4:</strong> Hot white-gold center (#fff8e0) mimics real neon tube heat</li>
-            <li><strong className="text-[#e5e4dd]">Design 5:</strong> Chromatic edge (light top, dark bottom) adds 3D definition</li>
+            <li><strong className="text-[#e5e4dd]">Design 1:</strong> No top layer glow - crispest edges, only inner text-shadow</li>
+            <li><strong className="text-[#e5e4dd]">Design 2:</strong> Diffused - larger blur radius (12px), lower opacity (0.3)</li>
+            <li><strong className="text-[#e5e4dd]">Design 3:</strong> Darkened - amber/brown tint instead of bright gold</li>
+            <li><strong className="text-[#e5e4dd]">Design 4:</strong> Darkened + Diffused - dark amber with large 16px blur</li>
+            <li><strong className="text-[#e5e4dd]">Design 5:</strong> Original for comparison - standard 4px blur, 0.8 opacity gold</li>
           </ul>
         </div>
 
