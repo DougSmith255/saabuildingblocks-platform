@@ -6627,7 +6627,7 @@ function AgentPagesSection({
                           setHasUnsavedChanges(true);
                         }}
                         prefixed={true}
-                        className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
                       />
                     </div>
                   </div>
@@ -7415,7 +7415,7 @@ function AgentPagesSection({
                           setHasUnsavedChanges(true);
                         }}
                         prefixed={true}
-                        className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
                       />
                     </div>
                   </div>
@@ -7539,7 +7539,7 @@ function AgentPagesSection({
                           setHasUnsavedChanges(true);
                         }}
                         prefixed={true}
-                        className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
                       />
                     </div>
                   </div>
