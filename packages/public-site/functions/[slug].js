@@ -607,7 +607,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
         0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
       filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      animation: h1GlowBreathe 4s ease-in-out infinite;
+      /* Animation disabled for cleaner appearance */
     }
 
     @keyframes h1GlowBreathe {
@@ -6363,8 +6363,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         0.09em 0.09em 0 #080808;
       /* GPU-accelerated depth shadow - uses accent color */
       filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25));
-      /* Glow Breathe animation - slow dramatic pulse */
-      animation: h1GlowBreathe 4s ease-in-out infinite;
+      /* Animation disabled for cleaner appearance */
     }
 
     @keyframes h1GlowBreathe {
