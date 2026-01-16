@@ -520,144 +520,171 @@ function AuthorDesign5({ author }: { author: typeof authors.doug }) {
 }
 
 // =============================================================================
-// H1 ALTERNATIVE DESIGNS - Sharper with Neon Glow
-// Variations modify only the TOP LAYER surrounding glow (drop-shadow filter)
-// Base text-shadow remains the same for consistent neon effect
+// H1 LAYER BREAKDOWN - See each glow layer individually
 // =============================================================================
 
-// Base text shadow for all designs (inner glow layers)
-const baseTextShadow = `
-  0 0 1px #fff,
-  0 0 2px #fff,
-  0 0 4px rgba(255,255,255,0.8),
-  0 0 8px #ffd700,
-  0 0 16px rgba(255,215,0,0.6),
-  0 0 32px rgba(255,215,0,0.3),
+// Common H1 base styles (no glow)
+const h1BaseStyle = {
+  fontFamily: 'var(--font-taskor, sans-serif)',
+  fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+  fontWeight: 700,
+  color: '#ffd700',
+  fontFeatureSettings: '"ss01" 1',
+  transform: 'perspective(800px) rotateX(12deg)',
+  letterSpacing: '0.02em',
+};
+
+// 3D shadow layers (always included as base)
+const shadow3D = `
   2px 2px 0 #2a2a2a,
   3px 3px 0 #1a1a1a,
   4px 4px 0 #0f0f0f
 `;
 
-// H1 Design 1: NO top layer glow (removed drop-shadow)
-function H1Design1() {
+// Individual glow layers
+const glowLayers = {
+  layer1: '0 0 1px #fff',           // tight white core
+  layer2: '0 0 2px #fff',           // white core 2
+  layer3: '0 0 4px rgba(255,255,255,0.8)',  // white glow
+  layer4: '0 0 8px #ffd700',        // gold glow close
+  layer5: '0 0 16px rgba(255,215,0,0.6)',   // gold glow medium
+  layer6: '0 0 32px rgba(255,215,0,0.3)',   // gold glow far
+  dropShadow: 'drop-shadow(0 0 4px rgba(255,215,0,0.8))', // outer drop-shadow filter
+};
+
+// Full combined glow (all layers)
+const fullGlow = `
+  ${glowLayers.layer1},
+  ${glowLayers.layer2},
+  ${glowLayers.layer3},
+  ${glowLayers.layer4},
+  ${glowLayers.layer5},
+  ${glowLayers.layer6},
+  ${shadow3D}
+`;
+
+// H1 with NO glow at all (just gold text + 3D shadow)
+function H1NoGlow() {
   return (
-    <div className="text-center py-8">
-      <h1
-        style={{
-          fontFamily: 'var(--font-taskor, sans-serif)',
-          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-          fontWeight: 700,
-          color: '#ffd700',
-          fontFeatureSettings: '"ss01" 1',
-          transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: baseTextShadow,
-          // NO drop-shadow filter - crisp edges
-          letterSpacing: '0.02em',
-        }}
-      >
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: shadow3D }}>
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 1: No top layer glow (drop-shadow removed)</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">BASE:</strong> No glow - just gold text + 3D shadow
+      </p>
     </div>
   );
 }
 
-// H1 Design 2: DIFFUSED top layer glow (larger blur radius, lower opacity)
-function H1Design2() {
+// H1 with ONLY Layer 1: tight white core (1px)
+function H1Layer1Only() {
   return (
-    <div className="text-center py-8">
-      <h1
-        style={{
-          fontFamily: 'var(--font-taskor, sans-serif)',
-          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-          fontWeight: 700,
-          color: '#ffd700',
-          fontFeatureSettings: '"ss01" 1',
-          transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: baseTextShadow,
-          // More diffused: larger blur (12px vs 4px), lower opacity (0.3 vs 0.8)
-          filter: 'drop-shadow(0 0 12px rgba(255,215,0,0.3))',
-          letterSpacing: '0.02em',
-        }}
-      >
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: `${glowLayers.layer1}, ${shadow3D}` }}>
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 2: Diffused top layer (12px blur, 0.3 opacity)</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Layer 1:</strong> <code className="text-xs bg-[#222] px-1 rounded">0 0 1px #fff</code> - tight white core
+      </p>
     </div>
   );
 }
 
-// H1 Design 3: DARKENED top layer glow (darker color)
-function H1Design3() {
+// H1 with ONLY Layer 2: white core 2 (2px)
+function H1Layer2Only() {
   return (
-    <div className="text-center py-8">
-      <h1
-        style={{
-          fontFamily: 'var(--font-taskor, sans-serif)',
-          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-          fontWeight: 700,
-          color: '#ffd700',
-          fontFeatureSettings: '"ss01" 1',
-          transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: baseTextShadow,
-          // Darkened: using amber/brown tint instead of gold
-          filter: 'drop-shadow(0 0 6px rgba(180,140,0,0.6))',
-          letterSpacing: '0.02em',
-        }}
-      >
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: `${glowLayers.layer2}, ${shadow3D}` }}>
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 3: Darkened top layer (amber tint, 6px blur)</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Layer 2:</strong> <code className="text-xs bg-[#222] px-1 rounded">0 0 2px #fff</code> - white core 2
+      </p>
     </div>
   );
 }
 
-// H1 Design 4: DARKENED + DIFFUSED top layer glow
-function H1Design4() {
+// H1 with ONLY Layer 3: white glow (4px)
+function H1Layer3Only() {
   return (
-    <div className="text-center py-8">
-      <h1
-        style={{
-          fontFamily: 'var(--font-taskor, sans-serif)',
-          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-          fontWeight: 700,
-          color: '#ffd700',
-          fontFeatureSettings: '"ss01" 1',
-          transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: baseTextShadow,
-          // Darkened + Diffused: darker color AND larger blur
-          filter: 'drop-shadow(0 0 16px rgba(160,120,0,0.25))',
-          letterSpacing: '0.02em',
-        }}
-      >
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: `${glowLayers.layer3}, ${shadow3D}` }}>
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 4: Darkened + Diffused (dark amber, 16px blur, 0.25 opacity)</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Layer 3:</strong> <code className="text-xs bg-[#222] px-1 rounded">0 0 4px rgba(255,255,255,0.8)</code> - white glow
+      </p>
     </div>
   );
 }
 
-// H1 Design 5: ORIGINAL for comparison (standard top layer glow)
-function H1Design5() {
+// H1 with ONLY Layer 4: gold glow close (8px)
+function H1Layer4Only() {
   return (
-    <div className="text-center py-8">
-      <h1
-        style={{
-          fontFamily: 'var(--font-taskor, sans-serif)',
-          fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
-          fontWeight: 700,
-          color: '#ffd700',
-          fontFeatureSettings: '"ss01" 1',
-          transform: 'perspective(800px) rotateX(12deg)',
-          textShadow: baseTextShadow,
-          // Original top layer glow for comparison
-          filter: 'drop-shadow(0 0 4px rgba(255,215,0,0.8))',
-          letterSpacing: '0.02em',
-        }}
-      >
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: `${glowLayers.layer4}, ${shadow3D}` }}>
         DOUG SMART
       </h1>
-      <p className="text-[#bfbdb0]/60 text-sm mt-4">Design 5: Original (4px blur, 0.8 opacity gold glow)</p>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Layer 4:</strong> <code className="text-xs bg-[#222] px-1 rounded">0 0 8px #ffd700</code> - gold glow close
+      </p>
+    </div>
+  );
+}
+
+// H1 with ONLY Layer 5: gold glow medium (16px)
+function H1Layer5Only() {
+  return (
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: `${glowLayers.layer5}, ${shadow3D}` }}>
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Layer 5:</strong> <code className="text-xs bg-[#222] px-1 rounded">0 0 16px rgba(255,215,0,0.6)</code> - gold glow medium
+      </p>
+    </div>
+  );
+}
+
+// H1 with ONLY Layer 6: gold glow far (32px)
+function H1Layer6Only() {
+  return (
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: `${glowLayers.layer6}, ${shadow3D}` }}>
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Layer 6:</strong> <code className="text-xs bg-[#222] px-1 rounded">0 0 32px rgba(255,215,0,0.3)</code> - gold glow far
+      </p>
+    </div>
+  );
+}
+
+// H1 with ONLY Drop Shadow filter (no text-shadow glow)
+function H1DropShadowOnly() {
+  return (
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: shadow3D, filter: glowLayers.dropShadow }}>
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">Drop Shadow:</strong> <code className="text-xs bg-[#222] px-1 rounded">drop-shadow(0 0 4px rgba(255,215,0,0.8))</code> - outer filter
+      </p>
+    </div>
+  );
+}
+
+// H1 with ALL layers (full original)
+function H1AllLayers() {
+  return (
+    <div className="text-center py-6">
+      <h1 style={{ ...h1BaseStyle, textShadow: fullGlow, filter: glowLayers.dropShadow }}>
+        DOUG SMART
+      </h1>
+      <p className="text-[#bfbdb0]/60 text-sm mt-4">
+        <strong className="text-[#e5e4dd]">ALL LAYERS:</strong> Full original with all glow layers + drop-shadow
+      </p>
     </div>
   );
 }
@@ -666,40 +693,55 @@ export default function TestAuthorDesignsPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] py-24 px-4 sm:px-8">
       <div className="max-w-4xl mx-auto">
-        {/* H1 DESIGNS SECTION */}
+        {/* H1 LAYER BREAKDOWN SECTION */}
         <h1
           className="text-4xl font-bold text-[#ffd700] mb-4 text-center"
           style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}
         >
-          H1 Sharper Neon Designs
+          H1 Glow Layer Breakdown
         </h1>
         <p className="text-[#bfbdb0] text-center mb-8">
-          5 alternative H1 styles - sharper edges while keeping the neon glow effect
+          Each layer shown individually so you can see what each one contributes.<br />
+          Tell me which layers to exclude for your custom combination.
         </p>
 
-        <div className="border border-[#333]/50 rounded-xl mb-20 overflow-hidden">
-          <H1Design1 />
+        <div className="border border-[#333]/50 rounded-xl mb-8 overflow-hidden">
+          <H1NoGlow />
           <div className="h-px bg-[#333]/50" />
-          <H1Design2 />
+          <H1Layer1Only />
           <div className="h-px bg-[#333]/50" />
-          <H1Design3 />
+          <H1Layer2Only />
           <div className="h-px bg-[#333]/50" />
-          <H1Design4 />
+          <H1Layer3Only />
           <div className="h-px bg-[#333]/50" />
-          <H1Design5 />
+          <H1Layer4Only />
+          <div className="h-px bg-[#333]/50" />
+          <H1Layer5Only />
+          <div className="h-px bg-[#333]/50" />
+          <H1Layer6Only />
+          <div className="h-px bg-[#333]/50" />
+          <H1DropShadowOnly />
         </div>
 
-        {/* H1 Summary */}
+        {/* Full original for comparison */}
+        <div className="border-2 border-[#ffd700]/30 rounded-xl mb-20 overflow-hidden">
+          <H1AllLayers />
+        </div>
+
+        {/* Layer Reference */}
         <div className="mb-20 p-6 rounded-xl bg-[#151515] border border-[#ffd700]/10">
-          <h3 className="text-lg font-bold text-[#ffd700] mb-3">H1 Design Summary</h3>
-          <p className="text-sm text-[#bfbdb0]/70 mb-3">All designs share the same base text-shadow. Only the TOP LAYER glow (drop-shadow filter) varies:</p>
-          <ul className="space-y-2 text-sm text-[#bfbdb0]">
-            <li><strong className="text-[#e5e4dd]">Design 1:</strong> No top layer glow - crispest edges, only inner text-shadow</li>
-            <li><strong className="text-[#e5e4dd]">Design 2:</strong> Diffused - larger blur radius (12px), lower opacity (0.3)</li>
-            <li><strong className="text-[#e5e4dd]">Design 3:</strong> Darkened - amber/brown tint instead of bright gold</li>
-            <li><strong className="text-[#e5e4dd]">Design 4:</strong> Darkened + Diffused - dark amber with large 16px blur</li>
-            <li><strong className="text-[#e5e4dd]">Design 5:</strong> Original for comparison - standard 4px blur, 0.8 opacity gold</li>
+          <h3 className="text-lg font-bold text-[#ffd700] mb-3">Layer Reference</h3>
+          <p className="text-sm text-[#bfbdb0]/70 mb-4">The original H1 uses all these layers. Tell me which to REMOVE for a sharper look:</p>
+          <ul className="space-y-2 text-sm text-[#bfbdb0] font-mono">
+            <li><strong className="text-white">Layer 1:</strong> 0 0 1px #fff <span className="text-[#bfbdb0]/50">— tight white core</span></li>
+            <li><strong className="text-white">Layer 2:</strong> 0 0 2px #fff <span className="text-[#bfbdb0]/50">— white core 2</span></li>
+            <li><strong className="text-white">Layer 3:</strong> 0 0 4px rgba(255,255,255,0.8) <span className="text-[#bfbdb0]/50">— white glow</span></li>
+            <li><strong className="text-white">Layer 4:</strong> 0 0 8px #ffd700 <span className="text-[#bfbdb0]/50">— gold glow close</span></li>
+            <li><strong className="text-white">Layer 5:</strong> 0 0 16px rgba(255,215,0,0.6) <span className="text-[#bfbdb0]/50">— gold glow medium</span></li>
+            <li><strong className="text-white">Layer 6:</strong> 0 0 32px rgba(255,215,0,0.3) <span className="text-[#bfbdb0]/50">— gold glow far</span></li>
+            <li><strong className="text-white">Drop Shadow:</strong> drop-shadow(0 0 4px rgba(255,215,0,0.8)) <span className="text-[#bfbdb0]/50">— outer filter</span></li>
           </ul>
+          <p className="text-sm text-[#bfbdb0]/70 mt-4">Example: "Remove layers 5, 6, and drop shadow" or "Keep only layers 1-3"</p>
         </div>
 
         {/* AUTHOR DESIGNS SECTION */}
