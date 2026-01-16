@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { BlogPostHero } from './BlogPostHero';
-import { RelatedPosts } from './RelatedPosts';
+import { AuthorSection } from './AuthorSection';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { Breadcrumbs } from './Breadcrumbs';
@@ -58,8 +58,6 @@ function processH2WordWrapping(html: string): string {
 export interface BlogPostTemplateProps {
   /** The blog post data */
   post: BlogPost;
-  /** Related posts to display */
-  relatedPosts?: BlogPost[];
 }
 
 /**
@@ -69,7 +67,7 @@ export interface BlogPostTemplateProps {
  * - BlogPostHero with theme switch, category, meta info
  * - Blog content with futuristic image frames
  * - Share buttons
- * - Related posts section
+ * - Author section with profile and bio
  * - Theme switching (light/dark mode)
  * - Responsive design following PAGE_BUILDER_GUIDELINES
  *
@@ -77,14 +75,11 @@ export interface BlogPostTemplateProps {
  * ```tsx
  * <BlogPostTemplate
  *   post={blogPost}
- *   relatedPosts={relatedPosts}
- *   baseUrl="https://smartagentalliance.com"
  * />
  * ```
  */
 export function BlogPostTemplate({
   post,
-  relatedPosts = [],
 }: BlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -229,18 +224,14 @@ export function BlogPostTemplate({
         </div>
       </section>
 
-      {/* Related Posts - No border-t here, divider handled by Share section */}
-      {relatedPosts.length > 0 && (
-        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-          <div className="max-w-[1900px] mx-auto">
-            <RelatedPosts
-              posts={relatedPosts}
-              currentPostId={post.id}
-              currentCategory={primaryCategory}
-            />
+      {/* Author Section - shows author bio based on WordPress author name */}
+      <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+        <div className="max-w-[1900px] mx-auto">
+          <div className="max-w-[1200px] mx-auto">
+            <AuthorSection authorName={post.author.name} />
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </article>
   );
 }

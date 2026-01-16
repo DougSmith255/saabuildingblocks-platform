@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { ChevronDown } from 'lucide-react';
 import { BlogPostHero } from '../BlogPostHero';
-import { RelatedPosts } from '../RelatedPosts';
+import { AuthorSection } from '../AuthorSection';
 import { ShareButtons } from '@saa/shared/components/saa/interactive';
 import { CyberFrame, YouTubeFacade } from '@saa/shared/components/saa/media';
 import { SchoolCardsSection } from '../SchoolCardsSection';
@@ -102,8 +102,6 @@ function BlogContentRenderer({ html }: { html: string }) {
 export interface CategoryBlogPostTemplateProps {
   /** The blog post data */
   post: BlogPost;
-  /** Related posts to display */
-  relatedPosts?: BlogPost[];
   /** Category for template customization (optional, defaults to post.categories[0]) */
   category?: string;
 }
@@ -120,7 +118,6 @@ export interface CategoryBlogPostTemplateProps {
  */
 export function CategoryBlogPostTemplate({
   post,
-  relatedPosts = [],
   category,
 }: CategoryBlogPostTemplateProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -170,9 +167,6 @@ export function CategoryBlogPostTemplate({
 
   // Build category slug
   const categorySlug = primaryCategory.toLowerCase().replace(/\s+/g, '-');
-
-  // Limit related posts based on config
-  const limitedRelatedPosts = relatedPosts.slice(0, templateConfig.relatedPostsLimit || 3);
 
   // Check if video should be emphasized
   const hasVideo = post.youtubeVideoUrl && extractYouTubeVideoId(post.youtubeVideoUrl);
@@ -343,20 +337,16 @@ export function CategoryBlogPostTemplate({
         </section>
       </LazySection>
 
-      {/* Related Posts */}
-      {limitedRelatedPosts.length > 0 && (
-        <LazySection height={400}>
-          <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
-            <div className="max-w-[1900px] mx-auto">
-              <RelatedPosts
-                posts={limitedRelatedPosts}
-                currentPostId={post.id}
-                currentCategory={primaryCategory}
-              />
+      {/* Author Section - shows author bio based on WordPress author name */}
+      <LazySection height={300}>
+        <section className="relative py-16 md:py-24 px-4 sm:px-8 md:px-12">
+          <div className="max-w-[1900px] mx-auto">
+            <div className="max-w-[1200px] mx-auto">
+              <AuthorSection authorName={post.author.name} />
             </div>
-          </section>
-        </LazySection>
-      )}
+          </div>
+        </section>
+      </LazySection>
     </article>
   );
 }

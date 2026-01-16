@@ -179,8 +179,8 @@ function AuthorDesign2({ author }: { author: typeof authors.doug }) {
 // Design 3: Compact Inline with 3D Metal Plate (ENHANCED VERSION)
 // - Tagline styling and sizing on names: Taskor, clamp(21px, calc(17.45px + 1.42vw), 60px)
 // - Body font styling and sizing on bio: Synonym, clamp(16px, calc(14.91px + 0.44vw), 28px)
-// - 3D icon effect on arrow (2x size)
-// - Shared ProfileCyberFrame component (size="lg" = 192px)
+// - 3D icon effect on arrow (w-12 h-12 button, w-5 h-5 icon)
+// - Shared ProfileCyberFrame component (size="md" = 144px)
 // - No set width - fills container
 // - Glow effect matches H2 styling (text-shadow only, no drop-shadow filter)
 function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; index?: number }) {
@@ -208,9 +208,9 @@ function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; ind
       <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       <div className="flex flex-col sm:flex-row items-center gap-6">
-        {/* Photo with shared ProfileCyberFrame (size="lg" = 192px, ~2x original) */}
+        {/* Photo with shared ProfileCyberFrame (size="md" = 144px, ~4/5 of lg) */}
         <div className="relative flex-shrink-0">
-          <ProfileCyberFrame size="lg" index={index}>
+          <ProfileCyberFrame size="md" index={index}>
             <img
               src={author.image}
               alt={author.name}
@@ -264,14 +264,14 @@ function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; ind
           </p>
         </div>
 
-        {/* Arrow link with 3D Icon effect - 2x size (w-24 h-24, icon w-10 h-10) */}
+        {/* Arrow link with 3D Icon effect - 1/2 size (w-12 h-12, icon w-5 h-5) */}
         <a
           href={author.profileUrl}
-          className="flex-shrink-0 w-24 h-24 rounded-full bg-[#ffd700]/10 border border-[#ffd700]/20 flex items-center justify-center hover:bg-[#ffd700]/20 hover:border-[#ffd700]/40 transition-all"
+          className="flex-shrink-0 w-12 h-12 rounded-full bg-[#ffd700]/10 border border-[#ffd700]/20 flex items-center justify-center hover:bg-[#ffd700]/20 hover:border-[#ffd700]/40 transition-all"
           title={`More about ${author.name}`}
         >
           <Icon3D color="#ffd700">
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Icon3D>

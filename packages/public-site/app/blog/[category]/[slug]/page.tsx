@@ -113,25 +113,6 @@ export async function generateMetadata({
 }
 
 /**
- * Get related posts (same category, excluding current post)
- */
-function getRelatedPosts(
-  currentPost: BlogPost,
-  allPosts: BlogPost[],
-  limit: number = 3
-): BlogPost[] {
-  const primaryCategory = currentPost.categories[0];
-
-  return allPosts
-    .filter(
-      (post) =>
-        post.id !== currentPost.id &&
-        post.categories.includes(primaryCategory)
-    )
-    .slice(0, limit);
-}
-
-/**
  * Blog Post Page Component
  */
 export default async function BlogPostPage({
@@ -146,8 +127,6 @@ export default async function BlogPostPage({
   if (!post) {
     notFound();
   }
-
-  const relatedPosts = getRelatedPosts(post, posts);
 
   const category = post.categories[0] || 'uncategorized';
 
@@ -170,7 +149,7 @@ export default async function BlogPostPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
         />
       )}
-      <CategoryBlogPostTemplate post={postWithTransformedContent} relatedPosts={relatedPosts} category={category} />
+      <CategoryBlogPostTemplate post={postWithTransformedContent} category={category} />
     </main>
   );
 }
