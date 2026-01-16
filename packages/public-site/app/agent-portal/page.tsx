@@ -331,6 +331,8 @@ function AgentPortal() {
   const [eliteCoursesIntroDismissed, setEliteCoursesIntroDismissed] = useState(false);
   const [isOnboardingLoaded, setIsOnboardingLoaded] = useState(false);
   const [showLinkPageIntroModal, setShowLinkPageIntroModal] = useState(false);
+  const [showLinkPageHelpModal, setShowLinkPageHelpModal] = useState(false);
+  const [showEliteCoursesHelpModal, setShowEliteCoursesHelpModal] = useState(false);
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
 
   // Check if any popup is open (for header slide animation)
@@ -557,17 +559,6 @@ function AgentPortal() {
     }
   }, [isOnboardingComplete, activeSection]);
   // Show one-time intro modals when navigating to Link Page or Elite Courses for the first time
-  useEffect(() => {
-    if (isOnboardingLoaded && activeSection === 'linktree' && !linkPageIntroDismissed) {
-      setShowLinkPageIntroModal(true);
-    }
-  }, [activeSection, isOnboardingLoaded, linkPageIntroDismissed]);
-
-  useEffect(() => {
-    if (isOnboardingLoaded && activeSection === 'courses' && !eliteCoursesIntroDismissed) {
-      setShowEliteCoursesIntroModal(true);
-    }
-  }, [activeSection, isOnboardingLoaded, eliteCoursesIntroDismissed]);
 
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -1804,6 +1795,17 @@ function AgentPortal() {
             {/* Elite Courses */}
             {activeSection === 'courses' && <CoursesSection />}
 
+            {activeSection === 'courses' && (
+              <button
+                onClick={() => setShowEliteCoursesHelpModal(true)}
+                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-purple-500 hover:bg-purple-600 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
+                aria-label="Elite Courses Help"
+              >
+                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+            )}
             {/* Production */}
             {activeSection === 'production' && <ProductionSection />}
 
@@ -2395,7 +2397,7 @@ function AgentPortal() {
       {/* Link Page Intro Modal - One Time Notification */}
       {showLinkPageIntroModal && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={() => {}}
           onWheel={(e) => e.stopPropagation()}
         >
@@ -2418,8 +2420,8 @@ function AgentPortal() {
               </div>
               <button
                 onClick={() => {
-                  setShowLinkPageIntroModal(false);
-                  dismissNotification('link_page');
+                  setShowLinkPageHelpModal(false);
+                  
                 }}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
               >
@@ -2427,16 +2429,6 @@ function AgentPortal() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-            </div>
-
-            {/* Warning Banner */}
-            <div className="mx-5 mt-5 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
-              <p className="text-amber-400 text-sm flex items-start gap-2">
-                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <span>This notification will disappear permanently when you close it. Please read carefully before exiting.</span>
-              </p>
             </div>
 
             {/* Content */}
@@ -2486,8 +2478,8 @@ function AgentPortal() {
             <div className="p-5 border-t border-white/10">
               <button
                 onClick={() => {
-                  setShowLinkPageIntroModal(false);
-                  dismissNotification('link_page');
+                  setShowLinkPageHelpModal(false);
+                  
                 }}
                 className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-emerald-500 hover:bg-emerald-400 transition-colors"
               >
@@ -2501,7 +2493,7 @@ function AgentPortal() {
       {/* Elite Courses Intro Modal - One Time Notification */}
       {showEliteCoursesIntroModal && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={() => {}}
           onWheel={(e) => e.stopPropagation()}
         >
@@ -2524,8 +2516,8 @@ function AgentPortal() {
               </div>
               <button
                 onClick={() => {
-                  setShowEliteCoursesIntroModal(false);
-                  dismissNotification('elite_courses');
+                  setShowEliteCoursesHelpModal(false);
+                  
                 }}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
               >
@@ -2533,16 +2525,6 @@ function AgentPortal() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-            </div>
-
-            {/* Warning Banner */}
-            <div className="mx-5 mt-5 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
-              <p className="text-amber-400 text-sm flex items-start gap-2">
-                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
-                </svg>
-                <span>This notification will disappear permanently when you close it. Please read carefully before exiting.</span>
-              </p>
             </div>
 
             {/* Content */}
@@ -2673,8 +2655,8 @@ function AgentPortal() {
             <div className="p-5 border-t border-white/10">
               <button
                 onClick={() => {
-                  setShowEliteCoursesIntroModal(false);
-                  dismissNotification('elite_courses');
+                  setShowEliteCoursesHelpModal(false);
+                  
                 }}
                 className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-purple-500 hover:bg-purple-400 transition-colors"
               >
@@ -3378,7 +3360,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       key: 'step2_okta_account' as keyof OnboardingProgress,
       number: 2,
       title: 'Activate Your Okta Account',
-      description: 'Set up your Okta account for secure access to eXp systems.',
+      description: 'Set up your Okta account for secure access to eXp systems. Scroll down to Step 1 in the "Quick Startup Guide" section of the eXp Toolkit Guide, or go directly to the Okta setup video.',
       content: (
         <div className="space-y-4">
           <p className="text-[#e5e4dd]/80 text-sm">
@@ -3469,7 +3451,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               BoldTrail integrates best with SAA landing pages and email drip campaigns. We are working on Cloze and Lofty landing page capabilities (not guaranteed).
             </p>
           </div>
-          <div className="bg-amber-500/10 rounded-lg p-3 border border-amber-500/30">
+              BoldTrail integrates best with SAA landing pages and email drip campaigns. In the future, Lofty and Cloze integration may become available, but this is not guaranteed.
             <p className="text-amber-400 text-xs flex items-start gap-2">
               <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -7325,23 +7307,6 @@ function AgentPagesSection({
               </div>
             </div>
 
-            {/* Activate Button (if not activated) */}
-            {!pageData.activated && (
-              <button
-                onClick={handleActivate}
-                disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
-                className="w-full px-5 py-3 rounded-xl font-medium bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                title={
-                  hasUnsavedChanges
-                    ? 'Save changes first'
-                    : (!pageData.profile_image_url && !user.profilePictureUrl)
-                      ? 'Upload a profile image first'
-                      : 'Activate your page'
-                }
-              >
-                Activate Your Pages
-              </button>
-            )}
           </div>
         </div>
 
@@ -7963,8 +7928,7 @@ function AgentPagesSection({
                 </svg>
                 QR Code
               </button>
-              {/* Link Page Live (only if activated) */}
-              {pageData.activated && (
+              {pageData.activated ? (
                 <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -8001,10 +7965,25 @@ function AgentPagesSection({
                     </a>
                   </div>
                 </div>
+              ) : (
+                <button
+                  onClick={handleActivate}
+                  disabled={hasUnsavedChanges || (!pageData.profile_image_url && !user?.profilePictureUrl)}
+                  className="flex-1 px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-medium flex items-center justify-center gap-2"
+                  title={
+                    hasUnsavedChanges
+                      ? 'Save changes first'
+                      : (!pageData.profile_image_url && !user?.profilePictureUrl)
+                        ? 'Upload a profile image first'
+                        : 'Activate your page'
+                  }
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Activate Your Pages
+                </button>
               )}
-            </div>
-
-            {/* Page Status & QR Code - visible on mobile (<1200px) and large desktop (>1650px) */}
             <div className="mb-4 flex gap-3 min-[1200px]:hidden min-[1650px]:flex">
               {/* QR Code Download Button */}
               <button
@@ -8286,7 +8265,7 @@ function AgentPagesSection({
             </div> {/* End PROFILE SECTION */}
 
             {/* CONNECT SECTION - Social Links, Phone, Email */}
-            <div className={`space-y-3 mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1200px]:block'}`}>
+            <div className={`mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1200px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
               <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -8296,6 +8275,11 @@ function AgentPagesSection({
               </div>
 
               {/* Social Links */}
+
+              {/* Content wrapper - 2 columns at >1650px */}
+              <div className="min-[1650px]:grid min-[1650px]:grid-cols-2 min-[1650px]:gap-6 space-y-3 min-[1650px]:space-y-0 mt-3">
+                {/* Column 1: Social Links */}
+                <div className="space-y-3">
               <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                 <div className="flex items-center justify-between mb-3">
                   <h4 className="text-sm font-medium text-[#ffd700]">Social Links</h4>
@@ -8452,7 +8436,7 @@ function AgentPagesSection({
               </div>
 
               {/* Email + Phone Row - Hidden on screens < 1650px (moved to Links column) */}
-              <div className="hidden min-[1650px]:grid min-[1650px]:grid-cols-2 gap-3">
+                <div className="space-y-3 hidden min-[1650px]:block">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
@@ -8500,7 +8484,8 @@ function AgentPagesSection({
                     )}
                   </div>
                 </div>
-              </div>
+                </div> {/* End Column 2: Email + Phone */}
+              </div> {/* End 2-column grid wrapper */}
             </div> {/* End CONNECT SECTION */}
               </div> {/* End LEFT COLUMN */}
 
@@ -9117,25 +9102,18 @@ function AgentPagesSection({
             </div> {/* End Desktop Two-Column Grid */}
 
             {/* Action Buttons - Desktop only, Activate button */}
-            {!pageData.activated && (
-              <div className="hidden min-[1200px]:flex flex-wrap gap-3 justify-end pt-4 mt-6 border-t border-white/10">
-                <button
-                  onClick={handleActivate}
-                  disabled={isSaving || hasUnsavedChanges || (!pageData.profile_image_url && !user.profilePictureUrl)}
-                  className="px-5 py-2.5 rounded-lg font-medium bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  title={
-                    hasUnsavedChanges
-                      ? 'Save changes first'
-                      : (!pageData.profile_image_url && !user.profilePictureUrl)
-                        ? 'Upload a profile image first'
-                        : 'Activate your page'
-                  }
-                >
-                  Activate Pages
-                </button>
-              </div>
-            )}
           </div> {/* End of SETTINGS COLUMN */}
+
+            {/* Floating Help Icon - Bottom Right */}
+            <button
+              onClick={() => setShowLinkPageHelpModal(true)}
+              className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center group max-[1199px]:bottom-20"
+              aria-label="Link Page Help"
+            >
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
         </div>
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
