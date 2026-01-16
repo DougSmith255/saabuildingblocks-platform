@@ -5573,7 +5573,7 @@ function AgentPagesSection({
         imageOptions: {
           crossOrigin: 'anonymous',
           margin: 4,
-          imageSize: 0.28,
+          imageSize: 0.22,
         },
         cornersSquareOptions: {
           color: '#2a2a2a',
@@ -6729,7 +6729,7 @@ function AgentPagesSection({
                     <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Link Page QR Code</span>
                     <div className="relative w-[200px] h-[200px]">
                       {/* Off-black rounded background behind logo - positioned under the QR center */}
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[58px] h-[58px] bg-[#1a1a1a] rounded-xl z-0" />
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[46px] h-[46px] bg-[#1a1a1a] rounded-lg z-0" />
                       <div ref={qrCodeRef} className="relative w-full h-full z-10" />
                     </div>
                     <button
