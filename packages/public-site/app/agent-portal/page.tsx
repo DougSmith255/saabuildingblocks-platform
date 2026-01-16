@@ -7514,8 +7514,132 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email + Phone - Only visible on screens < 1565px (moved from Connect section) */}
-              <div className="min-[1650px]:hidden grid grid-cols-1 gap-3 mb-4">
+              {/* Accent Color + Style Options - Only visible on screens < 1200px (in Links tab) */}
+              <div className="min-[1200px]:hidden grid grid-cols-2 gap-3 mb-4">
+                {/* Accent Color */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
+                  <div className="space-y-2">
+                    <HexColorPicker
+                      color={linksSettings.accentColor}
+                      onChange={(color) => {
+                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                        setHasUnsavedChanges(true);
+                      }}
+                      style={{ width: '100%', height: '95px' }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
+                        style={{ backgroundColor: linksSettings.accentColor }}
+                      />
+                      <HexColorInput
+                        color={linksSettings.accentColor}
+                        onChange={(color) => {
+                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                          setHasUnsavedChanges(true);
+                        }}
+                        prefixed={true}
+                        className="flex-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Style Options */}
+                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
+                  <div className="space-y-3">
+                    {/* Button Text */}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Text</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.iconStyle === 'light'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.iconStyle === 'dark'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Dark
+                        </button>
+                      </div>
+                    </div>
+                    {/* Font */}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Font</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.font === 'synonym'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Synonym
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.font === 'taskor'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Taskor
+                        </button>
+                      </div>
+                    </div>
+                    {/* Name Weight */}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Weight</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'bold'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Bold
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'normal'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Regular
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email + Phone - Only visible on screens < 1650px (moved from Connect section) */}
+              <div className="min-[1650px]:hidden grid grid-cols-1 min-[1200px]:grid-cols-1 gap-3 mb-4 max-[1199px]:grid-cols-2">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
@@ -7890,9 +8014,9 @@ function AgentPagesSection({
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
         {/* Shows when <1200px (mobile UI).
-            - <950px: Full width with 10px margins, 10px above mobile nav (64px) = bottom-[74px]
-            - 950-1200px: 10px from bottom, 10px gap from sidebar (280px) = left-[290px], 10px right margin */}
-        <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px] min-[950px]:right-[10px]">
+            - <950px: Full width with 10px margins, 35px above mobile nav (64px) = bottom-[99px]
+            - 950-1200px: 35px from bottom, 10px gap from sidebar (280px) = left-[290px], 10px right margin */}
+        <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[99px] min-[950px]:bottom-[35px] min-[950px]:left-[290px] min-[950px]:right-[10px]">
           <div className="flex gap-2">
             {/* Preview Link Page Button - Shrinks from right when Save appears */}
             <button
@@ -8155,17 +8279,65 @@ function AgentPagesSection({
                   const customLink = customLinkMap.get(linkId);
                   if (!isDefault && !customLink) return null;
 
+                  if (linkId === 'join-team') {
+                    return (
+                      <div
+                        key="join-team"
+                        className="w-full py-3 px-4 rounded-lg text-[16px] font-medium relative"
+                        style={{
+                          backgroundColor: linksSettings.accentColor,
+                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                        }}
+                      >
+                        <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                          <circle cx="9" cy="7" r="4" />
+                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <span className="block text-center">Join my Team</span>
+                      </div>
+                    );
+                  }
+
+                  if (linkId === 'learn-about') {
+                    return (
+                      <div
+                        key="learn-about"
+                        className="w-full py-3 px-4 rounded-lg text-[16px] font-medium relative"
+                        style={{
+                          backgroundColor: linksSettings.accentColor,
+                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
+                        }}
+                      >
+                        <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 16v-4" />
+                          <path d="M12 8h.01" />
+                        </svg>
+                        <span className="block text-center">Learn About my Team</span>
+                      </div>
+                    );
+                  }
+
+                  // Custom link
+                  const iconPath = LINK_ICONS.find(i => i.name === customLink?.icon)?.path;
                   return (
                     <div
                       key={linkId}
-                      className="w-full py-3 px-4 rounded-lg text-[16px] font-medium text-center"
+                      className="w-full py-3 px-4 rounded-lg text-[16px] font-medium relative"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                         fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
                       }}
                     >
-                      {isDefault ? (linkId === 'join-team' ? 'Join my Team' : 'Learn About my Team') : customLink?.label}
+                      <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d={iconPath || ''} />
+                      </svg>
+                      <span className="block text-center">{customLink?.label}</span>
                     </div>
                   );
                 });
