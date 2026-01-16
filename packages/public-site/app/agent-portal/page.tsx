@@ -140,7 +140,7 @@ interface UserData {
 }
 
 // Section types
-type SectionId = 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile' | 'download';
+type SectionId = 'onboarding' | 'dashboard' | 'market-stats' | 'calls' | 'templates' | 'courses' | 'production' | 'new-agents' | 'agent-page' | 'linktree' | 'support' | 'profile' | 'download';
 
 interface NavItem {
   id: SectionId;
@@ -149,6 +149,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
+  { id: 'onboarding', label: 'Onboarding', icon: Rocket },
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'support', label: 'Get Support', icon: LifeBuoy },
   { id: 'linktree', label: 'Link Page', icon: LinkIcon },
@@ -248,7 +249,7 @@ function AgentPortal() {
   console.log('[Loading Screen] === AgentPortal component rendering ===');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeSection, setActiveSection] = useState<SectionId>('dashboard');
+  const [activeSection, setActiveSection] = useState<SectionId>('onboarding');
   const [shakingItem, setShakingItem] = useState<SectionId | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   // Initialize user directly from localStorage to avoid flash
@@ -302,6 +303,35 @@ function AgentPortal() {
 
   // Track which source triggered the image upload (for showing notifications in correct location)
   const [uploadSource, setUploadSource] = useState<'dashboard' | 'agent-pages' | null>(null);
+
+  // Onboarding state
+  const [onboardingProgress, setOnboardingProgress] = useState<{
+    step1_welcome_video: boolean;
+    step2_okta_account: boolean;
+    step3_broker_tasks: boolean;
+    step4_choose_crm: boolean;
+    step5_training: boolean;
+    step6_community: boolean;
+    step7_karrie_session: boolean;
+    step8_link_page: boolean;
+    step9_elite_courses: boolean;
+  }>({
+    step1_welcome_video: false,
+    step2_okta_account: false,
+    step3_broker_tasks: false,
+    step4_choose_crm: false,
+    step5_training: false,
+    step6_community: false,
+    step7_karrie_session: false,
+    step8_link_page: false,
+    step9_elite_courses: false,
+  });
+  const [onboardingCompletedAt, setOnboardingCompletedAt] = useState<string | null>(null);
+  const [linkPageIntroDismissed, setLinkPageIntroDismissed] = useState(false);
+  const [eliteCoursesIntroDismissed, setEliteCoursesIntroDismissed] = useState(false);
+  const [isOnboardingLoaded, setIsOnboardingLoaded] = useState(false);
+  const [showLinkPageIntroModal, setShowLinkPageIntroModal] = useState(false);
+  const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
 
   // Check if any popup is open (for header slide animation)
   const isAnyPopupOpen = showEditProfile || showImageEditor;
@@ -424,6 +454,120 @@ function AgentPortal() {
       preloadProfileImage(user.profilePictureUrl);
     }
   }, [user?.profilePictureUrl]);
+
+  // Fetch onboarding progress when user is loaded
+  useEffect(() => {
+    if (user?.id && !isOnboardingLoaded) {
+      console.log('[Onboarding] Fetching progress for user:', user.id);
+      fetch(`https://saabuildingblocks.com/api/users/onboarding?userId=${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log('[Onboarding] API Response:', data);
+          if (data.success && data.data) {
+            const progress = data.data.onboarding_progress || {
+              step1_welcome_video: false,
+              step2_okta_account: false,
+              step3_broker_tasks: false,
+              step4_choose_crm: false,
+              step5_training: false,
+              step6_community: false,
+              step7_karrie_session: false,
+              step8_link_page: false,
+              step9_elite_courses: false,
+            };
+            console.log('[Onboarding] Setting progress:', progress);
+            console.log('[Onboarding] onboarding_completed_at:', data.data.onboarding_completed_at);
+            setOnboardingProgress(progress);
+            setOnboardingCompletedAt(data.data.onboarding_completed_at || null);
+            setLinkPageIntroDismissed(data.data.link_page_intro_dismissed || false);
+            setEliteCoursesIntroDismissed(data.data.elite_courses_intro_dismissed || false);
+          } else {
+            console.log('[Onboarding] API returned no data or error, using defaults');
+          }
+          setIsOnboardingLoaded(true);
+        })
+        .catch(err => {
+          console.error('[Onboarding] Failed to fetch progress:', err);
+          setIsOnboardingLoaded(true);
+        });
+    }
+  }, [user?.id, isOnboardingLoaded]);
+
+  // Function to update onboarding progress
+  const updateOnboardingProgress = useCallback(async (updates: Partial<typeof onboardingProgress>) => {
+    if (!user?.id) return;
+
+    const newProgress = { ...onboardingProgress, ...updates };
+    setOnboardingProgress(newProgress);
+
+    try {
+      const response = await fetch('https://saabuildingblocks.com/api/users/onboarding', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          onboarding_progress: newProgress,
+        }),
+      });
+      const data = await response.json();
+      if (data.success && data.data) {
+        setOnboardingCompletedAt(data.data.onboarding_completed_at || null);
+      }
+    } catch (err) {
+      console.error('[Onboarding] Failed to update progress:', err);
+    }
+  }, [user?.id, onboardingProgress]);
+
+  // Function to dismiss one-time notifications
+  const dismissNotification = useCallback(async (type: 'link_page' | 'elite_courses') => {
+    if (!user?.id) return;
+
+    if (type === 'link_page') {
+      setLinkPageIntroDismissed(true);
+    } else {
+      setEliteCoursesIntroDismissed(true);
+    }
+
+    try {
+      await fetch('https://saabuildingblocks.com/api/users/onboarding', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          ...(type === 'link_page' ? { link_page_intro_dismissed: true } : { elite_courses_intro_dismissed: true }),
+        }),
+      });
+    } catch (err) {
+      console.error('[Onboarding] Failed to dismiss notification:', err);
+    }
+  }, [user?.id]);
+
+  // Check if onboarding is complete
+  const isOnboardingComplete = onboardingCompletedAt !== null;
+
+  // Count completed onboarding steps
+  const completedStepsCount = Object.values(onboardingProgress).filter(Boolean).length;
+  const totalStepsCount = Object.keys(onboardingProgress).length;
+
+
+  // Redirect to dashboard if onboarding is complete and user is on onboarding tab
+  useEffect(() => {
+    if (isOnboardingComplete && activeSection === 'onboarding') {
+      setActiveSection('dashboard');
+    }
+  }, [isOnboardingComplete, activeSection]);
+  // Show one-time intro modals when navigating to Link Page or Elite Courses for the first time
+  useEffect(() => {
+    if (isOnboardingLoaded && activeSection === 'linktree' && !linkPageIntroDismissed) {
+      setShowLinkPageIntroModal(true);
+    }
+  }, [activeSection, isOnboardingLoaded, linkPageIntroDismissed]);
+
+  useEffect(() => {
+    if (isOnboardingLoaded && activeSection === 'courses' && !eliteCoursesIntroDismissed) {
+      setShowEliteCoursesIntroModal(true);
+    }
+  }, [activeSection, isOnboardingLoaded, eliteCoursesIntroDismissed]);
 
   // Disable body scroll when modal is open
   useEffect(() => {
@@ -1335,6 +1479,7 @@ function AgentPortal() {
             <div className="flex items-center gap-3">
               {/* Mobile: Current section title */}
               <span className="md:hidden text-[#ffd700] font-semibold text-sm">
+                {activeSection === 'onboarding' && 'Onboarding'}
                 {activeSection === 'dashboard' && 'Home'}
                 {activeSection === 'support' && 'Get Support'}
                 {activeSection === 'agent-page' && 'Agent Attraction'}
@@ -1527,11 +1672,19 @@ function AgentPortal() {
 
               {/* Navigation Menu - 3D Button Style, no container on desktop */}
               <nav className="md:space-y-1">
-              {navItems.map((item, index) => {
+              {navItems
+                .filter(item => {
+                  // Hide onboarding tab when onboarding is complete
+                  if (item.id === 'onboarding' && isOnboardingComplete) return false;
+                  return true;
+                })
+                .map((item, index) => {
                 const IconComponent = item.icon;
                 const isActive = activeSection === item.id;
                 const isDownload = item.id === 'download';
                 const isDownloadInactive = isDownload && !isActive;
+                const isOnboarding = item.id === 'onboarding';
+                const isOnboardingInactive = isOnboarding && !isActive;
                 return (
                   <div key={item.id}>
                     <button
@@ -1546,38 +1699,59 @@ function AgentPortal() {
                       style={{
                         background: isActive
                           ? 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)'
+                          : isOnboardingInactive
+                          ? 'linear-gradient(180deg, #2a2518 0%, #1f1a10 50%, #191408 100%)'
                           : isDownloadInactive
                           ? 'linear-gradient(180deg, #252525 0%, #1a1a1a 50%, #151515 100%)'
                           : 'linear-gradient(180deg, #151515 0%, #0a0a0a 100%)',
                         boxShadow: isActive
                           ? 'inset 0 1px 0 rgba(255,215,0,0.2), inset 0 -1px 2px rgba(0,0,0,0.5), 0 0 12px rgba(255,215,0,0.15)'
+                          : isOnboardingInactive
+                          ? 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 12px rgba(255,215,0,0.1), 0 0 20px rgba(255,215,0,0.05)'
                           : isDownloadInactive
                           ? 'inset 0 2px 0 rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.3)'
                           : 'inset 0 1px 0 rgba(255,255,255,0.05), inset 0 -1px 2px rgba(0,0,0,0.3)',
-                        border: isActive ? '1px solid rgba(255,215,0,0.3)' : '1px solid rgba(255,255,255,0.08)',
+                        border: isActive
+                          ? '1px solid rgba(255,215,0,0.3)'
+                          : isOnboardingInactive
+                          ? '1px solid rgba(255,215,0,0.25)'
+                          : '1px solid rgba(255,255,255,0.08)',
                         ...(shakingItem === item.id ? { animation: 'shake 0.3s ease-in-out' } : {}),
                       }}
                     >
-                      {/* Icon - only yellow when active, not just for download glow */}
+                      {/* Icon - gold for onboarding, yellow when active */}
                       <div
                         className={`transition-all duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}
                         style={{
-                          filter: isActive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
-                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.6)',
+                          filter: isActive || isOnboardingInactive ? 'drop-shadow(0 0 6px rgba(255,215,0,0.8))' : 'none',
+                          color: isActive || isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.6)',
                         }}
                       >
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      {/* Label - only yellow when active, not just for download glow */}
+                      {/* Label - gold for onboarding, yellow when active */}
                       <span
                         className="font-medium font-taskor text-sm transition-all duration-200"
                         style={{
-                          color: isActive ? '#ffd700' : 'rgba(229,228,221,0.8)',
-                          textShadow: isActive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
+                          color: isActive || isOnboardingInactive ? '#ffd700' : 'rgba(229,228,221,0.8)',
+                          textShadow: isActive || isOnboardingInactive ? '0 0 8px rgba(255,215,0,0.6)' : 'none',
                         }}
                       >
                         {item.label}
                       </span>
+                      {/* Progress indicator for onboarding */}
+                      {isOnboardingInactive && (
+                        <span
+                          className="ml-auto text-xs font-synonym px-2 py-0.5 rounded-full"
+                          style={{
+                            background: 'rgba(255,215,0,0.15)',
+                            color: '#ffd700',
+                            border: '1px solid rgba(255,215,0,0.2)',
+                          }}
+                        >
+                          {completedStepsCount}/{totalStepsCount}
+                        </span>
+                      )}
                     </button>
                   </div>
                 );
@@ -1597,9 +1771,25 @@ function AgentPortal() {
               userSelect: 'none',
             } as React.CSSProperties}
           >
+            {/* Onboarding Section */}
+            {activeSection === 'onboarding' && (
+              <OnboardingSection
+                progress={onboardingProgress}
+                onUpdateProgress={updateOnboardingProgress}
+                userName={user?.firstName || ''}
+                userLastName={user?.lastName || ''}
+                onNavigate={setActiveSection}
+              />
+            )}
+
             {/* Dashboard View */}
             {activeSection === 'dashboard' && (
-              <DashboardView onNavigate={setActiveSection} />
+              <DashboardView
+                onNavigate={setActiveSection}
+                isOnboardingComplete={isOnboardingComplete}
+                completedStepsCount={completedStepsCount}
+                totalStepsCount={totalStepsCount}
+              />
             )}
 
             {/* Get Support */}
@@ -2202,6 +2392,299 @@ function AgentPortal() {
         </div>
       )}
 
+      {/* Link Page Intro Modal - One Time Notification */}
+      {showLinkPageIntroModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => {}}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+
+          {/* Modal */}
+          <div
+            className="relative w-full max-w-lg my-auto bg-[#151517] rounded-2xl border border-emerald-500/30 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
+                  <LinkIcon className="w-6 h-6 text-emerald-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-emerald-400">Welcome to Your Link Page</h2>
+              </div>
+              <button
+                onClick={() => {
+                  setShowLinkPageIntroModal(false);
+                  dismissNotification('link_page');
+                }}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Warning Banner */}
+            <div className="mx-5 mt-5 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+              <p className="text-amber-400 text-sm flex items-start gap-2">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>This notification will disappear permanently when you close it. Please read carefully before exiting.</span>
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              <p className="text-[#e5e4dd]/80">
+                Your Link Page is your personalized hub for sharing all your important links in one place. Complete these sections to activate it:
+              </p>
+
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Profile</strong> - Add your photo and display name</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Design</strong> - Choose your style and accent color</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Connect</strong> - Add your contact information</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Links</strong> - Add your important links</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
+                <p className="text-blue-400 text-sm mb-2">
+                  <strong>Your Page URL:</strong>
+                </p>
+                <code className="text-blue-300 text-sm font-mono bg-black/30 px-2 py-1 rounded">
+                  smartagentalliance.com/{(user?.firstName || 'firstname').toLowerCase()}-{(user?.lastName || 'lastname').toLowerCase()}-links
+                </code>
+              </div>
+
+              <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/30">
+                <p className="text-purple-400 text-sm">
+                  <strong>Note:</strong> Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setShowLinkPageIntroModal(false);
+                  dismissNotification('link_page');
+                }}
+                className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-emerald-500 hover:bg-emerald-400 transition-colors"
+              >
+                Got it, let&apos;s set up my Link Page!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Elite Courses Intro Modal - One Time Notification */}
+      {showEliteCoursesIntroModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => {}}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+
+          {/* Modal */}
+          <div
+            className="relative w-full max-w-2xl my-auto bg-[#151517] rounded-2xl border border-purple-500/30 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-purple-500/10 to-transparent rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-purple-500/20 border border-purple-500/30">
+                  <GraduationCap className="w-6 h-6 text-purple-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-purple-400">Welcome to Elite Courses</h2>
+              </div>
+              <button
+                onClick={() => {
+                  setShowEliteCoursesIntroModal(false);
+                  dismissNotification('elite_courses');
+                }}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Warning Banner */}
+            <div className="mx-5 mt-5 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+              <p className="text-amber-400 text-sm flex items-start gap-2">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                <span>This notification will disappear permanently when you close it. Please read carefully before exiting.</span>
+              </p>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-5">
+              <div>
+                <p className="text-[#e5e4dd]/80 mb-3">
+                  As a Smart Agent Alliance member, you have access to exclusive training resources:
+                </p>
+                <div className="bg-[#ffd700]/5 rounded-lg p-4 border border-[#ffd700]/20">
+                  <h4 className="text-[#ffd700] font-semibold mb-2 flex items-center gap-2">
+                    <Crown className="w-4 h-4" />
+                    Social Agent Academy PRO Includes:
+                  </h4>
+                  <ul className="space-y-1 text-[#e5e4dd]/80 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#ffd700] mt-0.5">•</span>
+                      SAA PRO Course
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#ffd700] mt-0.5">•</span>
+                      Master Agent Attraction
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#ffd700] mt-0.5">•</span>
+                      AI Agent Accelerator
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Email Templates */}
+              <div className="space-y-4">
+                <h4 className="text-[#e5e4dd] font-semibold">Request Your Login Credentials:</h4>
+
+                {/* Wolf Pack Email */}
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <h5 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Wolf Pack / Social Agent Academy PRO
+                  </h5>
+                  <div className="bg-black/30 rounded-lg p-3 text-sm text-[#e5e4dd]/80 font-mono mb-3">
+                    <p><strong className="text-[#ffd700]">To:</strong> support@mikesherrard.com</p>
+                    <p><strong className="text-[#ffd700]">Subject:</strong> New SAA Agent - Login Request</p>
+                    <p className="mt-2">Hi,</p>
+                    <p className="mt-1">My name is {user?.firstName || '[First Name]'} {user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.</p>
+                    <p className="mt-1">Could you please help me with:</p>
+                    <p>- Login credentials for Social Agent Academy PRO</p>
+                    <p>- Skool community invite and/or setup information</p>
+                    <p className="mt-1">Thank you,</p>
+                    <p>{user?.firstName || '[First Name]'} {user?.lastName || '[Last Name]'}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        const text = `Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO\n- Skool community invite and/or setup information\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`;
+                        navigator.clipboard.writeText(text);
+                      }}
+                      className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-[#e5e4dd] hover:bg-white/15 transition-colors text-sm flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copy Email
+                    </button>
+                    <a
+                      href={`mailto:support@mikesherrard.com?subject=${encodeURIComponent('New SAA Agent - Login Request')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO\n- Skool community invite and/or setup information\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                      className="flex-1 px-3 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Open in Email
+                    </a>
+                  </div>
+                </div>
+
+                {/* Investor Army Email */}
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <h5 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    Investor Army
+                  </h5>
+                  <div className="bg-black/30 rounded-lg p-3 text-sm text-[#e5e4dd]/80 font-mono mb-3">
+                    <p><strong className="text-[#ffd700]">To:</strong> connor.steinbrook@exprealty.com</p>
+                    <p><strong className="text-[#ffd700]">Subject:</strong> New SAA Agent - Investor Army Login Request</p>
+                    <p className="mt-2">Hi Connor,</p>
+                    <p className="mt-1">My name is {user?.firstName || '[First Name]'} {user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.</p>
+                    <p className="mt-1">Could you please help me get access to Investor Army?</p>
+                    <p className="mt-1">Thank you,</p>
+                    <p>{user?.firstName || '[First Name]'} {user?.lastName || '[Last Name]'}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        const text = `Hi Connor,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.\n\nCould you please help me get access to Investor Army?\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`;
+                        navigator.clipboard.writeText(text);
+                      }}
+                      className="flex-1 px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-[#e5e4dd] hover:bg-white/15 transition-colors text-sm flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                      Copy Email
+                    </button>
+                    <a
+                      href={`mailto:connor.steinbrook@exprealty.com?subject=${encodeURIComponent('New SAA Agent - Investor Army Login Request')}&body=${encodeURIComponent(`Hi Connor,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.\n\nCould you please help me get access to Investor Army?\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                      className="flex-1 px-3 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                      Open in Email
+                    </a>
+                  </div>
+                </div>
+
+                <p className="text-[#e5e4dd]/50 text-xs text-center">
+                  Please allow 1-2 business days for a response.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => {
+                  setShowEliteCoursesIntroModal(false);
+                  dismissNotification('elite_courses');
+                }}
+                className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-purple-500 hover:bg-purple-400 transition-colors"
+              >
+                Got it, let&apos;s explore the courses!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Image Editor Modal */}
       {showImageEditor && pendingImageUrl && (
         <div
@@ -2493,15 +2976,107 @@ function AgentPortal() {
 // ============================================================================
 // Dashboard View - Quick Access Cards
 // ============================================================================
-function DashboardView({ onNavigate }: { onNavigate: (id: SectionId) => void }) {
+function DashboardView({
+  onNavigate,
+  isOnboardingComplete,
+  completedStepsCount,
+  totalStepsCount,
+}: {
+  onNavigate: (id: SectionId) => void;
+  isOnboardingComplete: boolean;
+  completedStepsCount: number;
+  totalStepsCount: number;
+}) {
   // Separate cards by size for bento layout
   const heroCard = dashboardCards.find(c => c.size === 'hero');
   const featuredCards = dashboardCards.filter(c => c.size === 'featured');
   const standardCards = dashboardCards.filter(c => c.size === 'standard');
   const compactCards = dashboardCards.filter(c => c.size === 'compact');
 
+  // Calculate onboarding progress percentage
+  const progressPercentage = totalStepsCount > 0 ? (completedStepsCount / totalStepsCount) * 100 : 0;
+
   return (
     <div className="space-y-4 px-1 sm:px-2">
+      {/* Onboarding Card - Prominent 3D metal plate (only when not complete) */}
+      {!isOnboardingComplete && (
+        <button
+          onClick={() => onNavigate('onboarding')}
+          className="w-full text-left group relative"
+          style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+        >
+          <div
+            className="relative p-5 sm:p-6 rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:scale-[1.01] group-active:scale-[0.99]"
+            style={{
+              background: 'linear-gradient(180deg, #2a2518 0%, #1f1a10 50%, #191408 100%)',
+              boxShadow: 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 20px rgba(255,215,0,0.15), 0 0 40px rgba(255,215,0,0.08)',
+              border: '2px solid rgba(255,215,0,0.35)',
+            }}
+          >
+            {/* Animated glow pulse */}
+            <div
+              className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity duration-500"
+              style={{
+                background: 'radial-gradient(ellipse at center, rgba(255,215,0,0.2) 0%, transparent 70%)',
+              }}
+            />
+
+            {/* Top highlight line */}
+            <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
+
+            <div className="relative flex items-center gap-4 sm:gap-6">
+              {/* Rocket Icon with glow */}
+              <div className="relative p-4 sm:p-5 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/40 group-hover:border-[#ffd700]/60 group-hover:bg-[#ffd700]/20 transition-all duration-300">
+                <Icon3D color="#ffd700">
+                  <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] group-hover:scale-110 transition-transform duration-300" />
+                </Icon3D>
+              </div>
+
+              <div className="flex-1 min-w-0">
+                {/* Title with Taskor font and neon glow */}
+                <h3
+                  className="text-xl sm:text-2xl font-bold uppercase tracking-wide"
+                  style={{
+                    fontFamily: 'var(--font-taskor, sans-serif)',
+                    color: '#ffd700',
+                    textShadow: '0 0 8px rgba(255,215,0,0.6), 0 0 20px rgba(255,215,0,0.3)',
+                  }}
+                >
+                  Onboarding
+                </h3>
+
+                {/* Progress text */}
+                <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1">
+                  {completedStepsCount} of {totalStepsCount} steps complete
+                </p>
+
+                {/* Progress bar */}
+                <div className="mt-3 h-2 rounded-full bg-black/40 overflow-hidden border border-white/10">
+                  <div
+                    className="h-full rounded-full transition-all duration-500 ease-out"
+                    style={{
+                      width: `${progressPercentage}%`,
+                      background: 'linear-gradient(90deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%)',
+                      boxShadow: '0 0 10px rgba(255,215,0,0.5)',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Continue arrow */}
+              <div className="hidden sm:flex flex-col items-center gap-1">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#ffd700]/15 group-hover:bg-[#ffd700]/25 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 transition-all duration-300">
+                  <svg className="w-5 h-5 text-[#ffd700] group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <span className="text-xs text-[#ffd700]/70 font-synonym">Continue</span>
+              </div>
+            </div>
+          </div>
+        </button>
+      )}
+
       {/* Hero Card - Get Support (most prominent) */}
       {heroCard && (
         <button
@@ -2747,6 +3322,558 @@ const STATE_BROKER_URLS: Record<string, { name: string; url: string; phone: stri
   'WI': { name: 'Wisconsin', url: 'https://exp.world/wibrokerroom#welcome', phone: '866-848-6990' },
   'WY': { name: 'Wyoming', url: 'https://exp.world/wybrokerroom#welcome', phone: '866-873-0565' },
 };
+
+// Onboarding Section Component
+interface OnboardingProgress {
+  step1_welcome_video: boolean;
+  step2_okta_account: boolean;
+  step3_broker_tasks: boolean;
+  step4_choose_crm: boolean;
+  step5_training: boolean;
+  step6_community: boolean;
+  step7_karrie_session: boolean;
+  step8_link_page: boolean;
+  step9_elite_courses: boolean;
+}
+
+interface OnboardingSectionProps {
+  progress: OnboardingProgress;
+  onUpdateProgress: (updates: Partial<OnboardingProgress>) => void;
+  userName: string;
+  userLastName: string;
+  onNavigate: (id: SectionId) => void;
+}
+
+function OnboardingSection({ progress, onUpdateProgress, userName, userLastName, onNavigate }: OnboardingSectionProps) {
+  const [expandedStep, setExpandedStep] = useState<number | null>(null);
+
+  // Onboarding steps configuration
+  const steps = [
+    {
+      key: 'step1_welcome_video' as keyof OnboardingProgress,
+      number: 1,
+      title: 'Watch the Welcome Video',
+      description: 'Get started with eXp Realty by watching the new agent welcome video.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Begin your journey by watching the welcome video that introduces you to eXp Realty and what to expect as a new agent.
+          </p>
+          <a
+            href="https://exptoolkit.com/us-new-exp-agent"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            <Video className="w-4 h-4" />
+            Watch Welcome Video
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step2_okta_account' as keyof OnboardingProgress,
+      number: 2,
+      title: 'Activate Your Okta Account',
+      description: 'Set up your Okta account for secure access to eXp systems.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Okta is your secure gateway to all eXp systems. Follow the tutorial to activate your account.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://exptoolkit.com/us-new-exp-agent"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+            >
+              eXp Toolkit Guide
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <a
+              href="https://share.synthesia.io/e356900d-e4e2-498b-af44-a45de76f85ce"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 hover:border-blue-500/50 transition-all text-sm"
+            >
+              <Video className="w-4 h-4" />
+              Okta Tutorial Video
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'step3_broker_tasks' as keyof OnboardingProgress,
+      number: 3,
+      title: 'Complete Important Broker Tasks',
+      description: 'Join your Association of Realtors, local MLS, and complete mandatory training.',
+      content: (
+        <div className="space-y-4">
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+            <h4 className="text-[#ffd700] font-semibold mb-2 text-sm">Required Tasks:</h4>
+            <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Join your Association of Realtors
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Join your Local MLS
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Complete NAR Code of Ethics Training
+              </li>
+            </ul>
+          </div>
+          <p className="text-[#e5e4dd]/60 text-xs">
+            Select your state in the Agent Resource Guide and call the broker number at the top of the page for assistance.
+          </p>
+          <a
+            href="https://exptoolkit.com/agent-resource-guide"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            Agent Resource Guide
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step4_choose_crm' as keyof OnboardingProgress,
+      number: 4,
+      title: 'Choose Your CRM',
+      description: 'Select your CRM system. BoldTrail is recommended for SAA landing pages and email drips.',
+      content: (
+        <div className="space-y-4">
+          <div className="bg-[#ffd700]/5 rounded-lg p-4 border border-[#ffd700]/20">
+            <h4 className="text-[#ffd700] font-semibold mb-2 text-sm flex items-center gap-2">
+              <Crown className="w-4 h-4" />
+              Recommended: BoldTrail
+            </h4>
+            <p className="text-[#e5e4dd]/80 text-sm">
+              BoldTrail integrates best with SAA landing pages and email drip campaigns. We are working on Cloze and Lofty landing page capabilities (not guaranteed).
+            </p>
+          </div>
+          <div className="bg-amber-500/10 rounded-lg p-3 border border-amber-500/30">
+            <p className="text-amber-400 text-xs flex items-start gap-2">
+              <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span>CRM choices (except BoldTrail) can only be changed once per 12 months. BoldTrail cannot be switched once selected.</span>
+            </p>
+          </div>
+          <a
+            href="https://exptoolkit.com/crmofchoice"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            Choose Your CRM
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step5_training' as keyof OnboardingProgress,
+      number: 5,
+      title: 'Complete Required Training (ASAP)',
+      description: 'Complete the Live Agent Startup session and Agent Essentials course.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Complete these trainings in order - Live Agent Startup first, then Agent Essentials.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://www.expuniversity.com/course/realty-live-agent-startup-session"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+            >
+              <span className="bg-[#ffd700]/20 text-[#ffd700] text-xs px-1.5 py-0.5 rounded font-bold">1</span>
+              Live Agent Startup
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <a
+              href="https://www.expuniversity.com/course/agentessentials"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+            >
+              <span className="bg-[#ffd700]/20 text-[#ffd700] text-xs px-1.5 py-0.5 rounded font-bold">2</span>
+              Agent Essentials
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+          <a
+            href="https://www.expuniversity.com/new-to-exp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-[#e5e4dd]/60 hover:text-[#ffd700] transition-all text-xs"
+          >
+            View full training roadmap
+            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step6_community' as keyof OnboardingProgress,
+      number: 6,
+      title: 'Plug Into Training & Community',
+      description: 'Review the events calendar and attend an eXp World Tour session.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Review the eXp events calendar and plan to attend an eXp World Tour session (found in the calendar).
+          </p>
+          <a
+            href="https://eventscalendar.exprealty.com/#tabs-44410029853595-48251349958648"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            <Users className="w-4 h-4" />
+            Events Calendar
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
+    {
+      key: 'step7_karrie_session' as keyof OnboardingProgress,
+      number: 7,
+      title: '1-on-1 Onboarding Session with Karrie',
+      description: 'Schedule an optional personalized onboarding session.',
+      isOptional: true,
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Book a personalized 1-on-1 onboarding session with Karrie to get your questions answered and receive tailored guidance.
+          </p>
+          <div className="rounded-lg overflow-hidden border border-white/10">
+            <iframe
+              src="https://team.smartagentalliance.com/widget/booking/gEwZSA9OwOAQWH63u5Yc"
+              style={{ width: '100%', height: '600px', border: 'none' }}
+              title="Book a session with Karrie"
+            />
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'step8_link_page' as keyof OnboardingProgress,
+      number: 8,
+      title: 'Set Up Your Link Page',
+      description: 'Complete your Profile, Design, Connect, and Links sections.',
+      content: (
+        <div className="space-y-4">
+          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+            <h4 className="text-[#ffd700] font-semibold mb-2 text-sm">Complete these sections:</h4>
+            <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Profile - Add your photo and display name
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Design - Choose your style and colors
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Connect - Add your contact information
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-[#ffd700] mt-0.5">•</span>
+                Links - Add your important links
+              </li>
+            </ul>
+          </div>
+          <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
+            <p className="text-blue-400 text-xs">
+              Your page URL will be: <span className="font-mono">smartagentalliance.com/firstname-lastname-links</span>
+            </p>
+            <p className="text-blue-400/70 text-xs mt-1">
+              Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
+            </p>
+          </div>
+          <button
+            onClick={() => onNavigate('linktree')}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 hover:border-emerald-500/50 transition-all text-sm"
+          >
+            <LinkIcon className="w-4 h-4" />
+            Go to Link Page
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      ),
+    },
+    {
+      key: 'step9_elite_courses' as keyof OnboardingProgress,
+      number: 9,
+      title: 'Explore Elite Courses',
+      description: 'Access Social Agent Academy PRO and other exclusive training.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Access your elite training resources including Social Agent Academy PRO, Master Agent Attraction, and AI Agent Accelerator.
+          </p>
+          <button
+            onClick={() => onNavigate('courses')}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-500/10 border border-purple-500/30 text-purple-400 hover:bg-purple-500/20 hover:border-purple-500/50 transition-all text-sm"
+          >
+            <GraduationCap className="w-4 h-4" />
+            Go to Elite Courses
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  const completedCount = Object.values(progress).filter(Boolean).length;
+  const progressPercentage = (completedCount / steps.length) * 100;
+
+  return (
+    <div className="space-y-6 px-1 sm:px-2">
+      {/* Header Card */}
+      <div
+        className="relative rounded-2xl p-6 overflow-hidden"
+        style={{
+          background: 'linear-gradient(180deg, #2a2518 0%, #1f1a10 50%, #191408 100%)',
+          boxShadow: 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 20px rgba(255,215,0,0.1)',
+          border: '1px solid rgba(255,215,0,0.25)',
+        }}
+      >
+        <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
+
+        <div className="flex items-center gap-4 mb-4">
+          <div className="p-3 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/30">
+            <Icon3D color="#ffd700">
+              <Rocket className="w-8 h-8 text-[#ffd700]" />
+            </Icon3D>
+          </div>
+          <div>
+            <h2
+              className="text-2xl font-bold uppercase tracking-wide"
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                color: '#ffd700',
+                textShadow: '0 0 8px rgba(255,215,0,0.6), 0 0 20px rgba(255,215,0,0.3)',
+              }}
+            >
+              Onboarding
+            </h2>
+            <p className="text-[#e5e4dd]/70 text-sm">Complete these steps to get started with eXp and Smart Agent Alliance</p>
+          </div>
+        </div>
+
+        {/* Progress bar */}
+        <div className="mb-2">
+          <div className="flex justify-between text-sm mb-1">
+            <span className="text-[#e5e4dd]/60">{completedCount} of {steps.length} steps complete</span>
+            <span className="text-[#ffd700]">{Math.round(progressPercentage)}%</span>
+          </div>
+          <div className="h-3 rounded-full bg-black/40 overflow-hidden border border-white/10">
+            <div
+              className="h-full rounded-full transition-all duration-500 ease-out"
+              style={{
+                width: `${progressPercentage}%`,
+                background: 'linear-gradient(90deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%)',
+                boxShadow: '0 0 10px rgba(255,215,0,0.5)',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Steps Checklist */}
+      <div className="space-y-3">
+        {steps.map((step, index) => {
+          const isChecked = progress[step.key];
+          const isExpanded = expandedStep === index;
+
+          return (
+            <div
+              key={step.key}
+              className="rounded-xl overflow-hidden transition-all duration-300"
+              style={{
+                background: isChecked
+                  ? 'linear-gradient(180deg, #1a2518 0%, #151f12 100%)'
+                  : 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+                border: isChecked
+                  ? '1px solid rgba(34, 197, 94, 0.3)'
+                  : '1px solid rgba(255,255,255,0.08)',
+                boxShadow: isChecked
+                  ? '0 0 12px rgba(34, 197, 94, 0.1)'
+                  : 'none',
+              }}
+            >
+              {/* Step Header */}
+              <div
+                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                onClick={() => setExpandedStep(isExpanded ? null : index)}
+              >
+                {/* Checkbox */}
+                <label
+                  className="flex-shrink-0 cursor-pointer"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={(e) => {
+                      onUpdateProgress({ [step.key]: e.target.checked });
+                    }}
+                    className="w-5 h-5"
+                  />
+                </label>
+
+                {/* Step Number */}
+                <div
+                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  style={{
+                    background: isChecked
+                      ? 'rgba(34, 197, 94, 0.2)'
+                      : 'rgba(255, 215, 0, 0.1)',
+                    border: isChecked
+                      ? '1px solid rgba(34, 197, 94, 0.4)'
+                      : '1px solid rgba(255, 215, 0, 0.3)',
+                    color: isChecked ? '#22c55e' : '#ffd700',
+                  }}
+                >
+                  {isChecked ? (
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    step.number
+                  )}
+                </div>
+
+                {/* Title and Description */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3
+                      className={`font-semibold text-sm transition-colors ${
+                        isChecked ? 'text-green-400' : 'text-[#e5e4dd]'
+                      }`}
+                    >
+                      {step.title}
+                    </h3>
+                    {(step as { isOptional?: boolean }).isOptional && (
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-[#e5e4dd]/50">
+                        Optional
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-[#e5e4dd]/50 text-xs mt-0.5 line-clamp-1">
+                    {step.description}
+                  </p>
+                </div>
+
+                {/* Expand Arrow */}
+                <svg
+                  className={`w-5 h-5 text-[#e5e4dd]/40 transition-transform duration-200 ${
+                    isExpanded ? 'rotate-180' : ''
+                  }`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+
+              {/* Expanded Content */}
+              {isExpanded && (
+                <div className="px-4 pb-4 pt-0 border-t border-white/[0.05]">
+                  <div className="pt-4">
+                    {step.content}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Help Section */}
+      <div
+        className="rounded-xl p-5"
+        style={{
+          background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+          border: '1px solid rgba(255,255,255,0.08)',
+        }}
+      >
+        <h3 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
+          <LifeBuoy className="w-5 h-5" />
+          Need Help?
+        </h3>
+        <p className="text-[#e5e4dd]/70 text-sm mb-4">
+          For eXp-related onboarding questions, contact the eXp Expert Care Team:
+        </p>
+        <div className="grid sm:grid-cols-3 gap-3">
+          <a
+            href="tel:833-303-0610"
+            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+          >
+            <Headphones className="w-4 h-4 text-[#ffd700]" />
+            <span>833-303-0610</span>
+          </a>
+          <a
+            href="mailto:ExpertCare@exprealty.net"
+            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+          >
+            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span className="truncate">ExpertCare@exprealty.net</span>
+          </a>
+          <a
+            href="https://exp.world/expertcare"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-[#e5e4dd] hover:bg-white/10 hover:border-white/20 transition-all text-sm"
+          >
+            <Building2 className="w-4 h-4 text-[#ffd700]" />
+            <span>exp.world/expertcare</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface SupportSectionProps {
   userState?: string | null;
@@ -3679,7 +4806,7 @@ function CoursesSection() {
     },
     {
       icon: Smartphone,
-      title: 'Social Agent Academy 2.0',
+      title: 'Social Agent Academy PRO',
       description: 'Generate inbound leads through content and visibility',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
       color: '#22c55e', // Green
