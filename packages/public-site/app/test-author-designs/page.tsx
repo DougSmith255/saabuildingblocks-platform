@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 
 /**
@@ -19,6 +19,7 @@ const authors = {
     bio: 'Top 1% eXp team builder. Designed and built this website, the agent portal, and the systems and automations powering production workflows and attraction tools across the organization.',
     image: 'https://imagedelivery.net/aOFwfEzPKv8va-sCfWtOQw/doug-smart-hero-headshot/public',
     profileUrl: 'https://saabuildingblocks.pages.dev/about-doug-smart/',
+    lastUpdated: 'Jan 15, 2026',
   },
   karrie: {
     name: 'Karrie Hill',
@@ -26,8 +27,195 @@ const authors = {
     bio: 'UC Berkeley Law (top 5%). Built a six-figure real estate business in her first full year without cold calling or door knocking, now helping agents do the same.',
     image: 'https://imagedelivery.net/aOFwfEzPKv8va-sCfWtOQw/karrie-hill-hero-headshot/public',
     profileUrl: 'https://saabuildingblocks.pages.dev/about-karrie-hill/',
+    lastUpdated: 'Jan 10, 2026',
   },
 };
+
+// =============================================================================
+// PROFILE CYBER FRAME - Circular futuristic holographic frame
+// =============================================================================
+function ProfileCyberFrame({
+  children,
+  className = '',
+  index = 0,
+  size = 80,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  index?: number;
+  size?: number;
+}) {
+  const randomValues = useMemo(() => ({
+    sheenAngle: 25 + (index * 10),
+    sheenPosition: 30 + (index * 20),
+  }), [index]);
+
+  return (
+    <>
+      <style jsx global>{`
+        .profile-cyber-frame {
+          position: relative;
+        }
+
+        .profile-cyber-frame-metal {
+          position: absolute;
+          top: -4px;
+          left: -4px;
+          right: -4px;
+          bottom: -4px;
+          border-radius: 9999px;
+          background: linear-gradient(145deg, rgba(80,80,80,0.6) 0%, rgba(40,40,40,0.8) 50%, rgba(60,60,60,0.6) 100%);
+          border: 1px solid rgba(150,150,150,0.4);
+          box-shadow:
+            0 4px 20px rgba(0,0,0,0.6),
+            inset 0 1px 0 rgba(255,255,255,0.15),
+            inset 0 -1px 0 rgba(0,0,0,0.3),
+            0 0 15px rgba(255,215,0,0.15);
+          transition: box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .profile-cyber-frame:hover .profile-cyber-frame-metal {
+          box-shadow:
+            0 4px 25px rgba(0,0,0,0.7),
+            inset 0 1px 0 rgba(255,255,255,0.2),
+            inset 0 -1px 0 rgba(0,0,0,0.3),
+            0 0 25px rgba(255,215,0,0.3);
+          border-color: rgba(255,215,0,0.3);
+        }
+
+        .profile-cyber-frame-inner {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          border-radius: 9999px;
+          overflow: hidden;
+          background-color: #0a0a0a;
+        }
+
+        .profile-cyber-frame-inner::before {
+          content: "";
+          position: absolute;
+          top: -100%;
+          left: -100%;
+          right: -100%;
+          bottom: -100%;
+          border-radius: 9999px;
+          pointer-events: none;
+          z-index: 10;
+          background: linear-gradient(
+            var(--pcf-sheen-angle, 25deg),
+            transparent 0%,
+            transparent 35%,
+            rgba(255,255,255,0.08) 42%,
+            rgba(255,255,255,0.15) 50%,
+            rgba(255,255,255,0.08) 58%,
+            transparent 65%,
+            transparent 100%
+          );
+          transform: translateX(calc(var(--pcf-sheen-pos, 30%) - 50%));
+          transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .profile-cyber-frame:hover .profile-cyber-frame-inner::before {
+          transform: translateX(calc(var(--pcf-sheen-pos, 30%) + 30%));
+        }
+
+        .profile-cyber-frame-ring {
+          position: absolute;
+          top: -2px;
+          left: -2px;
+          right: -2px;
+          bottom: -2px;
+          border-radius: 9999px;
+          pointer-events: none;
+          border: 2px solid rgba(255,215,0,0.4);
+          transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-cyber-frame:hover .profile-cyber-frame-ring {
+          border-color: rgba(255,215,0,0.7);
+          box-shadow: 0 0 12px rgba(255,215,0,0.4);
+        }
+      `}</style>
+
+      <div
+        className={`profile-cyber-frame ${className}`}
+        style={{
+          width: `${size}px`,
+          height: `${size}px`,
+          '--pcf-sheen-angle': `${randomValues.sheenAngle}deg`,
+          '--pcf-sheen-pos': `${randomValues.sheenPosition}%`,
+        } as React.CSSProperties}
+      >
+        <div className="profile-cyber-frame-metal" />
+        <div className="profile-cyber-frame-inner">
+          <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+            {children}
+          </div>
+        </div>
+        <div className="profile-cyber-frame-ring" />
+      </div>
+    </>
+  );
+}
+
+// =============================================================================
+// ICON 3D - 3D metal effect for icons
+// =============================================================================
+function Icon3D({
+  children,
+  color = '#c4a94d',
+  className = '',
+}: {
+  children: React.ReactNode;
+  color?: string;
+  className?: string;
+}) {
+  // Generate highlight and shadow colors
+  const adjustColor = (hex: string, percent: number): string => {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const r = Math.min(255, Math.max(0, (num >> 16) + Math.round(255 * percent)));
+    const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + Math.round(255 * percent)));
+    const b = Math.min(255, Math.max(0, (num & 0x0000FF) + Math.round(255 * percent)));
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+  };
+
+  const darkenColor = (hex: string, percent: number): string => {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const r = Math.max(0, Math.round((num >> 16) * (1 - percent)));
+    const g = Math.max(0, Math.round(((num >> 8) & 0x00FF) * (1 - percent)));
+    const b = Math.max(0, Math.round((num & 0x0000FF) * (1 - percent)));
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+  };
+
+  const highlight = adjustColor(color, 0.3);
+  const midShadow = darkenColor(color, 0.4);
+
+  const filter = `
+    drop-shadow(-1px -1px 0 ${highlight})
+    drop-shadow(1px 1px 0 ${midShadow})
+    drop-shadow(3px 3px 0 #2a2a1d)
+    drop-shadow(4px 4px 2px rgba(0, 0, 0, 0.5))
+  `;
+
+  return (
+    <span
+      className={`icon-3d ${className}`}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: color,
+        filter: filter.trim(),
+        transform: 'perspective(500px) rotateX(8deg)',
+      }}
+    >
+      {children}
+    </span>
+  );
+}
 
 // Design 1: Horizontal Card with Metal Plate Accent
 function AuthorDesign1({ author }: { author: typeof authors.doug }) {
@@ -119,11 +307,28 @@ function AuthorDesign2({ author }: { author: typeof authors.doug }) {
   );
 }
 
-// Design 3: Compact Inline with 3D Metal Plate
-function AuthorDesign3({ author }: { author: typeof authors.doug }) {
+// Design 3: Compact Inline with 3D Metal Plate (ENHANCED VERSION)
+// - Tagline styling and sizing on names: Taskor, clamp(21px, calc(17.45px + 1.42vw), 60px)
+// - Body font styling and sizing on bio: Synonym, clamp(16px, calc(14.91px + 0.44vw), 28px)
+// - Last updated date from WordPress
+// - 3D icon effect on arrow
+// - ProfileCyberFrame for photo
+// - No set width - fills container
+function AuthorDesign3({ author, index = 0 }: { author: typeof authors.doug; index?: number }) {
+  // Tagline text styling (matches Master Controller Tagline component)
+  const taglineTextShadow = `
+    0 0 0.01em #fff,
+    0 0 0.02em #fff,
+    0 0 0.03em rgba(255,255,255,0.8)
+  `;
+  const taglineFilter = `
+    drop-shadow(0 0 0.04em #bfbdb0)
+    drop-shadow(0 0 0.08em rgba(191,189,176,0.6))
+  `;
+
   return (
     <div
-      className="relative rounded-xl p-6 sm:p-8"
+      className="relative w-full rounded-xl p-6 sm:p-8"
       style={{
         background: 'linear-gradient(180deg, #252525 0%, #1a1a1a 50%, #151515 100%)',
         boxShadow: 'inset 0 2px 0 rgba(255,255,255,0.08), inset 0 -2px 4px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.4)',
@@ -134,40 +339,81 @@ function AuthorDesign3({ author }: { author: typeof authors.doug }) {
       <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
       <div className="flex flex-col sm:flex-row items-center gap-5">
-        {/* Photo */}
+        {/* Photo with ProfileCyberFrame */}
         <div className="relative flex-shrink-0">
-          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-[#3a3a3a]">
+          <ProfileCyberFrame size={80} index={index}>
             <Image
               src={author.image}
               alt={author.name}
               width={80}
               height={80}
-              className="object-cover w-full h-full grayscale hover:grayscale-0 transition-all duration-500"
+              className="object-cover w-full h-full"
             />
-          </div>
+          </ProfileCyberFrame>
         </div>
 
         {/* Content */}
         <div className="flex-1 text-center sm:text-left">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-2">
-            <h3 className="text-xl font-bold text-[#e5e4dd]" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 mb-1">
+            {/* Name with Tagline styling and sizing */}
+            <h3
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                fontSize: 'clamp(21px, calc(17.45px + 1.42vw), 60px)',
+                lineHeight: 1.4,
+                fontWeight: 400,
+                fontFeatureSettings: '"ss01" 1',
+                color: '#bfbdb0',
+                textShadow: taglineTextShadow,
+                filter: taglineFilter.trim(),
+                textTransform: 'uppercase',
+              }}
+            >
               {author.name}
             </h3>
-            <span className="text-[#ffd700]/60 text-xs">•</span>
-            <span className="text-[#bfbdb0]/70 text-sm">{author.role}</span>
           </div>
-          <p className="text-[#bfbdb0]/80 text-sm leading-relaxed">{author.bio}</p>
+
+          {/* Role */}
+          <p
+            className="mb-1"
+            style={{
+              fontFamily: 'var(--font-synonym, sans-serif)',
+              fontSize: 'clamp(14px, calc(12px + 0.3vw), 18px)',
+              color: 'rgba(191,189,176,0.7)',
+            }}
+          >
+            {author.role}
+          </p>
+
+          {/* Last Updated */}
+          <p className="text-[#ffd700]/50 text-xs mb-3">
+            Last updated: {author.lastUpdated}
+          </p>
+
+          {/* Bio with Body font styling and sizing */}
+          <p
+            style={{
+              fontFamily: 'var(--font-synonym, sans-serif)',
+              fontSize: 'clamp(16px, calc(14.91px + 0.44vw), 28px)',
+              lineHeight: 1.6,
+              color: '#bfbdb0',
+            }}
+          >
+            {author.bio}
+          </p>
         </div>
 
-        {/* Arrow link */}
+        {/* Arrow link with 3D Icon effect */}
         <a
           href={author.profileUrl}
-          className="flex-shrink-0 w-10 h-10 rounded-full bg-[#ffd700]/10 border border-[#ffd700]/20 flex items-center justify-center text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/40 transition-all"
+          className="flex-shrink-0 w-12 h-12 rounded-full bg-[#ffd700]/10 border border-[#ffd700]/20 flex items-center justify-center hover:bg-[#ffd700]/20 hover:border-[#ffd700]/40 transition-all"
           title={`More about ${author.name}`}
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
+          <Icon3D color="#ffd700">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </Icon3D>
         </a>
       </div>
     </div>
