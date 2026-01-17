@@ -48,9 +48,23 @@ env:
   RETRY_DELAY: 2  # Reduced from 5s to 2s for faster retries
 
 jobs:
+  # Wait for CI Pipeline to pass before deploying
+  check-ci:
+    name: Wait for CI Pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for CI Pipeline to pass
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.sha }}
+          check-name: 'build (public-site)'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+
   # Build job - creates the static export
   build:
     name: Build Static Export
+    needs: check-ci
     runs-on: ubuntu-latest
     timeout-minutes: 10
 

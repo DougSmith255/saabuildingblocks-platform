@@ -31,12 +31,10 @@ jobs:
       - name: Run ESLint (${{ matrix.package }})
         working-directory: packages/${{ matrix.package }}
         run: npm run lint
-        continue-on-error: true
 
       - name: Check TypeScript types (${{ matrix.package }})
         working-directory: packages/${{ matrix.package }}
         run: npm run type-check
-        continue-on-error: true
 
   build:
     runs-on: ubuntu-latest
