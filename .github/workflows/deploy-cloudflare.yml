@@ -1,13 +1,14 @@
 name: Deploy to Cloudflare Pages
 
 "on":
-  # Auto-deploy AFTER CI Pipeline passes
-  workflow_run:
-    workflows: ["CI Pipeline"]
-    types:
-      - completed
+  # Auto-deploy on push to main (runs in parallel with CI)
+  push:
     branches:
       - main
+    paths:
+      - 'packages/public-site/**'
+      - 'packages/shared/**'
+      - '.github/workflows/deploy-cloudflare.yml'
 
   # Trigger from n8n workflow
   repository_dispatch:
@@ -48,13 +49,10 @@ env:
 
 jobs:
   # Build job - creates the static export
-  # Only runs if CI Pipeline succeeded
   build:
     name: Build Static Export
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Skip deployment if CI Pipeline failed
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name != 'workflow_run' }}
 
     outputs:
       build-hash: ${{ steps.compute-hash.outputs.build-hash }}
@@ -112,11 +110,31 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
 
+      # Cache node_modules for faster installs
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       # Install dependencies (monorepo root) with caching
       - name: Install dependencies
         run: |
           echo "📦 Installing dependencies (with npm cache enabled)..."
           npm ci --prefer-offline --no-audit
+
+      # Cache shared package build
+      - name: Cache shared package build
+        uses: actions/cache@v4
+        with:
+          path: packages/shared/dist
+          key: shared-build-${{ hashFiles('packages/shared/**/*.ts', 'packages/shared/**/*.tsx') }}
+          restore-keys: |
+            shared-build-
 
       # Build shared package first (required for type checking other packages)
       - name: Build shared package
@@ -125,6 +143,17 @@ jobs:
           cd packages/shared
           npm run build
           echo "✅ Shared package built"
+
+      # Cache Next.js build for faster rebuilds
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            packages/public-site/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('packages/public-site/**/*.js', 'packages/public-site/**/*.jsx', 'packages/public-site/**/*.ts', 'packages/public-site/**/*.tsx') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}-
+            nextjs-${{ runner.os }}-
 
       # Type check BEFORE building to catch ALL errors at once
       - name: Type Check (Catch all errors upfront)
