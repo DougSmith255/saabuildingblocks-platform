@@ -9697,6 +9697,7 @@ function AgentPagesSection({
             </div>
           </div>
         </Modal>
+      </div>
 
         {/* Spacer for fixed bottom buttons on mobile - needed when mobile nav is visible (<950px) */}
         <div className="h-[110px] min-[950px]:hidden" />
