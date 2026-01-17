@@ -7622,23 +7622,23 @@ function AgentPagesSection({
   return (
     <div className="space-y-6 px-2 sm:px-4">
       {/* Error Message */}
-        {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center justify-between gap-2">
-            <span>{error}</span>
-            <button
-              onClick={() => setError(null)}
-              className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0"
-              title="Dismiss"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        )}
+      {error && (
+        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center justify-between gap-2">
+          <span>{error}</span>
+          <button
+            onClick={() => setError(null)}
+            className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0"
+            title="Dismiss"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      )}
 
-        {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
-        <div className="grid grid-cols-1 min-[1200px]:grid-cols-[1fr_256px] gap-6">
+      {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
+      <div className="grid grid-cols-1 min-[1200px]:grid-cols-[1fr_256px] gap-6">
 
           {/* PREVIEW COLUMN - Desktop only, sticky on right */}
           <div className="hidden min-[1200px]:block min-[1200px]:col-start-2 min-[1200px]:row-start-1 min-[1200px]:row-span-4">
