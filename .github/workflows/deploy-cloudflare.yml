@@ -1,14 +1,13 @@
 name: Deploy to Cloudflare Pages
 
 "on":
-  # Auto-deploy on push to main
-  push:
+  # Auto-deploy AFTER CI Pipeline passes
+  workflow_run:
+    workflows: ["CI Pipeline"]
+    types:
+      - completed
     branches:
       - main
-    paths:
-      - 'packages/public-site/**'
-      - 'packages/shared/**'
-      - '.github/workflows/deploy-cloudflare.yml'
 
   # Trigger from n8n workflow
   repository_dispatch:
@@ -48,25 +47,14 @@ env:
   RETRY_DELAY: 2  # Reduced from 5s to 2s for faster retries
 
 jobs:
-  # Wait for CI Pipeline to pass before deploying
-  check-ci:
-    name: Wait for CI Pipeline
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for CI Pipeline to pass
-        uses: lewagon/wait-on-check-action@v1.3.4
-        with:
-          ref: ${{ github.sha }}
-          check-name: 'build (public-site)'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
-
   # Build job - creates the static export
+  # Only runs if CI Pipeline succeeded
   build:
     name: Build Static Export
-    needs: check-ci
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Skip deployment if CI Pipeline failed
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name != 'workflow_run' }}
 
     outputs:
       build-hash: ${{ steps.compute-hash.outputs.build-hash }}
