@@ -325,6 +325,7 @@ function AgentPortal() {
     step7_karrie_session: false,
     step8_link_page: false,
     step9_elite_courses: false,
+    step10_download_app: false,
   });
   const [onboardingCompletedAt, setOnboardingCompletedAt] = useState<string | null>(null);
   const [linkPageIntroDismissed, setLinkPageIntroDismissed] = useState(false);
@@ -332,6 +333,8 @@ function AgentPortal() {
   const [isOnboardingLoaded, setIsOnboardingLoaded] = useState(false);
   const [showLinkPageIntroModal, setShowLinkPageIntroModal] = useState(false);
   const [showLinkPageHelpModal, setShowLinkPageHelpModal] = useState(false);
+  const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showEliteCoursesHelpModal, setShowEliteCoursesHelpModal] = useState(false);
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
 
@@ -476,6 +479,7 @@ function AgentPortal() {
               step7_karrie_session: false,
               step8_link_page: false,
               step9_elite_courses: false,
+              step10_download_app: false,
             };
             console.log('[Onboarding] Setting progress:', progress);
             console.log('[Onboarding] onboarding_completed_at:', data.data.onboarding_completed_at);
@@ -616,6 +620,38 @@ function AgentPortal() {
     }, 200);
   }, []);
 
+  const triggerOnboardingConfetti = useCallback(() => {
+    // Center burst
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ffd700', '#22c55e', '#ffffff', '#ff6b6b', '#45b7d1']
+    });
+
+    // Left burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.6 },
+        colors: ['#ffd700', '#22c55e', '#ffffff']
+      });
+    }, 100);
+
+    // Right burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 50,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.6 },
+        colors: ['#ffd700', '#22c55e', '#ffffff']
+      });
+    }, 200);
+  }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('agent_portal_user');
     localStorage.removeItem('agent_portal_token');
@@ -643,6 +679,53 @@ function AgentPortal() {
   };
 
   const handleProfilePictureClick = () => {
+
+  const handleCompleteOnboarding = async () => {
+    setIsCompletingOnboarding(true);
+
+    try {
+      // Check if all steps are complete
+      const allComplete = Object.values(onboardingProgress).every(v => v === true);
+
+      if (!allComplete) {
+        alert('Please complete all onboarding steps first!');
+        setIsCompletingOnboarding(false);
+        return;
+      }
+
+      // Trigger confetti immediately
+      triggerOnboardingConfetti();
+
+      // Mark onboarding as complete via API (will set onboarding_completed_at)
+      const response = await fetch(`/api/users/onboarding`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          onboarding_progress: onboardingProgress,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setOnboardingCompletedAt(data.onboarding_completed_at);
+        setShowCompletionModal(true);
+
+        // After 2 seconds, start fade-out transition
+        setTimeout(() => {
+          setShowCompletionModal(false);
+          // Fade-out will be handled by CSS transition
+          setTimeout(() => {
+            setActiveSection('dashboard');
+          }, 800); // Allow fade-out to complete
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error completing onboarding:', error);
+    } finally {
+      setIsCompletingOnboarding(false);
+    }
+  };
     fileInputRef.current?.click();
   };
 
@@ -1770,6 +1853,9 @@ function AgentPortal() {
                 userName={user?.firstName || ''}
                 userLastName={user?.lastName || ''}
                 onNavigate={setActiveSection}
+                onComplete={handleCompleteOnboarding}
+                isCompleting={isCompletingOnboarding}
+                onboardingCompletedAt={onboardingCompletedAt}
               />
             )}
 
@@ -1777,6 +1863,9 @@ function AgentPortal() {
             {activeSection === 'dashboard' && (
               <DashboardView
                 onNavigate={setActiveSection}
+                onComplete={handleCompleteOnboarding}
+                isCompleting={isCompletingOnboarding}
+                onboardingCompletedAt={onboardingCompletedAt}
                 isOnboardingComplete={isOnboardingComplete}
                 completedStepsCount={completedStepsCount}
                 totalStepsCount={totalStepsCount}
@@ -2559,6 +2648,25 @@ function AgentPortal() {
               <div className="space-y-4">
                 <h4 className="text-[#e5e4dd] font-semibold">Request Your Login Credentials:</h4>
 
+
+      {/* Completion Success Modal */}
+      {showCompletionModal && (
+        <div className="fixed inset-0 z-[10020] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-green-500/20 to-blue-500/20 border border-green-500/30 rounded-2xl p-8 max-w-md text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500 flex items-center justify-center">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-green-400 mb-2">
+              Onboarding Complete! 🎉
+            </h2>
+            <p className="text-[#e5e4dd]/80">
+              Welcome to Smart Agent Alliance! Redirecting to your dashboard...
+            </p>
+          </div>
+        </div>
+      )}
                 {/* Wolf Pack Email */}
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                   <h5 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
@@ -3315,6 +3423,7 @@ interface OnboardingProgress {
   step6_community: boolean;
   step7_karrie_session: boolean;
   step8_link_page: boolean;
+  step10_download_app: boolean;
   step9_elite_courses: boolean;
 }
 
@@ -3323,10 +3432,13 @@ interface OnboardingSectionProps {
   onUpdateProgress: (updates: Partial<OnboardingProgress>) => void;
   userName: string;
   userLastName: string;
+  onComplete: () => void;
+  isCompleting: boolean;
+  onboardingCompletedAt: string | null;
   onNavigate: (id: SectionId) => void;
 }
 
-function OnboardingSection({ progress, onUpdateProgress, userName, userLastName, onNavigate }: OnboardingSectionProps) {
+function OnboardingSection({ progress, onUpdateProgress, userName, userLastName, onNavigate, onComplete, isCompleting, onboardingCompletedAt }: OnboardingSectionProps) {
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
 
   // Onboarding steps configuration
@@ -3641,6 +3753,55 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
         </div>
       ),
     },
+    {
+      key: 'step10_download_app' as keyof OnboardingProgress,
+      number: 10,
+      title: 'Download the Mobile App',
+      description: 'Install the SAA Agent Portal app on your device for quick access and offline features.',
+      content: (
+        <div className="space-y-4">
+          <p className="text-[#e5e4dd]/80 text-sm">
+            Get instant access to your agent portal from your home screen. The app works on both iOS and Android devices.
+          </p>
+          <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
+            <h4 className="text-blue-400 font-semibold mb-2 text-sm flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              App Benefits:
+            </h4>
+            <ul className="space-y-1 text-[#e5e4dd]/80 text-sm">
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">⚡</span>
+                <span>Instant access from your home screen</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">📱</span>
+                <span>Works offline for key features</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">🔔</span>
+                <span>Push notifications for updates</span>
+              </li>
+            </ul>
+          </div>
+          <a
+            href="/download"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 hover:border-[#ffd700]/50 transition-all text-sm"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Go to Download Page
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        </div>
+      ),
+    },
   ];
 
   const completedCount = Object.values(progress).filter(Boolean).length;
@@ -3814,6 +3975,47 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
       <div
         className="rounded-xl p-5"
         style={{
+
+      {/* Complete Onboarding Button */}
+      {Object.values(progress).every(v => v === true) && !onboardingCompletedAt && (
+        <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/30">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-green-400 mb-2 flex items-center gap-2">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                You&apos;re All Set!
+              </h3>
+              <p className="text-[#e5e4dd]/80 text-sm mb-1">
+                Congratulations! You&apos;ve completed all onboarding steps.
+              </p>
+              <p className="text-[#e5e4dd]/60 text-xs">
+                Click complete to finish onboarding. You can access this guide anytime from your profile section.
+              </p>
+            </div>
+            <button
+              onClick={() => onComplete?.()}
+              disabled={isCompleting}
+              className="px-6 py-3 rounded-lg bg-green-500 hover:bg-green-400 text-black font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap"
+            >
+              {isCompleting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                  Completing...
+                </>
+              ) : (
+                <>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Complete Onboarding
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
           background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
           border: '1px solid rgba(255,255,255,0.08)',
         }}
