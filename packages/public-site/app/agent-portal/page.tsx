@@ -4003,11 +4003,6 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
         })}
       </div>
 
-      {/* Help Section */}
-      <div
-        className="rounded-xl p-5"
-        style={{
-
       {/* Complete Onboarding Button */}
       {Object.values(progress).every(v => v === true) && !onboardingCompletedAt && (
         <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/30">
@@ -4048,10 +4043,12 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
           </div>
         </div>
       )}
-          background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
-          border: '1px solid rgba(255,255,255,0.08)',
-        }}
-      >
+
+      {/* Help Section */}
+      <div className="rounded-xl p-5 mt-6" style={{
+        background: 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}>
         <h3 className="text-[#ffd700] font-semibold mb-3 flex items-center gap-2">
           <LifeBuoy className="w-5 h-5" />
           Need Help?
@@ -7646,7 +7643,7 @@ function AgentPagesSection({
           {/* PREVIEW COLUMN - Desktop only, sticky on right */}
           <div className="hidden min-[1200px]:block min-[1200px]:col-start-2 min-[1200px]:row-start-1 min-[1200px]:row-span-4">
             <div className="sticky top-4">
-            <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
+              <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
               {/* Preview Header */}
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
                 <div className="flex items-center justify-between">
@@ -7927,6 +7924,7 @@ function AgentPagesSection({
                     </div>
                   </div>
                 </div>
+            </div>
             </div>
 
               {/* Accent Color + Style - Only visible on screens < 1565px (moved from Links section) */}
