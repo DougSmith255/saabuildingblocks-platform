@@ -11,8 +11,6 @@ const INITIAL_PROGRESS_END = 0.5;
 // Auth API URL - admin dashboard handles authentication
 const AUTH_API_URL = 'https://saabuildingblocks.com';
 
-// Onboarding step type - simplified to just welcome after password/email setup
-type OnboardingStep = 'welcome' | null;
 
 /**
  * Agent Portal Activation Page
@@ -37,24 +35,8 @@ function ActivatePageContent() {
   const [userFirstName, setUserFirstName] = useState('');
   const [userLastName, setUserLastName] = useState('');
 
-  // Onboarding state
-  const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>(null);
-  const [activatedUser, setActivatedUser] = useState<{
-    id: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    fullName: string;
-    profilePictureUrl: string | null;
-  } | null>(null);
-
   // Editable email for login (separate from exp_email which is the official one)
   const [loginEmail, setLoginEmail] = useState('');
-
-  // Navigate to dashboard
-  const goToDashboard = () => {
-    router.push('/agent-portal');
-  };
 
   // Validate token on mount
   useEffect(() => {
@@ -191,10 +173,8 @@ function ActivatePageContent() {
         localStorage.setItem('agent_portal_user', JSON.stringify(userData));
         localStorage.setItem('agent_portal_token', data.data.accessToken);
 
-        // Start onboarding flow instead of redirecting
-        setActivatedUser(userData);
-        setOnboardingStep('welcome');
-        setIsLoading(false);
+        // Go directly to agent portal (onboarding is now in the portal itself)
+        router.push('/agent-portal');
       } else {
         // Fallback: auto-login after activation
         const loginResponse = await fetch(`${AUTH_API_URL}/api/auth/login`, {
@@ -228,10 +208,8 @@ function ActivatePageContent() {
           localStorage.setItem('agent_portal_user', JSON.stringify(userData));
           localStorage.setItem('agent_portal_token', loginData.data.accessToken);
 
-          // Start onboarding flow instead of redirecting
-          setActivatedUser(userData);
-          setOnboardingStep('welcome');
-          setIsLoading(false);
+          // Go directly to agent portal (onboarding is now in the portal itself)
+          router.push('/agent-portal');
         } else {
           // If auto-login fails, redirect to login page
           router.push('/agent-portal/login?activated=true');
@@ -279,68 +257,6 @@ function ActivatePageContent() {
                 </p>
                 <FormButton onClick={() => router.push('/agent-portal/login')}>
                   Go to Login
-                </FormButton>
-              </div>
-            </FormCard>
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  // Show welcome message after successful activation, then redirect to dashboard
-  if (onboardingStep && activatedUser) {
-    return (
-      <main id="main-content" className="relative min-h-screen flex flex-col overflow-x-hidden">
-        <DataStreamEffect />
-
-        <div className="relative z-10 flex-1 flex items-center justify-center w-full px-4 py-8">
-          <div className="flex flex-col items-center w-full max-w-lg">
-            {/* Welcome Step - single step then go to dashboard */}
-            <FormCard maxWidth="md">
-              <div className="text-center py-4">
-                <div className="text-5xl mb-4">🎉</div>
-                <h2 className="text-2xl font-bold text-[#ffd700] mb-2">
-                  Welcome, {activatedUser.firstName || 'Agent'}!
-                </h2>
-                <p className="text-[#e5e4dd]/70 mb-6">
-                  Your account is now active. You&apos;re ready to access the Agent Portal.
-                </p>
-
-                <div className="space-y-3 text-left mb-8 px-4">
-                  <h3 className="text-sm font-semibold text-[#ffd700] mb-2">Your Agent Portal includes:</h3>
-                  <div className="flex items-start gap-3">
-                    <span className="text-lg">📚</span>
-                    <div>
-                      <p className="text-sm font-medium text-[#e5e4dd]">Exclusive Templates</p>
-                      <p className="text-xs text-[#e5e4dd]/60">Marketing assets ready to customize</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-lg">🎓</span>
-                    <div>
-                      <p className="text-sm font-medium text-[#e5e4dd]">Elite Courses</p>
-                      <p className="text-xs text-[#e5e4dd]/60">Social Agent Academy, Investor Army & more</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-lg">🔗</span>
-                    <div>
-                      <p className="text-sm font-medium text-[#e5e4dd]">Your SAA Pages</p>
-                      <p className="text-xs text-[#e5e4dd]/60">Personal agent page & linktree</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-lg">📹</span>
-                    <div>
-                      <p className="text-sm font-medium text-[#e5e4dd]">Team Calls</p>
-                      <p className="text-xs text-[#e5e4dd]/60">Live and recorded training sessions</p>
-                    </div>
-                  </div>
-                </div>
-
-                <FormButton onClick={goToDashboard}>
-                  Enter Dashboard →
                 </FormButton>
               </div>
             </FormCard>
