@@ -315,6 +315,7 @@ function AgentPortal() {
     step7_karrie_session: boolean;
     step8_link_page: boolean;
     step9_elite_courses: boolean;
+    step10_download_app: boolean;
   }>({
     step1_welcome_video: false,
     step2_okta_account: false,
