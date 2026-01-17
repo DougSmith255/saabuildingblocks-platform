@@ -729,8 +729,6 @@ function AgentPortal() {
       setIsCompletingOnboarding(false);
     }
   };
-    fileInputRef.current?.click();
-  };
 
   const handleEditProfileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
