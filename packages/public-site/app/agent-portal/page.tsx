@@ -680,6 +680,8 @@ function AgentPortal() {
   };
 
   const handleProfilePictureClick = () => {
+    // Placeholder for profile picture click handler
+  };
 
   const handleCompleteOnboarding = async () => {
     setIsCompletingOnboarding(true);
