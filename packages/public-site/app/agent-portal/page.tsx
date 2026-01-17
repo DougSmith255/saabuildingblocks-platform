@@ -7739,41 +7739,34 @@ function AgentPagesSection({
   // ========================================================================
   return (
     <div className="space-y-6 px-2 sm:px-4">
-      {/* Error Message */}
-      {error && (
-        <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center justify-between gap-2">
-          <span>{error}</span>
+      {/* Action Bar - QR Code + Activate button - Shows above settings for non-activated users */}
+      {!pageData?.activated && (
+        <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl bg-black/20 border border-white/10">
           <button
-            onClick={() => setError(null)}
-            className="p-1 hover:bg-red-500/20 rounded transition-colors flex-shrink-0"
-            title="Dismiss"
+            onClick={downloadQRCode}
+            className="px-4 py-2.5 rounded-lg text-sm font-medium bg-white text-[#2a2a2a] hover:bg-gray-100 transition-colors flex items-center gap-2"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="3" height="3" />
+              <rect x="18" y="14" width="3" height="3" />
+              <rect x="14" y="18" width="3" height="3" />
+              <rect x="18" y="18" width="3" height="3" />
             </svg>
+            QR Code
           </button>
-        </div>
-      )}
-
-      {/* Get Started Banner - Shows when no page exists yet */}
-      {!hasPage && (
-        <div className="p-4 rounded-xl bg-gradient-to-r from-[#ffd700]/10 to-[#22c55e]/10 border border-[#ffd700]/30">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-[#ffd700] mb-1">Get Started with Your Link Page</h3>
-              <p className="text-sm text-[#e5e4dd]/70">
-                Complete the sections below and click &quot;Create Page&quot; to activate your personalized Link Page.
-                Your page URL will be: smartagentalliance.com/firstname-lastname-links
-              </p>
-            </div>
-            <button
-              onClick={handleCreatePage}
-              disabled={isSaving}
-              className="px-5 py-2.5 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
-            >
-              {isSaving ? 'Creating...' : 'Create Page'}
-            </button>
-          </div>
+          <button
+            onClick={hasPage ? handleActivate : handleCreatePage}
+            disabled={hasPage ? (hasUnsavedChanges || (!pageData?.profile_image_url && !user?.profilePictureUrl)) : isSaving}
+            className="flex-1 min-w-[200px] px-5 py-2.5 rounded-lg font-semibold bg-green-500/20 border border-green-500/50 text-green-400 hover:bg-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            {hasPage ? 'Activate Your Page' : (isSaving ? 'Creating...' : 'Activate Your Page')}
+          </button>
         </div>
       )}
 
