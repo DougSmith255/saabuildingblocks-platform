@@ -1613,6 +1613,7 @@ function AgentPortal() {
             return (
               <div key={item.id} className="flex items-center flex-1 h-full">
                 <button
+                  data-section={item.id}
                   onClick={() => setActiveSection(item.id)}
                   className="relative flex flex-col items-center justify-center w-full h-[52px] mx-0.5 rounded-lg transition-all duration-200"
                   style={{
@@ -1763,6 +1764,7 @@ function AgentPortal() {
                 return (
                   <div key={item.id}>
                     <button
+                      data-section={item.id}
                       onClick={() => {
                         setActiveSection(item.id);
                         setSidebarOpen(false);
@@ -2194,6 +2196,8 @@ function AgentPortal() {
                 mode="agent-page"
                 preloadedPageData={preloadedAgentPageData}
                 triggerConfetti={triggerConfetti}
+                setShowLinkPageIntroModal={setShowLinkPageIntroModal}
+                setShowLinkPageHelpModal={setShowLinkPageHelpModal}
               />
             </div>
             )}
@@ -2228,6 +2232,8 @@ function AgentPortal() {
                 mode="linktree"
                 preloadedPageData={preloadedAgentPageData}
                 triggerConfetti={triggerConfetti}
+                setShowLinkPageIntroModal={setShowLinkPageIntroModal}
+                setShowLinkPageHelpModal={setShowLinkPageHelpModal}
               />
             </div>
             )}
@@ -2513,8 +2519,17 @@ function AgentPortal() {
             onClick={(e) => e.stopPropagation()}
             onWheel={(e) => e.stopPropagation()}
           >
+            {/* Warning Banner */}
+            <div className="px-5 pt-4 pb-0">
+              <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
+                <p className="text-amber-400 text-xs text-center">
+                  This notification will disappear permanently when you close it. Please read carefully before exiting.
+                </p>
+              </div>
+            </div>
+
             {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-t-2xl">
+            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
                   <LinkIcon className="w-6 h-6 text-emerald-400" />
@@ -2523,8 +2538,8 @@ function AgentPortal() {
               </div>
               <button
                 onClick={() => {
-                  setShowLinkPageHelpModal(false);
-                  
+                  localStorage.setItem('link_page_intro_dismissed', 'true');
+                  setShowLinkPageIntroModal(false);
                 }}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
               >
@@ -2581,12 +2596,102 @@ function AgentPortal() {
             <div className="p-5 border-t border-white/10">
               <button
                 onClick={() => {
-                  setShowLinkPageHelpModal(false);
-                  
+                  localStorage.setItem('link_page_intro_dismissed', 'true');
+                  setShowLinkPageIntroModal(false);
                 }}
                 className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-emerald-500 hover:bg-emerald-400 transition-colors"
               >
                 Got it, let&apos;s set up my Link Page!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Link Page Help Modal - Re-accessible via question mark button */}
+      {showLinkPageHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowLinkPageHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+
+          {/* Modal */}
+          <div
+            className="relative w-full max-w-lg my-auto bg-[#151517] rounded-2xl border border-emerald-500/30 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-t-2xl">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
+                  <LinkIcon className="w-6 h-6 text-emerald-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-emerald-400">Link Page Help</h2>
+              </div>
+              <button
+                onClick={() => setShowLinkPageHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              <p className="text-[#e5e4dd]/80">
+                Your Link Page is your personalized hub for sharing all your important links in one place. Complete these sections to activate it:
+              </p>
+
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Profile</strong> - Add your photo and display name</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Design</strong> - Choose your style and accent color</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Connect</strong> - Add your contact information</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 mt-0.5">✓</span>
+                    <span><strong>Links</strong> - Add your important links</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
+                <p className="text-blue-400 text-sm mb-2">
+                  <strong>Your Page URL:</strong>
+                </p>
+                <code className="text-blue-300 text-sm font-mono bg-black/30 px-2 py-1 rounded">
+                  smartagentalliance.com/{(user?.firstName || 'firstname').toLowerCase()}-{(user?.lastName || 'lastname').toLowerCase()}-links
+                </code>
+              </div>
+
+              <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/30">
+                <p className="text-purple-400 text-sm">
+                  <strong>Note:</strong> Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowLinkPageHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-emerald-500 hover:bg-emerald-400 transition-colors"
+              >
+                Got it!
               </button>
             </div>
           </div>
@@ -6639,6 +6744,9 @@ interface AgentPagesSectionProps {
   mode?: AgentPagesSectionMode;
   preloadedPageData?: any; // Preloaded agent page data from loading screen
   triggerConfetti: () => void; // Confetti effect for save success
+  // Link page intro/help modal props
+  setShowLinkPageIntroModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLinkPageHelpModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function AgentPagesSection({
@@ -6668,6 +6776,8 @@ function AgentPagesSection({
   mode = 'linktree',
   preloadedPageData,
   triggerConfetti,
+  setShowLinkPageIntroModal,
+  setShowLinkPageHelpModal,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
@@ -6800,6 +6910,16 @@ function AgentPagesSection({
       setIsLoading(false);
     }
   }, [preloadedPageData]);
+
+  // Show Link Page intro modal when first visiting linktree mode
+  useEffect(() => {
+    if (mode === 'linktree') {
+      const dismissed = localStorage.getItem('link_page_intro_dismissed');
+      if (!dismissed) {
+        setShowLinkPageIntroModal(true);
+      }
+    }
+  }, [mode]);
 
   // Fetch agent page data - skip if we have preloaded data
   useEffect(() => {
@@ -7274,33 +7394,27 @@ function AgentPagesSection({
     }
   };
 
-  if (!pageData) {
+  // For Agent Attraction page: show prompt to create link page first
+  if (!pageData && mode === 'agent-page') {
     return (
       <div className="px-2 sm:px-4">
         <GenericCard padding="lg" centered>
           <div className="text-center space-y-4 py-8">
-            <span className="text-6xl">🚀</span>
-            <h3 className="text-h3 text-[#ffd700]">Create Your Pages</h3>
+            <span className="text-6xl">🔗</span>
+            <h3 className="text-h3 text-[#ffd700]">Create Your Link Page First</h3>
             <p className="text-body max-w-md mx-auto">
-              Get started with your personalized Agent Attraction Page and Links page.
-              Click below to create your pages and start customizing!
+              To activate your Agent Attraction Page, you need to create your Link Page first.
+              Click below to set up your Link Page, then come back here!
             </p>
-            {error && (
-              <div className="flex items-center justify-center gap-2 text-red-400 text-sm">
-                <span>{error}</span>
-                <button onClick={() => setError(null)} className="p-1 hover:bg-red-500/20 rounded" title="Dismiss">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-            )}
             <button
-              onClick={handleCreatePage}
-              disabled={isSaving}
-              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              onClick={() => {
+                // Navigate to Link Page section
+                const linkPageButton = document.querySelector('[data-section="linktree"]') as HTMLElement;
+                if (linkPageButton) linkPageButton.click();
+              }}
+              className="px-6 py-3 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] transition-colors"
             >
-              {isSaving ? 'Creating...' : 'Create My Pages'}
+              Create Link Page to Activate
             </button>
           </div>
         </GenericCard>
@@ -7308,16 +7422,24 @@ function AgentPagesSection({
     );
   }
 
+  // Safety check for agent-page mode - linktree mode handles its own null case
+  if (!pageData && mode === 'agent-page') {
+    // This shouldn't happen as agent-page already has its own check above
+    return null;
+  }
+
   // TODO: Change to smartagentalliance.com when domain migration is complete
-  const pageUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}`;
-  const pageUrlPreview = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}?preview=true`;
-  const linktreeUrl = `https://saabuildingblocks.pages.dev/${generatedSlug || pageData.slug}-links`;
+  const slugForUrl = generatedSlug || pageData?.slug || '';
+  const pageUrl = slugForUrl ? `https://saabuildingblocks.pages.dev/${slugForUrl}` : '';
+  const pageUrlPreview = slugForUrl ? `https://saabuildingblocks.pages.dev/${slugForUrl}?preview=true` : '';
+  const linktreeUrl = slugForUrl ? `https://saabuildingblocks.pages.dev/${slugForUrl}-links` : '';
+  const hasPage = !!pageData;
 
   // Download QR Code function
   const downloadQRCode = () => {
-    if (qrCodeInstanceRef.current) {
+    if (qrCodeInstanceRef.current && slugForUrl) {
       qrCodeInstanceRef.current.download({
-        name: `${generatedSlug || pageData.slug}-linktree-qr`,
+        name: `${slugForUrl}-linktree-qr`,
         extension: 'png',
       });
     }
@@ -7346,7 +7468,7 @@ function AgentPagesSection({
         )}
 
         {/* Status Banner */}
-        {pageData.activated ? (
+        {pageData?.activated ? (
           <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
             <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
             <span className="text-sm text-green-400 font-medium">Your Agent Attraction Page is live!</span>
@@ -7366,7 +7488,7 @@ function AgentPagesSection({
               setCopiedLink('attraction');
               setTimeout(() => setCopiedLink(null), 2000);
             }}
-            disabled={!pageData.activated}
+            disabled={!pageData?.activated}
             className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
           >
             {copiedLink === 'attraction' ? (
@@ -7386,7 +7508,7 @@ function AgentPagesSection({
               </>
             )}
           </button>
-          {pageData.activated && (
+          {pageData?.activated && (
             <a
               href={pageUrl}
               target="_blank"
@@ -7415,7 +7537,7 @@ function AgentPagesSection({
                 </div>
               </div>
               <div className="relative w-full overflow-hidden" style={{ height: '500px' }}>
-                {pageData.activated && (generatedSlug || pageData.slug) ? (
+                {pageData?.activated && (generatedSlug || pageData?.slug) ? (
                   <div className="flex justify-center pt-2 pb-4">
                     <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
                       <iframe
@@ -7577,7 +7699,7 @@ function AgentPagesSection({
 
           {/* Preview Content */}
           <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto relative">
-            {pageData.activated && (generatedSlug || pageData.slug) ? (
+            {pageData?.activated && (generatedSlug || pageData?.slug) ? (
               <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
                 <iframe
                   src={pageUrlPreview}
@@ -7632,6 +7754,41 @@ function AgentPagesSection({
           </button>
         </div>
       )}
+
+      {/* Get Started Banner - Shows when no page exists yet */}
+      {!hasPage && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-[#ffd700]/10 to-[#22c55e]/10 border border-[#ffd700]/30">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-[#ffd700] mb-1">Get Started with Your Link Page</h3>
+              <p className="text-sm text-[#e5e4dd]/70">
+                Complete the sections below and click &quot;Create Page&quot; to activate your personalized Link Page.
+                Your page URL will be: smartagentalliance.com/firstname-lastname-links
+              </p>
+            </div>
+            <button
+              onClick={handleCreatePage}
+              disabled={isSaving}
+              className="px-5 py-2.5 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors whitespace-nowrap"
+            >
+              {isSaving ? 'Creating...' : 'Create Page'}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Help Button - Always visible, opens instructions modal */}
+      <div className="flex justify-end">
+        <button
+          onClick={() => setShowLinkPageHelpModal(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Need Help?
+        </button>
+      </div>
 
       {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
       <div className="grid grid-cols-1 min-[1200px]:grid-cols-[1fr_256px] gap-6">
@@ -8158,7 +8315,7 @@ function AgentPagesSection({
                 </svg>
                 QR Code
               </button>
-              {pageData.activated ? (
+              {pageData?.activated ? (
                 <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -8197,21 +8354,23 @@ function AgentPagesSection({
                 </div>
               ) : (
                 <button
-                  onClick={handleActivate}
-                  disabled={hasUnsavedChanges || (!pageData.profile_image_url && !user?.profilePictureUrl)}
+                  onClick={hasPage ? handleActivate : handleCreatePage}
+                  disabled={hasPage ? (hasUnsavedChanges || (!pageData?.profile_image_url && !user?.profilePictureUrl)) : isSaving}
                   className="flex-1 px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-medium flex items-center justify-center gap-2"
                   title={
-                    hasUnsavedChanges
-                      ? 'Save changes first'
-                      : (!pageData.profile_image_url && !user?.profilePictureUrl)
-                        ? 'Upload a profile image first'
-                        : 'Activate your page'
+                    !hasPage
+                      ? 'Create your page first'
+                      : hasUnsavedChanges
+                        ? 'Save changes first'
+                        : (!pageData?.profile_image_url && !user?.profilePictureUrl)
+                          ? 'Upload a profile image first'
+                          : 'Activate your page'
                   }
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  Activate Your Pages
+                  {hasPage ? 'Activate Your Pages' : (isSaving ? 'Creating...' : 'Create Your Page')}
                 </button>
               )}
             <div className="mb-4 flex gap-3 min-[1200px]:hidden min-[1650px]:flex">
@@ -8232,7 +8391,7 @@ function AgentPagesSection({
                 QR Code
               </button>
               {/* Link Page Live (only if activated) */}
-              {pageData.activated && (
+              {pageData?.activated && (
                 <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -8424,7 +8583,7 @@ function AgentPagesSection({
                             <polyline points="17 8 12 3 7 8" />
                             <line x1="12" y1="3" x2="12" y2="15" />
                           </svg>
-                          {pageData.profile_image_url ? 'Change' : 'Upload'}
+                          {pageData?.profile_image_url ? 'Change' : 'Upload'}
                         </label>
                         {attractionUploadStatus && (
                           <div className="mt-2 text-xs text-blue-400 flex items-center gap-1.5">
@@ -9361,7 +9520,7 @@ function AgentPagesSection({
             {/* Save Changes Button - Expands from right (starts as 0-width line) when changes exist and page is activated */}
             <div
               className={`overflow-hidden transition-all duration-300 ease-out ${
-                hasUnsavedChanges && pageData.activated ? 'flex-1' : 'w-0'
+                hasUnsavedChanges && pageData?.activated ? 'flex-1' : 'w-0'
               }`}
             >
               <button
@@ -9376,7 +9535,7 @@ function AgentPagesSection({
                     : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
                   border: '1px solid rgba(255, 215, 0, 0.5)',
                   WebkitTapHighlightColor: 'transparent',
-                  minWidth: hasUnsavedChanges && pageData.activated ? '120px' : '0',
+                  minWidth: hasUnsavedChanges && pageData?.activated ? '120px' : '0',
                 } as React.CSSProperties}
               >
                 {showSaveSuccess ? (
