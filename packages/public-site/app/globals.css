@@ -309,7 +309,7 @@ html {
   /* Dark background for rubber banding areas */
   background-color: rgb(12, 12, 12) !important;
   scroll-behavior: smooth;
-  overscroll-behavior: none; /* Prevent rubber-banding on iOS/Chrome */
+  overscroll-behavior: auto; /* Allow natural scrolling */
 }
 
 body {
@@ -319,7 +319,7 @@ body {
   background-color: transparent !important;
   margin: 0;
   padding: 0;
-  overscroll-behavior: none; /* Prevent rubber-banding on iOS/Chrome */
+  overscroll-behavior: auto; /* Allow natural scrolling */
   /* Remove overflow-x: hidden to prevent mobile scrollbar glitches */
   /* Use max-width: 100vw on containers instead if horizontal scroll is an issue */
 }

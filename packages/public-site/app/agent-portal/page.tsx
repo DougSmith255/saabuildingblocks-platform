@@ -2129,6 +2129,22 @@ function AgentPortal() {
                 </form>
 
                 {/* Logout Button */}
+
+                {/* Re-access Onboarding Link (Mobile) */}
+                {onboardingCompletedAt && (
+                  <button
+                    onClick={() => {
+                      setActiveSection('onboarding');
+                      setSidebarOpen(false);
+                    }}
+                    className="min-[1200px]:hidden w-full px-4 py-3 rounded-xl text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#ffd700]/30 transition-all text-left flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <span>Onboarding Guide</span>
+                  </button>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-red-400 bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 hover:border-red-500/50 transition-all"
@@ -3350,6 +3366,22 @@ function DashboardView({
             </button>
           );
         })}
+      </div>
+
+      {/* Download App CTA - Mobile Only */}
+      <div className="min-[1200px]:hidden mt-6 mb-8">
+        <a
+          href="/download"
+          className="block w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#ffed4e] text-black font-semibold text-center shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          </svg>
+          Download Mobile App
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
       </div>
     </div>
   );
@@ -7004,6 +7036,8 @@ function AgentPagesSection({
       if (response.ok) {
         const data = await response.json();
         setPageData(data.page);
+        // Trigger confetti celebration
+        triggerOnboardingConfetti();
         // Success is indicated by the page now being activated (shown in status banner)
       } else {
         const errorData = await response.json();
@@ -7802,7 +7836,7 @@ function AgentPagesSection({
                     })()}
 
                     {/* Sample Buttons */}
-                    <div className="w-full space-y-1.5">
+                    <div className="w-full space-y-1.5 mt-1.5">
                       {/* Render buttons in linkOrder */}
                       {(() => {
                         const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
@@ -8464,6 +8498,21 @@ function AgentPagesSection({
                       </div>
                     </div>
                   </div>
+
+              {/* Re-access Onboarding Link (Desktop) */}
+              {onboardingCompletedAt && (
+                <div className="hidden min-[1200px]:block mt-3 pt-3 border-t border-white/10">
+                  <button
+                    onClick={() => setActiveSection('onboarding')}
+                    className="text-xs text-[#e5e4dd]/60 hover:text-[#ffd700] transition-colors flex items-center gap-1.5"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    View Onboarding Guide
+                  </button>
+                </div>
+              )}
             </div> {/* End PROFILE SECTION */}
 
             {/* CONNECT SECTION - Social Links, Phone, Email */}
@@ -8828,7 +8877,7 @@ function AgentPagesSection({
               </div>
 
               {/* Accent Color + Style Options - Only visible on screens < 1200px (in Links tab) */}
-              <div className="min-[1200px]:hidden grid grid-cols-2 gap-3 mb-4">
+              <div className="min-[1200px]:hidden grid grid-cols-1 min-[450px]:grid-cols-2 gap-3 mb-4">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -9341,10 +9390,10 @@ function AgentPagesSection({
               <span className="text-[#ffd700]">Preview</span>
             </button>
 
-            {/* Save Changes Button - Expands from right (starts as 0-width line) when changes exist */}
+            {/* Save Changes Button - Expands from right (starts as 0-width line) when changes exist and page is activated */}
             <div
               className={`overflow-hidden transition-all duration-300 ease-out ${
-                hasUnsavedChanges ? 'flex-1' : 'w-0'
+                hasUnsavedChanges && pageData.activated ? 'flex-1' : 'w-0'
               }`}
             >
               <button
@@ -9359,7 +9408,7 @@ function AgentPagesSection({
                     : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
                   border: '1px solid rgba(255, 215, 0, 0.5)',
                   WebkitTapHighlightColor: 'transparent',
-                  minWidth: hasUnsavedChanges ? '120px' : '0',
+                  minWidth: hasUnsavedChanges && pageData.activated ? '120px' : '0',
                 } as React.CSSProperties}
               >
                 {showSaveSuccess ? (
@@ -9565,7 +9614,7 @@ function AgentPagesSection({
             })()}
 
             {/* Link Buttons */}
-            <div className="w-full space-y-2">
+            <div className="w-full space-y-2 mt-2">
               {(() => {
                 const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
                 const customLinkMap = new Map(customLinks.map(l => [l.id, l]));

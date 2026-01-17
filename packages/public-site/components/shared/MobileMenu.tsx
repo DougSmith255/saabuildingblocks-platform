@@ -63,7 +63,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
 
       // Simple scroll lock using overflow hidden + touch-action
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
+      document.body.style.touchAction = 'pan-y'; // Allow vertical scrolling
       // Prevent iOS Safari bounce
       document.documentElement.style.overflow = 'hidden';
 
@@ -174,7 +174,12 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             display: shouldRenderMenu ? undefined : 'none',
           }}
         >
-        <div className="mobile-menu-content pt-16 pb-32 min-h-screen">
+        <div
+          className="mobile-menu-content pt-16 pb-32 min-h-screen"
+          style={{
+            overscrollBehavior: 'none', // Prevent rubber banding on content
+          }}
+        >
           <nav className="px-6 space-y-2" role="navigation" aria-label="Mobile navigation">
             {navItems.map((item, index) => (
               <div key={index}>
