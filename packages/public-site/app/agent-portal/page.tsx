@@ -7770,18 +7770,16 @@ function AgentPagesSection({
         </div>
       )}
 
-      {/* Help Button - Always visible, opens instructions modal */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => setShowLinkPageHelpModal(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 rounded-lg transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          Need Help?
-        </button>
-      </div>
+      {/* Floating Help Button - Fixed position, bottom-right corner */}
+      <button
+        onClick={() => setShowLinkPageHelpModal(true)}
+        className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 transition-colors flex items-center justify-center"
+        title="Need Help?"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </button>
 
       {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
       <div className="grid grid-cols-1 min-[1200px]:grid-cols-[1fr_256px] gap-6">
@@ -8366,6 +8364,7 @@ function AgentPagesSection({
                   {hasPage ? 'Activate Your Pages' : (isSaving ? 'Creating...' : 'Create Your Page')}
                 </button>
               )}
+            </div>
             <div className="mb-4 flex gap-3 min-[1200px]:hidden min-[1650px]:flex">
               {/* QR Code Download Button */}
               <button
