@@ -8364,6 +8364,7 @@ function AgentPagesSection({
                   {hasPage ? 'Activate Your Pages' : (isSaving ? 'Creating...' : 'Create Your Page')}
                 </button>
               )}
+            </div>
             <div className="mb-4 flex gap-3 min-[1200px]:hidden min-[1650px]:flex">
               {/* QR Code Download Button */}
               <button
@@ -9817,7 +9818,6 @@ function AgentPagesSection({
             </div>
           </div>
         </Modal>
-      </div>
 
         {/* Spacer for fixed bottom buttons on mobile - needed when mobile nav is visible (<950px) */}
         <div className="h-[110px] min-[950px]:hidden" />
