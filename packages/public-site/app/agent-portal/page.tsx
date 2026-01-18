@@ -122,6 +122,98 @@ const shakeKeyframes = `
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-4px); }
 }
+
+/* Phone Mockup Styles */
+.phone-mockup {
+  position: relative;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  border-radius: 40px;
+  padding: 12px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.1),
+    0 25px 50px -12px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 24px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 10;
+}
+
+.phone-mockup::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
+
+.phone-screen {
+  background: linear-gradient(180deg, #0a0a0a 0%, #151515 100%);
+  border-radius: 28px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Smooth transitions for layout changes */
+.fluid-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Save button pulse animation */
+@keyframes save-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(255, 215, 0, 0); }
+}
+
+.save-pulse {
+  animation: save-pulse 2s infinite;
+}
+
+/* Tab content fade-in animation */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tab-content-enter {
+  animation: fade-in 0.2s ease-out;
+}
+
+/* Section hover lift effect for desktop */
+@media (min-width: 1024px) {
+  .section-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .section-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Responsive typography scaling */
+@media (min-width: 1024px) {
+  .section-header {
+    font-size: 0.875rem;
+  }
+}
+@media (min-width: 1400px) {
+  .section-header {
+    font-size: 0.9375rem;
+  }
+}
 `;
 
 // User type from stored session
@@ -2519,15 +2611,6 @@ function AgentPortal() {
             onClick={(e) => e.stopPropagation()}
             onWheel={(e) => e.stopPropagation()}
           >
-            {/* Warning Banner */}
-            <div className="px-5 pt-4 pb-0">
-              <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
-                <p className="text-amber-400 text-xs text-center">
-                  This notification will disappear permanently when you close it. Please read carefully before exiting.
-                </p>
-              </div>
-            </div>
-
             {/* Header */}
             <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent">
               <div className="flex items-center gap-3">
@@ -7781,43 +7864,44 @@ function AgentPagesSection({
         </svg>
       </button>
 
-      {/* Desktop: 2-column layout with sticky preview. Mobile: settings only + floating preview button */}
-      <div className="grid grid-cols-1 min-[1200px]:grid-cols-[1fr_256px] gap-6">
+      {/* Responsive grid: Mobile(1col) -> Tablet landscape 1024px(2col) -> Desktop 1200px(3col) */}
+      {/* align-items: stretch ensures columns equalize height; content flows within each column */}
+      <div className="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1200px]:grid-cols-[1fr_1fr_320px] min-[1600px]:grid-cols-[1fr_1fr_380px] gap-4 min-[1024px]:gap-5 min-[1200px]:gap-6 min-[1024px]:items-stretch fluid-transition" style={{ minHeight: 'min(calc(100vh - 180px), 800px)' }}>
 
-          {/* PREVIEW COLUMN - Desktop only, sticky on right */}
-          <div className="hidden min-[1200px]:block min-[1200px]:col-start-2 min-[1200px]:row-start-1 min-[1200px]:row-span-4">
+          {/* PREVIEW COLUMN - Desktop only, sticky on right - Phone Mockup Style */}
+          <div className="hidden min-[1200px]:block min-[1200px]:col-start-3 min-[1200px]:row-start-1 min-[1200px]:row-span-4">
             <div className="sticky top-4">
-              <div className="rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 overflow-hidden">
               {/* Preview Header */}
-              <div className="px-4 py-3 border-b border-white/10 bg-black/30">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                  <span className="text-xs text-[#22c55e]">Link Page</span>
-                </div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
+                <span className="text-xs text-[#22c55e] font-medium">Link Page</span>
               </div>
 
-              {/* Preview Content - Linktree preview with star background */}
-              <div className="p-3 pb-4 relative overflow-hidden">
-                  {/* Static star dots for preview */}
-                  <div className="absolute inset-0 pointer-events-none" style={{
-                    background: `
-                      radial-gradient(1px 1px at 20px 30px, white, transparent),
-                      radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.6), transparent),
-                      radial-gradient(1px 1px at 130px 80px, white, transparent),
-                      radial-gradient(1px 1px at 160px 30px, rgba(255,255,255,0.7), transparent),
-                      radial-gradient(0.5px 0.5px at 70px 100px, rgba(255,255,255,0.5), transparent),
-                      radial-gradient(0.5px 0.5px at 100px 150px, rgba(255,255,255,0.4), transparent),
-                      radial-gradient(1px 1px at 50px 200px, rgba(255,255,255,0.6), transparent),
-                      radial-gradient(0.5px 0.5px at 180px 120px, rgba(255,255,255,0.5), transparent),
-                      radial-gradient(1px 1px at 25px 280px, rgba(255,255,255,0.7), transparent),
-                      radial-gradient(0.5px 0.5px at 140px 250px, rgba(255,255,255,0.4), transparent),
-                      radial-gradient(1px 1px at 80px 320px, rgba(255,255,255,0.6), transparent)
-                    `,
-                    opacity: 0.6
-                  }} />
-                  {/* Linktree Preview */}
-                  <div className="flex flex-col items-center gap-3 max-w-[180px] mx-auto relative z-10">
+              {/* Phone Mockup Frame */}
+              <div className="phone-mockup mx-auto" style={{ maxWidth: '280px' }}>
+                <div className="phone-screen" style={{ minHeight: '480px' }}>
+                  {/* Preview Content - Linktree preview with star background */}
+                  <div className="p-4 pb-6 relative overflow-hidden h-full">
+                    {/* Static star dots for preview */}
+                    <div className="absolute inset-0 pointer-events-none" style={{
+                      background: `
+                        radial-gradient(1px 1px at 20px 30px, white, transparent),
+                        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.6), transparent),
+                        radial-gradient(1px 1px at 130px 80px, white, transparent),
+                        radial-gradient(1px 1px at 160px 30px, rgba(255,255,255,0.7), transparent),
+                        radial-gradient(0.5px 0.5px at 70px 100px, rgba(255,255,255,0.5), transparent),
+                        radial-gradient(0.5px 0.5px at 100px 150px, rgba(255,255,255,0.4), transparent),
+                        radial-gradient(1px 1px at 50px 200px, rgba(255,255,255,0.6), transparent),
+                        radial-gradient(0.5px 0.5px at 180px 120px, rgba(255,255,255,0.5), transparent),
+                        radial-gradient(1px 1px at 25px 280px, rgba(255,255,255,0.7), transparent),
+                        radial-gradient(0.5px 0.5px at 140px 250px, rgba(255,255,255,0.4), transparent),
+                        radial-gradient(1px 1px at 80px 320px, rgba(255,255,255,0.6), transparent)
+                      `,
+                      opacity: 0.6
+                    }} />
+                    {/* Linktree Preview */}
+                    <div className="flex flex-col items-center gap-3 pt-8 mx-auto relative z-10">
                     {/* Profile Photo */}
                     <div
                       className="w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden"
@@ -8068,11 +8152,12 @@ function AgentPagesSection({
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
-            </div>
+          </div>
 
-              {/* Accent Color + Style - Only visible on screens < 1565px (moved from Links section) */}
-              <div className="min-[1650px]:hidden space-y-3 mt-4">
+              {/* Accent Color + Style - Now consolidated in Links column, hide this duplicate */}
+              <div className="hidden space-y-3 mt-4">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -8192,8 +8277,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* QR Code Section - visible only >1650px */}
-              <div className="hidden min-[1650px]:block mt-4">
+              {/* QR Code Section - visible on desktop (1200px+) */}
+              <div className="hidden min-[1200px]:block mt-4">
                 <div className="rounded-xl bg-white p-4 border border-white/10">
                   <div className="flex flex-col items-center gap-3">
                     <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Link Page QR Code</span>
@@ -8213,8 +8298,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Save Button - Under QR code, visible only >1650px */}
-              <div className="hidden min-[1650px]:block mt-3">
+              {/* Save Button - Under QR code, visible on desktop (1200px+) */}
+              <div className="hidden min-[1200px]:block mt-3">
                 <button
                   onClick={handleSave}
                   disabled={isSaving || !hasUnsavedChanges}
@@ -8249,13 +8334,61 @@ function AgentPagesSection({
                   )}
                 </button>
               </div>
+
+              {/* Activate Button - visible on desktop (1200px+) */}
+              <div className="hidden min-[1200px]:block mt-2">
+                {pageData?.activated ? (
+                  <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                      <span className="text-xs font-medium text-green-400">Page Live</span>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(linktreeUrl);
+                          const btn = document.getElementById('copy-linktree-btn-preview');
+                          if (btn) {
+                            btn.textContent = 'Copied!';
+                            setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+                          }
+                        }}
+                        id="copy-linktree-btn-preview"
+                        className="flex items-center justify-center gap-1 flex-1 px-2 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                      >
+                        Copy
+                      </button>
+                      <a
+                        href={linktreeUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1 flex-1 px-2 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
+                      >
+                        Open
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={hasPage ? handleActivate : handleCreatePage}
+                    disabled={hasPage ? (hasUnsavedChanges || (!pageData?.profile_image_url && !user?.profilePictureUrl)) : isSaving}
+                    className="w-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 bg-green-500/20 border border-green-500/50 text-green-400 hover:bg-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    {hasPage ? 'Activate Page' : (isSaving ? 'Creating...' : 'Activate Page')}
+                  </button>
+                )}
+              </div>
             </div> {/* End sticky wrapper */}
           </div>
 
-          {/* SETTINGS COLUMN - All settings here, single column on mobile */}
-          <div className="min-[1200px]:col-start-1 min-[1200px]:row-start-1">
-            {/* Desktop Save Button + QR Code + Page Status - visible 1200-1650px */}
-            <div className="hidden min-[1200px]:flex min-[1650px]:hidden gap-3 mb-4">
+          {/* COLUMN 1 - Profile + Connect (tablet/desktop) or all tabs (mobile) */}
+          {/* At 1024px+ (tablet landscape): col-1, At 1200px+ (desktop): col-1 with preview in col-3 */}
+          <div className="min-[1024px]:col-start-1 min-[1024px]:row-start-1 min-[1024px]:overflow-y-auto min-[1024px]:pr-2" style={{ maxHeight: 'inherit' }}>
+            {/* Desktop Save Button + QR Code + Page Status - hidden on desktop, now in Preview column */}
+            <div className="hidden gap-3 mb-4">
               {/* Save Button */}
               <button
                 onClick={handleSave}
@@ -8423,9 +8556,9 @@ function AgentPagesSection({
               )}
             </div>
 
-            {/* Tab Navigation - Mobile only (below 1200px), sticky at top */}
+            {/* Tab Navigation - Mobile/small tablet only (below 1024px), sticky at top */}
             <div
-              className="sticky top-0 z-20 bg-[#191919] border border-white/10 rounded-xl mb-4 min-[1200px]:hidden overflow-hidden"
+              className="sticky top-0 z-20 bg-[#191919] border border-white/10 rounded-xl mb-4 min-[1024px]:hidden overflow-hidden"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <div className="flex">
@@ -8479,14 +8612,12 @@ function AgentPagesSection({
               </div>
             </div>
 
-            {/* Desktop: Two-column layout for Profile+Connect (left) and Links (right) */}
-            <div className="grid grid-cols-1 min-[1200px]:grid-cols-2 min-[1200px]:gap-6">
-              {/* LEFT COLUMN - Profile and Connect */}
-              <div className="space-y-6">
+            {/* Mobile tabs show all content here; Desktop shows only Profile+Connect */}
+            <div className="space-y-6">
             {/* PROFILE SECTION - Photo, Name, Bio */}
-            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1200px]:block'}`}>
+            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1024px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1024px]:bg-[#22c55e]/10 border-b border-white/10 min-[1024px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -8646,9 +8777,9 @@ function AgentPagesSection({
             </div> {/* End PROFILE SECTION */}
 
             {/* CONNECT SECTION - Social Links, Phone, Email */}
-            <div className={`mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1200px]:block'}`}>
+            <div className={`mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1024px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1024px]:bg-[#22c55e]/10 border-b border-white/10 min-[1024px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
@@ -8868,22 +8999,24 @@ function AgentPagesSection({
                 </div> {/* End Column 2: Email + Phone */}
               </div> {/* End 2-column grid wrapper */}
             </div> {/* End CONNECT SECTION */}
-              </div> {/* End LEFT COLUMN */}
+            </div> {/* End space-y-6 wrapper */}
+          </div> {/* End COLUMN 1 */}
 
-              {/* RIGHT COLUMN - Links */}
-              <div>
+          {/* COLUMN 2 - Links Section */}
+          {/* At 1024px+ (tablet landscape): col-2, At 1200px+ (desktop): col-2 with preview in col-3 */}
+          <div className="min-[1024px]:col-start-2 min-[1024px]:row-start-1 min-[1024px]:overflow-y-auto min-[1024px]:pr-2" style={{ maxHeight: 'inherit' }}>
             {/* LINKS SECTION - Accent Color, Style, Button Links */}
-            <div className={`space-y-3 mt-6 min-[1200px]:mt-0 ${activeTab === 'links' ? '' : 'hidden min-[1200px]:block'}`}>
+            <div className={`space-y-3 ${activeTab === 'links' ? '' : 'hidden min-[1024px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1200px]:bg-[#22c55e]/10 border-b border-white/10 min-[1200px]:border-b-0">
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1024px]:bg-[#22c55e]/10 border-b border-white/10 min-[1024px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
                 <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Links</h3>
               </div>
 
-              {/* Accent Color + Style in a grid - Hidden on screens < 1565px (moved under preview) */}
-              <div className="hidden min-[1650px]:grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Accent Color + Style in a grid - Now consolidated below, hide this duplicate */}
+              <div className="hidden grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -9006,8 +9139,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Accent Color + Style Options - Only visible on screens < 1200px (in Links tab) */}
-              <div className="min-[1200px]:hidden grid grid-cols-1 min-[450px]:grid-cols-2 gap-3 mb-4">
+              {/* Accent Color + Style Options - Always visible in Links column/tab */}
+              <div className="grid grid-cols-1 min-[450px]:grid-cols-2 gap-3 mb-4">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -9479,12 +9612,8 @@ function AgentPagesSection({
               </div>
               </div> {/* End of BUTTON LINKS SECTION wrapper */}
             </div> {/* End of LINKS SECTION */}
-              </div> {/* End RIGHT COLUMN */}
-            </div> {/* End Desktop Two-Column Grid */}
-
-            {/* Action Buttons - Desktop only, Activate button */}
-          </div> {/* End of SETTINGS COLUMN */}
-        </div>
+          </div> {/* End COLUMN 2 */}
+        </div> {/* End 3-column grid */}
 
         {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
         {/* Shows when <1200px (mobile UI).
@@ -9492,10 +9621,10 @@ function AgentPagesSection({
             - 950-1200px: Positioned at bottom of screen = bottom-0 */}
         <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[49px] min-[950px]:bottom-0 min-[950px]:left-[290px] min-[950px]:right-[10px]">
           <div className="flex gap-2">
-            {/* Preview Link Page Button - Shrinks from right when Save appears */}
+            {/* Preview Link Page Button - Compact, shrinks when Save appears */}
             <button
               onClick={() => setShowMobilePreview(true)}
-              className="flex-1 py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
+              className="flex-1 py-2.5 rounded-lg text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
               style={{
                 background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
                 border: '1px solid rgba(255, 215, 0, 0.3)',
@@ -9509,25 +9638,25 @@ function AgentPagesSection({
               <span className="text-[#ffd700]">Preview</span>
             </button>
 
-            {/* Save Changes Button - Expands from right (starts as 0-width line) when changes exist and page is activated */}
+            {/* Save Changes Button - Expands when there are unsaved changes */}
             <div
               className={`overflow-hidden transition-all duration-300 ease-out ${
-                hasUnsavedChanges && pageData?.activated ? 'flex-1' : 'w-0'
+                hasUnsavedChanges ? 'flex-1' : 'w-0'
               }`}
             >
               <button
                 onClick={handleSave}
                 disabled={isSaving}
-                className={`w-full h-full py-3 rounded-xl font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                className={`w-full h-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap ${
                   showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
-                }`}
+                } ${hasUnsavedChanges && !showSaveSuccess ? 'save-pulse' : ''}`}
                 style={{
                   background: showSaveSuccess
                     ? '#22c55e'
                     : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
                   border: '1px solid rgba(255, 215, 0, 0.5)',
                   WebkitTapHighlightColor: 'transparent',
-                  minWidth: hasUnsavedChanges && pageData?.activated ? '120px' : '0',
+                  minWidth: hasUnsavedChanges ? '110px' : '0',
                 } as React.CSSProperties}
               >
                 {showSaveSuccess ? (
@@ -9820,9 +9949,10 @@ function AgentPagesSection({
         </Modal>
 
         {/* Spacer for fixed bottom buttons on mobile - needed when mobile nav is visible (<950px) */}
-        <div className="h-[110px] min-[950px]:hidden" />
+        {/* Height accounts for: mobile nav (64px) + Preview/Save bar (56px) + padding (20px) = 140px */}
+        <div className="h-[140px] min-[950px]:hidden" />
         {/* Additional spacer for 950-1200px range when Preview/Save buttons visible but no mobile nav */}
-        <div className="hidden min-[950px]:block min-[1200px]:hidden h-16" />
+        <div className="hidden min-[950px]:block min-[1200px]:hidden h-20" />
     </div>
   );
 }
