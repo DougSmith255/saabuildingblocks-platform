@@ -17,7 +17,7 @@
  * - Uses shared IntersectionObserver (1 observer for all cards vs 20+ separate ones)
  */
 
-import { memo } from 'react';
+import { memo, useState, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { GenericCard } from '@saa/shared/components/saa';
@@ -45,6 +45,10 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
   // Use shared IntersectionObserver for all blog cards (1 observer vs 20+)
   const [cardRef, isVisible] = useSharedVisibility<HTMLDivElement>();
 
+  // Track image loading state for smooth fade-in
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const handleImageLoad = useCallback(() => setImageLoaded(true), []);
+
   return (
     <div ref={cardRef} className={`h-full ${className}`}>
       <GenericCard hover padding="sm" className="h-full overflow-hidden !p-0">
@@ -61,17 +65,20 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
                 <Image
                   src={post.featuredImage.url}
                   alt={post.featuredImage.alt || post.title}
-                  width={post.featuredImage.width}
-                  height={post.featuredImage.height}
-                  className="
-                    w-full h-full
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className={`
                     object-cover
                     group-hover:scale-105
                     transition-all duration-500
                     group-hover:brightness-110
-                    animate-fade-in
-                  "
+                    ${imageLoaded ? 'opacity-100' : 'opacity-0'}
+                  `}
+                  style={{
+                    transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
+                  }}
                   loading="lazy"
+                  onLoad={handleImageLoad}
                 />
                 {/* Gradient overlay on hover */}
                 <div className="

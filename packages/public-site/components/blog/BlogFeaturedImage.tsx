@@ -4,6 +4,9 @@
  * Displays featured image with responsive sizes and loading states
  */
 
+'use client';
+
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import type { BlogPost } from '@/lib/wordpress/types';
 
@@ -87,6 +90,8 @@ export default function BlogFeaturedImage({
   className = ''
 }: BlogFeaturedImageProps) {
   const { featuredImage, title } = post;
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const handleImageLoad = useCallback(() => setImageLoaded(true), []);
 
   // No featured image - show fallback
   if (!featuredImage) {
@@ -102,9 +107,10 @@ export default function BlogFeaturedImage({
         loading={priority ? 'eager' : 'lazy'}
         fetchPriority={priority ? 'high' : 'auto'}
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
-        className="object-cover"
+        className={`object-cover transition-opacity duration-500 ease-out ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
         placeholder="blur"
         blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzFhMjAyYyIvPjwvc3ZnPg=="
+        onLoad={handleImageLoad}
       />
     </div>
   );

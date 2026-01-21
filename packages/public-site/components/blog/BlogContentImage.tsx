@@ -96,6 +96,7 @@ export default function BlogContentImage({
 }: BlogContentImageProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Use FuturisticImageFrame if enabled
   if (useFuturisticFrame) {
@@ -168,10 +169,11 @@ export default function BlogContentImage({
               fill={!width || !height}
               width={width}
               height={height}
-              className="object-cover"
+              className={`object-cover transition-opacity duration-500 ease-out ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 900px"
               loading="lazy"
               onError={handleError}
+              onLoad={() => setImageLoaded(true)}
             />
           )}
         </div>
