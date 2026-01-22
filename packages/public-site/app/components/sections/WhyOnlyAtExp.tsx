@@ -95,7 +95,7 @@ export function WhyOnlyAtExp() {
 
     timerRef.current = setInterval(() => {
       setCurrentCard(prev => (prev + 1) % totalCards);
-    }, 2500); // 2.5 seconds
+    }, 5000); // 5 seconds
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
@@ -248,13 +248,8 @@ export function WhyOnlyAtExp() {
                   })}
                 </div>
 
-                {/* Click hint */}
-                <p className="text-center text-sm text-white/50 mt-2">
-                  {isAutoMode ? 'Click to control manually' : 'Click to advance'}
-                </p>
-
-                {/* 3D Plasma Tube Progress Bar */}
-                <div className="flex justify-center mt-8">
+                {/* 3D Plasma Tube Progress Bar - moved up 12px */}
+                <div className="flex justify-center mt-5">
                   <div
                     className="w-80 h-3 rounded-full overflow-hidden relative"
                     style={{
@@ -273,6 +268,11 @@ export function WhyOnlyAtExp() {
                     />
                   </div>
                 </div>
+
+                {/* Click hint - below progress bar, larger and bold */}
+                <p className="text-center text-base font-bold text-white/60 mt-3">
+                  Click to control manually
+                </p>
               </div>
 
               {/* Right Column: Key message card */}

@@ -175,7 +175,11 @@ export function BuiltForFuture() {
   const totalCards = FUTURE_POINTS.length;
   const [currentCard, setCurrentCard] = useState(0);
   const [isAutoMode, setIsAutoMode] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Create looped cards array - add first card at the end for seamless loop
+  const loopedCards = [...FUTURE_POINTS, FUTURE_POINTS[0]];
 
   // Responsive card width
   const [isMobile, setIsMobile] = useState(false);
@@ -192,13 +196,32 @@ export function BuiltForFuture() {
     if (!isAutoMode) return;
 
     timerRef.current = setInterval(() => {
-      setCurrentCard(prev => (prev + 1) % totalCards);
-    }, 2000); // 2 seconds
+      setCurrentCard(prev => prev + 1);
+    }, 4000); // 4 seconds
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isAutoMode, totalCards]);
+  }, [isAutoMode]);
+
+  // Handle seamless loop - when we reach the duplicate card, snap back to real first card
+  useEffect(() => {
+    if (currentCard === totalCards) {
+      // We're at the duplicate of card 0 - wait for transition to complete, then snap back
+      const snapTimeout = setTimeout(() => {
+        setIsTransitioning(false); // Disable transition for instant snap
+        setCurrentCard(0);
+        // Re-enable transition after snap
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setIsTransitioning(true);
+          });
+        });
+      }, 500); // Wait for slide transition to complete
+
+      return () => clearTimeout(snapTimeout);
+    }
+  }, [currentCard, totalCards]);
 
   // Handle card click
   const handleCardClick = useCallback(() => {
@@ -207,16 +230,17 @@ export function BuiltForFuture() {
       setIsAutoMode(false);
       if (timerRef.current) clearInterval(timerRef.current);
     }
-    // Advance to next card
-    setCurrentCard(prev => (prev + 1) % totalCards);
-  }, [isAutoMode, totalCards]);
+    // Advance to next card (will loop via the useEffect above)
+    setCurrentCard(prev => prev + 1);
+  }, [isAutoMode]);
 
   // Card dimensions - responsive
   const CARD_WIDTH = isMobile ? 280 : 560;
   const CARD_GAP = isMobile ? 16 : 24;
 
-  // Progress for the progress bar
-  const progress = currentCard / (totalCards - 1);
+  // Progress for the progress bar (use modulo for display)
+  const displayCard = currentCard % totalCards;
+  const progress = displayCard / (totalCards - 1);
 
   return (
     <section className="relative pt-[calc(6rem+25px)] pb-24">
@@ -282,16 +306,18 @@ export function BuiltForFuture() {
             {/* Cards track */}
             <div className="py-12">
               <div
-                className="flex transition-transform duration-500 ease-out"
+                className={`flex ${isTransitioning ? 'transition-transform duration-500 ease-out' : ''}`}
                 style={{
                   gap: `${CARD_GAP}px`,
                   // Center current card in viewport
                   transform: `translateX(calc(50vw - ${CARD_WIDTH / 2}px - 12px - ${currentCard * (CARD_WIDTH + CARD_GAP)}px))`,
                 }}
               >
-                {FUTURE_POINTS.map((point, index) => {
-                  const distance = Math.abs(currentCard - index);
-                  const isActive = index === currentCard;
+                {loopedCards.map((point, index) => {
+                  // For visual effects, use displayCard (the actual logical card, not the looped position)
+                  const logicalIndex = index % totalCards;
+                  const distance = Math.abs(displayCard - logicalIndex);
+                  const isActive = logicalIndex === displayCard;
 
                   // Scale based on distance from center
                   const scale = Math.max(0.85, 1 - distance * 0.1);
@@ -367,13 +393,8 @@ export function BuiltForFuture() {
           </div>
         </div>
 
-        {/* Click hint */}
-        <p className="text-center text-sm text-white/50 mt-2">
-          {isAutoMode ? 'Click to control manually' : 'Click to advance'}
-        </p>
-
-        {/* 3D Plasma Tube Progress Bar */}
-        <div className="flex justify-center mt-6 mb-6 px-6">
+        {/* 3D Plasma Tube Progress Bar - moved up 20px */}
+        <div className="flex justify-center mt-1 px-6">
           <div
             className="w-80 h-3 rounded-full overflow-hidden relative"
             style={{
@@ -392,6 +413,11 @@ export function BuiltForFuture() {
             />
           </div>
         </div>
+
+        {/* Click hint - below progress bar, larger and bold */}
+        <p className="text-center text-base font-bold text-white/60 mt-3 mb-6">
+          Click to control manually
+        </p>
       </div>
     </section>
   );
