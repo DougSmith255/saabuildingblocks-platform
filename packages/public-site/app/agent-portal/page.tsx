@@ -10,6 +10,176 @@ import { preloadAppData } from '@/components/pwa/PreloadService';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
 import confetti from 'canvas-confetti';
 
+// ============================================================================
+// Custom SVG Icon Components
+// ============================================================================
+
+// Wolf icon for Wolf Pack sections (based on Emojione wolf)
+const WolfIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 4c-8 0-14.5 6.5-14.5 14.5c0 3.5 1.2 6.7 3.2 9.2L6 42l8 8l10-10c2.5 2 5.7 3.2 9.2 3.2c3.5 0 6.7-1.2 9.2-3.2l10 10l8-8l-14.7-14.3c2-2.5 3.2-5.7 3.2-9.2C49.5 10.5 42 4 32 4z" fill="currentColor"/>
+    <ellipse cx="26" cy="18" rx="3" ry="3.5" fill="#1a1a1a"/>
+    <ellipse cx="38" cy="18" rx="3" ry="3.5" fill="#1a1a1a"/>
+    <ellipse cx="32" cy="26" rx="4" ry="3" fill="#1a1a1a"/>
+  </svg>
+);
+
+// Bot sparkle icon for AI Agent Accelerator (based on Fluent Color)
+const BotSparkleIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="8" y="16" width="32" height="24" rx="4" fill="currentColor"/>
+    <circle cx="18" cy="26" r="3" fill="#1a1a1a"/>
+    <circle cx="30" cy="26" r="3" fill="#1a1a1a"/>
+    <rect x="20" y="32" width="8" height="3" rx="1.5" fill="#1a1a1a"/>
+    <rect x="22" y="8" width="4" height="8" rx="2" fill="currentColor"/>
+    <circle cx="24" cy="6" r="3" fill="currentColor"/>
+    <path d="M40 8l2 4l4 2l-4 2l-2 4l-2-4l-4-2l4-2z" fill="#ffd700"/>
+    <path d="M44 20l1.5 3l3 1.5l-3 1.5l-1.5 3l-1.5-3l-3-1.5l3-1.5z" fill="#ffd700"/>
+  </svg>
+);
+
+// People community icon for Master Agent Attraction (based on Fluent Color)
+const PeopleCommunityIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="24" cy="12" r="6" fill="currentColor"/>
+    <path d="M24 20c-6.6 0-12 4.5-12 10v2h24v-2c0-5.5-5.4-10-12-10z" fill="currentColor"/>
+    <circle cx="10" cy="18" r="4" fill="currentColor" opacity="0.7"/>
+    <path d="M10 24c-4.4 0-8 3-8 6.7V32h8v-2c0-2.2.7-4.2 1.9-5.9c-0.6-0.1-1.3-0.1-1.9-0.1z" fill="currentColor" opacity="0.7"/>
+    <circle cx="38" cy="18" r="4" fill="currentColor" opacity="0.7"/>
+    <path d="M38 24c-0.6 0-1.3 0-1.9 0.1c1.2 1.7 1.9 3.7 1.9 5.9v2h8v-1.3c0-3.7-3.6-6.7-8-6.7z" fill="currentColor" opacity="0.7"/>
+  </svg>
+);
+
+// Money bag icon for Investment Course (based on Noto)
+const MoneyBagIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 6l-6 8h12l-6-8z" fill="currentColor"/>
+    <ellipse cx="24" cy="30" rx="16" ry="14" fill="currentColor"/>
+    <text x="24" y="35" textAnchor="middle" fill="#1a1a1a" fontSize="16" fontWeight="bold" fontFamily="system-ui">$</text>
+  </svg>
+);
+
+// Graduation cap icon for Social Agent Academy (based on Noto)
+const GraduationCapColorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 8L2 20l22 12l22-12L24 8z" fill="currentColor"/>
+    <path d="M10 24v12c0 0 6 6 14 6s14-6 14-6V24L24 32L10 24z" fill="currentColor" opacity="0.8"/>
+    <rect x="42" y="20" width="2" height="16" fill="currentColor"/>
+    <circle cx="43" cy="38" r="3" fill="#ffd700"/>
+  </svg>
+);
+
+// Brain icon for Connor's call (based on Twemoji)
+const BrainIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4c-8 0-14 6-14 14c0 4 1.6 7.6 4.2 10.2c-0.1 0.6-0.2 1.2-0.2 1.8c0 4.4 3.6 8 8 8h4c4.4 0 8-3.6 8-8c0-0.6-0.1-1.2-0.2-1.8c2.6-2.6 4.2-6.2 4.2-10.2c0-8-6-14-14-14z" fill="currentColor"/>
+    <path d="M18 16c0-2 1.5-4 4-4s4 2 4 4M26 16c0-2 1.5-4 4-4s4 2 4 4M14 22c0 2 1.5 4 4 4s4-2 4-4M26 22c0 2 1.5 4 4 4s4-2 4-4" stroke="#1a1a1a" strokeWidth="2" fill="none"/>
+    <line x1="24" y1="12" x2="24" y2="34" stroke="#1a1a1a" strokeWidth="2"/>
+  </svg>
+);
+
+// Money with wings icon for Mike's call (based on Emojione)
+const MoneyWingsIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="12" y="16" width="24" height="16" rx="2" fill="currentColor"/>
+    <circle cx="24" cy="24" r="6" fill="currentColor" stroke="#1a1a1a" strokeWidth="2"/>
+    <text x="24" y="28" textAnchor="middle" fill="#1a1a1a" fontSize="10" fontWeight="bold" fontFamily="system-ui">$</text>
+    <path d="M12 20c-4-2-8-1-10 2c2-1 5 0 8 2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M12 24c-4 0-8 1-10 4c2-1 5-1 8 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M12 28c-4 2-8 3-10 2c2 0 5-1 8-2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M36 20c4-2 8-1 10 2c-2-1-5 0-8 2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M36 24c4 0 8 1 10 4c-2-1-5-1-8 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M36 28c4 2 8 3 10 2c-2 0-5-1-8-2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+  </svg>
+);
+
+// Woman technologist icon for Women's call (based on Twemoji)
+const WomanTechnologistIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="24" cy="14" r="10" fill="#ffcc4d"/>
+    <path d="M14 10c0-6 4-8 10-8s10 2 10 8c0 4-2 6-4 7l-6-3l-6 3c-2-1-4-3-4-7z" fill="#5c4033"/>
+    <circle cx="20" cy="14" r="1.5" fill="#1a1a1a"/>
+    <circle cx="28" cy="14" r="1.5" fill="#1a1a1a"/>
+    <path d="M22 18c0 0 1 2 2 2s2-2 2-2" stroke="#1a1a1a" strokeWidth="1.5" fill="none"/>
+    <rect x="6" y="30" width="36" height="14" rx="2" fill="currentColor"/>
+    <rect x="10" y="34" width="28" height="6" rx="1" fill="#1a1a1a"/>
+    <path d="M18 24l6 6l6-6" fill="currentColor"/>
+  </svg>
+);
+
+// Crown icon for Leaders call (based on Noto)
+const CrownColorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 36h40v4H4z" fill="currentColor"/>
+    <path d="M4 36l6-22l8 10l6-16l6 16l8-10l6 22H4z" fill="currentColor"/>
+    <circle cx="10" cy="12" r="3" fill="currentColor"/>
+    <circle cx="24" cy="6" r="3" fill="currentColor"/>
+    <circle cx="38" cy="12" r="3" fill="currentColor"/>
+  </svg>
+);
+
+// S logo icon for SAA Support
+const SLogoIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M32 12c0-4.4-3.6-8-8-8c-4.4 0-8 3.6-8 8c0 3 1.6 5.5 4 6.9V24h-8c-4.4 0-8 3.6-8 8s3.6 8 8 8h16c4.4 0 8-3.6 8-8s-3.6-8-8-8h-8v-5.1c2.4-1.4 4-3.9 4-6.9z" fill="currentColor"/>
+    <text x="24" y="18" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="bold" fontFamily="system-ui">S</text>
+  </svg>
+);
+
+// Location indicator icon for State Support (based on Openmoji)
+const LocationIndicatorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4C16.3 4 10 10.3 10 18c0 10 14 26 14 26s14-16 14-26c0-7.7-6.3-14-14-14z" fill="currentColor"/>
+    <circle cx="24" cy="18" r="6" fill="#1a1a1a"/>
+  </svg>
+);
+
+// eXp X logo icon for eXp Support
+const ExpXIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M140.625 59.765625 L232.421875 175.78125 L125 325.683594 L204.101563 325.683594 L262.695313 241.210938 L321.289063 325.683594 L400.878906 325.683594 L293.457031 175.292969 L385.253906 59.765625 L305.664063 59.765625 L262.695313 117.675781 L220.214844 59.765625 Z"/>
+    <path fill="currentColor" d="M125 352.539063 L125 440.917969 L400.390625 440.917969 L400.390625 352.539063 L327.148438 352.539063 L327.148438 387.207031 L353.515625 387.207031 L353.515625 413.574219 L172.363281 413.574219 L172.363281 387.207031 L198.242188 387.207031 L198.242188 352.539063 Z"/>
+  </svg>
+);
+
+// House icon for Production Know-How (based on Noto)
+const HouseIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M24 4L4 22h6v20h28V22h6L24 4z" fill="currentColor"/>
+    <rect x="18" y="28" width="12" height="14" fill="#1a1a1a"/>
+    <rect x="20" y="30" width="3" height="5" fill="currentColor" opacity="0.5"/>
+    <rect x="25" y="30" width="3" height="5" fill="currentColor" opacity="0.5"/>
+  </svg>
+);
+
+// Check icon for Checklists (based on Streamline)
+const CheckColorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="24" cy="24" r="20" fill="currentColor"/>
+    <path d="M14 24l7 7l13-13" stroke="#1a1a1a" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+  </svg>
+);
+
+// Handshake icon for Mentor (based on Noto)
+const HandshakeIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 20l8-8l8 4l4-4l8 8l-4 4l8 8l-8 8l-8-8l-4 4l-8-8l4-4l-8-8z" fill="currentColor" opacity="0.3"/>
+    <path d="M12 18l6 2l6-4l6 6l-4 4l6 6l-4 4l-6-6l-4 4l-6-6l4-4l-6-6z" fill="currentColor"/>
+    <circle cx="18" cy="22" r="2" fill="#1a1a1a"/>
+    <circle cx="30" cy="26" r="2" fill="#1a1a1a"/>
+  </svg>
+);
+
+// People icon for Get Clients (based on Fluent Color)
+const PeopleIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
+  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="18" cy="14" r="6" fill="currentColor"/>
+    <path d="M18 22c-6.6 0-12 4.5-12 10v2h24v-2c0-5.5-5.4-10-12-10z" fill="currentColor"/>
+    <circle cx="34" cy="16" r="5" fill="currentColor" opacity="0.7"/>
+    <path d="M34 23c-1 0-2 0.1-2.9 0.3c1.8 2 2.9 4.5 2.9 7.2v3.5h10v-1.5c0-5.2-4.5-9.5-10-9.5z" fill="currentColor" opacity="0.7"/>
+  </svg>
+);
+
 // Shake animation styles + mobile tap highlight fix
 const shakeKeyframes = `
 @keyframes shake {
@@ -170,6 +340,95 @@ const shakeKeyframes = `
 /* Smooth transitions for layout changes */
 .fluid-transition {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================================================
+   FLUID LAYOUT FRAMEWORK - Link Page UI Overhaul
+   ======================================================================== */
+
+/* Fluid CSS variables for consistent scaling across all screen sizes */
+.link-page-fluid-root {
+  /* Fluid spacing - scales smoothly between mobile and desktop */
+  --fluid-gap-xs: clamp(4px, 0.5vw, 8px);
+  --fluid-gap-sm: clamp(8px, 1vw, 12px);
+  --fluid-gap-md: clamp(12px, 1.5vw, 20px);
+  --fluid-gap-lg: clamp(16px, 2vw, 28px);
+  --fluid-gap-xl: clamp(20px, 2.5vw, 36px);
+
+  /* Fluid typography */
+  --fluid-text-xs: clamp(10px, 0.7vw, 11px);
+  --fluid-text-sm: clamp(12px, 0.85vw, 13px);
+  --fluid-text-base: clamp(13px, 1vw, 15px);
+  --fluid-text-lg: clamp(14px, 1.1vw, 16px);
+
+  /* Section card sizing */
+  --fluid-card-padding: clamp(12px, 1.5vw, 20px);
+  --fluid-card-radius: clamp(8px, 1vw, 12px);
+
+  /* Preview column width (only visible >= 1100px) */
+  --preview-width: clamp(280px, 22vw, 380px);
+
+  /* Content area constraints */
+  --content-max-width: min(100%, 1800px);
+}
+
+/* Main fluid grid for link page sections */
+.link-page-fluid-grid {
+  display: grid;
+  gap: var(--fluid-gap-lg);
+  width: 100%;
+
+  /* Single column on mobile/tablet (< 1100px) */
+  grid-template-columns: 1fr;
+}
+
+/* Desktop layout (>= 1100px): 2 content columns + preview */
+@media (min-width: 1100px) {
+  .link-page-fluid-grid {
+    /* Two equal content columns + fixed preview column */
+    grid-template-columns: 1fr 1fr var(--preview-width);
+  }
+}
+
+/* Extra-wide screens (>= 1600px): slightly wider preview */
+@media (min-width: 1600px) {
+  .link-page-fluid-root {
+    --preview-width: clamp(340px, 24vw, 420px);
+  }
+}
+
+/* Ultra-wide screens (>= 2000px): maximize content usage */
+@media (min-width: 2000px) {
+  .link-page-fluid-root {
+    --preview-width: 400px;
+    --fluid-gap-lg: clamp(24px, 2vw, 36px);
+  }
+
+  .link-page-fluid-grid {
+    /* Three content columns on ultra-wide */
+    grid-template-columns: 1fr 1fr 1fr var(--preview-width);
+  }
+}
+
+/* Fluid section cards */
+.fluid-section-card {
+  padding: var(--fluid-card-padding);
+  border-radius: var(--fluid-card-radius);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fluid internal grids - auto-fit for responsive columns */
+.fluid-inner-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--fluid-gap-md);
+}
+
+.fluid-inner-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: var(--fluid-gap-sm);
 }
 
 /* Save button pulse animation */
@@ -4291,6 +4550,7 @@ function SupportSection({ userState }: SupportSectionProps) {
   return (
     <div className="space-y-6">
       {/* Support Cards - grid with auto-fit, min 300px, equal widths */}
+      {/* Order: eXp Support, State Broker (if available), SAA Support, Wolf Pack Support */}
       <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
         {/* eXp Support Card */}
         <div className="rounded-2xl border border-[#3b82f6]/30 overflow-hidden bg-gradient-to-b from-[#3b82f6]/10 to-transparent">
@@ -4298,7 +4558,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#3b82f6]/20">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl bg-[#3b82f6]/20">
-                <Headphones className="w-7 h-7 text-[#3b82f6]" />
+                <ExpXIcon className="w-7 h-7" style={{ color: '#3b82f6' }} />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#3b82f6]">eXp Support</h3>
@@ -4354,13 +4614,64 @@ function SupportSection({ userState }: SupportSectionProps) {
           </div>
         </div>
 
+        {/* State Broker Support Card - Shows second if user has state set and broker URL exists */}
+        {brokerInfo && (
+          <div className="rounded-2xl border border-[#a855f7]/30 overflow-hidden bg-gradient-to-b from-[#a855f7]/10 to-transparent">
+            {/* Header */}
+            <div className="p-5 border-b border-[#a855f7]/20">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-3 rounded-xl bg-[#a855f7]/20">
+                  <LocationIndicatorIcon className="w-7 h-7" style={{ color: '#a855f7' }} />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
+                  <p className="text-sm text-[#e5e4dd]/60">Agent production questions & issues</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Options */}
+            <div className="p-5 space-y-3">
+              {/* Broker Room Link */}
+              <a
+                href={brokerInfo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#a855f7] text-[#1a1a1a] font-semibold hover:bg-[#c084fc] transition-colors text-sm"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+                <span className="truncate">eXp World Broker Room</span>
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+              </a>
+              {/* Phone */}
+              <a
+                href={`tel:${brokerInfo.phone.replace(/-/g, '')}`}
+                className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#a855f7]/30 text-[#a855f7] font-semibold hover:bg-[#a855f7]/10 transition-colors text-sm"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                {brokerInfo.phone}
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* SAA Support Card */}
         <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
           {/* Header */}
           <div className="p-5 border-b border-[#ffd700]/20">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl bg-[#ffd700]/20">
-                <LifeBuoy className="w-7 h-7 text-[#ffd700]" />
+                <SLogoIcon className="w-7 h-7" style={{ color: '#ffd700' }} />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
@@ -4414,7 +4725,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#22c55e]/20">
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl bg-[#22c55e]/20">
-                <Users className="w-7 h-7 text-[#22c55e]" />
+                <WolfIcon className="w-7 h-7" style={{ color: '#22c55e' }} />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#22c55e]">Wolf Pack Support</h3>
@@ -4447,57 +4758,6 @@ function SupportSection({ userState }: SupportSectionProps) {
             </a>
           </div>
         </div>
-
-        {/* State Broker Support Card - Only shows if user has state set and broker URL exists */}
-        {brokerInfo && (
-          <div className="rounded-2xl border border-[#a855f7]/30 overflow-hidden bg-gradient-to-b from-[#a855f7]/10 to-transparent">
-          {/* Header */}
-          <div className="p-5 border-b border-[#a855f7]/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 rounded-xl bg-[#a855f7]/20">
-                <MapPin className="w-7 h-7 text-[#a855f7]" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
-                <p className="text-sm text-[#e5e4dd]/60">Agent production questions & issues</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Options */}
-          <div className="p-5 space-y-3">
-            {/* Broker Room Link */}
-            <a
-              href={brokerInfo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-[#a855f7] text-[#1a1a1a] font-semibold hover:bg-[#c084fc] transition-colors text-sm"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-              </svg>
-              <span className="truncate">eXp World Broker Room</span>
-              <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-            </a>
-            {/* Phone */}
-            <a
-              href={`tel:${brokerInfo.phone.replace(/-/g, '')}`}
-              className="flex items-center justify-center gap-2 w-full py-3 px-3 rounded-xl bg-black/30 border border-[#a855f7]/30 text-[#a855f7] font-semibold hover:bg-[#a855f7]/10 transition-colors text-sm"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              {brokerInfo.phone}
-            </a>
-          </div>
-        </div>
-        )}
       </div>
     </div>
   );
@@ -4608,7 +4868,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
         <GenericCard padding="sm">
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">
-              <span className="text-2xl sm:text-3xl">📹</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#ffd700]/20">
+                <BrainIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#ffd700' }} />
+              </div>
               <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Connor Steinbrook Mastermind</h4>
             </div>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Mindset-based discussions and teachings</p>
@@ -4652,7 +4914,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
         <GenericCard padding="sm">
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">
-              <span className="text-2xl sm:text-3xl">📹</span>
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#00ff88]/20">
+                <MoneyWingsIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#00ff88' }} />
+              </div>
               <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#00ff88] leading-tight">Mike Sherrard Mastermind</h4>
             </div>
             <p className="text-xs sm:text-sm text-[#e5e4dd]/80">Production-based discussions and teachings</p>
@@ -4684,7 +4948,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
           <GenericCard padding="sm">
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3">
-                <span className="text-2xl sm:text-3xl">👩</span>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#ec4899]/20">
+                  <WomanTechnologistIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#ec4899' }} />
+                </div>
                 <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ec4899] leading-tight">Women's Mastermind</h4>
               </div>
               <p className="text-xs sm:text-sm text-[#e5e4dd]/80">For women in SAA and Wolf Pack</p>
@@ -4717,7 +4983,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
           <GenericCard padding="sm">
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3">
-                <span className="text-2xl sm:text-3xl">👑</span>
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#38bdf8]/20">
+                  <CrownColorIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#38bdf8' }} />
+                </div>
                 <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#38bdf8] leading-tight">Leaders Mastermind</h4>
               </div>
               <p className="text-xs sm:text-sm text-[#e5e4dd]/80">For SAA and Wolf Pack leaders</p>
@@ -5204,39 +5472,44 @@ function TemplatesSection() {
 function CoursesSection() {
   const courses = [
     {
-      icon: Crown,
+      icon: WolfIcon,
       title: 'Wolf Pack Skool',
       description: 'Access the Wolf Pack community and resources',
       url: 'https://www.skool.com/wolf-pack-6238',
       color: '#a855f7', // Purple
+      isCustomIcon: true,
     },
     {
-      icon: Smartphone,
+      icon: GraduationCapColorIcon,
       title: 'Social Agent Academy PRO',
       description: 'Generate inbound leads through content and visibility',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
       color: '#22c55e', // Green
+      isCustomIcon: true,
     },
     {
-      icon: Building,
+      icon: MoneyBagIcon,
       title: 'Investor Army',
       description: 'Work with investor clients confidently',
       url: 'https://info-investorarmy.clickfunnels.com/membership-access18193126?page_id=18193127&page_key=caoyze5b8hg4msp3&login_redirect=1',
       color: '#3b82f6', // Blue
+      isCustomIcon: true,
     },
     {
-      icon: Bot,
+      icon: BotSparkleIcon,
       title: 'AI Agent Accelerator',
       description: 'Automate content, follow-up, and admin tasks',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
       color: '#f97316', // Orange
+      isCustomIcon: true,
     },
     {
-      icon: Target,
+      icon: PeopleCommunityIcon,
       title: 'Master Agent Attraction',
       description: 'Attract agents into your downline for revenue share',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
       color: '#ec4899', // Pink
+      isCustomIcon: true,
     },
   ];
 
@@ -5263,7 +5536,7 @@ function CoursesSection() {
                     <IconComponent
                       className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
                       style={{ color: course.color }}
-                      strokeWidth={1.5}
+                      {...(!(course as any).isCustomIcon && { strokeWidth: 1.5 })}
                     />
                   </div>
                   {/* Title - heading color, gold on hover */}
@@ -5613,7 +5886,9 @@ interface NewAgentDocument {
 interface NewAgentCategory {
   id: string;
   title: string;
-  icon: string;
+  icon: string; // Emoji fallback
+  iconComponent?: React.ComponentType<{ className?: string; style?: React.CSSProperties }>; // Custom SVG icon
+  iconColor?: string; // Color for custom icon
   description: string;
   documents: NewAgentDocument[];
 }
@@ -5623,6 +5898,8 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
     id: 'production-know-how',
     title: 'Production Know-How',
     icon: '📈',
+    iconComponent: HouseIcon,
+    iconColor: '#ffd700',
     description: 'Essential knowledge for ramping up your production',
     documents: [
       {
@@ -6010,6 +6287,8 @@ Most developers offer 5-10 year warranties on structural elements.`,
     id: 'agent-checklists',
     title: 'Agent Checklists',
     icon: '✅',
+    iconComponent: CheckColorIcon,
+    iconColor: '#22c55e',
     description: 'Step-by-step checklists to keep you on track',
     documents: [
       {
@@ -6366,6 +6645,8 @@ AFTER APPOINTMENT
     id: 'get-clients',
     title: '8 Ways to Get Clients',
     icon: '🎯',
+    iconComponent: PeopleIcon,
+    iconColor: '#3b82f6',
     description: 'Proven strategies to grow your client base',
     documents: [
       {
@@ -6447,6 +6728,8 @@ Additionally, consider doing the Revenos courses to get leads from relocations a
     id: 'mentor-guide',
     title: 'Get the Most From Your Mentor',
     icon: '🤝',
+    iconComponent: HandshakeIcon,
+    iconColor: '#a855f7',
     description: 'Maximize your mentorship experience',
     documents: [
       {
@@ -6536,7 +6819,13 @@ function NewAgentsSection() {
             style={{ WebkitTapHighlightColor: 'transparent' }}
           >
             <div className="flex items-start gap-4">
-              <span className="text-4xl flex-shrink-0">{category.icon}</span>
+              {category.iconComponent ? (
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ backgroundColor: `${category.iconColor}20` }}>
+                  <category.iconComponent className="w-7 h-7" style={{ color: category.iconColor }} />
+                </div>
+              ) : (
+                <span className="text-4xl flex-shrink-0">{category.icon}</span>
+              )}
               <div className="flex-1 min-w-0">
                 <h4 className="text-lg font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors mb-1">
                   {category.title}
@@ -6564,7 +6853,13 @@ function NewAgentsSection() {
           <div className="space-y-4">
             {/* Category Header */}
             <div className="text-center pb-4 border-b border-white/10">
-              <span className="text-5xl mb-3 block">{selectedCategory.icon}</span>
+              {selectedCategory.iconComponent ? (
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: `${selectedCategory.iconColor}20` }}>
+                  <selectedCategory.iconComponent className="w-9 h-9" style={{ color: selectedCategory.iconColor }} />
+                </div>
+              ) : (
+                <span className="text-5xl mb-3 block">{selectedCategory.icon}</span>
+              )}
               <h3 className="text-xl font-bold text-[#ffd700]">{selectedCategory.title}</h3>
               <p className="text-body text-[#dcdbd5] mt-1">{selectedCategory.description}</p>
             </div>
@@ -7824,7 +8119,506 @@ function AgentPagesSection({
   // LINKTREE MODE - Full customization interface
   // ========================================================================
   return (
-    <div className="space-y-6 px-2 sm:px-4">
+    <div className="link-page-fluid-root space-y-6 px-2 sm:px-4" style={{ maxWidth: 'var(--content-max-width, 100%)', margin: '0 auto' }}>
+
+      {/* ====================================================================
+          NEW FLUID LAYOUT MOCKUP - Grid prototype with colored sections
+          This is the new above-the-fold layout for desktop/laptop (1100px+)
+
+          Layout: 3 columns
+          - Left: Settings grid (flexible, adapts)
+          - Middle: Button Links (tall column, ~280px)
+          - Right: Preview (tall column, ~300px)
+
+          Everything fills vertical AND horizontal space
+          ==================================================================== */}
+      <div
+        className="hidden min-[1100px]:grid gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.02] mx-auto"
+        style={{
+          /* 3 columns: flexible content | button links | preview */
+          gridTemplateColumns: 'minmax(400px, 1fr) minmax(200px, 240px) minmax(260px, 300px)',
+          /* Single row that fills available height */
+          gridTemplateRows: '1fr',
+          height: 'calc(100vh - 140px)',
+          minHeight: '500px',
+          maxWidth: '1800px',
+        }}
+      >
+        {/* COLUMN 1: Settings grid (adapts horizontally AND vertically) */}
+        <div
+          className="grid gap-2 p-2 rounded-xl overflow-auto"
+          style={{
+            /* 3-column auto-fit with 180px minimum */
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            /* Auto rows with equal distribution */
+            gridAutoRows: '1fr',
+            alignContent: 'stretch',
+            backgroundColor: 'rgba(0,0,0,0.2)',
+            border: '1px solid rgba(255,255,255,0.1)',
+          }}
+        >
+          {/* Row 1: Photo | Name | Bio */}
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(239, 68, 68, 0.3)',
+              border: '2px solid rgba(239, 68, 68, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-red-300 uppercase mb-2">Photo</span>
+            <div className="flex items-center gap-3">
+              <div
+                className="w-14 h-14 rounded-full bg-black/40 border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+                style={{ backgroundImage: pageData?.profile_image_url ? `url(${pageData.profile_image_url})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center' }}
+              >
+                {!pageData?.profile_image_url && <span className="text-white/40 text-lg">👤</span>}
+              </div>
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="grid-photo-upload"
+              />
+              <label
+                htmlFor="grid-photo-upload"
+                className="px-2 py-1 rounded text-[10px] bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer"
+              >
+                {pageData?.profile_image_url ? 'Change' : 'Upload'}
+              </label>
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(249, 115, 22, 0.3)',
+              border: '2px solid rgba(249, 115, 22, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-orange-300 uppercase mb-2">Display Name</span>
+            <div className="grid grid-cols-2 gap-2">
+              <input
+                type="text"
+                value={formData.display_first_name}
+                onChange={(e) => handleInputChange('display_first_name', e.target.value)}
+                placeholder="First"
+                className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-orange-400 focus:outline-none"
+              />
+              <input
+                type="text"
+                value={formData.display_last_name}
+                onChange={(e) => handleInputChange('display_last_name', e.target.value)}
+                placeholder="Last"
+                className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-orange-400 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(234, 179, 8, 0.3)',
+              border: '2px solid rgba(234, 179, 8, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-yellow-300 uppercase mb-2">Bio <span className="font-normal text-yellow-300/60">({linksSettings.bio.length}/80)</span></span>
+            <textarea
+              value={linksSettings.bio}
+              onChange={(e) => {
+                if (e.target.value.length <= 80) {
+                  setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                  setHasUnsavedChanges(true);
+                }
+              }}
+              placeholder="Short bio..."
+              rows={2}
+              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-yellow-400 focus:outline-none resize-none"
+            />
+          </div>
+
+          {/* Row 2: Color | Style | Email */}
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(34, 197, 94, 0.3)',
+              border: '2px solid rgba(34, 197, 94, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-green-300 uppercase mb-2">Accent Color</span>
+            <HexColorPicker
+              color={linksSettings.accentColor}
+              onChange={(color) => {
+                setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                setHasUnsavedChanges(true);
+              }}
+              style={{ width: '100%', height: '60px' }}
+            />
+            <div className="flex items-center gap-2 mt-2">
+              <div className="w-5 h-5 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
+              <HexColorInput
+                color={linksSettings.accentColor}
+                onChange={(color) => {
+                  setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                  setHasUnsavedChanges(true);
+                }}
+                prefixed
+                className="flex-1 px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] font-mono uppercase focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(6, 182, 212, 0.3)',
+              border: '2px solid rgba(6, 182, 212, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-cyan-300 uppercase mb-2">Style Options</span>
+            <div className="space-y-2">
+              <div className="flex gap-1">
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.iconStyle === 'light' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
+                >Light</button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.iconStyle === 'dark' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
+                >Dark</button>
+              </div>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.font === 'synonym' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
+                >Synonym</button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.font === 'taskor' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
+                >Taskor</button>
+              </div>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.nameWeight === 'bold' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
+                >Bold</button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.nameWeight === 'normal' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
+                >Regular</button>
+              </div>
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(168, 85, 247, 0.3)',
+              border: '2px solid rgba(168, 85, 247, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-purple-300 uppercase mb-2">Email</span>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="you@email.com"
+              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-purple-400 focus:outline-none"
+            />
+            <span className="text-[9px] text-purple-200/50 mt-1">Shown on page if filled</span>
+          </div>
+
+          {/* Row 3: Phone | Social (spans 2) */}
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(236, 72, 153, 0.3)',
+              border: '2px solid rgba(236, 72, 153, 0.6)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-pink-300 uppercase mb-2">Phone</span>
+            <input
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="(555) 123-4567"
+              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-pink-400 focus:outline-none"
+            />
+            <div className="flex gap-3 mt-2">
+              <label className="flex items-center gap-1 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.show_call_button}
+                  onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
+                  className="w-3 h-3 rounded"
+                />
+                <span className="text-[9px] text-pink-200/70">Call</span>
+              </label>
+              <label className="flex items-center gap-1 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.show_text_button}
+                  onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
+                  className="w-3 h-3 rounded"
+                />
+                <span className="text-[9px] text-pink-200/70">Text</span>
+              </label>
+            </div>
+          </div>
+
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(99, 102, 241, 0.3)',
+              border: '2px solid rgba(99, 102, 241, 0.6)',
+              gridColumn: 'span 2',
+            }}
+          >
+            <span className="text-[10px] font-bold text-indigo-300 uppercase mb-2">Social Links <span className="font-normal text-indigo-300/60">({filledSocialLinks}/6)</span></span>
+            <div className="grid grid-cols-3 gap-2">
+              <input type="url" value={formData.facebook_url} onChange={(e) => handleInputChange('facebook_url', e.target.value)} placeholder="Facebook" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
+              <input type="url" value={formData.instagram_url} onChange={(e) => handleInputChange('instagram_url', e.target.value)} placeholder="Instagram" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
+              <input type="url" value={formData.twitter_url} onChange={(e) => handleInputChange('twitter_url', e.target.value)} placeholder="X/Twitter" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
+              <input type="url" value={formData.youtube_url} onChange={(e) => handleInputChange('youtube_url', e.target.value)} placeholder="YouTube" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
+              <input type="url" value={formData.tiktok_url} onChange={(e) => handleInputChange('tiktok_url', e.target.value)} placeholder="TikTok" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
+              <input type="url" value={formData.linkedin_url} onChange={(e) => handleInputChange('linkedin_url', e.target.value)} placeholder="LinkedIn" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
+            </div>
+          </div>
+
+          {/* Row 4: QR Code | Page Status (spans 2) */}
+          <div
+            className="rounded-xl flex flex-col items-center p-3"
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+            }}
+          >
+            <span className="text-[10px] font-bold text-white/80 uppercase mb-2">QR Code</span>
+            <div className="w-16 h-16 bg-white rounded flex items-center justify-center">
+              <span className="text-[8px] text-black/40">QR</span>
+            </div>
+            <button
+              onClick={downloadQRCode}
+              className="mt-2 px-2 py-1 rounded text-[9px] bg-white/20 text-white/80 hover:bg-white/30"
+            >
+              Download
+            </button>
+          </div>
+
+          <div
+            className="rounded-xl flex flex-col p-3"
+            style={{
+              backgroundColor: 'rgba(34, 197, 94, 0.2)',
+              border: '2px solid rgba(34, 197, 94, 0.4)',
+              gridColumn: 'span 2',
+            }}
+          >
+            <span className="text-[10px] font-bold text-green-300 uppercase mb-2">Page Status</span>
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] ${pageData?.activated ? 'bg-green-500/30 text-green-200' : 'bg-yellow-500/30 text-yellow-200'}`}>
+                <div className={`w-2 h-2 rounded-full ${pageData?.activated ? 'bg-green-400' : 'bg-yellow-400'}`} />
+                {pageData?.activated ? 'Live' : 'Draft'}
+              </div>
+              {pageData?.slug && (
+                <>
+                  <button
+                    onClick={() => navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)}
+                    className="px-2 py-1 rounded text-[9px] bg-white/10 text-white/70 hover:bg-white/20"
+                  >
+                    Copy URL
+                  </button>
+                  <a
+                    href={`https://saabuildingblocks.com/${pageData.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-2 py-1 rounded text-[9px] bg-white/10 text-white/70 hover:bg-white/20"
+                  >
+                    Open Page
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Row 5: Save Bar (spans all 3) */}
+          <div
+            className="rounded-xl flex items-center justify-center gap-3 p-3"
+            style={{
+              backgroundColor: 'rgba(255, 215, 0, 0.2)',
+              border: '2px solid rgba(255, 215, 0, 0.4)',
+              gridColumn: 'span 3',
+            }}
+          >
+            <button
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges || isSaving}
+              className="px-4 py-2 rounded-lg bg-[#ffd700] text-[#1a1a1a] text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#ffe55c] transition-colors"
+            >
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+            {!pageData?.activated && (
+              <button
+                onClick={handleActivate}
+                disabled={hasUnsavedChanges || !pageData?.profile_image_url}
+                className="px-4 py-2 rounded-lg bg-green-500 text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-600 transition-colors"
+              >
+                Activate Page
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* COLUMN 2: Button Links (tall column) */}
+        <div
+          className="rounded-xl flex flex-col p-3"
+          style={{
+            backgroundColor: 'rgba(251, 146, 60, 0.3)',
+            border: '2px solid rgba(251, 146, 60, 0.6)',
+          }}
+        >
+          <span className="text-xs font-bold text-orange-300 uppercase tracking-wider mb-3 text-center">Button Links ({customLinks.length})</span>
+
+          {/* Scrollable list area */}
+          <div className="flex-1 flex flex-col gap-2 overflow-auto">
+            {/* Default links */}
+            <div className="p-2 rounded-lg bg-green-500/20 border border-green-500/40">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-green-300 flex-1 truncate">🔗 Join My Team</span>
+                <span className="text-[8px] text-green-300/50">default</span>
+              </div>
+            </div>
+            <div className="p-2 rounded-lg bg-green-500/20 border border-green-500/40">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] text-green-300 flex-1 truncate">ℹ️ Learn About eXp</span>
+                <span className="text-[8px] text-green-300/50">default</span>
+              </div>
+            </div>
+
+            {/* Custom links from state */}
+            {customLinks.map((link, index) => (
+              <div key={link.id} className="p-2 rounded-lg bg-white/10 border border-white/20">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-white/80 flex-1 truncate">{link.label || `Link ${index + 1}`}</span>
+                  <button
+                    onClick={() => {
+                      setCustomLinks(prev => prev.filter(l => l.id !== link.id));
+                      setHasUnsavedChanges(true);
+                    }}
+                    className="text-red-400/60 hover:text-red-400 text-xs"
+                  >
+                    ×
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {customLinks.length === 0 && (
+              <div className="text-center text-[9px] text-white/30 py-2">No custom links yet</div>
+            )}
+          </div>
+
+          {/* Add new link */}
+          <button
+            onClick={() => {
+              const newLink: CustomLink = {
+                id: `link-${Date.now()}`,
+                label: '',
+                url: '',
+                order: customLinks.length,
+              };
+              setCustomLinks(prev => [...prev, newLink]);
+              setHasUnsavedChanges(true);
+            }}
+            className="mt-2 p-2 rounded-lg bg-orange-500/20 border border-dashed border-orange-400/50 text-center hover:bg-orange-500/30 transition-colors"
+          >
+            <span className="text-[10px] text-orange-300">+ Add New Link</span>
+          </button>
+        </div>
+
+        {/* COLUMN 3: Preview (tall column) */}
+        <div
+          className="rounded-xl flex flex-col items-center p-3"
+          style={{
+            backgroundColor: 'rgba(107, 114, 128, 0.3)',
+            border: '2px solid rgba(107, 114, 128, 0.6)',
+          }}
+        >
+          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">Live Preview</span>
+
+          {/* Phone mockup */}
+          <div className="phone-mockup flex-1 w-full max-w-[220px]" style={{ minHeight: '380px' }}>
+            <div className="phone-screen h-full flex flex-col items-center p-4 pt-8 overflow-auto">
+              {/* Profile Photo */}
+              <div
+                className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden mb-3"
+                style={{
+                  borderColor: linksSettings.accentColor,
+                  backgroundImage: pageData?.profile_image_url ? `url(${pageData.profile_image_url})` : undefined,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                {!pageData?.profile_image_url && <span className="text-white/30 text-2xl">👤</span>}
+              </div>
+
+              {/* Name */}
+              <h3
+                className="text-sm text-center mb-1"
+                style={{
+                  color: linksSettings.accentColor,
+                  fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                }}
+              >
+                {formData.display_first_name || 'First'} {formData.display_last_name || 'Last'}
+              </h3>
+
+              {/* Bio */}
+              {linksSettings.bio && (
+                <p className="text-[10px] text-white/60 text-center mb-3 px-2">{linksSettings.bio}</p>
+              )}
+
+              {/* Contact buttons */}
+              <div className="flex gap-2 mb-3">
+                {formData.show_call_button && formData.phone && (
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>📞</div>
+                )}
+                {formData.show_text_button && formData.phone && (
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>💬</div>
+                )}
+                {formData.email && (
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>✉️</div>
+                )}
+              </div>
+
+              {/* Button Links preview */}
+              <div className="w-full space-y-2">
+                <div className="w-full py-2 px-3 rounded-lg text-[9px] text-center" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+                  Join My Team
+                </div>
+                <div className="w-full py-2 px-3 rounded-lg text-[9px] text-center" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+                  Learn About eXp
+                </div>
+                {customLinks.slice(0, 3).map((link) => (
+                  <div key={link.id} className="w-full py-2 px-3 rounded-lg text-[9px] text-center border border-white/20 text-white/60">
+                    {link.label || 'Custom Link'}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile indicator - shows on smaller screens */}
+      <div className="min-[1100px]:hidden p-4 rounded-xl bg-blue-500/20 border border-blue-500/40 text-center">
+        <span className="text-blue-300 text-sm font-medium">📱 Mobile/Tablet View</span>
+        <p className="text-blue-300/60 text-xs mt-1">Tabbed interface will go here (below 1100px)</p>
+      </div>
+
+      <div className="border-t-2 border-dashed border-white/20 pt-6 mt-6">
+        <p className="text-center text-white/40 text-xs mb-4">⬇️ OLD LAYOUT BELOW (for reference) ⬇️</p>
+      </div>
+
       {/* Action Bar - QR Code + Activate button - Shows above settings for non-activated users */}
       {!pageData?.activated && (
         <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl bg-black/20 border border-white/10">
@@ -7867,12 +8661,13 @@ function AgentPagesSection({
         </svg>
       </button>
 
-      {/* Responsive grid: Mobile(1col) -> Tablet landscape 1024px(2col) -> Desktop 1200px(3col) */}
-      {/* align-items: stretch ensures columns equalize height; content flows within each column */}
-      <div className="grid grid-cols-1 min-[1024px]:grid-cols-2 min-[1200px]:grid-cols-[1fr_1fr_320px] min-[1600px]:grid-cols-[1fr_1fr_380px] gap-4 min-[1024px]:gap-5 min-[1200px]:gap-6 min-[1024px]:items-stretch fluid-transition" style={{ minHeight: 'min(calc(100vh - 180px), 800px)' }}>
+      {/* FLUID GRID LAYOUT - Unified breakpoint at 1100px for tab/column view */}
+      {/* Mobile/Tablet (< 1100px): Single column with tabs */}
+      {/* Desktop (>= 1100px): 2 content columns + sticky preview */}
+      <div className="link-page-fluid-grid items-stretch fluid-transition" style={{ minHeight: 'min(calc(100vh - 180px), 700px)' }}>
 
-          {/* PREVIEW COLUMN - Desktop only, sticky on right - Phone Mockup Style */}
-          <div className="hidden min-[1200px]:block min-[1200px]:col-start-3 min-[1200px]:row-start-1 min-[1200px]:row-span-4">
+          {/* PREVIEW COLUMN - Desktop only (>= 1100px), sticky on right - Phone Mockup Style */}
+          <div className="hidden min-[1100px]:block min-[1100px]:col-start-3 min-[1100px]:row-start-1 min-[1100px]:row-span-4 min-[2000px]:col-start-4">
             <div className="sticky top-4">
               {/* Preview Header */}
               <div className="flex items-center justify-between mb-3">
@@ -8389,119 +9184,9 @@ function AgentPagesSection({
 
           {/* COLUMN 1 - Profile + Connect (tablet/desktop) or all tabs (mobile) */}
           {/* At 1024px+ (tablet landscape): col-1, At 1200px+ (desktop): col-1 with preview in col-3 */}
-          <div className="min-[1024px]:col-start-1 min-[1024px]:row-start-1 min-[1024px]:overflow-y-auto min-[1024px]:pr-2" style={{ maxHeight: 'inherit' }}>
-            {/* Desktop Save Button + QR Code + Page Status - hidden on desktop, now in Preview column */}
-            <div className="hidden gap-3 mb-4">
-              {/* Save Button */}
-              <button
-                onClick={handleSave}
-                disabled={isSaving || !hasUnsavedChanges}
-                className={`flex-1 py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ${
-                  !hasUnsavedChanges
-                    ? 'opacity-50 cursor-not-allowed'
-                    : ''
-                } ${
-                  showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
-                }`}
-                style={{
-                  background: showSaveSuccess
-                    ? '#22c55e'
-                    : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
-                  border: '1px solid rgba(255, 215, 0, 0.5)',
-                }}
-              >
-                {showSaveSuccess ? (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Saved!</span>
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                    </svg>
-                    <span>{isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}</span>
-                  </>
-                )}
-              </button>
-              {/* QR Code Download Button */}
-              <button
-                onClick={downloadQRCode}
-                className="px-4 py-2.5 rounded-lg text-xs font-medium bg-white text-[#2a2a2a] hover:bg-gray-100 transition-colors flex items-center justify-center gap-1.5 border border-white/20"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="3" height="3" />
-                  <rect x="18" y="14" width="3" height="3" />
-                  <rect x="14" y="18" width="3" height="3" />
-                  <rect x="18" y="18" width="3" height="3" />
-                </svg>
-                QR Code
-              </button>
-              {pageData?.activated ? (
-                <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-medium text-green-400">Link Page Live</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(linktreeUrl);
-                        const btn = document.getElementById('copy-linktree-btn-mid');
-                        if (btn) {
-                          btn.textContent = 'Copied!';
-                          setTimeout(() => { btn.textContent = 'Copy URL'; }, 1500);
-                        }
-                      }}
-                      id="copy-linktree-btn-mid"
-                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                      </svg>
-                      Copy URL
-                    </button>
-                    <a
-                      href={linktreeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      Open Page
-                    </a>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  onClick={hasPage ? handleActivate : handleCreatePage}
-                  disabled={hasPage ? (hasUnsavedChanges || (!pageData?.profile_image_url && !user?.profilePictureUrl)) : isSaving}
-                  className="flex-1 px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-medium flex items-center justify-center gap-2"
-                  title={
-                    !hasPage
-                      ? 'Create your page first'
-                      : hasUnsavedChanges
-                        ? 'Save changes first'
-                        : (!pageData?.profile_image_url && !user?.profilePictureUrl)
-                          ? 'Upload a profile image first'
-                          : 'Activate your page'
-                  }
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  {hasPage ? 'Activate Your Pages' : (isSaving ? 'Creating...' : 'Create Your Page')}
-                </button>
-              )}
-            </div>
-            <div className="mb-4 flex gap-3 min-[1200px]:hidden min-[1650px]:flex">
+          <div className="min-[1100px]:col-start-1 min-[1100px]:row-start-1 min-[1100px]:overflow-y-auto min-[1100px]:pr-2" style={{ maxHeight: 'inherit' }}>
+            {/* Mobile QR Code + Link Page Status - Only shown on mobile (<1100px), desktop has this in preview column */}
+            <div className="mb-4 flex gap-3 min-[1100px]:hidden">
               {/* QR Code Download Button */}
               <button
                 onClick={downloadQRCode}
@@ -8561,7 +9246,7 @@ function AgentPagesSection({
 
             {/* Tab Navigation - Mobile/small tablet only (below 1024px), sticky at top */}
             <div
-              className="sticky top-0 z-20 bg-[#191919] border border-white/10 rounded-xl mb-4 min-[1024px]:hidden overflow-hidden"
+              className="sticky top-0 z-20 bg-[#191919] border border-white/10 rounded-xl mb-4 min-[1100px]:hidden overflow-hidden"
               style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
             >
               <div className="flex">
@@ -8618,9 +9303,9 @@ function AgentPagesSection({
             {/* Mobile tabs show all content here; Desktop shows only Profile+Connect */}
             <div className="space-y-6">
             {/* PROFILE SECTION - Photo, Name, Bio */}
-            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1024px]:block'}`}>
+            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1100px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1024px]:bg-[#22c55e]/10 border-b border-white/10 min-[1024px]:border-b-0">
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1100px]:bg-[#22c55e]/10 border-b border-white/10 min-[1100px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
@@ -8724,8 +9409,8 @@ function AgentPagesSection({
                     </div>
                   </div>
 
-                  {/* Display Name + Bio Row - Side by side on wide screens only */}
-                  <div className="grid grid-cols-1 min-[1650px]:grid-cols-2 gap-3">
+                  {/* Display Name + Bio Row - Fluid layout, side by side when space allows */}
+                  <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))' }}>
                     {/* Display Name */}
                     <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                       <h4 className="text-sm font-medium text-[#ffd700] mb-3">Display Name</h4>
@@ -8780,20 +9465,19 @@ function AgentPagesSection({
             </div> {/* End PROFILE SECTION */}
 
             {/* CONNECT SECTION - Social Links, Phone, Email */}
-            <div className={`mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1024px]:block'}`}>
+            <div className={`mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1100px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1024px]:bg-[#22c55e]/10 border-b border-white/10 min-[1024px]:border-b-0">
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1100px]:bg-[#22c55e]/10 border-b border-white/10 min-[1100px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Connect</h3>
               </div>
 
-              {/* Social Links */}
-
-              {/* Content wrapper - 2 columns at >1650px */}
-              <div className="min-[1650px]:grid min-[1650px]:grid-cols-2 min-[1650px]:gap-6 space-y-3 min-[1650px]:space-y-0 mt-3">
-                {/* Column 1: Social Links */}
+              {/* Social Links + Email/Phone - Fluid Grid Layout */}
+              {/* Uses auto-fit to flow into 2 columns when space allows */}
+              <div className="grid gap-3 mt-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
+                {/* Social Links Card */}
                 <div className="space-y-3">
               <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                 <div className="flex items-center justify-between mb-3">
@@ -8950,8 +9634,8 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email + Phone Row - Hidden on screens < 1650px (moved to Links column) */}
-                <div className="space-y-3 hidden min-[1650px]:block">
+              {/* Email + Phone - Always visible, uses parent grid's auto-fit */}
+                <div className="space-y-3">
                 {/* Email */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
@@ -9007,11 +9691,11 @@ function AgentPagesSection({
 
           {/* COLUMN 2 - Links Section */}
           {/* At 1024px+ (tablet landscape): col-2, At 1200px+ (desktop): col-2 with preview in col-3 */}
-          <div className="min-[1024px]:col-start-2 min-[1024px]:row-start-1 min-[1024px]:overflow-y-auto min-[1024px]:pr-2" style={{ maxHeight: 'inherit' }}>
+          <div className="min-[1100px]:col-start-2 min-[1100px]:row-start-1 min-[1100px]:overflow-y-auto min-[1100px]:pr-2" style={{ maxHeight: 'inherit' }}>
             {/* LINKS SECTION - Accent Color, Style, Button Links */}
-            <div className={`space-y-3 ${activeTab === 'links' ? '' : 'hidden min-[1024px]:block'}`}>
+            <div className={`space-y-3 ${activeTab === 'links' ? '' : 'hidden min-[1100px]:block'}`}>
               {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1024px]:bg-[#22c55e]/10 border-b border-white/10 min-[1024px]:border-b-0">
+              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1100px]:bg-[#22c55e]/10 border-b border-white/10 min-[1100px]:border-b-0">
                 <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
@@ -9020,130 +9704,6 @@ function AgentPagesSection({
 
               {/* Accent Color + Style in a grid - Now consolidated below, hide this duplicate */}
               <div className="hidden grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* Accent Color */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
-                  <div className="space-y-2">
-                    <HexColorPicker
-                      color={linksSettings.accentColor}
-                      onChange={(color) => {
-                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                        setHasUnsavedChanges(true);
-                      }}
-                      style={{ width: '100%', height: '95px' }}
-                    />
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
-                        style={{ backgroundColor: linksSettings.accentColor }}
-                      />
-                      <HexColorInput
-                        color={linksSettings.accentColor}
-                        onChange={(color) => {
-                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                          setHasUnsavedChanges(true);
-                        }}
-                        prefixed={true}
-                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Style Options */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
-                  <div className="space-y-3">
-                    {/* Button Text */}
-                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Text</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'light'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Light
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'dark'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Dark
-                        </button>
-                      </div>
-                    </div>
-                    {/* Font */}
-                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Font</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'synonym'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Synonym
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'taskor'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Taskor
-                        </button>
-                      </div>
-                    </div>
-                    {/* Name Weight */}
-                    <div className="flex flex-col min-[1650px]:flex-row min-[1650px]:items-center gap-1 min-[1650px]:gap-3">
-                      <span className="text-xs text-[#e5e4dd]/60 min-[1650px]:w-16">Weight</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'bold'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Bold
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'normal'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Regular
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Accent Color + Style Options - Always visible in Links column/tab */}
-              <div className="grid grid-cols-1 min-[450px]:grid-cols-2 gap-3 mb-4">
                 {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
                   <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
@@ -9266,53 +9826,126 @@ function AgentPagesSection({
                 </div>
               </div>
 
-              {/* Email + Phone - Only visible on screens < 1650px (moved from Connect section) */}
-              <div className="min-[1650px]:hidden grid grid-cols-1 min-[1200px]:grid-cols-1 gap-3 mb-4 max-[1199px]:grid-cols-2">
-                {/* Email */}
+              {/* Accent Color + Style Options - Fluid layout, side by side when space allows */}
+              <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))' }}>
+                {/* Accent Color */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                    placeholder="your@email.com"
-                  />
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
+                  <div className="space-y-2">
+                    <HexColorPicker
+                      color={linksSettings.accentColor}
+                      onChange={(color) => {
+                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                        setHasUnsavedChanges(true);
+                      }}
+                      style={{ width: '100%', height: '95px' }}
+                    />
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
+                        style={{ backgroundColor: linksSettings.accentColor }}
+                      />
+                      <HexColorInput
+                        color={linksSettings.accentColor}
+                        onChange={(color) => {
+                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
+                          setHasUnsavedChanges(true);
+                        }}
+                        prefixed={true}
+                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                {/* Phone */}
+                {/* Style Options */}
                 <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Phone</h4>
-                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="flex-1 min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                      placeholder="(555) 123-4567"
-                    />
-                    {formData.phone && (
-                      <div className="flex gap-3 flex-shrink-0">
-                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
-                          <input
-                            type="checkbox"
-                            checked={formData.show_call_button}
-                            onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
-                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
-                          />
-                          <span className="text-xs text-[#e5e4dd]">Call</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
-                          <input
-                            type="checkbox"
-                            checked={formData.show_text_button}
-                            onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
-                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
-                          />
-                          <span className="text-xs text-[#e5e4dd]">Text</span>
-                        </label>
+                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
+                  <div className="space-y-3">
+                    {/* Button Text */}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Text</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.iconStyle === 'light'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Light
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.iconStyle === 'dark'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Dark
+                        </button>
                       </div>
-                    )}
+                    </div>
+                    {/* Font */}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Font</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.font === 'synonym'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Synonym
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.font === 'taskor'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Taskor
+                        </button>
+                      </div>
+                    </div>
+                    {/* Name Weight */}
+                    <div className="flex flex-col gap-1">
+                      <span className="text-xs text-[#e5e4dd]/60">Weight</span>
+                      <div className="flex gap-1 flex-1">
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'bold'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Bold
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
+                            linksSettings.nameWeight === 'normal'
+                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
+                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
+                          }`}
+                        >
+                          Regular
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
