@@ -173,13 +173,25 @@ const FUTURE_POINTS = [
 
 export function BuiltForFuture() {
   const totalCards = FUTURE_POINTS.length;
-  const [currentCard, setCurrentCard] = useState(0);
+
+  // Buffer: number of cards duplicated on each side for infinite scroll
+  const BUFFER = 2;
+
+  // Start at first real card (after buffer)
+  const [currentCard, setCurrentCard] = useState(BUFFER);
   const [isAutoMode, setIsAutoMode] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(true);
+  const [hasStarted, setHasStarted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Create looped cards array - add first card at the end for seamless loop
-  const loopedCards = [...FUTURE_POINTS, FUTURE_POINTS[0]];
+  // Create looped cards array - duplicate cards at both ends for infinite scrolling
+  // [last 2 cards] + [all cards] + [first 2 cards]
+  const loopedCards = [
+    ...FUTURE_POINTS.slice(-BUFFER), // Last 2 cards at start (for scrolling left)
+    ...FUTURE_POINTS,                 // All real cards
+    ...FUTURE_POINTS.slice(0, BUFFER) // First 2 cards at end (for scrolling right)
+  ];
 
   // Responsive card width
   const [isMobile, setIsMobile] = useState(false);
@@ -191,34 +203,52 @@ export function BuiltForFuture() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-scroll timer
+  // Start auto-scroll only when 20% of section is visible
   useEffect(() => {
-    if (!isAutoMode) return;
+    if (hasStarted) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+          setHasStarted(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  // Auto-scroll timer - 3.5 seconds between cards (only runs after hasStarted)
+  useEffect(() => {
+    if (!isAutoMode || !hasStarted) return;
 
     timerRef.current = setInterval(() => {
       setCurrentCard(prev => prev + 1);
-    }, 4000); // 4 seconds
+    }, 3500); // 3.5 seconds
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isAutoMode]);
+  }, [isAutoMode, hasStarted]);
 
-  // Handle seamless loop - when we reach the duplicate card, snap back to real first card
+  // Handle seamless loop - snap back when reaching duplicates
   useEffect(() => {
-    if (currentCard === totalCards) {
-      // We're at the duplicate of card 0 - wait for transition to complete, then snap back
+    // Scrolled past the end (into duplicate first cards)
+    if (currentCard >= BUFFER + totalCards) {
       const snapTimeout = setTimeout(() => {
-        setIsTransitioning(false); // Disable transition for instant snap
-        setCurrentCard(0);
-        // Re-enable transition after snap
+        setIsTransitioning(false);
+        setCurrentCard(BUFFER); // Snap to first real card
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             setIsTransitioning(true);
           });
         });
-      }, 500); // Wait for slide transition to complete
-
+      }, 500);
       return () => clearTimeout(snapTimeout);
     }
   }, [currentCard, totalCards]);
@@ -230,7 +260,7 @@ export function BuiltForFuture() {
       setIsAutoMode(false);
       if (timerRef.current) clearInterval(timerRef.current);
     }
-    // Advance to next card (will loop via the useEffect above)
+    // Advance to next card
     setCurrentCard(prev => prev + 1);
   }, [isAutoMode]);
 
@@ -238,12 +268,13 @@ export function BuiltForFuture() {
   const CARD_WIDTH = isMobile ? 280 : 560;
   const CARD_GAP = isMobile ? 16 : 24;
 
-  // Progress for the progress bar (use modulo for display)
-  const displayCard = currentCard % totalCards;
+  // Progress for the progress bar - account for BUFFER offset
+  // displayCard is the logical card index (0 to totalCards-1)
+  const displayCard = ((currentCard - BUFFER) % totalCards + totalCards) % totalCards;
   const progress = displayCard / (totalCards - 1);
 
   return (
-    <section className="relative pt-[calc(6rem+25px)] pb-24">
+    <section ref={sectionRef} className="relative pt-[calc(6rem+25px)] pb-24">
       {/* Fixed background animation */}
       <div className="absolute inset-0 overflow-hidden" style={{ zIndex: 0 }}>
         <GrayscaleDataStream />
@@ -314,19 +345,22 @@ export function BuiltForFuture() {
                 }}
               >
                 {loopedCards.map((point, index) => {
-                  // For visual effects, use displayCard (the actual logical card, not the looped position)
-                  const logicalIndex = index % totalCards;
-                  const distance = Math.abs(displayCard - logicalIndex);
-                  const isActive = logicalIndex === displayCard;
+                  // Active based on physical position (only ONE card can be active at a time)
+                  const isActive = index === currentCard;
+                  // Distance from center for scale/blur effects
+                  const distance = Math.abs(index - currentCard);
 
                   // Scale based on distance from center
                   const scale = Math.max(0.85, 1 - distance * 0.1);
 
-                  // Blur for non-active cards
-                  const blurAmount = Math.min(5, distance * 10);
+                  // Filter for non-active cards: more blur, grayscale, darken, and transparency
+                  const blurAmount = isActive ? 0 : Math.min(12, distance * 5);
+                  const grayscale = isActive ? 0 : 100;
+                  const brightness = isActive ? 1 : 0.4;
+                  const cardOpacity = isActive ? 1 : 0.6;
 
-                  // Mystic fog gradient for active card
-                  const activeBackground = `
+                  // Original misty fog gradient for active card (with white highlights)
+                  const mistyBackground = `
                     radial-gradient(ellipse 120% 80% at 30% 20%, rgba(255,255,255,0.8) 0%, transparent 50%),
                     radial-gradient(ellipse 100% 60% at 70% 80%, rgba(255,200,100,0.6) 0%, transparent 40%),
                     radial-gradient(ellipse 80% 100% at 50% 50%, rgba(255,215,0,0.7) 0%, transparent 60%),
@@ -334,37 +368,63 @@ export function BuiltForFuture() {
                     radial-gradient(ellipse 90% 70% at 80% 30%, rgba(255,240,200,0.4) 0%, transparent 45%),
                     linear-gradient(180deg, rgba(255,225,150,0.9) 0%, rgba(255,200,80,0.85) 50%, rgba(255,180,50,0.9) 100%)
                   `;
-                  const inactiveBackground = `linear-gradient(180deg, rgba(30,30,30,0.95), rgba(15,15,15,0.98))`;
+                  const darkBackground = 'linear-gradient(180deg, rgba(30,30,30,0.98), rgba(15,15,15,0.99))';
+
+                  // Transition class - disabled during snap to prevent visual glitch
+                  const transitionClass = isTransitioning ? 'transition-all duration-500' : '';
 
                   return (
                     <div
                       key={index}
-                      className="flex-shrink-0 transition-all duration-500"
+                      className={`flex-shrink-0 ${transitionClass}`}
                       style={{
                         width: `${CARD_WIDTH}px`,
                         transform: `scale(${scale})`,
-                        filter: `blur(${blurAmount}px)`,
+                        filter: `blur(${blurAmount}px) grayscale(${grayscale}%) brightness(${brightness})`,
+                        opacity: cardOpacity,
                       }}
                     >
+                      {/* Card with layered background - transitions disabled during snap */}
                       <div
-                        className={`rounded-2xl flex flex-col items-center justify-center relative overflow-hidden transition-all duration-300 ${isMobile ? 'p-8 min-h-[380px]' : 'p-8 min-h-[380px]'}`}
+                        className={`rounded-2xl flex flex-col items-center justify-center relative overflow-hidden ${isMobile ? 'p-8 min-h-[380px]' : 'p-8 min-h-[380px]'}`}
                         style={{
-                          background: isActive ? activeBackground : inactiveBackground,
                           border: isActive ? '2px solid rgba(180,150,50,0.5)' : `2px solid ${BRAND_YELLOW}22`,
                           boxShadow: isActive
                             ? `0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)`
                             : 'none',
+                          transition: isTransitioning ? 'border 0.5s ease, box-shadow 0.5s ease' : 'none',
                         }}
                       >
-                        {/* Circled Image */}
+                        {/* Dark base background - always present */}
                         <div
-                          className={`rounded-full flex items-center justify-center overflow-hidden relative z-10 transition-all duration-300 ${isMobile ? 'w-[180px] h-[180px] mb-6' : 'w-[200px] h-[200px] mb-6'}`}
+                          className="absolute inset-0 rounded-2xl"
+                          style={{
+                            background: darkBackground,
+                          }}
+                        />
+                        {/* Misty golden overlay - fades fast to avoid grayscale making it look white */}
+                        <div
+                          className="absolute inset-0 rounded-2xl"
+                          style={{
+                            background: mistyBackground,
+                            opacity: isActive ? 1 : 0,
+                            // Fade in slow (700ms), fade out fast (200ms) to beat the grayscale filter
+                            transition: isTransitioning
+                              ? (isActive ? 'opacity 0.7s ease-out' : 'opacity 0.2s ease-out')
+                              : 'none',
+                          }}
+                        />
+
+                        {/* Circled Image - transitions disabled during snap */}
+                        <div
+                          className={`rounded-full flex items-center justify-center overflow-hidden relative z-10 ${isMobile ? 'w-[180px] h-[180px] mb-6' : 'w-[200px] h-[200px] mb-6'}`}
                           style={{
                             backgroundColor: isActive ? 'rgba(20,18,12,0.85)' : point.bgColor,
                             border: isActive ? '3px solid rgba(40,35,20,0.8)' : `3px solid ${BRAND_YELLOW}`,
                             boxShadow: isActive
                               ? `0 0 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)`
                               : 'none',
+                            transition: isTransitioning ? 'all 0.5s ease' : 'none',
                           }}
                         >
                           <img
@@ -375,11 +435,12 @@ export function BuiltForFuture() {
                           />
                         </div>
 
-                        {/* Text */}
+                        {/* Text - transitions disabled during snap */}
                         <h3
-                          className="text-h5 font-bold text-center relative z-10 transition-colors duration-300"
+                          className="text-h5 font-bold text-center relative z-10"
                           style={{
                             color: isActive ? '#2a2a2a' : '#e5e4dd',
+                            transition: isTransitioning ? 'color 0.5s ease' : 'none',
                           }}
                         >
                           {point.text}
@@ -393,8 +454,8 @@ export function BuiltForFuture() {
           </div>
         </div>
 
-        {/* 3D Plasma Tube Progress Bar - moved up 20px */}
-        <div className="flex justify-center mt-1 px-6">
+        {/* 3D Plasma Tube Progress Bar - moved up 30px total */}
+        <div className="flex justify-center px-6" style={{ marginTop: '-6px' }}>
           <div
             className="w-80 h-3 rounded-full overflow-hidden relative"
             style={{

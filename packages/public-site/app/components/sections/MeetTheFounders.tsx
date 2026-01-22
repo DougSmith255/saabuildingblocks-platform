@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { H2, CTAButton } from '@saa/shared/components/saa';
 import { ProfileCyberFrame } from '@saa/shared/components/saa/media/ProfileCyberFrame';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
@@ -22,30 +22,8 @@ const FOUNDERS = [
   },
 ];
 
-function useScrollReveal(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
-}
-
 export function MeetTheFounders() {
-  const { ref, isVisible } = useScrollReveal();
+  const ref = useRef<HTMLDivElement>(null);
 
   return (
     <GlassPanel variant="marigoldCrosshatch">
@@ -70,14 +48,7 @@ export function MeetTheFounders() {
         {/* Two column layout - Doug left, Karrie + CTA right */}
         <div className="grid md:grid-cols-2 gap-8">
           {/* Left column - Doug */}
-          <div
-            className="transition-all duration-700"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(-30px)',
-              transitionDelay: '0.3s',
-            }}
-          >
+          <div>
             <div
               className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 h-full flex flex-col"
               style={{
@@ -126,14 +97,7 @@ export function MeetTheFounders() {
           </div>
 
           {/* Right column - Karrie + CTA */}
-          <div
-            className="transition-all duration-700 flex flex-col gap-6"
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(30px)',
-              transitionDelay: '0.5s',
-            }}
-          >
+          <div className="flex flex-col gap-6">
             <div
               className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 flex-1 flex flex-col"
               style={{

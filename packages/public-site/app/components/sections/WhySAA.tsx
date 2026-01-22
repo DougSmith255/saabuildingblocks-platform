@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { Check } from 'lucide-react';
@@ -37,56 +37,6 @@ function Check3D() {
 
 export function WhySAA() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [elementProgress, setElementProgress] = useState<{ [key: string]: number }>({});
-
-  useEffect(() => {
-    const elements = sectionRef.current?.querySelectorAll('.expand-reveal');
-    if (!elements) return;
-
-    const updateProgress = () => {
-      elements.forEach((el) => {
-        const id = el.getAttribute('data-id') || '';
-        const rect = el.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-
-        // Start animation when element top enters viewport
-        // End animation when element has scrolled up - longer distance = slower animation
-        const scrollDistance = 600; // pixels of scroll for full animation
-
-        // Calculate progress: 0 when top of element enters viewport, 1 after scrollDistance
-        const elementTop = rect.top;
-        const startPoint = windowHeight; // when top of element enters bottom of viewport
-        const distanceScrolled = startPoint - elementTop;
-
-        // Clamp between 0 and 1
-        const rawProgress = Math.max(0, Math.min(1, distanceScrolled / scrollDistance));
-
-        setElementProgress(prev => ({ ...prev, [id]: rawProgress }));
-      });
-    };
-
-    // Initial calculation
-    updateProgress();
-
-    // Update on scroll
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('resize', updateProgress, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', updateProgress);
-    };
-  }, []);
-
-  // Get progress for an element (0-1), with easing for smoother motion
-  const getProgress = (id: string) => {
-    const raw = elementProgress[id] || 0;
-    // Apply easeOutQuart for smooth deceleration
-    return 1 - Math.pow(1 - raw, 4);
-  };
-
-  // Width percentage for expanding cards (0% to 100%)
-  const getExpandWidth = (id: string) => Math.min(100, getProgress(id) * 100);
 
   return (
     <section ref={sectionRef} className="py-24 md:py-32 px-6 overflow-hidden relative">
@@ -121,30 +71,22 @@ export function WhySAA() {
         }
       `}</style>
       <div className="mx-auto" style={{ maxWidth: '1500px' }}>
-        {/* H2 - always visible, no animation */}
+        {/* H2 - always visible */}
         <div className="text-center mb-8">
           <H2>{HEADLINE}</H2>
         </div>
 
         <div className="grid md:grid-cols-12 gap-4 md:gap-6 items-stretch">
-          {/* Main content card - 7 columns - expands from left */}
-          <div className="md:col-span-7 expand-reveal" data-id="main-card">
-            {/* Card with clip-path reveal from left */}
+          {/* Main content card - 7 columns */}
+          <div className="md:col-span-7">
             <div
               className="rounded-2xl overflow-hidden h-full"
               style={{
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 background: 'linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4))',
-                clipPath: `inset(0 ${100 - getExpandWidth('main-card')}% 0 0 round 16px)`,
-                transition: 'clip-path 0.1s ease-out',
               }}
             >
-              <div
-                className="p-8 md:p-10"
-                style={{
-                  opacity: Math.min(1, getProgress('main-card') * 1.5),
-                }}
-              >
+              <div className="p-8 md:p-10">
                 <p className="font-heading text-2xl md:text-3xl font-bold" style={{ color: BRAND_YELLOW }}>{TAGLINE}</p>
                 <p className="text-body text-lg mt-4 opacity-70">{INTRO}</p>
                 <p className="font-heading text-xl md:text-2xl font-bold mt-6" style={{ color: BRAND_YELLOW }}>{SUBHEAD}</p>
@@ -162,28 +104,23 @@ export function WhySAA() {
             </div>
           </div>
 
-          {/* Right column - 5 columns - stretches to match left column height */}
+          {/* Right column - 5 columns */}
           <div className="md:col-span-5 flex flex-col gap-4 md:gap-6 h-full">
-            {/* Image card - expands from right, fills remaining space */}
-            <div className="expand-reveal flex-1 min-h-0" data-id="image-card">
-              {/* Card with clip-path reveal from right */}
+            {/* Image card */}
+            <div className="flex-1 min-h-0">
               <div
                 className="rounded-2xl overflow-hidden relative h-full"
                 style={{
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   background: 'rgba(255,255,255,0.05)',
-                  clipPath: `inset(0 0 0 ${100 - getExpandWidth('image-card')}% round 16px)`,
-                  transition: 'clip-path 0.1s ease-out',
                 }}
               >
-                {/* Image is always visible */}
                 <img
                   src={ALIGNED_INCENTIVES_IMAGE}
                   alt="Smart Agent Alliance aligned incentives model - where agent success and sponsor success grow together"
                   className="absolute inset-0 w-full h-full object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                {/* Caption is always visible */}
                 <div className="absolute bottom-0 left-0 right-0 p-5">
                   <p className="font-heading font-bold" style={{ color: BRAND_YELLOW, fontSize: '23px' }}>Aligned Incentives</p>
                   <p className="text-body text-xs opacity-70 mt-1">When you succeed, we succeed</p>
@@ -191,15 +128,8 @@ export function WhySAA() {
               </div>
             </div>
 
-            {/* CTA card - scale reveal */}
-            <div
-              className="expand-reveal"
-              data-id="cta-card"
-              style={{
-                opacity: Math.min(1, getProgress('cta-card') * 1.5),
-                transform: `scale(${0.9 + getProgress('cta-card') * 0.1})`,
-              }}
-            >
+            {/* CTA card */}
+            <div>
               <div
                 className="bento-card relative rounded-2xl overflow-hidden border p-6 md:p-8 text-center"
                 style={{ backgroundColor: 'rgba(255, 215, 0, 0.1)', borderColor: 'rgba(255, 215, 0, 0.3)' }}
@@ -211,15 +141,8 @@ export function WhySAA() {
           </div>
         </div>
 
-        {/* Disclaimer - fade up */}
-        <div
-          className="expand-reveal text-center mt-12"
-          data-id="disclaimer"
-          style={{
-            opacity: Math.min(1, getProgress('disclaimer') * 1.5),
-            transform: `translateY(${(1 - getProgress('disclaimer')) * 20}px)`,
-          }}
-        >
+        {/* Disclaimer */}
+        <div className="text-center mt-12">
           <p className="text-body mx-auto" style={{ color: '#e5e4dd', maxWidth: '700px' }}>{DISCLAIMER}</p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { H2, Icon3D, SecondaryButton } from '@saa/shared/components/saa';
 import { TrendingUp, Cloud, Percent, Award, Users } from 'lucide-react';
 
@@ -39,30 +39,7 @@ export function MediaLogos() {
   const trackRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const positionRef = useRef(0);
-  const velocityRef = useRef(0.5); // Base velocity (px per frame)
-  const lastScrollY = useRef(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  // Intersection Observer for entrance animation
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, []);
+  const velocityRef = useRef(1.2); // Base velocity (px per frame) - 1.2x speed
 
   // Carousel animation - recalculates width each frame to handle image loading
   useEffect(() => {
@@ -75,14 +52,8 @@ export function MediaLogos() {
 
       // Only animate if we have a valid width
       if (singleSetWidth > 0) {
-        // Apply velocity with decay
+        // Constant velocity - no scroll boost for better performance
         positionRef.current += velocityRef.current;
-
-        // Decay velocity back to base
-        if (velocityRef.current > 0.5) {
-          velocityRef.current *= 0.98;
-          if (velocityRef.current < 0.5) velocityRef.current = 0.5;
-        }
 
         // Reset position for seamless loop (with small buffer to prevent jumps)
         if (positionRef.current >= singleSetWidth) {
@@ -95,27 +66,12 @@ export function MediaLogos() {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Scroll boost handler
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = Math.abs(currentScrollY - lastScrollY.current);
-      lastScrollY.current = currentScrollY;
-
-      // Boost velocity based on scroll speed (capped)
-      const boost = Math.min(scrollDelta * 0.3, 8);
-      if (boost > 0.5) {
-        velocityRef.current = Math.max(velocityRef.current, boost);
-      }
-    };
-
     animationRef.current = requestAnimationFrame(animate);
-    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
@@ -146,11 +102,7 @@ export function MediaLogos() {
       </svg>
 
       {/* Heading - uses master controller H2 component */}
-      <div
-        className={`text-center px-4 transition-all duration-700 ease-out relative z-10 ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}
-      >
+      <div className="text-center px-4 relative z-10">
         <H2>Why eXp Realty?</H2>
 
         {/* Cards Grid: 3 on top, 2 on bottom */}
@@ -166,8 +118,6 @@ export function MediaLogos() {
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '1px solid rgba(255,215,0,0.15)',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                 transitionDelay: '0.2s',
               }}
             >
@@ -184,8 +134,6 @@ export function MediaLogos() {
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '1px solid rgba(255,215,0,0.15)',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                 transitionDelay: '0.35s',
               }}
             >
@@ -202,8 +150,6 @@ export function MediaLogos() {
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '1px solid rgba(255,215,0,0.15)',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                 transitionDelay: '0.5s',
               }}
             >
@@ -223,8 +169,6 @@ export function MediaLogos() {
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '2px solid rgba(0,204,102,0.5)',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                 transitionDelay: '0.65s',
               }}
             >
@@ -246,8 +190,6 @@ export function MediaLogos() {
               style={{
                 background: 'rgba(10,10,10,0.6)',
                 border: '2px solid rgba(153,51,255,0.5)',
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
                 transitionDelay: '0.8s',
               }}
             >
@@ -267,11 +209,7 @@ export function MediaLogos() {
       </div>
 
       {/* Carousel Container - portal edges at screen edges */}
-      <div
-        className={`relative z-10 transition-all duration-700 delay-300 ease-out ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-        }`}
-      >
+      <div className="relative z-10">
         {/* 3D Curved Portal Edges - raised bars that logos slide under */}
         {/* Left curved bar */}
         <div

@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { H2, Icon3D } from '@saa/shared/components/saa';
+import { useRef } from 'react';
+import { H2 } from '@saa/shared/components/saa';
 import { CTAButton } from '@saa/shared/components/saa';
 import { Users, DollarSign, Bot, GraduationCap, Globe } from 'lucide-react';
 
 /**
  * What You Get with SAA Section
- * Clip-Path Reveal - Cards slide in alternating from left/right
+ * Cards display immediately - no entrance animations
  */
 
 const BRAND_YELLOW = '#ffd700';
@@ -53,54 +53,6 @@ const BENEFITS = [
 
 export function WhatYouGet() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [revealProgress, setRevealProgress] = useState<number[]>(
-    new Array(BENEFITS.length).fill(0)
-  );
-  // Track which cards have been fully revealed
-  const revealedRef = useRef<boolean[]>(new Array(BENEFITS.length).fill(false));
-
-  useEffect(() => {
-    const cards = sectionRef.current?.querySelectorAll('.reveal-card');
-    if (!cards) return;
-
-    const observers = Array.from(cards).map((card, index) => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const ratio = entry.intersectionRatio;
-
-            // Once fully revealed (90%+), mark as revealed and keep at 1
-            if (ratio >= 0.9) {
-              revealedRef.current[index] = true;
-            }
-
-            // If already revealed, keep progress at 1
-            if (revealedRef.current[index]) {
-              setRevealProgress(prev => {
-                const newProgress = [...prev];
-                newProgress[index] = 1;
-                return newProgress;
-              });
-            } else {
-              setRevealProgress(prev => {
-                const newProgress = [...prev];
-                newProgress[index] = ratio;
-                return newProgress;
-              });
-            }
-          });
-        },
-        {
-          threshold: Array.from({ length: 50 }, (_, i) => i / 50),
-          rootMargin: '-5% 0px -5% 0px'
-        }
-      );
-      observer.observe(card);
-      return observer;
-    });
-
-    return () => observers.forEach(o => o.disconnect());
-  }, []);
 
   return (
     <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
@@ -113,17 +65,16 @@ export function WhatYouGet() {
           </p>
         </div>
 
-        {/* Clip-Path Reveal Cards */}
+        {/* Cards - no entrance animations */}
         <div className="space-y-10 md:space-y-12">
           {BENEFITS.map((benefit, index) => {
             const Icon = benefit.icon;
-            const cardProgress = revealProgress[index];
             const isEven = index % 2 === 0;
 
             return (
               <div
                 key={benefit.title}
-                className={`reveal-card flex items-center gap-4 md:gap-6 ${isEven ? 'flex-row' : 'flex-row-reverse'}`}
+                className={`flex items-center gap-4 md:gap-6 ${isEven ? 'flex-row' : 'flex-row-reverse'}`}
               >
                 {/* Icon circle - transparent with backdrop blur, smaller on mobile */}
                 <div
@@ -134,9 +85,6 @@ export function WhatYouGet() {
                     WebkitBackdropFilter: 'blur(8px)',
                     border: `2px solid ${BRAND_YELLOW}`,
                     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                    transform: `scale(${0.8 + cardProgress * 0.2})`,
-                    opacity: 0.3 + cardProgress * 0.7,
-                    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
                   {/* Icon - responsive size */}
@@ -154,9 +102,6 @@ export function WhatYouGet() {
                     WebkitBackdropFilter: 'blur(8px)',
                     border: `1px solid ${BRAND_YELLOW}44`,
                     boxShadow: `0 0 40px ${BRAND_YELLOW}15, inset 0 1px 0 rgba(255,255,255,0.05)`,
-                    opacity: 0.4 + cardProgress * 0.6,
-                    transform: `translateX(${isEven ? (1 - cardProgress) * 40 : (cardProgress - 1) * 40}px)`,
-                    transition: 'transform 0.1s ease-out, opacity 0.1s ease-out',
                   }}
                 >
                   {/* Background image */}

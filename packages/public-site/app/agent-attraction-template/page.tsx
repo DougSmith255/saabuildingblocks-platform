@@ -1057,9 +1057,9 @@ function MediaLogos() {
   const trackRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number | null>(null);
   const positionRef = useRef(0);
-  const velocityRef = useRef(0.5);
-  const lastScrollY = useRef(0);
-  const [isVisible, setIsVisible] = useState(false);
+  const velocityRef = useRef(1.2);
+  // Removed scroll boost - constant velocity only
+  const [isVisible, setIsVisible] = useState(true); // Start visible - no entrance animation
   const [showCommissionModal, setShowCommissionModal] = useState(false);
   const [showRevShareModal, setShowRevShareModal] = useState(false);
 
@@ -1082,32 +1082,24 @@ function MediaLogos() {
       const singleSetWidth = track.scrollWidth / 2;
       if (singleSetWidth > 0) {
         positionRef.current += velocityRef.current;
-        if (velocityRef.current > 0.5) { velocityRef.current *= 0.98; if (velocityRef.current < 0.5) velocityRef.current = 0.5; }
+        // Constant velocity - no boost, no decay
         if (positionRef.current >= singleSetWidth) positionRef.current = positionRef.current - singleSetWidth;
         track.style.transform = `translateX(-${positionRef.current}px)`;
       }
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = Math.abs(currentScrollY - lastScrollY.current);
-      lastScrollY.current = currentScrollY;
-      const boost = Math.min(scrollDelta * 0.3, 8);
-      if (boost > 0.5) velocityRef.current = Math.max(velocityRef.current, boost);
-    };
-
+    // No scroll boost - constant velocity only
     animationRef.current = requestAnimationFrame(animate);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); window.removeEventListener('scroll', handleScroll); };
+    return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); };
   }, []);
 
   return (
     <section ref={sectionRef} className="relative py-16 md:py-24 overflow-hidden">
-      <div className={`text-center px-4 transition-all duration-700 ease-out relative z-10 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div className="text-center px-4 relative z-10">
         <H2>Why eXp Realty?</H2>
         {/* Layout B: Unified card - bullets left, stacked buttons right */}
-        <div className={`mx-auto mb-8 transition-all duration-700 delay-150 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ maxWidth: '1200px' }}>
+        <div className="mx-auto mb-8" style={{ maxWidth: '1200px' }}>
           <div className="p-6 md:p-8 rounded-2xl" style={{ background: 'rgba(10,10,10,0.6)', border: '1px solid rgba(255,215,0,0.15)' }}>
             <div className="grid grid-cols-1 md:grid-cols-[1fr,auto] gap-6 md:gap-10 items-center">
               {/* Left: All bullet points with 3D icons */}
@@ -1176,7 +1168,7 @@ function MediaLogos() {
           </div>
         </div>
       </div>
-      <div className={`relative z-10 transition-all duration-700 delay-300 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+      <div className="relative z-10">
         {/* 3D Curved Portal Edges - raised bars that logos slide under */}
         {/* Left curved bar */}
         <div
@@ -1298,7 +1290,7 @@ function Check3D() {
 }
 
 function WhySAA() {
-  const { ref, isVisible } = useScrollReveal(0.1);
+  const sectionRef = useRef<HTMLDivElement>(null);
   return (
     <section className="py-24 md:py-32 px-6 overflow-hidden relative">
       <style>{`
@@ -1308,13 +1300,13 @@ function WhySAA() {
         .bento-card:hover .bento-image { transform: scale(1.05); }
         .check-3d { display: inline-flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; color: #c4a94d; filter: drop-shadow(-1px -1px 0 #ffe680) drop-shadow(1px 1px 0 #8a7a3d) drop-shadow(2px 2px 0 #2a2a1d) drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.5)); transform: perspective(500px) rotateX(8deg); flex-shrink: 0; }
       `}</style>
-      <div ref={ref} className="mx-auto" style={{ maxWidth: '1300px' }}>
-        <div className="text-center transition-all duration-700" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(30px)' }}>
+      <div ref={sectionRef} className="mx-auto" style={{ maxWidth: '1300px' }}>
+        <div className="text-center">
           <H2>Why Smart Agent Alliance (SAA)?</H2>
         </div>
         <div className="grid md:grid-cols-12 gap-4 md:gap-6">
           <div className="md:col-span-7">
-            <div className="bento-card relative rounded-2xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 border border-white/10 p-8 md:p-10 h-full" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(-40px)', transition: 'opacity 0.7s ease-out, transform 0.7s ease-out' }}>
+            <div className="bento-card relative rounded-2xl overflow-hidden bg-gradient-to-br from-black/60 to-black/40 border border-white/10 p-8 md:p-10 h-full">
               <div className="mb-8">
                 <p className="font-heading text-2xl md:text-3xl font-bold" style={{ color: BRAND_YELLOW }}>Elite systems. Proven training. Real community.</p>
                 <p className="text-body text-lg mt-4 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
@@ -1329,7 +1321,7 @@ function WhySAA() {
             </div>
           </div>
           <div className="md:col-span-5 flex flex-col gap-4 md:gap-6">
-            <div className="bento-card relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex-1" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(40px)', transition: 'opacity 0.7s ease-out 0.1s, transform 0.7s ease-out 0.1s' }}>
+            <div className="bento-card relative rounded-2xl overflow-hidden bg-white/5 border border-white/10 flex-1">
               <div className="absolute inset-0 overflow-hidden">
                 <img src={`${CLOUDFLARE_BASE}/saa-aligned-incentives-value-multiplication/public`} alt="Smart Agent Alliance aligned incentives model" className="bento-image w-full h-full object-cover object-center" />
               </div>
@@ -1341,7 +1333,7 @@ function WhySAA() {
             </div>
           </div>
         </div>
-        <div className="text-center mt-12" style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.7s ease-out 0.3s' }}>
+        <div className="text-center mt-12">
           <p className="text-body max-w-xl mx-auto" style={{ color: '#e5e4dd' }}>Access to SAA systems, training, and community is tied to sponsorship at the time of joining eXp Realty.</p>
         </div>
       </div>
@@ -1384,35 +1376,35 @@ function StaticCounterNeon({ value, suffix = '' }: { value: string; suffix?: str
 }
 
 function ProvenAtScale() {
-  const { ref, isVisible } = useScrollReveal(0.1);
+  const sectionRef = useRef<HTMLDivElement>(null);
   return (
     <GlassPanel variant="champagne">
       <section className="py-16 md:py-24 px-6 relative overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <img src={`${CLOUDFLARE_BASE}/6dc6fe182a485b79-Smart-agent-alliance-and-the-wolf-pack.webp/desktop`} alt="" aria-hidden="true" className="w-full h-full object-cover" style={{ objectPosition: 'center 55%', maskImage: 'radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%)', WebkitMaskImage: 'radial-gradient(ellipse 70% 65% at center 50%, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 70%, transparent 90%)' }} />
         </div>
-        <div ref={ref} className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
+        <div ref={sectionRef} className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
           <div className="grid md:grid-cols-12 gap-8 items-center">
             <div className="md:col-span-8">
-              <div style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(-40px)', transition: 'opacity 0.8s ease-out, transform 0.8s ease-out' }}>
+              <div>
                 <H2 className="text-center md:text-left" style={{ justifyContent: 'flex-start' }}>Proven at Scale</H2>
               </div>
               <div className="space-y-4 mb-8">
                 {PROVEN_STATS.map((stat, i) => {
                   const Icon = stat.icon;
                   return (
-                    <div key={i} className="flex items-center gap-4" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(-40px)', transition: `opacity 0.8s ease-out ${0.1 + i * 0.1}s, transform 0.8s ease-out ${0.1 + i * 0.1}s` }}>
+                    <div key={i} className="flex items-center gap-4">
                       <Icon3D><Icon className="w-6 h-6 flex-shrink-0" /></Icon3D>
                       <p className="text-body">{stat.text}</p>
                     </div>
                   );
                 })}
               </div>
-              <div className="text-center md:text-left" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(-40px)', transition: 'opacity 0.8s ease-out 0.5s, transform 0.8s ease-out 0.5s' }}>
+              <div className="text-center md:text-left">
                 <CTAButton href="#join-the-alliance">Join The Alliance</CTAButton>
               </div>
             </div>
-            <div className="md:col-span-4" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(40px)', transition: 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s' }}>
+            <div className="md:col-span-4">
               <CyberCardGold padding="lg">
                 <Icon3D><Globe className="w-14 h-14 mx-auto mb-3" /></Icon3D>
                 <p className="font-heading text-3xl md:text-4xl font-bold text-heading"><StaticCounterNeon value="3700" suffix="+" /></p>
@@ -1440,12 +1432,27 @@ const BENEFITS = [
 function WhatYouGet() {
   const [activeTab, setActiveTab] = useState(0);
   const [userInteracted, setUserInteracted] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const { ref: headerRef, isVisible: isHeaderVisible } = useScrollReveal(0.5);
-  const { ref: cardRef, isVisible: isCardVisible } = useScrollReveal(0.3);
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const activeBenefit = BENEFITS[activeTab];
   const Icon = activeBenefit.icon;
+
+  // Start timer when 20% of section is visible
+  useEffect(() => {
+    if (hasStarted) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+          setHasStarted(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [hasStarted]);
 
   const startTimer = () => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -1454,9 +1461,9 @@ function WhatYouGet() {
   };
 
   useEffect(() => {
-    if (isCardVisible && !userInteracted) startTimer();
+    if (hasStarted && !userInteracted) startTimer();
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [activeTab, isCardVisible, userInteracted]);
+  }, [activeTab, hasStarted, userInteracted]);
 
   const handleTabClick = (index: number) => {
     setUserInteracted(true);
@@ -1465,10 +1472,10 @@ function WhatYouGet() {
   };
 
   return (
-    <section className="py-16 md:py-24 px-6 relative">
+    <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
       <style>{`@keyframes whatYouGetFadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } } .what-you-get-animate { animation: whatYouGetFadeIn 0.3s ease-out forwards; }`}</style>
       <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
-        <div ref={headerRef} className="text-center transition-all duration-700" style={{ opacity: isHeaderVisible ? 1 : 0, transform: isHeaderVisible ? 'translateY(0)' : 'translateY(30px)' }}>
+        <div className="text-center">
           <H2>What You Get with SAA</H2>
           <p className="text-body opacity-60 mb-8">Smart Agent Alliance provides systems, training, income infrastructure, and collaboration through five core pillars.</p>
         </div>
@@ -1484,7 +1491,7 @@ function WhatYouGet() {
             );
           })}
         </div>
-        <div ref={cardRef} className="transition-all duration-700 mb-10 rounded-2xl border border-white/10 overflow-hidden relative h-[210px] md:h-[190px]" style={{ opacity: isCardVisible ? 1 : 0, transform: isCardVisible ? 'translateY(0)' : 'translateY(20px)' }}>
+        <div className="mb-10 rounded-2xl border border-white/10 overflow-hidden relative h-[210px] md:h-[190px]">
           <div key={`bg-${activeTab}`} className="absolute inset-0 what-you-get-animate" style={{ backgroundImage: `url(${activeBenefit.bgImage})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.75) 50%, rgba(0,0,0,0.5) 100%)' }} />
           <div key={activeTab} className="what-you-get-animate relative z-10 flex flex-row items-center gap-6 h-full p-8">
@@ -2370,18 +2377,18 @@ const FOUNDERS = [
 ];
 
 function MeetTheFounders() {
-  const { ref, isVisible } = useScrollReveal();
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   return (
     <GlassPanel variant="marigoldCrosshatch">
       <style>{`@keyframes h1GlowBreathe { 0%, 100% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25)); } 50% { filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1.15) drop-shadow(0 0 0.15em rgba(255, 215, 0, 0.45)); } }`}</style>
-      <section ref={ref} className="py-16 md:py-24 px-6 relative">
+      <section ref={sectionRef} className="py-16 md:py-24 px-6 relative">
         <div className="mx-auto relative z-10" style={{ maxWidth: '1300px' }}>
-          <div className="text-center transition-all duration-700 mb-12" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(20px)' }}>
+          <div className="text-center mb-12">
             <H2>Meet SAA's Founders</H2>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="transition-all duration-700" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(-30px)', transitionDelay: '0.3s' }}>
+            <div>
               <div className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 h-full flex flex-col" style={{ backgroundColor: 'rgba(20,20,20,0.75)', borderColor: 'rgba(255,255,255,0.1)' }}>
                 <ProfileCyberFrame size="lg" index={0}>
                   <img src={FOUNDERS[0].image} alt={FOUNDERS[0].name} className="w-full h-full object-cover" />
@@ -2391,7 +2398,7 @@ function MeetTheFounders() {
                 <p className="text-body text-sm md:text-base leading-relaxed flex-1">{FOUNDERS[0].bio}</p>
               </div>
             </div>
-            <div className="transition-all duration-700 flex flex-col gap-6" style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(30px)', transitionDelay: '0.5s' }}>
+            <div className="flex flex-col gap-6">
               <div className="p-6 md:p-8 rounded-2xl border text-center hover:border-yellow-500/30 transition-colors duration-300 flex-1 flex flex-col" style={{ backgroundColor: 'rgba(20,20,20,0.75)', borderColor: 'rgba(255,255,255,0.1)' }}>
                 <ProfileCyberFrame size="lg" index={1}>
                   <img src={FOUNDERS[1].image} alt={FOUNDERS[1].name} className="w-full h-full object-cover" />
@@ -2927,7 +2934,7 @@ export default function AgentAttractionTemplate2() {
             <RevealMaskEffect />
 
             <div className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0" style={{ maxWidth: '3000px' }}>
-              <div className="relative pointer-events-none z-[1]" style={{ width: 'clamp(400px, 47.37vw, 900px)', maxWidth: '95vw', aspectRatio: '900 / 500', maxHeight: '50dvh' }}>
+              <div className="relative pointer-events-none z-[1]" style={{ width: 'clamp(400px, 47.37vw, 900px)', maxWidth: '95vw', aspectRatio: '900 / 500', maxHeight: '50dvh', overflow: 'visible' }}>
                 <div className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]" style={{ top: '0', background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)', filter: 'blur(40px)' }} />
                 <img
                   src={AGENT_IMAGE}

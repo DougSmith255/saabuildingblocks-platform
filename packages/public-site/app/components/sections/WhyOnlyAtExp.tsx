@@ -87,20 +87,42 @@ export function WhyOnlyAtExp() {
   const totalCards = STEPS.length;
   const [currentCard, setCurrentCard] = useState(0);
   const [isAutoMode, setIsAutoMode] = useState(true);
+  const [hasStarted, setHasStarted] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Auto-flip timer
+  // Start auto-flip only when 20% of section is visible
   useEffect(() => {
-    if (!isAutoMode) return;
+    if (hasStarted) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.2) {
+          setHasStarted(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasStarted]);
+
+  // Auto-flip timer - only runs after hasStarted is true
+  useEffect(() => {
+    if (!isAutoMode || !hasStarted) return;
 
     timerRef.current = setInterval(() => {
       setCurrentCard(prev => (prev + 1) % totalCards);
-    }, 5000); // 5 seconds
+    }, 4000); // 4 seconds
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isAutoMode, totalCards]);
+  }, [isAutoMode, totalCards, hasStarted]);
 
   // Handle card click
   const handleCardClick = useCallback(() => {
@@ -117,7 +139,7 @@ export function WhyOnlyAtExp() {
   const progress = currentCard / (totalCards - 1);
 
   return (
-    <section>
+    <section ref={sectionRef}>
       {/* Glass panel + content */}
       <div
         className="rounded-3xl overflow-hidden relative"
@@ -248,8 +270,8 @@ export function WhyOnlyAtExp() {
                   })}
                 </div>
 
-                {/* 3D Plasma Tube Progress Bar - moved up 12px */}
-                <div className="flex justify-center mt-5">
+                {/* 3D Plasma Tube Progress Bar - moved down 25px */}
+                <div className="flex justify-center" style={{ marginTop: '45px' }}>
                   <div
                     className="w-80 h-3 rounded-full overflow-hidden relative"
                     style={{

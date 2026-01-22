@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { H2, Icon3D } from '@saa/shared/components/saa';
-// Note: useState only needed for scroll reveal
 import { CTAButton } from '@saa/shared/components/saa';
 import { CyberCardGold } from '@saa/shared/components/saa/cards';
 import { GlassPanel } from '@saa/shared/components/saa/backgrounds/GlassPanel';
@@ -10,7 +8,7 @@ import { Globe, TrendingUp, Check } from 'lucide-react';
 
 /**
  * Proven at Scale Section
- * Shows SAA's scale and credibility with animated counter and wolf pack background
+ * Shows SAA's scale and credibility with wolf pack background
  */
 
 const BRAND_YELLOW = '#ffd700';
@@ -24,62 +22,13 @@ const STATS = [
 ];
 const CTA_TEXT = "See What Agents Say";
 
-// Scroll reveal hook
-function useScrollReveal(threshold = 0.1) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return { ref, isVisible };
+// Simple wrapper - no animations
+function RevealFromLeft({ children }: { children: React.ReactNode; delay?: number }) {
+  return <div>{children}</div>;
 }
 
-function RevealFromLeft({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible } = useScrollReveal(0.1);
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateX(0)' : 'translateX(-40px)',
-        transition: `opacity 0.8s ease-out ${delay}s, transform 0.8s ease-out ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function RevealFromRight({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
-  const { ref, isVisible } = useScrollReveal(0.1);
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateX(0)' : 'translateX(40px)',
-        transition: `opacity 0.8s ease-out ${delay}s, transform 0.8s ease-out ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
+function RevealFromRight({ children }: { children: React.ReactNode; delay?: number }) {
+  return <div>{children}</div>;
 }
 
 // Static counter with H2 neon text styling (no backing plate)
