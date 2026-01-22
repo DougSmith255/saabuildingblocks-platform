@@ -247,14 +247,25 @@ p a {
 
 /* Hero Vignette - applies dark edge overlay to hero sections */
 /* Uses class instead of inline style for immediate CSS application */
+/* Fades to fully transparent at bottom to avoid hard line when hero scrolls normally */
 .hero-vignette {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  height: calc(100% + 100px);
-  background: radial-gradient(ellipse 80% 60% at 50% 50%, transparent 0%, rgba(0,0,0,0.6) 100%);
+  height: 100%;
+  background: radial-gradient(
+    ellipse 100% 80% at 50% 30%,
+    transparent 0%,
+    transparent 40%,
+    rgba(0,0,0,0.3) 70%,
+    rgba(0,0,0,0.5) 85%,
+    transparent 100%
+  );
   pointer-events: none;
+  /* Mask to fade out toward bottom - prevents hard line */
+  mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
 }
 
 /* RevealMaskEffect initial state - prevents pop-in by providing immediate CSS */

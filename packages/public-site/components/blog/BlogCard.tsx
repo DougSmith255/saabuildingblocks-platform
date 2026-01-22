@@ -70,12 +70,11 @@ function BlogCardComponent({ post, className = '' }: BlogCardProps) {
                   className={`
                     object-cover
                     group-hover:scale-105
-                    transition-all duration-500
                     group-hover:brightness-110
                     ${imageLoaded ? 'opacity-100' : 'opacity-0'}
                   `}
                   style={{
-                    transition: 'opacity 0.5s ease-out, transform 0.5s ease-out',
+                    transition: 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease-out',
                   }}
                   loading="lazy"
                   onLoad={handleImageLoad}
