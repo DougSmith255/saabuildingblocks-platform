@@ -83,6 +83,7 @@ export default function Home() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            overflow: 'visible',
           }}
         >
         {/* Agent Counter - viewport-aware (only renders desktop OR mobile counter) */}
@@ -97,6 +98,7 @@ export default function Home() {
           className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0"
           style={{
             maxWidth: '3000px',
+            overflow: 'visible',
           }}
         >
           {/* Doug and Karrie Image Container */}
@@ -110,11 +112,10 @@ export default function Home() {
               overflow: 'visible',
             }}
           >
-            {/* Space cloud/mist backdrop */}
+            {/* Space cloud/mist backdrop - centered and extends beyond container on all sides */}
             <div
-              className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]"
+              className="hero-3d-backdrop absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%]"
               style={{
-                top: '0',
                 background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)',
                 filter: 'blur(40px)',
               }}

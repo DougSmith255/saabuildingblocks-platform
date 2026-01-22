@@ -4176,14 +4176,21 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                 </svg>
               </div>
 
-              {/* Expanded Content */}
-              {isExpanded && (
-                <div className="px-4 pb-4 pt-0 border-t border-white/[0.05]">
-                  <div className="pt-4">
-                    {step.content}
+              {/* Expanded Content - Smooth accordion animation using CSS grid */}
+              <div
+                className="grid transition-all duration-300 ease-in-out"
+                style={{
+                  gridTemplateRows: isExpanded ? '1fr' : '0fr',
+                }}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-4 pb-4 pt-0 border-t border-white/[0.05]">
+                    <div className="pt-4">
+                      {step.content}
+                    </div>
                   </div>
                 </div>
-              )}
+              </div>
             </div>
           );
         })}
@@ -6830,6 +6837,8 @@ interface AgentPagesSectionProps {
   // Link page intro/help modal props
   setShowLinkPageIntroModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowLinkPageHelpModal: React.Dispatch<React.SetStateAction<boolean>>;
+  // Whether this section is currently active/visible
+  isActive?: boolean;
 }
 
 function AgentPagesSection({
@@ -6861,6 +6870,7 @@ function AgentPagesSection({
   triggerConfetti,
   setShowLinkPageIntroModal,
   setShowLinkPageHelpModal,
+  isActive = false,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
   const [isLoading, setIsLoading] = useState(!preloadedPageData);
@@ -6994,15 +7004,8 @@ function AgentPagesSection({
     }
   }, [preloadedPageData]);
 
-  // Show Link Page intro modal when first visiting linktree mode
-  useEffect(() => {
-    if (mode === 'linktree') {
-      const dismissed = localStorage.getItem('link_page_intro_dismissed');
-      if (!dismissed) {
-        setShowLinkPageIntroModal(true);
-      }
-    }
-  }, [mode]);
+  // Link Page intro modal is now only shown when user clicks the help button
+  // No automatic popup on first visit - user must explicitly request help
 
   // Fetch agent page data - skip if we have preloaded data
   useEffect(() => {

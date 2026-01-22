@@ -734,10 +734,56 @@ function FixedHeroWrapper({ children, className = '' }: { children: ReactNode; c
   return (
     <>
       <div ref={wrapperRef} className={`fixed top-0 left-0 right-0 z-0 pointer-events-none ${className}`}>
+        <HeroSettlingMask />
         <div className="pointer-events-auto">{children}</div>
       </div>
       <div className="h-svh" aria-hidden="true" />
     </>
+  );
+}
+
+// =============================================================================
+// HERO COMPONENT: HeroSettlingMask - Hides layout shift during JS hydration
+// =============================================================================
+function HeroSettlingMask() {
+  const { hasMounted } = useViewport();
+  const [isSettled, setIsSettled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+
+  useEffect(() => {
+    if (hasMounted) {
+      // Wait for next frame + tiny delay for layout calculations to complete
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          setIsSettled(true);
+          // After fade animation, completely hide
+          setTimeout(() => {
+            setIsHidden(true);
+          }, 350); // Match transition duration
+        }, 50); // Small delay for layout to settle
+      });
+    }
+  }, [hasMounted]);
+
+  // Don't render anything after fully hidden
+  if (isHidden) return null;
+
+  return (
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 10000, // Below header (10010) but above all hero content
+        backgroundColor: '#0a0a0a', // Match page background exactly
+        opacity: isSettled ? 0 : 1,
+        transition: 'opacity 300ms ease-out',
+        pointerEvents: 'none', // Don't block interactions during fade
+      }}
+    />
   );
 }
 
@@ -2929,13 +2975,13 @@ export default function AgentAttractionTemplate2() {
           <section
             className="relative min-h-[100dvh] w-full"
             aria-label="Hero"
-            style={{ maxWidth: '3000px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}
+            style={{ maxWidth: '3000px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'visible' }}
           >
             <RevealMaskEffect />
 
-            <div className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0" style={{ maxWidth: '3000px' }}>
+            <div className="hero-content-wrapper flex flex-col items-center w-full pt-[8%] md:pt-0" style={{ maxWidth: '3000px', overflow: 'visible' }}>
               <div className="relative pointer-events-none z-[1]" style={{ width: 'clamp(400px, 47.37vw, 900px)', maxWidth: '95vw', aspectRatio: '900 / 500', maxHeight: '50dvh', overflow: 'visible' }}>
-                <div className="hero-3d-backdrop absolute left-1/2 -translate-x-1/2 w-[110%] h-[110%]" style={{ top: '0', background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)', filter: 'blur(40px)' }} />
+                <div className="hero-3d-backdrop absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%]" style={{ background: 'radial-gradient(ellipse 60% 50% at center 45%, rgba(100,80,150,0.15) 0%, rgba(50,40,80,0.1) 40%, transparent 70%)', filter: 'blur(40px)' }} />
                 <img
                   src={AGENT_IMAGE}
                   srcSet={AGENT_IMAGE_SRCSET}
