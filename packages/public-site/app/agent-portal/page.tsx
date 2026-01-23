@@ -6972,7 +6972,6 @@ const LINK_ICONS = [
   { name: 'Search', label: 'Search', path: 'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16z M21 21l-4.35-4.35' },
   { name: 'MessageCircle', label: 'Message', path: 'M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z' },
   { name: 'Send', label: 'Send', path: 'M22 2L11 13 M22 2l-7 20-4-9-9-4 20-7z' },
-  { name: 'Bookmark', label: 'Bookmark', path: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
 ];
 
 interface LinksSettings {
@@ -8545,11 +8544,6 @@ return (
                   {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
                 </span>
 
-                {/* Bio */}
-                {linksSettings.bio && (
-                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px]">{linksSettings.bio}</p>
-                )}
-
                 {/* Social Links Circles */}
                 {(() => {
                   const socialIcons = [
@@ -8580,7 +8574,12 @@ return (
                   );
                 })()}
 
-                {/* Contact Buttons (Call/Text/Email) */}
+                {/* Bio - moved under social icons */}
+                {linksSettings.bio && (
+                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-2">{linksSettings.bio}</p>
+                )}
+
+                {/* Contact Buttons (Call/Text/Email) - styled like link buttons */}
                 {(() => {
                   const contacts = [];
                   if (formData.phone && linksSettings.showCallButton !== false) {
@@ -8595,22 +8594,29 @@ return (
 
                   if (contacts.length === 0) return null;
 
+                  // Calculate button width based on count
+                  const buttonCount = contacts.length;
+
                   return (
-                    <div className="flex justify-center gap-2 mt-2">
+                    <div className="flex gap-1.5 mt-3 mb-1.5">
                       {contacts.map((contact, idx) => (
                         <div
                           key={idx}
-                          className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs"
+                          className="flex-1 py-2 text-sm relative"
                           style={{
-                            backgroundColor: `${linksSettings.accentColor}20`,
-                            border: `1px solid ${linksSettings.accentColor}40`,
-                            color: linksSettings.accentColor,
+                            backgroundColor: linksSettings.accentColor,
+                            color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                            fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                            fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                            borderRadius: idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
                           }}
                         >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          {/* Icon positioned absolutely */}
+                          <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
                           </svg>
-                          <span style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>{contact.label}</span>
+                          {/* Text centered */}
+                          <span className="block w-full text-center text-xs">{contact.label}</span>
                         </div>
                       ))}
                     </div>
@@ -8619,7 +8625,7 @@ return (
               </div>
 
               {/* Button Links with Editor - overflow visible for external controls */}
-              <div className="mt-2 space-y-1.5 relative" style={{ overflow: 'visible' }}>
+              <div className="space-y-1.5 relative" style={{ overflow: 'visible' }}>
                 {(() => {
                   const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
                   const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
@@ -8692,9 +8698,9 @@ return (
 
                     return (
                       <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform }}>
-                        {/* Button - Full width inside phone screen */}
+                        {/* Button - Full width inside phone screen with centered text */}
                         <div
-                          className="w-full py-2.5 px-3 rounded-lg text-sm flex items-center gap-2 relative"
+                          className="w-full py-2.5 px-3 rounded-lg text-sm relative"
                           style={{
                             backgroundColor: linksSettings.accentColor,
                             color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
@@ -8702,35 +8708,37 @@ return (
                             fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                           }}
                         >
-                          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          {/* Icon positioned absolutely on the left */}
+                          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                           </svg>
-                          <span className="flex-1 text-center">{label}</span>
+                          {/* Text centered across full button width */}
+                          <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Positioned at phone border (outside screen area) */}
-                        <div className="absolute -left-8 top-1/2 -translate-y-1/2 flex flex-col gap-0.5">
+                        {/* Controls - Positioned in phone border area (left side) */}
+                        <div className="absolute -left-7 top-1/2 -translate-y-1/2 flex flex-col gap-0.5 bg-zinc-800/80 rounded px-0.5 py-0.5">
                           <button
                             onClick={() => moveLink(linkId, 'up')}
                             disabled={index === 0}
-                            className="p-0.5 text-white/50 hover:text-white disabled:opacity-20 transition-colors"
+                            className="p-0.5 text-white/70 hover:text-white disabled:opacity-30 transition-colors"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
                             </svg>
                           </button>
                           <button
                             onClick={() => moveLink(linkId, 'down')}
                             disabled={index === allLinkIds.length - 1}
-                            className="p-0.5 text-white/50 hover:text-white disabled:opacity-20 transition-colors"
+                            className="p-0.5 text-white/70 hover:text-white disabled:opacity-30 transition-colors"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* Edit Button - Positioned at right edge of phone border */}
+                        {/* Edit Button - Positioned in phone border area (right side) */}
                         {!isDefault && (
                           <button
                             onClick={() => {
@@ -8739,9 +8747,9 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-8 top-1/2 -translate-y-1/2 p-1 text-white/50 hover:text-white transition-colors"
+                            className="absolute -right-7 top-1/2 -translate-y-1/2 p-1 bg-zinc-800/80 rounded text-white/70 hover:text-white transition-colors"
                           >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
@@ -8863,15 +8871,23 @@ return (
                         fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                       }}
                     >
-                      {/* Clickable icon positioned absolutely on the left */}
+                      {/* Clickable circle + icon positioned absolutely on the left - opens icon picker */}
                       <button
                         onClick={() => setShowIconPicker(showIconPicker === 'new-link' ? null : 'new-link')}
                         className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
                         title="Choose icon"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
-                        </svg>
+                        {newLinkIcon === 'Globe' ? (
+                          <span className="w-4 h-4 rounded-full border-2 border-current flex items-center justify-center">
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                              <path d="M12 5v14M5 12h14" />
+                            </svg>
+                          </span>
+                        ) : (
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
+                          </svg>
+                        )}
                       </button>
                       {/* Input centered across full button width */}
                       <input
@@ -8959,10 +8975,16 @@ return (
                 ) : (
                   <button
                     onClick={() => setAddingNewLink(true)}
-                    className="w-full py-2.5 text-center text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30"
+                    className="w-full py-2.5 text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30 flex items-center justify-center gap-2"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                   >
-                    + Add Button
+                    {/* Circle with + icon */}
+                    <span className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    </span>
+                    Add Button
                   </button>
                 )}
               </div>
@@ -9284,8 +9306,9 @@ return (
             {/* Photo + Toggle */}
             <div className="flex items-start gap-4">
               <div
-                className="w-20 h-20 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+                className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden flex-shrink-0"
                 style={{
+                  borderColor: linksSettings.accentColor,
                   backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
