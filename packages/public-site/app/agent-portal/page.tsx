@@ -6983,6 +6983,8 @@ interface LinksSettings {
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
   linkOrder: string[]; // Order of all links including default buttons (join-team, learn-about) and custom link IDs
+  showCallButton?: boolean; // Show call button in preview
+  showTextButton?: boolean; // Show text button in preview
 }
 
 const DEFAULT_LINKS_SETTINGS: LinksSettings = {
@@ -8689,7 +8691,7 @@ return (
                     }
 
                     return (
-                      <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform }}
+                      <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform }}>
                         {/* Button - Full width inside phone screen */}
                         <div
                           className="w-full py-2.5 px-3 rounded-lg text-sm flex items-center gap-2 relative"
@@ -9211,9 +9213,9 @@ return (
           {/* Download QR */}
           <button
             onClick={downloadQRCode}
-            disabled={!pageData?.is_active}
-            className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.is_active ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-            title={!pageData?.is_active ? 'Activate your page first to download QR code' : ''}
+            disabled={!pageData?.activated}
+            className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+            title={!pageData?.activated ? 'Activate your page first to download QR code' : ''}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -9551,9 +9553,9 @@ return (
 
             <button
               onClick={downloadQRCode}
-              disabled={!pageData?.is_active}
-              className={`w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center justify-center gap-2 ${pageData?.is_active ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
-              title={!pageData?.is_active ? 'Activate your page first' : ''}
+              disabled={!pageData?.activated}
+              className={`w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center justify-center gap-2 ${pageData?.activated ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+              title={!pageData?.activated ? 'Activate your page first' : ''}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
               Download QR Code
