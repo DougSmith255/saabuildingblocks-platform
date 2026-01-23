@@ -8141,7 +8141,7 @@ return (
       {/* ================================================================
           PROFILE CARD (Green header)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -8156,7 +8156,7 @@ return (
           {/* Photo + B&W/Color Toggle */}
           <div className="flex items-start gap-4">
             <div
-              className="w-[70px] h-[70px] rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+              className="w-[100px] h-[100px] rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
               style={{
                 backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
                 backgroundSize: 'cover',
@@ -8165,7 +8165,7 @@ return (
               }}
             >
               {!getProfileImageUrl() && (
-                <svg className="w-9 h-9 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-12 h-12 text-white/30" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
               )}
@@ -8184,17 +8184,19 @@ return (
               >
                 Upload Photo
               </label>
-              {/* B&W / Color Toggle */}
-              <div className="flex rounded overflow-hidden border border-white/20">
+              {/* B&W / Color Toggle - Pill Design */}
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 text-[10px] font-medium transition-colors ${!linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60 hover:bg-white/10'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${!linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   B&W
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 text-[10px] font-medium transition-colors ${linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60 hover:bg-white/10'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Color
                 </button>
@@ -8250,7 +8252,7 @@ return (
       {/* ================================================================
           STYLE CARD (Purple header)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -8286,62 +8288,65 @@ return (
             </div>
           </div>
 
-          {/* Icon Style */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Icon Style</label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
-                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-              >
-                Light
-              </button>
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
-                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-              >
-                Dark
-              </button>
+          {/* Icon Style + Button Weight - Same Row */}
+          <div className="grid grid-cols-2 gap-3">
+            {/* Icon Style */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Icon Style</label>
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Light
+                </button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Dark
+                </button>
+              </div>
             </div>
-          </div>
 
-          {/* Button Weight */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
-            <div className="flex gap-2">
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
-                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-              >
-                Bold
-              </button>
-              <button
-                onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
-                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-              >
-                Regular
-              </button>
+            {/* Button Weight */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Bold
+                </button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                >
+                  Regular
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Font */}
           <div>
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
-            <div className="flex gap-2">
+            <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
                 style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Synonym
               </button>
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
                 style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Taskor
@@ -8354,7 +8359,7 @@ return (
       {/* ================================================================
           CONTACT CARD (Cyan header)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -8418,7 +8423,7 @@ return (
       {/* ================================================================
           PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden row-span-2" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+      <div className="rounded-xl overflow-hidden row-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -8429,35 +8434,33 @@ return (
         </div>
 
         {/* Phone Mockup - Premium Styling */}
-        <div className="p-3 flex flex-col items-center relative">
-          {/* Dotted background pattern */}
-          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px)', backgroundSize: '12px 12px' }} />
-
+        <div className="p-4 flex flex-col items-center">
           <div
-            className="w-full max-w-[180px] rounded-[2rem] p-[5px] relative z-10"
+            className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative"
             style={{
               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 20px 40px -10px rgba(0,0,0,0.6), 0 0 20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
             }}
           >
             {/* Phone inner bezel */}
             <div
-              className="rounded-[1.75rem] relative overflow-hidden flex flex-col"
+              className="rounded-[2.25rem] relative overflow-hidden flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
-                boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5)',
-                minHeight: '380px',
-                padding: '24px 12px 16px 12px',
+                boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
+                minHeight: '580px',
+                padding: '32px 16px 20px 16px',
               }}
             >
               {/* Notch */}
-              <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-full" style={{ boxShadow: '0 0 8px rgba(0,0,0,0.5)' }} />
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
               {/* Profile Photo */}
-              <div className="flex flex-col items-center gap-1.5 pt-3">
+              <div className="flex flex-col items-center gap-2 pt-6">
                 <div
-                  className="w-12 h-12 rounded-full border-2 flex items-center justify-center overflow-hidden"
+                  className="w-20 h-20 rounded-full border-3 flex items-center justify-center overflow-hidden"
                   style={{
                     borderColor: linksSettings.accentColor,
+                    borderWidth: '3px',
                     backgroundColor: 'rgba(40,40,40,0.8)',
                     backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
                     backgroundSize: 'cover',
@@ -8466,7 +8469,7 @@ return (
                   }}
                 >
                   {!getProfileImageUrl() && (
-                    <svg className="w-6 h-6 text-white/40" fill="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-10 h-10 text-white/40" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
                   )}
@@ -8474,7 +8477,7 @@ return (
 
                 {/* Name with H1 Glow Effect */}
                 <span
-                  className={`text-sm text-center leading-tight ${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'}`}
+                  className={`text-lg text-center leading-tight ${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'}`}
                   style={{
                     color: linksSettings.accentColor,
                     fontFamily: 'var(--font-taskor, sans-serif)',
@@ -8487,7 +8490,7 @@ return (
 
                 {/* Bio */}
                 {linksSettings.bio && (
-                  <p className="text-[9px] text-center text-white/50 px-1 leading-tight">{linksSettings.bio}</p>
+                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px]">{linksSettings.bio}</p>
                 )}
               </div>
 
@@ -8560,14 +8563,14 @@ return (
 
                           {/* Button */}
                           <div
-                            className="flex-1 py-1.5 px-2 rounded-md text-[10px] font-medium flex items-center gap-1"
+                            className="flex-1 py-2.5 px-3 rounded-lg text-sm font-medium flex items-center gap-2"
                             style={{
                               backgroundColor: linksSettings.accentColor,
                               color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                               fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             }}
                           >
-                            <svg className="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                             </svg>
                             <span className="flex-1 text-center">{label}</span>
@@ -8721,7 +8724,7 @@ return (
                 ) : (
                   <button
                     onClick={() => setAddingNewLink(true)}
-                    className="w-full py-1.5 text-center text-[10px] text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30"
+                    className="w-full py-2.5 text-center text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                   >
                     + Add Button
@@ -8729,17 +8732,21 @@ return (
                 )}
               </div>
 
-              {/* SAA Logo - Styled */}
-              <div className="mt-auto pt-3 flex flex-col items-center">
-                <svg width="36" height="16" viewBox="0 0 72 32" className="mb-0.5">
-                  {/* S */}
-                  <path d="M4 8c0-2 2-4 6-4s6 2 6 4c0 3-6 4-6 8 0 2 2 4 6 4s6-2 6-4" fill="none" stroke="#ffd700" strokeWidth="3" strokeLinecap="round"/>
-                  {/* A */}
-                  <path d="M24 20L30 4L36 20M26 14h8" fill="none" stroke="#ffd700" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                  {/* A */}
-                  <path d="M44 20L50 4L56 20M46 14h8" fill="none" stroke="#ffd700" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+              {/* SAA Logo - Actual Logo */}
+              <div className="mt-auto pt-4 flex flex-col items-center">
+                <svg width="80" height="30" viewBox="0 0 201.96256 75.736626" className="mb-1">
+                  <defs>
+                    <linearGradient id="previewLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#fff3b0', stopOpacity: 1 }} />
+                      <stop offset="40%" style={{ stopColor: '#ffd700', stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: '#e6ac00', stopOpacity: 1 }} />
+                    </linearGradient>
+                  </defs>
+                  <g transform="translate(-5.5133704,-105.97189)">
+                    <path fill="url(#previewLogoGradient)" d="M 21.472273,180.56058 C 11.316147,178.12213 1.9355119,166.45773 6.8673475,154.38101 c 0.2284985,-0.55952 1.4152886,-0.30887 8.5218335,-0.25364 6.089186,0.0474 11.528887,-0.54887 11.563021,0.35268 0.12172,3.21493 1.548705,4.66069 2.560443,5.07358 1.092535,0.44586 18.027365,0.14064 18.956531,-0.51505 2.086142,-1.47214 2.326164,-6.74 -0.732868,-6.70809 -1.893125,0.0197 -16.677992,0.18141 -18.724365,-0.11743 -4.043916,-0.59058 -5.591737,-1.59981 -9.49172,-4.13883 -8.077325,-5.25858 -10.5671578,-12.68416 -8.96983,-21.28238 0,0 6.234294,-0.12184 10.651176,-0.37024 4.312501,-0.24253 8.14686,-0.34782 8.671149,0.65635 1.028138,1.96921 2.764824,2.67171 3.10468,3.73011 0.296847,0.92448 1.558671,0.84083 5.661272,0.85056 4.303079,0.01 9.549862,0.24636 14.627167,0.65835 6.271917,0.50893 12.606804,1.04447 18.1587,14.09205 1.256383,2.95263 -0.05146,7.82433 2.707298,0.89052 0.906748,-2.27902 1.363355,-2.02044 15.012644,-2.13873 7.507113,-0.065 13.649301,-0.23577 13.649301,-0.37936 0,-0.1436 -0.28095,-0.89482 -0.62433,-1.66938 -0.34338,-0.77455 -1.02601,-2.31327 -1.51695,-3.41938 -0.49094,-1.10612 -2.062126,-4.92722 -3.491523,-8.49135 -1.429397,-3.56413 -2.857843,-7.08356 -3.174329,-7.82097 -0.316495,-0.7374 -1.226445,-2.94962 -2.022113,-4.91605 -0.795667,-1.96641 -4.043105,-11.29798 -3.693629,-11.88325 0.458064,-0.76712 -0.18677,-0.40385 12.337194,-0.40385 9.84423,0 9.65274,0.24739 9.65274,0.24739 1.2078,1.06083 2.78957,6.78964 3.34621,8.01751 0.55721,1.22913 1.27686,2.83788 1.59864,3.57529 0.60465,1.38564 1.79312,3.9863 4.28898,9.38518 0.79543,1.72061 2.34948,5.13949 3.45345,7.59751 2.67446,5.95472 3.04484,6.75259 5.91254,12.73702 2.46283,5.1395 2.46283,5.1395 3.20091,3.24636 2.23698,-5.73776 1.98186,-5.7611 4.28454,-5.95219 1.54958,-0.1286 24.51316,0.54777 24.82611,0.0215 0,0 -3.59658,-6.2074 -5.83995,-10.49576 -8.26158,-15.79266 -13.92752,-27.26401 -13.81355,-28.2205 0.0424,-0.35537 5.59171,-0.19826 13.73661,-0.17244 11.92585,0.0378 11.19138,0.12582 11.45775,0.44068 0.7756,0.9168 5.56816,10.25269 6.3956,11.61578 0.82745,1.36309 2.32581,3.98669 3.32968,5.83019 1.00389,1.84351 2.17996,3.95518 2.61353,4.69258 0.43356,0.7374 1.35628,2.34629 2.0505,3.5753 0.6942,1.22901 3.48408,6.15623 6.19971,10.94936 2.71564,4.79315 6.57201,11.63091 8.5697,15.19503 1.99772,3.56414 3.98079,6.98302 4.40686,7.59753 1.75557,2.53202 7.19727,12.85738 7.19727,13.65646 0,1.35047 -1.83096,1.53856 -14.97656,1.53856 -15.12194,0 -11.00005,0.41867 -13.10487,-0.35263 -2.71179,-0.99372 -7.4667,-12.35312 -8.24465,-13.49738 -0.5144,-0.75665 -20.11115,-0.50211 -20.85813,0.10747 -0.30114,0.24573 -4.74222,12.87268 -5.21806,13.18149 -0.51253,0.33263 1.56565,0.31373 -13.12083,0.46948 -14.37638,0.15246 -12.92516,-0.20864 -13.7378,-0.46876 -1.39249,-0.44578 -3.05836,-6.3221 -3.28223,-6.8137 -0.2239,-0.4916 -1.69614,-6.08358 -2.6942,-7.30424 -0.46821,-0.57263 -22.000524,-0.10018 -22.427167,0.30027 -0.495999,0.46555 -2.403531,4.97746 -3.536292,7.45088 -3.647579,7.96455 -0.798091,6.48322 -14.189162,6.21687 -7.764148,-0.15444 -10.944164,0.0682 -12.663388,-0.49314 -2.370345,-0.7739 -1.493164,-2.84033 -1.713395,-2.39718 -2.970363,5.97706 -32.338174,3.84174 -36.236923,2.90565 z m 12.24087,-53.49377 c -0.644922,-0.55276 -1.868417,-1.61286 -2.718877,-2.35578 C 28.5887,122.6096 17.54033,106.32825 20.700077,106.24689 c 18.520277,-0.47684 31.530155,-0.22018 43.622587,-0.0695 12.878883,18.49983 14.110357,21.6067 12.221476,21.31699 -20.587891,-5.5e-4 -41.658407,0.57749 -42.830997,-0.42752 z" />
+                  </g>
                 </svg>
-                <span className="text-[7px] text-white/40 tracking-wide">Powered by Smart Agent Alliance</span>
+                <span className="text-[9px] text-white/40 tracking-wide">Powered by Smart Agent Alliance</span>
               </div>
             </div>
           </div>
@@ -8749,7 +8756,7 @@ return (
       {/* ================================================================
           SOCIAL LINKS CARD (spans 2 columns)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden col-span-2" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+      <div className="rounded-xl overflow-hidden col-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -8903,7 +8910,7 @@ return (
       {/* ================================================================
           PAGE ACTIONS CARD
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
