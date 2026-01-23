@@ -2043,7 +2043,7 @@ function AgentPortal() {
                     {/* Upload spinner - shows while uploading */}
                     {isUploadingDashboardImage && (
                       <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
-                        <div className="w-10 h-10 border-3 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                        <div className="w-10 h-10 border-[3px] border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
                       </div>
                     )}
                     {user?.profilePictureUrl && !profileImageError ? (
@@ -2286,7 +2286,7 @@ function AgentPortal() {
                     {/* Upload spinner - shows while uploading */}
                     {isUploadingDashboardImage && (
                       <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
-                        <div className="w-10 h-10 border-3 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                        <div className="w-10 h-10 border-[3px] border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
                       </div>
                     )}
                     {user?.profilePictureUrl && !profileImageError ? (
@@ -2656,7 +2656,7 @@ function AgentPortal() {
                   {/* Upload spinner - shows while uploading */}
                   {isUploadingDashboardImage && (
                     <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
-                      <div className="w-12 h-12 border-3 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                      <div className="w-12 h-12 border-[3px] border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
                     </div>
                   )}
                   {user?.profilePictureUrl && !profileImageError ? (
@@ -8692,24 +8692,34 @@ return (
 
                   return (
                     <div className="flex justify-center gap-2 mt-1">
-                      {socialIcons.map((social, idx) => (
-                        <div
-                          key={idx}
-                          className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
-                          style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}
-                        >
-                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24">
-                            <path d={social.icon} />
-                          </svg>
-                        </div>
-                      ))}
+                      {socialIcons.map((social, idx) => {
+                        // Built-in social icons (first 6) use fill, custom icons use stroke
+                        const isBuiltIn = idx < builtInSocialIcons.length;
+                        return (
+                          <div
+                            key={idx}
+                            className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                            style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}
+                          >
+                            {isBuiltIn ? (
+                              <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24">
+                                <path d={social.icon} />
+                              </svg>
+                            ) : (
+                              <svg className="w-4 h-4" fill="none" stroke={linksSettings.accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                                <path d={social.icon} />
+                              </svg>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   );
                 })()}
 
                 {/* Bio - moved under social icons with spacing below for contact buttons */}
                 {linksSettings.bio && (
-                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-1.5 mb-1">{linksSettings.bio}</p>
+                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-1.5 mb-1 break-words overflow-hidden" style={{ wordBreak: 'break-word' }}>{linksSettings.bio}</p>
                 )}
               </div>
 
@@ -8789,38 +8799,30 @@ return (
                       const swappingId = allLinkIds[currentIndex - 1];
                       // Start animation
                       setAnimatingSwap({ movingId: linkId, swappingId, direction });
-                      // After animation completes, clear animation FIRST then update order
+                      // After animation completes: clear animation, then update order
                       setTimeout(() => {
-                        // Update order first while animation is still applied
+                        // Clear animation first - buttons are now visually in swapped positions
+                        setAnimatingSwap(null);
+                        // Then immediately update the order - no visual jump since positions match
                         const newOrder = [...allLinkIds];
                         [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
                         setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
                         setHasUnsavedChanges(true);
-                        // Clear animation after order update in next frame
-                        requestAnimationFrame(() => {
-                          requestAnimationFrame(() => {
-                            setAnimatingSwap(null);
-                          });
-                        });
-                      }, 280);
+                      }, 250);
                     } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
                       const swappingId = allLinkIds[currentIndex + 1];
                       // Start animation
                       setAnimatingSwap({ movingId: linkId, swappingId, direction });
-                      // After animation completes, update order then clear animation
+                      // After animation completes: clear animation, then update order
                       setTimeout(() => {
-                        // Update order first while animation is still applied
+                        // Clear animation first - buttons are now visually in swapped positions
+                        setAnimatingSwap(null);
+                        // Then immediately update the order - no visual jump since positions match
                         const newOrder = [...allLinkIds];
                         [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
                         setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
                         setHasUnsavedChanges(true);
-                        // Clear animation after order update in next frame
-                        requestAnimationFrame(() => {
-                          requestAnimationFrame(() => {
-                            setAnimatingSwap(null);
-                          });
-                        });
-                      }, 280);
+                      }, 250);
                     }
                   };
 
@@ -8880,7 +8882,7 @@ return (
                         </div>
 
                         {/* Controls - Positioned in phone border area (left side) - z-[200] to appear above phone border */}
-                        <div className="absolute -left-7 top-1/2 -translate-y-1/2 z-[200] flex flex-col gap-0.5 bg-zinc-800/90 rounded px-0.5 py-0.5 shadow-lg">
+                        <div className="absolute -left-10 top-1/2 -translate-y-1/2 z-[9999] flex flex-col gap-0.5 bg-zinc-800/95 rounded px-1 py-1 shadow-xl border border-white/10" style={{ position: 'absolute' }}>
                           <button
                             onClick={() => moveLink(linkId, 'up')}
                             disabled={index === 0}
@@ -8910,7 +8912,7 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-7 top-1/2 -translate-y-1/2 z-[200] p-1 bg-zinc-800/90 rounded text-white/70 hover:text-white transition-colors shadow-lg"
+                            className="absolute -right-10 top-1/2 -translate-y-1/2 z-[9999] p-1.5 bg-zinc-800/95 rounded text-white/70 hover:text-white transition-colors shadow-xl border border-white/10"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -9430,13 +9432,17 @@ return (
           {!pageData?.activated && (
             <button
               onClick={handleActivate}
-              disabled={!getProfileImageUrl() || !formData.display_first_name}
+              disabled={isSaving}
               className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              ACTIVATE MY PAGE
+              {isSaving ? (
+                <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              )}
+              {isSaving ? 'ACTIVATING...' : 'ACTIVATE MY PAGE'}
             </button>
           )}
 
@@ -9813,9 +9819,13 @@ return (
             </h3>
 
             {!pageData?.activated && (
-              <button onClick={handleActivate} disabled={!getProfileImageUrl() || !formData.display_first_name} className="w-full py-3 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] disabled:opacity-50 flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                ACTIVATE MY PAGE
+              <button onClick={handleActivate} disabled={isSaving} className="w-full py-3 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] disabled:opacity-50 flex items-center justify-center gap-2">
+                {isSaving ? (
+                  <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                ) : (
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                )}
+                {isSaving ? 'ACTIVATING...' : 'ACTIVATE MY PAGE'}
               </button>
             )}
 
@@ -10029,7 +10039,7 @@ return (
       }
     `}</style>
     <div
-      className="fixed bottom-[130px] right-4 z-50 min-[950px]:bottom-[60px] min-[1100px]:bottom-4 pixel-help-button"
+      className="fixed bottom-6 right-6 z-50 pixel-help-button"
       title="Need Help?"
     >
       <button name="checkbox" type="button" onClick={() => setShowLinkPageHelpModal(true)}></button>
