@@ -1031,7 +1031,10 @@ function AgentPortal() {
   };
 
   const handleProfilePictureClick = () => {
-    // Placeholder for profile picture click handler
+    // Trigger the global hidden file input for profile picture upload
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   const handleCompleteOnboarding = async () => {
@@ -1514,11 +1517,21 @@ function AgentPortal() {
           colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
           colorFormData.append('pageId', currentPageData.page.id);
 
-          await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+          const colorResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` },
             body: colorFormData,
           });
+
+          // Update local state with color URL
+          if (colorResponse.ok) {
+            const colorResult = await colorResponse.json();
+            if (colorResult.data?.url) {
+              window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
+                detail: { url: colorResult.data.url }
+              }));
+            }
+          }
         }
       }
 
@@ -7083,6 +7096,7 @@ interface AgentPageData {
   show_call_button: boolean;
   show_text_button: boolean;
   profile_image_url: string | null;
+  profile_image_color_url: string | null; // Color version for Linktree
   facebook_url: string | null;
   instagram_url: string | null;
   twitter_url: string | null;
@@ -7268,7 +7282,8 @@ function AgentPagesSection({
     const baseUrl = pageData?.profile_image_url || user?.profilePictureUrl || null;
     if (!baseUrl) return null;
     if (linksSettings.showColorPhoto) {
-      return getColorImageUrl(baseUrl);
+      // Prefer the stored color URL if available, otherwise derive from B&W URL
+      return pageData?.profile_image_color_url || getColorImageUrl(baseUrl);
     }
     return baseUrl;
   };
@@ -7371,9 +7386,17 @@ function AgentPagesSection({
       }
     };
 
+    const handleColorImageUpdate = (event: CustomEvent<{ url: string }>) => {
+      if (pageData) {
+        setPageData(prev => prev ? { ...prev, profile_image_color_url: event.detail.url } : null);
+      }
+    };
+
     window.addEventListener('agent-page-image-updated', handleImageUpdate as EventListener);
+    window.addEventListener('agent-page-color-image-updated', handleColorImageUpdate as EventListener);
     return () => {
       window.removeEventListener('agent-page-image-updated', handleImageUpdate as EventListener);
+      window.removeEventListener('agent-page-color-image-updated', handleColorImageUpdate as EventListener);
     };
   }, [pageData]);
 
@@ -8511,17 +8534,25 @@ return (
               {/* Profile Photo */}
               <div className="flex flex-col items-center gap-2 pt-6">
                 <div
-                  className="w-20 h-20 rounded-full border-3 flex items-center justify-center overflow-hidden"
+                  className="w-20 h-20 rounded-full border-3 flex items-center justify-center overflow-hidden relative"
                   style={{
                     borderColor: linksSettings.accentColor,
                     borderWidth: '3px',
                     backgroundColor: 'rgba(40,40,40,0.8)',
-                    backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
                   }}
                 >
+                  {/* Inner image div with B&W filter - border stays colored */}
+                  {getProfileImageUrl() && (
+                    <div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        backgroundImage: `url(${getProfileImageUrl()})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+                      }}
+                    />
+                  )}
                   {!getProfileImageUrl() && (
                     <svg className="w-10 h-10 text-white/40" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -8594,29 +8625,37 @@ return (
 
                   if (contacts.length === 0) return null;
 
-                  // Calculate button width based on count
                   const buttonCount = contacts.length;
+                  const showIconsOnly = buttonCount > 1;
 
                   return (
                     <div className="flex gap-1.5 mt-3 mb-1.5">
                       {contacts.map((contact, idx) => (
                         <div
                           key={idx}
-                          className="flex-1 py-2 text-sm relative"
+                          className="flex-1 py-2.5 text-sm relative"
                           style={{
                             backgroundColor: linksSettings.accentColor,
                             color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
-                            borderRadius: idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
+                            borderRadius: buttonCount === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
                           }}
                         >
-                          {/* Icon positioned absolutely */}
-                          <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
-                          </svg>
-                          {/* Text centered */}
-                          <span className="block w-full text-center text-xs">{contact.label}</span>
+                          {showIconsOnly ? (
+                            /* Icons only mode - centered icon */
+                            <svg className="mx-auto w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
+                            </svg>
+                          ) : (
+                            /* Single button mode - icon left, text centered */
+                            <>
+                              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
+                              </svg>
+                              <span className="block w-full text-center">{contact.label}</span>
+                            </>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -8654,8 +8693,11 @@ return (
                         [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
                         setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
                         setHasUnsavedChanges(true);
-                        setAnimatingSwap(null);
-                      }, 250);
+                        // Clear animation after React has re-rendered with new order
+                        requestAnimationFrame(() => {
+                          requestAnimationFrame(() => setAnimatingSwap(null));
+                        });
+                      }, 200);
                     } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
                       const swappingId = allLinkIds[currentIndex + 1];
                       // Start animation
@@ -8666,8 +8708,11 @@ return (
                         [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
                         setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
                         setHasUnsavedChanges(true);
-                        setAnimatingSwap(null);
-                      }, 250);
+                        // Clear animation after React has re-rendered with new order
+                        requestAnimationFrame(() => {
+                          requestAnimationFrame(() => setAnimatingSwap(null));
+                        });
+                      }, 200);
                     }
                   };
 
@@ -8676,7 +8721,7 @@ return (
                     const customLink = customLinkMap.get(linkId);
                     if (!isDefault && !customLink) return null;
 
-                    const label = linkId === 'join-team' ? 'Join my Team' : linkId === 'learn-about' ? 'Learn About eXp' : customLink?.label || 'Custom Link';
+                    const label = linkId === 'join-team' ? 'Join my Team' : linkId === 'learn-about' ? 'About my Team' : customLink?.label || 'Custom Link';
                     const iconPath = isDefault
                       ? (linkId === 'join-team' ? 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75' : 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 16v-4 M12 8h.01')
                       : LINK_ICONS.find(i => i.name === customLink?.icon)?.path || '';
@@ -8708,16 +8753,24 @@ return (
                             fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                           }}
                         >
-                          {/* Icon positioned absolutely on the left */}
-                          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
-                          </svg>
+                          {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
+                          {linkId === 'learn-about' ? (
+                            <img
+                              src={linksSettings.iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}
+                              alt="S"
+                              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 object-contain"
+                            />
+                          ) : (
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
+                            </svg>
+                          )}
                           {/* Text centered across full button width */}
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Positioned in phone border area (left side) */}
-                        <div className="absolute -left-7 top-1/2 -translate-y-1/2 flex flex-col gap-0.5 bg-zinc-800/80 rounded px-0.5 py-0.5">
+                        {/* Controls - Positioned in phone border area (left side) - z-20 to appear above border */}
+                        <div className="absolute -left-7 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-0.5 bg-zinc-800/90 rounded px-0.5 py-0.5 shadow-lg">
                           <button
                             onClick={() => moveLink(linkId, 'up')}
                             disabled={index === 0}
@@ -8738,7 +8791,7 @@ return (
                           </button>
                         </div>
 
-                        {/* Edit Button - Positioned in phone border area (right side) */}
+                        {/* Edit Button - Positioned in phone border area (right side) - z-20 to appear above border */}
                         {!isDefault && (
                           <button
                             onClick={() => {
@@ -8747,7 +8800,7 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-7 top-1/2 -translate-y-1/2 p-1 bg-zinc-800/80 rounded text-white/70 hover:text-white transition-colors"
+                            className="absolute -right-7 top-1/2 -translate-y-1/2 z-20 p-1 bg-zinc-800/90 rounded text-white/70 hover:text-white transition-colors shadow-lg"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -9118,14 +9171,24 @@ return (
             </div>
 
             {/* Custom 1 */}
-            <div className="min-w-0">
+            <div className="min-w-0 relative">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 1</label>
               <div className="flex gap-1">
-                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10 flex-shrink-0">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 8v8M8 12h8" />
-                  </svg>
+                <button
+                  onClick={() => setShowSocialIconPicker(showSocialIconPicker === 0 ? null : 0)}
+                  className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
+                  title="Choose icon"
+                >
+                  {customSocialLinks[0]?.icon && customSocialLinks[0].icon !== 'Globe' ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[0].icon)?.path || ''} />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 8v8M8 12h8" />
+                    </svg>
+                  )}
                 </button>
                 <input
                   type="url"
@@ -9144,17 +9207,56 @@ return (
                   className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
                 />
               </div>
+              {/* Icon Picker for Custom 1 */}
+              {showSocialIconPicker === 0 && (
+                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-30 max-h-[180px] overflow-y-auto w-48">
+                  <div className="grid grid-cols-6 gap-1">
+                    {LINK_ICONS.map((icon) => (
+                      <button
+                        key={icon.name}
+                        onClick={() => {
+                          const newLinks = [...customSocialLinks];
+                          if (newLinks[0]) {
+                            newLinks[0] = { ...newLinks[0], icon: icon.name };
+                          } else {
+                            newLinks[0] = { id: 'custom-social-1', url: '', icon: icon.name };
+                          }
+                          setCustomSocialLinks(newLinks);
+                          setShowSocialIconPicker(null);
+                          setHasUnsavedChanges(true);
+                        }}
+                        className={`p-1.5 rounded transition-colors ${customSocialLinks[0]?.icon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
+                        title={icon.label}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Custom 2 */}
-            <div className="min-w-0">
+            <div className="min-w-0 relative">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 2</label>
               <div className="flex gap-1">
-                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10 flex-shrink-0">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 8v8M8 12h8" />
-                  </svg>
+                <button
+                  onClick={() => setShowSocialIconPicker(showSocialIconPicker === 1 ? null : 1)}
+                  className={`p-2 rounded-lg border flex-shrink-0 transition-colors ${customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? 'bg-[#ffd700]/20 border-[#ffd700]/30 text-[#ffd700]' : 'bg-black/40 border-white/10 text-white/60 hover:bg-white/10'}`}
+                  title="Choose icon"
+                >
+                  {customSocialLinks[1]?.icon && customSocialLinks[1].icon !== 'Globe' ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === customSocialLinks[1].icon)?.path || ''} />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 8v8M8 12h8" />
+                    </svg>
+                  )}
                 </button>
                 <input
                   type="url"
@@ -9173,6 +9275,35 @@ return (
                   className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
                 />
               </div>
+              {/* Icon Picker for Custom 2 */}
+              {showSocialIconPicker === 1 && (
+                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-30 max-h-[180px] overflow-y-auto w-48">
+                  <div className="grid grid-cols-6 gap-1">
+                    {LINK_ICONS.map((icon) => (
+                      <button
+                        key={icon.name}
+                        onClick={() => {
+                          const newLinks = [...customSocialLinks];
+                          if (newLinks[1]) {
+                            newLinks[1] = { ...newLinks[1], icon: icon.name };
+                          } else {
+                            newLinks[1] = { id: 'custom-social-2', url: '', icon: icon.name };
+                          }
+                          setCustomSocialLinks(newLinks);
+                          setShowSocialIconPicker(null);
+                          setHasUnsavedChanges(true);
+                        }}
+                        className={`p-1.5 rounded transition-colors ${customSocialLinks[1]?.icon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
+                        title={icon.label}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
+                        </svg>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -9521,7 +9652,7 @@ return (
                   <path d="M12 16v-4" />
                   <path d="M12 8h.01" />
                 </svg>
-                <span className="flex-1 text-center">Learn About eXp</span>
+                <span className="flex-1 text-center">About my Team</span>
               </div>
 
               {/* Custom links */}

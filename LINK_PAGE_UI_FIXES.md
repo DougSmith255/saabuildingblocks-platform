@@ -101,6 +101,7 @@ filter: drop-shadow(0 0 4px currentColor);
 Phase 1: Completed (13 fixes)
 Phase 2: Completed (8 fixes)
 Phase 3: Completed (9 fixes - UI Polish)
+Phase 4: Completed (9 fixes - Final Polish)
 
 ---
 
@@ -149,3 +150,19 @@ Phase 3: Completed (9 fixes - UI Polish)
 | 7 | Remove cancel button from edit UI | DONE | Removed unnecessary cancel button |
 | 8 | Download QR Code disabled until active | DONE | Added disabled state with opacity-40 and cursor-not-allowed |
 | 9 | Profile border uses accent color | DONE | Changed from border-white to dynamic borderColor: linksSettings.accentColor |
+
+---
+
+## Phase 4 Fixes (Completed)
+
+| # | Fix | Status | Details |
+|---|-----|--------|---------|
+| 1 | Button swap animation flash | DONE | Used double requestAnimationFrame to delay clearing animatingSwap state until after React re-render |
+| 2 | Custom social link + icons open icon library | DONE | Added onClick handlers to Custom 1/2 buttons with icon picker dropdown |
+| 3 | B&W filter only affects image, not border | DONE | Separated profile image into inner div with grayscale filter, border stays on parent |
+| 4 | Color image missing for profile | DONE | Added profile_image_color_url to PageData, updated getProfileImageUrl to use stored color URL, added event listener for color image updates |
+| 5 | Profile uploader works in all 4 locations | DONE | Fixed handleProfilePictureClick to trigger fileInputRef.current.click() |
+| 6 | Up/down and edit buttons z-index | DONE | Added z-20 class and shadow-lg to control buttons |
+| 7 | Contact buttons full width with icon-only mode | DONE | Added showIconsOnly = buttonCount > 1 logic, icons centered when 2-3 buttons |
+| 8 | S logo white/black versions | DONE | Used existing /icons/s-logo-offwhite.png and /icons/s-logo-dark.png based on iconStyle |
+| 9 | Change "Learn About eXp" to "About my Team" | DONE | Updated button text using replace_all |
