@@ -2,12 +2,12 @@
  * useUserRole Hook
  *
  * Custom React hook to fetch and manage user role state
- * Integrates with Supabase auth to get current user's role
+ * Uses API route to bypass RLS issues on users table
  */
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { Role, UserWithRole } from '@/lib/types/rbac';
 
@@ -23,6 +23,7 @@ interface UseUserRoleReturn {
 
 /**
  * Hook to get current user's role
+ * Uses /api/auth/user-role endpoint which bypasses RLS
  */
 export function useUserRole(): UseUserRoleReturn {
   const [role, setRole] = useState<Role | null>(null);
@@ -30,48 +31,50 @@ export function useUserRole(): UseUserRoleReturn {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUserRole = async () => {
+  const fetchUserRole = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
 
       const supabase = createClient();
 
-      // Get authenticated user
-      const { data: { user: authUser }, error: authError } = await supabase.auth.getUser();
+      // Get the current session to get the access token
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
-      if (authError || !authUser) {
+      if (sessionError || !session) {
         throw new Error('Not authenticated');
       }
 
-      // Get user role from users table
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', authUser.id)
-        .single();
+      // Call API route with the access token
+      const response = await fetch('/api/auth/user-role', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      });
 
-      if (userError) {
-        throw new Error('Failed to fetch user role');
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || 'Failed to fetch user role');
       }
 
-      if (!userData) {
-        throw new Error('User not found');
-      }
+      const userData = result.data;
 
       const userWithRole: UserWithRole = {
         id: userData.id,
         email: userData.email,
-        username: userData.username,
-        full_name: userData.full_name,
-        display_name: userData.display_name,
-        avatar_url: userData.avatar_url,
+        username: userData.email, // Use email as username fallback
+        full_name: userData.fullName,
+        display_name: userData.fullName,
+        avatar_url: userData.profilePictureUrl,
         role: userData.role as Role,
-        permissions: userData.permissions,
-        is_active: userData.is_active,
-        created_at: userData.created_at,
-        last_login_at: userData.last_login_at,
-        metadata: userData.metadata,
+        permissions: [],
+        is_active: userData.isActive,
+        created_at: new Date().toISOString(), // Not provided by API
+        last_login_at: undefined,
+        metadata: {},
       };
 
       setUser(userWithRole);
@@ -80,9 +83,11 @@ export function useUserRole(): UseUserRoleReturn {
     } catch (err) {
       console.error('Failed to fetch user role:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch user role');
+      setRole(null);
+      setUser(null);
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchUserRole();
@@ -101,7 +106,7 @@ export function useUserRole(): UseUserRoleReturn {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [fetchUserRole]);
 
   return {
     role,

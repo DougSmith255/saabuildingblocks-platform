@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import StarBackground from '@/components/StarBackground';
 import ScrollProgress from '@/components/ScrollProgress';
 import GlassScrollbar from '@/components/GlassScrollbar';
+import { AuthProvider } from '@/app/providers/AuthProvider';
 
 /**
  * Login Page Layout
@@ -32,7 +33,7 @@ export default function LoginLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <AuthProvider>
       {/* Load secondary-button CSS */}
       <link rel="stylesheet" href="/css/wordpress-components/secondary-button.css" />
 
@@ -58,6 +59,6 @@ export default function LoginLayout({
           {children}
         </main>
       </div>
-    </>
+    </AuthProvider>
   );
 }

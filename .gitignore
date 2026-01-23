@@ -99,3 +99,9 @@ ROLLBACK_*.sh
 packages/*/tsconfig.tsbuildinfo
 
 .wrangler/
+
+# Sensitive files - DO NOT COMMIT
+CLOUDFLARE_TOKENS.md
+
+# Playwright MCP screenshots
+.playwright-mcp/

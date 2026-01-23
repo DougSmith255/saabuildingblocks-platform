@@ -27,6 +27,10 @@ export interface LinksSettings {
   iconStyle: 'light' | 'dark';  // Light (white) or Dark (near-black) icons
   font: 'synonym' | 'taskor';   // Font for button text
   bio: string;              // Bio text (max 150 chars)
+  showColorPhoto?: boolean; // false = B&W (default), true = full color photo
+  nameWeight?: 'bold' | 'normal'; // Font weight for display name
+  showCallButton?: boolean; // Show phone call button
+  showTextButton?: boolean; // Show text message button
 }
 
 /**
@@ -57,6 +61,7 @@ export interface AgentPageKVData {
   display_last_name: string;
   email: string | null; // Agent's contact email for Email button
   profile_image_url: string | null;
+  profile_image_color_url?: string | null; // Color version of profile image (for Linktree color option)
   phone: string | null;
   show_phone: boolean;
   phone_text_only: boolean;

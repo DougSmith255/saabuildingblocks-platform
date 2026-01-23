@@ -18,7 +18,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import dynamicImport from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Rocket, Zap, Users } from 'lucide-react';
+import { Palette, Type, LayoutGrid, FileCode, Settings, Layers, Zap, Users } from 'lucide-react';
 import { useUserRole, RoleBadge } from '@/lib/rbac';
 
 // Tab components - dynamically imported to prevent SSR
@@ -47,11 +47,6 @@ const TemplatesTab = dynamicImport(() => import('./components/tabs/TemplatesTab'
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Templates tab...</div>
 });
 
-const DeploymentTab = dynamicImport(() => import('./components/tabs/DeploymentTab').then(mod => ({ default: mod.DeploymentTab })), {
-  ssr: false,
-  loading: () => <div className="p-6 text-[#dcdbd5]">Loading Deployment tab...</div>
-});
-
 const AutomationsTab = dynamicImport(() => import('./components/tabs/AutomationsTab').then(mod => ({ default: mod.AutomationsTab })), {
   ssr: false,
   loading: () => <div className="p-6 text-[#dcdbd5]">Loading Automations tab...</div>
@@ -67,7 +62,7 @@ import { useBrandColorsStore } from './stores/brandColorsStore';
 import { useTypographyStore } from './stores/typographyStore';
 import { useSpacingStore } from './stores/spacingStore';
 
-type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'deployment' | 'automations' | 'users';
+type TabId = 'typography' | 'colors' | 'spacing' | 'templates' | 'components' | 'automations' | 'users';
 
 function MasterControllerContent() {
   const router = useRouter();
@@ -76,7 +71,7 @@ function MasterControllerContent() {
   // Initialize tab from URL or default to 'typography'
   const [activeTab, setActiveTab] = useState<TabId>(() => {
     const tabParam = searchParams.get('tab');
-    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'deployment', 'automations', 'users'];
+    const validTabs: TabId[] = ['typography', 'colors', 'spacing', 'templates', 'components', 'automations', 'users'];
     return (tabParam && validTabs.includes(tabParam as TabId)) ? tabParam as TabId : 'typography';
   });
 
@@ -102,7 +97,6 @@ function MasterControllerContent() {
     { id: 'templates' as TabId, label: 'Templates', icon: FileCode },
     { id: 'components' as TabId, label: 'Components', icon: Layers },
     { id: 'automations' as TabId, label: 'Automations', icon: Zap },
-    { id: 'deployment' as TabId, label: 'Deployment', icon: Rocket },
     { id: 'users' as TabId, label: 'Users', icon: Users },
   ];
 
@@ -216,8 +210,6 @@ function MasterControllerContent() {
         {activeTab === 'components' && <ComponentsTab />}
 
         {activeTab === 'automations' && <AutomationsTab />}
-
-        {activeTab === 'deployment' && <DeploymentTab />}
 
         {activeTab === 'users' && <UserManagementTab />}
       </div>

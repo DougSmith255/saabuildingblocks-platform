@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { verifyAccessToken } from '@/lib/auth/jwt';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,31 +55,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    const token = authHeader.substring(7);
 
-    // Verify token and get user - check sessions table
-    const { data: session, error: sessionError } = await supabase
-      .from('sessions')
-      .select('user_id, expires_at')
-      .eq('token', token)
-      .single();
+    // Verify JWT token
+    const { valid, payload, error: tokenError } = await verifyAccessToken(token);
 
-    if (sessionError || !session) {
+    if (!valid || !payload) {
       return NextResponse.json(
-        { error: 'Invalid or expired session' },
+        { error: tokenError || 'Invalid or expired token' },
         { status: 401, headers: CORS_HEADERS }
       );
     }
 
-    // Check if session is expired
-    if (new Date(session.expires_at) < new Date()) {
-      return NextResponse.json(
-        { error: 'Session expired' },
-        { status: 401, headers: CORS_HEADERS }
-      );
-    }
-
-    const userId = session.user_id;
+    const userId = payload.sub;
 
     // Get user details
     const { data: user, error: userError } = await supabase

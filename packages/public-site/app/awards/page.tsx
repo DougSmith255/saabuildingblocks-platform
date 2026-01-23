@@ -64,19 +64,6 @@ export default function Awards() {
         <section className="relative min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 md:px-12 py-24 md:py-32">
           <QuantumGridEffect />
           <div className="relative z-10 max-w-[1900px] mx-auto w-full text-center">
-            {/* Dark elliptical vignette behind text for readability */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '120%',
-                height: '200%',
-                background: 'radial-gradient(ellipse 60% 50% at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 70%)',
-                zIndex: 0,
-              }}
-            />
             <div className="relative z-10">
               <H1>INDUSTRY DOMINANCE</H1>
               <Tagline className="mt-4">

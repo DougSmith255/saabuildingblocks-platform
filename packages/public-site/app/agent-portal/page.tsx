@@ -7199,9 +7199,11 @@ function AgentPagesSection({
   const [customLinks, setCustomLinks] = useState<CustomLink[]>(preloadedPageData?.page?.custom_links || []);
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
-  const [newLinkIcon, setNewLinkIcon] = useState<string | null>(null);
+  const [newLinkIcon, setNewLinkIcon] = useState<string>('Globe');
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null); // ID of link being edited
+  const [editingLinkLabel, setEditingLinkLabel] = useState(''); // Label of link being edited
+  const [addingNewLink, setAddingNewLink] = useState(false); // Track if adding new link
 
   // Custom social links state (max 2 custom social icons)
   const [customSocialLinks, setCustomSocialLinks] = useState<CustomSocialLink[]>(preloadedPageData?.page?.custom_social_links || []);
@@ -8118,111 +8120,113 @@ function AgentPagesSection({
   // ========================================================================
   // LINKTREE MODE - Full customization interface
   // ========================================================================
-  return (
-    <div className="link-page-fluid-root space-y-6 px-2 sm:px-4" style={{ maxWidth: 'var(--content-max-width, 100%)', margin: '0 auto' }}>
+return (
+  <div className="link-page-fluid-root px-2 sm:px-4" style={{ maxWidth: '1600px', margin: '0 auto' }}>
 
-      {/* ====================================================================
-          NEW FLUID LAYOUT MOCKUP - Grid prototype with colored sections
-          This is the new above-the-fold layout for desktop/laptop (1100px+)
+    {/* ====================================================================
+        NEW 4-COLUMN CARD LAYOUT - Desktop (≥1100px)
+        Layout:
+        Row 1: Profile | Style | Contact | Preview/Button Links (spans 2 rows)
+        Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
+        ==================================================================== */}
 
-          Layout: 3 columns
-          - Left: Settings grid (flexible, adapts)
-          - Middle: Button Links (tall column, ~280px)
-          - Right: Preview (tall column, ~300px)
+    {/* DESKTOP LAYOUT (≥1100px) */}
+    <div
+      className="hidden min-[1100px]:grid gap-4"
+      style={{
+        gridTemplateColumns: '1fr 1fr 1fr minmax(300px, 340px)',
+        gridTemplateRows: 'auto auto',
+      }}
+    >
+      {/* ================================================================
+          PROFILE CARD (Green header)
+          ================================================================ */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
+        {/* Header */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+          <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span className="text-sm font-medium text-green-400">Profile</span>
+        </div>
 
-          Everything fills vertical AND horizontal space
-          ==================================================================== */}
-      <div
-        className="hidden min-[1100px]:grid gap-3 p-4 rounded-2xl border border-white/10 bg-white/[0.02] mx-auto"
-        style={{
-          /* 3 columns: flexible content | button links | preview */
-          gridTemplateColumns: 'minmax(400px, 1fr) minmax(200px, 240px) minmax(260px, 300px)',
-          /* Single row that fills available height */
-          gridTemplateRows: '1fr',
-          height: 'calc(100vh - 140px)',
-          minHeight: '500px',
-          maxWidth: '1800px',
-        }}
-      >
-        {/* COLUMN 1: Settings grid (adapts horizontally AND vertically) */}
-        <div
-          className="grid gap-2 p-2 rounded-xl overflow-auto"
-          style={{
-            /* 3-column auto-fit with 180px minimum */
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            /* Auto rows with equal distribution */
-            gridAutoRows: '1fr',
-            alignContent: 'stretch',
-            backgroundColor: 'rgba(0,0,0,0.2)',
-            border: '1px solid rgba(255,255,255,0.1)',
-          }}
-        >
-          {/* Row 1: Photo | Name | Bio */}
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.3)',
-              border: '2px solid rgba(239, 68, 68, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-red-300 uppercase mb-2">Photo</span>
-            <div className="flex items-center gap-3">
-              <div
-                className="w-14 h-14 rounded-full bg-black/40 border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
-                style={{ backgroundImage: pageData?.profile_image_url ? `url(${pageData.profile_image_url})` : undefined, backgroundSize: 'cover', backgroundPosition: 'center' }}
-              >
-                {!pageData?.profile_image_url && <span className="text-white/40 text-lg">👤</span>}
-              </div>
+        {/* Content */}
+        <div className="p-4 space-y-4">
+          {/* Photo + B&W/Color Toggle */}
+          <div className="flex items-start gap-4">
+            <div
+              className="w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+              style={{
+                backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+              }}
+            >
+              {!getProfileImageUrl() && <span className="text-white/40 text-xl">👤</span>}
+            </div>
+            <div className="flex flex-col gap-2">
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
                 onChange={handleImageUpload}
                 className="hidden"
-                id="grid-photo-upload"
+                id="profile-photo-upload"
               />
               <label
-                htmlFor="grid-photo-upload"
-                className="px-2 py-1 rounded text-[10px] bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer"
+                htmlFor="profile-photo-upload"
+                className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer transition-colors text-center"
               >
-                {pageData?.profile_image_url ? 'Change' : 'Upload'}
+                Upload Photo
               </label>
+              {/* B&W / Color Toggle */}
+              <div className="flex rounded overflow-hidden border border-white/20">
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 text-[10px] font-medium transition-colors ${!linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60 hover:bg-white/10'}`}
+                >
+                  B&W
+                </button>
+                <button
+                  onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
+                  className={`flex-1 px-2 py-1 text-[10px] font-medium transition-colors ${linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60 hover:bg-white/10'}`}
+                >
+                  Color
+                </button>
+              </div>
             </div>
           </div>
 
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(249, 115, 22, 0.3)',
-              border: '2px solid rgba(249, 115, 22, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-orange-300 uppercase mb-2">Display Name</span>
-            <div className="grid grid-cols-2 gap-2">
+          {/* First Name / Last Name */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">First Name</label>
               <input
                 type="text"
                 value={formData.display_first_name}
                 onChange={(e) => handleInputChange('display_first_name', e.target.value)}
                 placeholder="First"
-                className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-orange-400 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
               />
+            </div>
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Last Name</label>
               <input
                 type="text"
                 value={formData.display_last_name}
                 onChange={(e) => handleInputChange('display_last_name', e.target.value)}
                 placeholder="Last"
-                className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-orange-400 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
               />
             </div>
           </div>
 
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(234, 179, 8, 0.3)',
-              border: '2px solid rgba(234, 179, 8, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-yellow-300 uppercase mb-2">Bio <span className="font-normal text-yellow-300/60">({linksSettings.bio.length}/80)</span></span>
+          {/* Bio */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">
+              Bio <span className="text-white/30">({linksSettings.bio.length}/80)</span>
+            </label>
             <textarea
               value={linksSettings.bio}
               onChange={(e) => {
@@ -8231,31 +8235,41 @@ function AgentPagesSection({
                   setHasUnsavedChanges(true);
                 }
               }}
-              placeholder="Short bio..."
+              placeholder="Short bio about yourself..."
               rows={2}
-              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-yellow-400 focus:outline-none resize-none"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
             />
           </div>
+        </div>
+      </div>
 
-          {/* Row 2: Color | Style | Email */}
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(34, 197, 94, 0.3)',
-              border: '2px solid rgba(34, 197, 94, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-green-300 uppercase mb-2">Accent Color</span>
+      {/* ================================================================
+          STYLE CARD (Purple header)
+          ================================================================ */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
+        {/* Header */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+          <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+          <span className="text-sm font-medium text-purple-400">Style</span>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 space-y-4">
+          {/* Accent Color */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Accent Color</label>
             <HexColorPicker
               color={linksSettings.accentColor}
               onChange={(color) => {
                 setLinksSettings(prev => ({ ...prev, accentColor: color }));
                 setHasUnsavedChanges(true);
               }}
-              style={{ width: '100%', height: '60px' }}
+              style={{ width: '100%', height: '100px' }}
             />
             <div className="flex items-center gap-2 mt-2">
-              <div className="w-5 h-5 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
+              <div className="w-8 h-8 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
               <HexColorInput
                 color={linksSettings.accentColor}
                 onChange={(color) => {
@@ -8263,2334 +8277,1000 @@ function AgentPagesSection({
                   setHasUnsavedChanges(true);
                 }}
                 prefixed
-                className="flex-1 px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] font-mono uppercase focus:outline-none"
+                className="flex-1 px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm font-mono uppercase focus:outline-none"
               />
             </div>
           </div>
 
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(6, 182, 212, 0.3)',
-              border: '2px solid rgba(6, 182, 212, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-cyan-300 uppercase mb-2">Style Options</span>
-            <div className="space-y-2">
-              <div className="flex gap-1">
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.iconStyle === 'light' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
-                >Light</button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.iconStyle === 'dark' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
-                >Dark</button>
-              </div>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.font === 'synonym' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
-                >Synonym</button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.font === 'taskor' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
-                >Taskor</button>
-              </div>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.nameWeight === 'bold' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
-                >Bold</button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-2 py-1 rounded text-[9px] border ${linksSettings.nameWeight === 'normal' ? 'bg-cyan-500/30 border-cyan-400 text-cyan-200' : 'bg-black/20 border-white/20 text-white/60'}`}
-                >Regular</button>
-              </div>
+          {/* Icon Style */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Icon Style</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+              >
+                Light
+              </button>
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+              >
+                Dark
+              </button>
             </div>
           </div>
 
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(168, 85, 247, 0.3)',
-              border: '2px solid rgba(168, 85, 247, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-purple-300 uppercase mb-2">Email</span>
+          {/* Button Weight */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+              >
+                Bold
+              </button>
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+              >
+                Regular
+              </button>
+            </div>
+          </div>
+
+          {/* Font */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+              >
+                Synonym
+              </button>
+              <button
+                onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+              >
+                Taskor
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================================================================
+          CONTACT CARD (Cyan header)
+          ================================================================ */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
+        {/* Header */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <rect x="2" y="4" width="20" height="16" rx="2" />
+            <path d="M22 7l-10 5L2 7" />
+          </svg>
+          <span className="text-sm font-medium text-cyan-400">Contact</span>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 space-y-4">
+          {/* Email */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="you@email.com"
-              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-purple-400 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
             />
-            <span className="text-[9px] text-purple-200/50 mt-1">Shown on page if filled</span>
+            <p className="text-[10px] text-white/30 mt-1">Displayed on your page</p>
           </div>
 
-          {/* Row 3: Phone | Social (spans 2) */}
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(236, 72, 153, 0.3)',
-              border: '2px solid rgba(236, 72, 153, 0.6)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-pink-300 uppercase mb-2">Phone</span>
+          {/* Phone */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
             <input
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
               placeholder="(555) 123-4567"
-              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:border-pink-400 focus:outline-none"
+              className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none"
             />
-            <div className="flex gap-3 mt-2">
-              <label className="flex items-center gap-1 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.show_call_button}
-                  onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
-                  className="w-3 h-3 rounded"
-                />
-                <span className="text-[9px] text-pink-200/70">Call</span>
-              </label>
-              <label className="flex items-center gap-1 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={formData.show_text_button}
-                  onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
-                  className="w-3 h-3 rounded"
-                />
-                <span className="text-[9px] text-pink-200/70">Text</span>
-              </label>
-            </div>
           </div>
 
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(99, 102, 241, 0.3)',
-              border: '2px solid rgba(99, 102, 241, 0.6)',
-              gridColumn: 'span 2',
-            }}
-          >
-            <span className="text-[10px] font-bold text-indigo-300 uppercase mb-2">Social Links <span className="font-normal text-indigo-300/60">({filledSocialLinks}/6)</span></span>
-            <div className="grid grid-cols-3 gap-2">
-              <input type="url" value={formData.facebook_url} onChange={(e) => handleInputChange('facebook_url', e.target.value)} placeholder="Facebook" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
-              <input type="url" value={formData.instagram_url} onChange={(e) => handleInputChange('instagram_url', e.target.value)} placeholder="Instagram" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
-              <input type="url" value={formData.twitter_url} onChange={(e) => handleInputChange('twitter_url', e.target.value)} placeholder="X/Twitter" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
-              <input type="url" value={formData.youtube_url} onChange={(e) => handleInputChange('youtube_url', e.target.value)} placeholder="YouTube" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
-              <input type="url" value={formData.tiktok_url} onChange={(e) => handleInputChange('tiktok_url', e.target.value)} placeholder="TikTok" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
-              <input type="url" value={formData.linkedin_url} onChange={(e) => handleInputChange('linkedin_url', e.target.value)} placeholder="LinkedIn" className="w-full px-2 py-1 rounded bg-black/40 border border-white/20 text-white text-[10px] focus:border-indigo-400 focus:outline-none" />
-            </div>
-          </div>
-
-          {/* Row 4: QR Code | Page Status (spans 2) */}
-          <div
-            className="rounded-xl flex flex-col items-center p-3"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-            }}
-          >
-            <span className="text-[10px] font-bold text-white/80 uppercase mb-2">QR Code</span>
-            <div className="w-16 h-16 bg-white rounded flex items-center justify-center">
-              <span className="text-[8px] text-black/40">QR</span>
-            </div>
-            <button
-              onClick={downloadQRCode}
-              className="mt-2 px-2 py-1 rounded text-[9px] bg-white/20 text-white/80 hover:bg-white/30"
-            >
-              Download
-            </button>
-          </div>
-
-          <div
-            className="rounded-xl flex flex-col p-3"
-            style={{
-              backgroundColor: 'rgba(34, 197, 94, 0.2)',
-              border: '2px solid rgba(34, 197, 94, 0.4)',
-              gridColumn: 'span 2',
-            }}
-          >
-            <span className="text-[10px] font-bold text-green-300 uppercase mb-2">Page Status</span>
-            <div className="flex items-center gap-2 flex-wrap">
-              <div className={`flex items-center gap-1.5 px-2 py-1 rounded text-[9px] ${pageData?.activated ? 'bg-green-500/30 text-green-200' : 'bg-yellow-500/30 text-yellow-200'}`}>
-                <div className={`w-2 h-2 rounded-full ${pageData?.activated ? 'bg-green-400' : 'bg-yellow-400'}`} />
-                {pageData?.activated ? 'Live' : 'Draft'}
-              </div>
-              {pageData?.slug && (
-                <>
-                  <button
-                    onClick={() => navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)}
-                    className="px-2 py-1 rounded text-[9px] bg-white/10 text-white/70 hover:bg-white/20"
-                  >
-                    Copy URL
-                  </button>
-                  <a
-                    href={`https://saabuildingblocks.com/${pageData.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-2 py-1 rounded text-[9px] bg-white/10 text-white/70 hover:bg-white/20"
-                  >
-                    Open Page
-                  </a>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Row 5: Save Bar (spans all 3) */}
-          <div
-            className="rounded-xl flex items-center justify-center gap-3 p-3"
-            style={{
-              backgroundColor: 'rgba(255, 215, 0, 0.2)',
-              border: '2px solid rgba(255, 215, 0, 0.4)',
-              gridColumn: 'span 3',
-            }}
-          >
-            <button
-              onClick={handleSave}
-              disabled={!hasUnsavedChanges || isSaving}
-              className="px-4 py-2 rounded-lg bg-[#ffd700] text-[#1a1a1a] text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#ffe55c] transition-colors"
-            >
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </button>
-            {!pageData?.activated && (
-              <button
-                onClick={handleActivate}
-                disabled={hasUnsavedChanges || !pageData?.profile_image_url}
-                className="px-4 py-2 rounded-lg bg-green-500 text-white text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-600 transition-colors"
-              >
-                Activate Page
-              </button>
-            )}
+          {/* Call/Text Toggles */}
+          <div className="flex flex-col gap-2">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.show_call_button}
+                onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
+                className="w-4 h-4 rounded"
+              />
+              <span className="text-sm text-white/70">Show Call Button</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.show_text_button}
+                onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
+                className="w-4 h-4 rounded"
+              />
+              <span className="text-sm text-white/70">Show Text Button</span>
+            </label>
           </div>
         </div>
+      </div>
 
-        {/* COLUMN 2: Button Links (tall column) */}
-        <div
-          className="rounded-xl flex flex-col p-3"
-          style={{
-            backgroundColor: 'rgba(251, 146, 60, 0.3)',
-            border: '2px solid rgba(251, 146, 60, 0.6)',
-          }}
-        >
-          <span className="text-xs font-bold text-orange-300 uppercase tracking-wider mb-3 text-center">Button Links ({customLinks.length})</span>
-
-          {/* Scrollable list area */}
-          <div className="flex-1 flex flex-col gap-2 overflow-auto">
-            {/* Default links */}
-            <div className="p-2 rounded-lg bg-green-500/20 border border-green-500/40">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-green-300 flex-1 truncate">🔗 Join My Team</span>
-                <span className="text-[8px] text-green-300/50">default</span>
-              </div>
-            </div>
-            <div className="p-2 rounded-lg bg-green-500/20 border border-green-500/40">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] text-green-300 flex-1 truncate">ℹ️ Learn About eXp</span>
-                <span className="text-[8px] text-green-300/50">default</span>
-              </div>
-            </div>
-
-            {/* Custom links from state */}
-            {customLinks.map((link, index) => (
-              <div key={link.id} className="p-2 rounded-lg bg-white/10 border border-white/20">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] text-white/80 flex-1 truncate">{link.label || `Link ${index + 1}`}</span>
-                  <button
-                    onClick={() => {
-                      setCustomLinks(prev => prev.filter(l => l.id !== link.id));
-                      setHasUnsavedChanges(true);
-                    }}
-                    className="text-red-400/60 hover:text-red-400 text-xs"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-            ))}
-
-            {customLinks.length === 0 && (
-              <div className="text-center text-[9px] text-white/30 py-2">No custom links yet</div>
-            )}
-          </div>
-
-          {/* Add new link */}
-          <button
-            onClick={() => {
-              const newLink: CustomLink = {
-                id: `link-${Date.now()}`,
-                label: '',
-                url: '',
-                order: customLinks.length,
-              };
-              setCustomLinks(prev => [...prev, newLink]);
-              setHasUnsavedChanges(true);
-            }}
-            className="mt-2 p-2 rounded-lg bg-orange-500/20 border border-dashed border-orange-400/50 text-center hover:bg-orange-500/30 transition-colors"
-          >
-            <span className="text-[10px] text-orange-300">+ Add New Link</span>
-          </button>
+      {/* ================================================================
+          PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
+          ================================================================ */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden row-span-2">
+        {/* Header */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+          <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+            <line x1="12" y1="18" x2="12" y2="18" />
+          </svg>
+          <span className="text-sm font-medium text-[#ffd700]">Preview / Button Links</span>
         </div>
 
-        {/* COLUMN 3: Preview (tall column) */}
-        <div
-          className="rounded-xl flex flex-col items-center p-3"
-          style={{
-            backgroundColor: 'rgba(107, 114, 128, 0.3)',
-            border: '2px solid rgba(107, 114, 128, 0.6)',
-          }}
-        >
-          <span className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">Live Preview</span>
-
-          {/* Phone mockup */}
-          <div className="phone-mockup flex-1 w-full max-w-[220px]" style={{ minHeight: '380px' }}>
-            <div className="phone-screen h-full flex flex-col items-center p-4 pt-8 overflow-auto">
+        {/* Phone Mockup */}
+        <div className="p-4 flex flex-col items-center">
+          <div className="phone-mockup w-full max-w-[260px]">
+            <div className="phone-screen p-4 pt-8" style={{ minHeight: '420px' }}>
               {/* Profile Photo */}
-              <div
-                className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden mb-3"
-                style={{
-                  borderColor: linksSettings.accentColor,
-                  backgroundImage: pageData?.profile_image_url ? `url(${pageData.profile_image_url})` : undefined,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
-                {!pageData?.profile_image_url && <span className="text-white/30 text-2xl">👤</span>}
-              </div>
-
-              {/* Name */}
-              <h3
-                className="text-sm text-center mb-1"
-                style={{
-                  color: linksSettings.accentColor,
-                  fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
-                }}
-              >
-                {formData.display_first_name || 'First'} {formData.display_last_name || 'Last'}
-              </h3>
-
-              {/* Bio */}
-              {linksSettings.bio && (
-                <p className="text-[10px] text-white/60 text-center mb-3 px-2">{linksSettings.bio}</p>
-              )}
-
-              {/* Contact buttons */}
-              <div className="flex gap-2 mb-3">
-                {formData.show_call_button && formData.phone && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>📞</div>
-                )}
-                {formData.show_text_button && formData.phone && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>💬</div>
-                )}
-                {formData.email && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>✉️</div>
-                )}
-              </div>
-
-              {/* Button Links preview */}
-              <div className="w-full space-y-2">
-                <div className="w-full py-2 px-3 rounded-lg text-[9px] text-center" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
-                  Join My Team
-                </div>
-                <div className="w-full py-2 px-3 rounded-lg text-[9px] text-center" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
-                  Learn About eXp
-                </div>
-                {customLinks.slice(0, 3).map((link) => (
-                  <div key={link.id} className="w-full py-2 px-3 rounded-lg text-[9px] text-center border border-white/20 text-white/60">
-                    {link.label || 'Custom Link'}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile indicator - shows on smaller screens */}
-      <div className="min-[1100px]:hidden p-4 rounded-xl bg-blue-500/20 border border-blue-500/40 text-center">
-        <span className="text-blue-300 text-sm font-medium">📱 Mobile/Tablet View</span>
-        <p className="text-blue-300/60 text-xs mt-1">Tabbed interface will go here (below 1100px)</p>
-      </div>
-
-      <div className="border-t-2 border-dashed border-white/20 pt-6 mt-6">
-        <p className="text-center text-white/40 text-xs mb-4">⬇️ OLD LAYOUT BELOW (for reference) ⬇️</p>
-      </div>
-
-      {/* Action Bar - QR Code + Activate button - Shows above settings for non-activated users */}
-      {!pageData?.activated && (
-        <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl bg-black/20 border border-white/10">
-          <button
-            onClick={downloadQRCode}
-            className="px-4 py-2.5 rounded-lg text-sm font-medium bg-white text-[#2a2a2a] hover:bg-gray-100 transition-colors flex items-center gap-2"
-          >
-            <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="7" height="7" rx="1" />
-              <rect x="14" y="3" width="7" height="7" rx="1" />
-              <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="3" height="3" />
-              <rect x="18" y="14" width="3" height="3" />
-              <rect x="14" y="18" width="3" height="3" />
-              <rect x="18" y="18" width="3" height="3" />
-            </svg>
-            QR Code
-          </button>
-          <button
-            onClick={hasPage ? handleActivate : handleCreatePage}
-            disabled={hasPage ? (hasUnsavedChanges || (!pageData?.profile_image_url && !user?.profilePictureUrl)) : isSaving}
-            className="flex-1 min-w-[200px] px-5 py-2.5 rounded-lg font-semibold bg-green-500/20 border border-green-500/50 text-green-400 hover:bg-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-            {hasPage ? 'Activate Your Page' : (isSaving ? 'Creating...' : 'Activate Your Page')}
-          </button>
-        </div>
-      )}
-
-      {/* Floating Help Button - Fixed position, bottom-right corner */}
-      <button
-        onClick={() => setShowLinkPageHelpModal(true)}
-        className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 transition-colors flex items-center justify-center"
-        title="Need Help?"
-      >
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </button>
-
-      {/* FLUID GRID LAYOUT - Unified breakpoint at 1100px for tab/column view */}
-      {/* Mobile/Tablet (< 1100px): Single column with tabs */}
-      {/* Desktop (>= 1100px): 2 content columns + sticky preview */}
-      <div className="link-page-fluid-grid items-stretch fluid-transition" style={{ minHeight: 'min(calc(100vh - 180px), 700px)' }}>
-
-          {/* PREVIEW COLUMN - Desktop only (>= 1100px), sticky on right - Phone Mockup Style */}
-          <div className="hidden min-[1100px]:block min-[1100px]:col-start-3 min-[1100px]:row-start-1 min-[1100px]:row-span-4 min-[2000px]:col-start-4">
-            <div className="sticky top-4">
-              {/* Preview Header */}
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs text-[#e5e4dd]/50 uppercase tracking-wider">Live Preview</span>
-                <span className="text-xs text-[#22c55e] font-medium">Link Page</span>
-              </div>
-
-              {/* Phone Mockup Frame */}
-              <div className="phone-mockup mx-auto" style={{ maxWidth: '280px' }}>
-                <div className="phone-screen" style={{ minHeight: '480px' }}>
-                  {/* Preview Content - Linktree preview with star background */}
-                  <div className="p-4 pb-6 relative overflow-hidden h-full">
-                    {/* Static star dots for preview */}
-                    <div className="absolute inset-0 pointer-events-none" style={{
-                      background: `
-                        radial-gradient(1px 1px at 20px 30px, white, transparent),
-                        radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                        radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.6), transparent),
-                        radial-gradient(1px 1px at 130px 80px, white, transparent),
-                        radial-gradient(1px 1px at 160px 30px, rgba(255,255,255,0.7), transparent),
-                        radial-gradient(0.5px 0.5px at 70px 100px, rgba(255,255,255,0.5), transparent),
-                        radial-gradient(0.5px 0.5px at 100px 150px, rgba(255,255,255,0.4), transparent),
-                        radial-gradient(1px 1px at 50px 200px, rgba(255,255,255,0.6), transparent),
-                        radial-gradient(0.5px 0.5px at 180px 120px, rgba(255,255,255,0.5), transparent),
-                        radial-gradient(1px 1px at 25px 280px, rgba(255,255,255,0.7), transparent),
-                        radial-gradient(0.5px 0.5px at 140px 250px, rgba(255,255,255,0.4), transparent),
-                        radial-gradient(1px 1px at 80px 320px, rgba(255,255,255,0.6), transparent)
-                      `,
-                      opacity: 0.6
-                    }} />
-                    {/* Linktree Preview */}
-                    <div className="flex flex-col items-center gap-3 pt-8 mx-auto relative z-10">
-                    {/* Profile Photo */}
-                    <div
-                      className="w-16 h-16 rounded-full border-2 flex items-center justify-center overflow-hidden"
-                      style={{ borderColor: linksSettings.accentColor, backgroundColor: 'rgba(0,0,0,0.5)' }}
-                    >
-                      {getProfileImageUrl() ? (
-                        <img
-                          src={getProfileImageUrl() || ''}
-                          alt="Profile"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-2xl">👤</span>
-                      )}
-                    </div>
-
-                    {/* Name with Neon Effect - simplified for small preview to avoid blur */}
-                    {(() => {
-                      const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
-                      return (
-                    <span
-                      className={`${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'} text-xl text-center`}
-                      style={{
-                        color: linksSettings.accentColor,
-                        fontFamily: 'var(--font-taskor, sans-serif)',
-                        fontFeatureSettings: '"ss01" 1',
-                        transform: 'perspective(800px) rotateX(12deg)',
-                        textShadow: `
-                          0 0 1px ${outlineColor},
-                          0 0 4px ${linksSettings.accentColor}40,
-                          0 0 8px ${linksSettings.accentColor}20,
-                          1px 1px 0 #2a2a2a,
-                          2px 2px 0 #1a1a1a
-                        `,
-                        filter: `drop-shadow(1px 1px 2px rgba(0,0,0,0.7)) brightness(1.1)`,
-                      }}
-                    >
-                      {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
-                    </span>
-                      );
-                    })()}
-
-                    {/* Bio */}
-                    {linksSettings.bio && (
-                      <p className="text-xs text-center text-[#e5e4dd]/70" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
-                        {linksSettings.bio.slice(0, 80)}{linksSettings.bio.length > 80 ? '...' : ''}
-                      </p>
-                    )}
-
-                    {/* Social Icons - Compact */}
-                    {filledSocialLinks > 0 && (() => {
-                      const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
-                      return (
-                      <div className="flex gap-1.5 flex-wrap justify-center">
-                        {formData.facebook_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
-                          </div>
-                        )}
-                        {formData.instagram_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
-                          </div>
-                        )}
-                        {formData.twitter_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                          </div>
-                        )}
-                        {formData.youtube_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
-                          </div>
-                        )}
-                        {formData.tiktok_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
-                          </div>
-                        )}
-                        {formData.linkedin_url && (
-                          <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                            <svg className="w-2.5 h-2.5" fill={socialIconColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
-                          </div>
-                        )}
-                        {/* Custom Social Links */}
-                        {customSocialLinks.filter(link => link.url).map(link => {
-                          const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
-                          return (
-                            <div key={link.id} className="w-5 h-5 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                              <svg className="w-2.5 h-2.5" fill="none" stroke={socialIconColor} strokeWidth="2" viewBox="0 0 24 24">
-                                <path d={iconPath || ''} />
-                              </svg>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      );
-                    })()}
-
-                    {/* Contact Buttons Row - Email, Call, Text - Segmented button style */}
-                    {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
-                      const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
-                      const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
-
-                      // Build array of active buttons
-                      const buttons: { type: 'email' | 'call' | 'text'; label: string; icon: string }[] = [];
-                      if (formData.email) buttons.push({ type: 'email', label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
-                      if (formData.phone && formData.show_call_button) buttons.push({ type: 'call', label: 'Phone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
-                      if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
-
-                      const buttonCount = buttons.length;
-                      // 3 buttons = icons only, 2 buttons = icons + text centered, 1 button = icon left + text centered
-                      const showText = buttonCount < 3;
-
-                      return (
-                        <div className="flex w-full gap-[3px]">
-                          {buttons.map((btn, idx) => {
-                            const isFirst = idx === 0;
-                            const isLast = idx === buttons.length - 1;
-                            const isOnly = buttonCount === 1;
-                            // Rounding: full if only one, left-only if first, right-only if last, none if middle
-                            const roundedClass = isOnly ? 'rounded' : isFirst ? 'rounded-l' : isLast ? 'rounded-r' : '';
-
-                            return (
-                              <div
-                                key={btn.type}
-                                className={`flex-1 py-1.5 ${roundedClass} text-[10px] font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center justify-center`}
-                                style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                              >
-                                {isOnly ? (
-                                  // 1 button: icon on left (absolute), text centered
-                                  <div className="relative w-full flex items-center justify-center">
-                                    <svg className="w-2.5 h-2.5 absolute left-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                                    </svg>
-                                    <span>{btn.label}</span>
-                                  </div>
-                                ) : showText ? (
-                                  // 2 buttons: icon + text centered together
-                                  <div className="flex items-center justify-center gap-1">
-                                    <svg className="w-2.5 h-2.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                                    </svg>
-                                    <span>{btn.label}</span>
-                                  </div>
-                                ) : (
-                                  // 3 buttons: icon only
-                                  <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                                  </svg>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      );
-                    })()}
-
-                    {/* Sample Buttons */}
-                    <div className="w-full space-y-1.5 mt-1.5">
-                      {/* Render buttons in linkOrder */}
-                      {(() => {
-                        const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
-                        const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
-
-                        // Build ordered array with all links
-                        const allLinkIds = [...linkOrder];
-                        customLinks.forEach(link => {
-                          if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
-                        });
-                        if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
-                        if (!allLinkIds.includes('learn-about')) {
-                          const joinIndex = allLinkIds.indexOf('join-team');
-                          allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
-                        }
-
-                        return allLinkIds.map(linkId => {
-                          const isDefault = linkId === 'join-team' || linkId === 'learn-about';
-                          const customLink = customLinkMap.get(linkId);
-
-                          if (!isDefault && !customLink) return null;
-
-                          if (linkId === 'join-team') {
-                            return (
-                              <div
-                                key="join-team"
-                                className="w-full py-1.5 px-3 rounded text-[10px] font-medium relative"
-                                style={{
-                                  backgroundColor: linksSettings.accentColor,
-                                  color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                                  fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                                }}
-                              >
-                                <svg className="w-2.5 h-2.5 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                  <circle cx="9" cy="7" r="4" />
-                                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                                <span className="block text-center">Join my Team</span>
-                              </div>
-                            );
-                          }
-
-                          if (linkId === 'learn-about') {
-                            return (
-                              <div
-                                key="learn-about"
-                                className="w-full py-1.5 px-3 rounded text-[10px] font-medium relative"
-                                style={{
-                                  backgroundColor: linksSettings.accentColor,
-                                  color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                                  fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                                }}
-                              >
-                                <svg className="w-2.5 h-2.5 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <circle cx="12" cy="12" r="10" />
-                                  <path d="M12 16v-4" />
-                                  <path d="M12 8h.01" />
-                                </svg>
-                                <span className="block text-center">Learn About Team</span>
-                              </div>
-                            );
-                          }
-
-                          // Custom link
-                          const iconPath = LINK_ICONS.find(i => i.name === customLink?.icon)?.path;
-                          return (
-                            <div
-                              key={linkId}
-                              className="w-full py-1.5 px-3 rounded text-[10px] font-medium relative"
-                              style={{
-                                backgroundColor: linksSettings.accentColor,
-                                color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                                fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                              }}
-                            >
-                              {iconPath && (
-                                <svg className="w-2.5 h-2.5 absolute left-2 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <path d={iconPath} />
-                                </svg>
-                              )}
-                              <span className="block text-center">{customLink?.label}</span>
-                            </div>
-                          );
-                        });
-                      })()}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-              {/* Accent Color + Style - Now consolidated in Links column, hide this duplicate */}
-              <div className="hidden space-y-3 mt-4">
-                {/* Accent Color */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
-                  <div className="space-y-2">
-                    <HexColorPicker
-                      color={linksSettings.accentColor}
-                      onChange={(color) => {
-                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                        setHasUnsavedChanges(true);
-                      }}
-                      style={{ width: '100%', height: '95px' }}
-                    />
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
-                        style={{ backgroundColor: linksSettings.accentColor }}
-                      />
-                      <HexColorInput
-                        color={linksSettings.accentColor}
-                        onChange={(color) => {
-                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                          setHasUnsavedChanges(true);
-                        }}
-                        prefixed={true}
-                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Style Options */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
-                  <div className="space-y-3">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Button Text</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'light'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Light
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'dark'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Dark
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Font</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'synonym'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Synonym
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'taskor'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Taskor
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Name Weight</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'bold'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Bold
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'normal'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Regular
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* QR Code Section - visible on desktop (1200px+) */}
-              <div className="hidden min-[1200px]:block mt-4">
-                <div className="rounded-xl bg-white p-4 border border-white/10">
-                  <div className="flex flex-col items-center gap-3">
-                    <span className="text-xs text-[#2a2a2a]/60 uppercase tracking-wider">Link Page QR Code</span>
-                    <div className="relative w-[200px] h-[200px]">
-                      {/* Off-black rounded background behind logo - positioned under the QR center */}
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[46px] h-[46px] bg-[#1a1a1a] rounded-lg z-0" />
-                      <div ref={qrCodeRef} className="relative w-full h-full z-10" />
-                    </div>
-                    <button
-                      onClick={downloadQRCode}
-                      className="w-full py-2 rounded-lg text-xs font-medium bg-[#2a2a2a] text-white hover:bg-[#3a3a3a] transition-colors flex items-center justify-center gap-1.5"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      Download QR Code
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Save Button - Under QR code, visible on desktop (1200px+) */}
-              <div className="hidden min-[1200px]:block mt-3">
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving || !hasUnsavedChanges}
-                  className={`w-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ${
-                    !hasUnsavedChanges
-                      ? 'opacity-50 cursor-not-allowed'
-                      : ''
-                  } ${
-                    showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
-                  }`}
+              <div className="flex flex-col items-center gap-3">
+                <div
+                  className="w-20 h-20 rounded-full border-2 flex items-center justify-center overflow-hidden"
                   style={{
-                    background: showSaveSuccess
-                      ? '#22c55e'
-                      : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
-                    border: '1px solid rgba(255, 215, 0, 0.5)',
+                    borderColor: linksSettings.accentColor,
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
                   }}
                 >
-                  {showSaveSuccess ? (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Saved!</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                      </svg>
-                      <span>{isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}</span>
-                    </>
-                  )}
-                </button>
-              </div>
+                  {!getProfileImageUrl() && <span className="text-2xl">👤</span>}
+                </div>
 
-              {/* Activate Button - visible on desktop (1200px+) */}
-              <div className="hidden min-[1200px]:block mt-2">
-                {pageData?.activated ? (
-                  <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                      <span className="text-xs font-medium text-green-400">Page Live</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(linktreeUrl);
-                          const btn = document.getElementById('copy-linktree-btn-preview');
-                          if (btn) {
-                            btn.textContent = 'Copied!';
-                            setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
-                          }
-                        }}
-                        id="copy-linktree-btn-preview"
-                        className="flex items-center justify-center gap-1 flex-1 px-2 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                      >
-                        Copy
-                      </button>
-                      <a
-                        href={linktreeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1 flex-1 px-2 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                      >
-                        Open
-                      </a>
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={hasPage ? handleActivate : handleCreatePage}
-                    disabled={hasPage ? (hasUnsavedChanges || (!pageData?.profile_image_url && !user?.profilePictureUrl)) : isSaving}
-                    className="w-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 bg-green-500/20 border border-green-500/50 text-green-400 hover:bg-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    {hasPage ? 'Activate Page' : (isSaving ? 'Creating...' : 'Activate Page')}
-                  </button>
+                {/* Name */}
+                <span
+                  className={`text-lg text-center ${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'}`}
+                  style={{
+                    color: linksSettings.accentColor,
+                    fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                  }}
+                >
+                  {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
+                </span>
+
+                {/* Bio */}
+                {linksSettings.bio && (
+                  <p className="text-xs text-center text-white/60 px-2">{linksSettings.bio}</p>
                 )}
               </div>
-            </div> {/* End sticky wrapper */}
-          </div>
 
-          {/* COLUMN 1 - Profile + Connect (tablet/desktop) or all tabs (mobile) */}
-          {/* At 1024px+ (tablet landscape): col-1, At 1200px+ (desktop): col-1 with preview in col-3 */}
-          <div className="min-[1100px]:col-start-1 min-[1100px]:row-start-1 min-[1100px]:overflow-y-auto min-[1100px]:pr-2" style={{ maxHeight: 'inherit' }}>
-            {/* Mobile QR Code + Link Page Status - Only shown on mobile (<1100px), desktop has this in preview column */}
-            <div className="mb-4 flex gap-3 min-[1100px]:hidden">
-              {/* QR Code Download Button */}
-              <button
-                onClick={downloadQRCode}
-                className="px-4 py-3 rounded-lg text-xs font-medium bg-white text-[#2a2a2a] hover:bg-gray-100 transition-colors flex items-center justify-center gap-1.5 border border-white/20"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect x="3" y="3" width="7" height="7" rx="1" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" />
-                  <rect x="14" y="14" width="3" height="3" />
-                  <rect x="18" y="14" width="3" height="3" />
-                  <rect x="14" y="18" width="3" height="3" />
-                  <rect x="18" y="18" width="3" height="3" />
-                </svg>
-                QR Code
-              </button>
-              {/* Link Page Live (only if activated) */}
-              {pageData?.activated && (
-                <div className="flex-1 p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-medium text-green-400">Link Page Live</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(linktreeUrl);
-                        const btn = document.getElementById('copy-linktree-btn');
-                        if (btn) {
-                          btn.textContent = 'Copied!';
-                          setTimeout(() => { btn.textContent = 'Copy URL'; }, 1500);
-                        }
-                      }}
-                      id="copy-linktree-btn"
-                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                      </svg>
-                      Copy URL
-                    </button>
-                    <a
-                      href={linktreeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1.5 flex-1 px-3 py-1.5 rounded bg-green-500/10 border border-green-500/30 text-green-400 hover:bg-green-500/20 transition-all text-xs font-medium"
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                      </svg>
-                      Open Page
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
+              {/* Button Links with Editor */}
+              <div className="mt-4 space-y-2">
+                {(() => {
+                  const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
+                  const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
+                  const allLinkIds = [...linkOrder];
+                  customLinks.forEach(link => {
+                    if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
+                  });
+                  if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+                  if (!allLinkIds.includes('learn-about')) {
+                    const joinIndex = allLinkIds.indexOf('join-team');
+                    allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+                  }
 
-            {/* Tab Navigation - Mobile/small tablet only (below 1024px), sticky at top */}
-            <div
-              className="sticky top-0 z-20 bg-[#191919] border border-white/10 rounded-xl mb-4 min-[1100px]:hidden overflow-hidden"
-              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            >
-              <div className="flex">
-                <button
-                  onClick={() => setActiveTab('profile')}
-                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
-                    activeTab === 'profile'
-                      ? 'text-[#22c55e] bg-[#22c55e]/10'
-                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
-                  }`}
-                >
-                  Profile
-                  {activeTab === 'profile' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#22c55e]" />
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveTab('connect')}
-                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
-                    activeTab === 'connect'
-                      ? 'text-[#22c55e] bg-[#22c55e]/10'
-                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
-                  }`}
-                >
-                  Connect
-                  {activeTab === 'connect' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#22c55e]" />
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveTab('links')}
-                  style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-                  className={`flex-1 px-2 sm:px-4 py-3 text-xs sm:text-sm font-medium transition-colors relative ${
-                    activeTab === 'links'
-                      ? 'text-[#22c55e] bg-[#22c55e]/10'
-                      : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
-                  }`}
-                >
-                  Links
-                  {customLinks.length > 0 && (
-                    <span className="ml-1 px-1 py-0.5 text-[10px] sm:text-xs rounded-full bg-[#22c55e]/20 text-[#22c55e]">
-                      {customLinks.length}
-                    </span>
-                  )}
-                  {activeTab === 'links' && (
-                    <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#22c55e]" />
-                  )}
-                </button>
-              </div>
-            </div>
+                  const moveLink = (linkId: string, direction: 'up' | 'down') => {
+                    const currentIndex = allLinkIds.indexOf(linkId);
+                    if (direction === 'up' && currentIndex > 0) {
+                      const newOrder = [...allLinkIds];
+                      [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                      setHasUnsavedChanges(true);
+                    } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
+                      const newOrder = [...allLinkIds];
+                      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                      setHasUnsavedChanges(true);
+                    }
+                  };
 
-            {/* Mobile tabs show all content here; Desktop shows only Profile+Connect */}
-            <div className="space-y-6">
-            {/* PROFILE SECTION - Photo, Name, Bio */}
-            <div className={`space-y-3 ${activeTab === 'profile' ? '' : 'hidden min-[1100px]:block'}`}>
-              {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1100px]:bg-[#22c55e]/10 border-b border-white/10 min-[1100px]:border-b-0">
-                <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-                <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Profile</h3>
-              </div>
-                  {/* Profile Image - Compact */}
-                  <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                    <div className="flex items-start gap-4">
-                      {/* Profile Image + Style Toggle Column */}
-                      <div className="flex flex-col items-center flex-shrink-0">
-                        <label
-                          htmlFor="attraction-profile-image-upload"
-                          className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#ffd700] bg-black/30 cursor-pointer group"
-                        >
-                          {getProfileImageUrl() ? (
-                            <img
-                              src={getProfileImageUrl() || ''}
-                              alt="Profile"
-                              className="w-full h-full object-cover transition-all duration-300"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-[#ffd700]/40">
-                              <svg viewBox="0 0 24 24" fill="currentColor" width="32" height="32">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                              </svg>
-                            </div>
-                          )}
-                          {isUploadingImage && (
-                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                              <div className="w-6 h-6 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
-                            </div>
-                          )}
-                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20" className="text-white">
-                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                              <polyline points="17 8 12 3 7 8" />
-                              <line x1="12" y1="3" x2="12" y2="15" />
-                            </svg>
-                          </div>
-                        </label>
-                        {/* Photo Style Toggle - B&W or Color - Under the image */}
-                        <div className="mt-2 flex gap-1">
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                            className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
-                              !linksSettings.showColorPhoto
-                                ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
-                            }`}
-                          >
-                            B&W
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                            className={`px-2 py-0.5 rounded text-[10px] border transition-colors ${
-                              linksSettings.showColorPhoto
-                                ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                                : 'bg-black/20 border-white/10 text-[#e5e4dd]/70 hover:border-white/20'
-                            }`}
-                          >
-                            Color
-                          </button>
-                        </div>
-                      </div>
-                      {/* Right side - title, description, upload button */}
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-medium text-[#ffd700] mb-1">Profile Image <span className="text-red-400">*</span></h4>
-                        <p className="text-xs text-[#e5e4dd]/50 mb-2">Background removed automatically</p>
-                        <input
-                          ref={attractionFileInputRef}
-                          type="file"
-                          accept="image/jpeg,image/png,image/webp"
-                          onChange={handleImageUpload}
-                          onClick={(e) => { (e.target as HTMLInputElement).value = ''; }}
-                          className="hidden"
-                          id="attraction-profile-image-upload"
-                        />
-                        <label
-                          htmlFor="attraction-profile-image-upload"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors cursor-pointer"
-                        >
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                            <polyline points="17 8 12 3 7 8" />
-                            <line x1="12" y1="3" x2="12" y2="15" />
-                          </svg>
-                          {pageData?.profile_image_url ? 'Change' : 'Upload'}
-                        </label>
-                        {attractionUploadStatus && (
-                          <div className="mt-2 text-xs text-blue-400 flex items-center gap-1.5">
-                            <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
-                            {attractionUploadStatus}
-                          </div>
-                        )}
-                        {attractionUploadError && (
-                          <div className="mt-2 text-xs text-red-400">{attractionUploadError}</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  return allLinkIds.map((linkId, index) => {
+                    const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                    const customLink = customLinkMap.get(linkId);
+                    if (!isDefault && !customLink) return null;
 
-                  {/* Display Name + Bio Row - Fluid layout, side by side when space allows */}
-                  <div className="grid gap-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))' }}>
-                    {/* Display Name */}
-                    <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                      <h4 className="text-sm font-medium text-[#ffd700] mb-3">Display Name</h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">First Name</label>
-                          <input
-                            type="text"
-                            value={formData.display_first_name}
-                            onChange={(e) => handleInputChange('display_first_name', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs text-[#e5e4dd]/60 mb-1">Last Name</label>
-                          <input
-                            type="text"
-                            value={formData.display_last_name}
-                            onChange={(e) => handleInputChange('display_last_name', e.target.value)}
-                            className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    const label = linkId === 'join-team' ? 'Join my Team' : linkId === 'learn-about' ? 'Learn About eXp' : customLink?.label || 'Custom Link';
+                    const iconPath = isDefault
+                      ? (linkId === 'join-team' ? 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75' : 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 16v-4 M12 8h.01')
+                      : LINK_ICONS.find(i => i.name === customLink?.icon)?.path || '';
 
-                    {/* Bio */}
-                    <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                      <h4 className="text-sm font-medium text-[#ffd700] mb-2">Bio</h4>
-                      <div className="relative">
-                        <textarea
-                          value={linksSettings.bio}
-                          onChange={(e) => {
-                            if (e.target.value.length <= 80) {
-                              setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
-                              setHasUnsavedChanges(true);
-                            }
-                          }}
-                          className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors resize-none"
-                          rows={3}
-                          placeholder="Short description about yourself..."
-                        />
-                        <span className={`absolute bottom-2 right-2 text-[10px] ${
-                          linksSettings.bio.length >= 80 ? 'text-red-400' :
-                          linksSettings.bio.length >= 60 ? 'text-yellow-400' :
-                          'text-[#e5e4dd]/30'
-                        }`}>
-                          {linksSettings.bio.length}/80
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-            </div> {/* End PROFILE SECTION */}
+                    const isEditing = editingLinkId === linkId;
 
-            {/* CONNECT SECTION - Social Links, Phone, Email */}
-            <div className={`mt-6 ${activeTab === 'connect' ? '' : 'hidden min-[1100px]:block'}`}>
-              {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1100px]:bg-[#22c55e]/10 border-b border-white/10 min-[1100px]:border-b-0">
-                <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-                <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Connect</h3>
-              </div>
-
-              {/* Social Links + Email/Phone - Fluid Grid Layout */}
-              {/* Uses auto-fit to flow into 2 columns when space allows */}
-              <div className="grid gap-3 mt-3" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))' }}>
-                {/* Social Links Card */}
-                <div className="space-y-3">
-              <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-sm font-medium text-[#ffd700]">Social Links</h4>
-                  <span className="text-xs text-[#e5e4dd]/40">{filledSocialLinks}/6</span>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="url"
-                    value={formData.facebook_url}
-                    onChange={(e) => handleInputChange('facebook_url', e.target.value)}
-                    disabled={filledSocialLinks >= 6 && !formData.facebook_url}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                    placeholder="Facebook URL"
-                  />
-                  <input
-                    type="url"
-                    value={formData.instagram_url}
-                    onChange={(e) => handleInputChange('instagram_url', e.target.value)}
-                    disabled={filledSocialLinks >= 6 && !formData.instagram_url}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                    placeholder="Instagram URL"
-                  />
-                  <input
-                    type="url"
-                    value={formData.twitter_url}
-                    onChange={(e) => handleInputChange('twitter_url', e.target.value)}
-                    disabled={filledSocialLinks >= 6 && !formData.twitter_url}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                    placeholder="X (Twitter) URL"
-                  />
-                  <input
-                    type="url"
-                    value={formData.youtube_url}
-                    onChange={(e) => handleInputChange('youtube_url', e.target.value)}
-                    disabled={filledSocialLinks >= 6 && !formData.youtube_url}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                    placeholder="YouTube URL"
-                  />
-                  <input
-                    type="url"
-                    value={formData.tiktok_url}
-                    onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
-                    disabled={filledSocialLinks >= 6 && !formData.tiktok_url}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                    placeholder="TikTok URL"
-                  />
-                  <input
-                    type="url"
-                    value={formData.linkedin_url}
-                    onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
-                    disabled={filledSocialLinks >= 6 && !formData.linkedin_url}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                    placeholder="LinkedIn URL"
-                  />
-                  {/* Custom Social Links (2 slots with icon picker) */}
-                  {[0, 1].map((slotIndex) => {
-                    const customLink = customSocialLinks[slotIndex];
-                    const isDisabled = filledSocialLinks >= 6 && !customLink?.url;
                     return (
-                      <div key={slotIndex} className="relative flex min-w-0">
-                        <button
-                          type="button"
-                          onClick={() => !isDisabled && setShowSocialIconPicker(showSocialIconPicker === slotIndex ? null : slotIndex)}
-                          disabled={isDisabled}
-                          className={`flex items-center justify-center w-10 rounded-l-lg bg-black/40 border border-r-0 border-white/10 transition-colors ${isDisabled ? 'opacity-40' : 'hover:border-[#ffd700]/30'}`}
-                        >
-                          {customLink?.icon ? (
-                            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d={LINK_ICONS.find(i => i.name === customLink.icon)?.path || ''} />
+                      <div key={linkId} className="group">
+                        <div className="flex items-center gap-1">
+                          {/* Reorder Arrows */}
+                          <div className="flex flex-col opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              onClick={() => moveLink(linkId, 'up')}
+                              disabled={index === 0}
+                              className="p-0.5 text-white/40 hover:text-white disabled:opacity-20"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M18 15l-6-6-6 6" />
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => moveLink(linkId, 'down')}
+                              disabled={index === allLinkIds.length - 1}
+                              className="p-0.5 text-white/40 hover:text-white disabled:opacity-20"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M6 9l6 6 6-6" />
+                              </svg>
+                            </button>
+                          </div>
+
+                          {/* Button */}
+                          <div
+                            className="flex-1 py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2"
+                            style={{
+                              backgroundColor: linksSettings.accentColor,
+                              color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                              fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                            }}
+                          >
+                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                             </svg>
-                          ) : (
-                            <svg className="w-4 h-4 text-[#e5e4dd]/30" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
+                            <span className="flex-1 text-center">{label}</span>
+                          </div>
+
+                          {/* Edit Button (only for custom links) */}
+                          {!isDefault && (
+                            <button
+                              onClick={() => {
+                                setEditingLinkId(linkId);
+                                setEditingLinkLabel(customLink?.label || '');
+                              }}
+                              className="p-1.5 text-white/40 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                            </button>
                           )}
-                        </button>
-                        <input
-                          type="url"
-                          value={customLink?.url || ''}
-                          onChange={(e) => {
-                            const newUrl = e.target.value;
-                            setCustomSocialLinks(prev => {
-                              // Create array with 2 slots, preserving exact positions
-                              const updated: CustomSocialLink[] = [];
-                              // Ensure we have entries for both slots
-                              for (let i = 0; i < 2; i++) {
-                                if (i === slotIndex) {
-                                  // This is the slot being edited
-                                  updated[i] = {
-                                    id: prev[i]?.id || `social-${i}`,
-                                    url: newUrl,
-                                    icon: prev[i]?.icon || 'Globe'
-                                  };
-                                } else if (prev[i]) {
-                                  // Preserve existing entry
-                                  updated[i] = prev[i];
-                                }
-                              }
-                              return updated;
-                            });
-                            setHasUnsavedChanges(true);
-                          }}
-                          disabled={isDisabled}
-                          className="flex-1 min-w-0 px-3 py-2 rounded-r-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors disabled:opacity-40"
-                          placeholder={customLink?.icon ? `${LINK_ICONS.find(i => i.name === customLink.icon)?.label || 'Custom'} URL` : 'Custom URL'}
-                        />
-                        {/* Icon Picker Dropdown */}
-                        {showSocialIconPicker === slotIndex && (
-                          <div className="absolute z-20 top-full mt-1 left-0 w-48 max-h-32 overflow-y-auto rounded bg-[#1a1a1a] border border-white/20 shadow-xl">
-                            <div className="grid grid-cols-6 gap-0.5 p-1">
-                              {LINK_ICONS.map(icon => (
-                                <button
-                                  key={icon.name}
-                                  type="button"
-                                  onClick={() => {
-                                    setCustomSocialLinks(prev => {
-                                      // Create array with 2 slots, preserving exact positions
-                                      const updated: CustomSocialLink[] = [];
-                                      for (let i = 0; i < 2; i++) {
-                                        if (i === slotIndex) {
-                                          // This is the slot being edited
-                                          updated[i] = {
-                                            id: prev[i]?.id || `social-${i}`,
-                                            url: prev[i]?.url || '',
-                                            icon: icon.name
-                                          };
-                                        } else if (prev[i]) {
-                                          // Preserve existing entry
-                                          updated[i] = prev[i];
-                                        }
-                                      }
-                                      return updated;
-                                    });
-                                    setShowSocialIconPicker(null);
-                                    setHasUnsavedChanges(true);
-                                  }}
-                                  className={`p-1.5 rounded transition-colors ${
-                                    customLink?.icon === icon.name ? 'bg-[#ffd700]/20 text-[#ffd700]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
-                                  }`}
-                                  title={icon.label}
-                                >
-                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                    <path d={icon.path} />
-                                  </svg>
-                                </button>
-                              ))}
+                        </div>
+
+                        {/* Edit Mode */}
+                        {isEditing && (
+                          <div className="mt-2 p-2 rounded-lg bg-black/60 border border-white/10">
+                            <input
+                              type="text"
+                              value={editingLinkLabel}
+                              onChange={(e) => setEditingLinkLabel(e.target.value)}
+                              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:outline-none mb-2"
+                              placeholder="Button label"
+                              autoFocus
+                            />
+                            <div className="flex gap-1 justify-end">
+                              <button
+                                onClick={() => {
+                                  setCustomLinks(prev => prev.map(l => l.id === linkId ? { ...l, label: editingLinkLabel } : l));
+                                  setEditingLinkId(null);
+                                  setHasUnsavedChanges(true);
+                                }}
+                                className="p-1.5 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path d="M20 6L9 17l-5-5" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setCustomLinks(prev => prev.filter(l => l.id !== linkId));
+                                  setLinksSettings(prev => ({ ...prev, linkOrder: prev.linkOrder.filter(id => id !== linkId) }));
+                                  setEditingLinkId(null);
+                                  setHasUnsavedChanges(true);
+                                }}
+                                className="p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => setEditingLinkId(null)}
+                                className="p-1.5 rounded bg-white/10 text-white/60 hover:bg-white/20"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path d="M18 6L6 18M6 6l12 12" />
+                                </svg>
+                              </button>
                             </div>
                           </div>
                         )}
                       </div>
                     );
-                  })}
-                </div>
-              </div>
+                  });
+                })()}
 
-              {/* Email + Phone - Always visible, uses parent grid's auto-fit */}
-                <div className="space-y-3">
-                {/* Email */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Email</h4>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                    placeholder="your@email.com"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Phone</h4>
-                  <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="flex-1 min-w-0 w-full sm:w-auto px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-[#e5e4dd] text-sm focus:border-[#ffd700]/50 focus:outline-none transition-colors"
-                      placeholder="(555) 123-4567"
-                    />
-                    {formData.phone && (
-                      <div className="flex gap-3 flex-shrink-0">
-                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
-                          <input
-                            type="checkbox"
-                            checked={formData.show_call_button}
-                            onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
-                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
-                          />
-                          <span className="text-xs text-[#e5e4dd]">Call</span>
-                        </label>
-                        <label className="flex items-center gap-1.5 cursor-pointer" style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}>
-                          <input
-                            type="checkbox"
-                            checked={formData.show_text_button}
-                            onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
-                            className="w-4 h-4 rounded border-white/20 bg-black/30 accent-[#ffd700]"
-                          />
-                          <span className="text-xs text-[#e5e4dd]">Text</span>
-                        </label>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                </div> {/* End Column 2: Email + Phone */}
-              </div> {/* End 2-column grid wrapper */}
-            </div> {/* End CONNECT SECTION */}
-            </div> {/* End space-y-6 wrapper */}
-          </div> {/* End COLUMN 1 */}
-
-          {/* COLUMN 2 - Links Section */}
-          {/* At 1024px+ (tablet landscape): col-2, At 1200px+ (desktop): col-2 with preview in col-3 */}
-          <div className="min-[1100px]:col-start-2 min-[1100px]:row-start-1 min-[1100px]:overflow-y-auto min-[1100px]:pr-2" style={{ maxHeight: 'inherit' }}>
-            {/* LINKS SECTION - Accent Color, Style, Button Links */}
-            <div className={`space-y-3 ${activeTab === 'links' ? '' : 'hidden min-[1100px]:block'}`}>
-              {/* Section Header - Full width background band on desktop */}
-              <div className="flex items-center gap-2 px-3 py-2 -mx-2 rounded-lg min-[1100px]:bg-[#22c55e]/10 border-b border-white/10 min-[1100px]:border-b-0">
-                <svg className="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-                </svg>
-                <h3 className="text-sm font-semibold text-[#22c55e] uppercase tracking-wide">Links</h3>
-              </div>
-
-              {/* Accent Color + Style in a grid - Now consolidated below, hide this duplicate */}
-              <div className="hidden grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* Accent Color */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
-                  <div className="space-y-2">
-                    <HexColorPicker
-                      color={linksSettings.accentColor}
-                      onChange={(color) => {
-                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                        setHasUnsavedChanges(true);
+                {/* Add New Link Mode */}
+                {addingNewLink ? (
+                  <div className="p-2 rounded-lg bg-black/60 border border-[#ffd700]/30">
+                    <div
+                      className="py-2.5 px-4 rounded-lg text-sm flex items-center gap-2 mb-2"
+                      style={{
+                        backgroundColor: linksSettings.accentColor,
+                        color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                       }}
-                      style={{ width: '100%', height: '95px' }}
-                    />
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
-                        style={{ backgroundColor: linksSettings.accentColor }}
-                      />
-                      <HexColorInput
-                        color={linksSettings.accentColor}
-                        onChange={(color) => {
-                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                          setHasUnsavedChanges(true);
-                        }}
-                        prefixed={true}
-                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Style Options */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
-                  <div className="space-y-3">
-                    {/* Button Text */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Text</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'light'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Light
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'dark'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Dark
-                        </button>
-                      </div>
-                    </div>
-                    {/* Font */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Font</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'synonym'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Synonym
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'taskor'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Taskor
-                        </button>
-                      </div>
-                    </div>
-                    {/* Name Weight */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Weight</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'bold'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Bold
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'normal'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Regular
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Accent Color + Style Options - Fluid layout, side by side when space allows */}
-              <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))' }}>
-                {/* Accent Color */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-2">Accent Color</h4>
-                  <div className="space-y-2">
-                    <HexColorPicker
-                      color={linksSettings.accentColor}
-                      onChange={(color) => {
-                        setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                        setHasUnsavedChanges(true);
-                      }}
-                      style={{ width: '100%', height: '95px' }}
-                    />
-                    <div className="flex items-center gap-2">
-                      <div
-                        className="w-6 h-6 rounded-lg border border-white/20 flex-shrink-0"
-                        style={{ backgroundColor: linksSettings.accentColor }}
-                      />
-                      <HexColorInput
-                        color={linksSettings.accentColor}
-                        onChange={(color) => {
-                          setLinksSettings(prev => ({ ...prev, accentColor: color }));
-                          setHasUnsavedChanges(true);
-                        }}
-                        prefixed={true}
-                        className="flex-1 min-w-0 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-sm font-mono focus:border-[#ffd700]/50 focus:outline-none uppercase"
+                    >
+                      <button className="p-0.5">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M12 8v8M8 12h8" />
+                        </svg>
+                      </button>
+                      <input
+                        type="text"
+                        value={newLinkLabel}
+                        onChange={(e) => setNewLinkLabel(e.target.value)}
+                        className="flex-1 bg-transparent text-center focus:outline-none placeholder:opacity-50"
+                        placeholder="Button label..."
+                        autoFocus
                       />
                     </div>
-                  </div>
-                </div>
-
-                {/* Style Options */}
-                <div className="p-4 rounded-lg bg-black/20 border border-white/10">
-                  <h4 className="text-sm font-medium text-[#ffd700] mb-3">Style Options</h4>
-                  <div className="space-y-3">
-                    {/* Button Text */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Text</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'light'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Light
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.iconStyle === 'dark'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Dark
-                        </button>
-                      </div>
-                    </div>
-                    {/* Font */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Font</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'synonym'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Synonym
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.font === 'taskor'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Taskor
-                        </button>
-                      </div>
-                    </div>
-                    {/* Name Weight */}
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs text-[#e5e4dd]/60">Weight</span>
-                      <div className="flex gap-1 flex-1">
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'bold'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Bold
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                          className={`flex-1 px-3 py-1.5 rounded text-xs border transition-colors ${
-                            linksSettings.nameWeight === 'normal'
-                              ? 'bg-[#ffd700]/20 border-[#ffd700] text-[#ffd700]'
-                              : 'bg-black/20 border-white/10 text-[#e5e4dd]/70'
-                          }`}
-                        >
-                          Regular
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* BUTTON LINKS SECTION */}
-              <div className="p-4 rounded-xl bg-black/20 border border-white/10">
-              <div className="flex items-center gap-2 mb-3">
-                <h4 className="text-sm font-medium text-[#ffd700]">Button Links</h4>
-              </div>
-              {/* Unified Links List - 2-column grid on larger screens */}
-              {(() => {
-                // Build ordered list of all links
-                const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
-
-                // Create lookup for custom links
-                const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
-
-                // Build ordered array with all links
-                const allLinkIds = [...linkOrder];
-                // Add any custom links not in linkOrder
-                customLinks.forEach(link => {
-                  if (!allLinkIds.includes(link.id)) {
-                    allLinkIds.push(link.id);
-                  }
-                });
-                // Ensure default buttons are included
-                if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
-                if (!allLinkIds.includes('learn-about')) {
-                  const joinIndex = allLinkIds.indexOf('join-team');
-                  allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
-                }
-
-                return (
-                  <div className="flex flex-col gap-2">
-                    {allLinkIds.map((linkId, index) => {
-                      const isDefault = linkId === 'join-team' || linkId === 'learn-about';
-                      const defaultButton = DEFAULT_BUTTONS.find(b => b.id === linkId);
-                      const customLink = customLinkMap.get(linkId);
-
-                      if (!isDefault && !customLink) return null;
-
-                      const label = isDefault ? defaultButton?.label : customLink?.label;
-                      const url = isDefault ? (linkId === 'join-team' ? 'Join form' : 'Your page') : customLink?.url;
-
-                      return (
-                        <div
-                          key={linkId}
-                          className={`flex items-center gap-1.5 p-2 rounded group transition-colors ${
-                            editingLinkId === linkId
-                              ? 'bg-[#ffd700]/20 border border-[#ffd700]/50'
-                              : isDefault
-                                ? 'bg-[#22c55e]/10 border border-[#22c55e]/30'
-                                : 'bg-black/20 border border-white/10'
-                          }`}
-                        >
-                          {/* Reorder buttons */}
-                          <div className="flex flex-col">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (index > 0) {
-                                  const newOrder = [...allLinkIds];
-                                  [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-                                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                                  setHasUnsavedChanges(true);
-                                }
-                              }}
-                              disabled={index === 0}
-                              className="p-0.5 hover:bg-white/10 disabled:opacity-20"
-                            >
-                              <svg className="w-2.5 h-2.5 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                              </svg>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (index < allLinkIds.length - 1) {
-                                  const newOrder = [...allLinkIds];
-                                  [newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]];
-                                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                                  setHasUnsavedChanges(true);
-                                }
-                              }}
-                              disabled={index === allLinkIds.length - 1}
-                              className="p-0.5 hover:bg-white/10 disabled:opacity-20"
-                            >
-                              <svg className="w-2.5 h-2.5 text-[#e5e4dd]/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </button>
-                          </div>
-
-                          {/* Icon */}
-                          {isDefault ? (
-                            <div className="w-5 h-5 rounded bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0">
-                              <svg className="w-2.5 h-2.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d={linkId === 'join-team' ? 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' : 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'} />
-                              </svg>
-                            </div>
-                          ) : customLink?.icon && (
-                            <div className="w-5 h-5 rounded bg-[#22c55e]/10 flex items-center justify-center flex-shrink-0">
-                              <svg className="w-2.5 h-2.5 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d={LINK_ICONS.find(i => i.name === customLink.icon)?.path || ''} />
-                              </svg>
-                            </div>
-                          )}
-
-                          {/* Label */}
-                          <div className="flex-1 min-w-0">
-                            <div className={`text-xs truncate ${isDefault ? 'text-[#22c55e]' : 'text-[#e5e4dd]'}`}>
-                              {label}
-                              {isDefault && <span className="ml-1 text-[10px] text-[#22c55e]/50">(default)</span>}
-                            </div>
-                            <div className="text-[10px] text-[#e5e4dd]/30 truncate">{url}</div>
-                          </div>
-
-                          {/* Edit & Delete - custom links only */}
-                          {!isDefault && (
-                            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  // Populate fields with link data
-                                  setNewLinkLabel(customLink?.label || '');
-                                  setNewLinkUrl(customLink?.url || '');
-                                  setNewLinkIcon(customLink?.icon || null);
-                                  setEditingLinkId(linkId);
-                                }}
-                                className="p-1 rounded text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
-                                title="Edit link"
-                              >
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setCustomLinks(prev => prev.filter(l => l.id !== linkId));
-                                  setLinksSettings(prev => ({
-                                    ...prev,
-                                    linkOrder: prev.linkOrder.filter(id => id !== linkId)
-                                  }));
-                                  setHasUnsavedChanges(true);
-                                  // Clear edit mode if deleting the link being edited
-                                  if (editingLinkId === linkId) {
-                                    setEditingLinkId(null);
-                                    setNewLinkLabel('');
-                                    setNewLinkUrl('');
-                                    setNewLinkIcon(null);
-                                  }
-                                }}
-                                className="p-1 rounded text-red-400 hover:bg-red-500/10 transition-colors"
-                                title="Delete link"
-                              >
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })()}
-
-              {/* Add New Link - Compact inline form */}
-              <div className="p-3 rounded-lg bg-black/20 border border-white/10 mt-3">
-                <div className="flex flex-wrap items-end gap-2">
-                  <div className="flex-1 min-w-[120px]">
-                    <label className="block text-[10px] text-[#e5e4dd]/50 mb-1">Label</label>
-                    <input
-                      type="text"
-                      value={newLinkLabel}
-                      onChange={(e) => setNewLinkLabel(e.target.value)}
-                      className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#22c55e]/50 focus:outline-none"
-                      placeholder="Button text"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-[120px]">
-                    <label className="block text-[10px] text-[#e5e4dd]/50 mb-1">URL</label>
                     <input
                       type="url"
                       value={newLinkUrl}
                       onChange={(e) => setNewLinkUrl(e.target.value)}
-                      className="w-full px-2 py-1.5 rounded bg-black/30 border border-white/10 text-[#e5e4dd] text-xs focus:border-[#22c55e]/50 focus:outline-none"
+                      className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:outline-none mb-2"
                       placeholder="https://..."
                     />
-                  </div>
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setShowIconPicker(!showIconPicker)}
-                      className="flex items-center gap-1 px-2 py-1.5 rounded bg-black/30 border border-white/10 text-xs hover:border-[#22c55e]/30"
-                    >
-                      {newLinkIcon ? (
-                        <svg className="w-3 h-3 text-[#22c55e]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || ''} />
+                    <div className="flex gap-1 justify-end">
+                      <button
+                        onClick={() => {
+                          if (newLinkLabel && newLinkUrl) {
+                            const newLink = {
+                              id: `link-${Date.now()}`,
+                              label: newLinkLabel,
+                              url: newLinkUrl,
+                              icon: newLinkIcon,
+                              order: customLinks.length,
+                            };
+                            setCustomLinks(prev => [...prev, newLink]);
+                            setLinksSettings(prev => ({ ...prev, linkOrder: [...prev.linkOrder, newLink.id] }));
+                            setNewLinkLabel('');
+                            setNewLinkUrl('');
+                            setNewLinkIcon('Globe');
+                            setAddingNewLink(false);
+                            setHasUnsavedChanges(true);
+                          }
+                        }}
+                        className="p-1.5 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M20 6L9 17l-5-5" />
                         </svg>
-                      ) : (
-                        <span className="text-[#e5e4dd]/50">Icon</span>
-                      )}
-                    </button>
-                    {showIconPicker && (
-                      <div className="absolute z-10 bottom-full mb-1 left-0 w-48 max-h-32 overflow-y-auto rounded bg-[#1a1a1a] border border-white/20 shadow-xl">
-                        <div className="grid grid-cols-6 gap-0.5 p-1">
-                          {/* No Icon option */}
-                          <button
-                            type="button"
-                            onClick={() => { setNewLinkIcon(null); setShowIconPicker(false); }}
-                            className={`p-1.5 rounded transition-colors ${
-                              !newLinkIcon ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
-                            }`}
-                            title="No icon"
-                          >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
-                            </svg>
-                          </button>
-                          {LINK_ICONS.map(icon => (
-                            <button
-                              key={icon.name}
-                              type="button"
-                              onClick={() => { setNewLinkIcon(icon.name); setShowIconPicker(false); }}
-                              className={`p-1.5 rounded transition-colors ${
-                                newLinkIcon === icon.name ? 'bg-[#22c55e]/20 text-[#22c55e]' : 'hover:bg-white/10 text-[#e5e4dd]/70'
-                              }`}
-                              title={icon.label}
-                            >
-                              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d={icon.path} />
-                              </svg>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setNewLinkLabel('');
+                          setNewLinkUrl('');
+                          setAddingNewLink(false);
+                        }}
+                        className="p-1.5 rounded bg-white/10 text-white/60 hover:bg-white/20"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (newLinkLabel.trim() && newLinkUrl.trim()) {
-                        if (editingLinkId) {
-                          // Update existing link
-                          setCustomLinks(prev => prev.map(link =>
-                            link.id === editingLinkId
-                              ? { ...link, label: newLinkLabel.trim(), url: newLinkUrl.trim(), icon: newLinkIcon || undefined }
-                              : link
-                          ));
-                          setEditingLinkId(null);
-                        } else {
-                          // Add new link
-                          const newLinkId = `link-${Date.now()}`;
-                          const newLink: CustomLink = {
-                            id: newLinkId,
-                            label: newLinkLabel.trim(),
-                            url: newLinkUrl.trim(),
-                            icon: newLinkIcon || undefined,
-                            order: customLinks.length,
-                          };
-                          setCustomLinks(prev => [...prev, newLink]);
-                          setLinksSettings(prev => ({
-                            ...prev,
-                            linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLinkId]
-                          }));
-                        }
-                        setNewLinkLabel('');
-                        setNewLinkUrl('');
-                        setNewLinkIcon(null);
-                        setHasUnsavedChanges(true);
-                      }
-                    }}
-                    disabled={!newLinkLabel.trim() || !newLinkUrl.trim()}
-                    className={`px-3 py-1.5 rounded text-xs font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                      editingLinkId
-                        ? 'bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30'
-                        : 'bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20'
-                    }`}
-                  >
-                    {editingLinkId ? 'Save' : '+ Add'}
-                  </button>
-                  {editingLinkId && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditingLinkId(null);
-                        setNewLinkLabel('');
-                        setNewLinkUrl('');
-                        setNewLinkIcon(null);
-                      }}
-                      className="px-2 py-1.5 rounded text-xs font-medium bg-white/5 border border-white/10 text-[#e5e4dd]/60 hover:bg-white/10 transition-colors"
-                    >
-                      Cancel
-                    </button>
-                  )}
-                </div>
-              </div>
-              </div> {/* End of BUTTON LINKS SECTION wrapper */}
-            </div> {/* End of LINKS SECTION */}
-          </div> {/* End COLUMN 2 */}
-        </div> {/* End 3-column grid */}
-
-        {/* MOBILE BOTTOM BAR - Preview + Save buttons with animation */}
-        {/* Shows when <1200px (mobile UI).
-            - <950px: Full width with 10px margins, positioned above mobile nav (64px) = bottom-[49px]
-            - 950-1200px: Positioned at bottom of screen = bottom-0 */}
-        <div className="fixed left-[10px] right-[10px] z-40 min-[1200px]:hidden bottom-[49px] min-[950px]:bottom-0 min-[950px]:left-[290px] min-[950px]:right-[10px]">
-          <div className="flex gap-2">
-            {/* Preview Link Page Button - Compact, shrinks when Save appears */}
-            <button
-              onClick={() => setShowMobilePreview(true)}
-              className="flex-1 py-2.5 rounded-lg text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
-              style={{
-                background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
-                border: '1px solid rgba(255, 215, 0, 0.3)',
-                WebkitTapHighlightColor: 'transparent',
-              } as React.CSSProperties}
-            >
-              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-              <span className="text-[#ffd700]">Preview</span>
-            </button>
-
-            {/* Save Changes Button - Expands when there are unsaved changes */}
-            <div
-              className={`overflow-hidden transition-all duration-300 ease-out ${
-                hasUnsavedChanges ? 'flex-1' : 'w-0'
-              }`}
-            >
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className={`w-full h-full py-2.5 rounded-lg font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap ${
-                  showSaveSuccess ? 'text-white' : 'text-[#2a2a2a]'
-                } ${hasUnsavedChanges && !showSaveSuccess ? 'save-pulse' : ''}`}
-                style={{
-                  background: showSaveSuccess
-                    ? '#22c55e'
-                    : 'linear-gradient(180deg, #ffd700 0%, #e5c200 100%)',
-                  border: '1px solid rgba(255, 215, 0, 0.5)',
-                  WebkitTapHighlightColor: 'transparent',
-                  minWidth: hasUnsavedChanges ? '110px' : '0',
-                } as React.CSSProperties}
-              >
-                {showSaveSuccess ? (
-                  <>
-                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Saved!</span>
-                  </>
                 ) : (
-                  <>
-                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                    </svg>
-                    <span>{isSaving ? 'Saving...' : 'Save'}</span>
-                  </>
+                  <button
+                    onClick={() => setAddingNewLink(true)}
+                    className="w-full py-2 text-center text-xs text-white/50 hover:text-white/70 transition-colors"
+                  >
+                    + Add Button
+                  </button>
                 )}
-              </button>
+              </div>
+
+              {/* SAA Logo */}
+              <div className="mt-auto pt-4 flex flex-col items-center">
+                <span className="text-[#ffd700] text-lg font-bold" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>SAA</span>
+                <span className="text-[10px] text-white/40">Powered by Smart Agent Alliance</span>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* MOBILE PREVIEW MODAL - Using base Modal component */}
-        <Modal
-          isOpen={showMobilePreview}
-          onClose={() => setShowMobilePreview(false)}
-          size="lg"
-          showCloseButton={true}
-          closeOnBackdropClick={true}
-          closeOnEscape={true}
-        >
-          {/* Modal Header */}
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-            <span className="text-lg font-medium text-[#e5e4dd]">Live Preview</span>
-            <span className="text-sm text-[#22c55e]">Link Page</span>
+      {/* ================================================================
+          SOCIAL LINKS CARD (spans 2 columns)
+          ================================================================ */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden col-span-2">
+        {/* Header */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </svg>
+            <span className="text-sm font-medium text-indigo-400">Social Links</span>
           </div>
+          <span className="text-xs text-white/40">{filledSocialLinks}/6 max</span>
+        </div>
 
-          {/* Preview Content with star background - wider to fill space */}
-          <div className="flex flex-col items-center gap-4 max-w-[320px] w-full mx-auto relative">
-            {/* Static star dots for preview */}
-            <div className="absolute inset-0 -inset-x-8 pointer-events-none" style={{
-              background: `
-                radial-gradient(1.5px 1.5px at 30px 40px, white, transparent),
-                radial-gradient(1px 1px at 60px 90px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1.5px 1.5px at 140px 50px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1px 1px at 200px 100px, white, transparent),
-                radial-gradient(1px 1px at 250px 40px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(0.5px 0.5px at 100px 130px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 180px 180px, rgba(255,255,255,0.4), transparent),
-                radial-gradient(1.5px 1.5px at 70px 250px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1px 1px at 230px 200px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(1px 1px at 40px 350px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(0.5px 0.5px at 200px 320px, rgba(255,255,255,0.4), transparent),
-                radial-gradient(1.5px 1.5px at 120px 400px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(1px 1px at 260px 380px, rgba(255,255,255,0.5), transparent),
-                radial-gradient(0.5px 0.5px at 80px 450px, rgba(255,255,255,0.4), transparent)
-              `,
-              opacity: 0.5
-            }} />
-            {/* Profile Photo */}
-            <div
-              className="w-24 h-24 rounded-full border-3 flex items-center justify-center overflow-hidden relative z-10"
-              style={{ borderColor: linksSettings.accentColor, borderWidth: '3px', backgroundColor: 'rgba(0,0,0,0.5)' }}
-            >
-              {getProfileImageUrl() ? (
-                <img
-                  src={getProfileImageUrl() || ''}
-                  alt="Profile"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <span className="text-4xl">👤</span>
-              )}
+        {/* Content */}
+        <div className="p-4">
+          <div className="grid grid-cols-4 gap-3">
+            {/* Facebook */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Facebook</label>
+              <input
+                type="url"
+                value={formData.facebook_url}
+                onChange={(e) => handleInputChange('facebook_url', e.target.value)}
+                placeholder="facebook.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
             </div>
 
-            {/* Name with Neon Effect - simplified for preview to avoid blur */}
-            {(() => {
-              const outlineColor = linksSettings.iconStyle === 'light' ? '#fff' : '#1a1a1a';
-              return (
-            <span
-              className={`${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'} text-2xl text-center`}
-              style={{
-                color: linksSettings.accentColor,
-                fontFamily: 'var(--font-taskor, sans-serif)',
-                fontFeatureSettings: '"ss01" 1',
-                transform: 'perspective(800px) rotateX(12deg)',
-                textShadow: `
-                  0 0 1px ${outlineColor},
-                  0 0 6px ${linksSettings.accentColor}40,
-                  0 0 12px ${linksSettings.accentColor}20,
-                  1px 1px 0 #2a2a2a,
-                  2px 2px 0 #1a1a1a,
-                  3px 3px 0 #0f0f0f
-                `,
-                filter: `drop-shadow(1px 1px 2px rgba(0,0,0,0.7)) brightness(1.1)`,
-              }}
+            {/* Instagram */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Instagram</label>
+              <input
+                type="url"
+                value={formData.instagram_url}
+                onChange={(e) => handleInputChange('instagram_url', e.target.value)}
+                placeholder="instagram.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+
+            {/* X/Twitter */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">X/Twitter</label>
+              <input
+                type="url"
+                value={formData.twitter_url}
+                onChange={(e) => handleInputChange('twitter_url', e.target.value)}
+                placeholder="x.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+
+            {/* YouTube */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">YouTube</label>
+              <input
+                type="url"
+                value={formData.youtube_url}
+                onChange={(e) => handleInputChange('youtube_url', e.target.value)}
+                placeholder="youtube.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+
+            {/* TikTok */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">TikTok</label>
+              <input
+                type="url"
+                value={formData.tiktok_url}
+                onChange={(e) => handleInputChange('tiktok_url', e.target.value)}
+                placeholder="tiktok.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+
+            {/* LinkedIn */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">LinkedIn</label>
+              <input
+                type="url"
+                value={formData.linkedin_url}
+                onChange={(e) => handleInputChange('linkedin_url', e.target.value)}
+                placeholder="linkedin.com/..."
+                className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+              />
+            </div>
+
+            {/* Custom 1 */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 1</label>
+              <div className="flex gap-1">
+                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8M8 12h8" />
+                  </svg>
+                </button>
+                <input
+                  type="url"
+                  value={customSocialLinks[0]?.url || ''}
+                  onChange={(e) => {
+                    const newLinks = [...customSocialLinks];
+                    if (newLinks[0]) {
+                      newLinks[0] = { ...newLinks[0], url: e.target.value };
+                    } else {
+                      newLinks[0] = { id: 'custom-social-1', url: e.target.value, icon: 'Globe' };
+                    }
+                    setCustomSocialLinks(newLinks);
+                    setHasUnsavedChanges(true);
+                  }}
+                  placeholder="URL"
+                  className="flex-1 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Custom 2 */}
+            <div>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 2</label>
+              <div className="flex gap-1">
+                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M12 8v8M8 12h8" />
+                  </svg>
+                </button>
+                <input
+                  type="url"
+                  value={customSocialLinks[1]?.url || ''}
+                  onChange={(e) => {
+                    const newLinks = [...customSocialLinks];
+                    if (newLinks[1]) {
+                      newLinks[1] = { ...newLinks[1], url: e.target.value };
+                    } else {
+                      newLinks[1] = { id: 'custom-social-2', url: e.target.value, icon: 'Globe' };
+                    }
+                    setCustomSocialLinks(newLinks);
+                    setHasUnsavedChanges(true);
+                  }}
+                  placeholder="URL"
+                  className="flex-1 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ================================================================
+          PAGE ACTIONS CARD
+          ================================================================ */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
+        {/* Header */}
+        <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          <span className="text-sm font-medium text-emerald-400">Page Actions</span>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 space-y-2">
+          {/* Activate Button */}
+          {!pageData?.activated && (
+            <button
+              onClick={handleActivate}
+              disabled={hasUnsavedChanges || !getProfileImageUrl()}
+              className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
             >
-              {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
-            </span>
-              );
-            })()}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              ACTIVATE YOUR PAGE
+            </button>
+          )}
+
+          {/* View Page */}
+          {pageData?.slug && (
+            <a
+              href={`https://saabuildingblocks.com/${pageData.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              VIEW PAGE
+            </a>
+          )}
+
+          {/* Copy URL */}
+          {pageData?.slug && (
+            <button
+              onClick={() => navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)}
+              className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              COPY URL
+            </button>
+          )}
+
+          {/* Download QR */}
+          <button
+            onClick={downloadQRCode}
+            className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            DOWNLOAD QR CODE
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {/* ====================================================================
+        MOBILE/TABLET LAYOUT (<1100px) - Tabbed Interface
+        ==================================================================== */}
+    <div className="min-[1100px]:hidden space-y-4">
+      {/* Save Bar - Fixed at top */}
+      {hasUnsavedChanges && (
+        <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between">
+          <span className="text-sm text-[#ffd700]">You have unsaved changes</span>
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="px-4 py-2 rounded-lg bg-[#ffd700] text-black text-sm font-bold disabled:opacity-50"
+          >
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      )}
+
+      {/* Mobile Tabs */}
+      <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
+        <button
+          onClick={() => setActiveTab('profile')}
+          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${activeTab === 'profile' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+        >
+          Profile
+        </button>
+        <button
+          onClick={() => setActiveTab('connect')}
+          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${activeTab === 'connect' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+        >
+          Connect
+        </button>
+        <button
+          onClick={() => setActiveTab('links')}
+          className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors ${activeTab === 'links' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+        >
+          Links
+        </button>
+      </div>
+
+      {/* Profile Tab Content */}
+      {activeTab === 'profile' && (
+        <div className="space-y-4">
+          {/* Profile Card */}
+          <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4 space-y-4">
+            <h3 className="text-sm font-medium text-green-400 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Profile
+            </h3>
+
+            {/* Photo + Toggle */}
+            <div className="flex items-start gap-4">
+              <div
+                className="w-20 h-20 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+                style={{
+                  backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+                }}
+              >
+                {!getProfileImageUrl() && <span className="text-white/40 text-2xl">👤</span>}
+              </div>
+              <div className="flex flex-col gap-2">
+                <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageUpload} className="hidden" id="mobile-photo-upload" />
+                <label htmlFor="mobile-photo-upload" className="px-4 py-2 rounded-lg text-sm bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer text-center">
+                  Upload Photo
+                </label>
+                <div className="flex rounded overflow-hidden border border-white/20">
+                  <button
+                    onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                    className={`flex-1 px-3 py-1.5 text-xs font-medium ${!linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}
+                  >B&W</button>
+                  <button
+                    onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
+                    className={`flex-1 px-3 py-1.5 text-xs font-medium ${linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}
+                  >Color</button>
+                </div>
+              </div>
+            </div>
+
+            {/* Name Fields */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs text-white/50 mb-1">First Name</label>
+                <input
+                  type="text"
+                  value={formData.display_first_name}
+                  onChange={(e) => handleInputChange('display_first_name', e.target.value)}
+                  placeholder="First"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white focus:border-[#ffd700]/50 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-white/50 mb-1">Last Name</label>
+                <input
+                  type="text"
+                  value={formData.display_last_name}
+                  onChange={(e) => handleInputChange('display_last_name', e.target.value)}
+                  placeholder="Last"
+                  className="w-full px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white focus:border-[#ffd700]/50 focus:outline-none"
+                />
+              </div>
+            </div>
 
             {/* Bio */}
-            {linksSettings.bio && (
-              <p className="text-sm text-center text-[#e5e4dd]/70 max-w-[280px]">
-                {linksSettings.bio}
-              </p>
-            )}
-
-            {/* Social Icons */}
-            {filledSocialLinks > 0 && (() => {
-              const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
-              return (
-              <div className="flex gap-2 flex-wrap justify-center">
-                {formData.facebook_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.77,7.46H14.5v-1.9c0-.9.6-1.1,1-1.1h3V.5h-4.33C10.24.5,9.5,3.44,9.5,5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4Z"/></svg>
-                  </div>
-                )}
-                {formData.instagram_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M12,2.16c3.2,0,3.58.01,4.85.07,3.25.15,4.77,1.69,4.92,4.92.06,1.27.07,1.65.07,4.85s-.01,3.58-.07,4.85c-.15,3.23-1.66,4.77-4.92,4.92-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85C2.38,3.92,3.9,2.38,7.15,2.23,8.42,2.18,8.8,2.16,12,2.16ZM12,0C8.74,0,8.33.01,7.05.07,2.7.27.27,2.7.07,7.05.01,8.33,0,8.74,0,12s.01,3.67.07,4.95c.2,4.36,2.62,6.78,6.98,6.98,1.28.06,1.69.07,4.95.07s3.67-.01,4.95-.07c4.35-.2,6.78-2.62,6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.63-6.78-6.98-6.98C15.67.01,15.26,0,12,0Zm0,5.84A6.16,6.16,0,1,0,18.16,12,6.16,6.16,0,0,0,12,5.84ZM12,16a4,4,0,1,1,4-4A4,4,0,0,1,12,16ZM18.41,4.15a1.44,1.44,0,1,0,1.44,1.44A1.44,1.44,0,0,0,18.41,4.15Z"/></svg>
-                  </div>
-                )}
-                {formData.twitter_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                  </div>
-                )}
-                {formData.youtube_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M23.5,6.19a3.02,3.02,0,0,0-2.12-2.14C19.53,3.5,12,3.5,12,3.5s-7.53,0-9.38.55A3.02,3.02,0,0,0,.5,6.19,31.62,31.62,0,0,0,0,12a31.62,31.62,0,0,0,.5,5.81,3.02,3.02,0,0,0,2.12,2.14c1.85.55,9.38.55,9.38.55s7.53,0,9.38-.55a3.02,3.02,0,0,0,2.12-2.14A31.62,31.62,0,0,0,24,12,31.62,31.62,0,0,0,23.5,6.19ZM9.55,15.5V8.5L15.82,12Z"/></svg>
-                  </div>
-                )}
-                {formData.tiktok_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M19.59,6.69a4.83,4.83,0,0,1-3.77-4.25V2h-3.45V15.94a2.91,2.91,0,0,1-2.91,2.91,2.87,2.87,0,0,1-1.49-.42,2.91,2.91,0,0,1,1.49-5.4,2.81,2.81,0,0,1,.89.14V9.66a6.27,6.27,0,0,0-.89-.07A6.36,6.36,0,0,0,3.09,16a6.36,6.36,0,0,0,10.91,4.44V13.47a8.16,8.16,0,0,0,4.77,1.53h.82V11.55a4.83,4.83,0,0,1-4-4.86Z"/></svg>
-                  </div>
-                )}
-                {formData.linkedin_url && (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                    <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24"><path d="M20.45,20.45H16.89V14.88c0-1.33,0-3.04-1.85-3.04s-2.14,1.45-2.14,2.94v5.66H9.34V9h3.41v1.56h.05a3.74,3.74,0,0,1,3.37-1.85c3.6,0,4.27,2.37,4.27,5.46v6.28ZM5.34,7.43A2.07,2.07,0,1,1,7.41,5.36,2.07,2.07,0,0,1,5.34,7.43Zm1.78,13H3.56V9H7.12ZM22.22,0H1.77A1.75,1.75,0,0,0,0,1.73V22.27A1.75,1.75,0,0,0,1.77,24H22.22A1.76,1.76,0,0,0,24,22.27V1.73A1.76,1.76,0,0,0,22.22,0Z"/></svg>
-                  </div>
-                )}
-                {/* Custom Social Links */}
-                {customSocialLinks.filter(link => link.url).map(link => {
-                  const iconPath = LINK_ICONS.find(i => i.name === link.icon)?.path;
-                  return (
-                    <div key={link.id} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${linksSettings.accentColor}40`, border: `1px solid ${linksSettings.accentColor}60` }}>
-                      <svg className="w-4 h-4" fill="none" stroke={socialIconColor} strokeWidth="2" viewBox="0 0 24 24">
-                        <path d={iconPath || ''} />
-                      </svg>
-                    </div>
-                  );
-                })}
-              </div>
-              );
-            })()}
-
-            {/* Contact Buttons Row - Email, Call, Text - Segmented button style (matches actual link page) */}
-            {(formData.email || (formData.phone && (formData.show_call_button || formData.show_text_button))) && (() => {
-              const iconColor = linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
-              const fontFamily = linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)';
-
-              // Build array of active buttons
-              const buttons: { type: 'email' | 'call' | 'text'; label: string; icon: string }[] = [];
-              if (formData.email) buttons.push({ type: 'email', label: 'Email', icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' });
-              if (formData.phone && formData.show_call_button) buttons.push({ type: 'call', label: 'Phone', icon: 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z' });
-              if (formData.phone && formData.show_text_button) buttons.push({ type: 'text', label: 'Text', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' });
-
-              const buttonCount = buttons.length;
-
-              return (
-                <div className="flex w-full gap-[3px]">
-                  {buttons.map((btn, idx) => {
-                    const isFirst = idx === 0;
-                    const isLast = idx === buttons.length - 1;
-                    const isOnly = buttonCount === 1;
-                    // Rounding matches actual page: 8px on outer edges, 4px on inner edges
-                    const roundedStyle = isOnly
-                      ? 'rounded-lg'
-                      : isFirst
-                        ? 'rounded-l-lg rounded-r'
-                        : isLast
-                          ? 'rounded-l rounded-r-lg'
-                          : 'rounded';
-
-                    return (
-                      <div
-                        key={btn.type}
-                        className={`flex-1 py-3 ${roundedStyle} text-[16px] font-medium cursor-pointer transition-transform hover:scale-[1.01] flex items-center justify-center gap-2`}
-                        style={{ backgroundColor: linksSettings.accentColor, color: iconColor, fontFamily }}
-                      >
-                        <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d={btn.icon} />
-                        </svg>
-                        <span>{btn.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              );
-            })()}
-
-            {/* Link Buttons */}
-            <div className="w-full space-y-2 mt-2">
-              {(() => {
-                const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
-                const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
-                const allLinkIds = [...linkOrder];
-                customLinks.forEach(link => {
-                  if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
-                });
-                if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
-                if (!allLinkIds.includes('learn-about')) {
-                  const joinIndex = allLinkIds.indexOf('join-team');
-                  allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
-                }
-
-                return allLinkIds.map((linkId) => {
-                  const isDefault = linkId === 'join-team' || linkId === 'learn-about';
-                  const customLink = customLinkMap.get(linkId);
-                  if (!isDefault && !customLink) return null;
-
-                  if (linkId === 'join-team') {
-                    return (
-                      <div
-                        key="join-team"
-                        className="w-full py-3 px-4 rounded-lg text-[16px] font-medium relative"
-                        style={{
-                          backgroundColor: linksSettings.accentColor,
-                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                        }}
-                      >
-                        <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                          <circle cx="9" cy="7" r="4" />
-                          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                        </svg>
-                        <span className="block text-center">Join my Team</span>
-                      </div>
-                    );
+            <div>
+              <label className="block text-xs text-white/50 mb-1">Bio ({linksSettings.bio.length}/80)</label>
+              <textarea
+                value={linksSettings.bio}
+                onChange={(e) => {
+                  if (e.target.value.length <= 80) {
+                    setLinksSettings(prev => ({ ...prev, bio: e.target.value }));
+                    setHasUnsavedChanges(true);
                   }
-
-                  if (linkId === 'learn-about') {
-                    return (
-                      <div
-                        key="learn-about"
-                        className="w-full py-3 px-4 rounded-lg text-[16px] font-medium relative"
-                        style={{
-                          backgroundColor: linksSettings.accentColor,
-                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                        }}
-                      >
-                        <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="10" />
-                          <path d="M12 16v-4" />
-                          <path d="M12 8h.01" />
-                        </svg>
-                        <span className="block text-center">Learn About my Team</span>
-                      </div>
-                    );
-                  }
-
-                  // Custom link
-                  const iconPath = LINK_ICONS.find(i => i.name === customLink?.icon)?.path;
-                  return (
-                    <div
-                      key={linkId}
-                      className="w-full py-3 px-4 rounded-lg text-[16px] font-medium relative"
-                      style={{
-                        backgroundColor: linksSettings.accentColor,
-                        color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                        fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)'
-                      }}
-                    >
-                      <svg className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d={iconPath || ''} />
-                      </svg>
-                      <span className="block text-center">{customLink?.label}</span>
-                    </div>
-                  );
-                });
-              })()}
+                }}
+                placeholder="Short bio about yourself..."
+                rows={2}
+                className="w-full px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white focus:border-[#ffd700]/50 focus:outline-none resize-none"
+              />
             </div>
           </div>
-        </Modal>
 
-        {/* Spacer for fixed bottom buttons on mobile - needed when mobile nav is visible (<950px) */}
-        {/* Height accounts for: mobile nav (64px) + Preview/Save bar (56px) + padding (20px) = 140px */}
-        <div className="h-[140px] min-[950px]:hidden" />
-        {/* Additional spacer for 950-1200px range when Preview/Save buttons visible but no mobile nav */}
-        <div className="hidden min-[950px]:block min-[1200px]:hidden h-20" />
+          {/* Style Card */}
+          <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4 space-y-4">
+            <h3 className="text-sm font-medium text-purple-400 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+              Style
+            </h3>
+
+            {/* Accent Color */}
+            <div>
+              <label className="block text-xs text-white/50 mb-2">Accent Color</label>
+              <HexColorPicker
+                color={linksSettings.accentColor}
+                onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
+                style={{ width: '100%', height: '120px' }}
+              />
+              <div className="flex items-center gap-2 mt-2">
+                <div className="w-10 h-10 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
+                <HexColorInput
+                  color={linksSettings.accentColor}
+                  onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
+                  prefixed
+                  className="flex-1 px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white font-mono uppercase focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Toggle Options */}
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="block text-[10px] text-white/50 mb-1">Icon Style</label>
+                <div className="flex rounded overflow-hidden border border-white/20">
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Light</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Dark</button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] text-white/50 mb-1">Weight</label>
+                <div className="flex rounded overflow-hidden border border-white/20">
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Bold</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Normal</button>
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] text-white/50 mb-1">Font</label>
+                <div className="flex rounded overflow-hidden border border-white/20">
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Syn</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Task</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Connect Tab Content */}
+      {activeTab === 'connect' && (
+        <div className="space-y-4">
+          {/* Contact Card */}
+          <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4 space-y-4">
+            <h3 className="text-sm font-medium text-cyan-400 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="M22 7l-10 5L2 7" />
+              </svg>
+              Contact
+            </h3>
+
+            <div>
+              <label className="block text-xs text-white/50 mb-1">Email</label>
+              <input type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} placeholder="you@email.com" className="w-full px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white focus:border-[#ffd700]/50 focus:outline-none" />
+            </div>
+
+            <div>
+              <label className="block text-xs text-white/50 mb-1">Phone</label>
+              <input type="tel" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} placeholder="(555) 123-4567" className="w-full px-3 py-2.5 rounded-lg bg-black/40 border border-white/10 text-white focus:border-[#ffd700]/50 focus:outline-none" />
+            </div>
+
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={formData.show_call_button} onChange={(e) => handleInputChange('show_call_button', e.target.checked)} className="w-4 h-4 rounded" />
+                <span className="text-sm text-white/70">Show Call</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" checked={formData.show_text_button} onChange={(e) => handleInputChange('show_text_button', e.target.checked)} className="w-4 h-4 rounded" />
+                <span className="text-sm text-white/70">Show Text</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Social Links Card */}
+          <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4 space-y-3">
+            <h3 className="text-sm font-medium text-indigo-400 flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+              </svg>
+              Social Links
+              <span className="text-white/40 text-xs ml-auto">{filledSocialLinks}/6</span>
+            </h3>
+
+            <div className="grid grid-cols-2 gap-2">
+              <input type="url" value={formData.facebook_url} onChange={(e) => handleInputChange('facebook_url', e.target.value)} placeholder="Facebook" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+              <input type="url" value={formData.instagram_url} onChange={(e) => handleInputChange('instagram_url', e.target.value)} placeholder="Instagram" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+              <input type="url" value={formData.twitter_url} onChange={(e) => handleInputChange('twitter_url', e.target.value)} placeholder="X/Twitter" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+              <input type="url" value={formData.youtube_url} onChange={(e) => handleInputChange('youtube_url', e.target.value)} placeholder="YouTube" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+              <input type="url" value={formData.tiktok_url} onChange={(e) => handleInputChange('tiktok_url', e.target.value)} placeholder="TikTok" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+              <input type="url" value={formData.linkedin_url} onChange={(e) => handleInputChange('linkedin_url', e.target.value)} placeholder="LinkedIn" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Links Tab Content */}
+      {activeTab === 'links' && (
+        <div className="space-y-4">
+          {/* Preview Card with Button Editor */}
+          <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4">
+            <h3 className="text-sm font-medium text-[#ffd700] flex items-center gap-2 mb-4">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                <line x1="12" y1="18" x2="12" y2="18" />
+              </svg>
+              Button Links
+            </h3>
+
+            {/* Simplified Button List for Mobile */}
+            <div className="space-y-2">
+              {/* Default buttons */}
+              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span className="flex-1 text-center">Join my Team</span>
+              </div>
+              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 16v-4" />
+                  <path d="M12 8h.01" />
+                </svg>
+                <span className="flex-1 text-center">Learn About eXp</span>
+              </div>
+
+              {/* Custom links */}
+              {customLinks.map((link) => (
+                <div key={link.id} className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d={LINK_ICONS.find(i => i.name === link.icon)?.path || ''} />
+                  </svg>
+                  <span className="flex-1 text-center">{link.label}</span>
+                  <button onClick={() => { setCustomLinks(prev => prev.filter(l => l.id !== link.id)); setHasUnsavedChanges(true); }} className="p-1 text-current opacity-60 hover:opacity-100">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg>
+                  </button>
+                </div>
+              ))}
+
+              {/* Add Button */}
+              <button
+                onClick={() => {
+                  const newLink = { id: `link-${Date.now()}`, label: 'New Link', url: '', icon: 'Globe', order: customLinks.length };
+                  setCustomLinks(prev => [...prev, newLink]);
+                  setHasUnsavedChanges(true);
+                }}
+                className="w-full py-2.5 border-2 border-dashed border-white/20 rounded-lg text-sm text-white/50 hover:border-[#ffd700]/50 hover:text-[#ffd700] transition-colors"
+              >
+                + Add Button
+              </button>
+            </div>
+          </div>
+
+          {/* Page Actions */}
+          <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 p-4 space-y-2">
+            <h3 className="text-sm font-medium text-emerald-400 flex items-center gap-2 mb-3">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Page Actions
+            </h3>
+
+            {!pageData?.activated && (
+              <button onClick={handleActivate} disabled={hasUnsavedChanges || !getProfileImageUrl()} className="w-full py-3 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] disabled:opacity-50 flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                ACTIVATE YOUR PAGE
+              </button>
+            )}
+
+            {pageData?.slug && (
+              <div className="grid grid-cols-2 gap-2">
+                <a href={`https://saabuildingblocks.com/${pageData.slug}`} target="_blank" rel="noopener noreferrer" className="py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm text-center">View Page</a>
+                <button onClick={() => navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)} className="py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm">Copy URL</button>
+              </div>
+            )}
+
+            <button onClick={downloadQRCode} className="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+              Download QR Code
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Spacer for mobile nav */}
+      <div className="h-20" />
     </div>
-  );
+
+    {/* Floating Help Button */}
+    <button
+      onClick={() => setShowLinkPageHelpModal(true)}
+      className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 transition-colors flex items-center justify-center min-[1100px]:bottom-4"
+      title="Need Help?"
+    >
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    </button>
+  </div>
+);
 }
 
 // ============================================================================

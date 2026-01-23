@@ -114,6 +114,96 @@ function calculateNextRun(): string {
   return nextRun.toISOString();
 }
 
+/**
+ * Calculate next run time for weekly Monday 8 AM cron job (0 8 * * 1)
+ */
+function calculateNextWeeklyRun(): string {
+  const now = new Date();
+  const nextRun = new Date();
+
+  // Set to 8 AM
+  nextRun.setHours(8, 0, 0, 0);
+
+  // Find next Monday
+  const daysUntilMonday = (1 - now.getDay() + 7) % 7 || 7;
+  nextRun.setDate(now.getDate() + daysUntilMonday);
+
+  // If we're on Monday and it's before 8 AM, use today
+  if (now.getDay() === 1 && now.getHours() < 8) {
+    nextRun.setDate(now.getDate());
+  }
+
+  return nextRun.toISOString();
+}
+
+/**
+ * Parse dependency update log file for status
+ */
+async function parseDependencyLogFile(logPath: string): Promise<{
+  lastRun?: string;
+  status: 'active' | 'broken';
+  criticalCount?: number;
+  totalCount?: number;
+}> {
+  try {
+    const logContent = await fs.readFile(logPath, 'utf-8');
+    const lines = logContent.trim().split('\n');
+
+    let lastRunTime: string | undefined;
+    let lastStatus: 'active' | 'broken' = 'broken';
+    let criticalCount = 0;
+    let totalCount = 0;
+
+    // Look for "Starting Server/Tools Dependency Update Check" entries
+    const startEntries = lines.filter(line => line.includes('Starting Server/Tools Dependency Update Check'));
+
+    if (startEntries.length > 0) {
+      const lastStartLine = startEntries[startEntries.length - 1];
+      const timeMatch = lastStartLine.match(/\[(.*?)\]/);
+
+      if (timeMatch) {
+        lastRunTime = timeMatch[1];
+
+        // Check if completed
+        const completeEntries = lines.filter(line =>
+          line.includes('Dependency Update Check Complete') && line > lastStartLine
+        );
+
+        // Check for fatal errors
+        const fatalErrorEntries = lines.filter(line =>
+          line.includes('[ERROR]') && line > lastStartLine
+        );
+
+        // Count critical packages needing updates (from log lines after start)
+        const relevantLines = lines.filter(line => line > lastStartLine);
+        criticalCount = relevantLines.filter(line => line.includes('[CRITICAL]')).length;
+
+        // Count total outdated
+        const outdatedMatch = relevantLines.find(line => line.includes('Found'));
+        if (outdatedMatch) {
+          const match = outdatedMatch.match(/Found (\d+) outdated/);
+          if (match) totalCount = parseInt(match[1], 10);
+        }
+
+        if (completeEntries.length > 0 && fatalErrorEntries.length === 0) {
+          lastStatus = 'active';
+        } else if (fatalErrorEntries.length > 0) {
+          lastStatus = 'broken';
+        } else {
+          const lastRunDate = new Date(lastRunTime);
+          const now = new Date();
+          const daysSinceLastRun = (now.getTime() - lastRunDate.getTime()) / (1000 * 60 * 60 * 24);
+          lastStatus = daysSinceLastRun < 7 ? 'active' : 'broken';
+        }
+      }
+    }
+
+    return { lastRun: lastRunTime, status: lastStatus, criticalCount, totalCount };
+  } catch {
+    return { status: 'broken' };
+  }
+}
+
 export async function GET() {
   try {
     const automations: Automation[] = [];
@@ -134,6 +224,24 @@ export async function GET() {
       lastRun: lastRun,
       nextRun: cronExists ? calculateNextRun() : undefined,
       logFile: 'everwebinar-sync.log'
+    });
+
+    // Check Server/Tools Dependency Update automation
+    const depScriptPath = '/home/ubuntu/saabuildingblocks-platform/packages/admin-dashboard/scripts/check-dependency-updates.js';
+    const depLogPath = '/var/log/dependency-updates.log';
+
+    const depCronExists = await checkCronJob(depScriptPath);
+    const depResult = await parseDependencyLogFile(depLogPath);
+
+    automations.push({
+      id: 'server-tools-update',
+      name: 'Server/Tools Update Check',
+      description: `Checks for outdated packages (Next.js, React, Wrangler, Tailwind, TypeScript)${depResult.criticalCount ? ` - ${depResult.criticalCount} critical updates pending` : ''}`,
+      schedule: 'Weekly on Monday at 8:00 AM',
+      status: depCronExists ? depResult.status : 'broken',
+      lastRun: depResult.lastRun,
+      nextRun: depCronExists ? calculateNextWeeklyRun() : undefined,
+      logFile: 'dependency-updates.log'
     });
 
     return NextResponse.json({

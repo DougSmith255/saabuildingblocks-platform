@@ -130,22 +130,24 @@ function AgentPortalLoginContent() {
       }
 
       // Store user data and token
+      // API returns: { success, access_token, user } (not nested in data)
+      const user = data.user;
       const userData = {
-        id: data.data.user.id,
-        email: data.data.user.email,
-        username: data.data.user.username,
-        firstName: data.data.user.first_name || data.data.user.fullName?.split(' ')[0] || '',
-        lastName: data.data.user.last_name || data.data.user.fullName?.split(' ').slice(1).join(' ') || '',
-        fullName: data.data.user.fullName || `${data.data.user.first_name || ''} ${data.data.user.last_name || ''}`.trim(),
-        role: data.data.user.role,
-        profilePictureUrl: data.data.user.profile_picture_url || null,
-        gender: data.data.user.gender || 'male',
-        isLeader: data.data.user.is_leader || false,
-        state: data.data.user.state || null,
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        firstName: user.first_name || user.fullName?.split(' ')[0] || '',
+        lastName: user.last_name || user.fullName?.split(' ').slice(1).join(' ') || '',
+        fullName: user.fullName || user.full_name || `${user.first_name || ''} ${user.last_name || ''}`.trim(),
+        role: user.role,
+        profilePictureUrl: user.profile_picture_url || null,
+        gender: user.gender || 'male',
+        isLeader: user.is_leader || false,
+        state: user.state || null,
       };
 
       localStorage.setItem('agent_portal_user', JSON.stringify(userData));
-      localStorage.setItem('agent_portal_token', data.data.accessToken);
+      localStorage.setItem('agent_portal_token', data.access_token);
 
       // Prefetch the dashboard immediately so it's ready when we navigate
       router.prefetch('/agent-portal');

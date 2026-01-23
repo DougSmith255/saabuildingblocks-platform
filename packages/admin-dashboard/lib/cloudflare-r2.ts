@@ -1,32 +1,86 @@
 /**
  * Cloudflare R2 Storage Client
+ * Uses Cloudflare REST API for uploads (not S3-compatible API)
  * Handles profile picture uploads and asset management
  */
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
-const R2_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || 'a1ae4bb5913a89fea98821d7ba1ac304';
-const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
-const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
+const R2_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
+const R2_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN || '';
 const R2_BUCKET_NAME = 'saabuildingblocks-assets';
 // Use CDN URL which goes through the edge caching Worker for fast global delivery
 const R2_PUBLIC_URL = 'https://cdn.saabuildingblocks.com';
-
-// S3-compatible client for R2
-const r2Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-});
 
 export interface UploadResult {
   success: boolean;
   url?: string;
   error?: string;
+}
+
+/**
+ * Upload file to R2 using Cloudflare REST API
+ */
+async function uploadToR2(
+  key: string,
+  buffer: Buffer,
+  contentType: string
+): Promise<{ success: boolean; error?: string }> {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${R2_ACCOUNT_ID}/r2/buckets/${R2_BUCKET_NAME}/objects/${encodeURIComponent(key)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${R2_API_TOKEN}`,
+        'Content-Type': contentType,
+      },
+      body: new Uint8Array(buffer),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[R2] Upload failed:', response.status, errorText);
+      return { success: false, error: `Upload failed: ${response.status}` };
+    }
+
+    const result = await response.json();
+    if (!result.success) {
+      return { success: false, error: result.errors?.[0]?.message || 'Unknown error' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('[R2] Upload error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Network error' };
+  }
+}
+
+/**
+ * Delete file from R2 using Cloudflare REST API
+ */
+async function deleteFromR2(key: string): Promise<{ success: boolean; error?: string }> {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${R2_ACCOUNT_ID}/r2/buckets/${R2_BUCKET_NAME}/objects/${encodeURIComponent(key)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${R2_API_TOKEN}`,
+      },
+    });
+
+    if (!response.ok && response.status !== 404) {
+      const errorText = await response.text();
+      console.error('[R2] Delete failed:', response.status, errorText);
+      return { success: false, error: `Delete failed: ${response.status}` };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('[R2] Delete error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Network error' };
+  }
 }
 
 /**
@@ -44,14 +98,20 @@ export async function uploadProfilePicture(
 ): Promise<UploadResult> {
   try {
     // Validate MIME type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
     if (!allowedTypes.includes(mimeType)) {
-      return { success: false, error: 'Invalid file type. Only JPG and PNG are allowed.' };
+      return { success: false, error: 'Invalid file type. Only JPG, PNG, and WebP are allowed.' };
     }
 
     // Validate file size (max 5MB)
     if (fileBuffer.length > 5 * 1024 * 1024) {
       return { success: false, error: 'File size exceeds 5MB limit.' };
+    }
+
+    // Check if API token is configured
+    if (!R2_API_TOKEN || !R2_ACCOUNT_ID) {
+      console.error('[R2] Missing CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID');
+      return { success: false, error: 'Storage configuration error' };
     }
 
     // Generate file path - always save as webp for better compression
@@ -69,15 +129,10 @@ export async function uploadProfilePicture(
       .toBuffer();
 
     // Upload dashboard variant as the main image
-    const command = new PutObjectCommand({
-      Bucket: R2_BUCKET_NAME,
-      Key: key,
-      Body: dashboardBuffer,
-      ContentType: 'image/webp',
-      CacheControl: 'public, max-age=31536000', // 1 year cache
-    });
-
-    await r2Client.send(command);
+    const uploadResult = await uploadToR2(key, dashboardBuffer, 'image/webp');
+    if (!uploadResult.success) {
+      return { success: false, error: uploadResult.error || 'Failed to upload dashboard variant' };
+    }
     console.log(`[R2] Uploaded B&W dashboard variant: ${key} (${Math.round(dashboardBuffer.length / 1024)}KB)`);
 
     // Create and upload 150x150 B&W Linktree variant (default for linktree)
@@ -92,16 +147,12 @@ export async function uploadProfilePicture(
         .toBuffer();
 
       const linktreeKey = `profiles/${userId}-linktree.webp`;
-      const linktreeCommand = new PutObjectCommand({
-        Bucket: R2_BUCKET_NAME,
-        Key: linktreeKey,
-        Body: linktreeBuffer,
-        ContentType: 'image/webp',
-        CacheControl: 'public, max-age=31536000',
-      });
-
-      await r2Client.send(linktreeCommand);
-      console.log(`[R2] Created B&W Linktree variant: ${linktreeKey} (${Math.round(linktreeBuffer.length / 1024)}KB)`);
+      const linktreeResult = await uploadToR2(linktreeKey, linktreeBuffer, 'image/webp');
+      if (linktreeResult.success) {
+        console.log(`[R2] Created B&W Linktree variant: ${linktreeKey} (${Math.round(linktreeBuffer.length / 1024)}KB)`);
+      } else {
+        console.error('[R2] Failed to create Linktree variant:', linktreeResult.error);
+      }
     } catch (resizeError) {
       // Log but don't fail the upload if Linktree variant fails
       console.error('[R2] Failed to create Linktree variant:', resizeError);
@@ -128,43 +179,13 @@ export async function deleteProfilePicture(userId: string): Promise<{ success: b
     // Try all extensions (webp is new, jpg/png are legacy)
     for (const ext of ['webp', 'jpg', 'png']) {
       // Delete original/dashboard variant
-      const key = `profiles/${userId}.${ext}`;
-      try {
-        const command = new DeleteObjectCommand({
-          Bucket: R2_BUCKET_NAME,
-          Key: key,
-        });
-        await r2Client.send(command);
-      } catch (err) {
-        // Ignore errors if file doesn't exist
-        console.log(`[R2] File not found: ${key}`);
-      }
+      await deleteFromR2(`profiles/${userId}.${ext}`);
 
       // Delete Linktree variant
-      const linktreeKey = `profiles/${userId}-linktree.${ext}`;
-      try {
-        const linktreeCommand = new DeleteObjectCommand({
-          Bucket: R2_BUCKET_NAME,
-          Key: linktreeKey,
-        });
-        await r2Client.send(linktreeCommand);
-      } catch (err) {
-        // Ignore errors if file doesn't exist
-        console.log(`[R2] Linktree variant not found: ${linktreeKey}`);
-      }
+      await deleteFromR2(`profiles/${userId}-linktree.${ext}`);
 
       // Delete color variant
-      const colorKey = `profiles/${userId}-color.${ext}`;
-      try {
-        const colorCommand = new DeleteObjectCommand({
-          Bucket: R2_BUCKET_NAME,
-          Key: colorKey,
-        });
-        await r2Client.send(colorCommand);
-      } catch (err) {
-        // Ignore errors if file doesn't exist
-        console.log(`[R2] Color variant not found: ${colorKey}`);
-      }
+      await deleteFromR2(`profiles/${userId}-color.${ext}`);
     }
 
     return { success: true };
@@ -189,14 +210,20 @@ export async function uploadColorProfilePicture(
 ): Promise<UploadResult> {
   try {
     // Validate MIME type
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
     if (!allowedTypes.includes(mimeType)) {
-      return { success: false, error: 'Invalid file type. Only JPG and PNG are allowed.' };
+      return { success: false, error: 'Invalid file type. Only JPG, PNG, and WebP are allowed.' };
     }
 
     // Validate file size (max 5MB)
     if (fileBuffer.length > 5 * 1024 * 1024) {
       return { success: false, error: 'File size exceeds 5MB limit.' };
+    }
+
+    // Check if API token is configured
+    if (!R2_API_TOKEN || !R2_ACCOUNT_ID) {
+      console.error('[R2] Missing CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID');
+      return { success: false, error: 'Storage configuration error' };
     }
 
     // Generate file path for color variant - always webp
@@ -212,15 +239,10 @@ export async function uploadColorProfilePicture(
       .toBuffer();
 
     // Upload to R2
-    const command = new PutObjectCommand({
-      Bucket: R2_BUCKET_NAME,
-      Key: key,
-      Body: colorBuffer,
-      ContentType: 'image/webp',
-      CacheControl: 'public, max-age=31536000', // 1 year cache
-    });
-
-    await r2Client.send(command);
+    const uploadResult = await uploadToR2(key, colorBuffer, 'image/webp');
+    if (!uploadResult.success) {
+      return { success: false, error: uploadResult.error || 'Failed to upload color variant' };
+    }
     console.log(`[R2] Uploaded color profile: ${key} (${Math.round(colorBuffer.length / 1024)}KB)`);
 
     // Return public URL
@@ -235,4 +257,5 @@ export async function uploadColorProfilePicture(
   }
 }
 
-export default r2Client;
+// Export helper functions for direct use if needed
+export { uploadToR2, deleteFromR2 };

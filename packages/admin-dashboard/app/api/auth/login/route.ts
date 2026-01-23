@@ -5,13 +5,12 @@ export const dynamic = 'force-dynamic';
  * Login API Route
  * POST /api/auth/login
  *
- * Authenticates user and returns access + refresh tokens
+ * Authenticates user via Supabase Auth and returns access + refresh tokens
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { nanoid } from 'nanoid';
-import bcrypt from 'bcryptjs';
-import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import {
   generateTokenPair,
   hashToken,
@@ -22,8 +21,6 @@ import {
 } from '@/lib/auth/jwt';
 import { loginSchema, formatZodErrors } from '@/lib/auth/schemas';
 
-const MAX_FAILED_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
 const RATE_LIMIT_MAX_ATTEMPTS = 5;
 
@@ -51,17 +48,39 @@ function jsonResponse(data: object, status: number = 200, extraHeaders?: Record<
   });
 }
 
-export async function POST(request: NextRequest) {
-  // Use service role client to bypass RLS and access password hashes
-  const supabase = getSupabaseServiceClient();
+// Create Supabase clients
+function getSupabaseClients() {
+  const url = process.env['NEXT_PUBLIC_SUPABASE_URL'];
+  const anonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'];
+  const serviceKey = process.env['SUPABASE_SERVICE_ROLE_KEY'] || process.env['SUPABASE_SECRET_KEY'];
 
-  if (!supabase) {
+  if (!url || !anonKey || !serviceKey) return null;
+
+  // Anon client for auth (uses Supabase Auth)
+  const authClient = createClient(url, anonKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+
+  // Service client for database queries (bypasses RLS)
+  const serviceClient = createClient(url, serviceKey, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+
+  return { authClient, serviceClient };
+}
+
+export async function POST(request: NextRequest) {
+  const clients = getSupabaseClients();
+
+  if (!clients) {
     return jsonResponse({
       success: false,
       error: 'SERVICE_UNAVAILABLE',
       message: 'Authentication service is not available',
     }, 503);
   }
+
+  const { authClient, serviceClient } = clients;
 
   try {
     // Extract request data
@@ -77,11 +96,7 @@ export async function POST(request: NextRequest) {
 
     const { identifier, password, rememberMe } = validation.data;
 
-    // Determine if identifier is email or username
-    const isEmail = identifier.includes('@');
-
-    // Rate limiting check (5 FAILED attempts per 15 minutes per IP)
-    // Only check, don't increment - we increment only on failed attempts
+    // Rate limiting check
     const rateLimitKey = `login:${ipAddress}`;
     const rateLimit = checkRateLimit(rateLimitKey, RATE_LIMIT_MAX_ATTEMPTS, RATE_LIMIT_WINDOW_MS, false);
 
@@ -91,7 +106,7 @@ export async function POST(request: NextRequest) {
         success: false,
         ipAddress,
         userAgent,
-        metadata: { reason: 'rate_limit_exceeded', identifier, isEmail },
+        metadata: { reason: 'rate_limit_exceeded', identifier },
       });
 
       return jsonResponse({
@@ -106,95 +121,56 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Find user by email or username
-    const { data: user, error: userError } = await supabase
+    // Authenticate via Supabase Auth
+    const { data: authData, error: authError } = await authClient.auth.signInWithPassword({
+      email: identifier,
+      password: password,
+    });
+
+    if (authError || !authData.user) {
+      // Increment rate limit counter on failed attempt
+      incrementRateLimit(rateLimitKey, RATE_LIMIT_WINDOW_MS);
+
+      await logAuthEvent({
+        eventType: 'failed_login',
+        success: false,
+        ipAddress,
+        userAgent,
+        metadata: { reason: 'invalid_credentials', identifier },
+      });
+
+      return jsonResponse({
+        success: false,
+        error: 'INVALID_CREDENTIALS',
+        message: 'Invalid email or password',
+      }, 401);
+    }
+
+    // Get user data from users table (using service client to bypass RLS)
+    const { data: user, error: userError } = await serviceClient
       .from('users')
       .select('*')
-      .or(isEmail ? `email.eq.${identifier}` : `username.eq.${identifier}`)
+      .eq('id', authData.user.id)
       .single();
 
     if (userError || !user) {
-      // Increment rate limit counter on failed attempt
-      incrementRateLimit(rateLimitKey, RATE_LIMIT_WINDOW_MS);
-
       await logAuthEvent({
+        userId: authData.user.id,
         eventType: 'failed_login',
         success: false,
         ipAddress,
         userAgent,
-        metadata: { reason: 'user_not_found', identifier, isEmail },
+        metadata: { reason: 'user_not_found_in_db', authUserId: authData.user.id },
       });
 
-      // Generic error message to prevent user enumeration
       return jsonResponse({
         success: false,
-        error: 'INVALID_CREDENTIALS',
-        message: 'Invalid username/email or password',
+        error: 'USER_NOT_FOUND',
+        message: 'User account not found. Please contact support.',
       }, 401);
     }
 
-    // Check if account is locked
-    if (user.locked_until && new Date(user.locked_until) > new Date()) {
-      await logAuthEvent({
-        userId: user.id,
-        eventType: 'failed_login',
-        success: false,
-        ipAddress,
-        userAgent,
-        metadata: { reason: 'account_locked', lockedUntil: user.locked_until },
-      });
-
-      return jsonResponse({
-        success: false,
-        error: 'ACCOUNT_LOCKED',
-        message: 'Account locked due to too many failed login attempts',
-        unlockAt: user.locked_until,
-      }, 423);
-    }
-
-    // Verify password
-    const passwordValid = await bcrypt.compare(password, user.password_hash);
-
-    if (!passwordValid) {
-      // Increment rate limit counter on failed attempt
-      incrementRateLimit(rateLimitKey, RATE_LIMIT_WINDOW_MS);
-
-      // Increment failed login attempts in DB
-      const newFailedAttempts = (user.failed_login_attempts || 0) + 1;
-      const shouldLock = newFailedAttempts >= MAX_FAILED_ATTEMPTS;
-
-      await supabase
-        .from('users')
-        .update({
-          failed_login_attempts: newFailedAttempts,
-          locked_until: shouldLock
-            ? new Date(Date.now() + LOCKOUT_DURATION_MS).toISOString()
-            : null,
-        })
-        .eq('id', user.id);
-
-      await logAuthEvent({
-        userId: user.id,
-        eventType: 'failed_login',
-        success: false,
-        ipAddress,
-        userAgent,
-        metadata: {
-          reason: 'invalid_password',
-          failedAttempts: newFailedAttempts,
-          locked: shouldLock,
-        },
-      });
-
-      return jsonResponse({
-        success: false,
-        error: 'INVALID_CREDENTIALS',
-        message: 'Invalid username/email or password',
-        remainingAttempts: Math.max(0, MAX_FAILED_ATTEMPTS - newFailedAttempts),
-      }, 401);
-    }
-
-    // Check account status (use 'status' field, not 'is_active')
+    // Check account status
     if (user.status !== 'active') {
       await logAuthEvent({
         userId: user.id,
@@ -214,17 +190,17 @@ export async function POST(request: NextRequest) {
       }, 403);
     }
 
-    // Generate tokens
+    // Generate JWT tokens for Agent Portal
     const tokenId = nanoid();
     const deviceId = nanoid();
 
     const { accessToken, refreshToken, expiresIn } = await generateTokenPair(
       {
         userId: user.id,
-        username: user.username,
+        username: user.email,
         email: user.email,
         role: user.role,
-        permissions: user.permissions || [],
+        permissions: [],
       },
       tokenId,
       deviceId
@@ -234,7 +210,7 @@ export async function POST(request: NextRequest) {
     const tokenHash = hashToken(refreshToken);
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
-    await supabase.from('refresh_tokens').insert({
+    await serviceClient.from('refresh_tokens').insert({
       id: tokenId,
       user_id: user.id,
       token_hash: tokenHash,
@@ -246,13 +222,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Update user login info
-    await supabase
+    await serviceClient
       .from('users')
       .update({
         last_login_at: new Date().toISOString(),
-        last_login_ip: ipAddress,
-        failed_login_attempts: 0,
-        locked_until: null,
       })
       .eq('id', user.id);
 
@@ -270,28 +243,29 @@ export async function POST(request: NextRequest) {
     });
 
     // Create response with refresh token cookie
+    // Format matches what AuthProvider expects
     const response = NextResponse.json({
       success: true,
       message: 'Login successful',
-      data: {
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          fullName: user.full_name,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          role: user.role,
-          profile_picture_url: user.profile_picture_url,
-          emailVerified: user.email_verified,
-          lastLoginAt: new Date().toISOString(),
-          gender: user.gender || 'male',
-          is_leader: user.is_leader || false,
-          state: user.state || null,
-        },
-        accessToken,
-        expiresIn,
+      access_token: accessToken,
+      user: {
+        id: user.id,
+        username: user.email,
+        email: user.email,
+        fullName: user.full_name,
+        full_name: user.full_name,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        role: user.role,
+        profile_picture_url: user.profile_picture_url,
+        emailVerified: user.email_verified,
+        lastLoginAt: new Date().toISOString(),
+        gender: user.gender || 'male',
+        is_leader: user.is_leader || false,
+        state: user.state || null,
+        isFirstLogin: false,
       },
+      expiresIn,
     }, { headers: CORS_HEADERS });
 
     // Set refresh token in HttpOnly cookie

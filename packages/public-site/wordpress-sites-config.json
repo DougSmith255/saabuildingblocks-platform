@@ -1,0 +1,42 @@
+{
+  "sites": {
+    "old_site": {
+      "name": "Smart Agent Alliance (OLD - Will Be Deprecated)",
+      "url": "https://smartagentalliance.com",
+      "api_url": "https://smartagentalliance.com/wp-json/wp/v2",
+      "status": "production_active",
+      "notes": "Current live production site. Will be deprecated after migration to saabuildingblocks.com",
+      "credentials": {
+        "app_password": "insz XW5g zy1E vISK wRuA 8l8K",
+        "username": "dougsmart1"
+      }
+    },
+    "new_site": {
+      "name": "SAA Building Blocks (NEW - In Development)",
+      "url": "https://wp.saabuildingblocks.com",
+      "api_url": "https://wp.saabuildingblocks.com/wp-json/wp/v2",
+      "status": "development",
+      "notes": "New site under development. Contains converted pages-to-blogs that must be protected during sync.",
+      "protected_categories": [
+        "become-an-agent",
+        "real-estate-schools",
+        "brokerage-comparison"
+      ],
+      "credentials": {
+        "notes": "Uses existing WordPress setup"
+      }
+    }
+  },
+  "sync_config": {
+    "direction": "old_to_new_only",
+    "protected_content": {
+      "description": "Blogs in these categories were manually converted from pages and must NOT be overwritten",
+      "categories": ["become-an-agent", "real-estate-schools", "brokerage-comparison"]
+    },
+    "image_handling": "upload_to_cloudflare"
+  },
+  "cloudflare_images": {
+    "account_id": "a1ae4bb5913a89fea98821d7ba1ac304",
+    "delivery_hash": "RZBQ4dWu2c_YEpklnDDxFg"
+  }
+}

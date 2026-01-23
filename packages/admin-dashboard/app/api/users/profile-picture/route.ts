@@ -2,12 +2,11 @@
  * Profile Picture Upload API
  * POST /api/users/profile-picture
  *
- * Uploads a profile picture to Cloudflare R2 and updates the user record
+ * Uploads a profile picture to Cloudflare R2 using REST API and updates the user record
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServiceClient } from '@/app/master-controller/lib/supabaseClient';
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { verifyAccessToken } from '@/lib/auth/jwt';
 
 export const dynamic = 'force-dynamic';
@@ -25,26 +24,78 @@ export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
 }
 
-// R2 Configuration - getters to ensure env vars are read at runtime
+// R2 Configuration using Cloudflare REST API
 const getR2Config = () => ({
   accountId: process.env.CLOUDFLARE_ACCOUNT_ID || '',
-  accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-  secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+  apiToken: process.env.CLOUDFLARE_API_TOKEN || '',
   bucketName: process.env.R2_BUCKET_NAME || 'saabuildingblocks-assets',
   publicUrl: process.env.R2_PUBLIC_URL || '',
 });
 
-// Create S3 client fresh for each request to ensure credentials are current
-const createS3Client = (config: ReturnType<typeof getR2Config>) => {
-  return new S3Client({
-    region: 'auto',
-    endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
-    credentials: {
-      accessKeyId: config.accessKeyId,
-      secretAccessKey: config.secretAccessKey,
-    },
-  });
-};
+// Upload file to R2 using Cloudflare REST API
+async function uploadToR2(
+  config: ReturnType<typeof getR2Config>,
+  key: string,
+  buffer: Buffer,
+  contentType: string
+): Promise<{ success: boolean; error?: string }> {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${config.accountId}/r2/buckets/${config.bucketName}/objects/${encodeURIComponent(key)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${config.apiToken}`,
+        'Content-Type': contentType,
+      },
+      body: new Uint8Array(buffer),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('R2 upload failed:', response.status, errorText);
+      return { success: false, error: `Upload failed: ${response.status} ${errorText}` };
+    }
+
+    const result = await response.json();
+    if (!result.success) {
+      return { success: false, error: result.errors?.[0]?.message || 'Unknown error' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('R2 upload error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Network error' };
+  }
+}
+
+// Delete file from R2 using Cloudflare REST API
+async function deleteFromR2(
+  config: ReturnType<typeof getR2Config>,
+  key: string
+): Promise<{ success: boolean; error?: string }> {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${config.accountId}/r2/buckets/${config.bucketName}/objects/${encodeURIComponent(key)}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${config.apiToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('R2 delete failed:', response.status, errorText);
+      return { success: false, error: `Delete failed: ${response.status}` };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('R2 delete error:', error);
+    return { success: false, error: error instanceof Error ? error.message : 'Network error' };
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -147,29 +198,27 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // Get R2 config and create fresh client
+    // Get R2 config
     const r2Config = getR2Config();
-    const client = createS3Client(r2Config);
 
     // Log config (without secrets) for debugging
     console.log('R2 Config:', {
       accountId: r2Config.accountId ? `${r2Config.accountId.substring(0, 8)}...` : 'MISSING',
-      accessKeyId: r2Config.accessKeyId ? `${r2Config.accessKeyId.substring(0, 8)}...` : 'MISSING',
-      secretAccessKey: r2Config.secretAccessKey ? 'SET' : 'MISSING',
+      apiToken: r2Config.apiToken ? 'SET' : 'MISSING',
       bucketName: r2Config.bucketName,
       publicUrl: r2Config.publicUrl,
     });
 
-    // Upload new image to R2
-    const uploadCommand = new PutObjectCommand({
-      Bucket: r2Config.bucketName,
-      Key: filename,
-      Body: buffer,
-      ContentType: file.type,
-      CacheControl: 'public, max-age=31536000', // Cache for 1 year
-    });
+    // Upload new image to R2 using REST API
+    const uploadResult = await uploadToR2(r2Config, filename, buffer, file.type);
 
-    await client.send(uploadCommand);
+    if (!uploadResult.success) {
+      console.error('R2 upload failed:', uploadResult.error);
+      return NextResponse.json(
+        { error: 'Upload Failed', message: uploadResult.error || 'Failed to upload image to storage' },
+        { status: 500, headers: CORS_HEADERS }
+      );
+    }
 
     // Construct public URL
     const publicUrl = `${r2Config.publicUrl}/${filename}`;
@@ -180,11 +229,7 @@ export async function POST(request: NextRequest) {
         // Extract the key from the old URL
         const oldKey = oldProfilePictureUrl.replace(`${r2Config.publicUrl}/`, '');
         if (oldKey && oldKey.startsWith('profile-pictures/')) {
-          const deleteCommand = new DeleteObjectCommand({
-            Bucket: r2Config.bucketName,
-            Key: oldKey,
-          });
-          await client.send(deleteCommand);
+          await deleteFromR2(r2Config, oldKey);
           console.log('Deleted old profile picture:', oldKey);
         }
       } catch (deleteError) {

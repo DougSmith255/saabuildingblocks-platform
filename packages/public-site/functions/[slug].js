@@ -3628,8 +3628,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                     </div>
                   </div>
 
-                  <!-- Progress Bar - moved up 12px -->
-                  <div style="display: flex; justify-content: center; margin-top: 1.25rem;">
+                  <!-- Progress Bar - moved down 25px -->
+                  <div style="display: flex; justify-content: center; margin-top: 45px;">
                     <div class="why-only-progress-bar">
                       <div class="why-only-progress-fill" id="why-only-progress-fill" style="width: 0%;"></div>
                     </div>
@@ -5971,7 +5971,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const bio = settings.bio || '';
   
   // Icon color based on style
-  const iconColor = iconStyle === 'light' ? '#ffffff' : '#1a1a1a';
+  const iconColor = iconStyle === 'light' ? '#e5e4dd' : '#2a2a2a';
   
   // Convert hex color to RGB for rgba variants
   const hexToRgb = (hex) => {
@@ -6134,10 +6134,20 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     </div>
   ` : '';
 
-  // Profile image
-  const profileImageHTML = agent.profile_image_url ? `
+  // Profile image - check if color version should be shown
+  const showColorPhoto = agent.links_settings?.showColorPhoto || false;
+  let profileImageUrl = agent.profile_image_url;
+  if (showColorPhoto && profileImageUrl) {
+    // Append -color before the file extension to get color version
+    const match = profileImageUrl.match(/^(.+)\.(\w+)$/);
+    if (match) {
+      profileImageUrl = `${match[1]}-color.${match[2]}`;
+    }
+  }
+
+  const profileImageHTML = profileImageUrl ? `
     <div class="profile-image-container">
-      <img src="${escapeHTML(agent.profile_image_url)}" alt="${escapeHTML(fullName)}" class="profile-image" />
+      <img src="${escapeHTML(profileImageUrl)}" alt="${escapeHTML(fullName)}" class="profile-image" />
     </div>
   ` : `
     <div class="profile-image-container">
@@ -6158,41 +6168,44 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   // Default buttons - always shown
   const attractionPageUrl = `${siteUrl}/${escapeHTML(agent.slug)}/`;
 
-  // Link ordering from settings (default: join-team first, then learn-about, then custom links)
-  const linkOrder = agent.links_settings?.linkOrder || ['join-team', 'learn-about'];
+  // Link ordering from settings (default: about-team only, join-team is optional)
+  const linkOrder = agent.links_settings?.linkOrder || ['about-team'];
+
+  // S logo PNG: dark for light icon style, off-white for dark icon style
+  const sLogoPng = iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png';
 
   // Function to generate all links HTML in the correct order
   function generateLinksHTML(agent, customLinks, accentColor, iconColor, attractionPageUrl) {
     // Build a map of all links
     const allLinks = {};
 
-    // Default buttons with icons
-    allLinks['join-team'] = {
+    // Default button: About My Team with S logo PNG
+    allLinks['about-team'] = {
       type: 'default',
+      id: 'about-team',
+      html: `<a href="${attractionPageUrl}" class="link-button secondary">
+        <img src="${sLogoPng}" alt="S" class="link-icon" width="20" height="20" style="object-fit: contain;" />
+        <span>About My Team</span>
+      </a>`
+    };
+
+    // Optional button: Join My Team (only shown if user adds it)
+    allLinks['join-team'] = {
+      type: 'optional',
       id: 'join-team',
       html: `<button onclick="openJoinModal()" class="link-button primary">
-        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
           <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
         </svg>
-        <span>Join my Team</span>
+        <span>Join My Team</span>
       </button>`
-    };
-    allLinks['learn-about'] = {
-      type: 'default',
-      id: 'learn-about',
-      html: `<a href="${attractionPageUrl}" class="link-button secondary">
-        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-        </svg>
-        <span>Learn About my Team</span>
-      </a>`
     };
 
     // Custom links
     customLinks.forEach(link => {
       const iconPath = link.icon && LINK_ICONS[link.icon] ? LINK_ICONS[link.icon] : null;
       const iconHTML = iconPath ? `
-        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
           <path d="${iconPath}"/>
         </svg>
       ` : '';
@@ -6220,9 +6233,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       }
     });
 
-    // Also ensure default buttons are included if not in linkOrder
-    if (!orderedIds.includes('join-team')) orderedIds.push('join-team');
-    if (!orderedIds.includes('learn-about')) orderedIds.push('learn-about');
+    // Ensure about-team is always present (default button)
+    if (!orderedIds.includes('about-team')) orderedIds.unshift('about-team');
 
     // Generate HTML
     return orderedIds

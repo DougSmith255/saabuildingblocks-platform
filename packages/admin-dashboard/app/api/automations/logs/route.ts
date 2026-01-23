@@ -6,6 +6,7 @@ import path from 'path';
 const ALLOWED_LOGS: Record<string, string> = {
   'everwebinar-sync.log': '/var/log/everwebinar-sync.log',
   'email-automation.log': '/var/log/email-automation.log',
+  'dependency-updates.log': '/var/log/dependency-updates.log',
 };
 
 export async function GET(request: NextRequest) {
