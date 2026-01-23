@@ -2040,6 +2040,12 @@ function AgentPortal() {
                     className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors mb-3"
                     title="Click to change profile picture"
                   >
+                    {/* Upload spinner - shows while uploading */}
+                    {isUploadingDashboardImage && (
+                      <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
+                        <div className="w-10 h-10 border-3 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                      </div>
+                    )}
                     {user?.profilePictureUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
@@ -2084,11 +2090,10 @@ function AgentPortal() {
                   </h3>
                   <p className="text-[#e5e4dd]/60 text-sm">{user?.email}</p>
 
-                  {/* Dashboard Upload Status */}
-                  {dashboardUploadStatus && (
-                    <div className="mt-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs flex items-center gap-2">
-                      <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                      <span className="truncate">{dashboardUploadStatus}</span>
+                  {/* Dashboard Upload Status - only show completion message, spinner is in image */}
+                  {dashboardUploadStatus && !isUploadingDashboardImage && (
+                    <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center">
+                      {dashboardUploadStatus}
                     </div>
                   )}
                   {dashboardUploadError && (
@@ -2278,6 +2283,12 @@ function AgentPortal() {
                     onClick={handleProfilePictureClick}
                     className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors"
                   >
+                    {/* Upload spinner - shows while uploading */}
+                    {isUploadingDashboardImage && (
+                      <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
+                        <div className="w-10 h-10 border-3 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                      </div>
+                    )}
                     {user?.profilePictureUrl && !profileImageError ? (
                       <>
                         {/* Loading spinner - shows while image is loading */}
@@ -2316,11 +2327,10 @@ function AgentPortal() {
                   </button>
                   <p className="mt-2 text-sm text-[#e5e4dd]/60">Tap to change photo</p>
 
-                  {/* Upload Status */}
-                  {dashboardUploadStatus && (
-                    <div className="mt-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs flex items-center gap-2 w-full">
-                      <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                      <span className="truncate">{dashboardUploadStatus}</span>
+                  {/* Upload Status - only show completion message */}
+                  {dashboardUploadStatus && !isUploadingDashboardImage && (
+                    <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center w-full">
+                      {dashboardUploadStatus}
                     </div>
                   )}
                   {dashboardUploadError && (
@@ -2643,6 +2653,12 @@ function AgentPortal() {
                   onClick={handleProfilePictureClick}
                   className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors"
                 >
+                  {/* Upload spinner - shows while uploading */}
+                  {isUploadingDashboardImage && (
+                    <div className="absolute inset-0 bg-[#0a0a0a]/90 flex items-center justify-center z-20">
+                      <div className="w-12 h-12 border-3 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                    </div>
+                  )}
                   {user?.profilePictureUrl && !profileImageError ? (
                     <>
                       {/* Loading spinner - shows while image is loading */}
@@ -2681,11 +2697,10 @@ function AgentPortal() {
                 </button>
                 <p className="mt-2 text-sm text-[#e5e4dd]/60">Click to change photo</p>
 
-                {/* Dashboard Upload Status in Modal */}
-                {dashboardUploadStatus && (
-                  <div className="mt-3 p-2 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs flex items-center gap-2 w-full">
-                    <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
-                    <span className="truncate">{dashboardUploadStatus}</span>
+                {/* Dashboard Upload Status in Modal - only show completion message */}
+                {dashboardUploadStatus && !isUploadingDashboardImage && (
+                  <div className="mt-3 p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs text-center w-full">
+                    {dashboardUploadStatus}
                   </div>
                 )}
                 {dashboardUploadError && (
@@ -7324,28 +7339,24 @@ function AgentPagesSection({
   const filledCustomSocial = customSocialLinks.filter(link => link.url).length;
   const filledSocialLinks = filledBuiltInSocial + filledCustomSocial;
 
-  // Helper to get color version URL from B&W URL
-  // B&W: .../profiles/agent-page-xxx.png -> Color: .../profiles/agent-page-xxx-color.png
-  const getColorImageUrl = (bwUrl: string | null | undefined): string | null => {
-    if (!bwUrl) return null;
-    // Insert '-color' before the file extension
-    const match = bwUrl.match(/^(.+)\.(\w+)$/);
-    if (match) {
-      return `${match[1]}-color.${match[2]}`;
-    }
-    return bwUrl;
-  };
-
   // Get the appropriate profile image URL based on color setting
+  // IMPORTANT: Only return color URL if it actually exists in the database
+  // Never derive/guess a color URL as it may not exist (404 error)
   const getProfileImageUrl = (): string | null => {
     const baseUrl = pageData?.profile_image_url || user?.profilePictureUrl || null;
     if (!baseUrl) return null;
-    if (linksSettings.showColorPhoto) {
-      // Prefer the stored color URL if available, otherwise derive from B&W URL
-      return pageData?.profile_image_color_url || getColorImageUrl(baseUrl);
+
+    // Only use color URL if showColorPhoto is ON and color URL actually exists
+    if (linksSettings.showColorPhoto && pageData?.profile_image_color_url) {
+      return pageData.profile_image_color_url;
     }
+
+    // Otherwise return the B&W base URL
     return baseUrl;
   };
+
+  // Check if color version is available
+  const hasColorImage = Boolean(pageData?.profile_image_color_url);
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -8294,13 +8305,23 @@ return (
                   B&W
                 </button>
                 <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.showColorPhoto ? 'text-black' : 'text-white/60 hover:text-white'}`}
+                  onClick={() => {
+                    if (hasColorImage) {
+                      setLinksSettings(prev => ({ ...prev, showColorPhoto: true }));
+                      setHasUnsavedChanges(true);
+                    }
+                  }}
+                  disabled={!hasColorImage}
+                  title={!hasColorImage ? 'Upload a new photo to enable color mode' : 'Show color photo'}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.showColorPhoto && hasColorImage ? 'text-black' : 'text-white/60 hover:text-white'} ${!hasColorImage ? 'opacity-50 cursor-not-allowed' : ''}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Color
                 </button>
               </div>
+              {!hasColorImage && (
+                <p className="text-[9px] text-white/40 mt-1">Upload new photo for color option</p>
+              )}
             </div>
           </div>
 
@@ -8829,7 +8850,7 @@ return (
                     }
 
                     return (
-                      <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform }}>
+                      <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform, overflow: 'visible' }}>
                         {/* Button - Full width inside phone screen with centered text */}
                         <div
                           className="w-full py-2.5 px-3 rounded-lg text-sm relative"
@@ -8838,6 +8859,7 @@ return (
                             color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                            overflow: 'visible',
                           }}
                         >
                           {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
@@ -8845,10 +8867,11 @@ return (
                             <img
                               src={linksSettings.iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}
                               alt="S"
-                              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 object-contain"
+                              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 object-contain pointer-events-none"
+                              style={{ zIndex: 1 }}
                             />
                           ) : (
-                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                             </svg>
                           )}
@@ -9517,15 +9540,23 @@ return (
             {/* Photo + Toggle */}
             <div className="flex items-start gap-4">
               <div
-                className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden flex-shrink-0"
+                className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden flex-shrink-0 relative"
                 style={{
                   borderColor: linksSettings.accentColor,
-                  backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
                 }}
               >
+                {/* Image with B&W filter - border stays colored */}
+                {getProfileImageUrl() && (
+                  <div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      backgroundImage: `url(${getProfileImageUrl()})`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+                    }}
+                  />
+                )}
                 {!getProfileImageUrl() && <span className="text-white/40 text-2xl">👤</span>}
               </div>
               <div className="flex flex-col gap-2">
@@ -9539,10 +9570,20 @@ return (
                     className={`flex-1 px-3 py-1.5 text-xs font-medium ${!linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}
                   >B&W</button>
                   <button
-                    onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                    className={`flex-1 px-3 py-1.5 text-xs font-medium ${linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}
+                    onClick={() => {
+                      if (hasColorImage) {
+                        setLinksSettings(prev => ({ ...prev, showColorPhoto: true }));
+                        setHasUnsavedChanges(true);
+                      }
+                    }}
+                    disabled={!hasColorImage}
+                    title={!hasColorImage ? 'Upload a new photo to enable color mode' : ''}
+                    className={`flex-1 px-3 py-1.5 text-xs font-medium ${linksSettings.showColorPhoto && hasColorImage ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'} ${!hasColorImage ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >Color</button>
                 </div>
+                {!hasColorImage && (
+                  <p className="text-[10px] text-white/40">Upload new photo for color</p>
+                )}
               </div>
             </div>
 
@@ -9988,7 +10029,7 @@ return (
       }
     `}</style>
     <div
-      className="fixed bottom-20 right-4 z-50 min-[1100px]:bottom-4 pixel-help-button"
+      className="fixed bottom-[130px] right-4 z-50 min-[950px]:bottom-[60px] min-[1100px]:bottom-4 pixel-help-button"
       title="Need Help?"
     >
       <button name="checkbox" type="button" onClick={() => setShowLinkPageHelpModal(true)}></button>
