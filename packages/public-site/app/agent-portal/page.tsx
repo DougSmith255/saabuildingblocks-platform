@@ -2963,33 +2963,50 @@ function AgentPortal() {
         </div>
       )}
 
-      {/* Link Page Help Modal - Re-accessible via question mark button */}
+      {/* Link Page Help Modal - Premium Glass with Yellow Highlights */}
       {showLinkPageHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
           onClick={() => setShowLinkPageHelpModal(false)}
           onWheel={(e) => e.stopPropagation()}
         >
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-md" />
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" />
 
-          {/* Modal */}
+          {/* Modal - Premium Glass Effect */}
           <div
-            className="relative w-full max-w-lg my-auto bg-[#151517] rounded-2xl border border-emerald-500/30 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.2)',
+              boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
             onClick={(e) => e.stopPropagation()}
             onWheel={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between p-5 border-b border-white/10 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-t-2xl">
+            {/* Header - Gold gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%)',
+              }}
+            >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-500/20 border border-emerald-500/30">
-                  <LinkIcon className="w-6 h-6 text-emerald-400" />
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 215, 0, 0.15)',
+                    border: '1px solid rgba(255, 215, 0, 0.3)',
+                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
+                  }}
+                >
+                  <LinkIcon className="w-6 h-6 text-[#ffd700]" />
                 </div>
-                <h2 className="text-xl font-semibold text-emerald-400">Link Page Help</h2>
+                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Link Page Help</h2>
               </div>
               <button
                 onClick={() => setShowLinkPageHelpModal(false)}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -3003,39 +3020,68 @@ function AgentPortal() {
                 Your Link Page is your personalized hub for sharing all your important links in one place. Complete these sections to activate it:
               </p>
 
-              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                <ul className="space-y-2 text-[#e5e4dd]/80 text-sm">
+              {/* Checklist - Glass card */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                <ul className="space-y-2.5 text-[#e5e4dd]/80 text-sm">
                   <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-0.5">✓</span>
-                    <span><strong>Profile</strong> - Add your photo and display name</span>
+                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
+                    <span><strong className="text-[#e5e4dd]">Profile</strong> - Add your photo and display name</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-0.5">✓</span>
-                    <span><strong>Design</strong> - Choose your style and accent color</span>
+                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
+                    <span><strong className="text-[#e5e4dd]">Design</strong> - Choose your style and accent color</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-0.5">✓</span>
-                    <span><strong>Connect</strong> - Add your contact information</span>
+                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
+                    <span><strong className="text-[#e5e4dd]">Connect</strong> - Add your contact information</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <span className="text-emerald-400 mt-0.5">✓</span>
-                    <span><strong>Links</strong> - Add your important links</span>
+                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
+                    <span><strong className="text-[#e5e4dd]">Links</strong> - Add your important links</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-blue-500/10 rounded-lg p-4 border border-blue-500/30">
-                <p className="text-blue-400 text-sm mb-2">
-                  <strong>Your Page URL:</strong>
+              {/* URL Info - Glass card with gold accent */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.02) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
+                }}
+              >
+                <p className="text-[#ffd700] text-sm mb-2 font-medium">
+                  Your Page URL:
                 </p>
-                <code className="text-blue-300 text-sm font-mono bg-black/30 px-2 py-1 rounded">
+                <code
+                  className="text-sm font-mono px-3 py-1.5 rounded block"
+                  style={{
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    color: '#fde68a',
+                    border: '1px solid rgba(255, 215, 0, 0.1)',
+                  }}
+                >
                   smartagentalliance.com/{(user?.firstName || 'firstname').toLowerCase()}-{(user?.lastName || 'lastname').toLowerCase()}-links
                 </code>
               </div>
 
-              <div className="bg-purple-500/10 rounded-lg p-4 border border-purple-500/30">
-                <p className="text-purple-400 text-sm">
-                  <strong>Note:</strong> Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
+              {/* Note - Glass card */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  <strong className="text-[#e5e4dd]">Note:</strong> Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
                 </p>
               </div>
             </div>
@@ -3044,7 +3090,20 @@ function AgentPortal() {
             <div className="p-5 border-t border-white/10">
               <button
                 onClick={() => setShowLinkPageHelpModal(false)}
-                className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-emerald-500 hover:bg-emerald-400 transition-colors"
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                  color: '#1a1a1a',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
                 Got it!
               </button>
@@ -8490,14 +8549,16 @@ return (
               boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
             }}
           >
-            {/* Phone inner bezel */}
+            {/* Phone inner bezel - overflow-x visible for button controls, y hidden for scrolling */}
             <div
-              className="rounded-[2.25rem] relative overflow-hidden flex flex-col"
+              className="rounded-[2.25rem] relative flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
                 minHeight: '580px',
                 padding: '32px 16px 20px 16px',
+                overflowX: 'visible',
+                overflowY: 'hidden',
               }}
             >
               {/* Star Field Background */}
@@ -8609,59 +8670,59 @@ return (
                 {linksSettings.bio && (
                   <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-2">{linksSettings.bio}</p>
                 )}
+              </div>
 
-                {/* Contact Buttons (Call/Text/Email) - styled like link buttons */}
-                {(() => {
-                  const contacts = [];
-                  if (formData.phone && linksSettings.showCallButton !== false) {
-                    contacts.push({ type: 'call', label: 'Call', icon: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' });
-                  }
-                  if (formData.phone && linksSettings.showTextButton !== false) {
-                    contacts.push({ type: 'text', label: 'Text', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' });
-                  }
-                  if (formData.email) {
-                    contacts.push({ type: 'email', label: 'Email', icon: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' });
-                  }
+              {/* Contact Buttons (Call/Text/Email) - styled like link buttons, OUTSIDE centered container for full width */}
+              {(() => {
+                const contacts = [];
+                if (formData.phone && formData.show_call_button !== false) {
+                  contacts.push({ type: 'call', label: 'Call', icon: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' });
+                }
+                if (formData.phone && formData.show_text_button !== false) {
+                  contacts.push({ type: 'text', label: 'Text', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' });
+                }
+                if (formData.email) {
+                  contacts.push({ type: 'email', label: 'Email', icon: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' });
+                }
 
-                  if (contacts.length === 0) return null;
+                if (contacts.length === 0) return null;
 
-                  const buttonCount = contacts.length;
-                  const showIconsOnly = buttonCount > 1;
+                const buttonCount = contacts.length;
+                const showIconsOnly = buttonCount > 1;
 
-                  return (
-                    <div className="flex gap-1.5 mt-3 mb-1.5">
-                      {contacts.map((contact, idx) => (
-                        <div
-                          key={idx}
-                          className="flex-1 py-2.5 text-sm relative"
-                          style={{
-                            backgroundColor: linksSettings.accentColor,
-                            color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                            fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                            fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
-                            borderRadius: buttonCount === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
-                          }}
-                        >
-                          {showIconsOnly ? (
-                            /* Icons only mode - centered icon */
-                            <svg className="mx-auto w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                return (
+                  <div className="flex gap-1.5 mt-3 mb-1.5">
+                    {contacts.map((contact, idx) => (
+                      <div
+                        key={idx}
+                        className="flex-1 py-2.5 text-sm relative"
+                        style={{
+                          backgroundColor: linksSettings.accentColor,
+                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                          fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                          fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                          borderRadius: buttonCount === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
+                        }}
+                      >
+                        {showIconsOnly ? (
+                          /* Icons only mode - centered icon */
+                          <svg className="mx-auto w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
+                          </svg>
+                        ) : (
+                          /* Single button mode - icon left, text centered */
+                          <>
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
                             </svg>
-                          ) : (
-                            /* Single button mode - icon left, text centered */
-                            <>
-                              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
-                              </svg>
-                              <span className="block w-full text-center">{contact.label}</span>
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                })()}
-              </div>
+                            <span className="block w-full text-center">{contact.label}</span>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
 
               {/* Button Links with Editor - overflow visible for external controls */}
               <div className="space-y-1.5 relative" style={{ overflow: 'visible' }}>
@@ -8687,31 +8748,29 @@ return (
                       const swappingId = allLinkIds[currentIndex - 1];
                       // Start animation
                       setAnimatingSwap({ movingId: linkId, swappingId, direction });
-                      // After animation, update the actual order
+                      // After animation completes, clear animation FIRST then update order
                       setTimeout(() => {
+                        // Clear animation immediately
+                        setAnimatingSwap(null);
+                        // Update order in same tick - React will batch these
                         const newOrder = [...allLinkIds];
                         [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
                         setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
                         setHasUnsavedChanges(true);
-                        // Clear animation after React has re-rendered with new order
-                        requestAnimationFrame(() => {
-                          requestAnimationFrame(() => setAnimatingSwap(null));
-                        });
                       }, 200);
                     } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
                       const swappingId = allLinkIds[currentIndex + 1];
                       // Start animation
                       setAnimatingSwap({ movingId: linkId, swappingId, direction });
-                      // After animation, update the actual order
+                      // After animation completes, clear animation FIRST then update order
                       setTimeout(() => {
+                        // Clear animation immediately
+                        setAnimatingSwap(null);
+                        // Update order in same tick - React will batch these
                         const newOrder = [...allLinkIds];
                         [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
                         setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
                         setHasUnsavedChanges(true);
-                        // Clear animation after React has re-rendered with new order
-                        requestAnimationFrame(() => {
-                          requestAnimationFrame(() => setAnimatingSwap(null));
-                        });
                       }, 200);
                     }
                   };
@@ -8769,8 +8828,8 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Positioned in phone border area (left side) - z-20 to appear above border */}
-                        <div className="absolute -left-7 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-0.5 bg-zinc-800/90 rounded px-0.5 py-0.5 shadow-lg">
+                        {/* Controls - Positioned in phone border area (left side) - z-50 to appear above border */}
+                        <div className="absolute -left-7 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-0.5 bg-zinc-800/90 rounded px-0.5 py-0.5 shadow-lg">
                           <button
                             onClick={() => moveLink(linkId, 'up')}
                             disabled={index === 0}
@@ -8791,7 +8850,7 @@ return (
                           </button>
                         </div>
 
-                        {/* Edit Button - Positioned in phone border area (right side) - z-20 to appear above border */}
+                        {/* Edit Button - Positioned in phone border area (right side) - z-50 to appear above border */}
                         {!isDefault && (
                           <button
                             onClick={() => {
@@ -8800,7 +8859,7 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-7 top-1/2 -translate-y-1/2 z-20 p-1 bg-zinc-800/90 rounded text-white/70 hover:text-white transition-colors shadow-lg"
+                            className="absolute -right-7 top-1/2 -translate-y-1/2 z-50 p-1 bg-zinc-800/90 rounded text-white/70 hover:text-white transition-colors shadow-lg"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -8843,9 +8902,9 @@ return (
                                 style={{ color: 'inherit' }}
                               />
                             </div>
-                            {/* Icon Picker Dropdown */}
+                            {/* Icon Picker Dropdown - z-[100] to overlay */}
                             {showIconPicker === linkId && (
-                              <div className="p-2 rounded-lg bg-black/80 border border-white/20 max-h-[150px] overflow-y-auto">
+                              <div className="p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] relative shadow-xl">
                                 <div className="grid grid-cols-6 gap-1">
                                   {LINK_ICONS.map((icon) => (
                                     <button
@@ -8924,18 +8983,15 @@ return (
                         fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                       }}
                     >
-                      {/* Clickable circle + icon positioned absolutely on the left - opens icon picker */}
+                      {/* Clickable icon positioned absolutely on the left - opens icon picker */}
                       <button
                         onClick={() => setShowIconPicker(showIconPicker === 'new-link' ? null : 'new-link')}
                         className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
                         title="Choose icon"
                       >
                         {newLinkIcon === 'Globe' ? (
-                          <span className="w-4 h-4 rounded-full border-2 border-current flex items-center justify-center">
-                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                              <path d="M12 5v14M5 12h14" />
-                            </svg>
-                          </span>
+                          /* Plain + symbol */
+                          <span className="text-lg font-bold leading-none">+</span>
                         ) : (
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
@@ -8953,9 +9009,9 @@ return (
                         style={{ color: 'inherit' }}
                       />
                     </div>
-                    {/* Icon Picker Dropdown for new link */}
+                    {/* Icon Picker Dropdown for new link - z-[100] to overlay */}
                     {showIconPicker === 'new-link' && (
-                      <div className="p-2 rounded-lg bg-black/80 border border-white/20 max-h-[150px] overflow-y-auto">
+                      <div className="p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] relative shadow-xl">
                         <div className="grid grid-cols-6 gap-1">
                           {LINK_ICONS.map((icon) => (
                             <button
@@ -9028,15 +9084,11 @@ return (
                 ) : (
                   <button
                     onClick={() => setAddingNewLink(true)}
-                    className="w-full py-2.5 text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30 flex items-center justify-center gap-2"
+                    className="w-full py-2.5 text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30 flex items-center justify-center gap-1"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                   >
-                    {/* Circle with + icon */}
-                    <span className="w-5 h-5 rounded-full border-2 border-current flex items-center justify-center">
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path d="M12 5v14M5 12h14" />
-                      </svg>
-                    </span>
+                    {/* Plain + symbol */}
+                    <span className="text-lg font-bold leading-none">+</span>
                     Add Button
                   </button>
                 )}
@@ -9080,7 +9132,7 @@ return (
       {/* ================================================================
           SOCIAL LINKS CARD (spans 2 columns)
           ================================================================ */}
-      <div className="rounded-xl overflow-hidden col-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      <div className="rounded-xl col-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)', overflow: 'visible' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -9207,9 +9259,9 @@ return (
                   className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
                 />
               </div>
-              {/* Icon Picker for Custom 1 */}
+              {/* Icon Picker for Custom 1 - fixed position to break out of containers */}
               {showSocialIconPicker === 0 && (
-                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-30 max-h-[180px] overflow-y-auto w-48">
+                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
                   <div className="grid grid-cols-6 gap-1">
                     {LINK_ICONS.map((icon) => (
                       <button
@@ -9275,9 +9327,9 @@ return (
                   className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
                 />
               </div>
-              {/* Icon Picker for Custom 2 */}
+              {/* Icon Picker for Custom 2 - fixed position to break out of containers */}
               {showSocialIconPicker === 1 && (
-                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-30 max-h-[180px] overflow-y-auto w-48">
+                <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 z-[100] max-h-[180px] overflow-y-auto w-48 shadow-xl">
                   <div className="grid grid-cols-6 gap-1">
                     {LINK_ICONS.map((icon) => (
                       <button
@@ -9722,16 +9774,201 @@ return (
       <div className="h-20" />
     </div>
 
-    {/* Floating Help Button */}
-    <button
-      onClick={() => setShowLinkPageHelpModal(true)}
-      className="fixed bottom-20 right-4 z-50 w-12 h-12 rounded-full bg-emerald-500 text-white shadow-lg hover:bg-emerald-600 transition-colors flex items-center justify-center min-[1100px]:bottom-4"
+    {/* Floating Help Button - Pixel Art Style */}
+    <style jsx>{`
+      .pixel-help-button {
+        --stone-50: #fafaf9;
+        --stone-800: #292524;
+        --yellow-300: #fde047;
+        --yellow-400: #facc15;
+        --yellow-500: #eab308;
+        --black-25: rgba(0, 0, 0, 0.25);
+
+        position: relative;
+        display: block;
+        width: 4rem;
+        height: 4rem;
+        cursor: pointer;
+      }
+
+      .pixel-help-button > button {
+        cursor: pointer;
+        display: inline-block;
+        height: 100%;
+        width: 100%;
+        appearance: none;
+        border: 2px solid var(--stone-800);
+        border-radius: 0.25rem;
+        background-color: var(--yellow-400);
+        outline: 2px solid transparent;
+        outline-offset: 2px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .pixel-help-button > button:hover {
+        background-color: var(--yellow-300);
+      }
+
+      .pixel-help-button > button:active {
+        outline-color: var(--stone-800);
+      }
+
+      .pixel-help-button > button:focus-visible {
+        outline-color: var(--stone-800);
+        outline-style: dashed;
+      }
+
+      .pixel-help-button > span:nth-child(2) {
+        position: absolute;
+        inset: 3px;
+        pointer-events: none;
+        background-color: var(--yellow-400);
+        border-bottom: 2px solid var(--black-25);
+        transition: transform 75ms;
+      }
+
+      .pixel-help-button > span:nth-child(2)::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(
+            rgb(255 255 255 / 80%) 20%,
+            transparent 20%
+          ),
+          radial-gradient(rgb(255 255 255 / 100%) 20%, transparent 20%);
+        background-position:
+          0 0,
+          4px 4px;
+        background-size: 8px 8px;
+        mix-blend-mode: hard-light;
+        opacity: 0.5;
+        animation: pixel-dots 0.5s infinite linear;
+      }
+
+      .pixel-help-button > span:nth-child(3) {
+        position: absolute;
+        pointer-events: none;
+        inset: 0;
+      }
+
+      .pixel-help-button > span:nth-child(3)::before {
+        content: "";
+        width: 0.375rem;
+        height: 0.375rem;
+        position: absolute;
+        top: 0.25rem;
+        left: 0.25rem;
+        background-color: var(--stone-800);
+        border-radius: 0.125rem;
+        box-shadow:
+          3.125em 0 var(--stone-800),
+          0 3.125em var(--stone-800),
+          3.125em 3.125em var(--stone-800);
+      }
+
+      .pixel-help-button > span:nth-child(4) {
+        position: absolute;
+        pointer-events: none;
+        inset: 0;
+        filter: drop-shadow(0.25em 0.25em 0 rgba(0, 0, 0, 0.2));
+        transition: all 75ms;
+      }
+
+      .pixel-help-button > span:nth-child(4)::after {
+        content: "";
+        width: 0.25rem;
+        height: 0.25rem;
+        position: absolute;
+        top: 0.875rem;
+        left: 1rem;
+        border-radius: 0.0625px;
+        background-color: var(--stone-800);
+        box-shadow:
+          0.75em 2em var(--stone-800),
+          1em 2em var(--stone-800),
+          0.75em 1.75em var(--stone-800),
+          1em 1.75em var(--stone-800),
+          0.75em 1.25em var(--stone-800),
+          1em 1.25em var(--stone-800),
+          0.75em 1em var(--stone-800),
+          1em 1em var(--stone-800),
+          1em 0.75em var(--stone-800),
+          1.5em 0.75em var(--stone-800),
+          1.25em 0.75em var(--stone-800),
+          1.25em -0.25em var(--stone-800),
+          1.5em 0em var(--stone-800),
+          1.25em 0.5em var(--stone-800),
+          1.5em 0.5em var(--stone-800),
+          1.25em 0.25em var(--stone-800),
+          1.5em 0.25em var(--stone-800),
+          1.25em 0 var(--stone-800),
+          1em -0.25em var(--stone-800),
+          0.75em -0.25em var(--stone-800),
+          0.5em -0.25em var(--stone-800),
+          0.25em -0.25em var(--stone-800),
+          0.25em 0 var(--stone-800),
+          0 0.25em var(--stone-800),
+          0 0.5em var(--stone-800),
+          0.25em 0.25em var(--stone-800),
+          0.25em 0.5em var(--stone-800);
+      }
+
+      .pixel-help-button > span:nth-child(5) {
+        position: absolute;
+        background-color: var(--yellow-400);
+        border: 2px solid var(--stone-800);
+        border-radius: 0.75rem;
+        pointer-events: none;
+        z-index: -1;
+        inset: 0.5rem 1.5rem;
+        box-shadow:
+          7px 0 0 0 var(--stone-800),
+          inset 0 2px 0 0 var(--yellow-300),
+          inset 0 -2px 0 0 var(--yellow-500);
+        transition: all 0ms cubic-bezier(0, 0.5, 0.4, 1);
+      }
+
+      .pixel-help-button button:active ~ span:nth-child(5) {
+        transform: translateY(-200%);
+        transition-duration: 200ms;
+        opacity: 0;
+      }
+
+      .pixel-help-button button:hover ~ span:nth-child(4) {
+        filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
+      }
+
+      @keyframes pixel-dots {
+        0% {
+          background-position:
+            0 0,
+            4px 4px;
+        }
+        100% {
+          background-position:
+            8px 0,
+            12px 4px;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .pixel-help-button button:active,
+        .pixel-help-button button:focus-visible {
+          outline-color: var(--yellow-400);
+        }
+      }
+    `}</style>
+    <div
+      className="fixed bottom-20 right-4 z-50 min-[1100px]:bottom-4 pixel-help-button"
       title="Need Help?"
     >
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    </button>
+      <button name="checkbox" type="button" onClick={() => setShowLinkPageHelpModal(true)}></button>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </div>
 );
 }
