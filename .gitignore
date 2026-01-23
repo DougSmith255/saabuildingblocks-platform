@@ -105,3 +105,6 @@ CLOUDFLARE_TOKENS.md
 
 # Playwright MCP screenshots
 .playwright-mcp/
+
+# Function backups (local only)
+packages/public-site/functions/backups/
