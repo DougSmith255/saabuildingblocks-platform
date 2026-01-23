@@ -8141,14 +8141,14 @@ return (
       {/* ================================================================
           PROFILE CARD (Green header)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
-        {/* Header */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+        {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-          <span className="text-sm font-medium text-green-400">Profile</span>
+          <span className="text-sm font-medium text-green-400" style={{ textShadow: '0 0 8px rgba(74, 222, 128, 0.5)' }}>Profile</span>
         </div>
 
         {/* Content */}
@@ -8156,7 +8156,7 @@ return (
           {/* Photo + B&W/Color Toggle */}
           <div className="flex items-start gap-4">
             <div
-              className="w-16 h-16 rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+              className="w-[70px] h-[70px] rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
               style={{
                 backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
                 backgroundSize: 'cover',
@@ -8165,7 +8165,7 @@ return (
               }}
             >
               {!getProfileImageUrl() && (
-                <svg className="w-8 h-8 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-9 h-9 text-white/30" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
               )}
@@ -8250,13 +8250,13 @@ return (
       {/* ================================================================
           STYLE CARD (Purple header)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
-        {/* Header */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+        {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
           </svg>
-          <span className="text-sm font-medium text-purple-400">Style</span>
+          <span className="text-sm font-medium text-purple-400" style={{ textShadow: '0 0 8px rgba(192, 132, 252, 0.5)' }}>Style</span>
         </div>
 
         {/* Content */}
@@ -8292,13 +8292,15 @@ return (
             <div className="flex gap-2">
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Light
               </button>
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Dark
               </button>
@@ -8311,13 +8313,15 @@ return (
             <div className="flex gap-2">
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Bold
               </button>
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Regular
               </button>
@@ -8330,13 +8334,15 @@ return (
             <div className="flex gap-2">
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Synonym
               </button>
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                className={`flex-1 px-3 py-2 rounded-lg text-xs font-bold transition-colors ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'bg-black/40 border border-white/10 text-white/60 hover:bg-white/10'}`}
+                style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Taskor
               </button>
@@ -8348,14 +8354,14 @@ return (
       {/* ================================================================
           CONTACT CARD (Cyan header)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
-        {/* Header */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+        {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="M22 7l-10 5L2 7" />
           </svg>
-          <span className="text-sm font-medium text-cyan-400">Contact</span>
+          <span className="text-sm font-medium text-cyan-400" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>Contact</span>
         </div>
 
         {/* Content */}
@@ -8412,14 +8418,14 @@ return (
       {/* ================================================================
           PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden row-span-2">
-        {/* Header */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden row-span-2" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+        {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
             <line x1="12" y1="18" x2="12" y2="18" />
           </svg>
-          <span className="text-sm font-medium text-[#ffd700]">Preview / Button Links</span>
+          <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Preview / Button Links</span>
         </div>
 
         {/* Phone Mockup - Premium Styling */}
@@ -8436,12 +8442,12 @@ return (
           >
             {/* Phone inner bezel */}
             <div
-              className="rounded-[1.75rem] relative overflow-hidden"
+              className="rounded-[1.75rem] relative overflow-hidden flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
                 boxShadow: 'inset 0 0 15px rgba(0,0,0,0.5)',
-                minHeight: '300px',
-                padding: '20px 10px 12px 10px',
+                minHeight: '380px',
+                padding: '24px 12px 16px 12px',
               }}
             >
               {/* Notch */}
@@ -8466,12 +8472,14 @@ return (
                   )}
                 </div>
 
-                {/* Name */}
+                {/* Name with H1 Glow Effect */}
                 <span
                   className={`text-sm text-center leading-tight ${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'}`}
                   style={{
                     color: linksSettings.accentColor,
-                    fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                    fontFamily: 'var(--font-taskor, sans-serif)',
+                    fontFeatureSettings: '"ss01", "ss02", "ss03", "salt"',
+                    textShadow: `0 0 20px ${linksSettings.accentColor}80, 0 0 40px ${linksSettings.accentColor}4D`,
                   }}
                 >
                   {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
@@ -8714,16 +8722,24 @@ return (
                   <button
                     onClick={() => setAddingNewLink(true)}
                     className="w-full py-1.5 text-center text-[10px] text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30"
+                    style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                   >
                     + Add Button
                   </button>
                 )}
               </div>
 
-              {/* SAA Logo */}
-              <div className="mt-auto pt-2 flex flex-col items-center">
-                <span className="text-[#ffd700] text-xs font-bold" style={{ fontFamily: 'var(--font-taskor, sans-serif)' }}>SAA</span>
-                <span className="text-[7px] text-white/40">Powered by Smart Agent Alliance</span>
+              {/* SAA Logo - Styled */}
+              <div className="mt-auto pt-3 flex flex-col items-center">
+                <svg width="36" height="16" viewBox="0 0 72 32" className="mb-0.5">
+                  {/* S */}
+                  <path d="M4 8c0-2 2-4 6-4s6 2 6 4c0 3-6 4-6 8 0 2 2 4 6 4s6-2 6-4" fill="none" stroke="#ffd700" strokeWidth="3" strokeLinecap="round"/>
+                  {/* A */}
+                  <path d="M24 20L30 4L36 20M26 14h8" fill="none" stroke="#ffd700" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                  {/* A */}
+                  <path d="M44 20L50 4L56 20M46 14h8" fill="none" stroke="#ffd700" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span className="text-[7px] text-white/40 tracking-wide">Powered by Smart Agent Alliance</span>
               </div>
             </div>
           </div>
@@ -8733,14 +8749,17 @@ return (
       {/* ================================================================
           SOCIAL LINKS CARD (spans 2 columns)
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden col-span-2">
-        {/* Header */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden col-span-2" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+        {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
-            <span className="text-sm font-medium text-indigo-400">Social Links</span>
+            <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Social Links</span>
           </div>
           <span className="text-xs text-white/40">{filledSocialLinks}/6 max</span>
         </div>
@@ -8821,10 +8840,10 @@ return (
             </div>
 
             {/* Custom 1 */}
-            <div>
+            <div className="min-w-0">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 1</label>
               <div className="flex gap-1">
-                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10">
+                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10 flex-shrink-0">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 8v8M8 12h8" />
@@ -8844,16 +8863,16 @@ return (
                     setHasUnsavedChanges(true);
                   }}
                   placeholder="URL"
-                  className="flex-1 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+                  className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Custom 2 */}
-            <div>
+            <div className="min-w-0">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Custom 2</label>
               <div className="flex gap-1">
-                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10">
+                <button className="p-2 rounded-lg bg-black/40 border border-white/10 text-white/60 hover:bg-white/10 flex-shrink-0">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 8v8M8 12h8" />
@@ -8873,7 +8892,7 @@ return (
                     setHasUnsavedChanges(true);
                   }}
                   placeholder="URL"
-                  className="flex-1 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+                  className="flex-1 min-w-0 px-2 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
                 />
               </div>
             </div>
@@ -8884,13 +8903,13 @@ return (
       {/* ================================================================
           PAGE ACTIONS CARD
           ================================================================ */}
-      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/10 overflow-hidden">
-        {/* Header */}
+      <div className="rounded-xl bg-[#1a1a1a]/80 border border-white/[0.08] overflow-hidden" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 20px rgba(0,0,0,0.3)' }}>
+        {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
-          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
             <path d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
-          <span className="text-sm font-medium text-emerald-400">Page Actions</span>
+          <span className="text-sm font-medium text-emerald-400" style={{ textShadow: '0 0 8px rgba(52, 211, 153, 0.5)' }}>Page Actions</span>
         </div>
 
         {/* Content */}
@@ -8910,34 +8929,30 @@ return (
           )}
 
           {/* View Page */}
-          {pageData?.slug && (
-            <a
-              href={`https://saabuildingblocks.com/${pageData.slug}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              VIEW PAGE
-            </a>
-          )}
+          <button
+            onClick={() => pageData?.slug && window.open(`https://saabuildingblocks.com/${pageData.slug}`, '_blank')}
+            disabled={!pageData?.slug}
+            className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            VIEW PAGE
+          </button>
 
           {/* Copy URL */}
-          {pageData?.slug && (
-            <button
-              onClick={() => navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)}
-              className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-              </svg>
-              COPY URL
-            </button>
-          )}
+          <button
+            onClick={() => pageData?.slug && navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)}
+            disabled={!pageData?.slug}
+            className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            COPY URL
+          </button>
 
           {/* Download QR */}
           <button
