@@ -7200,12 +7200,13 @@ function AgentPagesSection({
   const [newLinkLabel, setNewLinkLabel] = useState('');
   const [newLinkUrl, setNewLinkUrl] = useState('');
   const [newLinkIcon, setNewLinkIcon] = useState<string>('Globe');
-  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [showIconPicker, setShowIconPicker] = useState<string | null>(null); // Link ID of which icon picker is open
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null); // ID of link being edited
   const [editingLinkLabel, setEditingLinkLabel] = useState(''); // Label of link being edited
   const [editingLinkUrl, setEditingLinkUrl] = useState(''); // URL of link being edited
   const [editingLinkIcon, setEditingLinkIcon] = useState('Globe'); // Icon of link being edited
   const [addingNewLink, setAddingNewLink] = useState(false); // Track if adding new link
+  const [animatingSwap, setAnimatingSwap] = useState<{ movingId: string, swappingId: string, direction: 'up' | 'down' } | null>(null); // Track button swap animation
 
   // Custom social links state (max 2 custom social icons)
   const [customSocialLinks, setCustomSocialLinks] = useState<CustomSocialLink[]>(preloadedPageData?.page?.custom_social_links || []);
@@ -8158,8 +8159,9 @@ return (
           {/* Photo + B&W/Color Toggle */}
           <div className="flex items-start gap-4">
             <div
-              className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] border-white flex items-center justify-center overflow-hidden flex-shrink-0"
+              className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] flex items-center justify-center overflow-hidden flex-shrink-0"
               style={{
+                borderColor: linksSettings.accentColor,
                 backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
@@ -8186,18 +8188,23 @@ return (
               >
                 Upload Photo
               </label>
-              {/* B&W / Color Toggle - Pill Design */}
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+              {/* B&W / Color Toggle - Pill Design with Animation */}
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+                {/* Animated sliding pill indicator */}
+                <div
+                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                  style={{ transform: linksSettings.showColorPhoto ? 'translateX(100%)' : 'translateX(0)' }}
+                />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${!linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${!linksSettings.showColorPhoto ? 'text-black' : 'text-white/60 hover:text-white'}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   B&W
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.showColorPhoto ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.showColorPhoto ? 'text-black' : 'text-white/60 hover:text-white'}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Color
@@ -8295,17 +8302,22 @@ return (
             {/* Icon Style */}
             <div>
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Icon Style</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+                {/* Animated sliding pill indicator */}
+                <div
+                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                  style={{ transform: linksSettings.iconStyle === 'dark' ? 'translateX(100%)' : 'translateX(0)' }}
+                />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.iconStyle === 'light' ? 'text-black' : 'text-white/60 hover:text-white'}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Light
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.iconStyle === 'dark' ? 'text-black' : 'text-white/60 hover:text-white'}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Dark
@@ -8316,17 +8328,22 @@ return (
             {/* Button Weight */}
             <div>
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+                {/* Animated sliding pill indicator */}
+                <div
+                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                  style={{ transform: linksSettings.nameWeight === 'normal' ? 'translateX(100%)' : 'translateX(0)' }}
+                />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameWeight === 'bold' ? 'text-black' : 'text-white/60 hover:text-white'}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Bold
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameWeight === 'normal' ? 'text-black' : 'text-white/60 hover:text-white'}`}
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                 >
                   Regular
@@ -8338,17 +8355,22 @@ return (
           {/* Font */}
           <div>
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
-            <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+            <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+              {/* Animated sliding pill indicator */}
+              <div
+                className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                style={{ transform: linksSettings.font === 'taskor' ? 'translateX(100%)' : 'translateX(0)' }}
+              />
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'synonym' ? 'text-black' : 'text-white/60 hover:text-white'}`}
                 style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Synonym
               </button>
               <button
                 onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full transition-colors ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'taskor' ? 'text-black' : 'text-white/60 hover:text-white'}`}
                 style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
               >
                 Taskor
@@ -8525,10 +8547,77 @@ return (
                 {linksSettings.bio && (
                   <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px]">{linksSettings.bio}</p>
                 )}
+
+                {/* Social Links Circles */}
+                {(() => {
+                  const socialIcons = [
+                    { url: formData.facebook_url, icon: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z' },
+                    { url: formData.instagram_url, icon: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
+                    { url: formData.twitter_url, icon: 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' },
+                    { url: formData.youtube_url, icon: 'M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z' },
+                    { url: formData.tiktok_url, icon: 'M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z' },
+                    { url: formData.linkedin_url, icon: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z' },
+                  ].filter(s => s.url);
+
+                  if (socialIcons.length === 0) return null;
+
+                  return (
+                    <div className="flex justify-center gap-2 mt-2">
+                      {socialIcons.map((social, idx) => (
+                        <div
+                          key={idx}
+                          className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                          style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}
+                        >
+                          <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24">
+                            <path d={social.icon} />
+                          </svg>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
+
+                {/* Contact Buttons (Call/Text/Email) */}
+                {(() => {
+                  const contacts = [];
+                  if (formData.phone && linksSettings.showCallButton !== false) {
+                    contacts.push({ type: 'call', label: 'Call', icon: 'M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z' });
+                  }
+                  if (formData.phone && linksSettings.showTextButton !== false) {
+                    contacts.push({ type: 'text', label: 'Text', icon: 'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z' });
+                  }
+                  if (formData.email) {
+                    contacts.push({ type: 'email', label: 'Email', icon: 'M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6' });
+                  }
+
+                  if (contacts.length === 0) return null;
+
+                  return (
+                    <div className="flex justify-center gap-2 mt-2">
+                      {contacts.map((contact, idx) => (
+                        <div
+                          key={idx}
+                          className="px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs"
+                          style={{
+                            backgroundColor: `${linksSettings.accentColor}20`,
+                            border: `1px solid ${linksSettings.accentColor}40`,
+                            color: linksSettings.accentColor,
+                          }}
+                        >
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d={contact.icon} />
+                          </svg>
+                          <span style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>{contact.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
 
-              {/* Button Links with Editor */}
-              <div className="mt-2 space-y-1">
+              {/* Button Links with Editor - overflow visible for external controls */}
+              <div className="mt-2 space-y-1.5 relative" style={{ overflow: 'visible' }}>
                 {(() => {
                   const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
                   const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
@@ -8543,17 +8632,34 @@ return (
                   }
 
                   const moveLink = (linkId: string, direction: 'up' | 'down') => {
+                    // Don't allow moves while animating
+                    if (animatingSwap) return;
+
                     const currentIndex = allLinkIds.indexOf(linkId);
                     if (direction === 'up' && currentIndex > 0) {
-                      const newOrder = [...allLinkIds];
-                      [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
-                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                      setHasUnsavedChanges(true);
+                      const swappingId = allLinkIds[currentIndex - 1];
+                      // Start animation
+                      setAnimatingSwap({ movingId: linkId, swappingId, direction });
+                      // After animation, update the actual order
+                      setTimeout(() => {
+                        const newOrder = [...allLinkIds];
+                        [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+                        setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                        setHasUnsavedChanges(true);
+                        setAnimatingSwap(null);
+                      }, 250);
                     } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
-                      const newOrder = [...allLinkIds];
-                      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
-                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                      setHasUnsavedChanges(true);
+                      const swappingId = allLinkIds[currentIndex + 1];
+                      // Start animation
+                      setAnimatingSwap({ movingId: linkId, swappingId, direction });
+                      // After animation, update the actual order
+                      setTimeout(() => {
+                        const newOrder = [...allLinkIds];
+                        [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+                        setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                        setHasUnsavedChanges(true);
+                        setAnimatingSwap(null);
+                      }, 250);
                     }
                   };
 
@@ -8569,74 +8675,83 @@ return (
 
                     const isEditing = editingLinkId === linkId;
 
+                    // Calculate animation transform
+                    const buttonHeight = 44; // Approximate height of button + gap
+                    let animationTransform = 'translateY(0)';
+                    if (animatingSwap) {
+                      if (linkId === animatingSwap.movingId) {
+                        // This is the button being moved
+                        animationTransform = animatingSwap.direction === 'up' ? `translateY(-${buttonHeight}px)` : `translateY(${buttonHeight}px)`;
+                      } else if (linkId === animatingSwap.swappingId) {
+                        // This is the button being displaced
+                        animationTransform = animatingSwap.direction === 'up' ? `translateY(${buttonHeight}px)` : `translateY(-${buttonHeight}px)`;
+                      }
+                    }
+
                     return (
-                      <div key={linkId} className="group">
-                        <div className="flex items-center gap-1">
-                          {/* Reorder Arrows - Always visible */}
-                          <div className="flex flex-col w-4 flex-shrink-0">
-                            <button
-                              onClick={() => moveLink(linkId, 'up')}
-                              disabled={index === 0}
-                              className="p-0.5 text-white/40 hover:text-white disabled:opacity-20"
-                            >
-                              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M18 15l-6-6-6 6" />
-                              </svg>
-                            </button>
-                            <button
-                              onClick={() => moveLink(linkId, 'down')}
-                              disabled={index === allLinkIds.length - 1}
-                              className="p-0.5 text-white/40 hover:text-white disabled:opacity-20"
-                            >
-                              <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M6 9l6 6 6-6" />
-                              </svg>
-                            </button>
-                          </div>
-
-                          {/* Button - Fixed width for consistent sizing */}
-                          <div
-                            className="flex-1 py-2.5 px-3 rounded-lg text-sm flex items-center gap-2"
-                            style={{
-                              backgroundColor: linksSettings.accentColor,
-                              color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
-                              fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                              fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
-                            }}
-                          >
-                            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
-                            </svg>
-                            <span className="flex-1 text-center">{label}</span>
-                          </div>
-
-                          {/* Edit Button - Always visible, consistent width placeholder */}
-                          <div className="w-7 flex-shrink-0 flex justify-center">
-                            {!isDefault && (
-                              <button
-                                onClick={() => {
-                                  setEditingLinkId(linkId);
-                                  setEditingLinkLabel(customLink?.label || '');
-                                  setEditingLinkUrl(customLink?.url || '');
-                                  setEditingLinkIcon(customLink?.icon || 'Globe');
-                                }}
-                                className="p-1.5 text-white/40 hover:text-white transition-colors"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                </svg>
-                              </button>
-                            )}
-                          </div>
+                      <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform }}
+                        {/* Button - Full width inside phone screen */}
+                        <div
+                          className="w-full py-2.5 px-3 rounded-lg text-sm flex items-center gap-2 relative"
+                          style={{
+                            backgroundColor: linksSettings.accentColor,
+                            color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                            fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                            fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                          }}
+                        >
+                          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
+                          </svg>
+                          <span className="flex-1 text-center">{label}</span>
                         </div>
+
+                        {/* Controls - Positioned at phone border (outside screen area) */}
+                        <div className="absolute -left-8 top-1/2 -translate-y-1/2 flex flex-col gap-0.5">
+                          <button
+                            onClick={() => moveLink(linkId, 'up')}
+                            disabled={index === 0}
+                            className="p-0.5 text-white/50 hover:text-white disabled:opacity-20 transition-colors"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M18 15l-6-6-6 6" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => moveLink(linkId, 'down')}
+                            disabled={index === allLinkIds.length - 1}
+                            className="p-0.5 text-white/50 hover:text-white disabled:opacity-20 transition-colors"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M6 9l6 6 6-6" />
+                            </svg>
+                          </button>
+                        </div>
+
+                        {/* Edit Button - Positioned at right edge of phone border */}
+                        {!isDefault && (
+                          <button
+                            onClick={() => {
+                              setEditingLinkId(linkId);
+                              setEditingLinkLabel(customLink?.label || '');
+                              setEditingLinkUrl(customLink?.url || '');
+                              setEditingLinkIcon(customLink?.icon || 'Globe');
+                            }}
+                            className="absolute -right-8 top-1/2 -translate-y-1/2 p-1 text-white/50 hover:text-white transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                          </button>
+                        )}
 
                         {/* Edit Mode - Button as Input UI */}
                         {isEditing && (
                           <div className="mt-2 space-y-2">
-                            {/* Button with inline label input */}
+                            {/* Button with inline label input - label centered across full width */}
                             <div
-                              className="py-2.5 px-3 rounded-lg text-sm flex items-center gap-2"
+                              className="py-2.5 px-3 rounded-lg text-sm relative"
                               style={{
                                 backgroundColor: linksSettings.accentColor,
                                 color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
@@ -8644,19 +8759,49 @@ return (
                                 fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                               }}
                             >
-                              <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === editingLinkIcon)?.path || ''} />
-                              </svg>
+                              {/* Icon positioned absolutely on the left - clickable for icon picker */}
+                              <button
+                                onClick={() => setShowIconPicker(linkId)}
+                                className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
+                                title="Change icon"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === editingLinkIcon)?.path || ''} />
+                                </svg>
+                              </button>
+                              {/* Input centered across full button width */}
                               <input
                                 type="text"
                                 value={editingLinkLabel}
                                 onChange={(e) => setEditingLinkLabel(e.target.value)}
-                                className="flex-1 bg-transparent text-center focus:outline-none placeholder:opacity-60"
+                                className="w-full bg-transparent text-center focus:outline-none placeholder:opacity-60"
                                 placeholder="Button label"
                                 autoFocus
                                 style={{ color: 'inherit' }}
                               />
                             </div>
+                            {/* Icon Picker Dropdown */}
+                            {showIconPicker === linkId && (
+                              <div className="p-2 rounded-lg bg-black/80 border border-white/20 max-h-[150px] overflow-y-auto">
+                                <div className="grid grid-cols-6 gap-1">
+                                  {LINK_ICONS.map((icon) => (
+                                    <button
+                                      key={icon.name}
+                                      onClick={() => {
+                                        setEditingLinkIcon(icon.name);
+                                        setShowIconPicker(null);
+                                      }}
+                                      className={`p-1.5 rounded transition-colors ${editingLinkIcon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
+                                      title={icon.label}
+                                    >
+                                      <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
+                                      </svg>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                             {/* URL input + action buttons row */}
                             <div className="flex items-center gap-2">
                               <input
@@ -8670,6 +8815,7 @@ return (
                                 onClick={() => {
                                   setCustomLinks(prev => prev.map(l => l.id === linkId ? { ...l, label: editingLinkLabel, url: editingLinkUrl, icon: editingLinkIcon } : l));
                                   setEditingLinkId(null);
+                                  setShowIconPicker(null);
                                   setHasUnsavedChanges(true);
                                 }}
                                 className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 flex-shrink-0"
@@ -8684,6 +8830,7 @@ return (
                                   setCustomLinks(prev => prev.filter(l => l.id !== linkId));
                                   setLinksSettings(prev => ({ ...prev, linkOrder: prev.linkOrder.filter(id => id !== linkId) }));
                                   setEditingLinkId(null);
+                                  setShowIconPicker(null);
                                   setHasUnsavedChanges(true);
                                 }}
                                 className="p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 flex-shrink-0"
@@ -8691,15 +8838,6 @@ return (
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                                </svg>
-                              </button>
-                              <button
-                                onClick={() => setEditingLinkId(null)}
-                                className="p-1.5 rounded-lg bg-white/10 text-white/60 hover:bg-white/20 flex-shrink-0"
-                                title="Cancel"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <path d="M18 6L6 18M6 6l12 12" />
                                 </svg>
                               </button>
                             </div>
@@ -8713,9 +8851,9 @@ return (
                 {/* Add New Link Mode - Button as Input UI */}
                 {addingNewLink ? (
                   <div className="space-y-2">
-                    {/* Button with + icon and inline label input */}
+                    {/* Button with clickable icon and inline label input - label centered across full width */}
                     <div
-                      className="py-2.5 px-3 rounded-lg text-sm flex items-center gap-2"
+                      className="py-2.5 px-3 rounded-lg text-sm relative"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
@@ -8723,19 +8861,49 @@ return (
                         fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                       }}
                     >
-                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
-                      </svg>
+                      {/* Clickable icon positioned absolutely on the left */}
+                      <button
+                        onClick={() => setShowIconPicker(showIconPicker === 'new-link' ? null : 'new-link')}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
+                        title="Choose icon"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
+                        </svg>
+                      </button>
+                      {/* Input centered across full button width */}
                       <input
                         type="text"
                         value={newLinkLabel}
                         onChange={(e) => setNewLinkLabel(e.target.value)}
-                        className="flex-1 bg-transparent text-center focus:outline-none placeholder:opacity-60"
+                        className="w-full bg-transparent text-center focus:outline-none placeholder:opacity-60"
                         placeholder="Button label"
                         autoFocus
                         style={{ color: 'inherit' }}
                       />
                     </div>
+                    {/* Icon Picker Dropdown for new link */}
+                    {showIconPicker === 'new-link' && (
+                      <div className="p-2 rounded-lg bg-black/80 border border-white/20 max-h-[150px] overflow-y-auto">
+                        <div className="grid grid-cols-6 gap-1">
+                          {LINK_ICONS.map((icon) => (
+                            <button
+                              key={icon.name}
+                              onClick={() => {
+                                setNewLinkIcon(icon.name);
+                                setShowIconPicker(null);
+                              }}
+                              className={`p-1.5 rounded transition-colors ${newLinkIcon === icon.name ? 'bg-[#ffd700]/30 text-[#ffd700]' : 'text-white/60 hover:bg-white/10 hover:text-white'}`}
+                              title={icon.label}
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d={icon.path} />
+                              </svg>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {/* URL input + action buttons row */}
                     <div className="flex items-center gap-2">
                       <input
@@ -9043,7 +9211,9 @@ return (
           {/* Download QR */}
           <button
             onClick={downloadQRCode}
-            className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+            disabled={!pageData?.is_active}
+            className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.is_active ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+            title={!pageData?.is_active ? 'Activate your page first to download QR code' : ''}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -9379,7 +9549,12 @@ return (
               </div>
             )}
 
-            <button onClick={downloadQRCode} className="w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center justify-center gap-2">
+            <button
+              onClick={downloadQRCode}
+              disabled={!pageData?.is_active}
+              className={`w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center justify-center gap-2 ${pageData?.is_active ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+              title={!pageData?.is_active ? 'Activate your page first' : ''}
+            >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
               Download QR Code
             </button>

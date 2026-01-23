@@ -99,7 +99,8 @@ filter: drop-shadow(0 0 4px currentColor);
 ## Current Progress
 
 Phase 1: Completed (13 fixes)
-Phase 2: Completed (8 fixes below)
+Phase 2: Completed (8 fixes)
+Phase 3: Completed (9 fixes - UI Polish)
 
 ---
 
@@ -132,3 +133,19 @@ Phase 2: Completed (8 fixes below)
 - URL input below with same accept/delete/cancel row
 
 **Both UIs should have identical styling for the popup area**
+
+---
+
+## Phase 3 Fixes (UI Polish)
+
+| # | Fix | Status | Details |
+|---|-----|--------|---------|
+| 1 | Move controls to phone border | DONE | Up/down arrows and edit button moved outside phone screen area using absolute positioning (-left-8, -right-8) |
+| 2 | Icon picker opens on click | DONE | Changed showIconPicker from boolean to string (linkId or 'new-link') to track which picker is open |
+| 3 | Social links populate in preview | DONE | Added dynamic social link circles and Call/Text/Email contact buttons to preview |
+| 4 | Pill settings animated slide | DONE | Added absolute positioned sliding indicator with CSS transform transitions |
+| 5 | Button reorder physical animation | DONE | Added animatingSwap state tracking, buttons now physically animate positions when reordered |
+| 6 | Label input centered in button | DONE | Icon positioned absolutely, input uses w-full text-center |
+| 7 | Remove cancel button from edit UI | DONE | Removed unnecessary cancel button |
+| 8 | Download QR Code disabled until active | DONE | Added disabled state with opacity-40 and cursor-not-allowed |
+| 9 | Profile border uses accent color | DONE | Changed from border-white to dynamic borderColor: linksSettings.accentColor |
