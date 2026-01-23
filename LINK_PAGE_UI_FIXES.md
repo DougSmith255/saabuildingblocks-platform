@@ -98,4 +98,37 @@ filter: drop-shadow(0 0 4px currentColor);
 
 ## Current Progress
 
-Starting fixes one at a time...
+Phase 1: Completed (13 fixes)
+Phase 2: Completed (8 fixes below)
+
+---
+
+## Phase 2 Fixes (New Issues)
+
+| # | Fix | Status | Details |
+|---|-----|--------|---------|
+| 1 | Bold/Regular is for LINK BUTTONS not H1 | DONE | nameWeight now controls button font-weight, H1 always bold |
+| 2 | Name H1 styling - copy from old link page | DONE | Added 3D transform, white outline, gold glow, drop-shadow from slug.js |
+| 3 | SAA logo gradient changes with accent color | DONE | Logo gradient dynamically creates lighter/darker variants from accent |
+| 4 | Profile image border - hard line outline | DONE | Changed from border-white/20 to solid border-white |
+| 5 | Preview buttons - same width, centered | DONE | Fixed container widths for arrows and edit button placeholders |
+| 6 | Edit/position buttons always visible | DONE | Removed opacity-0 group-hover:opacity-100 classes |
+| 7 | Add/Edit UI redesign | DONE | Both UIs now use styled button with inline label input, URL + action row below |
+| 8 | Phone screen star background | DONE | Added CSS radial gradient star pattern background |
+
+### Fix #7 Detailed Requirements
+
+**Add Button UI:**
+- The button itself becomes the input field
+- Label input centered inside the button (like active buttons look)
+- "+" icon on the left where normal icons go
+- URL input appears BELOW the button in a popup area
+- Accept, Delete, Cancel buttons in same row as URL input (to the right)
+
+**Edit Button UI:**
+- Same concept as Add Button UI
+- Existing label shows in button, becomes editable
+- Current icon shows, can be changed
+- URL input below with same accept/delete/cancel row
+
+**Both UIs should have identical styling for the popup area**

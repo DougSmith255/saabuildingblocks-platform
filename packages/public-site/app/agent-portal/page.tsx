@@ -7203,6 +7203,8 @@ function AgentPagesSection({
   const [showIconPicker, setShowIconPicker] = useState(false);
   const [editingLinkId, setEditingLinkId] = useState<string | null>(null); // ID of link being edited
   const [editingLinkLabel, setEditingLinkLabel] = useState(''); // Label of link being edited
+  const [editingLinkUrl, setEditingLinkUrl] = useState(''); // URL of link being edited
+  const [editingLinkIcon, setEditingLinkIcon] = useState('Globe'); // Icon of link being edited
   const [addingNewLink, setAddingNewLink] = useState(false); // Track if adding new link
 
   // Custom social links state (max 2 custom social icons)
@@ -8156,7 +8158,7 @@ return (
           {/* Photo + B&W/Color Toggle */}
           <div className="flex items-start gap-4">
             <div
-              className="w-[100px] h-[100px] rounded-full bg-black/40 border-2 border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0"
+              className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] border-white flex items-center justify-center overflow-hidden flex-shrink-0"
               style={{
                 backgroundImage: getProfileImageUrl() ? `url(${getProfileImageUrl()})` : undefined,
                 backgroundSize: 'cover',
@@ -8452,8 +8454,37 @@ return (
                 padding: '32px 16px 20px 16px',
               }}
             >
+              {/* Star Field Background */}
+              <div
+                className="absolute inset-0 overflow-hidden"
+                style={{
+                  background: `
+                    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                    radial-gradient(1.5px 1.5px at 50px 160px, rgba(255,255,255,0.5) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                    radial-gradient(1.5px 1.5px at 130px 80px, rgba(255,255,255,0.45) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 20px 200px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                    radial-gradient(1.5px 1.5px at 100px 250px, rgba(255,255,255,0.5) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 180px 300px, rgba(255,255,255,0.4) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 60px 350px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                    radial-gradient(1.5px 1.5px at 140px 380px, rgba(255,255,255,0.45) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 30px 420px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 200px 450px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                    radial-gradient(1.5px 1.5px at 80px 500px, rgba(255,255,255,0.5) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 170px 530px, rgba(255,255,255,0.4) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 110px 180px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 220px 220px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                    radial-gradient(1.5px 1.5px at 250px 100px, rgba(255,255,255,0.45) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 240px 340px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                    radial-gradient(1px 1px at 270px 480px, rgba(255,255,255,0.35) 0%, transparent 100%)
+                  `,
+                  pointerEvents: 'none',
+                }}
+              />
               {/* Notch */}
-              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)' }} />
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
               {/* Profile Photo */}
               <div className="flex flex-col items-center gap-2 pt-6">
                 <div
@@ -8475,14 +8506,16 @@ return (
                   )}
                 </div>
 
-                {/* Name with H1 Glow Effect */}
+                {/* Name with H1 Neon Effect - Exact replica from link page */}
                 <span
-                  className={`text-lg text-center leading-tight ${linksSettings.nameWeight === 'bold' ? 'font-bold' : 'font-normal'}`}
+                  className="text-lg text-center leading-tight font-bold"
                   style={{
                     color: linksSettings.accentColor,
                     fontFamily: 'var(--font-taskor, sans-serif)',
-                    fontFeatureSettings: '"ss01", "ss02", "ss03", "salt"',
-                    textShadow: `0 0 20px ${linksSettings.accentColor}80, 0 0 40px ${linksSettings.accentColor}4D`,
+                    fontFeatureSettings: '"ss01" 1',
+                    transform: 'perspective(800px) rotateX(12deg)',
+                    textShadow: `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`,
+                    filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`,
                   }}
                 >
                   {formData.display_first_name || 'Your'} {formData.display_last_name || 'Name'}
@@ -8539,8 +8572,8 @@ return (
                     return (
                       <div key={linkId} className="group">
                         <div className="flex items-center gap-1">
-                          {/* Reorder Arrows */}
-                          <div className="flex flex-col opacity-0 group-hover:opacity-100 transition-opacity">
+                          {/* Reorder Arrows - Always visible */}
+                          <div className="flex flex-col w-4 flex-shrink-0">
                             <button
                               onClick={() => moveLink(linkId, 'up')}
                               disabled={index === 0}
@@ -8561,13 +8594,14 @@ return (
                             </button>
                           </div>
 
-                          {/* Button */}
+                          {/* Button - Fixed width for consistent sizing */}
                           <div
-                            className="flex-1 py-2.5 px-3 rounded-lg text-sm font-medium flex items-center gap-2"
+                            className="flex-1 py-2.5 px-3 rounded-lg text-sm flex items-center gap-2"
                             style={{
                               backgroundColor: linksSettings.accentColor,
                               color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                               fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                              fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                             }}
                           >
                             <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -8576,42 +8610,70 @@ return (
                             <span className="flex-1 text-center">{label}</span>
                           </div>
 
-                          {/* Edit Button (only for custom links) */}
-                          {!isDefault && (
-                            <button
-                              onClick={() => {
-                                setEditingLinkId(linkId);
-                                setEditingLinkLabel(customLink?.label || '');
-                              }}
-                              className="p-1.5 text-white/40 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                              </svg>
-                            </button>
-                          )}
-                        </div>
-
-                        {/* Edit Mode */}
-                        {isEditing && (
-                          <div className="mt-2 p-2 rounded-lg bg-black/60 border border-white/10">
-                            <input
-                              type="text"
-                              value={editingLinkLabel}
-                              onChange={(e) => setEditingLinkLabel(e.target.value)}
-                              className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:outline-none mb-2"
-                              placeholder="Button label"
-                              autoFocus
-                            />
-                            <div className="flex gap-1 justify-end">
+                          {/* Edit Button - Always visible, consistent width placeholder */}
+                          <div className="w-7 flex-shrink-0 flex justify-center">
+                            {!isDefault && (
                               <button
                                 onClick={() => {
-                                  setCustomLinks(prev => prev.map(l => l.id === linkId ? { ...l, label: editingLinkLabel } : l));
+                                  setEditingLinkId(linkId);
+                                  setEditingLinkLabel(customLink?.label || '');
+                                  setEditingLinkUrl(customLink?.url || '');
+                                  setEditingLinkIcon(customLink?.icon || 'Globe');
+                                }}
+                                className="p-1.5 text-white/40 hover:text-white transition-colors"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                </svg>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Edit Mode - Button as Input UI */}
+                        {isEditing && (
+                          <div className="mt-2 space-y-2">
+                            {/* Button with inline label input */}
+                            <div
+                              className="py-2.5 px-3 rounded-lg text-sm flex items-center gap-2"
+                              style={{
+                                backgroundColor: linksSettings.accentColor,
+                                color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                                fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                                fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                              }}
+                            >
+                              <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === editingLinkIcon)?.path || ''} />
+                              </svg>
+                              <input
+                                type="text"
+                                value={editingLinkLabel}
+                                onChange={(e) => setEditingLinkLabel(e.target.value)}
+                                className="flex-1 bg-transparent text-center focus:outline-none placeholder:opacity-60"
+                                placeholder="Button label"
+                                autoFocus
+                                style={{ color: 'inherit' }}
+                              />
+                            </div>
+                            {/* URL input + action buttons row */}
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="url"
+                                value={editingLinkUrl}
+                                onChange={(e) => setEditingLinkUrl(e.target.value)}
+                                className="flex-1 px-2 py-1.5 rounded-lg bg-black/40 border border-white/20 text-white text-xs focus:outline-none focus:border-[#ffd700]/50"
+                                placeholder="https://..."
+                              />
+                              <button
+                                onClick={() => {
+                                  setCustomLinks(prev => prev.map(l => l.id === linkId ? { ...l, label: editingLinkLabel, url: editingLinkUrl, icon: editingLinkIcon } : l));
                                   setEditingLinkId(null);
                                   setHasUnsavedChanges(true);
                                 }}
-                                className="p-1.5 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                                className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 flex-shrink-0"
+                                title="Save"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M20 6L9 17l-5-5" />
@@ -8624,7 +8686,8 @@ return (
                                   setEditingLinkId(null);
                                   setHasUnsavedChanges(true);
                                 }}
-                                className="p-1.5 rounded bg-red-500/20 text-red-400 hover:bg-red-500/30"
+                                className="p-1.5 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 flex-shrink-0"
+                                title="Delete"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
@@ -8632,7 +8695,8 @@ return (
                               </button>
                               <button
                                 onClick={() => setEditingLinkId(null)}
-                                className="p-1.5 rounded bg-white/10 text-white/60 hover:bg-white/20"
+                                className="p-1.5 rounded-lg bg-white/10 text-white/60 hover:bg-white/20 flex-shrink-0"
+                                title="Cancel"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                                   <path d="M18 6L6 18M6 6l12 12" />
@@ -8646,42 +8710,41 @@ return (
                   });
                 })()}
 
-                {/* Add New Link Mode */}
+                {/* Add New Link Mode - Button as Input UI */}
                 {addingNewLink ? (
-                  <div className="p-2 rounded-lg border border-[#ffd700]/30 bg-black/50">
-                    {/* Button Preview with Icon Picker */}
+                  <div className="space-y-2">
+                    {/* Button with + icon and inline label input */}
                     <div
-                      className="py-1.5 px-2 rounded-lg text-xs flex items-center gap-1.5 mb-1.5"
+                      className="py-2.5 px-3 rounded-lg text-sm flex items-center gap-2"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                        fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                        fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                       }}
                     >
-                      {/* Icon Picker Button */}
-                      <button className="w-5 h-5 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/30 transition-colors flex-shrink-0">
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <circle cx="12" cy="12" r="10" />
-                        </svg>
-                      </button>
+                      <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
+                      </svg>
                       <input
                         type="text"
                         value={newLinkLabel}
                         onChange={(e) => setNewLinkLabel(e.target.value)}
-                        className="flex-1 bg-transparent focus:outline-none placeholder:opacity-60 text-xs min-w-0"
+                        className="flex-1 bg-transparent text-center focus:outline-none placeholder:opacity-60"
                         placeholder="Button label"
                         autoFocus
+                        style={{ color: 'inherit' }}
                       />
                     </div>
-                    {/* URL Input */}
-                    <input
-                      type="url"
-                      value={newLinkUrl}
-                      onChange={(e) => setNewLinkUrl(e.target.value)}
-                      className="w-full px-2 py-1.5 rounded-lg bg-black/40 border border-white/10 text-white text-[10px] focus:outline-none focus:border-[#ffd700]/50 mb-1.5"
-                      placeholder="https://..."
-                    />
-                    {/* Action Buttons */}
-                    <div className="flex gap-1.5 justify-end">
+                    {/* URL input + action buttons row */}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="url"
+                        value={newLinkUrl}
+                        onChange={(e) => setNewLinkUrl(e.target.value)}
+                        className="flex-1 px-2 py-1.5 rounded-lg bg-black/40 border border-white/20 text-white text-xs focus:outline-none focus:border-[#ffd700]/50"
+                        placeholder="https://..."
+                      />
                       <button
                         onClick={() => {
                           if (newLinkLabel && newLinkUrl) {
@@ -8701,9 +8764,10 @@ return (
                             setHasUnsavedChanges(true);
                           }
                         }}
-                        className="w-6 h-6 rounded-full bg-green-500/20 text-green-400 hover:bg-green-500/30 flex items-center justify-center transition-colors"
+                        className="p-1.5 rounded-lg bg-green-500/20 text-green-400 hover:bg-green-500/30 flex-shrink-0"
+                        title="Add"
                       >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M20 6L9 17l-5-5" />
                         </svg>
                       </button>
@@ -8713,9 +8777,10 @@ return (
                           setNewLinkUrl('');
                           setAddingNewLink(false);
                         }}
-                        className="w-6 h-6 rounded-full bg-white/10 text-white/50 hover:bg-white/20 flex items-center justify-center transition-colors"
+                        className="p-1.5 rounded-lg bg-white/10 text-white/60 hover:bg-white/20 flex-shrink-0"
+                        title="Cancel"
                       >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <path d="M18 6L6 18M6 6l12 12" />
                         </svg>
                       </button>
@@ -8732,14 +8797,28 @@ return (
                 )}
               </div>
 
-              {/* SAA Logo - Actual Logo */}
+              {/* SAA Logo - Actual Logo with Dynamic Accent Color Gradient */}
               <div className="mt-auto pt-4 flex flex-col items-center">
                 <svg width="80" height="30" viewBox="0 0 201.96256 75.736626" className="mb-1">
                   <defs>
                     <linearGradient id="previewLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" style={{ stopColor: '#fff3b0', stopOpacity: 1 }} />
-                      <stop offset="40%" style={{ stopColor: '#ffd700', stopOpacity: 1 }} />
-                      <stop offset="100%" style={{ stopColor: '#e6ac00', stopOpacity: 1 }} />
+                      <stop offset="0%" style={{ stopColor: (() => {
+                        // Create lighter variant of accent color
+                        const hex = linksSettings.accentColor.replace('#', '');
+                        const r = Math.min(255, parseInt(hex.substr(0, 2), 16) + 80);
+                        const g = Math.min(255, parseInt(hex.substr(2, 2), 16) + 80);
+                        const b = Math.min(255, parseInt(hex.substr(4, 2), 16) + 80);
+                        return `rgb(${r}, ${g}, ${b})`;
+                      })(), stopOpacity: 1 }} />
+                      <stop offset="40%" style={{ stopColor: linksSettings.accentColor, stopOpacity: 1 }} />
+                      <stop offset="100%" style={{ stopColor: (() => {
+                        // Create darker variant of accent color
+                        const hex = linksSettings.accentColor.replace('#', '');
+                        const r = Math.max(0, parseInt(hex.substr(0, 2), 16) - 40);
+                        const g = Math.max(0, parseInt(hex.substr(2, 2), 16) - 40);
+                        const b = Math.max(0, parseInt(hex.substr(4, 2), 16) - 40);
+                        return `rgb(${r}, ${g}, ${b})`;
+                      })(), stopOpacity: 1 }} />
                     </linearGradient>
                   </defs>
                   <g transform="translate(-5.5133704,-105.97189)">
