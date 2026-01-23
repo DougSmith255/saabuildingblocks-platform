@@ -8164,7 +8164,11 @@ return (
                 filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
               }}
             >
-              {!getProfileImageUrl() && <span className="text-white/40 text-xl">👤</span>}
+              {!getProfileImageUrl() && (
+                <svg className="w-8 h-8 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+              )}
             </div>
             <div className="flex flex-col gap-2">
               <input
@@ -8420,8 +8424,10 @@ return (
 
         {/* Phone Mockup */}
         <div className="p-4 flex flex-col items-center">
-          <div className="phone-mockup w-full max-w-[260px]">
-            <div className="phone-screen p-4 pt-8" style={{ minHeight: '420px' }}>
+          <div className="w-full max-w-[260px] rounded-[2rem] bg-gradient-to-b from-[#2a2a2a] to-[#1a1a1a] p-2 shadow-xl" style={{ boxShadow: '0 0 0 1px rgba(255,255,255,0.1), 0 20px 40px -10px rgba(0,0,0,0.5)' }}>
+            <div className="rounded-[1.5rem] bg-gradient-to-b from-[#0f0f0f] to-[#151515] p-4 pt-8 relative overflow-hidden" style={{ minHeight: '400px' }}>
+              {/* Notch */}
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-5 bg-black rounded-full" />
               {/* Profile Photo */}
               <div className="flex flex-col items-center gap-3">
                 <div
@@ -8435,7 +8441,11 @@ return (
                     filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
                   }}
                 >
-                  {!getProfileImageUrl() && <span className="text-2xl">👤</span>}
+                  {!getProfileImageUrl() && (
+                    <svg className="w-10 h-10 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  )}
                 </div>
 
                 {/* Name */}
@@ -8609,37 +8619,40 @@ return (
 
                 {/* Add New Link Mode */}
                 {addingNewLink ? (
-                  <div className="p-2 rounded-lg bg-black/60 border border-[#ffd700]/30">
+                  <div className="p-3 rounded-lg border border-[#ffd700]/30 bg-black/40">
+                    {/* Button Preview with Icon Picker */}
                     <div
-                      className="py-2.5 px-4 rounded-lg text-sm flex items-center gap-2 mb-2"
+                      className="py-2.5 px-3 rounded-lg text-sm flex items-center gap-2 mb-2"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                       }}
                     >
-                      <button className="p-0.5">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      {/* Icon Picker Button */}
+                      <button className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center hover:bg-black/30 transition-colors">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                           <circle cx="12" cy="12" r="10" />
-                          <path d="M12 8v8M8 12h8" />
                         </svg>
                       </button>
                       <input
                         type="text"
                         value={newLinkLabel}
                         onChange={(e) => setNewLinkLabel(e.target.value)}
-                        className="flex-1 bg-transparent text-center focus:outline-none placeholder:opacity-50"
-                        placeholder="Button label..."
+                        className="flex-1 bg-transparent focus:outline-none placeholder:opacity-60"
+                        placeholder="Button label"
                         autoFocus
                       />
                     </div>
+                    {/* URL Input */}
                     <input
                       type="url"
                       value={newLinkUrl}
                       onChange={(e) => setNewLinkUrl(e.target.value)}
-                      className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/20 text-white text-xs focus:outline-none mb-2"
+                      className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-xs focus:outline-none focus:border-[#ffd700]/50 mb-2"
                       placeholder="https://..."
                     />
-                    <div className="flex gap-1 justify-end">
+                    {/* Action Buttons */}
+                    <div className="flex gap-2 justify-end">
                       <button
                         onClick={() => {
                           if (newLinkLabel && newLinkUrl) {
@@ -8659,9 +8672,9 @@ return (
                             setHasUnsavedChanges(true);
                           }
                         }}
-                        className="p-1.5 rounded bg-green-500/20 text-green-400 hover:bg-green-500/30"
+                        className="w-8 h-8 rounded-full bg-green-500/20 text-green-400 hover:bg-green-500/30 flex items-center justify-center transition-colors"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                           <path d="M20 6L9 17l-5-5" />
                         </svg>
                       </button>
@@ -8671,9 +8684,9 @@ return (
                           setNewLinkUrl('');
                           setAddingNewLink(false);
                         }}
-                        className="p-1.5 rounded bg-white/10 text-white/60 hover:bg-white/20"
+                        className="w-8 h-8 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 flex items-center justify-center transition-colors"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                           <path d="M18 6L6 18M6 6l12 12" />
                         </svg>
                       </button>
@@ -8682,7 +8695,7 @@ return (
                 ) : (
                   <button
                     onClick={() => setAddingNewLink(true)}
-                    className="w-full py-2 text-center text-xs text-white/50 hover:text-white/70 transition-colors"
+                    className="w-full py-2.5 text-center text-xs text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30"
                   >
                     + Add Button
                   </button>
