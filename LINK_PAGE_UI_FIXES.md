@@ -103,6 +103,7 @@ Phase 2: Completed (8 fixes)
 Phase 3: Completed (9 fixes - UI Polish)
 Phase 4: Completed (9 fixes - Final Polish)
 Phase 5: Completed (7 fixes - Final UI Refinements)
+Phase 6: In Progress (11 fixes - Layout & Functionality)
 
 ---
 
@@ -395,3 +396,52 @@ Phase 5: Completed (7 fixes - Final UI Refinements)
 **Popup Redesign Notes:**
 - Redesign to match premium glass with yellow highlights style
 - Use existing glass styling patterns from the site
+
+---
+
+## Phase 6 Fixes (Current)
+
+**Reference Image:** https://wp.saabuildingblocks.com/wp-content/uploads/2026/01/Screenshot-2026-01-23-140203.png
+
+| # | Fix | Status | Details |
+|---|-----|--------|---------|
+| 1 | Question mark positioning | DONE | Already correctly positioned with `fixed bottom-20 right-4` |
+| 2 | Custom social link fields not working | DONE | Added customSocialLinks to socialIcons array in preview |
+| 3 | Activate Your Page button not working | DONE | Removed hasUnsavedChanges from disabled check, renamed to "ACTIVATE MY PAGE" |
+| 4 | Button controls z-index (AGAIN) | DONE | Changed z-50 to z-[200], added overflow:visible to phone outer container |
+| 5 | Contact button spacing | DONE | Changed `gap-1.5 mt-3 mb-1.5` to `gap-1 mt-1.5 mb-1` |
+| 6 | Button swap animation glitch | DONE | Changed timeout to 280ms, update order before clearing animation with double RAF |
+| 7 | S icon disappearing | DONE | Animation timing fix with proper RAF sequencing |
+| 8 | Profile upload notification | PENDING | Remove "cutting out background" notification - just show spinner inside profile image area |
+| 9 | Color profile image not hooked up | PENDING | Needs API investigation - color image may not be returning from backend |
+| 10 | Profile border always accent color | DONE | Separated image div from border div - filter only affects inner image |
+| 11 | Top section layout/spacing analysis | DONE | Removed gap-2 from container, added individual margins: name mt-1.5 mb-2, social mt-1, bio mt-1.5 mb-1 |
+
+---
+
+### Fix #11 - Screenshot Analysis
+
+**Current Layout (top to bottom):**
+1. Profile image (with gold border)
+2. Name "DOUG SMART" (stylized)
+3. Social icons row (Facebook, YouTube, LinkedIn)
+4. Bio text (centered, gray)
+5. Contact buttons row (Call, Text, Email)
+6. Link buttons (Join my Team, About my Team)
+7. "+ Add Button"
+8. SAA Logo + "Powered by" text
+
+**Observed Issues:**
+1. **Large gap between contact buttons and "Join my Team"** - This gap is noticeably larger than the gap between "Join my Team" and "About my Team"
+2. **Contact buttons have wide gaps between them** - The Call/Text/Email buttons have significant spacing between each other
+3. **Inconsistent vertical rhythm** - Items ABOVE bio (H1, social links) are spread far apart, but bio is SUPER CLOSE to items below (contact buttons)
+4. **No minimum spacing when elements removed** - When no social links, bio, or contact buttons exist, the H1 almost touches the main link buttons directly
+
+**Recommended Spacing Fixes:**
+- Reduce `gap` between contact buttons (currently looks like gap-1.5, should be gap-1 or smaller)
+- Reduce `mt-3 mb-1.5` on contact buttons container - should match button spacing below
+- **Tighten spacing above bio** - Reduce gaps between H1 → social icons → bio
+- **Add spacing below bio** - Bio needs more breathing room before contact buttons
+- **Add minimum margin below name** - When no intermediate elements, ensure H1 has adequate space before link buttons
+- Create consistent vertical rhythm throughout the preview section
+
