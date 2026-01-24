@@ -3096,40 +3096,12 @@ function AgentPortal() {
 
             {/* Content */}
             <div className="p-5 space-y-4">
+              {/* What it is */}
               <p className="text-[#e5e4dd]/80">
-                Your Link Page is your personalized hub for sharing all your important links in one place. Complete these sections to activate it:
+                Your Link Page is a shareable page for your production-related links - social media, calendars, websites, and more. Share one URL instead of juggling multiple links.
               </p>
 
-              {/* Checklist - Glass card */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                  backdropFilter: 'blur(10px)',
-                }}
-              >
-                <ul className="space-y-2.5 text-[#e5e4dd]/80 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
-                    <span><strong className="text-[#e5e4dd]">Profile</strong> - Add your photo and display name</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
-                    <span><strong className="text-[#e5e4dd]">Design</strong> - Choose your style and accent color</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
-                    <span><strong className="text-[#e5e4dd]">Connect</strong> - Add your contact information</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700] mt-0.5" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>✓</span>
-                    <span><strong className="text-[#e5e4dd]">Links</strong> - Add your important links</span>
-                  </li>
-                </ul>
-              </div>
-
-              {/* URL Info - Glass card with gold accent */}
+              {/* Agent Attraction - Built In */}
               <div
                 className="rounded-lg p-4"
                 style={{
@@ -3137,9 +3109,26 @@ function AgentPortal() {
                   border: '1px solid rgba(255, 215, 0, 0.2)',
                 }}
               >
-                <p className="text-[#ffd700] text-sm mb-2 font-medium">
-                  Your Page URL:
+                <p className="text-[#ffd700] text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Agent Attraction Built-In
                 </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  The <strong className="text-[#ffd700]">"About Our eXp Team"</strong> button automatically links to your personal Agent Attraction Page. That page explains our team, eXp Realty, and includes join instructions with <em>your name and info already filled in</em> - so agents who want to join go through you.
+                </p>
+              </div>
+
+              {/* URL Info */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Your Page URL</p>
                 <code
                   className="text-sm font-mono px-3 py-1.5 rounded block"
                   style={{
@@ -3152,7 +3141,7 @@ function AgentPortal() {
                 </code>
               </div>
 
-              {/* Note - Glass card */}
+              {/* Quick Tips */}
               <div
                 className="rounded-lg p-4"
                 style={{
@@ -3160,9 +3149,21 @@ function AgentPortal() {
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                 }}
               >
-                <p className="text-[#e5e4dd]/70 text-sm">
-                  <strong className="text-[#e5e4dd]">Note:</strong> Activating your Link Page also activates your Agent Attraction Page (they share the same display name).
-                </p>
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Quick Tips</p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Add your photo and choose an accent color to make it yours
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Add buttons for anything you want to share (calendars, socials, etc.)
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Drag buttons to reorder them - put your most important links first
+                  </li>
+                </ul>
               </div>
             </div>
 
