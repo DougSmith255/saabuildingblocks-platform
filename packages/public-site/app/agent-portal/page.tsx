@@ -7470,7 +7470,7 @@ function AgentPagesSection({
   }, []);
 
   // FIX-007/024: Calculate button positions for external controls
-  // Uses useLayoutEffect to calculate synchronously before paint
+  // Uses useLayoutEffect + requestAnimationFrame to ensure DOM is ready
   useLayoutEffect(() => {
     const updateButtonPositions = () => {
       if (!phoneInnerRef.current) return;
@@ -7486,17 +7486,32 @@ function AgentPagesSection({
         }
       });
 
-      setButtonPositions(newPositions);
+      // Only update if we found positions
+      if (Object.keys(newPositions).length > 0) {
+        setButtonPositions(newPositions);
+      }
     };
 
     // Calculate immediately
     updateButtonPositions();
+
+    // Also recalculate after a frame to catch any late-rendering elements
+    const frameId = requestAnimationFrame(() => {
+      updateButtonPositions();
+    });
+
+    // And once more after a short delay for good measure (handles async data loading)
+    const timeoutId = setTimeout(() => {
+      updateButtonPositions();
+    }, 100);
 
     // Also update on resize
     window.addEventListener('resize', updateButtonPositions);
 
     return () => {
       window.removeEventListener('resize', updateButtonPositions);
+      cancelAnimationFrame(frameId);
+      clearTimeout(timeoutId);
     };
   }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
 
@@ -9123,6 +9138,7 @@ return (
                         data-total={allLinkIds.length}
                       >
                         {/* Button - Full width inside phone screen with centered text */}
+                        {/* When editing: button becomes editable with input instead of span */}
                         <div
                           className="w-full py-2.5 px-3 rounded-lg text-sm relative"
                           style={{
@@ -9133,7 +9149,7 @@ return (
                             overflow: 'visible',
                           }}
                         >
-                          {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
+                          {/* Icon positioned absolutely on the left */}
                           {/* FIX-005: S logo uses CSS background-image to avoid React remount issues */}
                           {linkId === 'learn-about' ? (
                             <div
@@ -9149,51 +9165,43 @@ return (
                               }}
                               aria-hidden="true"
                             />
+                          ) : isEditing ? (
+                            /* When editing custom link: clickable icon to change */
+                            <button
+                              onClick={() => setShowIconPicker(linkId)}
+                              className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
+                              title="Change icon"
+                            >
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === editingLinkIcon)?.path || iconPath} />
+                              </svg>
+                            </button>
                           ) : (
                             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1, transform: 'translateZ(0)' }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                             </svg>
                           )}
-                          {/* Text centered across full button width */}
-                          <span className="block w-full text-center">{label}</span>
+                          {/* Text/Input centered across full button width */}
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              value={editingLinkLabel}
+                              onChange={(e) => setEditingLinkLabel(e.target.value)}
+                              className="w-full bg-transparent text-center focus:outline-none placeholder:opacity-60"
+                              placeholder="Button label"
+                              autoFocus
+                              style={{ color: 'inherit' }}
+                            />
+                          ) : (
+                            <span className="block w-full text-center">{label}</span>
+                          )}
                         </div>
 
                         {/* FIX-007/024: Controls moved OUTSIDE phone inner - see controls overlay below phone frame */}
 
-                        {/* Edit Mode - Button as Input UI */}
+                        {/* Edit Mode - URL input and action buttons BELOW the button (no duplicate) */}
                         {isEditing && (
                           <div className="mt-2 space-y-2">
-                            {/* Button with inline label input - label centered across full width */}
-                            <div
-                              className="py-2.5 px-3 rounded-lg text-sm relative"
-                              style={{
-                                backgroundColor: linksSettings.accentColor,
-                                color: isAccentDark ? '#ffffff' : '#1a1a1a',
-                                fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                                fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
-                              }}
-                            >
-                              {/* Icon positioned absolutely on the left - clickable for icon picker */}
-                              <button
-                                onClick={() => setShowIconPicker(linkId)}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
-                                title="Change icon"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === editingLinkIcon)?.path || ''} />
-                                </svg>
-                              </button>
-                              {/* Input centered across full button width */}
-                              <input
-                                type="text"
-                                value={editingLinkLabel}
-                                onChange={(e) => setEditingLinkLabel(e.target.value)}
-                                className="w-full bg-transparent text-center focus:outline-none placeholder:opacity-60"
-                                placeholder="Button label"
-                                autoFocus
-                                style={{ color: 'inherit' }}
-                              />
-                            </div>
                             {/* Icon Picker Dropdown - absolute to overlay content - FIX-018 */}
                             {showIconPicker === linkId && (
                               <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
@@ -9480,9 +9488,8 @@ return (
                           top: `${position}px`,
                           zIndex: 10,
                           background: '#1d1d1d', // Container background matches phone border
-                          borderRadius: '10px 0 0 10px', // Rounded on left side to blend with phone curve
+                          borderRadius: '0 6px 6px 0', // Rounded on INSIDE (right side) to blend into phone
                           padding: '2px',
-                          boxShadow: '-2px 0 4px rgba(0,0,0,0.3)', // Subtle shadow for depth
                         }}
                       >
                         <button
@@ -9541,9 +9548,8 @@ return (
                           top: `${position + 6}px`, // +6 to vertically center with button
                           zIndex: 10,
                           background: '#141414', // Container background darker for right side
-                          borderRadius: '0 10px 10px 0', // Rounded on right side to blend with phone curve
+                          borderRadius: '6px 0 0 6px', // Rounded on INSIDE (left side) to blend into phone
                           padding: '4px',
-                          boxShadow: '2px 0 4px rgba(0,0,0,0.3)', // Subtle shadow for depth
                         }}
                       >
                         <button
