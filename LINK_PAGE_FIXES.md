@@ -1,7 +1,7 @@
 # Link Page UI Fixes Tracker
 
-**Last Updated:** 2026-01-24 (Round 11 - SOLUTION IMPLEMENTED)
-**Status:** 🟢 All critical issues SOLVED, 1 minor fix pending
+**Last Updated:** 2026-01-24 (Round 12)
+**Status:** 🟢 All issues addressed, pending user verification
 **File:** `/packages/public-site/app/agent-portal/page.tsx`
 **Git Commit:** pending
 
@@ -11,24 +11,55 @@
 
 | Status | Count | Fixes |
 |--------|-------|-------|
-| ✅ Verified | 20 | FIX-001 through FIX-025 (except FIX-005) |
-| 🟢 SOLUTION IMPLEMENTED | 1 | FIX-007/024 (controls moved OUTSIDE phone) |
-| 🟡 Partial Fix Needed | 1 | FIX-005 (S logo preload - works but shows loading flash) |
+| ✅ Verified | 19 | FIX-001 through FIX-025 (except FIX-005, FIX-007/024) |
+| 🟢 Round 12 Fixes | 2 | FIX-005 (S logo never disappears), FIX-007/024 (controls on phone border) |
 
 ---
 
-## 🟢 SOLVED: BUTTON CONTROLS NOW VISIBLE 🟢
+## 🟢 ROUND 12 FIXES 🟢
 
-### FIX-007/024: Button Controls - RESTRUCTURED AND WORKING
+### FIX-007/024: Button Controls - REFINED POSITIONING
 
-**Status:** 🟢 SOLUTION IMPLEMENTED (Round 11)
-**Issue:** The up/down move controls and edit button were NOT VISIBLE AT ALL.
+**Status:** 🟢 REFINED (Round 12)
+**Issue:** Round 11 fix had controls appearing at wrong initial position, then snapping after click.
+
+**Round 12 Fixes:**
+| Change | Details |
+|--------|---------|
+| useLayoutEffect | Changed from useEffect with 50ms delay to useLayoutEffect for immediate calculation |
+| Position calculation | Added +6px offset to account for phone frame padding |
+| Control positioning | Changed from `left: -30px` to `left: -14px` to position ON phone border |
+| Flat styling | Removed 3D gradients/shadows, now flat: left `#1d1d1d`, right `#141414` |
+| No render until ready | Controls don't render until `buttonPositions` is populated |
+
+### FIX-005: S Logo - NO MORE DISAPPEARING
+
+**Status:** 🟢 REFINED (Round 12)
+**Issue:** S logo was disappearing and fading in when button moved down.
+
+**Round 12 Fix:**
+- **Before:** Single `<img>` with conditional `src` - caused re-mount on move
+- **After:** Both images always rendered with `visibility: visible/hidden` toggle
+- Added `transition: 'none'` to prevent any fade effects
+- Images swap instantly without any flicker or fade
+
+**Implementation:**
+```jsx
+{/* Both always rendered, visibility toggled */}
+<img src="/icons/s-logo-offwhite.png" style={{ visibility: isAccentDark ? 'visible' : 'hidden', transition: 'none' }} />
+<img src="/icons/s-logo-dark.png" style={{ visibility: isAccentDark ? 'hidden' : 'visible', transition: 'none' }} />
+```
+
+---
+
+## PREVIOUS: FIX-007/024 Troubleshooting History
 
 **Troubleshooting Log:**
 | Attempt | Date | What Was Tried | Result |
 |---------|------|----------------|--------|
 | 1-10 | 2026-01-24 | Various CSS approaches (z-index, overflow, opacity, isolation, transforms) | All failed - controls clipped by phone inner |
-| **11** | **2026-01-24** | **RESTRUCTURED: Moved controls OUTSIDE phone inner, rendered as siblings in phone frame** | **✅ WORKING** |
+| 11 | 2026-01-24 | RESTRUCTURED: Moved controls OUTSIDE phone inner | Semi-working - wrong initial position |
+| **12** | **2026-01-24** | **useLayoutEffect + position on phone border + flat styling** | **Pending verification** |
 
 **ROOT CAUSE IDENTIFIED (Round 11):**
 The controls were positioned **INSIDE** the phone inner container. Even with CSS absolute positioning (`left: -36px`), they remained in the DOM tree of phone inner which has `overflow: hidden`. The phone frame's border-radius created implicit clipping.
@@ -88,25 +119,6 @@ The removal of `opacity-0 group-hover:opacity-100` might have broken something e
 6. Use `position: fixed` with calculated coordinates
 
 ---
-
-## 🟡 PARTIAL FIXES NEEDED
-
-### FIX-005: S Logo Preload Needed
-
-**Status:** 🟡 PARTIAL - Works but shows loading flash
-**Issue:** S logo now correctly switches between light/dark, BUT on first load of alternate version, there's a visible loading delay.
-
-**User Feedback (Round 10):**
-- "works well, but both versions need to be loaded in the agent portal loading screen"
-- "so that i dont see the first load of the alternate icon have to load"
-
-**FIX NEEDED:**
-Add preload for both S logo versions at component mount or in document head:
-```jsx
-<link rel="preload" href="/icons/s-logo-offwhite.png" as="image" />
-<link rel="preload" href="/icons/s-logo-dark.png" as="image" />
-```
-Or load both images in a hidden div on component mount.
 
 ---
 

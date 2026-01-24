@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo, Suspense, useCallback } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
@@ -7470,34 +7470,32 @@ function AgentPagesSection({
   }, []);
 
   // FIX-007/024: Calculate button positions for external controls
-  // This runs whenever links change to update the position tracking
-  useEffect(() => {
+  // Uses useLayoutEffect to calculate synchronously before paint
+  useLayoutEffect(() => {
     const updateButtonPositions = () => {
-      if (!buttonLinksContainerRef.current || !phoneInnerRef.current) return;
+      if (!phoneInnerRef.current) return;
 
-      const containerRect = buttonLinksContainerRef.current.getBoundingClientRect();
       const phoneInnerRect = phoneInnerRef.current.getBoundingClientRect();
 
       const newPositions: Record<string, number> = {};
       Object.entries(buttonRowRefs.current).forEach(([linkId, element]) => {
         if (element) {
           const rect = element.getBoundingClientRect();
-          // Calculate position relative to phone inner top
-          newPositions[linkId] = rect.top - phoneInnerRect.top;
+          // Calculate position relative to phone inner top, add 6px for phone frame padding
+          newPositions[linkId] = rect.top - phoneInnerRect.top + 6;
         }
       });
 
       setButtonPositions(newPositions);
     };
 
-    // Update positions after a short delay to ensure DOM has rendered
-    const timeoutId = setTimeout(updateButtonPositions, 50);
+    // Calculate immediately
+    updateButtonPositions();
 
     // Also update on resize
     window.addEventListener('resize', updateButtonPositions);
 
     return () => {
-      clearTimeout(timeoutId);
       window.removeEventListener('resize', updateButtonPositions);
     };
   }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
@@ -9131,16 +9129,32 @@ return (
                           }}
                         >
                           {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
-                          {/* FIX-005/023: Use display block/none instead of opacity to prevent overlap */}
+                          {/* FIX-005: Both S logo versions always rendered, visibility toggled instantly */}
                           {linkId === 'learn-about' ? (
                             <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }}>
-                              {/* Show only the appropriate version based on accent darkness */}
+                              {/* Light version - shown on dark backgrounds */}
                               <img
-                                key="s-logo-current"
-                                src={isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}
+                                src="/icons/s-logo-offwhite.png"
                                 alt="S"
-                                className="w-4 h-4 object-contain"
-                                style={{ transform: 'translateZ(0)' }}
+                                className="w-4 h-4 object-contain absolute inset-0"
+                                style={{
+                                  visibility: isAccentDark ? 'visible' : 'hidden',
+                                  transition: 'none',
+                                }}
+                                loading="eager"
+                                decoding="sync"
+                                width={16}
+                                height={16}
+                              />
+                              {/* Dark version - shown on light backgrounds */}
+                              <img
+                                src="/icons/s-logo-dark.png"
+                                alt="S"
+                                className="w-4 h-4 object-contain absolute inset-0"
+                                style={{
+                                  visibility: isAccentDark ? 'hidden' : 'visible',
+                                  transition: 'none',
+                                }}
                                 loading="eager"
                                 decoding="sync"
                                 width={16}
@@ -9455,9 +9469,12 @@ return (
                 }
               };
 
+              // Don't render controls until positions are calculated
+              if (Object.keys(buttonPositions).length === 0) return null;
+
               return (
                 <>
-                  {/* LEFT SIDE: Up/Down controls for all buttons */}
+                  {/* LEFT SIDE: Up/Down controls for all buttons - positioned on phone border */}
                   {allLinkIds.map((linkId, index) => {
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
@@ -9471,23 +9488,21 @@ return (
                         key={`controls-left-${linkId}`}
                         className="absolute flex flex-col gap-0.5"
                         style={{
-                          left: '-30px',
-                          top: `${position + 6}px`, // +6 to vertically center with button
+                          left: '-14px', // Position on phone border (controls are 16px wide, so -14px puts edge at -14+16=2px into frame)
+                          top: `${position}px`,
                           zIndex: 10,
                         }}
                       >
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
                           disabled={index === 0}
-                          className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
+                          className="disabled:opacity-30 hover:brightness-110 flex items-center justify-center"
                           style={{
                             width: '16px',
                             height: '16px',
-                            background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                            borderRadius: '4px',
+                            background: '#1d1d1d', // Flat, same as phone border
+                            borderRadius: '3px',
                             color: '#ffd700',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                            border: '1px solid rgba(255,255,255,0.1)',
                           }}
                           title="Move up"
                         >
@@ -9498,15 +9513,13 @@ return (
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
                           disabled={index === allLinkIds.length - 1}
-                          className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
+                          className="disabled:opacity-30 hover:brightness-110 flex items-center justify-center"
                           style={{
                             width: '16px',
                             height: '16px',
-                            background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                            borderRadius: '4px',
+                            background: '#1d1d1d', // Flat, same as phone border
+                            borderRadius: '3px',
                             color: '#ffd700',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                            border: '1px solid rgba(255,255,255,0.1)',
                           }}
                           title="Move down"
                         >
@@ -9518,7 +9531,7 @@ return (
                     );
                   })}
 
-                  {/* RIGHT SIDE: Edit buttons for custom links only */}
+                  {/* RIGHT SIDE: Edit buttons for custom links only - positioned on phone border */}
                   {allLinkIds.map((linkId) => {
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
@@ -9539,18 +9552,16 @@ return (
                           setEditingLinkUrl(customLink.url || '');
                           setEditingLinkIcon(customLink.icon || 'Globe');
                         }}
-                        className="absolute transition-all hover:brightness-125 flex items-center justify-center"
+                        className="absolute hover:brightness-110 flex items-center justify-center"
                         style={{
-                          right: '-30px',
-                          top: `${position + 10}px`, // +10 to vertically center with button
+                          right: '-14px', // Position on phone border
+                          top: `${position + 8}px`, // +8 to vertically center with button
                           width: '16px',
                           height: '16px',
                           zIndex: 10,
-                          background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                          borderRadius: '4px',
+                          background: '#141414', // Flat, darker for right side
+                          borderRadius: '3px',
                           color: '#ffd700',
-                          boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                          border: '1px solid rgba(255,255,255,0.1)',
                         }}
                         title="Edit link"
                       >
