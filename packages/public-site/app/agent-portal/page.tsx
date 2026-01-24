@@ -7692,6 +7692,13 @@ function AgentPagesSection({
         });
       }
 
+      // Safety check - currentPageData should exist by now
+      if (!currentPageData) {
+        setError('Failed to create or load page. Please try again.');
+        setIsSaving(false);
+        return;
+      }
+
       // Check for profile image
       if (!currentPageData.profile_image_url && !user.profilePictureUrl) {
         setError('Please upload a profile image before activating your page.');
