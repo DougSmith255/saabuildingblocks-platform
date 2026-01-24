@@ -2098,7 +2098,7 @@ function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors mb-3"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white/20 hover:border-[#ffd700]/50 transition-colors mb-3 bg-white/5"
                     title="Click to change profile picture"
                   >
                     {/* Upload spinner - shows while uploading */}
@@ -2342,7 +2342,7 @@ function AgentPortal() {
                   <button
                     type="button"
                     onClick={handleProfilePictureClick}
-                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors"
+                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 hover:border-[#ffd700]/50 transition-colors bg-white/5"
                   >
                     {/* Upload spinner - shows while uploading */}
                     {isUploadingDashboardImage && (
@@ -2716,7 +2716,7 @@ function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-white/[0.08] hover:border-[#ffd700]/50 transition-colors"
+                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-white/20 hover:border-[#ffd700]/50 transition-colors bg-white/5"
                 >
                   {/* Upload spinner - shows while uploading */}
                   {isUploadingDashboardImage && (
