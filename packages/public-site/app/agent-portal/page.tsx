@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCal
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
