@@ -9111,7 +9111,12 @@ return (
                         key={linkId}
                         ref={(el) => { buttonRowRefs.current[linkId] = el; }}
                         className="group relative"
-                        style={{ transition: 'transform 0.25s ease-out', transform: animationTransform, overflow: 'visible' }}
+                        style={{
+                          // Only apply transition when actively animating, otherwise instant movement
+                          transition: animatingSwap ? 'transform 0.25s ease-out' : 'none',
+                          transform: animationTransform,
+                          overflow: 'visible',
+                        }}
                         data-link-id={linkId}
                         data-is-default={isDefault}
                         data-index={index}
@@ -9129,38 +9134,21 @@ return (
                           }}
                         >
                           {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
-                          {/* FIX-005: Both S logo versions always rendered, visibility toggled instantly */}
+                          {/* FIX-005: S logo uses CSS background-image to avoid React remount issues */}
                           {linkId === 'learn-about' ? (
-                            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }}>
-                              {/* Light version - shown on dark backgrounds */}
-                              <img
-                                src="/icons/s-logo-offwhite.png"
-                                alt="S"
-                                className="w-4 h-4 object-contain absolute inset-0"
-                                style={{
-                                  visibility: isAccentDark ? 'visible' : 'hidden',
-                                  transition: 'none',
-                                }}
-                                loading="eager"
-                                decoding="sync"
-                                width={16}
-                                height={16}
-                              />
-                              {/* Dark version - shown on light backgrounds */}
-                              <img
-                                src="/icons/s-logo-dark.png"
-                                alt="S"
-                                className="w-4 h-4 object-contain absolute inset-0"
-                                style={{
-                                  visibility: isAccentDark ? 'hidden' : 'visible',
-                                  transition: 'none',
-                                }}
-                                loading="eager"
-                                decoding="sync"
-                                width={16}
-                                height={16}
-                              />
-                            </div>
+                            <div
+                              className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                              style={{
+                                width: '16px',
+                                height: '16px',
+                                zIndex: 1,
+                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}')`,
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center',
+                              }}
+                              aria-hidden="true"
+                            />
                           ) : (
                             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1, transform: 'translateZ(0)' }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
@@ -9474,7 +9462,7 @@ return (
 
               return (
                 <>
-                  {/* LEFT SIDE: Up/Down controls for all buttons - positioned on phone border */}
+                  {/* LEFT SIDE: Up/Down controls for all buttons - positioned ON phone border */}
                   {allLinkIds.map((linkId, index) => {
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
@@ -9486,22 +9474,25 @@ return (
                     return (
                       <div
                         key={`controls-left-${linkId}`}
-                        className="absolute flex flex-col gap-0.5"
+                        className="absolute flex flex-col"
                         style={{
-                          left: '-14px', // Position on phone border (controls are 16px wide, so -14px puts edge at -14+16=2px into frame)
+                          left: '-2px', // Position ON phone border - controls extend outward from edge
                           top: `${position}px`,
                           zIndex: 10,
+                          background: '#1d1d1d', // Container background matches phone border
+                          borderRadius: '10px 0 0 10px', // Rounded on left side to blend with phone curve
+                          padding: '2px',
+                          boxShadow: '-2px 0 4px rgba(0,0,0,0.3)', // Subtle shadow for depth
                         }}
                       >
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
                           disabled={index === 0}
-                          className="disabled:opacity-30 hover:brightness-110 flex items-center justify-center"
+                          className="disabled:opacity-30 hover:brightness-125 flex items-center justify-center"
                           style={{
-                            width: '16px',
-                            height: '16px',
-                            background: '#1d1d1d', // Flat, same as phone border
-                            borderRadius: '3px',
+                            width: '14px',
+                            height: '14px',
+                            background: 'transparent',
                             color: '#ffd700',
                           }}
                           title="Move up"
@@ -9513,12 +9504,11 @@ return (
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
                           disabled={index === allLinkIds.length - 1}
-                          className="disabled:opacity-30 hover:brightness-110 flex items-center justify-center"
+                          className="disabled:opacity-30 hover:brightness-125 flex items-center justify-center"
                           style={{
-                            width: '16px',
-                            height: '16px',
-                            background: '#1d1d1d', // Flat, same as phone border
-                            borderRadius: '3px',
+                            width: '14px',
+                            height: '14px',
+                            background: 'transparent',
                             color: '#ffd700',
                           }}
                           title="Move down"
@@ -9531,7 +9521,7 @@ return (
                     );
                   })}
 
-                  {/* RIGHT SIDE: Edit buttons for custom links only - positioned on phone border */}
+                  {/* RIGHT SIDE: Edit buttons for custom links only - positioned ON phone border */}
                   {allLinkIds.map((linkId) => {
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
@@ -9543,33 +9533,42 @@ return (
                     if (!customLink) return null;
 
                     return (
-                      <button
+                      <div
                         key={`controls-right-${linkId}`}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEditingLinkId(linkId);
-                          setEditingLinkLabel(customLink.label || '');
-                          setEditingLinkUrl(customLink.url || '');
-                          setEditingLinkIcon(customLink.icon || 'Globe');
-                        }}
-                        className="absolute hover:brightness-110 flex items-center justify-center"
+                        className="absolute"
                         style={{
-                          right: '-14px', // Position on phone border
-                          top: `${position + 8}px`, // +8 to vertically center with button
-                          width: '16px',
-                          height: '16px',
+                          right: '-2px', // Position ON phone border - control extends outward from edge
+                          top: `${position + 6}px`, // +6 to vertically center with button
                           zIndex: 10,
-                          background: '#141414', // Flat, darker for right side
-                          borderRadius: '3px',
-                          color: '#ffd700',
+                          background: '#141414', // Container background darker for right side
+                          borderRadius: '0 10px 10px 0', // Rounded on right side to blend with phone curve
+                          padding: '4px',
+                          boxShadow: '2px 0 4px rgba(0,0,0,0.3)', // Subtle shadow for depth
                         }}
-                        title="Edit link"
                       >
-                        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                        </svg>
-                      </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingLinkId(linkId);
+                            setEditingLinkLabel(customLink.label || '');
+                            setEditingLinkUrl(customLink.url || '');
+                            setEditingLinkIcon(customLink.icon || 'Globe');
+                          }}
+                          className="hover:brightness-125 flex items-center justify-center"
+                          style={{
+                            width: '14px',
+                            height: '14px',
+                            background: 'transparent',
+                            color: '#ffd700',
+                          }}
+                          title="Edit link"
+                        >
+                          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                          </svg>
+                        </button>
+                      </div>
                     );
                   })}
                 </>

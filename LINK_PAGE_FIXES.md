@@ -1,6 +1,6 @@
 # Link Page UI Fixes Tracker
 
-**Last Updated:** 2026-01-24 (Round 12)
+**Last Updated:** 2026-01-24 (Round 13)
 **Status:** 🟢 All issues addressed, pending user verification
 **File:** `/packages/public-site/app/agent-portal/page.tsx`
 **Git Commit:** pending
@@ -12,43 +12,88 @@
 | Status | Count | Fixes |
 |--------|-------|-------|
 | ✅ Verified | 19 | FIX-001 through FIX-025 (except FIX-005, FIX-007/024) |
-| 🟢 Round 12 Fixes | 2 | FIX-005 (S logo never disappears), FIX-007/024 (controls on phone border) |
+| 🟢 Round 13 Fixes | 2 | FIX-005 (S logo CSS background-image), FIX-007/024 (controls ON phone border with rounded corners) |
 
 ---
 
-## 🟢 ROUND 12 FIXES 🟢
+## 🟢 ROUND 13 FIXES 🟢
 
-### FIX-007/024: Button Controls - REFINED POSITIONING
+### FIX-007/024: Button Controls - POSITIONED ON PHONE BORDER
 
-**Status:** 🟢 REFINED (Round 12)
-**Issue:** Round 11 fix had controls appearing at wrong initial position, then snapping after click.
+**Status:** 🟢 REFINED (Round 13)
+**Issue:** Round 12 controls still too far from phone border, needed rounded corners to blend.
 
-**Round 12 Fixes:**
+**Round 13 Fixes:**
 | Change | Details |
 |--------|---------|
-| useLayoutEffect | Changed from useEffect with 50ms delay to useLayoutEffect for immediate calculation |
-| Position calculation | Added +6px offset to account for phone frame padding |
-| Control positioning | Changed from `left: -30px` to `left: -14px` to position ON phone border |
-| Flat styling | Removed 3D gradients/shadows, now flat: left `#1d1d1d`, right `#141414` |
-| No render until ready | Controls don't render until `buttonPositions` is populated |
-
-### FIX-005: S Logo - NO MORE DISAPPEARING
-
-**Status:** 🟢 REFINED (Round 12)
-**Issue:** S logo was disappearing and fading in when button moved down.
-
-**Round 12 Fix:**
-- **Before:** Single `<img>` with conditional `src` - caused re-mount on move
-- **After:** Both images always rendered with `visibility: visible/hidden` toggle
-- Added `transition: 'none'` to prevent any fade effects
-- Images swap instantly without any flicker or fade
+| Position | Changed `left: '-14px'` → `left: '-2px'` to sit ON phone border |
+| Position (right) | Changed `right: '-14px'` → `right: '-2px'` |
+| Rounded corners (left) | `borderRadius: '10px 0 0 10px'` - rounded on left side only |
+| Rounded corners (right) | `borderRadius: '0 10px 10px 0'` - rounded on right side only |
+| Container styling | Controls now in container with background, buttons transparent |
+| Box shadow | Added subtle shadow for depth: `boxShadow: '-2px 0 4px rgba(0,0,0,0.3)'` |
 
 **Implementation:**
 ```jsx
-{/* Both always rendered, visibility toggled */}
-<img src="/icons/s-logo-offwhite.png" style={{ visibility: isAccentDark ? 'visible' : 'hidden', transition: 'none' }} />
-<img src="/icons/s-logo-dark.png" style={{ visibility: isAccentDark ? 'hidden' : 'visible', transition: 'none' }} />
+{/* Left controls container */}
+<div style={{
+  left: '-2px', // ON phone border
+  background: '#1d1d1d',
+  borderRadius: '10px 0 0 10px', // Rounded left side
+  padding: '2px',
+  boxShadow: '-2px 0 4px rgba(0,0,0,0.3)',
+}}>
+  <button style={{ background: 'transparent', ... }}>...</button>
+</div>
+
+{/* Right controls container */}
+<div style={{
+  right: '-2px', // ON phone border
+  background: '#141414',
+  borderRadius: '0 10px 10px 0', // Rounded right side
+  padding: '4px',
+  boxShadow: '2px 0 4px rgba(0,0,0,0.3)',
+}}>
+  <button style={{ background: 'transparent', ... }}>...</button>
+</div>
 ```
+
+### FIX-005: S Logo - CSS BACKGROUND-IMAGE APPROACH
+
+**Status:** 🟢 REFINED (Round 13)
+**Issue:** Round 12 S logo still disappearing/fading when button moved - likely due to DOM reconciliation during button reorder.
+
+**Round 13 Fixes:**
+1. Changed from two stacked `<img>` elements to single `<div>` with CSS `background-image`
+2. Removed button row transition when not animating: `transition: animatingSwap ? 'transform 0.25s ease-out' : 'none'`
+3. No DOM element remounting - just CSS property changes
+
+**Implementation:**
+```jsx
+{/* S logo using CSS background-image - no React remounting */}
+<div
+  style={{
+    width: '16px',
+    height: '16px',
+    backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}')`,
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+  }}
+  aria-hidden="true"
+/>
+
+{/* Button row - no transition unless actively animating */}
+<div style={{
+  transition: animatingSwap ? 'transform 0.25s ease-out' : 'none',
+  transform: animationTransform,
+}}>
+```
+
+**Why this should work:**
+- CSS background-image changes don't cause React DOM operations
+- Removing transition during reorder prevents any visual animation artifacts
+- Single element instead of two means no opacity/visibility toggling
 
 ---
 
@@ -59,7 +104,17 @@
 |---------|------|----------------|--------|
 | 1-10 | 2026-01-24 | Various CSS approaches (z-index, overflow, opacity, isolation, transforms) | All failed - controls clipped by phone inner |
 | 11 | 2026-01-24 | RESTRUCTURED: Moved controls OUTSIDE phone inner | Semi-working - wrong initial position |
-| **12** | **2026-01-24** | **useLayoutEffect + position on phone border + flat styling** | **Pending verification** |
+| 12 | 2026-01-24 | useLayoutEffect + position on phone border + flat styling | Controls still too far out |
+| **13** | **2026-01-24** | **left: '-2px' + rounded corners + container styling** | **Pending verification** |
+
+## PREVIOUS: FIX-005 Troubleshooting History
+
+| Attempt | Date | What Was Tried | Result |
+|---------|------|----------------|--------|
+| 1 | 2026-01-24 | Conditional `src` on single img | Flicker on button move |
+| 2-11 | 2026-01-24 | Two stacked imgs with visibility/opacity toggle | Still flickering |
+| 12 | 2026-01-24 | Added contain:strict, backfaceVisibility, transform:translateZ(0) | Still flickering |
+| **13** | **2026-01-24** | **CSS background-image + no transition on reorder** | **Pending verification** |
 
 **ROOT CAUSE IDENTIFIED (Round 11):**
 The controls were positioned **INSIDE** the phone inner container. Even with CSS absolute positioning (`left: -36px`), they remained in the DOM tree of phone inner which has `overflow: hidden`. The phone frame's border-radius created implicit clipping.
