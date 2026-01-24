@@ -7470,67 +7470,68 @@ function AgentPagesSection({
   }, []);
 
   // FIX-007/024: Calculate button positions for external controls
-  // Uses useLayoutEffect + requestAnimationFrame to ensure DOM is ready
-  // CRITICAL: Only run after pageData is loaded so button rows exist in DOM
+  // Uses useLayoutEffect + ResizeObserver to ensure DOM is ready
   useLayoutEffect(() => {
-    // Don't calculate until page data exists
-    if (!pageData) return;
-
     const updateButtonPositions = () => {
       if (!phoneInnerRef.current) return;
 
       const phoneInnerRect = phoneInnerRef.current.getBoundingClientRect();
-      // Skip if phone inner hasn't rendered properly yet
-      if (phoneInnerRect.height === 0) return;
 
       const newPositions: Record<string, number> = {};
       Object.entries(buttonRowRefs.current).forEach(([linkId, element]) => {
         if (element) {
           const rect = element.getBoundingClientRect();
-          // Skip if element hasn't rendered properly
-          if (rect.height === 0) return;
           // Calculate position relative to phone inner top, add 6px for phone frame padding
           newPositions[linkId] = rect.top - phoneInnerRect.top + 6;
         }
       });
 
-      // Only update if we found valid positions (more than 0 and values aren't all zeros)
+      // Update if we found any positions
       if (Object.keys(newPositions).length > 0) {
-        const hasValidPositions = Object.values(newPositions).some(pos => pos > 0);
-        if (hasValidPositions) {
-          setButtonPositions(newPositions);
-        }
+        setButtonPositions(newPositions);
       }
     };
 
     // Calculate immediately
     updateButtonPositions();
 
-    // Also recalculate after a frame to catch any late-rendering elements
-    const frameId = requestAnimationFrame(() => {
+    // Also recalculate after frames to catch late-rendering elements
+    const frameId1 = requestAnimationFrame(() => {
       updateButtonPositions();
+      // Nested RAF for after paint
+      requestAnimationFrame(() => {
+        updateButtonPositions();
+      });
     });
 
-    // And once more after a short delay for good measure (handles async data loading)
-    const timeoutId = setTimeout(() => {
-      updateButtonPositions();
-    }, 150);
+    // Multiple timeouts as fallbacks
+    const timeoutId1 = setTimeout(updateButtonPositions, 50);
+    const timeoutId2 = setTimeout(updateButtonPositions, 150);
+    const timeoutId3 = setTimeout(updateButtonPositions, 300);
+    const timeoutId4 = setTimeout(updateButtonPositions, 500);
 
-    // And another longer delay as a fallback
-    const timeoutId2 = setTimeout(() => {
-      updateButtonPositions();
-    }, 300);
+    // ResizeObserver to catch when phone inner actually renders/resizes
+    let resizeObserver: ResizeObserver | null = null;
+    if (phoneInnerRef.current && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        updateButtonPositions();
+      });
+      resizeObserver.observe(phoneInnerRef.current);
+    }
 
     // Also update on resize
     window.addEventListener('resize', updateButtonPositions);
 
     return () => {
       window.removeEventListener('resize', updateButtonPositions);
-      cancelAnimationFrame(frameId);
-      clearTimeout(timeoutId);
+      cancelAnimationFrame(frameId1);
+      clearTimeout(timeoutId1);
       clearTimeout(timeoutId2);
+      clearTimeout(timeoutId3);
+      clearTimeout(timeoutId4);
+      resizeObserver?.disconnect();
     };
-  }, [pageData, linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
+  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
 
   // Auto-scroll phone inner to bottom when adding content
   useEffect(() => {
