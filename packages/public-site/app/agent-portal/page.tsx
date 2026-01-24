@@ -8930,7 +8930,7 @@ return (
                           <div
                             key={idx}
                             className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-110"
-                            style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}
+                            style={{ backgroundColor: `${socialIconColor}20`, border: `1px solid ${socialIconColor}40` }}
                           >
                             {isBuiltIn ? (
                               <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24">
@@ -9107,15 +9107,15 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - FIX-007/024: Always visible, isolation for stacking context */}
+                        {/* Controls - FIX-007/024: Always visible with explicit opacity */}
                         {/* LEFT SIDE: Up/Down controls */}
                         <div
                           className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5"
                           style={{
                             left: '-36px',
                             zIndex: 99999,
-                            isolation: 'isolate',
-                            transform: 'translateZ(50px)',
+                            opacity: 1,
+                            visibility: 'visible',
                           }}
                         >
                           <button
@@ -9174,8 +9174,8 @@ return (
                               width: '16px',
                               height: '16px',
                               zIndex: 99999,
-                              isolation: 'isolate',
-                              transform: 'translateZ(50px)',
+                              opacity: 1,
+                              visibility: 'visible',
                               background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
                               borderRadius: '4px', // All corners rounded
                               color: '#ffd700',
@@ -9201,7 +9201,7 @@ return (
                                 backgroundColor: linksSettings.accentColor,
                                 color: isAccentDark ? '#ffffff' : '#1a1a1a',
                                 fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                                fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                                fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                               }}
                             >
                               {/* Icon positioned absolutely on the left - clickable for icon picker */}
@@ -9303,7 +9303,7 @@ return (
                         backgroundColor: linksSettings.accentColor,
                         color: isAccentDark ? '#ffffff' : '#1a1a1a',
                         fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                        fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                        fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                       }}
                     >
                       {/* Clickable icon positioned absolutely on the left - opens icon picker */}
@@ -9332,7 +9332,7 @@ return (
                         className="w-full bg-transparent text-center focus:outline-none placeholder:opacity-60"
                         placeholder="Button label"
                         autoFocus
-                        style={{ color: 'inherit', fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400 }}
+                        style={{ color: 'inherit', fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400 }}
                       />
                     </div>
                     {/* Icon Picker Dropdown for new link - absolute to overlay content below - FIX-018 */}
