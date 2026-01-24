@@ -1550,13 +1550,18 @@ function AgentPortal() {
           // Update local state with color URL
           if (colorResponse.ok) {
             const colorResult = await colorResponse.json();
+            console.log('[ImageUpload] Color upload result:', colorResult);
             if (colorResult.data?.url) {
               // Add cache-busting timestamp to force browser to reload the new color image
               const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
+              console.log('[ImageUpload] Dispatching color image event:', colorCacheBustUrl);
               window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
                 detail: { url: colorCacheBustUrl }
               }));
             }
+          } else {
+            const errorData = await colorResponse.json().catch(() => ({}));
+            console.error('[ImageUpload] Color upload failed:', colorResponse.status, errorData);
           }
         }
       }
@@ -3011,8 +3016,8 @@ function AgentPortal() {
           onClick={() => setShowLinkPageHelpModal(false)}
           onWheel={(e) => e.stopPropagation()}
         >
-          {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" />
+          {/* Backdrop with blur - isolation prevents blend mode interference with help button */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
 
           {/* Modal - Premium Glass Effect */}
           <div
@@ -7486,11 +7491,17 @@ function AgentPagesSection({
   // Listen for image update events from the parent component
   useEffect(() => {
     const handleImageUpdate = (event: CustomEvent<{ url: string }>) => {
+      console.log('[AgentPagesSection] Received image update event:', event.detail.url);
       setPageData(prev => prev ? { ...prev, profile_image_url: event.detail.url } : null);
     };
 
     const handleColorImageUpdate = (event: CustomEvent<{ url: string }>) => {
-      setPageData(prev => prev ? { ...prev, profile_image_color_url: event.detail.url } : null);
+      console.log('[AgentPagesSection] Received color image update event:', event.detail.url);
+      setPageData(prev => {
+        const updated = prev ? { ...prev, profile_image_color_url: event.detail.url } : null;
+        console.log('[AgentPagesSection] Updated pageData with color URL, hasColorImage will be:', Boolean(updated?.profile_image_color_url));
+        return updated;
+      });
     };
 
     // Handler for when page is created during image upload
@@ -8581,7 +8592,7 @@ return (
                   className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
-                    color: linksSettings.nameWeight === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
+                    color: (linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
                   }}
                 >
                   Bold
@@ -9008,54 +9019,56 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Positioned ON the phone border, visible on hover */}
-                        {/* Left side: Up/Down controls - integrated into phone frame */}
-                        <div className="absolute -left-10 top-1/2 -translate-y-1/2 z-[9999] flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* Controls - Inside button, right side - always visible */}
+                        {/* Up/Down controls - positioned inside button on right */}
+                        <div
+                          className="absolute right-1 top-1/2 -translate-y-1/2 flex gap-0.5"
+                          style={{ zIndex: 10 }}
+                        >
                           <button
-                            onClick={() => moveLink(linkId, 'up')}
+                            onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
                             disabled={index === 0}
-                            className="p-1 rounded-l-lg disabled:opacity-30 transition-colors"
+                            className="p-1 rounded disabled:opacity-30 transition-all hover:scale-110"
                             style={{
-                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%)',
-                              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                              background: 'rgba(0,0,0,0.4)',
                               color: '#ffd700'
                             }}
                             title="Move up"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
                             </svg>
                           </button>
                           <button
-                            onClick={() => moveLink(linkId, 'down')}
+                            onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
                             disabled={index === allLinkIds.length - 1}
-                            className="p-1 rounded-l-lg disabled:opacity-30 transition-colors"
+                            className="p-1 rounded disabled:opacity-30 transition-all hover:scale-110"
                             style={{
-                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%)',
-                              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                              background: 'rgba(0,0,0,0.4)',
                               color: '#ffd700'
                             }}
                             title="Move down"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* Right side: Edit button - integrated into phone frame */}
+                        {/* Edit button - shown for custom links only, next to up/down controls */}
                         {!isDefault && (
                           <button
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.stopPropagation();
                               setEditingLinkId(linkId);
                               setEditingLinkLabel(customLink?.label || '');
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-10 top-1/2 -translate-y-1/2 z-[9999] p-1.5 rounded-r-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="absolute right-14 top-1/2 -translate-y-1/2 p-1 rounded transition-all hover:scale-110"
                             style={{
-                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%)',
-                              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                              zIndex: 10,
+                              background: 'rgba(0,0,0,0.4)',
                               color: '#ffd700'
                             }}
                             title="Edit link"
@@ -9592,12 +9605,18 @@ return (
             </button>
           )}
 
-          {/* Save Changes Button - Shows when page is activated and has unsaved changes */}
-          {pageData?.activated && hasUnsavedChanges && (
+          {/* Save Changes Button - Always visible when page is activated, greyed out until changes made */}
+          {pageData?.activated && (
             <button
               onClick={handleSave}
-              disabled={isSaving}
-              className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              disabled={isSaving || !hasUnsavedChanges}
+              className="w-full py-3 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+              style={{
+                backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
+                color: hasUnsavedChanges ? '#000000' : '#888888',
+                cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
+                opacity: isSaving ? 0.5 : 1,
+              }}
             >
               {isSaving ? (
                 <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
@@ -9608,7 +9627,7 @@ return (
                   <polyline points="7,3 7,8 15,8" />
                 </svg>
               )}
-              {isSaving ? 'Saving...' : 'Save Changes'}
+              {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
             </button>
           )}
 
