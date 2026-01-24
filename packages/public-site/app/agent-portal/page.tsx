@@ -8650,14 +8650,9 @@ return (
             </div>
           </div>
 
-          {/* Style + Button Weight - Same Row */}
-          <div className="grid grid-cols-2 gap-3">
-            {/* Style - REMOVED: Now auto-detected based on accent color brightness */}
-            {/* Text color automatically adjusts: dark accent = light text, light accent = dark text */}
-
-            {/* Button Weight */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
+          {/* Button Weight - Full width (Style picker removed - now auto-detected) */}
+          <div>
+            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
               <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
                 {/* Animated sliding pill indicator */}
                 <div
@@ -8685,7 +8680,6 @@ return (
                   Regular
                 </button>
               </div>
-            </div>
           </div>
 
           {/* Font */}
@@ -8890,9 +8884,9 @@ return (
                     fontFamily: 'var(--font-taskor, sans-serif)',
                     fontFeatureSettings: '"ss01" 1',
                     transform: 'perspective(800px) rotateX(12deg)',
-                    WebkitTextStroke: isAccentDark ? `1px ${linksSettings.accentColor}` : 'none',
+                    // Subtle outline via text-shadow for dark accents - barely visible, just adds definition
                     textShadow: isAccentDark
-                      ? `0 0 0.08em ${linksSettings.accentColor}, 0 0 0.15em ${linksSettings.accentColor}80, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
+                      ? `-0.5px -0.5px 0 ${linksSettings.accentColor}40, 0.5px -0.5px 0 ${linksSettings.accentColor}40, -0.5px 0.5px 0 ${linksSettings.accentColor}40, 0.5px 0.5px 0 ${linksSettings.accentColor}40, 0 0 0.1em ${linksSettings.accentColor}60, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
                       : `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`,
                     filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`,
                   }}
@@ -9126,13 +9120,13 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - FIX-007: Rounded corners, high z-index, positioned outside phone */}
-                        {/* LEFT SIDE: Up/Down controls */}
+                        {/* Controls - FIX-007: Rounded corners, high z-index, positioned outside button */}
+                        {/* LEFT SIDE: Up/Down controls - positioned relative to button, not phone */}
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5"
+                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
                           style={{
-                            left: '-32px', // Further out to be clearly in front of phone border
-                            zIndex: 99999, // Very high z-index to be in front of everything
+                            left: '-28px',
+                            zIndex: 99999,
                           }}
                         >
                           <button
@@ -9185,12 +9179,12 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center"
+                            className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center opacity-0 group-hover:opacity-100"
                             style={{
-                              right: '-32px', // Further out to be clearly in front of phone border
+                              right: '-28px',
                               width: '16px',
                               height: '16px',
-                              zIndex: 99999, // Very high z-index
+                              zIndex: 99999,
                               background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
                               borderRadius: '4px', // All corners rounded
                               color: '#ffd700',
@@ -9310,10 +9304,10 @@ return (
 
                 {/* Add New Link Mode - Button as Input UI */}
                 {addingNewLink ? (
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative">
                     {/* Button with clickable icon and inline label input - label centered across full width */}
                     <div
-                      className="py-2.5 px-3 rounded-lg text-sm relative"
+                      className="py-2.5 px-3 rounded-lg text-sm relative z-10"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: isAccentDark ? '#ffffff' : '#1a1a1a',
@@ -9328,8 +9322,11 @@ return (
                         title="Choose icon"
                       >
                         {newLinkIcon === 'Globe' ? (
-                          /* Plain + symbol */
-                          <span className="text-lg font-bold leading-none">+</span>
+                          /* Circled plus icon - FIX-017 */
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path strokeLinecap="round" d="M12 8v8M8 12h8" />
+                          </svg>
                         ) : (
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d={LINK_ICONS.find(i => i.name === newLinkIcon)?.path || 'M12 5v14M5 12h14'} />
@@ -9347,9 +9344,9 @@ return (
                         style={{ color: 'inherit' }}
                       />
                     </div>
-                    {/* Icon Picker Dropdown for new link - absolute to overlay content - FIX-018 */}
+                    {/* Icon Picker Dropdown for new link - absolute to overlay content below - FIX-018 */}
                     {showIconPicker === 'new-link' && (
-                      <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
+                      <div className="absolute left-0 right-0 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[50] shadow-xl" style={{ top: '44px' }}>
                         <div className="grid grid-cols-6 gap-1">
                           {LINK_ICONS.map((icon) => (
                             <button
