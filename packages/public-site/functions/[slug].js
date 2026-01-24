@@ -2566,11 +2566,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .max-w-2xl { max-width: 42rem; }
     .max-w-4xl { max-width: 56rem; }
 
-    /* Scroll reveal animation */
+    /* Elements visible by default - no scroll-reveal animations */
     .scroll-reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .scroll-reveal.visible {
@@ -3240,7 +3239,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 </head>
 <body>
   <!-- Star Field Background -->
-  <canvas id="star-canvas" style="position: fixed; top: 0px; left: 0px; width: 800px; height: 600px; z-index: -1; pointer-events: none; background: transparent;" width="800" height="600"></canvas>
+  <canvas id="star-canvas" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; background: transparent;"></canvas>
   <div style="position: fixed; inset: 0; z-index: -2; background: radial-gradient(ellipse at bottom, #282828 0%, #0c0c0c 100%);"></div>
 
   <main id="main-content">
@@ -3352,9 +3351,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </h2>
         </div>
         <div class="why-saa-grid">
-          <!-- Left Card - expands from left using clip-path -->
+          <!-- Left Card - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-left" data-expand-dir="left" style="height: 100%;">
-            <div id="saa-left-frame" class="rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); clip-path: inset(0 100% 0 0 round 16px); transition: clip-path 0.1s ease-out; height: 100%;">
+            <div id="saa-left-frame" class="rounded-2xl overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1); background: linear-gradient(to bottom right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)); clip-path: inset(0 0 0 0 round 16px); height: 100%;">
               <div id="saa-left-content" style="padding: 2rem 2.5rem; opacity: 0;">
                 <p class="font-bold" style="font-family: var(--font-amulya); color: #ffd700; font-size: 1.875rem;">Elite systems. Proven training. Real community.</p>
                 <p class="text-body mt-3 opacity-70">Most eXp sponsors offer little or no ongoing value.</p>
@@ -3381,9 +3380,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               </div>
             </div>
           </div>
-          <!-- Right Card - Aligned Incentives - expands from right using clip-path -->
+          <!-- Right Card - Aligned Incentives - visible immediately -->
           <div class="expand-reveal-element" data-expand-id="saa-right" data-expand-dir="right" style="height: 100%; min-height: 300px;">
-            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(0 0 0 100% round 16px); transition: clip-path 0.1s ease-out; height: 100%; min-height: 300px;">
+            <div id="saa-right-frame" class="rounded-2xl overflow-hidden" style="position: relative; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); clip-path: inset(0 0 0 0 round 16px); height: 100%; min-height: 300px;">
               <!-- Image is always visible -->
               <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-aligned-incentives-value-multiplication/public" alt="Smart Agent Alliance aligned incentives model" class="bento-image" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center;">
               <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%);"></div>
@@ -4734,18 +4733,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         handleScroll();
       }
 
-      // Scroll reveal
+      // Scroll reveal - add visible class immediately (no animation, elements already visible)
       function setupScrollReveal() {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.15 });
-
-        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.add('visible'));
       }
 
       // Counter scramble animation (matches homepage)
@@ -4826,38 +4816,24 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }, 500);
       }
 
-      // Logo animation
+      // Logo animation - constant velocity, no scroll boost (matches homepage)
       function setupLogoAnimation() {
         const track = document.getElementById('logo-track');
         if (!track) return;
 
         let position = 0;
-        let velocity = 0.5;
-        let lastScrollY = window.scrollY;
+        const velocity = 1.2; // Constant velocity matching homepage (1.2x speed)
 
         function animate() {
           const singleSetWidth = track.scrollWidth / 2;
           if (singleSetWidth > 0) {
             position += velocity;
-            if (velocity > 0.5) {
-              velocity *= 0.98;
-              if (velocity < 0.5) velocity = 0.5;
-            }
             if (position >= singleSetWidth) position -= singleSetWidth;
             track.style.transform = 'translateX(-' + position + 'px)';
           }
           requestAnimationFrame(animate);
         }
 
-        function handleScroll() {
-          const currentScrollY = window.scrollY;
-          const scrollDelta = Math.abs(currentScrollY - lastScrollY);
-          lastScrollY = currentScrollY;
-          const boost = Math.min(scrollDelta * 0.3, 8);
-          if (boost > 0.5) velocity = Math.max(velocity, boost);
-        }
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
         requestAnimationFrame(animate);
       }
 
@@ -4934,117 +4910,55 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         requestAnimationFrame(animate);
       }
 
-      // What You Get - Clip-Path Reveal Cards (alternating left/right)
+      // What You Get - Show cards immediately (no scroll-reveal animation)
       function setupWhatYouGetClipReveal() {
         var cards = document.querySelectorAll('.wyg-reveal-card');
         if (!cards.length) return;
 
-        // Create thresholds for smooth animation
-        var thresholds = [];
-        for (var i = 0; i <= 50; i++) {
-          thresholds.push(i / 50);
-        }
-
-        cards.forEach(function(card, index) {
-          var hasRevealed = false; // Track if card has been fully revealed
-          var direction = card.getAttribute('data-wyg-direction') || 'left';
-          var isFromRight = direction === 'right';
+        // Show all cards fully visible immediately
+        cards.forEach(function(card) {
           var iconCircle = card.querySelector('.wyg-icon-circle');
           var cardContent = card.querySelector('.wyg-card-content');
 
-          var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-              var p = entry.intersectionRatio;
+          if (iconCircle) {
+            iconCircle.style.transform = 'scale(1)';
+            iconCircle.style.opacity = '1';
+          }
 
-              // Once fully revealed (90%+), mark as revealed and keep at 1
-              if (p >= 0.9) {
-                hasRevealed = true;
-              }
-
-              // If already revealed, keep progress at 1
-              if (hasRevealed) {
-                p = 1;
-              }
-
-              // Icon circle: scale from 0.8 to 1, opacity from 0.3 to 1
-              if (iconCircle) {
-                var scale = 0.8 + p * 0.2;
-                var iconOpacity = 0.3 + p * 0.7;
-                iconCircle.style.transform = 'scale(' + scale + ')';
-                iconCircle.style.opacity = iconOpacity;
-              }
-
-              // Card content: slide in from left or right, fade in
-              if (cardContent) {
-                var translateX = isFromRight ? (p - 1) * 40 : (1 - p) * 40;
-                var contentOpacity = 0.4 + p * 0.6;
-                cardContent.style.transform = 'translateX(' + translateX + 'px)';
-                cardContent.style.opacity = contentOpacity;
-              }
-            });
-          }, {
-            threshold: thresholds,
-            rootMargin: '-5% 0px -5% 0px'
-          });
-          observer.observe(card);
+          if (cardContent) {
+            cardContent.style.transform = 'translateX(0)';
+            cardContent.style.opacity = '1';
+          }
         });
       }
 
-      // Why SAA - Expand Reveal Animation (cards open from edges with rounded corners)
+      // Why SAA - Show cards fully expanded immediately (no scroll-reveal animation)
       function setupWhySAAClipReveal() {
         var elements = document.querySelectorAll('.expand-reveal-element');
         if (!elements.length) return;
 
-        // Easing function for smooth deceleration (easeOutQuart)
-        function easeOutQuart(t) {
-          return 1 - Math.pow(1 - t, 4);
-        }
+        // Show all elements fully expanded immediately
+        elements.forEach(function(el) {
+          var expandId = el.getAttribute('data-expand-id');
+          var expandDir = el.getAttribute('data-expand-dir');
+          var frameEl = document.getElementById(expandId + '-frame');
+          var contentEl = document.getElementById(expandId + '-content');
 
-        function updateProgress() {
-          elements.forEach(function(el) {
-            var expandId = el.getAttribute('data-expand-id');
-            var expandDir = el.getAttribute('data-expand-dir');
-            var frameEl = document.getElementById(expandId + '-frame');
-            var contentEl = document.getElementById(expandId + '-content');
-
-            var rect = el.getBoundingClientRect();
-            var windowHeight = window.innerHeight;
-
-            // Start animation when element top enters viewport
-            // End animation after 400px of scroll
-            var scrollDistance = 600;
-            var elementTop = rect.top;
-            var startPoint = windowHeight;
-            var distanceScrolled = startPoint - elementTop;
-
-            // Clamp between 0 and 1
-            var rawProgress = Math.max(0, Math.min(1, distanceScrolled / scrollDistance));
-            var p = easeOutQuart(rawProgress);
-            var clipPercent = 100 - (p * 100); // 100% to 0% as progress goes 0 to 1
-
-            if (expandDir === 'left' && frameEl) {
-              // Expand from left using clip-path
-              frameEl.style.clipPath = 'inset(0 ' + clipPercent + '% 0 0 round 16px)';
-              if (contentEl) {
-                contentEl.style.opacity = Math.min(1, p * 1.5);
-              }
-            } else if (expandDir === 'right' && frameEl) {
-              // Expand from right using clip-path
-              frameEl.style.clipPath = 'inset(0 0 0 ' + clipPercent + '% round 16px)';
-            } else {
-              // Default: fade up (for disclaimer)
-              el.style.opacity = Math.min(1, p * 1.5);
-              el.style.transform = 'translateY(' + ((1 - p) * 20) + 'px)';
+          if (expandDir === 'left' && frameEl) {
+            // Fully expanded
+            frameEl.style.clipPath = 'inset(0 0 0 0 round 16px)';
+            if (contentEl) {
+              contentEl.style.opacity = '1';
             }
-          });
-        }
-
-        // Initial calculation
-        updateProgress();
-
-        // Update on scroll
-        window.addEventListener('scroll', updateProgress, { passive: true });
-        window.addEventListener('resize', updateProgress, { passive: true });
+          } else if (expandDir === 'right' && frameEl) {
+            // Fully expanded
+            frameEl.style.clipPath = 'inset(0 0 0 0 round 16px)';
+          } else {
+            // Default: visible (for disclaimer)
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          }
+        });
       }
 
       // WhyOnlyAtExp - Click/Auto-Flip 3D Card Stack Animation (matches homepage)
