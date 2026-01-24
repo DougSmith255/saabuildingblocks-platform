@@ -1581,6 +1581,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       height: 310px;
       width: 100%;
       perspective: 1200px;
+      cursor: pointer;
     }
     @media (min-width: 768px) {
       .why-only-card-stack {
@@ -3634,8 +3635,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                       <div class="why-only-progress-fill" id="why-only-progress-fill" style="width: 0%;"></div>
                     </div>
                   </div>
-                  <!-- Scroll hint - below progress bar, larger and bold -->
-                  <p style="text-align: center; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 0.75rem;">Scroll to explore</p>
+                  <!-- Click hint - below progress bar, larger and bold -->
+                  <p style="text-align: center; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 0.75rem;">Click to control manually</p>
                 </div>
 
                 <!-- Right Column: Key message card -->
@@ -4031,8 +4032,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
               <div id="built-future-progress" style="height: 100%; border-radius: 9999px; width: 0%; background: linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%); box-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px rgba(255,215,0,0.4), inset 0 1px 2px rgba(255,255,255,0.4);"></div>
             </div>
           </div>
-          <!-- Scroll hint - below progress bar, larger and bold -->
-          <p style="text-align: center; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 0.75rem; margin-bottom: 1rem;">Scroll to explore</p>
+          <!-- Click hint - below progress bar, larger and bold -->
+          <p style="text-align: center; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 0.75rem; margin-bottom: 1rem;">Click to control manually</p>
         </div>
       </div>
     </section>
@@ -5046,14 +5047,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         window.addEventListener('resize', updateProgress, { passive: true });
       }
 
-      // WhyOnlyAtExp - Scroll-Triggered 3D Card Stack Animation (GSAP)
-      function setupWhyOnlyScrollAnimation() {
-        // Register GSAP plugin
-        gsap.registerPlugin(ScrollTrigger);
-
-        const triggerEl = document.getElementById('why-only-trigger');
+      // WhyOnlyAtExp - Click/Auto-Flip 3D Card Stack Animation (matches homepage)
+      function setupWhyOnlyClickAnimation() {
+        const sectionEl = document.getElementById('why-only-section');
         const cardStackEl = document.getElementById('why-only-card-stack');
-        const contentEl = document.getElementById('why-only-content');
         const progressFill = document.getElementById('why-only-progress-fill');
         const cards = [
           document.getElementById('why-only-card-0'),
@@ -5061,141 +5058,101 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           document.getElementById('why-only-card-2')
         ];
 
-        if (!triggerEl || !cardStackEl || !contentEl || cards.some(c => !c)) return;
+        if (!cardStackEl || cards.some(c => !c)) return;
 
         const totalCards = cards.length;
+        let currentCard = 0;
+        let isAutoMode = true;
+        let hasStarted = false;
+        let autoTimer = null;
 
-        // State for magnetic snap effect
-        let rawProgress = 0;
-        let displayProgress = 0;
-        let lastRaw = 0;
-        let velocity = 0;
-        let rafId = null;
-
-        // Grace period: 10% at start and 10% at end of scroll range
-        // Buffer zones: desktop has 10% grace at start/end, mobile/tablet (stacking layout) has none
-        var isMobileGrace = window.innerWidth < 1020;
-        const GRACE = isMobileGrace ? 0 : 0.1;
-        const CONTENT_RANGE = 1 - (GRACE * 2);
-
-        // Update card transforms based on progress
-        function updateCards(progress) {
+        // Update card transforms based on current card index
+        function updateCards(cardIndex) {
           cards.forEach(function(card, index) {
-            const isLastCard = index === totalCards - 1;
-            // Scale so 3rd card (index 2) reaches position 0 when progress = 1
-            const globalCardPosition = progress * (totalCards - 1) - index;
-
             let rotateX = 0, translateZ = 0, translateY = 0, opacity = 1, scale = 1;
 
-            if (isLastCard) {
-              // Last card: slides up into position, no flip
-              if (globalCardPosition >= 0) {
-                rotateX = 0;
-                opacity = 1;
-                scale = 1;
-                translateZ = 0;
-                translateY = 0;
-              } else {
-                const stackPosition = -globalCardPosition;
-                translateZ = -30 * stackPosition;
-                translateY = 20 * stackPosition;
-                opacity = Math.max(0.4, 1 - stackPosition * 0.15);
-                scale = Math.max(0.88, 1 - stackPosition * 0.04);
-              }
-            } else if (globalCardPosition >= 1) {
+            if (index === cardIndex) {
+              // Current card: front and center
+              rotateX = 0;
+              opacity = 1;
+              scale = 1;
+              translateZ = 0;
+              translateY = 0;
+            } else if (index < cardIndex) {
+              // Cards that have flipped (above current)
               rotateX = -90;
               opacity = 0;
               scale = 0.9;
-            } else if (globalCardPosition >= 0) {
-              rotateX = -globalCardPosition * 90;
-              opacity = globalCardPosition > 0.7 ? 1 - ((globalCardPosition - 0.7) / 0.3) : 1;
-              scale = 1 - globalCardPosition * 0.1;
             } else {
-              const stackPosition = -globalCardPosition;
+              // Cards in the stack (below current)
+              const stackPosition = index - cardIndex;
               translateZ = -30 * stackPosition;
               translateY = 20 * stackPosition;
               opacity = Math.max(0.4, 1 - stackPosition * 0.15);
               scale = Math.max(0.88, 1 - stackPosition * 0.04);
             }
 
-            card.style.transform = 'perspective(1200px) rotateX(' + rotateX + 'deg) translateZ(' + translateZ + 'px) translateY(' + translateY + 'px) scale(' + scale + ')';
+            card.style.transform = 'perspective(1200px) rotateX(' + rotateX + 'deg) translate3d(0, ' + translateY + 'px, ' + translateZ + 'px) scale(' + scale + ')';
             card.style.opacity = opacity;
             card.style.zIndex = totalCards - index;
+            card.style.transition = 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
           });
 
           // Update progress bar
           if (progressFill) {
+            var progress = cardIndex / (totalCards - 1);
             progressFill.style.width = (progress * 100) + '%';
+            progressFill.style.transition = 'width 0.5s ease-out';
           }
         }
 
-        // Velocity-based magnetic snap - same strength for desktop and mobile
-        function animateMagnetic() {
-          const raw = rawProgress;
-          const currentDisplay = displayProgress;
-
-          // Calculate velocity (change since last frame)
-          const instantVelocity = Math.abs(raw - lastRaw);
-          // Smooth velocity with decay
-          velocity = velocity * 0.9 + instantVelocity * 0.1;
-          lastRaw = raw;
-
-          // Card positions are at 0, 0.5, 1 (for 3 cards)
-          const cardStep = 1 / (totalCards - 1);
-          const nearestCardIndex = Math.round(raw / cardStep);
-          const nearestCardProgress = Math.max(0, Math.min(1, nearestCardIndex * cardStep));
-
-          // When velocity is high, follow raw position
-          // When velocity is low, snap to nearest card
-          const velocityFactor = Math.min(1, velocity * 100); // 0 = stopped, 1 = scrolling fast
-
-          // Blend between snap target (when stopped) and raw position (when scrolling)
-          const targetProgress = nearestCardProgress * (1 - velocityFactor) + raw * velocityFactor;
-
-          // Smooth interpolation toward target
-          const newProgress = currentDisplay + (targetProgress - currentDisplay) * 0.15;
-
-          // Always update to keep smooth animation
-          if (Math.abs(newProgress - currentDisplay) > 0.0001) {
-            displayProgress = newProgress;
-            updateCards(newProgress);
-          }
-
-          rafId = requestAnimationFrame(animateMagnetic);
+        // Start auto-flip timer
+        function startAutoFlip() {
+          if (autoTimer) clearInterval(autoTimer);
+          autoTimer = setInterval(function() {
+            currentCard = (currentCard + 1) % totalCards;
+            updateCards(currentCard);
+          }, 4000); // 4 seconds
         }
 
-        // Start the magnetic animation loop
-        rafId = requestAnimationFrame(animateMagnetic);
-
-        // Create ScrollTrigger for pinning and progress tracking
-        // Pin when the CARD STACK reaches 55% from top of viewport (same as home page)
-        var isMobileCards = window.innerWidth < 1020;
-        ScrollTrigger.create({
-          trigger: cardStackEl,
-          start: 'center 55%',
-          end: '+=200%',
-          pin: triggerEl,
-          pinSpacing: true,
-          scrub: 0.5,
-          onUpdate: function(self) {
-            // Map scroll progress to card progress with grace periods
-            // On mobile, cards move 2x faster relative to scroll
-            var mobileMultiplier = isMobileCards ? 2 : 1;
-            let cardProgress = 0;
-
-            if (self.progress <= GRACE) {
-              cardProgress = 0;
-            } else if (self.progress >= 1 - GRACE) {
-              cardProgress = 1;
-            } else {
-              // Apply mobile multiplier (2x speed on mobile) and clamp to 0-1 range
-              cardProgress = Math.min((self.progress - GRACE) / CONTENT_RANGE * mobileMultiplier, 1);
+        // Handle card click
+        function handleCardClick() {
+          if (isAutoMode) {
+            // First click: stop auto mode
+            isAutoMode = false;
+            if (autoTimer) {
+              clearInterval(autoTimer);
+              autoTimer = null;
             }
+          }
+          // Advance to next card
+          currentCard = (currentCard + 1) % totalCards;
+          updateCards(currentCard);
+        }
 
-            // Update raw progress - magnetic loop will interpolate
-            rawProgress = cardProgress;
-          },
-        });
+        // Add click listener to card stack
+        cardStackEl.addEventListener('click', handleCardClick);
+
+        // Start auto-flip only when 20% of section is visible
+        if (sectionEl && 'IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting && entry.intersectionRatio >= 0.2 && !hasStarted) {
+                hasStarted = true;
+                if (isAutoMode) {
+                  startAutoFlip();
+                }
+              }
+            });
+          }, { threshold: 0.2 });
+          observer.observe(sectionEl);
+        } else {
+          // Fallback: start immediately if no IntersectionObserver
+          hasStarted = true;
+          if (isAutoMode) {
+            startAutoFlip();
+          }
+        }
 
         // Initialize cards at position 0
         updateCards(0);
@@ -5412,15 +5369,30 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
         var wrappers = track.querySelectorAll('[data-loop-index]');
 
-        // updateCards function - renders card states based on scroll position
-        function updateCards(scrollPosition) {
-          var progress = scrollPosition / (totalCards - 1);
+        // Click/Auto-Scroll Implementation (matches homepage)
+        var BUFFER = 2; // Cards duplicated on each side for infinite scroll
+        var currentCard = BUFFER; // Start at first real card
+        var isAutoMode = true;
+        var hasStarted = false;
+        var autoTimer = null;
+        var isTransitioning = true;
+        var sectionEl = document.getElementById('built-for-future');
+
+        // Add CSS transition to track
+        track.style.transition = 'transform 0.5s ease-out';
+
+        // Updated updateCards function for click/auto mode
+        function updateCardsClick(cardIndex) {
+          // Progress bar - account for BUFFER offset
+          var displayCard = ((cardIndex - BUFFER) % totalCards + totalCards) % totalCards;
+          var progress = displayCard / (totalCards - 1);
           if (progressBar) {
             progressBar.style.width = (progress * 100) + '%';
+            progressBar.style.transition = 'width 0.5s ease-out';
           }
 
-          // Track transform - exact formula from React
-          var offset = (scrollPosition + 2) * (CARD_WIDTH + CARD_GAP);
+          // Track transform - center current card
+          var offset = cardIndex * (CARD_WIDTH + CARD_GAP);
           track.style.transform = 'translateX(calc(50vw - ' + (CARD_WIDTH / 2) + 'px - 12px - ' + offset + 'px))';
 
           wrappers.forEach(function(wrapper) {
@@ -5429,124 +5401,121 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             var imgContainer = wrapper.querySelector('[data-img-container]');
             var title = wrapper.querySelector('[data-title]');
 
-            var actualIndex = loopIndex - 2;
-            var distance = Math.abs(scrollPosition - actualIndex);
-            var isActive = distance < 0.5;
+            var isActive = loopIndex === cardIndex;
+            var distance = Math.abs(cardIndex - loopIndex);
 
-            // Scale - exact from React
+            // Scale
             var scale = Math.max(0.85, 1 - distance * 0.1);
-
-            // Blur - exact from React
+            // Blur
             var blurAmount = Math.min(5, distance * 10);
 
-            // Blackout for looped cards - exact from React
-            var blackoutOpacity = 0;
-            if (actualIndex < 0) {
-              blackoutOpacity = Math.max(0, 1 - scrollPosition);
-            } else if (actualIndex > totalCards - 1) {
-              blackoutOpacity = Math.max(0, (scrollPosition - (totalCards - 2)) / 1);
+            // Apply styles
+            wrapper.style.transform = 'scale(' + scale + ')';
+            wrapper.style.filter = 'blur(' + blurAmount + 'px)';
+            wrapper.style.transition = isTransitioning ? 'transform 0.5s ease-out, filter 0.5s ease-out' : 'none';
+
+            // Card styles
+            if (card) {
+              card.style.background = isActive ? activeBackground : inactiveBackground;
+              card.style.border = isActive ? '2px solid rgba(180,150,50,0.5)' : '2px solid ' + BRAND_YELLOW + '22';
+              card.style.boxShadow = isActive ? '0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)' : 'none';
+              card.style.transition = isTransitioning ? 'background 0.5s ease, border 0.5s ease, box-shadow 0.5s ease' : 'none';
             }
 
-            // Apply wrapper styles - exact from React
-            wrapper.style.transform = 'scale(' + scale + ')';
-            wrapper.style.filter = 'blur(' + (blurAmount + blackoutOpacity * 4) + 'px) grayscale(' + (blackoutOpacity * 100) + '%) brightness(' + (1 - blackoutOpacity * 0.6) + ')';
-            wrapper.style.opacity = 1 - blackoutOpacity * 0.4;
-
-            // Card styles - exact from React
-            card.style.background = isActive ? activeBackground : inactiveBackground;
-            card.style.border = isActive ? '2px solid rgba(180,150,50,0.5)' : '2px solid ' + BRAND_YELLOW + '22';
-            card.style.boxShadow = isActive ? '0 0 40px 8px rgba(255,200,80,0.4), 0 0 80px 16px rgba(255,180,50,0.25)' : 'none';
-
-            // Image container styles - exact from React
+            // Image container styles
             if (imgContainer) {
               imgContainer.style.backgroundColor = isActive ? 'rgba(20,18,12,0.85)' : loopedCards[loopIndex].bgColor;
               imgContainer.style.border = isActive ? '3px solid rgba(40,35,20,0.8)' : '3px solid ' + BRAND_YELLOW;
               imgContainer.style.boxShadow = isActive ? '0 0 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)' : 'none';
+              imgContainer.style.transition = isTransitioning ? 'background-color 0.5s ease, border 0.5s ease, box-shadow 0.5s ease' : 'none';
             }
 
-            // Title color - exact from React
+            // Title color
             if (title) {
               title.style.color = isActive ? '#2a2a2a' : '#e5e4dd';
+              title.style.transition = isTransitioning ? 'color 0.5s ease' : 'none';
             }
           });
         }
 
-        // Magnetic animation loop - same strength for desktop and mobile
-        var isMobileHorizontal = window.innerWidth < 768;
-        function animateMagnetic() {
-          var raw = rawPositionRef;
-          var lastRaw = lastRawRef;
-          var currentDisplay = displayPositionRef;
-
-          var instantVelocity = Math.abs(raw - lastRaw);
-          velocityRef = velocityRef * 0.9 + instantVelocity * 0.1;
-          lastRawRef = raw;
-
-          var nearestCard = Math.round(raw);
-          var clampedTarget = Math.max(0, Math.min(totalCards - 1, nearestCard));
-
-          // When velocity is high, follow raw position
-          // When velocity is low, snap to nearest card
-          var velocityFactor = Math.min(1, velocityRef * 50);
-          var targetPosition = clampedTarget * (1 - velocityFactor) + raw * velocityFactor;
-          var newPosition = currentDisplay + (targetPosition - currentDisplay) * 0.15;
-
-          if (Math.abs(newPosition - currentDisplay) > 0.001) {
-            displayPositionRef = newPosition;
-            updateCards(newPosition);
+        // Handle seamless loop - snap back when reaching duplicates
+        function checkLoop() {
+          if (currentCard >= BUFFER + totalCards) {
+            setTimeout(function() {
+              isTransitioning = false;
+              track.style.transition = 'none';
+              currentCard = BUFFER;
+              updateCardsClick(currentCard);
+              requestAnimationFrame(function() {
+                requestAnimationFrame(function() {
+                  isTransitioning = true;
+                  track.style.transition = 'transform 0.5s ease-out';
+                });
+              });
+            }, 500);
           }
-
-          requestAnimationFrame(animateMagnetic);
         }
 
-        requestAnimationFrame(animateMagnetic);
+        // Start auto-scroll timer
+        function startAutoScroll() {
+          if (autoTimer) clearInterval(autoTimer);
+          autoTimer = setInterval(function() {
+            currentCard++;
+            updateCardsClick(currentCard);
+            checkLoop();
+          }, 3500); // 3.5 seconds
+        }
 
-        // GSAP ScrollTrigger
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Pin trigger: 40% on mobile, 45% on desktop
-        var pinStartHorizontal = isMobileHorizontal ? 'center 40%' : 'center 45%';
-        // Shorter scroll range on mobile to reduce dead space at end
-        var scrollRangeHorizontal = isMobileHorizontal ? '+=150%' : '+=300%';
-        ScrollTrigger.create({
-          trigger: trigger,
-          start: pinStartHorizontal,
-          end: scrollRangeHorizontal,
-          pin: true,
-          pinSpacing: true,
-          scrub: 0.5,
-          onUpdate: function(self) {
-            // On mobile, cards move 2x faster relative to scroll
-            var mobileMultiplier = isMobileHorizontal ? 2 : 1;
-            var cardPosition = 0;
-
-            if (self.progress <= GRACE) {
-              cardPosition = 0;
-            } else if (self.progress >= 1 - GRACE) {
-              cardPosition = totalCards - 1;
-            } else {
-              var contentProgress = (self.progress - GRACE) / CONTENT_RANGE;
-              // Apply mobile multiplier (2x speed on mobile) and clamp to valid range
-              cardPosition = Math.min(contentProgress * mobileMultiplier, 1) * (totalCards - 1);
+        // Handle click
+        function handleClick() {
+          if (isAutoMode) {
+            isAutoMode = false;
+            if (autoTimer) {
+              clearInterval(autoTimer);
+              autoTimer = null;
             }
-
-            rawPositionRef = cardPosition;
           }
-        });
+          currentCard++;
+          updateCardsClick(currentCard);
+          checkLoop();
+        }
 
-        // Initialize at position 0
-        updateCards(0);
+        // Add click listener to container
+        var containerEl = content.parentElement;
+        if (containerEl) {
+          containerEl.style.cursor = 'pointer';
+          containerEl.addEventListener('click', handleClick);
+        }
 
-        // Force immediate visual update to ensure cards display correctly
-        var initialOffset = 2 * (CARD_WIDTH + CARD_GAP);
-        track.style.transform = 'translateX(calc(50vw - ' + (CARD_WIDTH / 2) + 'px - 12px - ' + initialOffset + 'px))';
+        // Start auto-scroll only when 20% of section is visible
+        if (sectionEl && 'IntersectionObserver' in window) {
+          var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+              if (entry.isIntersecting && entry.intersectionRatio >= 0.2 && !hasStarted) {
+                hasStarted = true;
+                if (isAutoMode) {
+                  startAutoScroll();
+                }
+              }
+            });
+          }, { threshold: 0.2 });
+          observer.observe(sectionEl);
+        } else {
+          hasStarted = true;
+          if (isAutoMode) {
+            startAutoScroll();
+          }
+        }
+
+        // Initialize at position BUFFER (first real card)
+        updateCardsClick(currentCard);
 
         console.log('[BuiltForFuture] Initialized with ' + loopedCards.length + ' looped cards');
         console.log('[BuiltForFuture] CARD_WIDTH=' + CARD_WIDTH + ', CARD_GAP=' + CARD_GAP + ', initialOffset=' + initialOffset);
       }
       // Keep old function name for backwards compatibility
       function setupDeckStack() {
-        setupWhyOnlyScrollAnimation();
+        setupWhyOnlyClickAnimation();
       }
 
       // Check for previously submitted user
