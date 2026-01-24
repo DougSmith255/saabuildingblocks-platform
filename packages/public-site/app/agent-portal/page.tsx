@@ -7133,7 +7133,7 @@ interface LinksSettings {
   nameWeight: 'bold' | 'normal'; // Name text weight
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
-  linkOrder: string[]; // Order of all links including default buttons (join-team, learn-about) and custom link IDs
+  linkOrder: string[]; // Order of all links including default button (learn-about) and custom link IDs
   showCallButton?: boolean; // Show call button in preview
   showTextButton?: boolean; // Show text button in preview
 }
@@ -7145,7 +7145,7 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   nameWeight: 'bold', // Bold by default
   bio: '',
   showColorPhoto: false, // B&W by default
-  linkOrder: ['join-team', 'learn-about'], // Default order: default buttons first
+  linkOrder: ['learn-about'], // Default order: default button at bottom
 };
 
 // Helper function to ensure social icon color is visible on dark backgrounds
@@ -7206,8 +7206,7 @@ function getVisibleSocialIconColor(hexColor: string): string {
 
 // Default button definitions
 const DEFAULT_BUTTONS = [
-  { id: 'join-team', label: 'Join my Team', type: 'default' as const },
-  { id: 'learn-about', label: 'Learn About my Team', type: 'default' as const },
+  { id: 'learn-about', label: 'About Our eXp Team', type: 'default' as const },
 ];
 
 interface CustomLink {
@@ -8892,6 +8891,8 @@ return (
         </div>
 
         {/* Phone Mockup - Premium Styling - overflow visible for button controls */}
+        {/* Hide scrollbar for webkit browsers */}
+        <style>{`.phone-inner-scroll::-webkit-scrollbar { display: none; }`}</style>
         <div className="p-4 flex flex-col items-center overflow-visible">
           <div
             className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative overflow-visible"
@@ -8901,10 +8902,10 @@ return (
               overflow: 'visible',
             }}
           >
-            {/* Phone inner bezel - FIXED height with scrollable content */}
+            {/* Phone inner bezel - FIXED height with scrollable content, hidden scrollbar */}
             <div
               ref={phoneInnerRef}
-              className="rounded-[2.25rem] relative flex flex-col"
+              className="phone-inner-scroll rounded-[2.25rem] relative flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
@@ -8912,6 +8913,15 @@ return (
                 padding: '32px 16px 20px 16px',
                 overflowX: 'hidden',
                 overflowY: 'auto', // Scrollable when content exceeds height
+                scrollbarWidth: 'none', // Firefox
+                msOverflowStyle: 'none', // IE/Edge
+              }}
+              onWheel={(e) => {
+                // Capture scroll events to prevent page scroll when hovering phone
+                e.stopPropagation();
+                if (phoneInnerRef.current) {
+                  phoneInnerRef.current.scrollTop += e.deltaY;
+                }
               }}
             >
               {/* Star Field Background */}
@@ -9113,16 +9123,15 @@ return (
               {/* Button Links with Editor - FIX-007/024: controls rendered outside phone inner */}
               <div ref={buttonLinksContainerRef} className="space-y-1.5 relative" style={{ overflow: 'visible' }}>
                 {(() => {
-                  const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
+                  const linkOrder = linksSettings.linkOrder || ['learn-about'];
                   const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
                   const allLinkIds = [...linkOrder];
                   customLinks.forEach(link => {
                     if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
                   });
-                  if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+                  // Ensure default button is included (at end if not in order)
                   if (!allLinkIds.includes('learn-about')) {
-                    const joinIndex = allLinkIds.indexOf('join-team');
-                    allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+                    allLinkIds.push('learn-about');
                   }
 
                   const moveLink = (linkId: string, direction: 'up' | 'down') => {
@@ -9158,13 +9167,14 @@ return (
                   };
 
                   return allLinkIds.map((linkId, index) => {
-                    const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                    const isDefault = linkId === 'learn-about';
                     const customLink = customLinkMap.get(linkId);
                     if (!isDefault && !customLink) return null;
 
-                    const label = linkId === 'join-team' ? 'Join my Team' : linkId === 'learn-about' ? 'About my Team' : customLink?.label || 'Custom Link';
+                    const label = linkId === 'learn-about' ? 'About Our eXp Team' : customLink?.label || 'Custom Link';
+                    // Info icon for default button
                     const iconPath = isDefault
-                      ? (linkId === 'join-team' ? 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75' : 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 16v-4 M12 8h.01')
+                      ? 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 16v-4 M12 8h.01'
                       : LINK_ICONS.find(i => i.name === customLink?.icon)?.path || '';
 
                     const isEditing = editingLinkId === linkId;
@@ -9200,11 +9210,19 @@ return (
                       >
                         {/* Button - Full width inside phone screen with centered text */}
                         {/* When editing: button becomes editable with input instead of span */}
+                        {/* Default button has muted styling (transparent bg + solid border) */}
                         <div
                           className="w-full py-2.5 px-3 rounded-lg text-sm relative"
                           style={{
-                            backgroundColor: linksSettings.accentColor,
-                            color: isAccentDark ? '#ffffff' : '#1a1a1a',
+                            backgroundColor: isDefault
+                              ? `${linksSettings.accentColor}33` // 20% opacity for default button
+                              : linksSettings.accentColor,
+                            border: isDefault
+                              ? `2px solid ${linksSettings.accentColor}` // Solid border for default
+                              : 'none',
+                            color: isDefault
+                              ? linksSettings.accentColor // Text matches border for default
+                              : (isAccentDark ? '#ffffff' : '#1a1a1a'),
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                             overflow: 'visible',
@@ -9311,7 +9329,7 @@ return (
                               <button
                                 onClick={() => {
                                   setCustomLinks(prev => prev.filter(l => l.id !== linkId));
-                                  setLinksSettings(prev => ({ ...prev, linkOrder: (prev.linkOrder || ['join-team', 'learn-about']).filter(id => id !== linkId) }));
+                                  setLinksSettings(prev => ({ ...prev, linkOrder: (prev.linkOrder || ['learn-about']).filter(id => id !== linkId) }));
                                   setEditingLinkId(null);
                                   setShowIconPicker(null);
                                   setHasUnsavedChanges(true);
@@ -9415,7 +9433,7 @@ return (
                               order: customLinks.length,
                             };
                             setCustomLinks(prev => [...prev, newLink]);
-                            setLinksSettings(prev => ({ ...prev, linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLink.id] }));
+                            setLinksSettings(prev => ({ ...prev, linkOrder: [...(prev.linkOrder || ['learn-about']), newLink.id] }));
                             setNewLinkLabel('');
                             setNewLinkUrl('');
                             setNewLinkIcon('Globe');
@@ -9497,16 +9515,15 @@ return (
             {/* This allows controls to be visible without being clipped by phone inner's overflow:hidden */}
             {(() => {
               // Build list of all link IDs in current order
-              const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
+              const linkOrder = linksSettings.linkOrder || ['learn-about'];
               const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
               const allLinkIds = [...linkOrder];
               customLinks.forEach(link => {
                 if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
               });
-              if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+              // Ensure default button is included (at end if not in order)
               if (!allLinkIds.includes('learn-about')) {
-                const joinIndex = allLinkIds.indexOf('join-team');
-                allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+                allLinkIds.push('learn-about');
               }
 
               // Move link function with animation
@@ -9550,7 +9567,7 @@ return (
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
 
-                    const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                    const isDefault = linkId === 'learn-about';
                     const customLink = customLinkMap.get(linkId);
                     if (!isDefault && !customLink) return null;
 
@@ -9608,7 +9625,7 @@ return (
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
 
-                    const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                    const isDefault = linkId === 'learn-about';
                     if (isDefault) return null; // No edit for default buttons
 
                     const customLink = customLinkMap.get(linkId);
@@ -10259,23 +10276,21 @@ return (
 
             {/* Simplified Button List for Mobile */}
             <div className="space-y-2">
-              {/* Default buttons */}
-              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: isAccentDark ? '#fff' : '#000' }}>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-                <span className="flex-1 text-center">Join my Team</span>
-              </div>
-              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: isAccentDark ? '#fff' : '#000' }}>
+              {/* Default button - muted styling (transparent bg + solid border) */}
+              <div
+                className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2"
+                style={{
+                  backgroundColor: `${linksSettings.accentColor}33`,
+                  border: `2px solid ${linksSettings.accentColor}`,
+                  color: linksSettings.accentColor,
+                }}
+              >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 16v-4" />
                   <path d="M12 8h.01" />
                 </svg>
-                <span className="flex-1 text-center">About my Team</span>
+                <span className="flex-1 text-center">About Our eXp Team</span>
               </div>
 
               {/* Custom links */}
