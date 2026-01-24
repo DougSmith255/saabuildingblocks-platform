@@ -1632,6 +1632,10 @@ function AgentPortal() {
       setDashboardUploadStatus('Applying new contrast level...');
       const processedBlob = await applyBWContrastFilter(bgRemovedBlob, contrastLevel);
 
+      // Step 2b: Create color version (for Linktree color option)
+      setDashboardUploadStatus('Creating color version...');
+      const colorProcessedBlob = await applyColorContrastFilter(bgRemovedBlob, colorContrastLevel);
+
       // Step 3: Upload to dashboard
       setDashboardUploadStatus('Updating dashboard...');
       const dashboardFormData = new FormData();
@@ -1663,6 +1667,7 @@ function AgentPortal() {
       if (pageResponse.ok) {
         const pageData = await pageResponse.json();
         if (pageData.page?.id) {
+          // Upload B&W version
           const attractionFormData = new FormData();
           attractionFormData.append('file', processedBlob, 'profile.png');
           attractionFormData.append('pageId', pageData.page.id);
@@ -1672,6 +1677,31 @@ function AgentPortal() {
             headers: { 'Authorization': `Bearer ${token}` },
             body: attractionFormData,
           });
+
+          // Step 5: Upload COLOR version for Linktree color option
+          setDashboardUploadStatus('Uploading color version...');
+          const colorFormData = new FormData();
+          colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
+          colorFormData.append('pageId', pageData.page.id);
+
+          const colorResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` },
+            body: colorFormData,
+          });
+
+          // Dispatch event to update UI with color URL
+          if (colorResponse.ok) {
+            const colorResult = await colorResponse.json();
+            console.log('[Reprocess] Color upload result:', colorResult);
+            if (colorResult.data?.url) {
+              const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
+              console.log('[Reprocess] Dispatching color image event:', colorCacheBustUrl);
+              window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
+                detail: { url: colorCacheBustUrl }
+              }));
+            }
+          }
         }
       }
 
@@ -2579,7 +2609,9 @@ function AgentPortal() {
                 setUser={setUser}
                 contrastLevel={contrastLevel}
                 setContrastLevel={setContrastLevel}
+                colorContrastLevel={colorContrastLevel}
                 applyBWContrastFilter={applyBWContrastFilter}
+                applyColorContrastFilter={applyColorContrastFilter}
                 originalImageFile={originalImageFile}
                 setOriginalImageFile={setOriginalImageFile}
                 setPendingImageFile={setPendingImageFile}
@@ -2615,7 +2647,9 @@ function AgentPortal() {
                 setUser={setUser}
                 contrastLevel={contrastLevel}
                 setContrastLevel={setContrastLevel}
+                colorContrastLevel={colorContrastLevel}
                 applyBWContrastFilter={applyBWContrastFilter}
+                applyColorContrastFilter={applyColorContrastFilter}
                 originalImageFile={originalImageFile}
                 setOriginalImageFile={setOriginalImageFile}
                 setPendingImageFile={setPendingImageFile}
@@ -7226,7 +7260,9 @@ interface AgentPagesSectionProps {
   setUser: React.Dispatch<React.SetStateAction<UserData | null>>;
   contrastLevel: number;
   setContrastLevel: React.Dispatch<React.SetStateAction<number>>;
+  colorContrastLevel: number; // For color version of profile image
   applyBWContrastFilter: (imageSource: File | Blob, contrast: number) => Promise<Blob>;
+  applyColorContrastFilter: (imageSource: File | Blob, contrast: number) => Promise<Blob>; // For color version
   originalImageFile: File | null;
   setOriginalImageFile: React.Dispatch<React.SetStateAction<File | null>>;
   // Image editor modal props
@@ -7261,7 +7297,9 @@ function AgentPagesSection({
   setUser,
   contrastLevel,
   setContrastLevel,
+  colorContrastLevel,
   applyBWContrastFilter,
+  applyColorContrastFilter,
   originalImageFile,
   setOriginalImageFile,
   setPendingImageFile,
@@ -7389,6 +7427,11 @@ function AgentPagesSection({
   // Check if color version is available
   const hasColorImage = Boolean(pageData?.profile_image_color_url);
 
+  // Debug: Log hasColorImage changes
+  useEffect(() => {
+    console.log('[AgentPagesSection] hasColorImage changed:', hasColorImage, 'profile_image_color_url:', pageData?.profile_image_color_url);
+  }, [hasColorImage, pageData?.profile_image_color_url]);
+
   // Preload S logo variants for instant switching
   useEffect(() => {
     const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-offwhite.png'];
@@ -7408,6 +7451,7 @@ function AgentPagesSection({
   // Update state when preloadedPageData becomes available (e.g., after initial mount)
   useEffect(() => {
     if (preloadedPageData?.page) {
+      console.log('[AgentPagesSection] Preloaded page data, profile_image_color_url:', preloadedPageData.page.profile_image_color_url);
       setPageData(preloadedPageData.page);
       setFormData({
         display_first_name: preloadedPageData.page.display_first_name || '',
@@ -7452,6 +7496,7 @@ function AgentPagesSection({
         if (response.ok) {
           const data = await response.json();
           if (data.page) {
+            console.log('[AgentPagesSection] Initial page data loaded, profile_image_color_url:', data.page.profile_image_color_url);
             setPageData(data.page);
             setFormData({
               display_first_name: data.page.display_first_name || '',
@@ -7882,6 +7927,10 @@ function AgentPagesSection({
       setAttractionUploadStatus('Applying new contrast level...');
       const processedBlob = await applyBWContrastFilter(bgRemovedBlob, contrastLevel);
 
+      // Step 2b: Create color version (for Linktree color option)
+      setAttractionUploadStatus('Creating color version...');
+      const colorProcessedBlob = await applyColorContrastFilter(bgRemovedBlob, colorContrastLevel);
+
       // Step 3: Upload to dashboard
       setAttractionUploadStatus('Updating dashboard...');
       const dashboardFormData = new FormData();
@@ -7925,6 +7974,29 @@ function AgentPagesSection({
             profile_image_url: data.data.page.profile_image_url ? `${data.data.page.profile_image_url}?v=${Date.now()}` : null,
           };
           setPageData(updatedPage);
+        }
+
+        // Step 5: Upload COLOR version for Linktree color option
+        setAttractionUploadStatus('Uploading color version...');
+        const colorFormData = new FormData();
+        colorFormData.append('file', colorProcessedBlob, 'profile-color.png');
+        colorFormData.append('pageId', pageData.id);
+
+        const colorResponse = await fetch('https://saabuildingblocks.com/api/agent-pages/upload-color-image', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` },
+          body: colorFormData,
+        });
+
+        // Update pageData with color URL
+        if (colorResponse.ok) {
+          const colorResult = await colorResponse.json();
+          console.log('[AttractionReprocess] Color upload result:', colorResult);
+          if (colorResult.data?.url) {
+            const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
+            console.log('[AttractionReprocess] Updating pageData with color URL:', colorCacheBustUrl);
+            setPageData(prev => prev ? { ...prev, profile_image_color_url: colorCacheBustUrl } : null);
+          }
         }
       }
 
@@ -8407,6 +8479,12 @@ return (
                 <svg className="w-12 h-12 text-white/30" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                 </svg>
+              )}
+              {/* Loading spinner overlay during upload - FIX-003 */}
+              {attractionUploadStatus && (
+                <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
+                  <div className="w-8 h-8 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
+                </div>
               )}
             </div>
             <div className="flex flex-col gap-2">
@@ -8905,7 +8983,7 @@ return (
                           backgroundColor: linksSettings.accentColor,
                           color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                           fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                          fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                          fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                           borderRadius: buttonCount === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
                         }}
                       >
@@ -9005,21 +9083,40 @@ return (
                           }}
                         >
                           {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
+                          {/* FIX-005: Keep both S logo variants in DOM to prevent flash on reorder */}
                           {linkId === 'learn-about' ? (
-                            <img
-                              key={`s-logo-${linksSettings.iconStyle}`}
-                              src={linksSettings.iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}
-                              alt="S"
-                              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 object-contain pointer-events-none"
-                              style={{ zIndex: 1, willChange: 'transform' }}
-                              loading="eager"
-                              decoding="sync"
-                              fetchPriority="high"
-                              width={16}
-                              height={16}
-                            />
+                            <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }}>
+                              {/* Light version */}
+                              <img
+                                src="/icons/s-logo-offwhite.png"
+                                alt="S"
+                                className="absolute inset-0 w-4 h-4 object-contain transition-opacity duration-150"
+                                style={{
+                                  opacity: linksSettings.iconStyle === 'light' ? 1 : 0,
+                                  transform: 'translateZ(0)', // Force GPU layer
+                                }}
+                                loading="eager"
+                                decoding="sync"
+                                width={16}
+                                height={16}
+                              />
+                              {/* Dark version */}
+                              <img
+                                src="/icons/s-logo-dark.png"
+                                alt="S"
+                                className="absolute inset-0 w-4 h-4 object-contain transition-opacity duration-150"
+                                style={{
+                                  opacity: linksSettings.iconStyle === 'light' ? 0 : 1,
+                                  transform: 'translateZ(0)', // Force GPU layer
+                                }}
+                                loading="eager"
+                                decoding="sync"
+                                width={16}
+                                height={16}
+                              />
+                            </div>
                           ) : (
-                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1, willChange: 'transform' }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1, transform: 'translateZ(0)' }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                             </svg>
                           )}
@@ -9027,13 +9124,13 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Small buttons sitting on the phone border edge */}
-                        {/* LEFT SIDE: Up/Down controls - positioned on phone border */}
+                        {/* Controls - FIX-007: Rounded corners, high z-index, positioned outside phone */}
+                        {/* LEFT SIDE: Up/Down controls */}
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 flex flex-col"
+                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5"
                           style={{
-                            left: '-26px', // Position so controls sit on the outer edge of phone border
-                            zIndex: 9999,
+                            left: '-32px', // Further out to be clearly in front of phone border
+                            zIndex: 99999, // Very high z-index to be in front of everything
                           }}
                         >
                           <button
@@ -9041,16 +9138,17 @@ return (
                             disabled={index === 0}
                             className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
-                              width: '14px',
-                              height: '14px',
-                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-                              borderRadius: '3px 0 0 0',
+                              width: '16px',
+                              height: '16px',
+                              background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                              borderRadius: '4px', // All corners rounded
                               color: '#ffd700',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                              border: '1px solid rgba(255,255,255,0.1)',
                             }}
                             title="Move up"
                           >
-                            <svg className="w-2 h-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
                             </svg>
                           </button>
@@ -9059,22 +9157,23 @@ return (
                             disabled={index === allLinkIds.length - 1}
                             className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
-                              width: '14px',
-                              height: '14px',
-                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-                              borderRadius: '0 0 0 3px',
+                              width: '16px',
+                              height: '16px',
+                              background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                              borderRadius: '4px', // All corners rounded
                               color: '#ffd700',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                              border: '1px solid rgba(255,255,255,0.1)',
                             }}
                             title="Move down"
                           >
-                            <svg className="w-2 h-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* RIGHT SIDE: Edit button - positioned on phone border (custom links only) */}
+                        {/* RIGHT SIDE: Edit button (custom links only) */}
                         {!isDefault && (
                           <button
                             onClick={(e) => {
@@ -9086,18 +9185,19 @@ return (
                             }}
                             className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
-                              right: '-26px', // Position so control sits on the outer edge of phone border
-                              width: '14px',
-                              height: '14px',
-                              zIndex: 9999,
-                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-                              borderRadius: '0 3px 3px 0',
+                              right: '-32px', // Further out to be clearly in front of phone border
+                              width: '16px',
+                              height: '16px',
+                              zIndex: 99999, // Very high z-index
+                              background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                              borderRadius: '4px', // All corners rounded
                               color: '#ffd700',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
+                              boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                              border: '1px solid rgba(255,255,255,0.1)',
                             }}
                             title="Edit link"
                           >
-                            <svg className="w-2 h-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
@@ -9138,9 +9238,9 @@ return (
                                 style={{ color: 'inherit' }}
                               />
                             </div>
-                            {/* Icon Picker Dropdown - z-[100] to overlay */}
+                            {/* Icon Picker Dropdown - absolute to overlay content - FIX-018 */}
                             {showIconPicker === linkId && (
-                              <div className="p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] relative shadow-xl">
+                              <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
                                 <div className="grid grid-cols-6 gap-1">
                                   {LINK_ICONS.map((icon) => (
                                     <button
@@ -9245,9 +9345,9 @@ return (
                         style={{ color: 'inherit' }}
                       />
                     </div>
-                    {/* Icon Picker Dropdown for new link - z-[100] to overlay */}
+                    {/* Icon Picker Dropdown for new link - absolute to overlay content - FIX-018 */}
                     {showIconPicker === 'new-link' && (
-                      <div className="p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] relative shadow-xl">
+                      <div className="absolute top-full left-0 mt-1 p-2 rounded-lg bg-black/95 border border-white/20 max-h-[150px] overflow-y-auto z-[100] shadow-xl w-48">
                         <div className="grid grid-cols-6 gap-1">
                           {LINK_ICONS.map((icon) => (
                             <button
@@ -9320,11 +9420,14 @@ return (
                 ) : (
                   <button
                     onClick={() => setAddingNewLink(true)}
-                    className="w-full py-2.5 text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30 flex items-center justify-center gap-1"
+                    className="w-full py-2.5 text-sm text-white/40 hover:text-white/60 transition-colors border border-dashed border-white/20 rounded-lg hover:border-white/30 flex items-center justify-center gap-1.5"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
                   >
-                    {/* Plain + symbol */}
-                    <span className="text-lg font-bold leading-none">+</span>
+                    {/* Circled + icon - FIX-017 */}
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 8v8M8 12h8" />
+                    </svg>
                     Add Button
                   </button>
                 )}
