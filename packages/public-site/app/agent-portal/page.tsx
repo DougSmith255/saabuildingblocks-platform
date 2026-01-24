@@ -9019,43 +9019,50 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Inside button, right side - always visible */}
-                        {/* Up/Down controls - positioned inside button on right */}
+                        {/* Controls - Embedded in phone border, pushed to outer edges */}
+                        {/* LEFT SIDE: Up/Down controls - embedded in phone border */}
                         <div
-                          className="absolute right-1 top-1/2 -translate-y-1/2 flex gap-0.5"
-                          style={{ zIndex: 10 }}
+                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-px"
+                          style={{
+                            left: '-22px', // 16px inner padding + 6px outer padding = 22px to reach outer edge
+                            zIndex: 9999,
+                          }}
                         >
                           <button
                             onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
                             disabled={index === 0}
-                            className="p-1 rounded disabled:opacity-30 transition-all hover:scale-110"
+                            className="p-1.5 disabled:opacity-30 transition-all hover:brightness-125"
                             style={{
-                              background: 'rgba(0,0,0,0.4)',
-                              color: '#ffd700'
+                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                              borderRadius: '6px 0 0 0',
+                              color: '#ffd700',
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
                             }}
                             title="Move up"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
                             </svg>
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
                             disabled={index === allLinkIds.length - 1}
-                            className="p-1 rounded disabled:opacity-30 transition-all hover:scale-110"
+                            className="p-1.5 disabled:opacity-30 transition-all hover:brightness-125"
                             style={{
-                              background: 'rgba(0,0,0,0.4)',
-                              color: '#ffd700'
+                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                              borderRadius: '0 0 0 6px',
+                              color: '#ffd700',
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
                             }}
                             title="Move down"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* Edit button - shown for custom links only, next to up/down controls */}
+                        {/* RIGHT SIDE: Edit button - embedded in phone border (custom links only) */}
                         {!isDefault && (
                           <button
                             onClick={(e) => {
@@ -9065,15 +9072,18 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute right-14 top-1/2 -translate-y-1/2 p-1 rounded transition-all hover:scale-110"
+                            className="absolute top-1/2 -translate-y-1/2 p-1.5 transition-all hover:brightness-125"
                             style={{
-                              zIndex: 10,
-                              background: 'rgba(0,0,0,0.4)',
-                              color: '#ffd700'
+                              right: '-22px', // 16px inner padding + 6px outer padding = 22px to reach outer edge
+                              zIndex: 9999,
+                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                              borderRadius: '0 6px 6px 0',
+                              color: '#ffd700',
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
                             }}
                             title="Edit link"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
