@@ -553,8 +553,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
     body {
       font-family: var(--font-synonym), system-ui, -apple-system, sans-serif;
-      background: radial-gradient(at center bottom, rgb(40, 40, 40) 0%, rgb(12, 12, 12) 100%);
-      background-color: rgb(12, 12, 12);
+      background: transparent;
       color: var(--color-bodyText);
       min-height: 100vh;
       line-height: 1.6;
@@ -5318,15 +5317,20 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             var isActive = loopIndex === cardIndex;
             var distance = Math.abs(cardIndex - loopIndex);
 
-            // Scale
+            // Scale based on distance from center - exact from React
             var scale = Math.max(0.85, 1 - distance * 0.1);
-            // Blur
-            var blurAmount = Math.min(5, distance * 10);
 
-            // Apply styles
+            // Filter effects for non-active cards - exact from React
+            var blurAmount = isActive ? 0 : Math.min(12, distance * 5);
+            var grayscale = isActive ? 0 : 100;
+            var brightness = isActive ? 1 : 0.4;
+            var cardOpacity = isActive ? 1 : 0.6;
+
+            // Apply styles - matching React exactly
             wrapper.style.transform = 'scale(' + scale + ')';
-            wrapper.style.filter = 'blur(' + blurAmount + 'px)';
-            wrapper.style.transition = isTransitioning ? 'transform 0.5s ease-out, filter 0.5s ease-out' : 'none';
+            wrapper.style.filter = 'blur(' + blurAmount + 'px) grayscale(' + grayscale + '%) brightness(' + brightness + ')';
+            wrapper.style.opacity = cardOpacity;
+            wrapper.style.transition = isTransitioning ? 'transform 0.5s ease-out, filter 0.5s ease-out, opacity 0.5s ease-out' : 'none';
 
             // Card styles
             if (card) {

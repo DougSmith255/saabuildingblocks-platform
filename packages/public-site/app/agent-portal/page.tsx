@@ -2310,20 +2310,7 @@ function AgentPortal() {
             {activeSection === 'support' && (
               <>
                 <SupportSection userState={user?.state} />
-                {/* Floating Help Button - Teal Style */}
-                <button
-                  onClick={() => setShowSupportHelpModal(true)}
-                  className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
-                  style={{
-                    background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
-                    boxShadow: '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                  }}
-                  aria-label="Support Help"
-                >
-                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
+                <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="teal" ariaLabel="Support Help" />
               </>
             )}
 
@@ -2334,36 +2321,16 @@ function AgentPortal() {
             {activeSection === 'templates' && (
               <>
                 <TemplatesSection />
-                {/* Floating Help Button - Gold Style */}
-                <button
-                  onClick={() => setShowTemplatesHelpModal(true)}
-                  className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
-                  style={{
-                    background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
-                    boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                  }}
-                  aria-label="Templates Help"
-                >
-                  <svg className="w-6 h-6 text-[#1a1a1a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
+                <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" />
               </>
             )}
 
             {/* Elite Courses */}
-            {activeSection === 'courses' && <CoursesSection />}
-
             {activeSection === 'courses' && (
-              <button
-                onClick={() => setShowEliteCoursesHelpModal(true)}
-                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-purple-500 hover:bg-purple-600 text-white shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
-                aria-label="Elite Courses Help"
-              >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
+              <>
+                <CoursesSection />
+                <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" />
+              </>
             )}
             {/* Production */}
             {activeSection === 'production' && <ProductionSection />}
@@ -2372,20 +2339,7 @@ function AgentPortal() {
             {activeSection === 'new-agents' && (
               <>
                 <NewAgentsSection />
-                {/* Floating Help Button - Gold Style */}
-                <button
-                  onClick={() => setShowNewAgentsHelpModal(true)}
-                  className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
-                  style={{
-                    background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
-                    boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                  }}
-                  aria-label="New Agents Help"
-                >
-                  <svg className="w-6 h-6 text-[#1a1a1a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </button>
+                <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" />
               </>
             )}
 
@@ -2699,19 +2653,7 @@ function AgentPortal() {
 
             {/* Agent Attraction floating help button */}
             {activeSection === 'agent-page' && (
-              <button
-                onClick={() => setShowAgentAttractionHelpModal(true)}
-                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
-                style={{
-                  background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
-                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                }}
-                aria-label="Agent Attraction Help"
-              >
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
+              <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" />
             )}
 
             {/* Linktree Section - kept mounted to avoid re-loading */}
@@ -4358,9 +4300,9 @@ function DashboardView({
           <div
             className="relative p-5 sm:p-6 rounded-2xl overflow-hidden transition-all duration-300 ease-out hover:scale-[1.01] group-active:scale-[0.99]"
             style={{
-              background: 'linear-gradient(180deg, #2a2518 0%, #1f1a10 50%, #191408 100%)',
-              boxShadow: 'inset 0 2px 0 rgba(255,215,0,0.15), inset 0 -2px 4px rgba(0,0,0,0.4), 0 4px 20px rgba(255,215,0,0.15), 0 0 40px rgba(255,215,0,0.08)',
-              border: '2px solid rgba(255,215,0,0.35)',
+              background: 'linear-gradient(145deg, rgba(35, 32, 24, 0.95) 0%, rgba(25, 22, 16, 0.98) 100%)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 215, 0, 0.1), 0 0 30px rgba(255, 215, 0, 0.08)',
+              border: '1px solid rgba(255, 215, 0, 0.3)',
             }}
           >
             {/* Animated glow pulse */}
@@ -4437,15 +4379,24 @@ function DashboardView({
           <div
             className={`
               relative p-5 sm:p-6 rounded-2xl
-              bg-gradient-to-br ${heroCard.gradient || 'from-[#ffd700]/20 to-amber-600/10'}
-              border-2 border-[#ffd700]/40
               transition-all duration-300 ease-out
-              hover:border-[#ffd700]/70 hover:shadow-xl hover:shadow-[#ffd700]/20
               hover:scale-[1.01]
               group-active:scale-[0.99]
               overflow-hidden
             `}
-            style={{ backgroundColor: 'rgba(10,10,10,0.95)' }}
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.25)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.5)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 25px rgba(255, 215, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.25)';
+              e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
+            }}
           >
             {/* Animated glow effect */}
             <div className="absolute inset-0 bg-gradient-to-r from-[#ffd700]/0 via-[#ffd700]/10 to-[#ffd700]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -4495,28 +4446,27 @@ function DashboardView({
               <div
                 className={`
                   relative p-5 sm:p-6 rounded-2xl
-                  bg-gradient-to-br ${card.gradient || 'from-white/10 to-white/5'}
                   transition-all duration-300 ease-out
                   ${isComingSoon ? '' : 'hover:scale-[1.02] group-active:scale-[0.98]'}
                   overflow-hidden
                 `}
                 style={{
-                  backgroundColor: 'rgba(10,10,10,0.95)',
-                  border: `1px solid ${isComingSoon ? '#666' : accent}30`,
-                  boxShadow: `0 0 0 1px ${isComingSoon ? '#666' : accent}10`,
+                  background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                  border: `1px solid ${isComingSoon ? 'rgba(102, 102, 102, 0.3)' : accent}25`,
+                  boxShadow: `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)`,
                   filter: isComingSoon ? 'grayscale(100%)' : 'none',
                   opacity: isComingSoon ? 0.6 : 1,
                 }}
                 onMouseEnter={(e) => {
                   if (!isComingSoon) {
-                    e.currentTarget.style.border = `1px solid ${accent}60`;
-                    e.currentTarget.style.boxShadow = `0 8px 32px ${accent}20`;
+                    e.currentTarget.style.border = `1px solid ${accent}50`;
+                    e.currentTarget.style.boxShadow = `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 20px ${accent}15`;
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isComingSoon) {
-                    e.currentTarget.style.border = `1px solid ${accent}30`;
-                    e.currentTarget.style.boxShadow = `0 0 0 1px ${accent}10`;
+                    e.currentTarget.style.border = `1px solid ${accent}25`;
+                    e.currentTarget.style.boxShadow = `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)`;
                   }
                 }}
               >
@@ -5148,14 +5098,14 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               className="rounded-xl overflow-hidden transition-all duration-300"
               style={{
                 background: isChecked
-                  ? 'linear-gradient(180deg, #1a2518 0%, #151f12 100%)'
-                  : 'linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%)',
+                  ? 'linear-gradient(145deg, rgba(26, 37, 24, 0.95) 0%, rgba(21, 31, 18, 0.98) 100%)'
+                  : 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
                 border: isChecked
-                  ? '1px solid rgba(34, 197, 94, 0.3)'
-                  : '1px solid rgba(255,255,255,0.08)',
+                  ? '1px solid rgba(34, 197, 94, 0.25)'
+                  : '1px solid rgba(255, 215, 0, 0.15)',
                 boxShadow: isChecked
-                  ? '0 0 12px rgba(34, 197, 94, 0.1)'
-                  : 'none',
+                  ? '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 12px rgba(34, 197, 94, 0.1)'
+                  : '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
               }}
             >
               {/* Step Header */}
@@ -6292,15 +6242,18 @@ function TemplatesSection() {
             onClick={() => setActiveCategory(category.id)}
             style={{
               WebkitTapHighlightColor: 'transparent',
+              transition: 'background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
               ...(activeCategory === category.id ? {
                 background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
                 boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.3)',
+                border: '1px solid transparent',
               } : {
                 background: 'rgba(0, 0, 0, 0.3)',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: 'none',
               }),
             } as React.CSSProperties}
-            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
               activeCategory === category.id
                 ? 'text-[#1a1a1a]'
                 : 'text-[#e5e4dd]/80 hover:border-[#ffd700]/40 hover:text-[#ffd700]'
@@ -6319,31 +6272,6 @@ function TemplatesSection() {
         ))}
       </div>
 
-      {/* Canva Login Reminder - Premium glass styling */}
-      <div
-        className="mt-6 p-4 rounded-xl flex items-center gap-3"
-        style={{
-          background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
-          border: '1px solid rgba(0, 196, 204, 0.2)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
-        }}
-      >
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-          style={{
-            background: 'rgba(0, 196, 204, 0.15)',
-            border: '1px solid rgba(0, 196, 204, 0.3)',
-          }}
-        >
-          <svg className="w-5 h-5 text-[#00c4cc]" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-          </svg>
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-[#00c4cc]">Canva Access</p>
-          <p className="text-xs text-[#e5e4dd]/60">Login with your eXp email to access and customize these templates</p>
-        </div>
-      </div>
     </div>
   );
 }
@@ -9082,7 +9010,11 @@ function AgentPagesSection({
         <div className="flex flex-col min-[1100px]:flex-row gap-6">
           {/* Left Column - Preview (hidden on mobile, visible on 1100px+) */}
           <div className="hidden min-[1100px]:block min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
-            <div className="sticky top-4 rounded-xl bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-[#ffd700]/20 overflow-hidden">
+            <div className="sticky top-4 rounded-xl overflow-hidden" style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.2)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}>
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-[#ffd700]">Page Preview</span>
@@ -9125,7 +9057,11 @@ function AgentPagesSection({
           {/* Right Column - Info sections */}
           <div className="flex-1 space-y-6">
             {/* How It Works Section */}
-            <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+            <div className="p-5 rounded-xl" style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.15)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
               <div className="space-y-4 text-sm text-[#e5e4dd]/80">
                 <div className="flex gap-3">
@@ -9161,7 +9097,11 @@ function AgentPagesSection({
             </div>
 
             {/* What Happens Section */}
-            <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+            <div className="p-5 rounded-xl" style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.15)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Act</h3>
               <div className="space-y-3 text-sm">
                 <div className="p-3 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
@@ -9190,7 +9130,11 @@ function AgentPagesSection({
             </div>
 
             {/* Where to Share */}
-            <div className="p-5 rounded-xl bg-black/20 border border-[#ffd700]/10">
+            <div className="p-5 rounded-xl" style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.15)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share</h3>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {[
@@ -11391,6 +11335,221 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
         </span>
       )}
     </div>
+  );
+}
+
+// ============================================================================
+// Pixel Help Button Component - Reusable with color variants
+// ============================================================================
+
+type PixelHelpButtonColor = 'gold' | 'purple' | 'teal';
+
+interface PixelHelpButtonProps {
+  onClick: () => void;
+  color?: PixelHelpButtonColor;
+  ariaLabel?: string;
+}
+
+const PIXEL_BUTTON_COLORS = {
+  gold: {
+    light: '#fde047',    // yellow-300
+    main: '#facc15',     // yellow-400
+    dark: '#eab308',     // yellow-500
+    text: '#292524',     // stone-800
+  },
+  purple: {
+    light: '#d8b4fe',    // purple-300
+    main: '#c084fc',     // purple-400
+    dark: '#a855f7',     // purple-500
+    text: '#faf5ff',     // purple-50 (light text)
+  },
+  teal: {
+    light: '#5eead4',    // teal-300
+    main: '#2dd4bf',     // teal-400
+    dark: '#14b8a6',     // teal-500
+    text: '#134e4a',     // teal-900
+  },
+};
+
+function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelHelpButtonProps) {
+  const colors = PIXEL_BUTTON_COLORS[color];
+  const uniqueId = `pixel-help-${color}-${Date.now()}`;
+
+  return (
+    <>
+      <style jsx>{`
+        .${uniqueId} {
+          --btn-light: ${colors.light};
+          --btn-main: ${colors.main};
+          --btn-dark: ${colors.dark};
+          --btn-text: ${colors.text};
+          --black-25: rgba(0, 0, 0, 0.25);
+
+          display: block;
+          width: 4rem;
+          height: 4rem;
+          cursor: pointer;
+        }
+
+        .${uniqueId} > button {
+          cursor: pointer;
+          display: inline-block;
+          height: 100%;
+          width: 100%;
+          appearance: none;
+          border: 2px solid var(--btn-text);
+          border-radius: 0.25rem;
+          background-color: var(--btn-main);
+          outline: 2px solid transparent;
+          outline-offset: 2px;
+          transition: background-color 0.2s;
+        }
+
+        .${uniqueId} > button:hover {
+          background-color: var(--btn-light);
+        }
+
+        .${uniqueId} > button:active {
+          outline-color: var(--btn-text);
+        }
+
+        .${uniqueId} > button:focus-visible {
+          outline-color: var(--btn-text);
+          outline-style: dashed;
+        }
+
+        .${uniqueId} > span:nth-child(2) {
+          position: absolute;
+          inset: 3px;
+          pointer-events: none;
+          background-color: var(--btn-main);
+          border-bottom: 2px solid var(--black-25);
+          transition: transform 75ms;
+        }
+
+        .${uniqueId} > span:nth-child(2)::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(rgb(255 255 255 / 80%) 20%, transparent 20%),
+            radial-gradient(rgb(255 255 255 / 100%) 20%, transparent 20%);
+          background-position: 0 0, 4px 4px;
+          background-size: 8px 8px;
+          mix-blend-mode: hard-light;
+          opacity: 0.5;
+          animation: pixel-dots-${color} 0.5s infinite linear;
+        }
+
+        .${uniqueId} > span:nth-child(3) {
+          position: absolute;
+          pointer-events: none;
+          inset: 0;
+        }
+
+        .${uniqueId} > span:nth-child(3)::before {
+          content: "";
+          width: 0.375rem;
+          height: 0.375rem;
+          position: absolute;
+          top: 0.25rem;
+          left: 0.25rem;
+          background-color: var(--btn-text);
+          border-radius: 0.125rem;
+          box-shadow:
+            3.125em 0 var(--btn-text),
+            0 3.125em var(--btn-text),
+            3.125em 3.125em var(--btn-text);
+        }
+
+        .${uniqueId} > span:nth-child(4) {
+          position: absolute;
+          pointer-events: none;
+          inset: 0;
+          filter: drop-shadow(0.25em 0.25em 0 rgba(0, 0, 0, 0.2));
+          transition: all 75ms;
+        }
+
+        .${uniqueId} > span:nth-child(4)::after {
+          content: "";
+          width: 0.25rem;
+          height: 0.25rem;
+          position: absolute;
+          top: 0.875rem;
+          left: 1rem;
+          border-radius: 0.0625px;
+          background-color: var(--btn-text);
+          box-shadow:
+            0.75em 2em var(--btn-text),
+            1em 2em var(--btn-text),
+            0.75em 1.75em var(--btn-text),
+            1em 1.75em var(--btn-text),
+            0.75em 1.25em var(--btn-text),
+            1em 1.25em var(--btn-text),
+            0.75em 1em var(--btn-text),
+            1em 1em var(--btn-text),
+            1em 0.75em var(--btn-text),
+            1.5em 0.75em var(--btn-text),
+            1.25em 0.75em var(--btn-text),
+            1.25em -0.25em var(--btn-text),
+            1.5em 0em var(--btn-text),
+            1.25em 0.5em var(--btn-text),
+            1.5em 0.5em var(--btn-text),
+            1.25em 0.25em var(--btn-text),
+            1.5em 0.25em var(--btn-text),
+            1.25em 0 var(--btn-text),
+            1em -0.25em var(--btn-text),
+            0.75em -0.25em var(--btn-text),
+            0.5em -0.25em var(--btn-text),
+            0.25em -0.25em var(--btn-text),
+            0.25em 0 var(--btn-text),
+            0 0.25em var(--btn-text),
+            0 0.5em var(--btn-text),
+            0.25em 0.25em var(--btn-text),
+            0.25em 0.5em var(--btn-text);
+        }
+
+        .${uniqueId} > span:nth-child(5) {
+          position: absolute;
+          background-color: var(--btn-main);
+          border: 2px solid var(--btn-text);
+          border-radius: 0.75rem;
+          pointer-events: none;
+          z-index: -1;
+          inset: 0.5rem 1.5rem;
+          box-shadow:
+            7px 0 0 0 var(--btn-text),
+            inset 0 2px 0 0 var(--btn-light),
+            inset 0 -2px 0 0 var(--btn-dark);
+          transition: all 0ms cubic-bezier(0, 0.5, 0.4, 1);
+        }
+
+        .${uniqueId} button:active ~ span:nth-child(5) {
+          transform: translateY(-200%);
+          transition-duration: 200ms;
+          opacity: 0;
+        }
+
+        .${uniqueId} button:hover ~ span:nth-child(4) {
+          filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
+        }
+
+        @keyframes pixel-dots-${color} {
+          0% { background-position: 0 0, 4px 4px; }
+          100% { background-position: 8px 0, 12px 4px; }
+        }
+      `}</style>
+      <div
+        className={`fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 ${uniqueId}`}
+        style={{ isolation: 'isolate' }}
+        title={ariaLabel}
+      >
+        <button type="button" onClick={onClick} aria-label={ariaLabel}></button>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </>
   );
 }
 
