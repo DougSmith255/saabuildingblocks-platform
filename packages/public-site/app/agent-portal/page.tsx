@@ -8441,7 +8441,7 @@ function AgentPagesSection({
                     </svg>
                     <div>
                       <p className="font-medium text-[#e5e4dd] mb-1">When someone clicks Join</p>
-                      <p className="text-[#e5e4dd]/60 text-xs">They enter <strong className="text-green-400">your name</strong> as sponsor. You get credit.</p>
+                      <p className="text-[#e5e4dd]/60 text-xs">Join instructions show <strong className="text-green-400">your name and email</strong> as sponsor. You get credit.</p>
                     </div>
                   </div>
                 </div>
