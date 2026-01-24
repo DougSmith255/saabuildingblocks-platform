@@ -1474,7 +1474,9 @@ function AgentPortal() {
 
       const dashboardData = await dashboardResponse.json();
       // Apply toCdnUrl to use edge-cached CDN instead of origin
-      const updatedUser = { ...user, profilePictureUrl: toCdnUrl(dashboardData.url) };
+      // Add cache-busting timestamp to force browser to reload the new image
+      const cacheBustUrl = `${toCdnUrl(dashboardData.url)}?v=${Date.now()}`;
+      const updatedUser = { ...user, profilePictureUrl: cacheBustUrl };
       setUser(updatedUser);
       setProfileImageError(false); // Reset error state for new image
       setProfileImageLoading(true); // Reset loading state for new image
@@ -1525,8 +1527,10 @@ function AgentPortal() {
             const uploadResult = await uploadResponse.json();
             if (uploadResult.data?.url) {
               // Dispatch a custom event to update the AgentPagesSection's pageData
+              // Add cache-busting timestamp to force browser to reload the new image
+              const cacheBustUrl = `${uploadResult.data.url}?v=${Date.now()}`;
               window.dispatchEvent(new CustomEvent('agent-page-image-updated', {
-                detail: { url: uploadResult.data.url }
+                detail: { url: cacheBustUrl }
               }));
             }
           }
@@ -1547,8 +1551,10 @@ function AgentPortal() {
           if (colorResponse.ok) {
             const colorResult = await colorResponse.json();
             if (colorResult.data?.url) {
+              // Add cache-busting timestamp to force browser to reload the new color image
+              const colorCacheBustUrl = `${colorResult.data.url}?v=${Date.now()}`;
               window.dispatchEvent(new CustomEvent('agent-page-color-image-updated', {
-                detail: { url: colorResult.data.url }
+                detail: { url: colorCacheBustUrl }
               }));
             }
           }
@@ -7356,7 +7362,7 @@ function AgentPagesSection({
     formData.tiktok_url,
     formData.linkedin_url,
   ].filter(Boolean).length;
-  const filledCustomSocial = customSocialLinks.filter(link => link.url).length;
+  const filledCustomSocial = customSocialLinks.filter(link => link && link.url).length;
   const filledSocialLinks = filledBuiltInSocial + filledCustomSocial;
 
   // Get the appropriate profile image URL based on color setting
@@ -7377,6 +7383,15 @@ function AgentPagesSection({
 
   // Check if color version is available
   const hasColorImage = Boolean(pageData?.profile_image_color_url);
+
+  // Preload S logo variants for instant switching
+  useEffect(() => {
+    const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-offwhite.png'];
+    preloadImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -7541,7 +7556,7 @@ function AgentPagesSection({
         height: 200,
         type: 'svg',
         data: linktreeUrl,
-        image: '/icons/s-logo-1000.png',
+        image: '/icons/s-logo-dark.png',
         dotsOptions: {
           color: '#2a2a2a',
           type: 'dots', // Circular dots for a softer look
@@ -7871,7 +7886,9 @@ function AgentPagesSection({
       if (dashboardResponse.ok) {
         const dashboardData = await dashboardResponse.json();
         // Apply toCdnUrl to use edge-cached CDN instead of origin
-        const updatedUser = { ...user, profilePictureUrl: toCdnUrl(dashboardData.url) };
+        // Add cache-busting timestamp to force browser to reload the new image
+        const cacheBustUrl = `${toCdnUrl(dashboardData.url)}?v=${Date.now()}`;
+        const updatedUser = { ...user, profilePictureUrl: cacheBustUrl };
         setUser(updatedUser);
         localStorage.setItem('agent_portal_user', JSON.stringify(updatedUser));
       }
@@ -7891,7 +7908,12 @@ function AgentPagesSection({
 
         if (response.ok) {
           const data = await response.json();
-          setPageData(data.data.page);
+          // Add cache-busting timestamp to force browser to reload the new image
+          const updatedPage = {
+            ...data.data.page,
+            profile_image_url: data.data.page.profile_image_url ? `${data.data.page.profile_image_url}?v=${Date.now()}` : null,
+          };
+          setPageData(updatedPage);
         }
       }
 
@@ -8399,8 +8421,11 @@ return (
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${!linksSettings.showColorPhoto ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   B&W
                 </button>
@@ -8413,8 +8438,13 @@ return (
                   }}
                   disabled={!hasColorImage}
                   title={!hasColorImage ? 'Upload a new photo to enable color mode' : 'Show color photo'}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.showColorPhoto && hasColorImage ? 'text-black' : 'text-white/60 hover:text-white'} ${!hasColorImage ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)',
+                    opacity: !hasColorImage ? 0.5 : 1,
+                    cursor: !hasColorImage ? 'not-allowed' : 'pointer'
+                  }}
                 >
                   Color
                 </button>
@@ -8509,11 +8539,11 @@ return (
             </div>
           </div>
 
-          {/* Icon Style + Button Weight - Same Row */}
+          {/* Style + Button Weight - Same Row */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Icon Style */}
+            {/* Style */}
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Icon Style</label>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Style</label>
               <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
                 {/* Animated sliding pill indicator */}
                 <div
@@ -8548,15 +8578,21 @@ return (
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameWeight === 'bold' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.nameWeight === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   Bold
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameWeight === 'normal' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.nameWeight === 'normal' ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   Regular
                 </button>
@@ -8780,7 +8816,7 @@ return (
 
                   // Add custom social links with their selected icons
                   const customSocialIcons = customSocialLinks
-                    .filter(link => link.url && link.icon && link.icon !== 'Globe')
+                    .filter(link => link && link.url && link.icon && link.icon !== 'Globe')
                     .map(link => ({
                       url: link.url,
                       icon: LINK_ICONS.find(i => i.name === link.icon)?.path || ''
@@ -8843,7 +8879,7 @@ return (
                 const showIconsOnly = buttonCount > 1;
 
                 return (
-                  <div className="flex gap-1 mt-1.5 mb-1">
+                  <div className="flex gap-1 mt-1.5" style={{ marginBottom: '6px' }}>
                     {contacts.map((contact, idx) => (
                       <div
                         key={idx}
@@ -8958,6 +8994,10 @@ return (
                               alt="S"
                               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 object-contain pointer-events-none"
                               style={{ zIndex: 1 }}
+                              loading="eager"
+                              decoding="sync"
+                              width={16}
+                              height={16}
                             />
                           ) : (
                             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -8968,31 +9008,42 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Show on hover, positioned on button itself */}
-                        <div className="absolute right-1 top-1/2 -translate-y-1/2 z-[9999] flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {/* Controls - Positioned ON the phone border, visible on hover */}
+                        {/* Left side: Up/Down controls - integrated into phone frame */}
+                        <div className="absolute -left-10 top-1/2 -translate-y-1/2 z-[9999] flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => moveLink(linkId, 'up')}
                             disabled={index === 0}
-                            className="p-1 rounded bg-black/40 hover:bg-black/60 disabled:opacity-30 transition-colors"
-                            style={{ color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a' }}
+                            className="p-1 rounded-l-lg disabled:opacity-30 transition-colors"
+                            style={{
+                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%)',
+                              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                              color: '#ffd700'
+                            }}
+                            title="Move up"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
                             </svg>
                           </button>
                           <button
                             onClick={() => moveLink(linkId, 'down')}
                             disabled={index === allLinkIds.length - 1}
-                            className="p-1 rounded bg-black/40 hover:bg-black/60 disabled:opacity-30 transition-colors"
-                            style={{ color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a' }}
+                            className="p-1 rounded-l-lg disabled:opacity-30 transition-colors"
+                            style={{
+                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%)',
+                              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                              color: '#ffd700'
+                            }}
+                            title="Move down"
                           >
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* Edit Button - Positioned in phone border area (right side) - z-[200] to appear above phone border */}
+                        {/* Right side: Edit button - integrated into phone frame */}
                         {!isDefault && (
                           <button
                             onClick={() => {
@@ -9001,7 +9052,13 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-14 top-1/2 -translate-y-1/2 z-[9999] p-1.5 bg-zinc-700 rounded text-white/70 hover:text-white transition-colors shadow-xl border border-white/20"
+                            className="absolute -right-10 top-1/2 -translate-y-1/2 z-[9999] p-1.5 rounded-r-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                            style={{
+                              background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 100%)',
+                              boxShadow: '0 0 0 1px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.05)',
+                              color: '#ffd700'
+                            }}
+                            title="Edit link"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -9388,12 +9445,12 @@ return (
                   type="url"
                   value={customSocialLinks[0]?.url || ''}
                   onChange={(e) => {
-                    const newLinks = [...customSocialLinks];
-                    if (newLinks[0]) {
-                      newLinks[0] = { ...newLinks[0], url: e.target.value };
-                    } else {
-                      newLinks[0] = { id: 'custom-social-1', url: e.target.value, icon: 'Globe' };
-                    }
+                    // Ensure we have a proper array with no sparse elements
+                    const newLinks = [
+                      customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                      customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                    ];
+                    newLinks[0] = { ...newLinks[0], url: e.target.value };
                     setCustomSocialLinks(newLinks);
                     setHasUnsavedChanges(true);
                   }}
@@ -9409,12 +9466,12 @@ return (
                       <button
                         key={icon.name}
                         onClick={() => {
-                          const newLinks = [...customSocialLinks];
-                          if (newLinks[0]) {
-                            newLinks[0] = { ...newLinks[0], icon: icon.name };
-                          } else {
-                            newLinks[0] = { id: 'custom-social-1', url: '', icon: icon.name };
-                          }
+                          // Ensure we have a proper array with no sparse elements
+                          const newLinks = [
+                            customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                            customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                          ];
+                          newLinks[0] = { ...newLinks[0], icon: icon.name };
                           setCustomSocialLinks(newLinks);
                           setShowSocialIconPicker(null);
                           setHasUnsavedChanges(true);
@@ -9456,12 +9513,12 @@ return (
                   type="url"
                   value={customSocialLinks[1]?.url || ''}
                   onChange={(e) => {
-                    const newLinks = [...customSocialLinks];
-                    if (newLinks[1]) {
-                      newLinks[1] = { ...newLinks[1], url: e.target.value };
-                    } else {
-                      newLinks[1] = { id: 'custom-social-2', url: e.target.value, icon: 'Globe' };
-                    }
+                    // Ensure we have a proper array with no sparse elements
+                    const newLinks = [
+                      customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                      customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                    ];
+                    newLinks[1] = { ...newLinks[1], url: e.target.value };
                     setCustomSocialLinks(newLinks);
                     setHasUnsavedChanges(true);
                   }}
@@ -9477,12 +9534,12 @@ return (
                       <button
                         key={icon.name}
                         onClick={() => {
-                          const newLinks = [...customSocialLinks];
-                          if (newLinks[1]) {
-                            newLinks[1] = { ...newLinks[1], icon: icon.name };
-                          } else {
-                            newLinks[1] = { id: 'custom-social-2', url: '', icon: icon.name };
-                          }
+                          // Ensure we have a proper array with no sparse elements
+                          const newLinks = [
+                            customSocialLinks[0] || { id: 'custom-social-1', url: '', icon: 'Globe' },
+                            customSocialLinks[1] || { id: 'custom-social-2', url: '', icon: 'Globe' },
+                          ];
+                          newLinks[1] = { ...newLinks[1], icon: icon.name };
                           setCustomSocialLinks(newLinks);
                           setShowSocialIconPicker(null);
                           setHasUnsavedChanges(true);
@@ -9517,7 +9574,7 @@ return (
 
         {/* Content */}
         <div className="p-4 space-y-2">
-          {/* Activate Button */}
+          {/* Activate Button - Shows only when page is not activated */}
           {!pageData?.activated && (
             <button
               onClick={handleActivate}
@@ -9535,10 +9592,30 @@ return (
             </button>
           )}
 
-          {/* View Page */}
+          {/* Save Changes Button - Shows when page is activated and has unsaved changes */}
+          {pageData?.activated && hasUnsavedChanges && (
+            <button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="w-full py-3 px-4 rounded-lg font-semibold bg-[#ffd700] text-black hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+            >
+              {isSaving ? (
+                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                  <polyline points="17,21 17,13 7,13 7,21" />
+                  <polyline points="7,3 7,8 15,8" />
+                </svg>
+              )}
+              {isSaving ? 'Saving...' : 'Save Changes'}
+            </button>
+          )}
+
+          {/* View Page - Opens the linktree-style link page */}
           <button
-            onClick={() => pageData?.slug && window.open(`https://saabuildingblocks.com/${pageData.slug}`, '_blank')}
-            disabled={!pageData?.slug}
+            onClick={() => linktreeUrl && window.open(linktreeUrl, '_blank')}
+            disabled={!linktreeUrl}
             className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -9548,9 +9625,9 @@ return (
             VIEW PAGE
           </button>
 
-          {/* Copy URL */}
+          {/* Copy URL - Copies the linktree-style link page URL */}
           <button
-            onClick={() => pageData?.slug && navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)}
+            onClick={() => linktreeUrl && navigator.clipboard.writeText(linktreeUrl)}
             disabled={!pageData?.slug}
             className="w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
           >
@@ -9755,7 +9832,7 @@ return (
             {/* Toggle Options */}
             <div className="grid grid-cols-3 gap-2">
               <div>
-                <label className="block text-[10px] text-white/50 mb-1">Icon Style</label>
+                <label className="block text-[10px] text-white/50 mb-1">Style</label>
                 <div className="flex rounded overflow-hidden border border-white/20">
                   <button onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Light</button>
                   <button onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Dark</button>
@@ -9918,10 +9995,10 @@ return (
               </button>
             )}
 
-            {pageData?.slug && (
+            {linktreeUrl && (
               <div className="grid grid-cols-2 gap-2">
-                <a href={`https://saabuildingblocks.com/${pageData.slug}`} target="_blank" rel="noopener noreferrer" className="py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm text-center">View Page</a>
-                <button onClick={() => navigator.clipboard.writeText(`https://saabuildingblocks.com/${pageData.slug}`)} className="py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm">Copy URL</button>
+                <a href={linktreeUrl} target="_blank" rel="noopener noreferrer" className="py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm text-center">View Page</a>
+                <button onClick={() => navigator.clipboard.writeText(linktreeUrl)} className="py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm">Copy URL</button>
               </div>
             )}
 
@@ -10128,7 +10205,8 @@ return (
       }
     `}</style>
     <div
-      className="fixed bottom-6 right-6 z-50 pixel-help-button"
+      className="fixed bottom-6 right-6 z-[100] pixel-help-button"
+      style={{ isolation: 'isolate' }}
       title="Need Help?"
     >
       <button name="checkbox" type="button" onClick={() => setShowLinkPageHelpModal(true)}></button>
