@@ -1,9 +1,9 @@
 # Link Page UI Fixes Tracker
 
-**Last Updated:** 2026-01-24 (Round 6 - All Fixes Applied)
-**Status:** 🟢 ALL FIXES APPLIED - Ready for User Testing
+**Last Updated:** 2026-01-24 (Round 7)
+**Status:** 🟡 16 fixes verified, 1 new issue, 7 awaiting re-test
 **File:** `/packages/public-site/app/agent-portal/page.tsx`
-**Git Commit:** (pending push)
+**Git Commit:** `d6b34ab6`
 
 ---
 
@@ -12,7 +12,81 @@
 | Status | Count | Fixes |
 |--------|-------|-------|
 | ✅ Verified | 10 | FIX-001, FIX-002, FIX-006, FIX-008, FIX-009, FIX-010, FIX-011, FIX-013, FIX-014, FIX-015 |
-| 🔧 Code Applied | 7 | FIX-003, FIX-004, FIX-005, FIX-007, FIX-016, FIX-017, FIX-018 |
+| 🔧 Code Applied (needs re-test) | 7 | FIX-003, FIX-004, FIX-005, FIX-007, FIX-016, FIX-017, FIX-018 |
+| ❌ New Issue | 1 | FIX-019 |
+
+---
+
+## CRITICAL: DATABASE COLUMN ADDED
+
+**FIX-004 Root Cause:** The `profile_image_color_url` column did NOT exist in the database!
+- Column was added via SQL: `ALTER TABLE agent_pages ADD COLUMN profile_image_color_url TEXT;`
+- User must **re-upload** their profile image for the color version to be saved
+- After re-upload, the Color button should become clickable
+
+---
+
+## NEW ISSUES
+
+### FIX-019: S Logo Not Switching to Off-White in Light Style (NEW)
+
+**Status:** ❌ NOT FIXED
+**Issue:** The S icon in "About my Team" button does not switch to the off-white version properly when clicking the Light style option in the Link Page UI.
+
+**Current Implementation:**
+The code at lines 9091-9116 keeps both S logo variants in DOM with opacity switching:
+- When `iconStyle === 'light'`: s-logo-offwhite.png should have opacity 1
+- When `iconStyle === 'dark'`: s-logo-dark.png should have opacity 1
+
+**Troubleshooting Log:**
+| Attempt | Date | What Was Tried | Result |
+|---------|------|----------------|--------|
+| 1 | 2026-01-24 | (FIX-005) Changed to opacity switching instead of conditional rendering | User reports still not switching |
+
+**Investigation Needed:**
+1. Verify the deployment has completed and user has latest code
+2. Check if `linksSettings.iconStyle` is actually changing when Light is clicked
+3. Add console.log to trace the value of iconStyle
+4. Check if there's a CSS specificity issue overriding the opacity
+
+---
+
+## ROUND 6 FIXES (Awaiting User Re-Test After Image Re-Upload)
+
+### FIX-003: Loading Spinner in Link Page UI Profile Photo
+**Status:** 🔧 Code Applied
+**What Was Done:** Added spinner overlay to profile photo in Link Page UI Profile section
+
+### FIX-004: Color Profile Button Pipeline
+**Status:** 🔧 Code Applied + DB Column Added
+**Root Cause:** Database column `profile_image_color_url` didn't exist!
+**What Was Done:**
+1. Added database column via SQL
+2. Added color upload to dashboard reprocess flow
+3. Added color upload to attraction page reprocess flow
+4. Added `colorContrastLevel` and `applyColorContrastFilter` props
+
+**User Action Required:** Re-upload profile image to create color version
+
+### FIX-005: S Logo Disappearing on Downward Move
+**Status:** 🔧 Code Applied
+**What Was Done:** Keep both logo variants in DOM with opacity switching
+
+### FIX-007: Button Controls Position/Styling
+**Status:** 🔧 Code Applied
+**What Was Done:** Increased z-index to 99999, positioned at -32px, rounded all corners
+
+### FIX-016: Email/Phone/Text Buttons Not Bold on First Load
+**Status:** 🔧 Code Applied
+**What Was Done:** Added null check fallback for fontWeight
+
+### FIX-017: Add Button Icon Should Have Circle
+**Status:** 🔧 Code Applied
+**What Was Done:** Changed to circled plus SVG icon
+
+### FIX-018: Icon Library Popup Should Overlay Not Push
+**Status:** 🔧 Code Applied
+**What Was Done:** Changed to absolute positioning
 
 ---
 
@@ -33,99 +107,21 @@
 
 ---
 
-## ROUND 6 FIXES APPLIED (Awaiting User Verification)
+## OTHER CHANGES (This Session)
 
-### FIX-003: Loading Spinner in Link Page UI Profile Photo ✅ FIXED
-
-**What Was Done:**
-- Added loading spinner overlay to the profile photo in the Link Page UI Profile section
-- Spinner appears with gold border and rotating animation when `attractionUploadStatus` is set
-- Located after line 8410 in the profile photo container
-
-**Code Location:** Lines 8419-8425
+### Dashboard Profile Image Styling
+**Status:** ✅ Applied
+**What Was Done:** Added light grey border (`border-white/20`) and subtle background (`bg-white/5`) to all 3 dashboard profile image instances
 
 ---
 
-### FIX-004: Color Profile Button Pipeline ✅ FIXED - CRITICAL
+## NEXT STEPS
 
-**Root Cause Found:**
-The color image was ONLY being uploaded in the main dashboard flow. Two other image flows were missing color uploads:
-1. Dashboard reprocess flow (handleReprocessImages)
-2. Attraction page reprocess flow (handleAttractionReprocessImages)
-
-**What Was Done:**
-1. Added `colorContrastLevel` and `applyColorContrastFilter` to AgentPagesSection props
-2. Added color processing step to both reprocess flows
-3. Added color upload to API after B&W upload in both flows
-4. Added event dispatch to update pageData with color URL
-5. Added debug logging to trace color image flow
-
-**Code Locations:**
-- Props interface: Lines 7257-7260
-- Dashboard reprocess: Lines 1637-1710
-- Attraction reprocess: Lines 7924-7989
-- Debug logging: Lines 7393-7397, 7456, 7412
-
----
-
-### FIX-005: S Logo Disappearing on Downward Move ✅ FIXED
-
-**What Was Done:**
-- Changed from conditional image rendering to keeping BOTH logo variants in the DOM
-- Used opacity transitions (0 vs 1) to switch between variants instead of recreating DOM elements
-- Added GPU layer forcing with `transform: translateZ(0)` for smooth transitions
-- Set `loading="eager"` and `decoding="sync"` for immediate availability
-
-**Code Location:** Lines 9014-9034 (S logo section)
-
----
-
-### FIX-007: Button Controls Position/Styling ✅ FIXED
-
-**What Was Done:**
-- Increased z-index to 99999 (from 9999)
-- Positioned controls at `-32px` left (further outside phone border)
-- Added `borderRadius: '4px'` to round ALL corners
-- Added visible border: `border: '1px solid rgba(255,255,255,0.1)'`
-- Added shadow: `boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)'`
-- Improved gradient background for better visibility
-
-**Code Location:** Lines 9038-9101 (controls section)
-
----
-
-### FIX-016: Email/Phone/Text Buttons Not Bold on First Load ✅ FIXED
-
-**What Was Done:**
-- Added null check fallback for fontWeight on action buttons
-- Changed: `fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400`
-- Applied to Email, Call, and Text button labels
-
-**Code Location:** Line 8908 (action buttons section)
-
----
-
-### FIX-017: Add Button Icon Should Have Circle ✅ FIXED
-
-**What Was Done:**
-- Changed the "+" icon to a circled plus SVG icon
-- SVG has a circle (cx="12" cy="12" r="10") with plus sign inside
-- Only changed the icon, NOT the "+ Add Button" text
-
-**Code Location:** Lines 9321-9329 (add button section)
-
----
-
-### FIX-018: Icon Library Popup Should Overlay Not Push ✅ FIXED
-
-**What Was Done:**
-- Changed icon picker from relative to absolute positioning
-- Added `position: absolute`, `top: 100%`, `left: 0`
-- Set `z-index: 100` for proper layering
-- Added shadow and max-height with scroll
-- Applied to both custom social link icon pickers
-
-**Code Location:** Lines 9143 and 9250 (icon picker dropdowns)
+1. **User: Re-upload profile image** to create color version in database
+2. **User: Hard refresh** the page (Ctrl+Shift+R) to get latest code
+3. **User: Test FIX-004** - Color button should become clickable after re-upload
+4. **User: Test FIX-019** - Report if S logo switching still doesn't work
+5. **User: Test remaining fixes** (FIX-003, 005, 007, 016, 017, 018)
 
 ---
 
@@ -160,18 +156,3 @@ Changed to inline style `marginBottom: '6px'`
 
 ### FIX-015: Bold Pill Text ✅
 Added null check: `(linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'`
-
----
-
-## NEXT STEPS
-
-1. **Push changes to GitHub** - Deploy to production
-2. **User Testing** - Verify all 7 new fixes work:
-   - [ ] FIX-003: Spinner shows in Link Page UI profile section during upload
-   - [ ] FIX-004: Color button becomes enabled after uploading new photo
-   - [ ] FIX-005: S logo no longer flashes when moving button down
-   - [ ] FIX-007: Controls are visible, rounded, and in front of phone border
-   - [ ] FIX-016: Email/Phone/Text buttons are bold when Bold is selected
-   - [ ] FIX-017: Add button has circled plus icon
-   - [ ] FIX-018: Icon picker overlays content instead of pushing it down
-3. **Report any remaining issues** for Round 7
