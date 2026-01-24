@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCal
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
-import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target } from 'lucide-react';
+import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
 import { HexColorPicker, HexColorInput } from 'react-colorful';
@@ -685,10 +685,14 @@ function AgentPortal() {
   const [isOnboardingLoaded, setIsOnboardingLoaded] = useState(false);
   const [showLinkPageIntroModal, setShowLinkPageIntroModal] = useState(false);
   const [showLinkPageHelpModal, setShowLinkPageHelpModal] = useState(false);
+  const [showNewAgentsHelpModal, setShowNewAgentsHelpModal] = useState(false);
+  const [showTemplatesHelpModal, setShowTemplatesHelpModal] = useState(false);
+  const [showAgentAttractionHelpModal, setShowAgentAttractionHelpModal] = useState(false);
   const [isCompletingOnboarding, setIsCompletingOnboarding] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showEliteCoursesHelpModal, setShowEliteCoursesHelpModal] = useState(false);
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
+  const [showSupportHelpModal, setShowSupportHelpModal] = useState(false);
 
   // Check if any popup is open (for header slide animation)
   const isAnyPopupOpen = showEditProfile || showImageEditor;
@@ -2303,13 +2307,49 @@ function AgentPortal() {
             )}
 
             {/* Get Support */}
-            {activeSection === 'support' && <SupportSection userState={user?.state} />}
+            {activeSection === 'support' && (
+              <>
+                <SupportSection userState={user?.state} />
+                {/* Floating Help Button - Teal Style */}
+                <button
+                  onClick={() => setShowSupportHelpModal(true)}
+                  className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
+                  style={{
+                    background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+                    boxShadow: '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                  }}
+                  aria-label="Support Help"
+                >
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+              </>
+            )}
 
             {/* Team Calls */}
             {activeSection === 'calls' && <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />}
 
             {/* Templates */}
-            {activeSection === 'templates' && <TemplatesSection />}
+            {activeSection === 'templates' && (
+              <>
+                <TemplatesSection />
+                {/* Floating Help Button - Gold Style */}
+                <button
+                  onClick={() => setShowTemplatesHelpModal(true)}
+                  className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                    boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                  }}
+                  aria-label="Templates Help"
+                >
+                  <svg className="w-6 h-6 text-[#1a1a1a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+              </>
+            )}
 
             {/* Elite Courses */}
             {activeSection === 'courses' && <CoursesSection />}
@@ -2329,7 +2369,25 @@ function AgentPortal() {
             {activeSection === 'production' && <ProductionSection />}
 
             {/* New Agents */}
-            {activeSection === 'new-agents' && <NewAgentsSection />}
+            {activeSection === 'new-agents' && (
+              <>
+                <NewAgentsSection />
+                {/* Floating Help Button - Gold Style */}
+                <button
+                  onClick={() => setShowNewAgentsHelpModal(true)}
+                  className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
+                  style={{
+                    background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                    boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                  }}
+                  aria-label="New Agents Help"
+                >
+                  <svg className="w-6 h-6 text-[#1a1a1a]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </button>
+              </>
+            )}
 
             {/* Download App */}
             {activeSection === 'download' && <DownloadSection />}
@@ -2637,6 +2695,23 @@ function AgentPortal() {
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
               />
             </div>
+            )}
+
+            {/* Agent Attraction floating help button */}
+            {activeSection === 'agent-page' && (
+              <button
+                onClick={() => setShowAgentAttractionHelpModal(true)}
+                className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-all flex items-center justify-center max-[1199px]:bottom-20"
+                style={{
+                  background: 'linear-gradient(135deg, #a855f7 0%, #7c3aed 100%)',
+                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                aria-label="Agent Attraction Help"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
             )}
 
             {/* Linktree Section - kept mounted to avoid re-loading */}
@@ -3183,6 +3258,577 @@ function AgentPortal() {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Agents Help Modal */}
+      {showNewAgentsHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowNewAgentsHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Premium Glass Effect */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.2)',
+              boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Gold gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 215, 0, 0.15)',
+                    border: '1px solid rgba(255, 215, 0, 0.3)',
+                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
+                  }}
+                >
+                  <PersonStanding className="w-6 h-6 text-[#ffd700]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>New Agents Help</h2>
+              </div>
+              <button
+                onClick={() => setShowNewAgentsHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* What it is */}
+              <p className="text-[#e5e4dd]/80">
+                Welcome to your New Agent resource hub. Here you'll find everything you need to hit the ground running at eXp Realty and Smart Agent Alliance.
+              </p>
+
+              {/* Categories Overview */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(255, 215, 0, 0.02) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
+                }}
+              >
+                <p className="text-[#ffd700] text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                    <rect x="9" y="3" width="6" height="4" rx="2" />
+                  </svg>
+                  Curated Resources
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Each category contains guides, checklists, and step-by-step instructions tailored for new agents. Click any category card to explore its documents.
+                </p>
+              </div>
+
+              {/* What's Included */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">What's Included</p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Getting started checklists and setup guides
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    eXp Realty platform tutorials and best practices
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Smart Agent Alliance exclusive resources
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Downloadable documents for offline reference
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowNewAgentsHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                  color: '#1a1a1a',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Templates Help Modal */}
+      {showTemplatesHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowTemplatesHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Premium Glass Effect */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.2)',
+              boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Gold gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 215, 0, 0.15)',
+                    border: '1px solid rgba(255, 215, 0, 0.3)',
+                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
+                  }}
+                >
+                  <LayoutTemplate className="w-6 h-6 text-[#ffd700]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Templates Help</h2>
+              </div>
+              <button
+                onClick={() => setShowTemplatesHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* What it is */}
+              <p className="text-[#e5e4dd]/80">
+                Professional Canva templates designed for Smart Agent Alliance members. Customize them with your branding and information.
+              </p>
+
+              {/* Access Info */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 196, 204, 0.1) 0%, rgba(0, 196, 204, 0.02) 100%)',
+                  border: '1px solid rgba(0, 196, 204, 0.2)',
+                }}
+              >
+                <p className="text-[#00c4cc] text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  Canva Access
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Use your <strong className="text-[#00c4cc]">eXp Realty email credentials</strong> to log into Canva and access these templates. The templates are shared with all eXp agents.
+                </p>
+              </div>
+
+              {/* W/B Toggle Explanation */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Background Versions</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  Many templates come in two versions. Use the toggle to switch between:
+                </p>
+                <div className="flex items-center gap-4 mt-2">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-6 h-6 rounded bg-white text-black text-xs font-bold leading-6 text-center">W</span>
+                    <span className="text-[#e5e4dd]/70 text-sm">White background</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-6 h-6 rounded bg-black text-white border border-white/30 text-xs font-bold leading-6 text-center">B</span>
+                    <span className="text-[#e5e4dd]/70 text-sm">Black background</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Template Categories</p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Social media posts and stories
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Listing marketing materials
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Agent attraction content
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Business cards and branding
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowTemplatesHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                  color: '#1a1a1a',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Agent Attraction Help Modal */}
+      {showAgentAttractionHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowAgentAttractionHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Premium Glass Effect */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Purple gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(168, 85, 247, 0.2)',
+                    border: '1px solid rgba(168, 85, 247, 0.4)',
+                    boxShadow: '0 0 12px rgba(168, 85, 247, 0.3)',
+                  }}
+                >
+                  <UserCircle className="w-6 h-6 text-purple-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-purple-400" style={{ textShadow: '0 0 20px rgba(168, 85, 247, 0.3)' }}>Agent Attraction Help</h2>
+              </div>
+              <button
+                onClick={() => setShowAgentAttractionHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-purple-400 hover:bg-purple-400/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* What it is */}
+              <p className="text-[#e5e4dd]/80">
+                Your Agent Attraction Page is your personal recruitment funnel. It explains eXp Realty, Smart Agent Alliance, and how to join - with <strong className="text-purple-400">your information already filled in</strong>.
+              </p>
+
+              {/* How It Works */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.02) 100%)',
+                  border: '1px solid rgba(168, 85, 247, 0.2)',
+                }}
+              >
+                <p className="text-purple-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Automatic Agent Attraction
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  When agents click <strong className="text-purple-400">"About Our eXp Team"</strong> on your Link Page, they land on your Attraction Page. The join instructions show <em>your name and email</em> as their sponsor.
+                </p>
+              </div>
+
+              {/* What's On Your Page */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">What Visitors See</p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">•</span>
+                    Full explanation of eXp Realty's model and benefits
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">•</span>
+                    Smart Agent Alliance exclusive resources and training
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">•</span>
+                    Step-by-step join instructions with your info pre-filled
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-400">•</span>
+                    Video walkthrough of the opportunity
+                  </li>
+                </ul>
+              </div>
+
+              {/* Revenue Share Note */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.05)',
+                  border: '1px solid rgba(34, 197, 94, 0.15)',
+                }}
+              >
+                <p className="text-green-400 text-sm font-medium mb-1">Revenue Share Opportunity</p>
+                <p className="text-[#e5e4dd]/70 text-xs">
+                  Every agent who joins through your page becomes part of your revenue share lineage at eXp Realty.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowAgentAttractionHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)',
+                  color: '#ffffff',
+                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Support Help Modal */}
+      {showSupportHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowSupportHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Premium Glass Effect */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(20, 184, 166, 0.3)',
+              boxShadow: '0 0 40px rgba(20, 184, 166, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Teal gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, transparent 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(20, 184, 166, 0.2)',
+                    border: '1px solid rgba(20, 184, 166, 0.4)',
+                    boxShadow: '0 0 12px rgba(20, 184, 166, 0.3)',
+                  }}
+                >
+                  <MessageSquare className="w-6 h-6 text-teal-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-teal-400" style={{ textShadow: '0 0 20px rgba(20, 184, 166, 0.3)' }}>Support Help</h2>
+              </div>
+              <button
+                onClick={() => setShowSupportHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-teal-400 hover:bg-teal-400/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* What it is */}
+              <p className="text-[#e5e4dd]/80">
+                Your direct line to Smart Agent Alliance resources, eXp support, and brokerage contacts. <strong className="text-teal-400">Everything you need in one place.</strong>
+              </p>
+
+              {/* What's Available */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.02) 100%)',
+                  border: '1px solid rgba(20, 184, 166, 0.2)',
+                }}
+              >
+                <p className="text-teal-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Support Resources
+                </p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">•</span>
+                    Direct contact for Doug Smart (Team Leader)
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">•</span>
+                    State-specific broker contacts and regional support
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">•</span>
+                    eXp Support links (Workplace, Help Desk, KW Connect)
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-teal-400">•</span>
+                    Smart Agent Alliance AI assistant
+                  </li>
+                </ul>
+              </div>
+
+              {/* Quick Tip */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Pro Tip</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  For general eXp questions, check Workplace first - most answers are there. For team-specific help or SAA resources, reach out to Doug directly.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowSupportHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
+                  color: '#ffffff',
+                  boxShadow: '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(20, 184, 166, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -5562,16 +6208,6 @@ function TemplatesSection() {
   // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
     <div className="space-y-6 px-2 sm:px-4">
-      {/* Header */}
-      <div className="text-center pb-2">
-        <p className="text-sm text-[#e5e4dd]/60">
-          Use your eXp credentials to access Canva templates
-        </p>
-        <p className="text-xs text-[#e5e4dd]/40 mt-1">
-          Toggle <span className="inline-block w-4 h-4 rounded bg-white text-black text-[9px] font-bold leading-4 align-middle">W</span> / <span className="inline-block w-4 h-4 rounded bg-black text-white border border-white/30 text-[9px] font-bold leading-4 align-middle">B</span> for white or black background versions
-        </p>
-      </div>
-
       {/* Category Buttons - Horizontal scroll on mobile, wrap on larger screens */}
       <div className="flex flex-wrap gap-2 justify-center">
         {TEMPLATE_CATEGORIES.map((category) => (
@@ -5589,11 +6225,6 @@ function TemplatesSection() {
             <span>{category.label}</span>
           </button>
         ))}
-      </div>
-
-      {/* Category Description */}
-      <div className="text-center">
-        <p className="text-sm text-[#e5e4dd]/50">{currentCategory.description}</p>
       </div>
 
       {/* Templates Grid - Now with combined cards */}
@@ -6954,14 +7585,6 @@ function NewAgentsSection() {
 
   return (
     <div className="space-y-6 px-2 sm:px-4">
-      {/* Header */}
-      <div className="text-center pb-2">
-        <h3 className="text-h3 text-[#ffd700] mb-2">New Agent Resources</h3>
-        <p className="text-sm text-[#e5e4dd]/60">
-          Essential guides and checklists to jumpstart your real estate career
-        </p>
-      </div>
-
       {/* Category Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {NEW_AGENT_CATEGORIES.map((category) => (
