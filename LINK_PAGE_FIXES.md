@@ -1,9 +1,9 @@
 # Link Page UI Fixes Tracker
 
-**Last Updated:** 2026-01-24 (Round 7)
-**Status:** 🟡 16 fixes verified, 1 new issue, 7 awaiting re-test
+**Last Updated:** 2026-01-24 (Round 8)
+**Status:** 🟡 10 verified, 8 awaiting re-test
 **File:** `/packages/public-site/app/agent-portal/page.tsx`
-**Git Commit:** `d6b34ab6`
+**Git Commit:** Pending push
 
 ---
 
@@ -12,8 +12,7 @@
 | Status | Count | Fixes |
 |--------|-------|-------|
 | ✅ Verified | 10 | FIX-001, FIX-002, FIX-006, FIX-008, FIX-009, FIX-010, FIX-011, FIX-013, FIX-014, FIX-015 |
-| 🔧 Code Applied (needs re-test) | 7 | FIX-003, FIX-004, FIX-005, FIX-007, FIX-016, FIX-017, FIX-018 |
-| ❌ New Issue | 1 | FIX-019 |
+| 🔧 Code Applied (needs re-test) | 8 | FIX-003, FIX-004, FIX-005, FIX-007, FIX-016, FIX-017, FIX-018, FIX-019/020 |
 
 ---
 
@@ -26,28 +25,31 @@
 
 ---
 
-## NEW ISSUES
+## ROUND 8: AUTO-BRIGHTNESS SYSTEM (NEW)
 
-### FIX-019: S Logo Not Switching to Off-White in Light Style (NEW)
+### FIX-019/020: Auto Text Color Based on Accent Brightness
 
-**Status:** ❌ NOT FIXED
-**Issue:** The S icon in "About my Team" button does not switch to the off-white version properly when clicking the Light style option in the Link Page UI.
+**Status:** 🔧 Code Applied (needs re-test)
+**Issue:** Originally FIX-019 was about S logo not switching. Resolved by removing manual Style picker entirely and implementing auto-detection.
 
-**Current Implementation:**
-The code at lines 9091-9116 keeps both S logo variants in DOM with opacity switching:
-- When `iconStyle === 'light'`: s-logo-offwhite.png should have opacity 1
-- When `iconStyle === 'dark'`: s-logo-dark.png should have opacity 1
+**What Was Done:**
+1. **Added luminance calculation function** (`isColorDark()`) that calculates if a hex color is dark or light using the formula: `(0.299*R + 0.587*G + 0.114*B) < 140`
+2. **Created `isAccentDark` derived value** that auto-updates when accent color changes
+3. **Removed both Style picker UIs** (main UI and phone preview toggle)
+4. **Replaced all `iconStyle` checks** with `isAccentDark`:
+   - Button text color: `isAccentDark ? '#ffffff' : '#1a1a1a'`
+   - S logo opacity: off-white shows when `isAccentDark`, dark shows when not
+5. **Updated H1 name styling** for dark accents:
+   - Fill: Off-white (`#e5e4dd`) instead of accent color
+   - Outline: Accent color via `WebkitTextStroke`
+   - Text shadow: Accent color glow effect
+6. **Added more space below bio** (`mb-1` → `mb-3`)
 
-**Troubleshooting Log:**
-| Attempt | Date | What Was Tried | Result |
-|---------|------|----------------|--------|
-| 1 | 2026-01-24 | (FIX-005) Changed to opacity switching instead of conditional rendering | User reports still not switching |
-
-**Investigation Needed:**
-1. Verify the deployment has completed and user has latest code
-2. Check if `linksSettings.iconStyle` is actually changing when Light is clicked
-3. Add console.log to trace the value of iconStyle
-4. Check if there's a CSS specificity issue overriding the opacity
+**User Experience:**
+- No more manual Light/Dark toggle needed
+- Text automatically becomes white when accent is dark (e.g., navy blue, dark green)
+- Text automatically becomes black when accent is light (e.g., gold, yellow)
+- H1 name gets outline effect with dark accents for better readability
 
 ---
 
@@ -117,11 +119,13 @@ The code at lines 9091-9116 keeps both S logo variants in DOM with opacity switc
 
 ## NEXT STEPS
 
-1. **User: Re-upload profile image** to create color version in database
+1. **Deploy changes** - Push to GitHub and deploy to Cloudflare
 2. **User: Hard refresh** the page (Ctrl+Shift+R) to get latest code
-3. **User: Test FIX-004** - Color button should become clickable after re-upload
-4. **User: Test FIX-019** - Report if S logo switching still doesn't work
-5. **User: Test remaining fixes** (FIX-003, 005, 007, 016, 017, 018)
+3. **User: Test auto-brightness** - Change accent color to dark (navy) and light (gold), verify text color auto-switches
+4. **User: Test H1 styling** - Verify name gets outline effect with dark accents
+5. **User: Re-upload profile image** to create color version in database
+6. **User: Test FIX-004** - Color button should become clickable after re-upload
+7. **User: Test remaining fixes** (FIX-003, 005, 007, 016, 017, 018)
 
 ---
 

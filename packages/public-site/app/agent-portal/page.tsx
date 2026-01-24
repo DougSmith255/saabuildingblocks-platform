@@ -7427,6 +7427,28 @@ function AgentPagesSection({
   // Check if color version is available
   const hasColorImage = Boolean(pageData?.profile_image_color_url);
 
+  // Calculate luminance of a hex color to determine if it's dark or light
+  // Returns true if the color is dark (needs light text), false if light (needs dark text)
+  const isColorDark = (hexColor: string): boolean => {
+    // Remove # if present
+    const hex = hexColor.replace('#', '');
+
+    // Parse RGB values
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+
+    // Calculate relative luminance using sRGB formula
+    // Threshold ~140-150 works well for determining dark vs light
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b);
+
+    return luminance < 140; // Dark colors need light text
+  };
+
+  // Auto-determine if accent color is dark (needs light/white text)
+  // This replaces the manual iconStyle picker
+  const isAccentDark = isColorDark(linksSettings.accentColor);
+
   // Debug: Log hasColorImage changes
   useEffect(() => {
     console.log('[AgentPagesSection] hasColorImage changed:', hasColorImage, 'profile_image_color_url:', pageData?.profile_image_color_url);
@@ -8630,31 +8652,8 @@ return (
 
           {/* Style + Button Weight - Same Row */}
           <div className="grid grid-cols-2 gap-3">
-            {/* Style */}
-            <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Style</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-                {/* Animated sliding pill indicator */}
-                <div
-                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                  style={{ transform: linksSettings.iconStyle === 'dark' ? 'translateX(100%)' : 'translateX(0)' }}
-                />
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.iconStyle === 'light' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-                >
-                  Light
-                </button>
-                <button
-                  onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.iconStyle === 'dark' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-                >
-                  Dark
-                </button>
-              </div>
-            </div>
+            {/* Style - REMOVED: Now auto-detected based on accent color brightness */}
+            {/* Text color automatically adjusts: dark accent = light text, light accent = dark text */}
 
             {/* Button Weight */}
             <div>
@@ -8883,15 +8882,18 @@ return (
                   )}
                 </div>
 
-                {/* Name with H1 Neon Effect - Exact replica from link page */}
+                {/* Name with H1 Neon Effect - Auto-adapts based on accent color brightness */}
                 <span
                   className="text-lg text-center leading-tight font-bold mt-1.5 mb-2"
                   style={{
-                    color: linksSettings.accentColor,
+                    color: isAccentDark ? '#e5e4dd' : linksSettings.accentColor,
                     fontFamily: 'var(--font-taskor, sans-serif)',
                     fontFeatureSettings: '"ss01" 1',
                     transform: 'perspective(800px) rotateX(12deg)',
-                    textShadow: `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`,
+                    WebkitTextStroke: isAccentDark ? `1px ${linksSettings.accentColor}` : 'none',
+                    textShadow: isAccentDark
+                      ? `0 0 0.08em ${linksSettings.accentColor}, 0 0 0.15em ${linksSettings.accentColor}80, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
+                      : `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em ${linksSettings.accentColor}8C, 0 0 0.18em ${linksSettings.accentColor}59, 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`,
                     filter: `drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em ${linksSettings.accentColor}40)`,
                   }}
                 >
@@ -8951,7 +8953,7 @@ return (
 
                 {/* Bio - moved under social icons with spacing below for contact buttons */}
                 {linksSettings.bio && (
-                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-1.5 mb-1 break-words overflow-hidden" style={{ wordBreak: 'break-word' }}>{linksSettings.bio}</p>
+                  <p className="text-xs text-center text-white/50 px-2 leading-tight max-w-[220px] mt-1.5 mb-3 break-words overflow-hidden" style={{ wordBreak: 'break-word' }}>{linksSettings.bio}</p>
                 )}
               </div>
 
@@ -8981,7 +8983,7 @@ return (
                         className="flex-1 py-2.5 text-sm relative"
                         style={{
                           backgroundColor: linksSettings.accentColor,
-                          color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                          color: isAccentDark ? '#ffffff' : '#1a1a1a',
                           fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                           fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                           borderRadius: buttonCount === 1 ? '0.5rem' : idx === 0 ? '0.5rem 0.375rem 0.375rem 0.5rem' : idx === buttonCount - 1 ? '0.375rem 0.5rem 0.5rem 0.375rem' : '0.375rem',
@@ -9076,7 +9078,7 @@ return (
                           className="w-full py-2.5 px-3 rounded-lg text-sm relative"
                           style={{
                             backgroundColor: linksSettings.accentColor,
-                            color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                            color: isAccentDark ? '#ffffff' : '#1a1a1a',
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                             overflow: 'visible',
@@ -9092,7 +9094,7 @@ return (
                                 alt="S"
                                 className="absolute inset-0 w-4 h-4 object-contain transition-opacity duration-150"
                                 style={{
-                                  opacity: linksSettings.iconStyle === 'light' ? 1 : 0,
+                                  opacity: isAccentDark ? 1 : 0,
                                   transform: 'translateZ(0)', // Force GPU layer
                                 }}
                                 loading="eager"
@@ -9106,7 +9108,7 @@ return (
                                 alt="S"
                                 className="absolute inset-0 w-4 h-4 object-contain transition-opacity duration-150"
                                 style={{
-                                  opacity: linksSettings.iconStyle === 'light' ? 0 : 1,
+                                  opacity: isAccentDark ? 0 : 1,
                                   transform: 'translateZ(0)', // Force GPU layer
                                 }}
                                 loading="eager"
@@ -9212,7 +9214,7 @@ return (
                               className="py-2.5 px-3 rounded-lg text-sm relative"
                               style={{
                                 backgroundColor: linksSettings.accentColor,
-                                color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                                color: isAccentDark ? '#ffffff' : '#1a1a1a',
                                 fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                                 fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                               }}
@@ -9314,7 +9316,7 @@ return (
                       className="py-2.5 px-3 rounded-lg text-sm relative"
                       style={{
                         backgroundColor: linksSettings.accentColor,
-                        color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
+                        color: isAccentDark ? '#ffffff' : '#1a1a1a',
                         fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                         fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
                       }}
@@ -9976,14 +9978,7 @@ return (
             </div>
 
             {/* Toggle Options */}
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <label className="block text-[10px] text-white/50 mb-1">Style</label>
-                <div className="flex rounded overflow-hidden border border-white/20">
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'light' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.iconStyle === 'light' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Light</button>
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, iconStyle: 'dark' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.iconStyle === 'dark' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Dark</button>
-                </div>
-              </div>
+            <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block text-[10px] text-white/50 mb-1">Weight</label>
                 <div className="flex rounded overflow-hidden border border-white/20">
@@ -10076,7 +10071,7 @@ return (
             {/* Simplified Button List for Mobile */}
             <div className="space-y-2">
               {/* Default buttons */}
-              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: isAccentDark ? '#fff' : '#000' }}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                   <circle cx="9" cy="7" r="4" />
@@ -10085,7 +10080,7 @@ return (
                 </svg>
                 <span className="flex-1 text-center">Join my Team</span>
               </div>
-              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+              <div className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: isAccentDark ? '#fff' : '#000' }}>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                   <circle cx="12" cy="12" r="10" />
                   <path d="M12 16v-4" />
@@ -10096,7 +10091,7 @@ return (
 
               {/* Custom links */}
               {customLinks.map((link) => (
-                <div key={link.id} className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: linksSettings.iconStyle === 'light' ? '#fff' : '#000' }}>
+                <div key={link.id} className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: isAccentDark ? '#fff' : '#000' }}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d={LINK_ICONS.find(i => i.name === link.icon)?.path || ''} />
                   </svg>
