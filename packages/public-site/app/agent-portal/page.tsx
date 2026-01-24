@@ -7366,6 +7366,12 @@ function AgentPagesSection({
   const [addingNewLink, setAddingNewLink] = useState(false); // Track if adding new link
   const [animatingSwap, setAnimatingSwap] = useState<{ movingId: string, swappingId: string, direction: 'up' | 'down' } | null>(null); // Track button swap animation
 
+  // FIX-007/024: Refs for button position tracking (controls rendered OUTSIDE phone inner)
+  const buttonRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const buttonLinksContainerRef = useRef<HTMLDivElement | null>(null);
+  const phoneInnerRef = useRef<HTMLDivElement | null>(null);
+  const [buttonPositions, setButtonPositions] = useState<Record<string, number>>({});
+
   // Custom social links state (max 2 custom social icons)
   const [customSocialLinks, setCustomSocialLinks] = useState<CustomSocialLink[]>(preloadedPageData?.page?.custom_social_links || []);
   const [showSocialIconPicker, setShowSocialIconPicker] = useState<number | null>(null); // Index of slot being edited
@@ -7462,6 +7468,39 @@ function AgentPagesSection({
       img.src = src;
     });
   }, []);
+
+  // FIX-007/024: Calculate button positions for external controls
+  // This runs whenever links change to update the position tracking
+  useEffect(() => {
+    const updateButtonPositions = () => {
+      if (!buttonLinksContainerRef.current || !phoneInnerRef.current) return;
+
+      const containerRect = buttonLinksContainerRef.current.getBoundingClientRect();
+      const phoneInnerRect = phoneInnerRef.current.getBoundingClientRect();
+
+      const newPositions: Record<string, number> = {};
+      Object.entries(buttonRowRefs.current).forEach(([linkId, element]) => {
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Calculate position relative to phone inner top
+          newPositions[linkId] = rect.top - phoneInnerRect.top;
+        }
+      });
+
+      setButtonPositions(newPositions);
+    };
+
+    // Update positions after a short delay to ensure DOM has rendered
+    const timeoutId = setTimeout(updateButtonPositions, 50);
+
+    // Also update on resize
+    window.addEventListener('resize', updateButtonPositions);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', updateButtonPositions);
+    };
+  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -8798,16 +8837,17 @@ return (
               overflow: 'visible',
             }}
           >
-            {/* Phone inner bezel - overflow-x visible for button controls, y hidden for scrolling */}
+            {/* Phone inner bezel - overflow hidden to prevent scrollbars, controls render outside this */}
             <div
+              ref={phoneInnerRef}
               className="rounded-[2.25rem] relative flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
                 minHeight: '580px',
                 padding: '32px 16px 20px 16px',
-                overflowX: 'visible',
-                overflowY: 'hidden',
+                overflowX: 'hidden',
+                overflowY: 'auto',
               }}
             >
               {/* Star Field Background */}
@@ -8841,12 +8881,12 @@ return (
               />
               {/* Notch */}
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
-              {/* Profile Photo */}
+              {/* Profile Photo - FIX-025: Use lightened color for border like social icons */}
               <div className="flex flex-col items-center pt-6">
                 <div
                   className="w-20 h-20 rounded-full border-3 flex items-center justify-center overflow-hidden relative"
                   style={{
-                    borderColor: linksSettings.accentColor,
+                    borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
                     borderWidth: '3px',
                     backgroundColor: 'rgba(40,40,40,0.8)',
                   }}
@@ -9006,8 +9046,8 @@ return (
                 );
               })()}
 
-              {/* Button Links with Editor - overflow visible for external controls */}
-              <div className="space-y-1.5 relative" style={{ overflow: 'visible' }}>
+              {/* Button Links with Editor - FIX-007/024: controls rendered outside phone inner */}
+              <div ref={buttonLinksContainerRef} className="space-y-1.5 relative" style={{ overflow: 'visible' }}>
                 {(() => {
                   const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
                   const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
@@ -9069,7 +9109,16 @@ return (
                     }
 
                     return (
-                      <div key={linkId} className="group relative" style={{ transition: 'transform 0.25s ease-out', transform: animationTransform, overflow: 'visible' }}>
+                      <div
+                        key={linkId}
+                        ref={(el) => { buttonRowRefs.current[linkId] = el; }}
+                        className="group relative"
+                        style={{ transition: 'transform 0.25s ease-out', transform: animationTransform, overflow: 'visible' }}
+                        data-link-id={linkId}
+                        data-is-default={isDefault}
+                        data-index={index}
+                        data-total={allLinkIds.length}
+                      >
                         {/* Button - Full width inside phone screen with centered text */}
                         <div
                           className="w-full py-2.5 px-3 rounded-lg text-sm relative"
@@ -9107,89 +9156,7 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - FIX-007/024: Always visible with explicit opacity */}
-                        {/* LEFT SIDE: Up/Down controls */}
-                        <div
-                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5"
-                          style={{
-                            left: '-36px',
-                            zIndex: 99999,
-                            opacity: 1,
-                            visibility: 'visible',
-                          }}
-                        >
-                          <button
-                            onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
-                            disabled={index === 0}
-                            className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
-                            style={{
-                              width: '16px',
-                              height: '16px',
-                              background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                              borderRadius: '4px', // All corners rounded
-                              color: '#ffd700',
-                              boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                              border: '1px solid rgba(255,255,255,0.1)',
-                            }}
-                            title="Move up"
-                          >
-                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                              <path d="M18 15l-6-6-6 6" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
-                            disabled={index === allLinkIds.length - 1}
-                            className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
-                            style={{
-                              width: '16px',
-                              height: '16px',
-                              background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                              borderRadius: '4px', // All corners rounded
-                              color: '#ffd700',
-                              boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                              border: '1px solid rgba(255,255,255,0.1)',
-                            }}
-                            title="Move down"
-                          >
-                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                              <path d="M6 9l6 6 6-6" />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {/* RIGHT SIDE: Edit button (custom links only) - FIX-024: Always visible */}
-                        {!isDefault && (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setEditingLinkId(linkId);
-                              setEditingLinkLabel(customLink?.label || '');
-                              setEditingLinkUrl(customLink?.url || '');
-                              setEditingLinkIcon(customLink?.icon || 'Globe');
-                            }}
-                            className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center"
-                            style={{
-                              right: '-36px',
-                              width: '16px',
-                              height: '16px',
-                              zIndex: 99999,
-                              opacity: 1,
-                              visibility: 'visible',
-                              background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
-                              borderRadius: '4px', // All corners rounded
-                              color: '#ffd700',
-                              boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
-                              border: '1px solid rgba(255,255,255,0.1)',
-                            }}
-                            title="Edit link"
-                          >
-                            <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                            </svg>
-                          </button>
-                        )}
+                        {/* FIX-007/024: Controls moved OUTSIDE phone inner - see controls overlay below phone frame */}
 
                         {/* Edit Mode - Button as Input UI */}
                         {isEditing && (
@@ -9454,6 +9421,149 @@ return (
                 <span className="text-[9px] text-white/40 tracking-wide">Powered by Smart Agent Alliance</span>
               </div>
             </div>
+
+            {/* FIX-007/024: Button Controls Overlay - rendered OUTSIDE phone inner but INSIDE phone frame */}
+            {/* This allows controls to be visible without being clipped by phone inner's overflow:hidden */}
+            {(() => {
+              // Build list of all link IDs in current order
+              const linkOrder = linksSettings.linkOrder || ['join-team', 'learn-about'];
+              const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
+              const allLinkIds = [...linkOrder];
+              customLinks.forEach(link => {
+                if (!allLinkIds.includes(link.id)) allLinkIds.push(link.id);
+              });
+              if (!allLinkIds.includes('join-team')) allLinkIds.unshift('join-team');
+              if (!allLinkIds.includes('learn-about')) {
+                const joinIndex = allLinkIds.indexOf('join-team');
+                allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
+              }
+
+              // Move link function (same as inside the map)
+              const moveLink = (linkId: string, direction: 'up' | 'down') => {
+                if (animatingSwap) return;
+                const currentIndex = allLinkIds.indexOf(linkId);
+                if (direction === 'up' && currentIndex > 0) {
+                  const newOrder = [...allLinkIds];
+                  [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                  setHasUnsavedChanges(true);
+                } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
+                  const newOrder = [...allLinkIds];
+                  [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                  setHasUnsavedChanges(true);
+                }
+              };
+
+              return (
+                <>
+                  {/* LEFT SIDE: Up/Down controls for all buttons */}
+                  {allLinkIds.map((linkId, index) => {
+                    const position = buttonPositions[linkId];
+                    if (position === undefined) return null;
+
+                    const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                    const customLink = customLinkMap.get(linkId);
+                    if (!isDefault && !customLink) return null;
+
+                    return (
+                      <div
+                        key={`controls-left-${linkId}`}
+                        className="absolute flex flex-col gap-0.5"
+                        style={{
+                          left: '-30px',
+                          top: `${position + 6}px`, // +6 to vertically center with button
+                          zIndex: 10,
+                        }}
+                      >
+                        <button
+                          onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
+                          disabled={index === 0}
+                          className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                            borderRadius: '4px',
+                            color: '#ffd700',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                          }}
+                          title="Move up"
+                        >
+                          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <path d="M18 15l-6-6-6 6" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
+                          disabled={index === allLinkIds.length - 1}
+                          className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                            borderRadius: '4px',
+                            color: '#ffd700',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                          }}
+                          title="Move down"
+                        >
+                          <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" />
+                          </svg>
+                        </button>
+                      </div>
+                    );
+                  })}
+
+                  {/* RIGHT SIDE: Edit buttons for custom links only */}
+                  {allLinkIds.map((linkId) => {
+                    const position = buttonPositions[linkId];
+                    if (position === undefined) return null;
+
+                    const isDefault = linkId === 'join-team' || linkId === 'learn-about';
+                    if (isDefault) return null; // No edit for default buttons
+
+                    const customLink = customLinkMap.get(linkId);
+                    if (!customLink) return null;
+
+                    return (
+                      <button
+                        key={`controls-right-${linkId}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingLinkId(linkId);
+                          setEditingLinkLabel(customLink.label || '');
+                          setEditingLinkUrl(customLink.url || '');
+                          setEditingLinkIcon(customLink.icon || 'Globe');
+                        }}
+                        className="absolute transition-all hover:brightness-125 flex items-center justify-center"
+                        style={{
+                          right: '-30px',
+                          top: `${position + 10}px`, // +10 to vertically center with button
+                          width: '16px',
+                          height: '16px',
+                          zIndex: 10,
+                          background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                          borderRadius: '4px',
+                          color: '#ffd700',
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                        }}
+                        title="Edit link"
+                      >
+                        <svg className="w-2.5 h-2.5" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                        </svg>
+                      </button>
+                    );
+                  })}
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>
