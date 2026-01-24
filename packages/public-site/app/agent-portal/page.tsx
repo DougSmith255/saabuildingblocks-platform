@@ -7475,13 +7475,18 @@ function AgentPagesSection({
     const updateButtonPositions = () => {
       if (!phoneInnerRef.current) return;
 
-      const phoneInnerRect = phoneInnerRef.current.getBoundingClientRect();
+      const phoneInner = phoneInnerRef.current;
+      const phoneInnerRect = phoneInner.getBoundingClientRect();
+      const scrollTop = phoneInner.scrollTop;
 
       const newPositions: Record<string, number> = {};
       Object.entries(buttonRowRefs.current).forEach(([linkId, element]) => {
         if (element) {
           const rect = element.getBoundingClientRect();
-          // Calculate position relative to phone inner top, add 6px for phone frame padding
+          // Calculate position relative to phone inner top
+          // Add 6px for phone frame padding
+          // The rect.top - phoneInnerRect.top gives us the visual offset
+          // This already accounts for scroll since getBoundingClientRect is viewport-relative
           newPositions[linkId] = rect.top - phoneInnerRect.top + 6;
         }
       });
@@ -7519,11 +7524,27 @@ function AgentPagesSection({
       resizeObserver.observe(phoneInnerRef.current);
     }
 
-    // Also update on resize
+    // Listen for scroll on phone inner to update positions when user scrolls
+    // Use requestAnimationFrame to throttle updates for smooth performance
+    const phoneInner = phoneInnerRef.current;
+    let scrollRAF: number | null = null;
+    const handleScroll = () => {
+      if (scrollRAF) cancelAnimationFrame(scrollRAF);
+      scrollRAF = requestAnimationFrame(updateButtonPositions);
+    };
+    if (phoneInner) {
+      phoneInner.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    // Also update on window resize
     window.addEventListener('resize', updateButtonPositions);
 
     return () => {
       window.removeEventListener('resize', updateButtonPositions);
+      if (phoneInner) {
+        phoneInner.removeEventListener('scroll', handleScroll);
+      }
+      if (scrollRAF) cancelAnimationFrame(scrollRAF);
       cancelAnimationFrame(frameId1);
       clearTimeout(timeoutId1);
       clearTimeout(timeoutId2);
