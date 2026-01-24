@@ -5351,12 +5351,19 @@ function SupportSection({ userState }: SupportSectionProps) {
       {/* Support Cards - grid with auto-fit, min 300px, equal widths */}
       {/* Order: eXp Support, State Broker (if available), SAA Support, Wolf Pack Support */}
       <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-        {/* eXp Support Card */}
-        <div className="rounded-2xl border border-[#3b82f6]/30 overflow-hidden bg-gradient-to-b from-[#3b82f6]/10 to-transparent">
+        {/* eXp Support Card - Premium glass with blue accent */}
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            border: '1px solid rgba(59, 130, 246, 0.25)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+          }}
+        >
           {/* Header */}
-          <div className="p-5 border-b border-[#3b82f6]/20">
+          <div className="p-5 border-b border-[#3b82f6]/20" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 rounded-xl bg-[#3b82f6]/20">
+              <div className="p-3 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
                 <ExpXIcon className="w-7 h-7" style={{ color: '#3b82f6' }} />
               </div>
               <div>
@@ -5413,13 +5420,20 @@ function SupportSection({ userState }: SupportSectionProps) {
           </div>
         </div>
 
-        {/* State Broker Support Card - Shows second if user has state set and broker URL exists */}
+        {/* State Broker Support Card - Premium glass with purple accent */}
         {brokerInfo && (
-          <div className="rounded-2xl border border-[#a855f7]/30 overflow-hidden bg-gradient-to-b from-[#a855f7]/10 to-transparent">
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(168, 85, 247, 0.25)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}
+          >
             {/* Header */}
-            <div className="p-5 border-b border-[#a855f7]/20">
+            <div className="p-5 border-b border-[#a855f7]/20" style={{ background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, transparent 50%)' }}>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-3 rounded-xl bg-[#a855f7]/20">
+                <div className="p-3 rounded-xl" style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
                   <LocationIndicatorIcon className="w-7 h-7" style={{ color: '#a855f7' }} />
                 </div>
                 <div>
@@ -5464,12 +5478,19 @@ function SupportSection({ userState }: SupportSectionProps) {
           </div>
         )}
 
-        {/* SAA Support Card */}
-        <div className="rounded-2xl border border-[#ffd700]/30 overflow-hidden bg-gradient-to-b from-[#ffd700]/10 to-transparent">
+        {/* SAA Support Card - Premium glass with gold accent */}
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            border: '1px solid rgba(255, 215, 0, 0.25)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+          }}
+        >
           {/* Header */}
-          <div className="p-5 border-b border-[#ffd700]/20">
+          <div className="p-5 border-b border-[#ffd700]/20" style={{ background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 rounded-xl bg-[#ffd700]/20">
+              <div className="p-3 rounded-xl" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
                 <SLogoIcon className="w-7 h-7" style={{ color: '#ffd700' }} />
               </div>
               <div>
@@ -5518,12 +5539,19 @@ function SupportSection({ userState }: SupportSectionProps) {
           </div>
         </div>
 
-        {/* Wolf Pack Support Card */}
-        <div className="rounded-2xl border border-[#22c55e]/30 overflow-hidden bg-gradient-to-b from-[#22c55e]/10 to-transparent">
+        {/* Wolf Pack Support Card - Premium glass with green accent */}
+        <div
+          className="rounded-2xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            border: '1px solid rgba(34, 197, 94, 0.25)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+          }}
+        >
           {/* Header */}
-          <div className="p-5 border-b border-[#22c55e]/20">
+          <div className="p-5 border-b border-[#22c55e]/20" style={{ background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
-              <div className="p-3 rounded-xl bg-[#22c55e]/20">
+              <div className="p-3 rounded-xl" style={{ background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
                 <WolfIcon className="w-7 h-7" style={{ color: '#22c55e' }} />
               </div>
               <div>
@@ -5664,10 +5692,18 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
   return (
     <div className="space-y-4 sm:space-y-6 px-2 sm:px-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-6">
-        <GenericCard padding="sm">
+        {/* Connor Steinbrook Mastermind - Premium glass with gold accent */}
+        <div
+          className="p-4 sm:p-5 rounded-xl"
+          style={{
+            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            border: '1px solid rgba(255, 215, 0, 0.15)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+          }}
+        >
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#ffd700]/20">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
                 <BrainIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#ffd700' }} />
               </div>
               <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ffd700] leading-tight">Connor Steinbrook Mastermind</h4>
@@ -5708,12 +5744,20 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
               )}
             </button>
           </div>
-        </GenericCard>
+        </div>
 
-        <GenericCard padding="sm">
+        {/* Mike Sherrard Mastermind - Premium glass with green accent */}
+        <div
+          className="p-4 sm:p-5 rounded-xl"
+          style={{
+            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            border: '1px solid rgba(0, 255, 136, 0.15)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+          }}
+        >
           <div className="space-y-2 sm:space-y-3">
             <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#00ff88]/20">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(0, 255, 136, 0.15)', border: '1px solid rgba(0, 255, 136, 0.3)' }}>
                 <MoneyWingsIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#00ff88' }} />
               </div>
               <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#00ff88] leading-tight">Mike Sherrard Mastermind</h4>
@@ -5741,13 +5785,21 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
               </a>
             </div>
           </div>
-        </GenericCard>
+        </div>
 
+        {/* Women's Mastermind - Premium glass with pink accent */}
         {showWomensCall && (
-          <GenericCard padding="sm">
+          <div
+            className="p-4 sm:p-5 rounded-xl"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(236, 72, 153, 0.15)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}
+          >
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#ec4899]/20">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(236, 72, 153, 0.15)', border: '1px solid rgba(236, 72, 153, 0.3)' }}>
                   <WomanTechnologistIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#ec4899' }} />
                 </div>
                 <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#ec4899] leading-tight">Women's Mastermind</h4>
@@ -5775,14 +5827,22 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 </a>
               </div>
             </div>
-          </GenericCard>
+          </div>
         )}
 
+        {/* Leaders Mastermind - Premium glass with blue accent */}
         {showLeadersCall && (
-          <GenericCard padding="sm">
+          <div
+            className="p-4 sm:p-5 rounded-xl"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(56, 189, 248, 0.15)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}
+          >
             <div className="space-y-2 sm:space-y-3">
               <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center bg-[#38bdf8]/20">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
                   <CrownColorIcon className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#38bdf8' }} />
                 </div>
                 <h4 className="text-sm sm:text-base lg:text-h5 font-semibold text-[#38bdf8] leading-tight">Leaders Mastermind</h4>
@@ -5812,12 +5872,19 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
                 )}
               </button>
             </div>
-          </GenericCard>
+          </div>
         )}
       </div>
 
-      {/* Referral Tip */}
-      <div className="mt-4 p-4 rounded-lg bg-[#ffd700]/5 border border-[#ffd700]/20">
+      {/* Referral Tip - Premium glass with gold accent */}
+      <div
+        className="mt-4 p-4 rounded-xl"
+        style={{
+          background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+          border: '1px solid rgba(255, 215, 0, 0.15)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+        }}
+      >
         <div className="flex items-start gap-3">
           <span className="text-xl">💡</span>
           <div>
@@ -6106,8 +6173,13 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
 
   return (
     <div
-      className="group rounded-xl overflow-hidden bg-gradient-to-b from-[#0a0a0a] to-[#151515] border border-white/10 hover:border-[#ffd700]/40 transition-all hover:shadow-[0_0_20px_rgba(255,215,0,0.15)]"
-      style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+      className="group rounded-xl overflow-hidden hover:border-[#ffd700]/40 transition-all"
+      style={{
+        WebkitTapHighlightColor: 'transparent',
+        background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+        border: '1px solid rgba(255, 215, 0, 0.1)',
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+      } as React.CSSProperties}
     >
       {/* Template Preview Image */}
       <a
@@ -6208,17 +6280,30 @@ function TemplatesSection() {
   // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
     <div className="space-y-6 px-2 sm:px-4">
-      {/* Category Buttons - Horizontal scroll on mobile, wrap on larger screens */}
-      <div className="flex flex-wrap gap-2 justify-center">
+      {/* Category Buttons - Premium pill design matching Link Page */}
+      <div className="flex flex-wrap gap-2 justify-center p-3 rounded-xl" style={{
+        background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+        border: '1px solid rgba(255, 215, 0, 0.1)',
+        boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+      }}>
         {TEMPLATE_CATEGORIES.map((category) => (
           <button
             key={category.id}
             onClick={() => setActiveCategory(category.id)}
-            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+            style={{
+              WebkitTapHighlightColor: 'transparent',
+              ...(activeCategory === category.id ? {
+                background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.3)',
+              } : {
+                background: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              }),
+            } as React.CSSProperties}
+            className={`flex items-center gap-1.5 px-4 py-2.5 rounded-full text-sm font-medium transition-all whitespace-nowrap ${
               activeCategory === category.id
-                ? 'bg-[#ffd700] text-black shadow-lg shadow-[#ffd700]/20'
-                : 'bg-black/40 border border-white/10 text-[#e5e4dd]/80 hover:border-[#ffd700]/30 hover:text-[#ffd700]'
+                ? 'text-[#1a1a1a]'
+                : 'text-[#e5e4dd]/80 hover:border-[#ffd700]/40 hover:text-[#ffd700]'
             }`}
           >
             <span>{category.icon}</span>
@@ -6234,9 +6319,22 @@ function TemplatesSection() {
         ))}
       </div>
 
-      {/* Canva Login Reminder */}
-      <div className="mt-6 p-4 rounded-xl bg-[#00c4cc]/10 border border-[#00c4cc]/20 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-[#00c4cc]/20 flex items-center justify-center flex-shrink-0">
+      {/* Canva Login Reminder - Premium glass styling */}
+      <div
+        className="mt-6 p-4 rounded-xl flex items-center gap-3"
+        style={{
+          background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+          border: '1px solid rgba(0, 196, 204, 0.2)',
+          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+        }}
+      >
+        <div
+          className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{
+            background: 'rgba(0, 196, 204, 0.15)',
+            border: '1px solid rgba(0, 196, 204, 0.3)',
+          }}
+        >
           <svg className="w-5 h-5 text-[#00c4cc]" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
           </svg>
@@ -6310,12 +6408,22 @@ function CoursesSection() {
               rel="noopener noreferrer"
               className="block group"
             >
-              <GenericCard padding="sm" centered className="h-full hover:border-[#ffd700]/40 transition-colors cursor-pointer">
+              <div
+                className="h-full p-4 sm:p-5 rounded-xl hover:border-[#ffd700]/40 transition-all cursor-pointer"
+                style={{
+                  background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.1)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                }}
+              >
                 <div className="text-center flex flex-col items-center">
                   {/* Icon with colored background */}
                   <div
                     className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl flex items-center justify-center mb-4"
-                    style={{ backgroundColor: `${course.color}20` }}
+                    style={{
+                      backgroundColor: `${course.color}15`,
+                      border: `1px solid ${course.color}30`,
+                    }}
                   >
                     <IconComponent
                       className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
@@ -6332,7 +6440,7 @@ function CoursesSection() {
                     {course.description}
                   </p>
                 </div>
-              </GenericCard>
+              </div>
             </a>
           );
         })}
@@ -7591,8 +7699,13 @@ function NewAgentsSection() {
           <button
             key={category.id}
             onClick={() => handleCategoryClick(category)}
-            className="group text-left p-5 rounded-xl bg-black/40 border border-white/10 hover:border-[#ffd700]/40 hover:bg-black/60 transition-all duration-200"
-            style={{ WebkitTapHighlightColor: 'transparent' }}
+            className="group text-left p-5 rounded-xl border hover:border-[#ffd700]/40 transition-all duration-200"
+            style={{
+              WebkitTapHighlightColor: 'transparent',
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.15)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            }}
           >
             <div className="flex items-start gap-4">
               {category.iconComponent ? (
@@ -7646,8 +7759,13 @@ function NewAgentsSection() {
                 <button
                   key={doc.id}
                   onClick={() => handleDocumentClick(doc)}
-                  className="w-full text-left p-4 rounded-lg bg-white/5 border border-white/10 hover:border-[#ffd700]/40 hover:bg-white/10 transition-all group"
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                  className="w-full text-left p-4 rounded-lg hover:border-[#ffd700]/40 transition-all group"
+                  style={{
+                    WebkitTapHighlightColor: 'transparent',
+                    background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.9) 0%, rgba(20, 20, 22, 0.95) 100%)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.02)',
+                  }}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex-1 min-w-0">
