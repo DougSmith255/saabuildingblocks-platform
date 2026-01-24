@@ -8797,6 +8797,12 @@ return (
                       <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                     </svg>
                   )}
+                  {/* Loading spinner overlay during upload */}
+                  {attractionUploadStatus && (
+                    <div className="absolute inset-0 rounded-full bg-black/60 flex items-center justify-center">
+                      <div className="w-6 h-6 border-2 border-[#ffd700] border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Name with H1 Neon Effect - Exact replica from link page */}
@@ -8994,24 +9000,26 @@ return (
                             backgroundColor: linksSettings.accentColor,
                             color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a',
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
-                            fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400,
+                            fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                             overflow: 'visible',
                           }}
                         >
                           {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
                           {linkId === 'learn-about' ? (
                             <img
+                              key={`s-logo-${linksSettings.iconStyle}`}
                               src={linksSettings.iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}
                               alt="S"
                               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 object-contain pointer-events-none"
-                              style={{ zIndex: 1 }}
+                              style={{ zIndex: 1, willChange: 'transform' }}
                               loading="eager"
                               decoding="sync"
+                              fetchPriority="high"
                               width={16}
                               height={16}
                             />
                           ) : (
-                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1, willChange: 'transform' }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" d={iconPath} />
                             </svg>
                           )}
@@ -9019,50 +9027,54 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Embedded in phone border, pushed to outer edges */}
-                        {/* LEFT SIDE: Up/Down controls - embedded in phone border */}
+                        {/* Controls - Small buttons sitting on the phone border edge */}
+                        {/* LEFT SIDE: Up/Down controls - positioned on phone border */}
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-px"
+                          className="absolute top-1/2 -translate-y-1/2 flex flex-col"
                           style={{
-                            left: '-22px', // 16px inner padding + 6px outer padding = 22px to reach outer edge
+                            left: '-26px', // Position so controls sit on the outer edge of phone border
                             zIndex: 9999,
                           }}
                         >
                           <button
                             onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'up'); }}
                             disabled={index === 0}
-                            className="p-1.5 disabled:opacity-30 transition-all hover:brightness-125"
+                            className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
+                              width: '14px',
+                              height: '14px',
                               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-                              borderRadius: '6px 0 0 0',
+                              borderRadius: '3px 0 0 0',
                               color: '#ffd700',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
                             }}
                             title="Move up"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <svg className="w-2 h-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
                             </svg>
                           </button>
                           <button
                             onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
                             disabled={index === allLinkIds.length - 1}
-                            className="p-1.5 disabled:opacity-30 transition-all hover:brightness-125"
+                            className="disabled:opacity-30 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
+                              width: '14px',
+                              height: '14px',
                               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-                              borderRadius: '0 0 0 6px',
+                              borderRadius: '0 0 0 3px',
                               color: '#ffd700',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
                             }}
                             title="Move down"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <svg className="w-2 h-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
                             </svg>
                           </button>
                         </div>
 
-                        {/* RIGHT SIDE: Edit button - embedded in phone border (custom links only) */}
+                        {/* RIGHT SIDE: Edit button - positioned on phone border (custom links only) */}
                         {!isDefault && (
                           <button
                             onClick={(e) => {
@@ -9072,18 +9084,20 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute top-1/2 -translate-y-1/2 p-1.5 transition-all hover:brightness-125"
+                            className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
-                              right: '-22px', // 16px inner padding + 6px outer padding = 22px to reach outer edge
+                              right: '-26px', // Position so control sits on the outer edge of phone border
+                              width: '14px',
+                              height: '14px',
                               zIndex: 9999,
                               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
-                              borderRadius: '0 6px 6px 0',
+                              borderRadius: '0 3px 3px 0',
                               color: '#ffd700',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(255,255,255,0.05)',
+                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.1)',
                             }}
                             title="Edit link"
                           >
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <svg className="w-2 h-2" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                               <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                             </svg>
@@ -9172,7 +9186,7 @@ return (
                               <button
                                 onClick={() => {
                                   setCustomLinks(prev => prev.filter(l => l.id !== linkId));
-                                  setLinksSettings(prev => ({ ...prev, linkOrder: prev.linkOrder.filter(id => id !== linkId) }));
+                                  setLinksSettings(prev => ({ ...prev, linkOrder: (prev.linkOrder || ['join-team', 'learn-about']).filter(id => id !== linkId) }));
                                   setEditingLinkId(null);
                                   setShowIconPicker(null);
                                   setHasUnsavedChanges(true);
@@ -9273,7 +9287,7 @@ return (
                               order: customLinks.length,
                             };
                             setCustomLinks(prev => [...prev, newLink]);
-                            setLinksSettings(prev => ({ ...prev, linkOrder: [...prev.linkOrder, newLink.id] }));
+                            setLinksSettings(prev => ({ ...prev, linkOrder: [...(prev.linkOrder || ['join-team', 'learn-about']), newLink.id] }));
                             setNewLinkLabel('');
                             setNewLinkUrl('');
                             setNewLinkIcon('Globe');
