@@ -7131,6 +7131,7 @@ interface LinksSettings {
   iconStyle: 'light' | 'dark';
   font: 'synonym' | 'taskor';
   nameWeight: 'bold' | 'normal'; // Name text weight
+  buttonTextSize: number; // Button text size in pixels (default: 14)
   bio: string;
   showColorPhoto: boolean; // false = B&W (default), true = full color on Linktree
   linkOrder: string[]; // Order of all links including default button (learn-about) and custom link IDs
@@ -7143,6 +7144,7 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
   iconStyle: 'dark',
   font: 'synonym',
   nameWeight: 'bold', // Bold by default
+  buttonTextSize: 14, // 14px default (equivalent to text-sm)
   bio: '',
   showColorPhoto: false, // B&W by default
   linkOrder: ['learn-about'], // Default order: default button at bottom
@@ -8752,9 +8754,11 @@ return (
             </div>
           </div>
 
-          {/* Button Weight - Full width (Style picker removed - now auto-detected) */}
-          <div>
-            <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
+          {/* Button Weight + Text Size - Side by side */}
+          <div className="flex gap-3">
+            {/* Button Weight */}
+            <div className="flex-1">
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
               <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
                 {/* Animated sliding pill indicator */}
                 <div
@@ -8782,6 +8786,31 @@ return (
                   Regular
                 </button>
               </div>
+            </div>
+
+            {/* Text Size */}
+            <div className="flex-1">
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Text Size</label>
+              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+                <input
+                  type="number"
+                  step="0.5"
+                  min="8"
+                  max="24"
+                  value={linksSettings.buttonTextSize ?? 14}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    if (!isNaN(value) && value >= 8 && value <= 24) {
+                      setLinksSettings(prev => ({ ...prev, buttonTextSize: value }));
+                      setHasUnsavedChanges(true);
+                    }
+                  }}
+                  className="w-full px-3 py-1.5 text-xs text-center bg-transparent text-white focus:outline-none"
+                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                />
+                <span className="pr-3 py-1.5 text-xs text-white/50">px</span>
+              </div>
+            </div>
           </div>
 
           {/* Font */}
@@ -9212,7 +9241,7 @@ return (
                         {/* When editing: button becomes editable with input instead of span */}
                         {/* Default button has muted styling (transparent bg + solid border) */}
                         <div
-                          className="w-full py-2.5 px-3 rounded-lg text-sm relative"
+                          className="w-full py-2.5 px-3 rounded-lg relative"
                           style={{
                             backgroundColor: isDefault
                               ? `${linksSettings.accentColor}33` // 20% opacity for default button
@@ -9225,6 +9254,7 @@ return (
                               : (isAccentDark ? '#ffffff' : '#1a1a1a'),
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
+                            fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
                             overflow: 'visible',
                           }}
                         >
@@ -9354,12 +9384,13 @@ return (
                   <div className="space-y-2 relative">
                     {/* Button with clickable icon and inline label input - label centered across full width */}
                     <div
-                      className="py-2.5 px-3 rounded-lg text-sm relative z-10"
+                      className="py-2.5 px-3 rounded-lg relative z-10"
                       style={{
                         backgroundColor: linksSettings.accentColor,
                         color: isAccentDark ? '#ffffff' : '#1a1a1a',
                         fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                         fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
+                        fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
                       }}
                     >
                       {/* Clickable icon positioned absolutely on the left - opens icon picker */}
@@ -10278,11 +10309,14 @@ return (
             <div className="space-y-2">
               {/* Default button - muted styling (transparent bg + solid border) */}
               <div
-                className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2"
+                className="py-2.5 px-4 rounded-lg font-medium flex items-center gap-2"
                 style={{
                   backgroundColor: `${linksSettings.accentColor}33`,
                   border: `2px solid ${linksSettings.accentColor}`,
                   color: linksSettings.accentColor,
+                  fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
+                  fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                  fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                 }}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -10295,7 +10329,17 @@ return (
 
               {/* Custom links */}
               {customLinks.map((link) => (
-                <div key={link.id} className="py-2.5 px-4 rounded-lg text-sm font-medium flex items-center gap-2" style={{ backgroundColor: linksSettings.accentColor, color: isAccentDark ? '#fff' : '#000' }}>
+                <div
+                  key={link.id}
+                  className="py-2.5 px-4 rounded-lg font-medium flex items-center gap-2"
+                  style={{
+                    backgroundColor: linksSettings.accentColor,
+                    color: isAccentDark ? '#fff' : '#000',
+                    fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
+                    fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
+                    fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
+                  }}
+                >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path d={LINK_ICONS.find(i => i.name === link.icon)?.path || ''} />
                   </svg>
