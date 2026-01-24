@@ -1482,13 +1482,33 @@ function AgentPortal() {
 
       // Step 5: Upload same to attraction page (B&W version)
       setStatus('Syncing to attraction page...');
-      const pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
+      let pageResponse = await fetch(`https://saabuildingblocks.com/api/agent-pages/${user.id}`, {
         headers: { 'Authorization': `Bearer ${token}` },
       });
+
+      // If page doesn't exist, create it first
+      if (!pageResponse.ok && pageResponse.status === 404) {
+        setStatus('Creating your page...');
+        const createResponse = await fetch('https://saabuildingblocks.com/api/agent-pages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (createResponse.ok) {
+          pageResponse = createResponse;
+        }
+      }
 
       if (pageResponse.ok) {
         const currentPageData = await pageResponse.json();
         if (currentPageData.page?.id) {
+          // Dispatch event to update AgentPagesSection's pageData state
+          window.dispatchEvent(new CustomEvent('agent-page-created', {
+            detail: { page: currentPageData.page }
+          }));
           // Upload B&W version
           const attractionFormData = new FormData();
           attractionFormData.append('file', processedBlob, 'profile.png');
@@ -7451,22 +7471,43 @@ function AgentPagesSection({
   // Listen for image update events from the parent component
   useEffect(() => {
     const handleImageUpdate = (event: CustomEvent<{ url: string }>) => {
-      if (pageData) {
-        setPageData(prev => prev ? { ...prev, profile_image_url: event.detail.url } : null);
-      }
+      setPageData(prev => prev ? { ...prev, profile_image_url: event.detail.url } : null);
     };
 
     const handleColorImageUpdate = (event: CustomEvent<{ url: string }>) => {
-      if (pageData) {
-        setPageData(prev => prev ? { ...prev, profile_image_color_url: event.detail.url } : null);
-      }
+      setPageData(prev => prev ? { ...prev, profile_image_color_url: event.detail.url } : null);
+    };
+
+    // Handler for when page is created during image upload
+    const handlePageCreated = (event: CustomEvent<{ page: AgentPageData }>) => {
+      setPageData(event.detail.page);
+      // Update form data with new page values
+      setFormData({
+        display_first_name: event.detail.page.display_first_name || '',
+        display_last_name: event.detail.page.display_last_name || '',
+        email: event.detail.page.email || '',
+        phone: event.detail.page.phone || '',
+        show_call_button: event.detail.page.show_call_button ?? true,
+        show_text_button: event.detail.page.show_text_button ?? true,
+        facebook_url: event.detail.page.facebook_url || '',
+        instagram_url: event.detail.page.instagram_url || '',
+        twitter_url: event.detail.page.twitter_url || '',
+        youtube_url: event.detail.page.youtube_url || '',
+        tiktok_url: event.detail.page.tiktok_url || '',
+        linkedin_url: event.detail.page.linkedin_url || '',
+      });
+      setCustomLinks(event.detail.page.custom_links || []);
+      setCustomSocialLinks(event.detail.page.custom_social_links || []);
+      setLinksSettings(event.detail.page.links_settings || DEFAULT_LINKS_SETTINGS);
     };
 
     window.addEventListener('agent-page-image-updated', handleImageUpdate as EventListener);
     window.addEventListener('agent-page-color-image-updated', handleColorImageUpdate as EventListener);
+    window.addEventListener('agent-page-created', handlePageCreated as EventListener);
     return () => {
       window.removeEventListener('agent-page-image-updated', handleImageUpdate as EventListener);
       window.removeEventListener('agent-page-color-image-updated', handleColorImageUpdate as EventListener);
+      window.removeEventListener('agent-page-created', handlePageCreated as EventListener);
     };
   }, [pageData]);
 
@@ -7593,23 +7634,74 @@ function AgentPagesSection({
   };
 
   const handleActivate = async () => {
-    if (!pageData) return;
-
-    // Check for profile image
-    if (!pageData.profile_image_url && !user.profilePictureUrl) {
-      setError('Please upload a profile image before activating your page.');
-      return;
-    }
-
     setIsSaving(true);
     setError(null);
 
     try {
       const token = localStorage.getItem('agent_portal_token');
+      let currentPageData = pageData;
+
+      // If page doesn't exist, create it first
+      if (!currentPageData) {
+        const createResponse = await fetch('https://saabuildingblocks.com/api/agent-pages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        const createData = await createResponse.json();
+
+        if (!createResponse.ok || !createData.page) {
+          if (createResponse.status === 409) {
+            // Page already exists - refresh to get it
+            window.location.reload();
+            return;
+          }
+          setError(createData.error || 'Failed to create page');
+          setIsSaving(false);
+          return;
+        }
+
+        currentPageData = createData.page;
+        setPageData(createData.page);
+        // Update form data with new page values
+        setFormData({
+          display_first_name: createData.page.display_first_name || '',
+          display_last_name: createData.page.display_last_name || '',
+          email: createData.page.email || '',
+          phone: createData.page.phone || '',
+          show_call_button: createData.page.show_call_button ?? true,
+          show_text_button: createData.page.show_text_button ?? true,
+          facebook_url: createData.page.facebook_url || '',
+          instagram_url: createData.page.instagram_url || '',
+          twitter_url: createData.page.twitter_url || '',
+          youtube_url: createData.page.youtube_url || '',
+          tiktok_url: createData.page.tiktok_url || '',
+          linkedin_url: createData.page.linkedin_url || '',
+        });
+        setCustomLinks(createData.page.custom_links || []);
+        setCustomSocialLinks(createData.page.custom_social_links || []);
+        setLinksSettings(createData.page.links_settings || {
+          accentColor: '#ffd700',
+          iconStyle: 'dark',
+          font: 'synonym',
+          bio: '',
+          showColorPhoto: false,
+        });
+      }
+
+      // Check for profile image
+      if (!currentPageData.profile_image_url && !user.profilePictureUrl) {
+        setError('Please upload a profile image before activating your page.');
+        setIsSaving(false);
+        return;
+      }
 
       // If using user's profile picture, sync it to agent page first
-      if (!pageData.profile_image_url && user.profilePictureUrl) {
-        await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}`, {
+      if (!currentPageData.profile_image_url && user.profilePictureUrl) {
+        await fetch(`https://saabuildingblocks.com/api/agent-pages/${currentPageData.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -7621,7 +7713,7 @@ function AgentPagesSection({
         });
       }
 
-      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${pageData.id}/activate`, {
+      const response = await fetch(`https://saabuildingblocks.com/api/agent-pages/${currentPageData.id}/activate`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -7647,7 +7739,8 @@ function AgentPagesSection({
   // Open image editor modal when user selects a file from attraction page section
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file || !pageData) return;
+    if (!file) return;
+    // Note: pageData check removed - page will be created during upload if needed
 
     // Validate file type
     const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
@@ -8227,9 +8320,9 @@ return (
         Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
         ==================================================================== */}
 
-    {/* DESKTOP LAYOUT (≥1100px) */}
+    {/* DESKTOP LAYOUT (≥1100px) - overflow visible for button controls */}
     <div
-      className="hidden min-[1100px]:grid gap-4"
+      className="hidden min-[1100px]:grid gap-4 overflow-visible"
       style={{
         gridTemplateColumns: '1fr 1fr 1fr minmax(300px, 340px)',
         gridTemplateRows: 'auto auto',
@@ -8558,8 +8651,9 @@ return (
 
       {/* ================================================================
           PREVIEW / BUTTON LINKS CARD (Gold header, spans 2 rows)
+          Note: overflow-visible required for button controls to appear outside phone border
           ================================================================ */}
-      <div className="rounded-xl overflow-hidden row-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+      <div className="rounded-xl overflow-visible row-span-2" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
         {/* Header with Premium Glow */}
         <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
           <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -8569,10 +8663,10 @@ return (
           <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Preview / Button Links</span>
         </div>
 
-        {/* Phone Mockup - Premium Styling */}
-        <div className="p-4 flex flex-col items-center">
+        {/* Phone Mockup - Premium Styling - overflow visible for button controls */}
+        <div className="p-4 flex flex-col items-center overflow-visible">
           <div
-            className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative"
+            className="w-full max-w-[300px] rounded-[2.5rem] p-[6px] relative overflow-visible"
             style={{
               background: 'linear-gradient(145deg, #2a2a2a 0%, #1a1a1a 50%, #0f0f0f 100%)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.08), 0 25px 50px -12px rgba(0,0,0,0.6), 0 0 30px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)',
@@ -8796,33 +8890,19 @@ return (
 
                     const currentIndex = allLinkIds.indexOf(linkId);
                     if (direction === 'up' && currentIndex > 0) {
-                      const swappingId = allLinkIds[currentIndex - 1];
-                      // Start animation
-                      setAnimatingSwap({ movingId: linkId, swappingId, direction });
-                      // After animation completes: clear animation, then update order
-                      setTimeout(() => {
-                        // Clear animation first - buttons are now visually in swapped positions
-                        setAnimatingSwap(null);
-                        // Then immediately update the order - no visual jump since positions match
-                        const newOrder = [...allLinkIds];
-                        [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
-                        setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                        setHasUnsavedChanges(true);
-                      }, 250);
+                      // Calculate new order immediately
+                      const newOrder = [...allLinkIds];
+                      [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+                      // Update order immediately - no animation, just instant swap
+                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                      setHasUnsavedChanges(true);
                     } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
-                      const swappingId = allLinkIds[currentIndex + 1];
-                      // Start animation
-                      setAnimatingSwap({ movingId: linkId, swappingId, direction });
-                      // After animation completes: clear animation, then update order
-                      setTimeout(() => {
-                        // Clear animation first - buttons are now visually in swapped positions
-                        setAnimatingSwap(null);
-                        // Then immediately update the order - no visual jump since positions match
-                        const newOrder = [...allLinkIds];
-                        [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
-                        setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                        setHasUnsavedChanges(true);
-                      }, 250);
+                      // Calculate new order immediately
+                      const newOrder = [...allLinkIds];
+                      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+                      // Update order immediately - no animation, just instant swap
+                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                      setHasUnsavedChanges(true);
                     }
                   };
 
@@ -8881,12 +8961,13 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - Positioned in phone border area (left side) - z-[200] to appear above phone border */}
-                        <div className="absolute -left-10 top-1/2 -translate-y-1/2 z-[9999] flex flex-col gap-0.5 bg-zinc-800/95 rounded px-1 py-1 shadow-xl border border-white/10" style={{ position: 'absolute' }}>
+                        {/* Controls - Show on hover, positioned on button itself */}
+                        <div className="absolute right-1 top-1/2 -translate-y-1/2 z-[9999] flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => moveLink(linkId, 'up')}
                             disabled={index === 0}
-                            className="p-0.5 text-white/70 hover:text-white disabled:opacity-30 transition-colors"
+                            className="p-1 rounded bg-black/40 hover:bg-black/60 disabled:opacity-30 transition-colors"
+                            style={{ color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a' }}
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M18 15l-6-6-6 6" />
@@ -8895,7 +8976,8 @@ return (
                           <button
                             onClick={() => moveLink(linkId, 'down')}
                             disabled={index === allLinkIds.length - 1}
-                            className="p-0.5 text-white/70 hover:text-white disabled:opacity-30 transition-colors"
+                            className="p-1 rounded bg-black/40 hover:bg-black/60 disabled:opacity-30 transition-colors"
+                            style={{ color: linksSettings.iconStyle === 'light' ? '#ffffff' : '#1a1a1a' }}
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M6 9l6 6 6-6" />
@@ -8912,7 +8994,7 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute -right-10 top-1/2 -translate-y-1/2 z-[9999] p-1.5 bg-zinc-800/95 rounded text-white/70 hover:text-white transition-colors shadow-xl border border-white/10"
+                            className="absolute -right-14 top-1/2 -translate-y-1/2 z-[9999] p-1.5 bg-zinc-700 rounded text-white/70 hover:text-white transition-colors shadow-xl border border-white/20"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                               <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
@@ -9442,7 +9524,7 @@ return (
                   <path d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               )}
-              {isSaving ? 'ACTIVATING...' : 'ACTIVATE MY PAGE'}
+              {isSaving ? 'Activating...' : 'Activate my Page'}
             </button>
           )}
 
@@ -9825,7 +9907,7 @@ return (
                 ) : (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                 )}
-                {isSaving ? 'ACTIVATING...' : 'ACTIVATE MY PAGE'}
+                {isSaving ? 'Activating...' : 'Activate my Page'}
               </button>
             )}
 
@@ -9863,7 +9945,7 @@ return (
         --yellow-500: #eab308;
         --black-25: rgba(0, 0, 0, 0.25);
 
-        position: relative;
+        /* position is set by Tailwind 'fixed' class - do not override */
         display: block;
         width: 4rem;
         height: 4rem;
