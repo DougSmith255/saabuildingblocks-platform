@@ -6168,8 +6168,11 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   // Default buttons - always shown
   const attractionPageUrl = `${siteUrl}/${escapeHTML(agent.slug)}/`;
 
-  // Link ordering from settings (default: about-team only, join-team is optional)
-  const linkOrder = agent.links_settings?.linkOrder || ['about-team'];
+  // Link ordering from settings (default: learn-about only)
+  const linkOrder = agent.links_settings?.linkOrder || ['learn-about'];
+
+  // Button text size from settings (default: 14px)
+  const buttonTextSize = agent.links_settings?.buttonTextSize ?? 14;
 
   // S logo PNG: dark for light icon style, off-white for dark icon style
   const sLogoPng = iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png';
@@ -6179,26 +6182,14 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     // Build a map of all links
     const allLinks = {};
 
-    // Default button: About My Team with S logo PNG
-    allLinks['about-team'] = {
+    // Default button: About Our eXp Team with S logo PNG - muted styling (transparent bg + solid border)
+    allLinks['learn-about'] = {
       type: 'default',
-      id: 'about-team',
-      html: `<a href="${attractionPageUrl}" class="link-button secondary">
+      id: 'learn-about',
+      html: `<a href="${attractionPageUrl}" class="link-button default-muted">
         <img src="${sLogoPng}" alt="S" class="link-icon" width="20" height="20" style="object-fit: contain;" />
-        <span>About My Team</span>
+        <span>About Our eXp Team</span>
       </a>`
-    };
-
-    // Optional button: Join My Team (only shown if user adds it)
-    allLinks['join-team'] = {
-      type: 'optional',
-      id: 'join-team',
-      html: `<button onclick="openJoinModal()" class="link-button primary">
-        <svg class="link-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="20" height="20">
-          <path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
-        </svg>
-        <span>Join My Team</span>
-      </button>`
     };
 
     // Custom links
@@ -6233,8 +6224,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       }
     });
 
-    // Ensure about-team is always present (default button)
-    if (!orderedIds.includes('about-team')) orderedIds.unshift('about-team');
+    // Ensure learn-about is always present (default button) - add at end if not in order
+    if (!orderedIds.includes('learn-about')) orderedIds.push('learn-about');
 
     // Generate HTML
     return orderedIds
@@ -6485,8 +6476,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       color: ${iconColor};
       text-decoration: none;
       border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.875rem;
+      font-weight: ${nameWeight === 'bold' ? '700' : '400'};
+      font-size: ${buttonTextSize}px;
       text-align: center;
       transition: all 0.2s ease;
       border: none;
@@ -6505,12 +6496,22 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       left: 1rem;
     }
 
-    .link-button.custom,
-    .link-button.primary,
-    .link-button.secondary {
+    /* Custom buttons - solid background */
+    .link-button.custom {
       background: ${accentColor};
       color: ${iconColor};
       border: none;
+    }
+
+    /* Default button - muted styling (transparent bg + solid border) */
+    .link-button.default-muted {
+      background: ${accentColor}33;
+      color: ${accentColor};
+      border: 2px solid ${accentColor};
+    }
+
+    .link-button.default-muted:hover {
+      background: ${accentColor}4d;
     }
 
     /* Contact Buttons - Segmented Style */
