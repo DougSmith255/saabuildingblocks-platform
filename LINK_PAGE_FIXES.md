@@ -1,9 +1,9 @@
 # Link Page UI Fixes Tracker
 
-**Last Updated:** 2026-01-24 (Round 8)
-**Status:** 🟡 10 verified, 8 awaiting re-test
+**Last Updated:** 2026-01-24 (Round 9)
+**Status:** 🔴 2 persistent issues, 4 new issues, 14 verified
 **File:** `/packages/public-site/app/agent-portal/page.tsx`
-**Git Commit:** Pending push
+**Git Commit:** `acebeee0`
 
 ---
 
@@ -11,84 +11,136 @@
 
 | Status | Count | Fixes |
 |--------|-------|-------|
-| ✅ Verified | 10 | FIX-001, FIX-002, FIX-006, FIX-008, FIX-009, FIX-010, FIX-011, FIX-013, FIX-014, FIX-015 |
-| 🔧 Code Applied (needs re-test) | 8 | FIX-003, FIX-004, FIX-005, FIX-007, FIX-016, FIX-017, FIX-018, FIX-019/020 |
+| ✅ Verified | 14 | FIX-001, FIX-002, FIX-003, FIX-004, FIX-006, FIX-008, FIX-009, FIX-010, FIX-011, FIX-013, FIX-014, FIX-015, FIX-016, FIX-017, FIX-018, FIX-019/020 |
+| 🔴 PERSISTENT (Multiple Failed Attempts) | 2 | FIX-005, FIX-007 |
+| ❌ NEW Issues | 4 | FIX-021, FIX-022, FIX-023, FIX-024 |
 
 ---
 
-## CRITICAL: DATABASE COLUMN ADDED
+## 🔴 PERSISTENT ISSUES (NEED INVESTIGATION)
 
-**FIX-004 Root Cause:** The `profile_image_color_url` column did NOT exist in the database!
-- Column was added via SQL: `ALTER TABLE agent_pages ADD COLUMN profile_image_color_url TEXT;`
-- User must **re-upload** their profile image for the color version to be saved
-- After re-upload, the Color button should become clickable
+### FIX-005: S Logo Disappearing/Reappearing on Downward Move
+
+**Status:** 🔴 PERSISTENT - Multiple fix attempts failed
+**Issue:** When the "About my Team" button (which has the S logo) is moved DOWN, the S logo disappears momentarily and then reappears.
+
+**Troubleshooting Log:**
+| Attempt | Date | What Was Tried | Result |
+|---------|------|----------------|--------|
+| 1 | 2026-01-24 | Changed from conditional rendering to opacity switching | Still happening |
+| 2 | 2026-01-24 | Added `transform: translateZ(0)` for GPU layer | Still happening |
+| 3 | 2026-01-24 | Added `loading="eager"` and `decoding="sync"` | Still happening |
+| 4 | 2026-01-24 | Changed to keep both logo variants in DOM at all times | Still happening |
+
+**Current Implementation (lines ~9083-9113):**
+```jsx
+<div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }}>
+  {/* Light version */}
+  <img src="/icons/s-logo-offwhite.png" style={{ opacity: isAccentDark ? 1 : 0 }} ... />
+  {/* Dark version */}
+  <img src="/icons/s-logo-dark.png" style={{ opacity: isAccentDark ? 0 : 1 }} ... />
+</div>
+```
+
+**Suspected Root Causes:**
+1. React re-renders the entire button row when order changes, causing image reload
+2. The `key={linkId}` on parent div forces remount on reorder
+3. Animation transform (`translateY`) might be interfering with image rendering
+4. Parent container has `overflow: hidden` somewhere cutting off during animation
+
+**Additional User Report (Round 9):**
+- White S icon appears BUT grey version does NOT disappear - causing visual overlap
+- This suggests both opacity values might be getting set incorrectly during state transition
+
+**Investigation Needed:**
+1. Check if `isAccentDark` is being recalculated during reorder (it shouldn't be)
+2. Add console.log to track opacity values during reorder
+3. Consider using CSS classes instead of inline style opacity
+4. Consider using a single image with CSS filter for color switching
+5. Check if React key is causing full remount - try stable key approach
 
 ---
 
-## ROUND 8: AUTO-BRIGHTNESS SYSTEM (NEW)
+### FIX-007: Button Controls Hiding Behind Phone Border
 
-### FIX-019/020: Auto Text Color Based on Accent Brightness
+**Status:** 🔴 PERSISTENT - Multiple fix attempts failed
+**Issue:** The up/down move controls and edit button are hidden behind the phone's thick metal border frame.
 
-**Status:** 🔧 Code Applied (needs re-test)
-**Issue:** Originally FIX-019 was about S logo not switching. Resolved by removing manual Style picker entirely and implementing auto-detection.
+**Troubleshooting Log:**
+| Attempt | Date | What Was Tried | Result |
+|---------|------|----------------|--------|
+| 1 | 2026-01-24 | Set `zIndex: 99999` | Still hidden |
+| 2 | 2026-01-24 | Set parent containers to `overflow: visible` | Still hidden |
+| 3 | 2026-01-24 | Moved position from `-32px` to `-28px` | Still hidden |
+| 4 | 2026-01-24 | Added hover-only visibility | User hates hover behavior |
 
-**What Was Done:**
-1. **Added luminance calculation function** (`isColorDark()`) that calculates if a hex color is dark or light using the formula: `(0.299*R + 0.587*G + 0.114*B) < 140`
-2. **Created `isAccentDark` derived value** that auto-updates when accent color changes
-3. **Removed both Style picker UIs** (main UI and phone preview toggle)
-4. **Replaced all `iconStyle` checks** with `isAccentDark`:
-   - Button text color: `isAccentDark ? '#ffffff' : '#1a1a1a'`
-   - S logo opacity: off-white shows when `isAccentDark`, dark shows when not
-5. **Updated H1 name styling** for dark accents:
-   - Fill: Off-white (`#e5e4dd`) instead of accent color
-   - Outline: Accent color via `WebkitTextStroke`
-   - Text shadow: Accent color glow effect
-6. **Added more space below bio** (`mb-1` → `mb-3`)
+**Current Implementation (lines ~9125-9170):**
+```jsx
+<div
+  className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100"
+  style={{ left: '-28px', zIndex: 99999 }}
+>
+```
 
-**User Experience:**
-- No more manual Light/Dark toggle needed
-- Text automatically becomes white when accent is dark (e.g., navy blue, dark green)
-- Text automatically becomes black when accent is light (e.g., gold, yellow)
-- H1 name gets outline effect with dark accents for better readability
+**User Feedback (Round 9):**
+- "Just move them forward on the z axis"
+- "They are still hiding behind the phone's border (the thick border, the metal frame)"
+- "Hover to see controls is stupid - make them always visible"
+- z-index alone is NOT solving the issue
+
+**Suspected Root Causes:**
+1. z-index doesn't work without proper stacking context
+2. Parent element might have `transform` which creates new stacking context
+3. The phone border element might have its own stacking context with higher z-index
+4. `overflow: hidden` on an ancestor is clipping the controls
+
+**Investigation Needed:**
+1. Find the phone border element and check its z-index/stacking context
+2. Add `transform: translateZ(100px)` to force 3D stacking
+3. Move controls OUTSIDE the phone container entirely
+4. Use `position: fixed` instead of `absolute` as last resort
+5. Remove ALL hover behavior - always visible
 
 ---
 
-## ROUND 6 FIXES (Awaiting User Re-Test After Image Re-Upload)
+## ❌ NEW ISSUES (Round 9)
 
-### FIX-003: Loading Spinner in Link Page UI Profile Photo
-**Status:** 🔧 Code Applied
-**What Was Done:** Added spinner overlay to profile photo in Link Page UI Profile section
+### FIX-021: New Button Label Input Not Matching Font Weight
 
-### FIX-004: Color Profile Button Pipeline
-**Status:** 🔧 Code Applied + DB Column Added
-**Root Cause:** Database column `profile_image_color_url` didn't exist!
-**What Was Done:**
-1. Added database column via SQL
-2. Added color upload to dashboard reprocess flow
-3. Added color upload to attraction page reprocess flow
-4. Added `colorContrastLevel` and `applyColorContrastFilter` props
+**Status:** ❌ NOT FIXED
+**Issue:** When adding a new button and typing the label, the input text is not bold even when Bold weight is selected. It only becomes bold after clicking the checkmark to confirm.
 
-**User Action Required:** Re-upload profile image to create color version
+**Expected:** Input text should match `linksSettings.nameWeight` styling in real-time
+**Location:** New link input around line ~9334
 
-### FIX-005: S Logo Disappearing on Downward Move
-**Status:** 🔧 Code Applied
-**What Was Done:** Keep both logo variants in DOM with opacity switching
+---
 
-### FIX-007: Button Controls Position/Styling
-**Status:** 🔧 Code Applied
-**What Was Done:** Increased z-index to 99999, positioned at -32px, rounded all corners
+### FIX-022: Social Link Icons Too Dark with Dark Accent
 
-### FIX-016: Email/Phone/Text Buttons Not Bold on First Load
-**Status:** 🔧 Code Applied
-**What Was Done:** Added null check fallback for fontWeight
+**Status:** ❌ NOT FIXED
+**Issue:** When accent color is very dark (e.g., navy blue), the social link icons in the circles also become very dark and nearly invisible.
 
-### FIX-017: Add Button Icon Should Have Circle
-**Status:** 🔧 Code Applied
-**What Was Done:** Changed to circled plus SVG icon
+**Expected:** Icon color should be a lighter version of the accent color, or use a contrasting color
+**Suggestion:** Calculate a lighter tint of the accent color for icons when accent is dark
 
-### FIX-018: Icon Library Popup Should Overlay Not Push
-**Status:** 🔧 Code Applied
-**What Was Done:** Changed to absolute positioning
+---
+
+### FIX-023: S Logo - Both Versions Showing (Opacity Issue)
+
+**Status:** ❌ NOT FIXED
+**Issue:** When switching to light style (dark accent), the white S logo appears BUT the grey/dark S logo does NOT disappear. Both are visible, causing visual overlap.
+
+**Root Cause:** Likely same as FIX-005 - opacity values not updating correctly during state changes
+
+---
+
+### FIX-024: Remove Hover Behavior from Button Controls
+
+**Status:** ❌ NOT FIXED
+**Issue:** User explicitly requested that button controls (up/down/edit) should ALWAYS be visible, not just on hover.
+
+**Current:** `opacity-0 group-hover:opacity-100`
+**Requested:** Remove opacity classes, always show controls
 
 ---
 
@@ -98,6 +150,8 @@
 |--------|-------------|--------|
 | FIX-001 | Save Changes button always visible when activated | ✅ |
 | FIX-002 | View Page points to correct linktree URL | ✅ |
+| FIX-003 | Loading spinner on profile upload | ✅ |
+| FIX-004 | Color profile button pipeline | ✅ |
 | FIX-006 | Custom social link fields no longer crash | ✅ |
 | FIX-008 | Crash when adding button (linkOrder undefined) | ✅ |
 | FIX-009 | Help button gradient glitch fixed | ✅ |
@@ -106,57 +160,41 @@
 | FIX-013 | Renamed "Icon Style" to "Style" | ✅ |
 | FIX-014 | 6px spacing between button sections | ✅ |
 | FIX-015 | Bold pill text color correct on first load | ✅ |
+| FIX-016 | Email/Phone/Text bold on first load | ✅ |
+| FIX-017 | Add icon button has circled plus | ✅ |
+| FIX-018 | Icon library popup overlays content | ✅ |
+| FIX-019/020 | Auto text color + subtle H1 outline | ✅ |
 
 ---
 
-## OTHER CHANGES (This Session)
+## NEXT STEPS (Priority Order)
 
-### Dashboard Profile Image Styling
-**Status:** ✅ Applied
-**What Was Done:** Added light grey border (`border-white/20`) and subtle background (`bg-white/5`) to all 3 dashboard profile image instances
-
----
-
-## NEXT STEPS
-
-1. **Deploy changes** - Push to GitHub and deploy to Cloudflare
-2. **User: Hard refresh** the page (Ctrl+Shift+R) to get latest code
-3. **User: Test auto-brightness** - Change accent color to dark (navy) and light (gold), verify text color auto-switches
-4. **User: Test H1 styling** - Verify name gets outline effect with dark accents
-5. **User: Re-upload profile image** to create color version in database
-6. **User: Test FIX-004** - Color button should become clickable after re-upload
-7. **User: Test remaining fixes** (FIX-003, 005, 007, 016, 017, 018)
+1. **FIX-024** - Remove hover behavior (quick fix)
+2. **FIX-007** - Move controls outside phone container OR use fixed positioning
+3. **FIX-021** - Add fontWeight to new button input
+4. **FIX-022** - Calculate lighter icon color for dark accents
+5. **FIX-005/023** - Deep investigation into S logo opacity issue
 
 ---
 
-## FIX DETAILS (For Previously Verified Fixes)
+## TECHNICAL NOTES
 
-### FIX-001: Save Changes Button ✅
-Changed condition to show when `pageData?.activated`, grey out when `!hasUnsavedChanges`
+### Phone Mockup Structure (for FIX-007)
+```
+Preview Card (overflow-visible, row-span-2)
+└── Phone Container (p-4, overflow-visible)
+    └── Phone Frame (max-w-[300px], rounded-[2.5rem], p-[6px])  ← THICK BORDER
+        └── Phone Inner (rounded-[2.25rem], overflowX: visible, overflowY: hidden)
+            └── Button Links Container (overflow: visible)
+                └── Button Row (group, relative)
+                    └── Button (relative)
+                    └── Controls (absolute, left: -28px)  ← GETTING CLIPPED
+```
 
-### FIX-002: View Page URL ✅
-Changed onClick to use linktree URL: `${slug}-links`
+**The phone frame at `p-[6px]` creates the thick metal border. Controls at `-28px` are within this padding area and may be getting clipped by the frame's visual styling, not overflow.**
 
-### FIX-006: Custom Social Links Crash ✅
-Fixed sparse array issue by checking `link && link.url`
-
-### FIX-008: Crash When Adding Button ✅
-Added fallback for undefined linkOrder: `[...(prev.linkOrder || ['join-team', 'learn-about']), newLink.id]`
-
-### FIX-009: Help Button Gradient ✅
-Added backdrop isolation to modal
-
-### FIX-010: QR Code S Logo Color ✅
-Changed from `/icons/s-logo-1000.png` to `/icons/s-logo-dark.png`
-
-### FIX-011: Style Default to Dark ✅
-Verified DEFAULT_LINKS_SETTINGS has `iconStyle: 'dark'`
-
-### FIX-013: Rename "Icon Style" ✅
-Simple text replacement to "Style"
-
-### FIX-014: 6px Spacing ✅
-Changed to inline style `marginBottom: '6px'`
-
-### FIX-015: Bold Pill Text ✅
-Added null check: `(linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'`
+### Possible Solutions for FIX-007:
+1. Move controls to be siblings of the phone frame, not descendants
+2. Use CSS `isolation: isolate` on controls
+3. Use `position: fixed` with calculated coordinates
+4. Render controls in a React Portal outside the phone DOM tree

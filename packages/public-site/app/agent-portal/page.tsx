@@ -8918,6 +8918,9 @@ return (
 
                   if (socialIcons.length === 0) return null;
 
+                  // FIX-022: Use lightened color for social icons when accent is dark
+                  const socialIconColor = getVisibleSocialIconColor(linksSettings.accentColor);
+
                   return (
                     <div className="flex justify-center gap-2 mt-1">
                       {socialIcons.map((social, idx) => {
@@ -8930,11 +8933,11 @@ return (
                             style={{ backgroundColor: `${linksSettings.accentColor}20`, border: `1px solid ${linksSettings.accentColor}40` }}
                           >
                             {isBuiltIn ? (
-                              <svg className="w-4 h-4" fill={linksSettings.accentColor} viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill={socialIconColor} viewBox="0 0 24 24">
                                 <path d={social.icon} />
                               </svg>
                             ) : (
-                              <svg className="w-4 h-4" fill="none" stroke={linksSettings.accentColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+                              <svg className="w-4 h-4" fill="none" stroke={socialIconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                                 <path d={social.icon} />
                               </svg>
                             )}
@@ -9079,32 +9082,16 @@ return (
                           }}
                         >
                           {/* Icon positioned absolutely on the left - S logo for learn-about, SVG for others */}
-                          {/* FIX-005: Keep both S logo variants in DOM to prevent flash on reorder */}
+                          {/* FIX-005/023: Use display block/none instead of opacity to prevent overlap */}
                           {linkId === 'learn-about' ? (
                             <div className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ zIndex: 1 }}>
-                              {/* Light version */}
+                              {/* Show only the appropriate version based on accent darkness */}
                               <img
-                                src="/icons/s-logo-offwhite.png"
+                                key="s-logo-current"
+                                src={isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}
                                 alt="S"
-                                className="absolute inset-0 w-4 h-4 object-contain transition-opacity duration-150"
-                                style={{
-                                  opacity: isAccentDark ? 1 : 0,
-                                  transform: 'translateZ(0)', // Force GPU layer
-                                }}
-                                loading="eager"
-                                decoding="sync"
-                                width={16}
-                                height={16}
-                              />
-                              {/* Dark version */}
-                              <img
-                                src="/icons/s-logo-dark.png"
-                                alt="S"
-                                className="absolute inset-0 w-4 h-4 object-contain transition-opacity duration-150"
-                                style={{
-                                  opacity: isAccentDark ? 0 : 1,
-                                  transform: 'translateZ(0)', // Force GPU layer
-                                }}
+                                className="w-4 h-4 object-contain"
+                                style={{ transform: 'translateZ(0)' }}
                                 loading="eager"
                                 decoding="sync"
                                 width={16}
@@ -9120,13 +9107,15 @@ return (
                           <span className="block w-full text-center">{label}</span>
                         </div>
 
-                        {/* Controls - FIX-007: Rounded corners, high z-index, positioned outside button */}
-                        {/* LEFT SIDE: Up/Down controls - positioned relative to button, not phone */}
+                        {/* Controls - FIX-007/024: Always visible, isolation for stacking context */}
+                        {/* LEFT SIDE: Up/Down controls */}
                         <div
-                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute top-1/2 -translate-y-1/2 flex flex-col gap-0.5"
                           style={{
-                            left: '-28px',
+                            left: '-36px',
                             zIndex: 99999,
+                            isolation: 'isolate',
+                            transform: 'translateZ(50px)',
                           }}
                         >
                           <button
@@ -9169,7 +9158,7 @@ return (
                           </button>
                         </div>
 
-                        {/* RIGHT SIDE: Edit button (custom links only) */}
+                        {/* RIGHT SIDE: Edit button (custom links only) - FIX-024: Always visible */}
                         {!isDefault && (
                           <button
                             onClick={(e) => {
@@ -9179,12 +9168,14 @@ return (
                               setEditingLinkUrl(customLink?.url || '');
                               setEditingLinkIcon(customLink?.icon || 'Globe');
                             }}
-                            className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center opacity-0 group-hover:opacity-100"
+                            className="absolute top-1/2 -translate-y-1/2 transition-all hover:brightness-125 flex items-center justify-center"
                             style={{
-                              right: '-28px',
+                              right: '-36px',
                               width: '16px',
                               height: '16px',
                               zIndex: 99999,
+                              isolation: 'isolate',
+                              transform: 'translateZ(50px)',
                               background: 'linear-gradient(145deg, #3a3a3a 0%, #2a2a2a 50%, #1a1a1a 100%)',
                               borderRadius: '4px', // All corners rounded
                               color: '#ffd700',
@@ -9333,7 +9324,7 @@ return (
                           </svg>
                         )}
                       </button>
-                      {/* Input centered across full button width */}
+                      {/* Input centered across full button width - FIX-021: Match font weight */}
                       <input
                         type="text"
                         value={newLinkLabel}
@@ -9341,7 +9332,7 @@ return (
                         className="w-full bg-transparent text-center focus:outline-none placeholder:opacity-60"
                         placeholder="Button label"
                         autoFocus
-                        style={{ color: 'inherit' }}
+                        style={{ color: 'inherit', fontWeight: linksSettings.nameWeight === 'bold' ? 700 : 400 }}
                       />
                     </div>
                     {/* Icon Picker Dropdown for new link - absolute to overlay content below - FIX-018 */}
