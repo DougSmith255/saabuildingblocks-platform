@@ -2098,7 +2098,7 @@ function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-2 border-white/20 hover:border-[#ffd700]/50 transition-colors mb-3 bg-white/5"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] border-white/30 hover:border-[#ffd700]/50 transition-colors mb-3 bg-white/5"
                     title="Click to change profile picture"
                   >
                     {/* Upload spinner - shows while uploading */}
@@ -7471,24 +7471,35 @@ function AgentPagesSection({
 
   // FIX-007/024: Calculate button positions for external controls
   // Uses useLayoutEffect + requestAnimationFrame to ensure DOM is ready
+  // CRITICAL: Only run after pageData is loaded so button rows exist in DOM
   useLayoutEffect(() => {
+    // Don't calculate until page data exists
+    if (!pageData) return;
+
     const updateButtonPositions = () => {
       if (!phoneInnerRef.current) return;
 
       const phoneInnerRect = phoneInnerRef.current.getBoundingClientRect();
+      // Skip if phone inner hasn't rendered properly yet
+      if (phoneInnerRect.height === 0) return;
 
       const newPositions: Record<string, number> = {};
       Object.entries(buttonRowRefs.current).forEach(([linkId, element]) => {
         if (element) {
           const rect = element.getBoundingClientRect();
+          // Skip if element hasn't rendered properly
+          if (rect.height === 0) return;
           // Calculate position relative to phone inner top, add 6px for phone frame padding
           newPositions[linkId] = rect.top - phoneInnerRect.top + 6;
         }
       });
 
-      // Only update if we found positions
+      // Only update if we found valid positions (more than 0 and values aren't all zeros)
       if (Object.keys(newPositions).length > 0) {
-        setButtonPositions(newPositions);
+        const hasValidPositions = Object.values(newPositions).some(pos => pos > 0);
+        if (hasValidPositions) {
+          setButtonPositions(newPositions);
+        }
       }
     };
 
@@ -7503,7 +7514,12 @@ function AgentPagesSection({
     // And once more after a short delay for good measure (handles async data loading)
     const timeoutId = setTimeout(() => {
       updateButtonPositions();
-    }, 100);
+    }, 150);
+
+    // And another longer delay as a fallback
+    const timeoutId2 = setTimeout(() => {
+      updateButtonPositions();
+    }, 300);
 
     // Also update on resize
     window.addEventListener('resize', updateButtonPositions);
@@ -7512,8 +7528,21 @@ function AgentPagesSection({
       window.removeEventListener('resize', updateButtonPositions);
       cancelAnimationFrame(frameId);
       clearTimeout(timeoutId);
+      clearTimeout(timeoutId2);
     };
-  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
+  }, [pageData, linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
+
+  // Auto-scroll phone inner to bottom when adding content
+  useEffect(() => {
+    if (phoneInnerRef.current && (addingNewLink || customLinks.length > 0)) {
+      // Small delay to let content render
+      setTimeout(() => {
+        if (phoneInnerRef.current) {
+          phoneInnerRef.current.scrollTop = phoneInnerRef.current.scrollHeight;
+        }
+      }, 100);
+    }
+  }, [customLinks.length, addingNewLink]);
 
   // Auto-generate slug from display name
   const generatedSlug = `${formData.display_first_name}-${formData.display_last_name}`
@@ -8534,7 +8563,7 @@ return (
             <div
               className="w-[100px] h-[100px] rounded-full bg-black/40 border-[3px] flex items-center justify-center overflow-hidden flex-shrink-0 relative"
               style={{
-                borderColor: linksSettings.accentColor,
+                borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
               }}
             >
               {/* Image with B&W filter - border stays colored */}
@@ -8850,17 +8879,17 @@ return (
               overflow: 'visible',
             }}
           >
-            {/* Phone inner bezel - overflow hidden to prevent scrollbars, controls render outside this */}
+            {/* Phone inner bezel - FIXED height with scrollable content */}
             <div
               ref={phoneInnerRef}
               className="rounded-[2.25rem] relative flex flex-col"
               style={{
                 background: 'linear-gradient(180deg, #0a0a0a 0%, #111111 100%)',
                 boxShadow: 'inset 0 0 20px rgba(0,0,0,0.6)',
-                minHeight: '580px',
+                height: '580px', // FIXED height - phone doesn't grow
                 padding: '32px 16px 20px 16px',
                 overflowX: 'hidden',
-                overflowY: 'auto',
+                overflowY: 'auto', // Scrollable when content exceeds height
               }}
             >
               {/* Star Field Background */}
@@ -9080,19 +9109,29 @@ return (
 
                     const currentIndex = allLinkIds.indexOf(linkId);
                     if (direction === 'up' && currentIndex > 0) {
-                      // Calculate new order immediately
-                      const newOrder = [...allLinkIds];
-                      [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
-                      // Update order immediately - no animation, just instant swap
-                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                      setHasUnsavedChanges(true);
+                      const swappingId = allLinkIds[currentIndex - 1];
+                      // Trigger animation first
+                      setAnimatingSwap({ movingId: linkId, swappingId, direction });
+                      // After animation completes, update the actual order
+                      setTimeout(() => {
+                        const newOrder = [...allLinkIds];
+                        [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+                        setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                        setHasUnsavedChanges(true);
+                        setAnimatingSwap(null);
+                      }, 250); // Match the CSS transition duration
                     } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
-                      // Calculate new order immediately
-                      const newOrder = [...allLinkIds];
-                      [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
-                      // Update order immediately - no animation, just instant swap
-                      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                      setHasUnsavedChanges(true);
+                      const swappingId = allLinkIds[currentIndex + 1];
+                      // Trigger animation first
+                      setAnimatingSwap({ movingId: linkId, swappingId, direction });
+                      // After animation completes, update the actual order
+                      setTimeout(() => {
+                        const newOrder = [...allLinkIds];
+                        [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+                        setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                        setHasUnsavedChanges(true);
+                        setAnimatingSwap(null);
+                      }, 250); // Match the CSS transition duration
                     }
                   };
 
@@ -9448,20 +9487,34 @@ return (
                 allLinkIds.splice(joinIndex + 1, 0, 'learn-about');
               }
 
-              // Move link function (same as inside the map)
+              // Move link function with animation
               const moveLink = (linkId: string, direction: 'up' | 'down') => {
                 if (animatingSwap) return;
                 const currentIndex = allLinkIds.indexOf(linkId);
                 if (direction === 'up' && currentIndex > 0) {
-                  const newOrder = [...allLinkIds];
-                  [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
-                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                  setHasUnsavedChanges(true);
+                  const swappingId = allLinkIds[currentIndex - 1];
+                  // Trigger animation first
+                  setAnimatingSwap({ movingId: linkId, swappingId, direction });
+                  // After animation completes, update the actual order
+                  setTimeout(() => {
+                    const newOrder = [...allLinkIds];
+                    [newOrder[currentIndex - 1], newOrder[currentIndex]] = [newOrder[currentIndex], newOrder[currentIndex - 1]];
+                    setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                    setHasUnsavedChanges(true);
+                    setAnimatingSwap(null);
+                  }, 250);
                 } else if (direction === 'down' && currentIndex < allLinkIds.length - 1) {
-                  const newOrder = [...allLinkIds];
-                  [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
-                  setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
-                  setHasUnsavedChanges(true);
+                  const swappingId = allLinkIds[currentIndex + 1];
+                  // Trigger animation first
+                  setAnimatingSwap({ movingId: linkId, swappingId, direction });
+                  // After animation completes, update the actual order
+                  setTimeout(() => {
+                    const newOrder = [...allLinkIds];
+                    [newOrder[currentIndex], newOrder[currentIndex + 1]] = [newOrder[currentIndex + 1], newOrder[currentIndex]];
+                    setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+                    setHasUnsavedChanges(true);
+                    setAnimatingSwap(null);
+                  }, 250);
                 }
               };
 
@@ -9488,7 +9541,7 @@ return (
                           top: `${position}px`,
                           zIndex: 10,
                           background: '#1d1d1d', // Container background matches phone border
-                          borderRadius: '0 6px 6px 0', // Rounded on INSIDE (right side) to blend into phone
+                          borderRadius: '6px', // All corners rounded
                           padding: '2px',
                         }}
                       >
@@ -9548,7 +9601,7 @@ return (
                           top: `${position + 6}px`, // +6 to vertically center with button
                           zIndex: 10,
                           background: '#141414', // Container background darker for right side
-                          borderRadius: '6px 0 0 6px', // Rounded on INSIDE (left side) to blend into phone
+                          borderRadius: '6px', // All corners rounded
                           padding: '4px',
                         }}
                       >
@@ -9976,7 +10029,7 @@ return (
               <div
                 className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden flex-shrink-0 relative"
                 style={{
-                  borderColor: linksSettings.accentColor,
+                  borderColor: getVisibleSocialIconColor(linksSettings.accentColor),
                 }}
               >
                 {/* Image with B&W filter - border stays colored */}
