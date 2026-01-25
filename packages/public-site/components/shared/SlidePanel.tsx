@@ -80,14 +80,18 @@ export function SlidePanel({
     }
   }, [isOpen, hasBeenOpened]);
 
-  // Lock body scroll when open
+  // Lock body scroll and hide scrollbar when open
   useEffect(() => {
     if (isOpen) {
+      // Add class to html element to completely hide scrollbar
+      document.documentElement.classList.add('slide-panel-body-lock');
       document.body.style.overflow = 'hidden';
     } else {
+      document.documentElement.classList.remove('slide-panel-body-lock');
       document.body.style.overflow = '';
     }
     return () => {
+      document.documentElement.classList.remove('slide-panel-body-lock');
       document.body.style.overflow = '';
     };
   }, [isOpen]);
@@ -232,6 +236,22 @@ export function SlidePanel({
           border-radius: 1rem 1rem 0.5rem 0.5rem;
           background: rgb(18, 18, 18) !important;
           backdrop-filter: none !important;
+        }
+
+        /* Hide scrollbar completely when slide panel is open */
+        .slide-panel-body-lock {
+          overflow: hidden !important;
+        }
+        .slide-panel-body-lock,
+        .slide-panel-body-lock body {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .slide-panel-body-lock::-webkit-scrollbar,
+        .slide-panel-body-lock body::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
         }
 
         /* Desktop (950px+): right panel */

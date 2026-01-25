@@ -591,6 +591,22 @@ const shakeKeyframes = `
   animation: backdropFadeOut 0.25s ease-in forwards;
 }
 
+/* Hide scrollbar completely when modal is open */
+.modal-open {
+  overflow: hidden !important;
+}
+.modal-open,
+.modal-open body {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+.modal-open::-webkit-scrollbar,
+.modal-open body::-webkit-scrollbar {
+  display: none !important; /* Chrome/Safari/Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
+
 /* Color variants for help panels - defined first for use in .help-panel */
 .help-panel-gold {
   --help-accent: rgba(255, 215, 0, 0.2);
@@ -1249,14 +1265,18 @@ function AgentPortal() {
   }, [isOnboardingComplete, activeSection]);
   // Show one-time intro modals when navigating to Link Page or Elite Courses for the first time
 
-  // Disable body scroll when modal is open
+  // Disable body scroll and hide scrollbar when modal is open
   useEffect(() => {
     if (isAnyPopupOpen) {
+      // Add class to html element to completely hide scrollbar
+      document.documentElement.classList.add('modal-open');
       document.body.style.overflow = 'hidden';
     } else {
+      document.documentElement.classList.remove('modal-open');
       document.body.style.overflow = '';
     }
     return () => {
+      document.documentElement.classList.remove('modal-open');
       document.body.style.overflow = '';
     };
   }, [isAnyPopupOpen]);

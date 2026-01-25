@@ -58,6 +58,21 @@ const KEYFRAMES_CSS = `
   from { opacity: 1; }
   to { opacity: 0; }
 }
+/* Hide scrollbar completely when slide panel is open */
+.slide-panel-open {
+  overflow: hidden !important;
+}
+.slide-panel-open,
+.slide-panel-open body {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.slide-panel-open::-webkit-scrollbar,
+.slide-panel-open body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
 `;
 
 // Inject keyframes CSS once
@@ -141,16 +156,20 @@ export function SlidePanel({
     }
   }, [isOpen, hasBeenOpened]);
 
-  // Lock body scroll when open
+  // Lock body scroll and hide scrollbar when open
   useEffect(() => {
     if (isOpen) {
+      // Add class to html element to completely hide scrollbar
+      document.documentElement.classList.add('slide-panel-open');
       document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
     } else {
+      document.documentElement.classList.remove('slide-panel-open');
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
     }
     return () => {
+      document.documentElement.classList.remove('slide-panel-open');
       document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
     };
