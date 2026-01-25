@@ -814,6 +814,8 @@ function AgentPortal() {
   const [cropArea, setCropArea] = useState({ x: 0, y: 0, size: 100 }); // percentage-based
   const [previewContrastLevel, setPreviewContrastLevel] = useState(130);
   const imageEditorRef = useRef<HTMLDivElement>(null);
+  // Safari browser detection for reduced glow effects
+  const [isSafari, setIsSafari] = useState(false);
 
   // Two-step image editor state
   const [imageEditorStep, setImageEditorStep] = useState<1 | 2>(1);
@@ -897,6 +899,14 @@ function AgentPortal() {
       setMinLoadTimeElapsed(true);
     }, 3000); // 3 seconds minimum for all users
     return () => clearTimeout(timer);
+  }, []);
+
+  // Detect Safari browser for reduced glow effects
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    // Safari detection: contains safari but not chrome (Chrome also has Safari in UA)
+    const isSafariBrowser = ua.includes('safari') && !ua.includes('chrome') && !ua.includes('chromium');
+    setIsSafari(isSafariBrowser);
   }, []);
 
   // Handle section query parameter for deep linking (e.g., /agent-portal?section=download)
@@ -2519,6 +2529,7 @@ function AgentPortal() {
                 isOnboardingComplete={isOnboardingComplete}
                 completedStepsCount={completedStepsCount}
                 totalStepsCount={totalStepsCount}
+                isSafari={isSafari}
               />
             )}
 
@@ -4831,11 +4842,13 @@ function DashboardView({
   isOnboardingComplete,
   completedStepsCount,
   totalStepsCount,
+  isSafari = false,
 }: {
   onNavigate: (id: SectionId) => void;
   isOnboardingComplete: boolean;
   completedStepsCount: number;
   totalStepsCount: number;
+  isSafari?: boolean;
 }) {
   // Separate cards by size for bento layout
   const heroCard = dashboardCards.find(c => c.size === 'hero');
@@ -4877,13 +4890,15 @@ function DashboardView({
               </div>
 
               <div className="flex-1 min-w-0">
-                {/* Title with Taskor font and neon glow */}
+                {/* Title with Taskor font and neon glow (reduced on Safari) */}
                 <h3
                   className="text-xl sm:text-2xl font-bold uppercase tracking-wide"
                   style={{
                     fontFamily: 'var(--font-taskor, sans-serif)',
                     color: '#ffd700',
-                    textShadow: '0 0 8px rgba(255,215,0,0.6), 0 0 20px rgba(255,215,0,0.3)',
+                    textShadow: isSafari
+                      ? '0 0 4px rgba(255,215,0,0.3), 0 0 8px rgba(255,215,0,0.15)'
+                      : '0 0 8px rgba(255,215,0,0.6), 0 0 20px rgba(255,215,0,0.3)',
                   }}
                 >
                   Onboarding
@@ -4908,7 +4923,9 @@ function DashboardView({
                     style={{
                       width: `${progressPercentage}%`,
                       background: 'linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%)',
-                      boxShadow: '0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)',
+                      boxShadow: isSafari
+                        ? '0 0 4px #ffd700, 0 0 8px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)'
+                        : '0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)',
                     }}
                   />
                 </div>
