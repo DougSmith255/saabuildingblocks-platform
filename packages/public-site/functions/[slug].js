@@ -5395,7 +5395,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         updateCardsClick(currentCard);
 
         console.log('[BuiltForFuture] Initialized with ' + loopedCards.length + ' looped cards');
-        console.log('[BuiltForFuture] CARD_WIDTH=' + CARD_WIDTH + ', CARD_GAP=' + CARD_GAP + ', initialOffset=' + initialOffset);
+        console.log('[BuiltForFuture] CARD_WIDTH=' + CARD_WIDTH + ', CARD_GAP=' + CARD_GAP);
       }
       // Keep old function name for backwards compatibility
       function setupDeckStack() {
