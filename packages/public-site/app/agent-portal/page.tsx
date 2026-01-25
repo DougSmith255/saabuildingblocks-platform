@@ -12504,7 +12504,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           --btn-light: #5eead4;
           --btn-main: #2dd4bf;
           --btn-dark: #14b8a6;
-          --btn-text: #134e4a;
+          --btn-text: #292524; /* Same dark as gold for consistent corner/question mark visibility */
         }
         /* ===== GREEN VARIANT (Support - SAA brand green) ===== */
         .pixel-help-green {
