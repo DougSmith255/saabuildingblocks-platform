@@ -56,7 +56,10 @@ body {
   font-family: var(--font-synonym), 'Courier New', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  /* Safari fix: use clip instead of hidden to prevent left offset issue */
+  overflow-x: clip;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Mobile: Disable fixed background to prevent scroll glitch with browser address bar */

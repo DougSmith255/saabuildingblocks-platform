@@ -75,6 +75,43 @@ body {
 }
 ```
 
+**Result:** ❌ Did not fix the issue
+
+---
+
+### Attempt 3: Use overflow-x: clip instead of hidden (2026-01-25)
+**Files:**
+- `packages/public-site/app/globals.css`
+- `packages/public-site/app/styles/critical.css`
+
+The theory: Safari handles `overflow-x: hidden` differently and may add scrollbar compensation that shifts content. `overflow-x: clip` is a newer CSS property that clips overflow without the scrollbar-related side effects.
+
+```css
+html {
+  overflow-x: clip;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: clip;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fallback for browsers that don't support overflow: clip */
+@supports not (overflow: clip) {
+  html, body {
+    overflow-x: hidden;
+  }
+}
+```
+
 **Result:** ⏳ Pending deployment and testing
 
 ---

@@ -37,23 +37,31 @@ input.saa-form-input:autofill {
 /* Smooth scroll for entire site - disabled when Lenis is active */
 html {
   /* scroll-behavior: smooth; - DISABLED: Lenis handles smooth scrolling, this conflicts */
-  overflow-x: hidden;
-  max-width: 100%;
-  /* Safari fix: ensure no horizontal offset */
-  margin: 0;
-  padding: 0;
+  /* Use clip instead of hidden - Safari handles it better without left offset */
+  overflow-x: clip;
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Ensure full width without scrollbar compensation */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 body {
-  overflow-x: hidden;
-  max-width: 100%;
-  /* Safari fix: ensure no horizontal offset */
-  margin: 0;
-  padding: 0;
-  /* Force the body to start at viewport edge */
-  position: relative;
-  left: 0;
-  right: 0;
+  /* Use clip instead of hidden - prevents Safari left offset issue */
+  overflow-x: clip;
+  margin: 0 !important;
+  padding: 0 !important;
+  /* Ensure body starts at edge */
+  width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Fallback for browsers that don't support overflow: clip */
+@supports not (overflow: clip) {
+  html, body {
+    overflow-x: hidden;
+  }
 }
 
 /* Disable tap highlight on mobile - prevents grey flash on touch */
