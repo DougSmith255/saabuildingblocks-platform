@@ -4620,14 +4620,21 @@ function DashboardView({
                   {completedStepsCount} of {totalStepsCount} steps complete
                 </p>
 
-                {/* Progress bar */}
-                <div className="mt-3 h-2 rounded-full bg-black/40 overflow-hidden border border-white/10">
+                {/* Progress bar - 3D Plasma Tube style */}
+                <div
+                  className="mt-3 h-2 rounded-full overflow-hidden relative"
+                  style={{
+                    background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+                    border: '1px solid rgba(245, 245, 240, 0.25)',
+                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
+                  }}
+                >
                   <div
                     className="h-full rounded-full transition-all duration-500 ease-out"
                     style={{
                       width: `${progressPercentage}%`,
-                      background: 'linear-gradient(90deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%)',
-                      boxShadow: '0 0 10px rgba(255,215,0,0.5)',
+                      background: 'linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%)',
+                      boxShadow: '0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)',
                     }}
                   />
                 </div>
@@ -5356,33 +5363,35 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
           </div>
         </div>
 
-        {/* Instructions Banner */}
-        <div className="mt-4 p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
-          <p className="text-[#ffd700] text-sm flex items-center gap-2">
-            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span><strong>Check off each step</strong> as you complete it. Once all 10 steps are checked, click the <strong>Complete</strong> button to finish your onboarding.</span>
-          </p>
-        </div>
-
-        {/* Progress bar */}
-        <div className="mb-2">
-          <div className="flex justify-between text-sm mb-1">
+        {/* Progress bar - 3D Plasma Tube style matching card sliders */}
+        <div className="mt-6 mb-2">
+          <div className="flex justify-between text-sm mb-2">
             <span className="text-[#e5e4dd]/60">{completedCount} of {steps.length} steps complete</span>
             <span className="text-[#ffd700]">{Math.round(progressPercentage)}%</span>
           </div>
-          <div className="h-3 rounded-full bg-black/40 overflow-hidden border border-white/10">
+          <div
+            className="h-3 rounded-full overflow-hidden relative"
+            style={{
+              background: 'linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%)',
+              border: '1px solid rgba(245, 245, 240, 0.25)',
+              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(255,255,255,0.05)',
+            }}
+          >
             <div
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${progressPercentage}%`,
-                background: 'linear-gradient(90deg, #ffd700 0%, #ffeb3b 50%, #ffd700 100%)',
-                boxShadow: '0 0 10px rgba(255,215,0,0.5)',
+                background: 'linear-gradient(180deg, #ffe566 0%, #ffd700 40%, #cc9900 100%)',
+                boxShadow: '0 0 8px #ffd700, 0 0 16px #ffd700, 0 0 32px #ffd70066, inset 0 1px 2px rgba(255,255,255,0.4)',
               }}
             />
           </div>
         </div>
+
+        {/* Instructions hint - below progress bar */}
+        <p className="text-center text-sm text-[#e5e4dd]/60 mt-2">
+          <strong className="text-[#ffd700]/80">Check off each step</strong> as you complete it, then click <strong className="text-[#ffd700]/80">Complete</strong>
+        </p>
       </div>
 
       {/* Steps Checklist */}
