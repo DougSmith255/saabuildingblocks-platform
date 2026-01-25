@@ -1916,7 +1916,7 @@ function AgentPortal() {
           left: 0,
           right: 0,
           bottom: 0,
-          width: '100vw',
+          width: '100%', /* Changed from 100vw to avoid Safari scrollbar width issue */
           height: '100dvh',
           zIndex: 99999,
           display: 'flex',

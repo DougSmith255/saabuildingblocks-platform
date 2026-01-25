@@ -92,14 +92,18 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
   }, [isMobileMenuOpen]);
 
   // Manage shouldRenderMenu based on isMobileMenuOpen prop
+  // Safari fix: Keep element in DOM longer to prevent state loss
   useEffect(() => {
     if (isMobileMenuOpen) {
       setShouldRenderMenu(true);
       setOpenDropdown(null);
     } else {
-      // Delay hiding to allow close animation
-      const timer = setTimeout(() => setShouldRenderMenu(false), 300);
-      return () => clearTimeout(timer);
+      // Safari fix: Use longer delay and requestAnimationFrame for smoother state transition
+      // This prevents Safari from losing track of the element's rendering context
+      requestAnimationFrame(() => {
+        const timer = setTimeout(() => setShouldRenderMenu(false), 400);
+        return () => clearTimeout(timer);
+      });
     }
   }, [isMobileMenuOpen]);
 
@@ -159,8 +163,8 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           style={{
             background: 'rgba(15, 15, 15, 0.98)',
             // Reduced blur for better performance (was 20px)
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
+            backdropFilter: isMobileMenuOpen ? 'blur(8px)' : 'none',
+            WebkitBackdropFilter: isMobileMenuOpen ? 'blur(8px)' : 'none',
             // GPU acceleration with translate3d
             transform: isMobileMenuOpen ? 'translate3d(0, 0, 0)' : 'translate3d(0, -100%, 0)',
             // Prevent flickering on webkit
@@ -171,7 +175,12 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             overscrollBehavior: 'contain',
             pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
             WebkitOverflowScrolling: 'touch',
-            display: shouldRenderMenu ? undefined : 'none',
+            // Safari fix: use visibility instead of display to preserve element state
+            // This prevents Safari from losing track of the element when toggling
+            visibility: shouldRenderMenu ? 'visible' : 'hidden',
+            opacity: isMobileMenuOpen ? 1 : 0,
+            // Transition for smooth open/close
+            transition: 'transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s ease-out',
           }}
         >
         <div
