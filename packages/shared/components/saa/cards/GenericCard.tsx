@@ -1,14 +1,14 @@
 /**
  * Generic Card Component
  *
- * A premium glass card component for the SAA design system.
- * Uses dark gradient glass styling with gold accent border.
+ * A premium dark glass card component for the SAA design system.
+ * Matches the Link Page UI styling - deep dark gradient with subtle borders.
  *
- * Style: Premium glass with gradient background and gold accents
- * - Dark gradient background (30,30,32 to 20,20,22)
+ * Style: Premium dark glass (matches Link Page UI)
+ * - Deep dark gradient background (20,20,20 to 12,12,12)
  * - Rounded corners (xl = 12px)
- * - Gold accent border (15% opacity)
- * - Depth shadow with inner highlight
+ * - Subtle white border (6% opacity)
+ * - Complex shadow with outer ring and depth
  * - Optional hover state for interactive cards
  *
  * @example
@@ -70,11 +70,11 @@ export function GenericCard({
   const centerClasses = centered ? 'text-center' : '';
   const paddingClass = paddingClasses[padding];
 
-  // Premium glass styling
+  // Premium dark glass styling (matches Link Page UI)
   const premiumGlassStyle: React.CSSProperties = {
-    background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
-    border: '1px solid rgba(255, 215, 0, 0.15)',
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+    background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+    border: '1px solid rgba(255,255,255,0.06)',
+    boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
     WebkitTapHighlightColor: 'transparent',
     WebkitTouchCallout: 'none',
     WebkitUserSelect: 'none',
@@ -83,13 +83,13 @@ export function GenericCard({
 
   // Hover handler for interactive cards
   const handleMouseEnter = isInteractive ? (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.35)';
-    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 15px rgba(255, 215, 0, 0.1)';
+    e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)';
+    e.currentTarget.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.04), 0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)';
   } : undefined;
 
   const handleMouseLeave = isInteractive ? (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.15)';
-    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
+    e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
+    e.currentTarget.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)';
   } : undefined;
 
   const cardContent = (

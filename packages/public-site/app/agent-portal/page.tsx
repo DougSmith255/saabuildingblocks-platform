@@ -2338,8 +2338,10 @@ function AgentPortal() {
                 <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" />
               </>
             )}
-            {/* Production */}
-            {activeSection === 'production' && <ProductionSection />}
+            {/* Production / Landing Pages */}
+            {activeSection === 'production' && (
+              <ProductionSection />
+            )}
 
             {/* New Agents */}
             {activeSection === 'new-agents' && (
@@ -2350,7 +2352,9 @@ function AgentPortal() {
             )}
 
             {/* Download App */}
-            {activeSection === 'download' && <DownloadSection />}
+            {activeSection === 'download' && (
+              <DownloadSection />
+            )}
 
             {/* Profile Section (Mobile) - Inline Edit Form */}
             {activeSection === 'profile' && (
@@ -3080,7 +3084,7 @@ function AgentPortal() {
           <div
             className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
               boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             }}
@@ -3230,7 +3234,7 @@ function AgentPortal() {
           <div
             className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
               boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             }}
@@ -3364,7 +3368,7 @@ function AgentPortal() {
           <div
             className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
               boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             }}
@@ -3521,7 +3525,7 @@ function AgentPortal() {
           <div
             className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(168, 85, 247, 0.3)',
               boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             }}
@@ -3668,7 +3672,7 @@ function AgentPortal() {
           <div
             className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(20, 184, 166, 0.3)',
               boxShadow: '0 0 40px rgba(20, 184, 166, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             }}
@@ -3801,7 +3805,7 @@ function AgentPortal() {
           <div
             className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.3)',
               boxShadow: '0 0 40px rgba(255, 215, 0, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
             }}
@@ -4524,9 +4528,9 @@ function DashboardView({
               overflow-hidden
             `}
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.25)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.5)';
@@ -4590,7 +4594,7 @@ function DashboardView({
                   overflow-hidden
                 `}
                 style={{
-                  background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                   border: `1px solid ${isComingSoon ? 'rgba(102, 102, 102, 0.3)' : accent}25`,
                   boxShadow: `0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)`,
                   filter: isComingSoon ? 'grayscale(100%)' : 'none',
@@ -4676,17 +4680,17 @@ function DashboardView({
                   h-full
                 "
                 style={{
-                  background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
-                  border: '1px solid rgba(255, 215, 0, 0.15)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.35)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 15px rgba(255, 215, 0, 0.1)';
+                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.12)';
+                  e.currentTarget.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.04), 0 12px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.15)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
+                  e.currentTarget.style.border = '1px solid rgba(255,255,255,0.06)';
+                  e.currentTarget.style.boxShadow = '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)';
                 }}
               >
                 <div className="flex flex-col items-center text-center space-y-2.5">
@@ -5249,13 +5253,13 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               style={{
                 background: isChecked
                   ? 'linear-gradient(145deg, rgba(26, 37, 24, 0.95) 0%, rgba(21, 31, 18, 0.98) 100%)'
-                  : 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                  : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                 border: isChecked
                   ? '1px solid rgba(34, 197, 94, 0.25)'
-                  : '1px solid rgba(255, 215, 0, 0.15)',
+                  : '1px solid rgba(255,255,255,0.06)',
                 boxShadow: isChecked
                   ? '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 12px rgba(34, 197, 94, 0.1)'
-                  : '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                  : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
               }}
             >
               {/* Step Header */}
@@ -5281,13 +5285,13 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                     style={{
                       background: isChecked
                         ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
-                        : 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                        : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                       border: isChecked
                         ? '1px solid rgba(34, 197, 94, 0.5)'
-                        : '1px solid rgba(255, 215, 0, 0.2)',
+                        : '1px solid rgba(255,255,255,0.06)',
                       boxShadow: isChecked
                         ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                        : '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                     }}
                   >
                     {isChecked && (
@@ -5475,9 +5479,9 @@ function SupportSection({ userState }: SupportSectionProps) {
         <div
           className="rounded-2xl overflow-hidden"
           style={{
-            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(59, 130, 246, 0.25)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
           }}
         >
           {/* Header */}
@@ -5545,9 +5549,9 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div
             className="rounded-2xl overflow-hidden"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(168, 85, 247, 0.25)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}
           >
             {/* Header */}
@@ -5602,9 +5606,9 @@ function SupportSection({ userState }: SupportSectionProps) {
         <div
           className="rounded-2xl overflow-hidden"
           style={{
-            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(255, 215, 0, 0.25)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
           }}
         >
           {/* Header */}
@@ -5663,9 +5667,9 @@ function SupportSection({ userState }: SupportSectionProps) {
         <div
           className="rounded-2xl overflow-hidden"
           style={{
-            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(34, 197, 94, 0.25)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
           }}
         >
           {/* Header */}
@@ -5816,9 +5820,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
         <div
           className="p-4 sm:p-5 rounded-xl"
           style={{
-            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(255, 215, 0, 0.15)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
           }}
         >
           <div className="space-y-2 sm:space-y-3">
@@ -5870,9 +5874,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
         <div
           className="p-4 sm:p-5 rounded-xl"
           style={{
-            background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(0, 255, 136, 0.15)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
           }}
         >
           <div className="space-y-2 sm:space-y-3">
@@ -5912,9 +5916,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
           <div
             className="p-4 sm:p-5 rounded-xl"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(236, 72, 153, 0.15)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}
           >
             <div className="space-y-2 sm:space-y-3">
@@ -5955,9 +5959,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
           <div
             className="p-4 sm:p-5 rounded-xl"
             style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(56, 189, 248, 0.15)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}
           >
             <div className="space-y-2 sm:space-y-3">
@@ -6000,9 +6004,9 @@ function TeamCallsSection({ userGender, isLeader }: { userGender?: 'male' | 'fem
       <div
         className="mt-4 p-4 rounded-xl"
         style={{
-          background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
           border: '1px solid rgba(255, 215, 0, 0.15)',
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
         }}
       >
         <div className="flex items-start gap-3">
@@ -6296,9 +6300,9 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
       className="group rounded-xl overflow-hidden hover:border-[#ffd700]/40 transition-all"
       style={{
         WebkitTapHighlightColor: 'transparent',
-        background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+        background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
         border: '1px solid rgba(255, 215, 0, 0.1)',
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+        boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
       } as React.CSSProperties}
     >
       {/* Template Preview Image */}
@@ -6400,11 +6404,11 @@ function TemplatesSection() {
   // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
     <div className="space-y-6 px-2 sm:px-4">
-      {/* Category Buttons - Premium pill design matching Link Page */}
+      {/* Category Buttons - Premium dark glass matching Link Page */}
       <div className="flex flex-wrap gap-2 justify-center p-3 rounded-xl" style={{
-        background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
-        border: '1px solid rgba(255, 215, 0, 0.1)',
-        boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+        background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
       }}>
         {TEMPLATE_CATEGORIES.map((category) => (
           <button
@@ -6507,11 +6511,11 @@ function CoursesSection() {
               className="block group"
             >
               <div
-                className="h-full p-4 sm:p-5 rounded-xl hover:border-[#ffd700]/40 transition-all cursor-pointer"
+                className="h-full p-4 sm:p-5 rounded-xl hover:border-white/[0.12] transition-all cursor-pointer"
                 style={{
-                  background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
-                  border: '1px solid rgba(255, 215, 0, 0.1)',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                 }}
               >
                 <div className="text-center flex flex-col items-center">
@@ -7797,12 +7801,12 @@ function NewAgentsSection() {
           <button
             key={category.id}
             onClick={() => handleCategoryClick(category)}
-            className="group text-left p-5 rounded-xl border hover:border-[#ffd700]/40 transition-all duration-200"
+            className="group text-left p-5 rounded-xl border hover:border-white/[0.12] transition-all duration-200"
             style={{
               WebkitTapHighlightColor: 'transparent',
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.15)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}
           >
             <div className="flex items-start gap-4">
@@ -9181,9 +9185,9 @@ function AgentPagesSection({
           {/* Left Column - Preview (hidden on mobile, visible on 1100px+) */}
           <div className="hidden min-[1100px]:block min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
             <div className="sticky top-4 rounded-xl overflow-hidden" style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
               <div className="px-4 py-3 border-b border-white/10 bg-black/30">
                 <div className="flex items-center justify-between">
@@ -9228,9 +9232,9 @@ function AgentPagesSection({
           <div className="flex-1 space-y-6">
             {/* How It Works Section */}
             <div className="p-5 rounded-xl" style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.15)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
               <div className="space-y-4 text-sm text-[#e5e4dd]/80">
@@ -9268,9 +9272,9 @@ function AgentPagesSection({
 
             {/* What Happens Section */}
             <div className="p-5 rounded-xl" style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.15)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-4">What Happens When Prospects Act</h3>
               <div className="space-y-3 text-sm">
@@ -9301,9 +9305,9 @@ function AgentPagesSection({
 
             {/* Where to Share */}
             <div className="p-5 rounded-xl" style={{
-              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.15)',
-              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share</h3>
               <div className="grid grid-cols-2 gap-2 text-xs">
