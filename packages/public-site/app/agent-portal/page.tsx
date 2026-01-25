@@ -2285,9 +2285,9 @@ function AgentPortal() {
               className="flex-shrink-0 cursor-pointer"
               title="Go to Dashboard"
             >
-              {/* S logo for mobile */}
+              {/* S logo for mobile - using local transparent PNG */}
               <img
-                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public"
+                src="/icons/s-logo-1000.png"
                 alt="Smart Agent Alliance"
                 className="min-[950px]:hidden"
                 style={{
@@ -12584,9 +12584,12 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           /* Increase base pixel size (0.3rem vs 0.25rem) before scaling to make pixels appear more filled in */
           width: 0.3rem !important;
           height: 0.3rem !important;
-          /* Slightly larger scale (0.68) to compensate for smaller button size while maintaining filled-in look */
-          transform: scale(0.68) translate(-8%, 3%);
+          /* Scale down and use absolute positioning to center the question mark */
+          transform: scale(0.58);
           transform-origin: center center;
+          /* Offset positioning to center within the smaller mobile button */
+          top: 0.45rem !important;
+          left: 0.55rem !important;
         }
         .pixel-help-mobile > span:nth-child(5) {
           inset: 0.3rem 0.9rem !important;

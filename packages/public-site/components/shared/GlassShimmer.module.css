@@ -15,22 +15,24 @@
   pointer-events: none;
 }
 
-/* Layer 1: Glass Background - blur + dark gradient + gold vertical lines */
-/* More opaque background to prevent color shift when hero fades during scroll */
+/* Layer 1: Glass Background - fully opaque dark gradient + gold vertical lines */
+/* NO backdrop-filter to prevent color shift when scrolling */
 .glassBase {
   position: absolute;
   inset: 0;
+  /* Fully opaque background prevents content behind from showing through */
   background:
-    linear-gradient(45deg, rgba(10, 10, 10, 0.92), rgba(26, 26, 26, 0.95)),
+    linear-gradient(45deg, rgb(14, 14, 14), rgb(24, 24, 24)),
     repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px);
-  backdrop-filter: blur(8px) saturate(1.5);
-  -webkit-backdrop-filter: blur(8px) saturate(1.5);
+  /* REMOVED: backdrop-filter causes color shift on scroll as content moves behind */
+  /* backdrop-filter: blur(8px) saturate(1.5); */
+  /* -webkit-backdrop-filter: blur(8px) saturate(1.5); */
   box-shadow:
     0 0 30px rgba(0,0,0,0.4),
     inset 0 0 30px rgba(255,255,255,0.05);
-  filter: brightness(1.1) contrast(1.1) saturate(1.2);
+  /* REMOVED: filter can cause color changes during scroll */
+  /* filter: brightness(1.1) contrast(1.1) saturate(1.2); */
   border-radius: 0 0 20px 20px;
-  will-change: backdrop-filter;
   transform: translateZ(0);
   backface-visibility: hidden;
 }
@@ -40,9 +42,10 @@
   content: '';
   position: absolute;
   inset: 2px;
+  /* Fully opaque background to prevent color shift */
   background:
     repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
-    linear-gradient(45deg, rgba(10, 10, 10, 0.73), rgba(26, 26, 26, 0.83));
+    linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22));
   border-radius: 0 0 18px 18px;
   z-index: -1;
   pointer-events: none;
@@ -69,8 +72,8 @@
   pointer-events: none;
 }
 
-/* Mobile optimization - use solid background to prevent color shift during scroll */
-/* backdrop-filter causes color changes when content behind header moves (address bar, scrolling) */
+/* Mobile touch optimization */
+/* Prevent tap highlights that can cause visual flashes */
 @media (max-width: 768px) {
   .glassContainer {
     /* Prevent tap highlight and touch-induced color changes */
@@ -79,38 +82,12 @@
   }
 
   .glassBase {
-    /* Disable backdrop-filter on mobile to prevent color shift */
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    /* Disable filter effects that can cause color shift on touch/scroll */
-    filter: none !important;
-    /* Use fully opaque background instead */
-    background:
-      linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22)),
-      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px) !important;
-    /* Prevent any repaints during scroll/touch */
-    will-change: auto;
     /* Prevent tap highlight */
     -webkit-tap-highlight-color: transparent !important;
   }
 
-  /* Prevent active state from changing appearance */
-  .glassBase:active,
-  .glassContainer:active {
-    background:
-      linear-gradient(45deg, rgb(12, 12, 12), rgb(22, 22, 22)),
-      repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 215, 0, 0.02) 2px, rgba(255, 215, 0, 0.02) 4px) !important;
-  }
-
-  .glassBase::after {
-    /* Use fully opaque background for the grid overlay too */
-    background:
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.03) 2px, rgba(255, 255, 255, 0.03) 4px),
-      linear-gradient(45deg, rgb(10, 10, 10), rgb(22, 22, 22)) !important;
-  }
-
   .shimmerGradient {
-    /* Reduce shimmer opacity on mobile to prevent visual shifts */
+    /* Reduce shimmer opacity on mobile for subtler effect */
     opacity: 0.5;
     /* Prevent tap highlight */
     -webkit-tap-highlight-color: transparent !important;
