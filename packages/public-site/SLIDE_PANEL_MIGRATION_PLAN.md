@@ -259,11 +259,12 @@ grep -rn "backdrop\|overlay" --include="*.tsx" packages/public-site/
 
 | Task | Status | Notes |
 |------|--------|-------|
-| Create SlidePanel component | ✅ Complete | `/components/shared/SlidePanel.tsx` created |
+| Create SlidePanel component | ✅ Complete | `/components/shared/SlidePanel.tsx` + `/packages/shared/components/saa/interactive/SlidePanel.tsx` |
 | Audit main site modals | ✅ Complete | Found 4 pages with modals (8 modal instances) |
 | Audit [slug].js modals | ✅ Complete | Found 4 modals (2 form + 2 iframe) |
 | Replace main site modals | 🔄 In Progress | 3/8 converted (JoinModal, InstructionsModal, FreebieDownloadModal) |
 | Replace [slug].js modals | ⬜ Pending | 4 modals to inline |
+| Body scroll lock + hide scrollbar | ✅ Complete | CSS hides scrollbar completely (Firefox, Chrome, Safari, Edge) |
 | Testing | ⬜ Pending | |
 | Cleanup | ⬜ Pending | |
 
