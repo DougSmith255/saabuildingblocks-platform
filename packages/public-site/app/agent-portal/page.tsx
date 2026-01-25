@@ -2292,11 +2292,11 @@ function AgentPortal() {
               className="flex-shrink-0 cursor-pointer"
               title="Go to Dashboard"
             >
-              {/* S logo for mobile - using local transparent PNG */}
+              {/* S logo for mobile - using local transparent PNG (same as SAA Support panel) */}
               <img
                 src="/icons/s-logo-1000.png"
                 alt="Smart Agent Alliance"
-                className="min-[950px]:hidden"
+                className="min-[950px]:hidden object-contain"
                 style={{
                   width: '36px',
                   height: '36px',
@@ -12517,16 +12517,22 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             0 1.9em var(--btn-text),
             1.9em 1.9em var(--btn-text) !important;
         }
+        /* Mobile question mark centering - use font-size to scale em-based box-shadows */
+        .pixel-help-mobile > span:nth-child(4) {
+          /* Scale down the em-based shadows by reducing font-size context */
+          font-size: 10px !important;
+        }
         .pixel-help-mobile > span:nth-child(4)::after {
-          /* Increase base pixel size (0.3rem vs 0.25rem) before scaling to make pixels appear more filled in */
-          width: 0.3rem !important;
-          height: 0.3rem !important;
-          /* Scale down and use absolute positioning to center the question mark */
-          transform: scale(0.58);
-          transform-origin: center center;
-          /* Offset positioning to center within the smaller mobile button */
-          top: 0.45rem !important;
-          left: 0.55rem !important;
+          /* Keep original size ratio */
+          width: 0.25rem !important;
+          height: 0.25rem !important;
+          /* Center in 40px button: button center is 20px */
+          /* Question mark spans ~1.75em wide (~17.5px at 10px font) and ~2.25em tall (~22.5px) */
+          /* Position to center: 20 - 8.75 = 11.25px for left, 20 - 11.25 = 8.75px for top */
+          top: 6px !important;
+          left: 8px !important;
+          /* No transform needed - font-size handles the scaling */
+          transform: none !important;
         }
         .pixel-help-mobile > span:nth-child(5) {
           inset: 0.3rem 0.9rem !important;
