@@ -358,63 +358,6 @@ const shakeKeyframes = `
   will-change: contents;
 }
 
-/* Mobile Header Pixel Help Button - smaller inline version */
-.mobile-pixel-help {
-  position: relative;
-  display: inline-flex;
-  width: 1.5rem;
-  height: 1.5rem;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-.mobile-pixel-help button {
-  cursor: pointer;
-  display: block;
-  height: 100%;
-  width: 100%;
-  appearance: none;
-  border: 1.5px solid currentColor;
-  border-radius: 0.2rem;
-  background-color: currentColor;
-  outline: none;
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: inherit;
-  position: relative;
-}
-.mobile-pixel-help::before {
-  content: '?';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 0.75rem;
-  font-weight: 800;
-  pointer-events: none;
-  z-index: 1;
-}
-.mobile-pixel-help.gold { color: #ffd700; }
-.mobile-pixel-help.gold button { background: #ffd700; border-color: #292524; }
-.mobile-pixel-help.gold::before { color: #292524; }
-.mobile-pixel-help.purple { color: #c084fc; }
-.mobile-pixel-help.purple button { background: #c084fc; border-color: #1e1b4b; }
-.mobile-pixel-help.purple::before { color: #1e1b4b; }
-.mobile-pixel-help.teal { color: #2dd4bf; }
-.mobile-pixel-help.teal button { background: #2dd4bf; border-color: #134e4a; }
-.mobile-pixel-help.teal::before { color: #134e4a; }
-.mobile-pixel-help.gradient button {
-  background: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e);
-  border-color: #1a1a1a;
-}
-.mobile-pixel-help.gradient::before { color: #1a1a1a; }
-/* 3D effect shadow */
-.mobile-pixel-help button {
-  box-shadow:
-    2px 2px 0 0 rgba(0,0,0,0.3),
-    inset 0 1px 0 0 rgba(255,255,255,0.3),
-    inset 0 -1px 0 0 rgba(0,0,0,0.15);
-}
-
 /* Bottom nav sliding indicator animation */
 @keyframes nav-indicator-slide {
   0% { transform: scaleX(0.8); opacity: 0.5; }
@@ -2177,41 +2120,27 @@ function AgentPortal() {
                   {activeSection === 'download' && 'Download App'}
                   {activeSection === 'profile' && 'My Profile'}
                 </span>
-                {/* Mobile Help Button - pixel style, shows for sections with help modals */}
+                {/* Mobile Help Button - uses actual PixelHelpButton component, scaled down for header */}
                 {activeSection === 'support' && (
-                  <div className="mobile-pixel-help gradient" onClick={() => setShowSupportHelpModal(true)} role="button" tabIndex={0} aria-label="Support Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" size="small" className="relative" />
                 )}
                 {activeSection === 'calls' && (
-                  <div className="mobile-pixel-help teal" onClick={() => setShowTeamCallsHelpModal(true)} role="button" tabIndex={0} aria-label="Team Calls Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="small" className="relative" />
                 )}
                 {activeSection === 'templates' && (
-                  <div className="mobile-pixel-help gold" onClick={() => setShowTemplatesHelpModal(true)} role="button" tabIndex={0} aria-label="Templates Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="small" className="relative" />
                 )}
                 {activeSection === 'courses' && (
-                  <div className="mobile-pixel-help purple" onClick={() => setShowEliteCoursesHelpModal(true)} role="button" tabIndex={0} aria-label="Elite Courses Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" size="small" className="relative" />
                 )}
                 {activeSection === 'new-agents' && (
-                  <div className="mobile-pixel-help gold" onClick={() => setShowNewAgentsHelpModal(true)} role="button" tabIndex={0} aria-label="New Agents Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" size="small" className="relative" />
                 )}
                 {activeSection === 'agent-page' && (
-                  <div className="mobile-pixel-help purple" onClick={() => setShowAgentAttractionHelpModal(true)} role="button" tabIndex={0} aria-label="Agent Attraction Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" size="small" className="relative" />
                 )}
                 {activeSection === 'linktree' && (
-                  <div className="mobile-pixel-help gold" onClick={() => setShowLinkPageHelpModal(true)} role="button" tabIndex={0} aria-label="Link Page Help">
-                    <button type="button" />
-                  </div>
+                  <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" size="small" className="relative" />
                 )}
               </div>
               {/* Desktop: Logout Button - uses button text size clamp from master controller */}
@@ -6236,7 +6165,7 @@ function SupportSection({ userState }: SupportSectionProps) {
                 <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-              <span>Skyline</span>
+              <span>SkySlope</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
               <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -6284,7 +6213,7 @@ function SupportSection({ userState }: SupportSectionProps) {
                 href="https://apps.apple.com/us/app/my-exp-exp-realty/id1574384899"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#1a1a1a] text-white font-semibold hover:bg-[#2a2a2a] transition-colors border border-[#3b82f6]/30"
+                className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#1a1a1a] text-[#e5e4dd] font-semibold hover:bg-[#2a2a2a] transition-colors border border-[#3b82f6]/30"
                 style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
               >
                 <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -12331,20 +12260,25 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 // ============================================================================
 
 type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'gradient';
+type PixelHelpButtonSize = 'normal' | 'small';
 
 interface PixelHelpButtonProps {
   onClick: () => void;
   color?: PixelHelpButtonColor;
   ariaLabel?: string;
+  size?: PixelHelpButtonSize;
+  className?: string; // For custom positioning (mobile header uses relative, desktop uses fixed)
 }
 
-function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelHelpButtonProps) {
+function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = 'normal', className }: PixelHelpButtonProps) {
   const classMap = {
     gold: 'pixel-help-gold',
     purple: 'pixel-help-purple',
     teal: 'pixel-help-teal',
     gradient: 'pixel-help-gradient',
   };
+
+  const sizeClass = size === 'small' ? 'pixel-help-small' : '';
 
   return (
     <>
@@ -12403,6 +12337,13 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
           width: 4rem;
           height: 4rem;
           cursor: pointer;
+        }
+        /* ===== SMALL SIZE (for mobile header) ===== */
+        .pixel-help-small {
+          width: 1.75rem !important;
+          height: 1.75rem !important;
+          transform: scale(0.4375);
+          transform-origin: center center;
         }
         .pixel-help-gold > button,
         .pixel-help-purple > button,
@@ -12578,7 +12519,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
       `}</style>
       <div
-        className={`fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 ${classMap[color]}`}
+        className={`${className || 'fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20'} ${classMap[color]} ${sizeClass}`}
         style={{ isolation: 'isolate' }}
         title={ariaLabel}
       >
