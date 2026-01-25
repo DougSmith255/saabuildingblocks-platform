@@ -6058,7 +6058,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       id: 'learn-about',
       html: `<a href="${attractionPageUrl}" class="link-button default-muted">
         <img src="${sLogoPng}" alt="S" class="link-icon" width="20" height="20" style="object-fit: contain;" />
-        <span>About Our eXp Team</span>
+        <span>About My eXp Team</span>
       </a>`
     };
 

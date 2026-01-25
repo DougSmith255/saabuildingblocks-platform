@@ -3215,7 +3215,7 @@ function AgentPortal() {
                   Agent Attraction Built-In
                 </p>
                 <p className="text-[#e5e4dd]/80 text-sm">
-                  The <strong className="text-[#ffd700]">"About Our eXp Team"</strong> button automatically links to your personal Agent Attraction Page. That page explains our team, eXp Realty, and includes join instructions with <em>your name and info already filled in</em> - so agents who want to join go through you.
+                  The <strong className="text-[#ffd700]">"About My eXp Team"</strong> button automatically links to your personal Agent Attraction Page. That page explains our team, eXp Realty, and includes join instructions with <em>your name and info already filled in</em> - so agents who want to join go through you.
                 </p>
               </div>
 
@@ -3256,7 +3256,7 @@ function AgentPortal() {
                   Hidden Advantage
                 </p>
                 <p className="text-[#e5e4dd]/80 text-sm">
-                  Other agents scope out the competition <em>all the time</em>. The <strong className="text-purple-400">"About Our eXp Team"</strong> button on your page will naturally be seen by agents checking you out - and maybe even clients who have been interested in becoming an agent. Every click is a potential recruit.
+                  Other agents scope out the competition <em>all the time</em>. The <strong className="text-purple-400">"About My eXp Team"</strong> button on your page will naturally be seen by agents checking you out - and maybe even clients who have been interested in becoming an agent. Every click is a potential recruit.
                 </p>
               </div>
             </div>
@@ -3650,7 +3650,7 @@ function AgentPortal() {
                   Automatic Agent Attraction
                 </p>
                 <p className="text-[#e5e4dd]/80 text-sm">
-                  When agents click <strong className="text-purple-400">"About Our eXp Team"</strong> on your Link Page, they land on your Attraction Page. The join instructions show <em>your name and email</em> as their sponsor.
+                  When agents click <strong className="text-purple-400">"About My eXp Team"</strong> on your Link Page, they land on your Attraction Page. The join instructions show <em>your name and email</em> as their sponsor.
                 </p>
               </div>
 
@@ -8221,7 +8221,7 @@ function getVisibleSocialIconColor(hexColor: string): string {
 
 // Default button definitions
 const DEFAULT_BUTTONS = [
-  { id: 'learn-about', label: 'About Our eXp Team', type: 'default' as const },
+  { id: 'learn-about', label: 'About My eXp Team', type: 'default' as const },
 ];
 
 interface CustomLink {
@@ -8478,7 +8478,7 @@ function AgentPagesSection({
 
   // Preload S logo variants for instant switching
   useEffect(() => {
-    const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-1000.png'];
+    const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-offwhite.png'];
     preloadImages.forEach(src => {
       const img = new Image();
       img.src = src;
@@ -10306,7 +10306,7 @@ return (
                     const customLink = customLinkMap.get(linkId);
                     if (!isDefault && !customLink) return null;
 
-                    const label = linkId === 'learn-about' ? 'About Our eXp Team' : customLink?.label || 'Custom Link';
+                    const label = linkId === 'learn-about' ? 'About My eXp Team' : customLink?.label || 'Custom Link';
                     // Info icon for default button
                     const iconPath = isDefault
                       ? 'M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z M12 16v-4 M12 8h.01'
@@ -10372,7 +10372,7 @@ return (
                                 width: '16px',
                                 height: '16px',
                                 zIndex: 1,
-                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-1000.png' : '/icons/s-logo-dark.png'}')`,
+                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}')`,
                                 backgroundSize: 'contain',
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
@@ -10569,7 +10569,7 @@ return (
                               order: customLinks.length,
                             };
                             setCustomLinks(prev => [...prev, newLink]);
-                            // Insert new button ABOVE "About Our eXp Team" (learn-about stays at bottom)
+                            // Insert new button ABOVE "About My eXp Team" (learn-about stays at bottom)
                             setLinksSettings(prev => {
                               const currentOrder = prev.linkOrder || ['learn-about'];
                               const learnAboutIndex = currentOrder.indexOf('learn-about');
@@ -10711,13 +10711,13 @@ return (
               return (
                 <>
                   {/* LEFT SIDE: Up/Down controls for CUSTOM buttons only - positioned ON phone border */}
-                  {/* Note: "About Our eXp Team" (learn-about) has no placement controls - new buttons auto-insert above it */}
+                  {/* Note: "About My eXp Team" (learn-about) has no placement controls - new buttons auto-insert above it */}
                   {allLinkIds.map((linkId, index) => {
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
 
                     const isDefault = linkId === 'learn-about';
-                    // Skip controls for default "About Our eXp Team" button - it always stays at bottom
+                    // Skip controls for default "About My eXp Team" button - it always stays at bottom
                     if (isDefault) return null;
 
                     const customLink = customLinkMap.get(linkId);
@@ -11446,7 +11446,7 @@ return (
                   <path d="M12 16v-4" />
                   <path d="M12 8h.01" />
                 </svg>
-                <span className="flex-1 text-center">About Our eXp Team</span>
+                <span className="flex-1 text-center">About My eXp Team</span>
               </div>
 
               {/* Custom links */}
