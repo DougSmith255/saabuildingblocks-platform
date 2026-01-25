@@ -4669,14 +4669,25 @@ function DashboardView({
             >
               <div
                 className="
-                  relative p-4 rounded-xl border border-white/10
+                  relative p-4 rounded-xl
                   transition-all duration-300 ease-out
-                  hover:border-[#ffd700]/30 hover:shadow-md hover:shadow-[#ffd700]/5
                   hover:scale-[1.02]
                   group-active:scale-[0.98]
                   h-full
                 "
-                style={{ backgroundColor: 'rgba(20,20,20,0.95)' }}
+                style={{
+                  background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.15)',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 15px rgba(255, 215, 0, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.15)';
+                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
+                }}
               >
                 <div className="flex flex-col items-center text-center space-y-2.5">
                   {/* Centered icon with subtle background */}

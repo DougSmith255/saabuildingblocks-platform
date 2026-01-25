@@ -1,13 +1,14 @@
 /**
  * Generic Card Component
  *
- * A clean, simple card component for the SAA design system.
- * Uses subtle glass-like styling with rounded corners and soft border.
+ * A premium glass card component for the SAA design system.
+ * Uses dark gradient glass styling with gold accent border.
  *
- * Style: bg-white/5 rounded-xl border border-white/10
- * - Semi-transparent white background (5% opacity)
+ * Style: Premium glass with gradient background and gold accents
+ * - Dark gradient background (30,30,32 to 20,20,22)
  * - Rounded corners (xl = 12px)
- * - Subtle white border (10% opacity)
+ * - Gold accent border (15% opacity)
+ * - Depth shadow with inner highlight
  * - Optional hover state for interactive cards
  *
  * @example
@@ -62,22 +63,41 @@ export function GenericCard({
   // If href is provided, automatically make it interactive
   const isInteractive = hover || !!href;
 
-  const baseClasses = 'bg-white/5 rounded-xl border border-white/10';
+  const baseClasses = 'rounded-xl';
   const hoverClasses = isInteractive
-    ? 'transition-all duration-300 hover:scale-[1.02] hover:bg-white/10 hover:border-[#ffd700]/60 hover:shadow-lg hover:shadow-[#ffd700]/10 cursor-pointer'
+    ? 'transition-all duration-300 hover:scale-[1.02] cursor-pointer'
     : '';
   const centerClasses = centered ? 'text-center' : '';
   const paddingClass = paddingClasses[padding];
 
+  // Premium glass styling
+  const premiumGlassStyle: React.CSSProperties = {
+    background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+    border: '1px solid rgba(255, 215, 0, 0.15)',
+    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+    WebkitTapHighlightColor: 'transparent',
+    WebkitTouchCallout: 'none',
+    WebkitUserSelect: 'none',
+    userSelect: 'none',
+  };
+
+  // Hover handler for interactive cards
+  const handleMouseEnter = isInteractive ? (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.35)';
+    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 15px rgba(255, 215, 0, 0.1)';
+  } : undefined;
+
+  const handleMouseLeave = isInteractive ? (e: React.MouseEvent<HTMLDivElement>) => {
+    e.currentTarget.style.border = '1px solid rgba(255, 215, 0, 0.15)';
+    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)';
+  } : undefined;
+
   const cardContent = (
     <div
       className={`${baseClasses} ${paddingClass} ${hoverClasses} ${centerClasses} ${className}`.trim()}
-      style={{
-        WebkitTapHighlightColor: 'transparent',
-        WebkitTouchCallout: 'none',
-        WebkitUserSelect: 'none',
-        userSelect: 'none',
-      } as React.CSSProperties}
+      style={premiumGlassStyle}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {children}
     </div>
