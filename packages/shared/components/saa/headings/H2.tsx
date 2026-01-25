@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { extractPlainText } from '../../../utils/extractPlainText';
 
 export interface HeadingProps {
@@ -38,6 +38,16 @@ export default function H2({
   className = '',
   style = {}
 }: HeadingProps) {
+  // Safari browser detection for reduced glow effects
+  const [isSafari, setIsSafari] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+    // Safari detection: contains safari but not chrome (Chrome also has Safari in UA)
+    const isSafariBrowser = ua.includes('safari') && !ua.includes('chrome') && !ua.includes('chromium');
+    setIsSafari(isSafariBrowser);
+  }, []);
+
   // Extract plain text for SEO/accessibility
   const plainText = extractPlainText(children);
 
@@ -50,14 +60,23 @@ export default function H2({
   // the metal backing plate (::before pseudo-element). H2 gets its visual
   // punch from the metal plate, not from an outer glow.
   // Glow is spread out for softer, more diffused appearance (less blurry)
-  const textShadow = `
-    0 0 1px #fff,
-    0 0 2px #fff,
-    0 0 8px rgba(255,255,255,0.4),
-    0 0 16px rgba(255,255,255,0.2),
-    0 0 28px rgba(255,255,255,0.1),
-    0 0 40px rgba(255,255,255,0.05)
-  `;
+  // Safari: reduced outer glow layers (28px, 40px) to prevent overly strong rendering
+  const textShadow = isSafari
+    ? `
+      0 0 1px #fff,
+      0 0 2px #fff,
+      0 0 8px rgba(255,255,255,0.4),
+      0 0 16px rgba(255,255,255,0.15),
+      0 0 24px rgba(255,255,255,0.05)
+    `
+    : `
+      0 0 1px #fff,
+      0 0 2px #fff,
+      0 0 8px rgba(255,255,255,0.4),
+      0 0 16px rgba(255,255,255,0.2),
+      0 0 28px rgba(255,255,255,0.1),
+      0 0 40px rgba(255,255,255,0.05)
+    `;
 
   return (
     <>
