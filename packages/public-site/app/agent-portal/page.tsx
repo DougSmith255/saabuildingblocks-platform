@@ -9052,6 +9052,9 @@ function AgentPagesSection({
   // Tab navigation state for new UI - uses initialTab from props
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
 
+  // Tablet layout (950-1549px) uses 2 tabs: 'content' (Profile, Contact, Social) or 'style' (Style, Page Actions)
+  const [tabletTab, setTabletTab] = useState<'content' | 'style'>('content');
+
   // Copy link feedback state
   const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
 
@@ -9376,6 +9379,34 @@ function AgentPagesSection({
       window.removeEventListener('agent-page-created', handlePageCreated as EventListener);
     };
   }, [pageData]);
+
+  // Sync linkOrder with customLinks on initial load to ensure proper ordering
+  // This fixes the down arrow disabled state on initial page load
+  useEffect(() => {
+    if (customLinks.length === 0) return;
+
+    const currentOrder = linksSettings.linkOrder || ['learn-about'];
+    const customLinkIds = customLinks.map(l => l.id);
+
+    // Check if any custom links are missing from linkOrder
+    const missingLinks = customLinkIds.filter(id => !currentOrder.includes(id));
+
+    // If there are missing links, add them before 'learn-about'
+    if (missingLinks.length > 0) {
+      const learnAboutIndex = currentOrder.indexOf('learn-about');
+      const newOrder = [...currentOrder];
+
+      if (learnAboutIndex !== -1) {
+        // Insert missing links before 'learn-about'
+        newOrder.splice(learnAboutIndex, 0, ...missingLinks);
+      } else {
+        // Add missing links at the end, then add 'learn-about'
+        newOrder.push(...missingLinks, 'learn-about');
+      }
+
+      setLinksSettings(prev => ({ ...prev, linkOrder: newOrder }));
+    }
+  }, [customLinks]); // Only run when customLinks changes (including initial load)
 
   // Generate QR Code for Linktree URL
   // IMPORTANT: This useEffect MUST be before any early returns to comply with React's rules of hooks
@@ -10201,9 +10232,9 @@ return (
         Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
         ==================================================================== */}
 
-    {/* DESKTOP LAYOUT (≥1100px) - overflow visible for button controls */}
+    {/* DESKTOP LAYOUT (≥1550px) - overflow visible for button controls */}
     <div
-      className="hidden min-[1100px]:grid gap-4 overflow-visible"
+      className="hidden min-[1550px]:grid gap-4 overflow-visible"
       style={{
         gridTemplateColumns: '1fr 1fr 1fr minmax(300px, 340px)',
         gridTemplateRows: 'auto auto',
@@ -11798,9 +11829,333 @@ return (
     </div>
 
     {/* ====================================================================
-        MOBILE/TABLET LAYOUT (<1100px) - Tabbed Interface
+        TABLET LAYOUT (950px - 1549px) - 2 Column with 2 Tabs
         ==================================================================== */}
-    <div className="min-[1100px]:hidden space-y-4">
+    <div className="hidden min-[950px]:block min-[1550px]:hidden space-y-4">
+      {/* Save Bar */}
+      {hasUnsavedChanges && (
+        <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between">
+          <span className="text-sm text-[#ffd700]">You have unsaved changes</span>
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            className="px-4 py-2 rounded-lg bg-[#ffd700] text-black text-sm font-bold disabled:opacity-50"
+          >
+            {isSaving ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      )}
+
+      {/* Tablet Pill Tabs */}
+      <div className="flex justify-center">
+        <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
+          <button
+            onClick={() => setTabletTab('content')}
+            className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'content' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+          >
+            Profile & Social
+          </button>
+          <button
+            onClick={() => setTabletTab('style')}
+            className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'style' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+          >
+            Style & Actions
+          </button>
+        </div>
+      </div>
+
+      {/* Tablet Tab Content - 2 Columns */}
+      {tabletTab === 'content' && (
+        <div className="grid grid-cols-2 gap-4">
+          {/* Column 1: Profile */}
+          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+            <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+              <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span className="text-sm font-medium text-green-400" style={{ textShadow: '0 0 8px rgba(74, 222, 128, 0.5)' }}>Profile</span>
+            </div>
+            <div className="p-4 space-y-4">
+              {/* Photo + B&W/Color Toggle */}
+              <div className="flex items-start gap-4">
+                <div
+                  className="w-20 h-20 rounded-full bg-black/40 border-2 flex items-center justify-center overflow-hidden flex-shrink-0 relative"
+                  style={{ borderColor: getVisibleSocialIconColor(linksSettings.accentColor) }}
+                >
+                  {getProfileImageUrl() && (
+                    <div
+                      className="absolute inset-0 rounded-full"
+                      style={{
+                        backgroundImage: `url(${getProfileImageUrl()})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        filter: linksSettings.showColorPhoto ? 'none' : 'grayscale(100%)',
+                      }}
+                    />
+                  )}
+                  {!getProfileImageUrl() && (
+                    <svg className="w-10 h-10 text-white/30" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2">
+                  <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleImageUpload} className="hidden" id="tablet-photo-upload" />
+                  <label htmlFor="tablet-photo-upload" className="px-3 py-1.5 rounded text-xs bg-white/10 border border-white/20 text-white/80 hover:bg-white/20 cursor-pointer text-center">
+                    Upload Photo
+                  </label>
+                  <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
+                    <div
+                      className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
+                      style={{ transform: linksSettings.showColorPhoto ? 'translateX(100%)' : 'translateX(0)' }}
+                    />
+                    <button
+                      onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
+                      className="flex-1 px-3 py-1 text-[10px] font-bold rounded-full relative z-10 transition-colors duration-200"
+                      style={{ color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)' }}
+                    >B&W</button>
+                    <button
+                      onClick={() => { if (hasColorImage) { setLinksSettings(prev => ({ ...prev, showColorPhoto: true })); setHasUnsavedChanges(true); } }}
+                      disabled={!hasColorImage}
+                      className="flex-1 px-3 py-1 text-[10px] font-bold rounded-full relative z-10 transition-colors duration-200"
+                      style={{ color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)', opacity: !hasColorImage ? 0.5 : 1 }}
+                    >Color</button>
+                  </div>
+                </div>
+              </div>
+              {/* Name Fields */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">First Name</label>
+                  <input type="text" value={formData.display_first_name} onChange={(e) => handleInputChange('display_first_name', e.target.value)} placeholder="First" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Last Name</label>
+                  <input type="text" value={formData.display_last_name} onChange={(e) => handleInputChange('display_last_name', e.target.value)} placeholder="Last" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+              </div>
+              {/* Bio */}
+              <div>
+                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Bio ({linksSettings.bio.length}/80)</label>
+                <textarea
+                  value={linksSettings.bio}
+                  onChange={(e) => { if (e.target.value.length <= 80) { setLinksSettings(prev => ({ ...prev, bio: e.target.value })); setHasUnsavedChanges(true); } }}
+                  placeholder="Short bio..."
+                  rows={2}
+                  className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none resize-none"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: Contact + Social Links */}
+          <div className="space-y-4">
+            {/* Contact Card */}
+            <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+              <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+                <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="M22 7l-10 5L2 7" />
+                </svg>
+                <span className="text-sm font-medium text-cyan-400" style={{ textShadow: '0 0 8px rgba(34, 211, 238, 0.5)' }}>Contact</span>
+              </div>
+              <div className="p-4 space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Email</label>
+                    <input type="email" value={formData.email} onChange={(e) => handleInputChange('email', e.target.value)} placeholder="you@email.com" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Phone</label>
+                    <input type="tel" value={formData.phone} onChange={(e) => handleInputChange('phone', e.target.value)} placeholder="(555) 123-4567" className="w-full px-3 py-2 rounded-lg bg-black/40 border border-white/10 text-white text-sm focus:border-[#ffd700]/50 focus:outline-none" />
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={formData.show_call_button} onChange={(e) => handleInputChange('show_call_button', e.target.checked)} className="w-4 h-4 rounded" />
+                    <span className="text-xs text-white/70">Show Call</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={formData.show_text_button} onChange={(e) => handleInputChange('show_text_button', e.target.checked)} className="w-4 h-4 rounded" />
+                    <span className="text-xs text-white/70">Show Text</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Social Links Card */}
+            <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+              <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+                <svg className="w-4 h-4 text-pink-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+                </svg>
+                <span className="text-sm font-medium text-pink-400" style={{ textShadow: '0 0 8px rgba(244, 114, 182, 0.5)' }}>Social Links</span>
+              </div>
+              <div className="p-4 space-y-2 max-h-[200px] overflow-y-auto">
+                {SOCIAL_PLATFORMS.map(platform => (
+                  <div key={platform.id} className="flex items-center gap-2">
+                    <div className="w-6 h-6 flex items-center justify-center text-white/60">
+                      <platform.icon className="w-4 h-4" />
+                    </div>
+                    <input
+                      type="text"
+                      value={linksSettings.socialLinks[platform.id] || ''}
+                      onChange={(e) => {
+                        setLinksSettings(prev => ({
+                          ...prev,
+                          socialLinks: { ...prev.socialLinks, [platform.id]: e.target.value }
+                        }));
+                        setHasUnsavedChanges(true);
+                      }}
+                      placeholder={platform.placeholder}
+                      className="flex-1 px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tabletTab === 'style' && (
+        <div className="grid grid-cols-2 gap-4">
+          {/* Column 1: Style */}
+          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+            <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+              <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+              </svg>
+              <span className="text-sm font-medium text-purple-400" style={{ textShadow: '0 0 8px rgba(192, 132, 252, 0.5)' }}>Style</span>
+            </div>
+            <div className="p-4 space-y-4">
+              {/* Accent Color */}
+              <div>
+                <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Accent Color</label>
+                <HexColorPicker
+                  color={linksSettings.accentColor}
+                  onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
+                  style={{ width: '100%', height: '100px' }}
+                />
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="w-8 h-8 rounded border border-white/20" style={{ backgroundColor: linksSettings.accentColor }} />
+                  <HexColorInput
+                    color={linksSettings.accentColor}
+                    onChange={(color) => { setLinksSettings(prev => ({ ...prev, accentColor: color })); setHasUnsavedChanges(true); }}
+                    prefixed
+                    className="flex-1 px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white font-mono text-xs uppercase focus:outline-none"
+                  />
+                </div>
+              </div>
+              {/* Weight/Font Toggles */}
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] text-white/50 mb-1">Weight</label>
+                  <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Normal</button>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 mb-1">Font</label>
+                  <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
+                    <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Column 2: Page Actions */}
+          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+            <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
+              <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                <polyline points="13 2 13 9 20 9" />
+              </svg>
+              <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Page Actions</span>
+            </div>
+            <div className="p-4 space-y-3">
+              {/* Activate/Deactivate */}
+              <button
+                onClick={pageData?.activated ? handleDeactivatePage : handleActivatePage}
+                disabled={isSaving}
+                className={`w-full py-2.5 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
+                  pageData?.activated
+                    ? 'bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500/30'
+                    : 'bg-[#ffd700] text-black hover:bg-[#ffe55c]'
+                }`}
+              >
+                {pageData?.activated ? (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0" /><line x1="12" y1="2" x2="12" y2="12" /></svg>
+                    Deactivate Page
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+                    Activate Page
+                  </>
+                )}
+              </button>
+
+              {/* Preview Page */}
+              <button
+                onClick={() => window.open(`/${pageData?.slug || user?.username || ''}`, '_blank')}
+                disabled={!pageData?.activated}
+                className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
+                Preview Page
+              </button>
+
+              {/* Copy Link */}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`${window.location.origin}/${pageData?.slug || user?.username || ''}`);
+                  setCopiedLink('linktree');
+                  setTimeout(() => setCopiedLink(null), 2000);
+                }}
+                disabled={!pageData?.activated}
+                className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+              >
+                {copiedLink === 'linktree' ? (
+                  <>
+                    <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
+                    Copied!
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                    Copy Link
+                  </>
+                )}
+              </button>
+
+              {/* QR Code */}
+              <button
+                onClick={downloadQRCode}
+                disabled={!pageData?.activated}
+                className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="14" width="3" height="3" /><rect x="14" y="18" width="3" height="3" /><rect x="18" y="18" width="3" height="3" /></svg>
+                QR Code
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom spacer for mobile nav */}
+      <div className="h-20 min-[950px]:h-4" />
+    </div>
+
+    {/* ====================================================================
+        MOBILE LAYOUT (<950px) - Tabbed Interface
+        ==================================================================== */}
+    <div className="min-[950px]:hidden space-y-4">
       {/* Save Bar - Fixed at top */}
       {hasUnsavedChanges && (
         <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between">
