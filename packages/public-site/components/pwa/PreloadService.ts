@@ -19,11 +19,10 @@ export interface PreloadResult {
  */
 const CRITICAL_IMAGES = [
   '/images/saa-logo-gold.png',
-  '/icons/icon-192x192.png',
+  '/icons/icon-192x192.png', // SAA Support (transparent, used as favicon too)
   // Cloudflare Images - preload to prevent slow loading in Support & Team Calls sections
-  'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public', // SAA Support + Download App
   'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public', // eXp Support
-  'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wolf-pack-logo-icon/public', // Wolf Pack Support
+  'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wolf-pack-logo-icon/public', // Wolf Pack Support + Elite Courses
 ];
 
 /**

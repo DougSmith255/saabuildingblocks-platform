@@ -142,14 +142,27 @@ const WomanTechnologistIcon = ({ className = '', style = {} }: { className?: str
   </svg>
 );
 
-// Crown icon for Leaders call (based on Noto)
+// Crown icon for Leaders call (NotoCrown - colorful emoji style)
 const CrownColorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 36h40v4H4z" fill="currentColor"/>
-    <path d="M4 36l6-22l8 10l6-16l6 16l8-10l6 22H4z" fill="currentColor"/>
-    <circle cx="10" cy="12" r="3" fill="currentColor"/>
-    <circle cx="24" cy="6" r="3" fill="currentColor"/>
-    <circle cx="38" cy="12" r="3" fill="currentColor"/>
+  <svg className={className} style={style} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+    <path fill="#f19534" d="M94.52 21.81c2.44-1.18 4.13-3.67 4.13-6.56a7.28 7.28 0 0 0-14.56 0c0 2.93 1.73 5.44 4.22 6.6c-2.88 15.6-7.3 27.21-23.75 29.69c0 0 4.43 22.15 25.15 22.15s22.82-21.93 22.82-21.93c-16.81.86-18.23-20.27-18.01-29.95"></path>
+    <path fill="#f19534" d="M34.74 21.81c-2.44-1.18-4.13-3.67-4.13-6.56a7.28 7.28 0 0 1 14.56 0c0 2.93-1.73 5.44-4.22 6.6c2.88 15.6 7.3 27.21 23.75 29.69c0 0-4.43 22.15-25.15 22.15S16.74 51.77 16.74 51.77c16.8.85 18.22-20.28 18-29.96"></path>
+    <path fill="#ffca28" d="M89.43 73.69c.09 0 .18.01.27.01c5.71 0 10-1.67 13.22-4.08z"></path>
+    <path fill="#ffca28" d="M119.24 16.86c-3.33-.45-6.51 2.72-7.09 7.06c-.36 2.71.37 5.24 1.78 6.87l-2.4 9.95s-3.67 23.51-22.21 28.15C74.5 72.6 69.13 45.47 67.83 37.09c2.82-1.4 4.77-4.3 4.77-7.67c0-4.73-3.83-8.56-8.56-8.56s-8.56 3.83-8.56 8.56c0 3.39 1.98 6.32 4.85 7.7c-1.03 8.27-5.57 34.5-21.57 31.76c-16.24-2.79-23.33-30.14-24.97-37.58c1.95-1.6 3.04-4.42 2.64-7.45c-.58-4.35-4.02-7.47-7.68-6.98s-6.15 4.41-5.57 8.75c.42 3.16 2.36 5.67 4.79 6.62l12.72 79.03s11.1 8.77 43.35 8.77s43.35-8.77 43.35-8.77l12.75-79.24c2.06-1.08 3.68-3.51 4.08-6.49c.59-4.35-1.64-8.23-4.98-8.68"></path>
+    <ellipse cx={64.44} cy={88.3} fill="#26a69a" rx={9.74} ry={11.61}></ellipse>
+    <path fill="#69f0ae" d="M64.44 79.56c.38.42.72 1.19 0 2.69s-4.6 3.53-5.31 3.94c-.71.42-1.18.23-1.4.06c-1.05-.84-.65-2.74.03-3.9c1.46-2.51 4.55-5.1 6.68-2.79"></path>
+    <path fill="#00796b" d="M63.72 92.63c-1.1.53-4.71 2.14-3.52 4.05c.7 1.13 2.15 1.61 3.48 1.67s2.64-.36 3.82-.97c5.6-2.9 6.05-10.52 4.96-11.1c-1.12-.6-1.88.95-2.46 1.61a20.3 20.3 0 0 1-6.28 4.74"></path>
+    <path fill="#26a69a" d="M118.09 78.8c1.56-8.63-4.24-10.79-4.24-10.79s-3.74-.68-5.5 9.03c-1.76 9.7 1.98 10.38 1.98 10.38s6.19.01 7.76-8.62"></path>
+    <path fill="#69f0ae" d="M115.51 70.96c1.36 1.82-.25 4.51-2.86 6.3c-.77.53-1.79.33-1.94-.11c-.42-1.26-.24-2.69.32-3.9c1.66-3.63 3.79-3.21 4.48-2.29"></path>
+    <path fill="#26a69a" d="M9.76 79.06C8.19 70.44 14 68.27 14 68.27s3.74-.68 5.5 9.03c1.76 9.7-1.98 10.38-1.98 10.38s-6.2.01-7.76-8.62"></path>
+    <path fill="#69f0ae" d="M15.78 71.2c1.34 1 .79 2.31-.22 3.22c-1.15 1.05-2.03 2.2-3.01 3.39c-.15.18-.32.38-.56.43c-.46.1-.83-.37-.98-.82c-.43-1.26-.35-2.74.29-3.9c1.82-3.31 3.96-2.71 4.48-2.32"></path>
+    <path fill="#f44336" d="M99.99 87.16c-.69 3.93-3.84 6.66-7.05 6.1s-3.65-3.91-2.96-7.84s2.24-6.94 5.44-6.38c3.21.56 5.26 4.2 4.57 8.12m-69.56 0c.69 3.93 3.84 6.66 7.05 6.1s3.65-3.91 2.96-7.84s-2.24-6.94-5.44-6.38s-5.25 4.2-4.57 8.12"></path>
+    <path fill="#ffa8a4" d="M35.08 84.54c-.73.82-2.51 2.47-3.14 1.21c-.86-1.72.33-4.32 1.69-5.18s2.47-.18 2.66.59c.23.98-.56 2.64-1.21 3.38m56.9 2.51c-.99-.15-1.1-3.56 1.56-6.24c1.27-1.28 3.09.24 2.63 2.29c-.44 1.95-2.38 4.23-4.19 3.95"></path>
+    <path fill="#ffca28" d="M109.15 98.21c-5.99 3-19.73 10.99-45.1 10.99s-39.11-7.99-45.1-10.99c0 0-2.15 1.15-2.15 2.35v9.21c0 1.23.65 2.36 1.71 2.99c4.68 2.76 18.94 9.28 45.55 9.28s40.87-6.52 45.55-9.28a3.48 3.48 0 0 0 1.71-2.99v-9.21c-.02-1.2-2.17-2.35-2.17-2.35"></path>
+    <path fill="#fff59d" d="M39.6 110.84c2.8.55 3.65.79 3.46 2.35c-.39 3.07-6.76 2.34-10.53 1.35c-7.79-2.05-9.37-4.21-9.37-6.14c0-1.77 1.36-1.98 3.46-1.24c2.51.89 6.39 2.39 12.98 3.68"></path>
+    <path fill="none" stroke="#f19534" strokeLinecap="round" strokeMiterlimit={10} strokeWidth={4} d="M109.15 100.23s-16.57 9.38-45.1 9.38s-45.1-9.38-45.1-9.38"></path>
+    <path fill="#ffca28" d="M26.97 49.57c5.32-3.8 8.18-10.61 8.43-21.45c.02-.98.3-1.27.83-1.33c.85-.09.99.68.98 1.23c-.24 11.7-1.73 19.01-7.63 23.13c-.29.2-2.36 1.46-3.24.59c-1.05-1.02.29-1.93.63-2.17m4.87-34.03c-.17-1.81.25-5.07 5-6.55c1.39-.43 2.25.25 2.41.78c.4 1.32-.76 1.84-1.29 2.01c-3.65 1.18-3.83 3-4.58 4.16s-1.48.15-1.54-.4m46.38 31.63c4.81-4.27 8-9.04 10.1-19.9c.19-.96.47-1.22.99-1.2c.85.02.89.81.8 1.35c-1.78 11.58-3.47 14.88-9.4 21.45c-.67.74-2.3 1.41-3.22.64c-.83-.69.13-1.8.73-2.34m7.08-31.54c-.17-1.81.25-5.07 5-6.55c1.39-.43 2.25.25 2.41.78c.4 1.32-.76 1.84-1.29 2.01c-3.65 1.18-3.83 3-4.58 4.16c-.74 1.16-1.48.15-1.54-.4"></path>
+    <path fill="#fff59d" d="M31.59 71.62C19.97 66.35 16.55 52.6 14.73 46.63c-.24-.79-.12-1.54.67-1.78s1.26.27 1.51 1.06c1.32 4.33 6.45 18.79 17.04 22.9c.77.3 1.97 1.03 1.32 2.28c-.43.81-1.81 1.38-3.68.53M12.68 24.63c-.56-1.16-.79-2.26-3.84-3.53c-.77-.32-1.28-1.03-1.07-1.83s1.01-1.4 2.17-1.2c3.77.65 4.59 4.48 4.75 5.81c.15 1.28-1.44 1.91-2.01.75m84.19 46.99c11.62-5.27 15.04-19.02 16.86-24.99c.24-.79.12-1.54-.67-1.78s-1.26.27-1.51 1.06c-1.32 4.33-6.45 18.79-17.04 22.9c-.77.3-1.97 1.03-1.32 2.28c.43.81 1.81 1.38 3.68.53m18.91-46.99c.56-1.16.79-2.26 3.84-3.53c.77-.32 1.28-1.03 1.07-1.83s-1.01-1.4-2.17-1.2c-3.77.65-4.59 4.48-4.75 5.81c-.15 1.28 1.45 1.91 2.01.75m-56.4 4.92c.61-1.25 1.68-2.96 5.17-3.68c1.34-.28 1.73-.86 1.61-1.74c-.24-1.83-2.52-1.7-3.75-1.41c-4.1.96-5.01 4.6-5.18 6.04c-.17 1.37 1.55 2.04 2.15.79"></path>
   </svg>
 );
 
@@ -5665,8 +5678,8 @@ function SupportSection({ userState }: SupportSectionProps) {
             {/* Header */}
             <div className="p-5 border-b border-[#a855f7]/20" style={{ background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, transparent 50%)' }}>
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-3 rounded-xl" style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
-                  <LocationIndicatorIcon className="w-7 h-7" style={{ color: '#a855f7' }} />
+                <div className="p-2 rounded-xl" style={{ background: 'rgba(168, 85, 247, 0.15)', border: '1px solid rgba(168, 85, 247, 0.3)' }}>
+                  <LocationIndicatorIcon className="w-10 h-10" style={{ color: '#a855f7' }} />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-[#a855f7]">{brokerInfo.name} eXp Broker</h3>
@@ -5723,7 +5736,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#ffd700]/20" style={{ background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
-                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public" alt="SAA" className="w-7 h-7 object-contain" />
+                <img src="/icons/icon-192x192.png" alt="SAA" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
@@ -6569,8 +6582,10 @@ function CoursesSection() {
       title: 'Wolf Pack Skool',
       description: 'Access the Wolf Pack community and resources',
       url: 'https://www.skool.com/wolf-pack-6238',
-      color: '#a855f7', // Purple
+      color: '#22c55e', // Green to match Wolf Pack logo container
       isCustomIcon: true,
+      customBg: 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(12,12,12,0.98) 100%)', // Green tint
+      customBorder: 'rgba(34, 197, 94, 0.2)',
     },
     {
       icon: GraduationCapColorIcon,
@@ -6603,6 +6618,8 @@ function CoursesSection() {
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
       color: '#ec4899', // Pink
       isCustomIcon: true,
+      customBg: 'linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(12,12,12,0.98) 100%)', // Light purple tint
+      customBorder: 'rgba(168, 85, 247, 0.2)',
     },
   ];
 
@@ -6622,8 +6639,8 @@ function CoursesSection() {
               <div
                 className="h-full p-4 sm:p-5 rounded-xl hover:scale-[1.02] hover:border-white/[0.12] transition-all duration-300 cursor-pointer"
                 style={{
-                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-                  border: '1px solid rgba(255,255,255,0.06)',
+                  background: (course as any).customBg || 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: `1px solid ${(course as any).customBorder || 'rgba(255,255,255,0.06)'}`,
                   boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
                 }}
               >
