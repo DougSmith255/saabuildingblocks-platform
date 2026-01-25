@@ -8435,8 +8435,11 @@ function AgentPagesSection({
 
   // FIX-007/024: Calculate button positions for external controls
   // Uses useLayoutEffect + ResizeObserver to ensure DOM is ready
+  // IMPORTANT: Skip updates during animation so controls stay still while buttons swap
   useLayoutEffect(() => {
     const updateButtonPositions = () => {
+      // Skip position updates during button swap animation - controls stay still
+      if (animatingSwap) return;
       if (!phoneInnerRef.current) return;
 
       const phoneInner = phoneInnerRef.current;
@@ -8516,7 +8519,7 @@ function AgentPagesSection({
       clearTimeout(timeoutId4);
       resizeObserver?.disconnect();
     };
-  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink]);
+  }, [linksSettings.linkOrder, customLinks, editingLinkId, addingNewLink, animatingSwap]);
 
   // Auto-scroll phone inner to bottom when adding content
   useEffect(() => {
