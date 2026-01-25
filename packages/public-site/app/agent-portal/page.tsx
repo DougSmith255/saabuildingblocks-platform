@@ -2309,34 +2309,22 @@ function AgentPortal() {
 
             {/* Get Support */}
             {activeSection === 'support' && (
-              <>
-                <SupportSection userState={user?.state} />
-                <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="teal" ariaLabel="Support Help" />
-              </>
+              <SupportSection userState={user?.state} />
             )}
 
             {/* Team Calls */}
             {activeSection === 'calls' && (
-              <>
-                <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />
-                <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="gold" ariaLabel="Team Calls Help" />
-              </>
+              <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />
             )}
 
             {/* Templates */}
             {activeSection === 'templates' && (
-              <>
-                <TemplatesSection />
-                <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" />
-              </>
+              <TemplatesSection />
             )}
 
             {/* Elite Courses */}
             {activeSection === 'courses' && (
-              <>
-                <CoursesSection />
-                <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" />
-              </>
+              <CoursesSection />
             )}
             {/* Production / Landing Pages */}
             {activeSection === 'production' && (
@@ -2345,10 +2333,7 @@ function AgentPortal() {
 
             {/* New Agents */}
             {activeSection === 'new-agents' && (
-              <>
-                <NewAgentsSection />
-                <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" />
-              </>
+              <NewAgentsSection />
             )}
 
             {/* Download App */}
@@ -2657,13 +2642,9 @@ function AgentPortal() {
                 triggerConfetti={triggerConfetti}
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
+                showLinkPageHelpModal={showLinkPageHelpModal}
               />
             </div>
-            )}
-
-            {/* Agent Attraction floating help button */}
-            {activeSection === 'agent-page' && (
-              <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" />
             )}
 
             {/* Linktree Section - kept mounted to avoid re-loading */}
@@ -2700,12 +2681,39 @@ function AgentPortal() {
                 triggerConfetti={triggerConfetti}
                 setShowLinkPageIntroModal={setShowLinkPageIntroModal}
                 setShowLinkPageHelpModal={setShowLinkPageHelpModal}
+                showLinkPageHelpModal={showLinkPageHelpModal}
               />
             </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* ========== Floating Help Buttons - Rendered at root level for proper fixed positioning ========== */}
+      {/* Support Help Button */}
+      {activeSection === 'support' && (
+        <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="teal" ariaLabel="Support Help" />
+      )}
+      {/* Team Calls Help Button */}
+      {activeSection === 'calls' && (
+        <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="gold" ariaLabel="Team Calls Help" />
+      )}
+      {/* Templates Help Button */}
+      {activeSection === 'templates' && (
+        <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" />
+      )}
+      {/* Elite Courses Help Button */}
+      {activeSection === 'courses' && (
+        <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" />
+      )}
+      {/* New Agents Help Button */}
+      {activeSection === 'new-agents' && (
+        <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" />
+      )}
+      {/* Agent Attraction Help Button */}
+      {activeSection === 'agent-page' && (
+        <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" />
+      )}
 
       {/* Edit Profile Modal */}
       {showEditProfile && (
@@ -4460,10 +4468,10 @@ function DashboardView({
             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
 
             <div className="relative flex items-center gap-4 sm:gap-6">
-              {/* Rocket Icon with glow */}
-              <div className="relative p-4 sm:p-5 rounded-xl bg-[#ffd700]/15 border border-[#ffd700]/40 group-hover:border-[#ffd700]/60 group-hover:bg-[#ffd700]/20 transition-all duration-300">
+              {/* Rocket Icon with glow - square background */}
+              <div className="relative p-4 sm:p-5 rounded-md bg-[#ffd700]/15 border border-[#ffd700]/40 group-hover:border-[#ffd700]/60 group-hover:bg-[#ffd700]/20 transition-all duration-300 flex items-center justify-center aspect-square">
                 <Icon3D color="#ffd700">
-                  <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] group-hover:scale-110 transition-transform duration-300" />
+                  <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] transition-transform duration-300" />
                 </Icon3D>
               </div>
 
@@ -4545,10 +4553,10 @@ function DashboardView({
             <div className="absolute inset-0 bg-gradient-to-r from-[#ffd700]/0 via-[#ffd700]/10 to-[#ffd700]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div className="relative flex items-center gap-4 sm:gap-6">
-              {/* Icon container with gold glow */}
-              <div className="relative p-4 sm:p-5 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 group-hover:bg-[#ffd700]/15 transition-all duration-300">
+              {/* Icon container with gold glow - square background */}
+              <div className="relative p-4 sm:p-5 rounded-md bg-[#ffd700]/10 border border-[#ffd700]/30 group-hover:border-[#ffd700]/50 group-hover:bg-[#ffd700]/15 transition-all duration-300 flex items-center justify-center aspect-square">
                 <Icon3D color="#ffd700">
-                  <heroCard.icon className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] group-hover:scale-110 transition-transform duration-300" />
+                  <heroCard.icon className="w-8 h-8 sm:w-10 sm:h-10 text-[#ffd700] transition-transform duration-300" />
                 </Icon3D>
               </div>
 
@@ -4617,16 +4625,16 @@ function DashboardView({
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none" />
 
                 <div className="relative flex flex-col items-center text-center space-y-3">
-                  {/* Icon container with accent color glow */}
+                  {/* Icon container with accent color glow - square background */}
                   <div
-                    className="relative p-4 rounded-xl transition-all duration-300"
+                    className="relative p-4 rounded-md transition-all duration-300 flex items-center justify-center aspect-square"
                     style={{
                       backgroundColor: `${isComingSoon ? '#666' : accent}15`,
                       border: `1px solid ${isComingSoon ? '#666' : accent}30`,
                     }}
                   >
                     <Icon3D color={isComingSoon ? '#666' : accent}>
-                      <IconComponent className={`w-8 h-8 sm:w-10 sm:h-10 ${isComingSoon ? '' : 'group-hover:scale-110'} transition-transform duration-300`} />
+                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 transition-transform duration-300" />
                     </Icon3D>
                   </div>
 
@@ -4694,10 +4702,10 @@ function DashboardView({
                 }}
               >
                 <div className="flex flex-col items-center text-center space-y-2.5">
-                  {/* Centered icon with subtle background */}
-                  <div className="p-2.5 rounded-lg bg-[#ffd700]/5 group-hover:bg-[#ffd700]/10 transition-colors duration-300">
+                  {/* Centered icon with subtle background - square */}
+                  <div className="p-2.5 rounded-md bg-[#ffd700]/5 group-hover:bg-[#ffd700]/10 transition-colors duration-300 flex items-center justify-center aspect-square">
                     <Icon3D color={accent}>
-                      <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform duration-300" />
+                      <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300" />
                     </Icon3D>
                   </div>
 
@@ -6511,7 +6519,7 @@ function CoursesSection() {
               className="block group"
             >
               <div
-                className="h-full p-4 sm:p-5 rounded-xl hover:border-white/[0.12] transition-all cursor-pointer"
+                className="h-full p-4 sm:p-5 rounded-xl hover:scale-[1.02] hover:border-white/[0.12] transition-all duration-300 cursor-pointer"
                 style={{
                   background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
                   border: '1px solid rgba(255,255,255,0.06)',
@@ -7801,7 +7809,7 @@ function NewAgentsSection() {
           <button
             key={category.id}
             onClick={() => handleCategoryClick(category)}
-            className="group text-left p-5 rounded-xl border hover:border-white/[0.12] transition-all duration-200"
+            className="group text-left p-5 rounded-xl border hover:scale-[1.02] hover:border-white/[0.12] transition-all duration-300"
             style={{
               WebkitTapHighlightColor: 'transparent',
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
@@ -8133,6 +8141,7 @@ interface AgentPagesSectionProps {
   // Link page intro/help modal props
   setShowLinkPageIntroModal: React.Dispatch<React.SetStateAction<boolean>>;
   setShowLinkPageHelpModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showLinkPageHelpModal?: boolean; // To hide help button when modal is open
   // Whether this section is currently active/visible
   isActive?: boolean;
 }
@@ -8168,6 +8177,7 @@ function AgentPagesSection({
   triggerConfetti,
   setShowLinkPageIntroModal,
   setShowLinkPageHelpModal,
+  showLinkPageHelpModal = false,
   isActive = false,
 }: AgentPagesSectionProps) {
   const [pageData, setPageData] = useState<AgentPageData | null>(preloadedPageData?.page || null);
@@ -9741,24 +9751,64 @@ return (
             />
           </div>
 
-          {/* Call/Text Toggles */}
-          <div className="flex flex-col gap-2">
-            <label className="flex items-center gap-2 cursor-pointer">
+          {/* Call/Text Toggles - Premium glass styled checkboxes matching onboarding */}
+          <div className="flex flex-col gap-3">
+            <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.show_call_button}
                 onChange={(e) => handleInputChange('show_call_button', e.target.checked)}
-                className="w-4 h-4 rounded"
+                className="sr-only peer"
               />
+              <div
+                className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
+                style={{
+                  background: formData.show_call_button
+                    ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                    : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: formData.show_call_button
+                    ? '1px solid rgba(34, 197, 94, 0.5)'
+                    : '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: formData.show_call_button
+                    ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                    : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                }}
+              >
+                {formData.show_call_button && (
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
               <span className="text-sm text-white/70">Show Call Button</span>
             </label>
-            <label className="flex items-center gap-2 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.show_text_button}
                 onChange={(e) => handleInputChange('show_text_button', e.target.checked)}
-                className="w-4 h-4 rounded"
+                className="sr-only peer"
               />
+              <div
+                className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
+                style={{
+                  background: formData.show_text_button
+                    ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                    : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: formData.show_text_button
+                    ? '1px solid rgba(34, 197, 94, 0.5)'
+                    : '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: formData.show_text_button
+                    ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                    : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                }}
+              >
+                {formData.show_text_button && (
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </div>
               <span className="text-sm text-white/70">Show Text Button</span>
             </label>
           </div>
@@ -11453,6 +11503,8 @@ return (
         }
       }
     `}</style>
+    {/* Hide button when help modal is open to prevent visual artifacts from backdrop blur */}
+    {!showLinkPageHelpModal && (
     <div
       className="fixed bottom-6 right-6 z-[100] pixel-help-button"
       style={{ isolation: 'isolate' }}
@@ -11464,6 +11516,7 @@ return (
       <span></span>
       <span></span>
     </div>
+    )}
   </div>
 );
 }

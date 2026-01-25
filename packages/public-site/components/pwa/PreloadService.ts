@@ -20,6 +20,7 @@ export interface PreloadResult {
 const CRITICAL_IMAGES = [
   '/images/saa-logo-gold.png',
   '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png', // Download App section icon - preload to prevent slow loading
 ];
 
 /**
