@@ -12527,11 +12527,10 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           /* Keep original size ratio */
           width: 0.25rem !important;
           height: 0.25rem !important;
-          /* Center in 40px button: button center is 20px */
-          /* Question mark spans ~1.75em wide (~17.5px at 10px font) and ~2.25em tall (~22.5px) */
-          /* Position to center: 20 - 8.75 = 11.25px for left, 20 - 11.25 = 8.75px for top */
-          top: 6px !important;
-          left: 8px !important;
+          /* Attempt 6: Was too high and too far left, adjusting down and right */
+          /* Previous: top: 6px, left: 8px */
+          top: 8px !important;
+          left: 10px !important;
           /* No transform needed - font-size handles the scaling */
           transform: none !important;
         }
