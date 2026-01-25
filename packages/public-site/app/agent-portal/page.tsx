@@ -2067,23 +2067,76 @@ function AgentPortal() {
               </H1>
             </div>
 
-            {/* Mobile: Section Title / Desktop: Logout Button */}
+            {/* Mobile: Section Title + Help Button / Desktop: Logout Button */}
             <div className="flex items-center gap-3">
-              {/* Mobile: Current section title */}
-              <span className="md:hidden text-[#ffd700] font-semibold text-sm">
-                {activeSection === 'onboarding' && 'Onboarding'}
-                {activeSection === 'dashboard' && 'Home'}
-                {activeSection === 'support' && 'Get Support'}
-                {activeSection === 'agent-page' && 'Agent Attraction'}
-                {activeSection === 'linktree' && 'Link Page'}
-                {activeSection === 'calls' && 'Team Calls'}
-                {activeSection === 'courses' && 'Courses'}
-                {activeSection === 'templates' && 'Templates'}
-                {activeSection === 'production' && 'Landing Pages'}
-                {activeSection === 'new-agents' && 'New Agents'}
-                {activeSection === 'download' && 'Download App'}
-                {activeSection === 'profile' && 'My Profile'}
-              </span>
+              {/* Mobile: Current section title with help button */}
+              <div className="md:hidden flex items-center gap-2">
+                <span className="text-[#ffd700] font-semibold text-sm">
+                  {activeSection === 'onboarding' && 'Onboarding'}
+                  {activeSection === 'dashboard' && 'Home'}
+                  {activeSection === 'support' && 'Get Support'}
+                  {activeSection === 'agent-page' && 'Agent Attraction'}
+                  {activeSection === 'linktree' && 'Link Page'}
+                  {activeSection === 'calls' && 'Team Calls'}
+                  {activeSection === 'courses' && 'Courses'}
+                  {activeSection === 'templates' && 'Templates'}
+                  {activeSection === 'production' && 'Landing Pages'}
+                  {activeSection === 'new-agents' && 'New Agents'}
+                  {activeSection === 'download' && 'Download App'}
+                  {activeSection === 'profile' && 'My Profile'}
+                </span>
+                {/* Mobile Help Button - shows for sections with help modals */}
+                {activeSection === 'support' && (
+                  <button
+                    onClick={() => setShowSupportHelpModal(true)}
+                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
+                    style={{ background: 'linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e)', color: '#1a1a1a' }}
+                    aria-label="Support Help"
+                  >?</button>
+                )}
+                {activeSection === 'calls' && (
+                  <button
+                    onClick={() => setShowTeamCallsHelpModal(true)}
+                    className="w-6 h-6 rounded-full bg-[#2dd4bf] text-[#134e4a] flex items-center justify-center text-xs font-bold"
+                    aria-label="Team Calls Help"
+                  >?</button>
+                )}
+                {activeSection === 'templates' && (
+                  <button
+                    onClick={() => setShowTemplatesHelpModal(true)}
+                    className="w-6 h-6 rounded-full bg-[#ffd700] text-[#292524] flex items-center justify-center text-xs font-bold"
+                    aria-label="Templates Help"
+                  >?</button>
+                )}
+                {activeSection === 'courses' && (
+                  <button
+                    onClick={() => setShowEliteCoursesHelpModal(true)}
+                    className="w-6 h-6 rounded-full bg-[#c084fc] text-[#1e1b4b] flex items-center justify-center text-xs font-bold"
+                    aria-label="Elite Courses Help"
+                  >?</button>
+                )}
+                {activeSection === 'new-agents' && (
+                  <button
+                    onClick={() => setShowNewAgentsHelpModal(true)}
+                    className="w-6 h-6 rounded-full bg-[#ffd700] text-[#292524] flex items-center justify-center text-xs font-bold"
+                    aria-label="New Agents Help"
+                  >?</button>
+                )}
+                {activeSection === 'agent-page' && (
+                  <button
+                    onClick={() => setShowAgentAttractionHelpModal(true)}
+                    className="w-6 h-6 rounded-full bg-[#c084fc] text-[#1e1b4b] flex items-center justify-center text-xs font-bold"
+                    aria-label="Agent Attraction Help"
+                  >?</button>
+                )}
+                {activeSection === 'linktree' && (
+                  <button
+                    onClick={() => setShowLinkPageHelpModal(true)}
+                    className="w-6 h-6 rounded-full bg-[#ffd700] text-[#292524] flex items-center justify-center text-xs font-bold"
+                    aria-label="Link Page Help"
+                  >?</button>
+                )}
+              </div>
               {/* Desktop: Logout Button - uses button text size clamp from master controller */}
               <button
                 onClick={handleLogout}
@@ -2771,31 +2824,33 @@ function AgentPortal() {
         </div>
       </div>
 
-      {/* ========== Floating Help Buttons - Rendered at root level for proper fixed positioning ========== */}
-      {/* Support Help Button */}
-      {activeSection === 'support' && (
-        <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" />
-      )}
-      {/* Team Calls Help Button */}
-      {activeSection === 'calls' && (
-        <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
-      )}
-      {/* Templates Help Button */}
-      {activeSection === 'templates' && (
-        <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" />
-      )}
-      {/* Elite Courses Help Button */}
-      {activeSection === 'courses' && (
-        <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" />
-      )}
-      {/* New Agents Help Button */}
-      {activeSection === 'new-agents' && (
-        <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" />
-      )}
-      {/* Agent Attraction Help Button */}
-      {activeSection === 'agent-page' && (
-        <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" />
-      )}
+      {/* ========== Floating Help Buttons - Desktop/Tablet only (hidden on mobile where header has help button) ========== */}
+      <div className="hidden min-[950px]:block">
+        {/* Support Help Button */}
+        {activeSection === 'support' && (
+          <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" />
+        )}
+        {/* Team Calls Help Button */}
+        {activeSection === 'calls' && (
+          <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
+        )}
+        {/* Templates Help Button */}
+        {activeSection === 'templates' && (
+          <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" />
+        )}
+        {/* Elite Courses Help Button */}
+        {activeSection === 'courses' && (
+          <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" />
+        )}
+        {/* New Agents Help Button */}
+        {activeSection === 'new-agents' && (
+          <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" />
+        )}
+        {/* Agent Attraction Help Button */}
+        {activeSection === 'agent-page' && (
+          <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" />
+        )}
+      </div>
 
       {/* Edit Profile Modal */}
       {showEditProfile && (
@@ -11911,15 +11966,6 @@ return (
         height: 4rem;
         cursor: pointer;
       }
-      /* Half size on mobile (below 768px) */
-      @media (max-width: 767px) {
-        .pixel-help-button {
-          width: 2rem;
-          height: 2rem;
-          transform: scale(0.5);
-          transform-origin: bottom right;
-        }
-      }
 
       .pixel-help-button > button {
         cursor: pointer;
@@ -12089,10 +12135,10 @@ return (
         }
       }
     `}</style>
-    {/* Hide button when help modal is open to prevent visual artifacts from backdrop blur */}
+    {/* Hide button when help modal is open OR on mobile (mobile uses header button instead) */}
     {!showLinkPageHelpModal && (
     <div
-      className="fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 pixel-help-button"
+      className="hidden min-[950px]:block fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 pixel-help-button"
       style={{ isolation: 'isolate' }}
       title="Need Help?"
     >
@@ -12228,18 +12274,6 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
           width: 4rem;
           height: 4rem;
           cursor: pointer;
-        }
-        /* Half size on mobile (below 768px) */
-        @media (max-width: 767px) {
-          .pixel-help-gold,
-          .pixel-help-purple,
-          .pixel-help-teal,
-          .pixel-help-gradient {
-            width: 2rem;
-            height: 2rem;
-            transform: scale(0.5);
-            transform-origin: bottom right;
-          }
         }
         .pixel-help-gold > button,
         .pixel-help-purple > button,
