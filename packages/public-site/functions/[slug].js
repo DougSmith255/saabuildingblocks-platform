@@ -2971,7 +2971,13 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .built-future-card-wrapper {
       flex-shrink: 0;
       width: 280px;
-      transition: transform 0.025s ease-out, filter 0.035s ease-out, opacity 0.035s ease-out;
+      transition: transform 0.5s ease-out, filter 0.5s ease-out, opacity 0.5s ease-out;
+      -webkit-transition: transform 0.5s ease-out, -webkit-filter 0.5s ease-out, opacity 0.5s ease-out;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      will-change: transform, filter, opacity;
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
     }
     @media (min-width: 640px) {
       .built-future-card-wrapper {
@@ -2988,7 +2994,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       justify-content: center;
       position: relative;
       overflow: hidden;
-      transition: background 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
+      transition: background 0.5s ease-out, border 0.5s ease-out, box-shadow 0.5s ease-out;
+      -webkit-transition: background 0.5s ease-out, border 0.5s ease-out, box-shadow 0.5s ease-out;
+      transform: translateZ(0);
+      will-change: background, border, box-shadow;
     }
     @media (min-width: 768px) {
       .built-future-card {
@@ -3022,7 +3031,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       overflow: hidden;
       position: relative;
       z-index: 10;
-      transition: background-color 0.2s ease-out, border 0.2s ease-out, box-shadow 0.2s ease-out;
+      transition: background-color 0.5s ease-out, border 0.5s ease-out, box-shadow 0.5s ease-out;
+      -webkit-transition: background-color 0.5s ease-out, border 0.5s ease-out, box-shadow 0.5s ease-out;
+      transform: translateZ(0);
+      will-change: background-color, border, box-shadow;
     }
     @media (min-width: 768px) {
       .built-future-card-image {
@@ -3046,7 +3058,10 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       text-align: center;
       position: relative;
       z-index: 10;
-      transition: color 0.2s ease-out;
+      transition: color 0.5s ease-out;
+      -webkit-transition: color 0.5s ease-out;
+      transform: translateZ(0);
+      will-change: color;
     }
     .built-future-card-title-light {
       color: #e5e4dd;

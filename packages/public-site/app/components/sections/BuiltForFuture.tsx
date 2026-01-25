@@ -379,9 +379,13 @@ export function BuiltForFuture() {
                       className={`flex-shrink-0 ${transitionClass}`}
                       style={{
                         width: `${CARD_WIDTH}px`,
-                        transform: `scale(${scale})`,
+                        transform: `scale(${scale}) translateZ(0)`,
                         filter: `blur(${blurAmount}px) grayscale(${grayscale}%) brightness(${brightness})`,
+                        WebkitFilter: `blur(${blurAmount}px) grayscale(${grayscale}%) brightness(${brightness})`,
                         opacity: cardOpacity,
+                        willChange: 'transform, filter, opacity',
+                        WebkitBackfaceVisibility: 'hidden',
+                        backfaceVisibility: 'hidden',
                       }}
                     >
                       {/* Card with layered background - transitions disabled during snap */}
@@ -412,6 +416,11 @@ export function BuiltForFuture() {
                             transition: isTransitioning
                               ? (isActive ? 'opacity 0.7s ease-out' : 'opacity 0.2s ease-out')
                               : 'none',
+                            WebkitTransition: isTransitioning
+                              ? (isActive ? 'opacity 0.7s ease-out' : 'opacity 0.2s ease-out')
+                              : 'none',
+                            transform: 'translateZ(0)',
+                            willChange: 'opacity',
                           }}
                         />
 
@@ -425,6 +434,9 @@ export function BuiltForFuture() {
                               ? `0 0 30px rgba(0,0,0,0.3), inset 0 0 20px rgba(0,0,0,0.2)`
                               : 'none',
                             transition: isTransitioning ? 'all 0.5s ease' : 'none',
+                            WebkitTransition: isTransitioning ? 'all 0.5s ease' : 'none',
+                            transform: 'translateZ(0)',
+                            willChange: 'background-color, border, box-shadow',
                           }}
                         >
                           <img
@@ -441,6 +453,9 @@ export function BuiltForFuture() {
                           style={{
                             color: isActive ? '#2a2a2a' : '#e5e4dd',
                             transition: isTransitioning ? 'color 0.5s ease' : 'none',
+                            WebkitTransition: isTransitioning ? 'color 0.5s ease' : 'none',
+                            transform: 'translateZ(0)',
+                            willChange: 'color',
                           }}
                         >
                           {point.text}

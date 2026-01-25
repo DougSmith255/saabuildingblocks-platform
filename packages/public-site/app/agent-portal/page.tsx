@@ -333,6 +333,88 @@ const shakeKeyframes = `
   user-select: none !important;
 }
 
+/* Safari modal fixes - force GPU compositing and proper repaints */
+/* This prevents content from disappearing after modal close on Safari */
+.agent-portal-root [class*="fixed"][class*="inset-0"] {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: opacity, transform;
+}
+
+/* Safari backdrop-blur fixes */
+.agent-portal-root [class*="backdrop-blur"] {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+/* Force repaint on modal content for Safari */
+.agent-portal-root [class*="z-[10020]"] > div {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: contents;
+}
+
+/* Mobile Header Pixel Help Button - smaller inline version */
+.mobile-pixel-help {
+  position: relative;
+  display: inline-flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.mobile-pixel-help button {
+  cursor: pointer;
+  display: block;
+  height: 100%;
+  width: 100%;
+  appearance: none;
+  border: 1.5px solid currentColor;
+  border-radius: 0.2rem;
+  background-color: currentColor;
+  outline: none;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: inherit;
+  position: relative;
+}
+.mobile-pixel-help::before {
+  content: '?';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.75rem;
+  font-weight: 800;
+  pointer-events: none;
+  z-index: 1;
+}
+.mobile-pixel-help.gold { color: #ffd700; }
+.mobile-pixel-help.gold button { background: #ffd700; border-color: #292524; }
+.mobile-pixel-help.gold::before { color: #292524; }
+.mobile-pixel-help.purple { color: #c084fc; }
+.mobile-pixel-help.purple button { background: #c084fc; border-color: #1e1b4b; }
+.mobile-pixel-help.purple::before { color: #1e1b4b; }
+.mobile-pixel-help.teal { color: #2dd4bf; }
+.mobile-pixel-help.teal button { background: #2dd4bf; border-color: #134e4a; }
+.mobile-pixel-help.teal::before { color: #134e4a; }
+.mobile-pixel-help.gradient button {
+  background: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e);
+  border-color: #1a1a1a;
+}
+.mobile-pixel-help.gradient::before { color: #1a1a1a; }
+/* 3D effect shadow */
+.mobile-pixel-help button {
+  box-shadow:
+    2px 2px 0 0 rgba(0,0,0,0.3),
+    inset 0 1px 0 0 rgba(255,255,255,0.3),
+    inset 0 -1px 0 0 rgba(0,0,0,0.15);
+}
+
 /* Bottom nav sliding indicator animation */
 @keyframes nav-indicator-slide {
   0% { transform: scaleX(0.8); opacity: 0.5; }
@@ -2085,56 +2167,41 @@ function AgentPortal() {
                   {activeSection === 'download' && 'Download App'}
                   {activeSection === 'profile' && 'My Profile'}
                 </span>
-                {/* Mobile Help Button - shows for sections with help modals */}
+                {/* Mobile Help Button - pixel style, shows for sections with help modals */}
                 {activeSection === 'support' && (
-                  <button
-                    onClick={() => setShowSupportHelpModal(true)}
-                    className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-                    style={{ background: 'linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e)', color: '#1a1a1a' }}
-                    aria-label="Support Help"
-                  >?</button>
+                  <div className="mobile-pixel-help gradient" onClick={() => setShowSupportHelpModal(true)} role="button" tabIndex={0} aria-label="Support Help">
+                    <button type="button" />
+                  </div>
                 )}
                 {activeSection === 'calls' && (
-                  <button
-                    onClick={() => setShowTeamCallsHelpModal(true)}
-                    className="w-6 h-6 rounded-full bg-[#2dd4bf] text-[#134e4a] flex items-center justify-center text-xs font-bold"
-                    aria-label="Team Calls Help"
-                  >?</button>
+                  <div className="mobile-pixel-help teal" onClick={() => setShowTeamCallsHelpModal(true)} role="button" tabIndex={0} aria-label="Team Calls Help">
+                    <button type="button" />
+                  </div>
                 )}
                 {activeSection === 'templates' && (
-                  <button
-                    onClick={() => setShowTemplatesHelpModal(true)}
-                    className="w-6 h-6 rounded-full bg-[#ffd700] text-[#292524] flex items-center justify-center text-xs font-bold"
-                    aria-label="Templates Help"
-                  >?</button>
+                  <div className="mobile-pixel-help gold" onClick={() => setShowTemplatesHelpModal(true)} role="button" tabIndex={0} aria-label="Templates Help">
+                    <button type="button" />
+                  </div>
                 )}
                 {activeSection === 'courses' && (
-                  <button
-                    onClick={() => setShowEliteCoursesHelpModal(true)}
-                    className="w-6 h-6 rounded-full bg-[#c084fc] text-[#1e1b4b] flex items-center justify-center text-xs font-bold"
-                    aria-label="Elite Courses Help"
-                  >?</button>
+                  <div className="mobile-pixel-help purple" onClick={() => setShowEliteCoursesHelpModal(true)} role="button" tabIndex={0} aria-label="Elite Courses Help">
+                    <button type="button" />
+                  </div>
                 )}
                 {activeSection === 'new-agents' && (
-                  <button
-                    onClick={() => setShowNewAgentsHelpModal(true)}
-                    className="w-6 h-6 rounded-full bg-[#ffd700] text-[#292524] flex items-center justify-center text-xs font-bold"
-                    aria-label="New Agents Help"
-                  >?</button>
+                  <div className="mobile-pixel-help gold" onClick={() => setShowNewAgentsHelpModal(true)} role="button" tabIndex={0} aria-label="New Agents Help">
+                    <button type="button" />
+                  </div>
                 )}
                 {activeSection === 'agent-page' && (
-                  <button
-                    onClick={() => setShowAgentAttractionHelpModal(true)}
-                    className="w-6 h-6 rounded-full bg-[#c084fc] text-[#1e1b4b] flex items-center justify-center text-xs font-bold"
-                    aria-label="Agent Attraction Help"
-                  >?</button>
+                  <div className="mobile-pixel-help purple" onClick={() => setShowAgentAttractionHelpModal(true)} role="button" tabIndex={0} aria-label="Agent Attraction Help">
+                    <button type="button" />
+                  </div>
                 )}
                 {activeSection === 'linktree' && (
-                  <button
-                    onClick={() => setShowLinkPageHelpModal(true)}
-                    className="w-6 h-6 rounded-full bg-[#ffd700] text-[#292524] flex items-center justify-center text-xs font-bold"
-                    aria-label="Link Page Help"
-                  >?</button>
+                  <div className="mobile-pixel-help gold" onClick={() => setShowLinkPageHelpModal(true)} role="button" tabIndex={0} aria-label="Link Page Help">
+                    <button type="button" />
+                  </div>
                 )}
               </div>
               {/* Desktop: Logout Button - uses button text size clamp from master controller */}
@@ -5851,6 +5918,21 @@ interface SupportSectionProps {
 function SupportSection({ userState }: SupportSectionProps) {
   const brokerInfo = userState ? STATE_BROKER_URLS[userState.toUpperCase()] : null;
 
+  // Platform detection for My eXp App links
+  const [isIOS, setIsIOS] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isIOSDevice = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroidDevice = /android/.test(userAgent);
+    const isMobileDevice = isIOSDevice || isAndroidDevice || /mobile/.test(userAgent);
+    setIsIOS(isIOSDevice);
+    setIsAndroid(isAndroidDevice);
+    setIsMobile(isMobileDevice);
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Support Cards - grid with auto-fit, min 300px, equal widths */}
@@ -6160,24 +6242,54 @@ function SupportSection({ userState }: SupportSectionProps) {
             </div>
           </div>
 
-          {/* CTA Button */}
-          <a
-            href="https://myexp.page.link/exp"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#3b82f6] text-[#1a1a1a] font-semibold hover:bg-[#5b9aff] transition-colors"
-            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
-          >
-            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            Download My eXp App
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-              <polyline points="15 3 21 3 21 9" />
-              <line x1="10" y1="14" x2="21" y2="3" />
-            </svg>
-          </a>
+          {/* CTA Buttons - Platform-specific */}
+          {!isMobile ? (
+            // Desktop: Link to web app
+            <a
+              href="https://my.exprealty.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#3b82f6] text-[#1a1a1a] font-semibold hover:bg-[#5b9aff] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+            >
+              <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+              Open My eXp
+            </a>
+          ) : (
+            // Mobile: Show app store buttons
+            <div className="flex flex-col gap-3">
+              {/* iOS App Store */}
+              <a
+                href="https://apps.apple.com/us/app/my-exp-exp-realty/id1574384899"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#1a1a1a] text-white font-semibold hover:bg-[#2a2a2a] transition-colors border border-[#3b82f6]/30"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                </svg>
+                Download on App Store
+              </a>
+              {/* Google Play Store */}
+              <a
+                href="https://play.google.com/store/apps/details?id=com.exp.myexp"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#3b82f6] text-[#1a1a1a] font-semibold hover:bg-[#5b9aff] transition-colors"
+                style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+              >
+                <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                </svg>
+                Get it on Google Play
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>
