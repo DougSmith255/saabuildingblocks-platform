@@ -618,6 +618,7 @@ const shakeKeyframes = `
 }
 
 /* Help panel - mobile first (bottom sheet) */
+/* Premium glass effect with 3D styling */
 .help-panel {
   animation: slideInUp 0.3s ease-out forwards;
   border-top: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
@@ -625,7 +626,18 @@ const shakeKeyframes = `
   padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
   max-height: 85vh;
   width: 100%;
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1));
+  /* Premium glass background */
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    linear-gradient(45deg, rgba(18, 18, 18, 0.97), rgba(28, 28, 28, 0.98));
+  backdrop-filter: blur(12px) saturate(1.4);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  /* 3D depth with multiple shadows */
+  box-shadow:
+    0 -10px 40px rgba(0, 0, 0, 0.5),
+    0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1)),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 .help-panel-closing {
@@ -638,20 +650,32 @@ const shakeKeyframes = `
   backdrop-filter: none !important;
 }
 
-/* Desktop (950px+): right panel */
+/* Desktop (950px+): right panel with premium glass 3D effect */
 @media (min-width: 950px) {
   .help-panel {
     animation: slideInRight 0.3s ease-out forwards;
-    border-top: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
-    border-left: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
-    border-bottom: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
-    border-right: none;
+    /* Only left border - clean edge design */
+    border: none;
+    border-left: 1px solid var(--help-accent, rgba(255, 215, 0, 0.25));
     border-radius: 1rem 0 0 1rem;
     padding-bottom: 0;
     max-height: 100%;
     height: 100%;
     max-width: 28rem;
-    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1));
+    /* Premium glass background with subtle gradient */
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
+      linear-gradient(45deg, rgba(14, 14, 14, 0.98), rgba(24, 24, 24, 0.99));
+    backdrop-filter: blur(16px) saturate(1.5);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    /* 3D depth effect - premium shadow stack */
+    box-shadow:
+      -20px 0 60px rgba(0, 0, 0, 0.6),
+      -5px 0 20px rgba(0, 0, 0, 0.4),
+      0 0 50px var(--help-glow, rgba(255, 215, 0, 0.08)),
+      inset 1px 0 0 rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
   }
 
   .help-panel-closing {
