@@ -7113,11 +7113,17 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
             `}
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             alt={template.name}
-            className={`w-full h-full object-cover group-hover:scale-105 transition-all duration-300 ${
+            className={`w-full h-full object-cover ${
               imageLoaded ? 'opacity-100' : 'opacity-0'
             }`}
+            style={{
+              transform: 'scale(1)',
+              transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease',
+            }}
             loading="lazy"
             onLoad={() => setImageLoaded(true)}
+            onMouseEnter={(e) => { (e.target as HTMLElement).style.transform = 'scale(1.05)'; }}
+            onMouseLeave={(e) => { (e.target as HTMLElement).style.transform = 'scale(1)'; }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
@@ -7127,8 +7133,14 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
           </div>
         )}
 
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+        {/* Dark film overlay - visible by default, fades on hover */}
+        <div
+          className="absolute inset-0 bg-black/40 group-hover:bg-black/0 pointer-events-none"
+          style={{ transition: 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }}
+        />
+
+        {/* Yellow tint + button overlay on hover */}
+        <div className="absolute inset-0 bg-[#ffd700]/0 group-hover:bg-[#ffd700]/10 flex items-center justify-center opacity-0 group-hover:opacity-100" style={{ transition: 'background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease' }}>
           <span className="px-3 py-1.5 rounded-full bg-[#ffd700] text-black text-xs font-semibold flex items-center gap-1.5">
             Open in Canva
             <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -9992,7 +10004,7 @@ function AgentPagesSection({
           {/* Preview Column - At bottom on mobile (<1100px), on left on desktop (≥1100px) */}
           <div className="order-last min-[1100px]:order-first min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
             {/* Sticky only on desktop, normal flow on mobile */}
-            <div className="min-[1100px]:sticky min-[1100px]:top-4 rounded-xl overflow-hidden" style={{
+            <div className="min-[1100px]:sticky min-[1100px]:top-24 rounded-xl overflow-hidden" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',

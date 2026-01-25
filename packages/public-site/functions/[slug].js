@@ -595,17 +595,43 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       font-family: var(--font-taskor), system-ui, sans-serif;
     }
 
-    /* H1 Neon Sign Effect - layers 4 & 5 removed for better readability */
+    /* H1 Neon Sign Effect - matching home page glow */
     .h1-neon {
       color: #ffd700;
       transform: perspective(800px) rotateX(12deg);
       font-feature-settings: "ss01" 1;
-      text-shadow: 0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8),
-        0 0 0.13em rgba(255, 215, 0, 0.55), 0 0 0.18em rgba(255, 179, 71, 0.35),
-        0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a,
-        0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808;
+      /* WHITE CORE + GOLD GLOW (without close gold layer on small screens) */
+      text-shadow:
+        0 0 0.01em #fff,
+        0 0 0.02em #fff,
+        0 0 0.03em rgba(255,255,255,0.8),
+        0 0 0.09em rgba(255, 215, 0, 0.8),
+        0 0 0.13em rgba(255, 215, 0, 0.55),
+        0 0 0.18em rgba(255, 179, 71, 0.35),
+        0.03em 0.03em 0 #2a2a2a,
+        0.045em 0.045em 0 #1a1a1a,
+        0.06em 0.06em 0 #0f0f0f,
+        0.075em 0.075em 0 #080808;
       filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(255, 215, 0, 0.25));
-      /* Animation disabled for cleaner appearance */
+      animation: h1GlowBreathe 4s ease-in-out infinite;
+    }
+
+    /* Add close gold glow on desktop (matching home page H1 component) */
+    @media (min-width: 1200px) {
+      .h1-neon {
+        text-shadow:
+          0 0 0.01em #fff,
+          0 0 0.02em #fff,
+          0 0 0.03em rgba(255,255,255,0.8),
+          0 0 0.05em #ffd700,
+          0 0 0.09em rgba(255, 215, 0, 0.8),
+          0 0 0.13em rgba(255, 215, 0, 0.55),
+          0 0 0.18em rgba(255, 179, 71, 0.35),
+          0.03em 0.03em 0 #2a2a2a,
+          0.045em 0.045em 0 #1a1a1a,
+          0.06em 0.06em 0 #0f0f0f,
+          0.075em 0.075em 0 #080808;
+      }
     }
 
     @keyframes h1GlowBreathe {
@@ -2061,132 +2087,233 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .volume-slider { width: 60px; }
     }
 
-    /* Modals */
-    .modal-container {
+    /* Slide Panel Animations */
+    @keyframes slidePanelUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    @keyframes slidePanelDown {
+      from { transform: translateY(0); }
+      to { transform: translateY(100%); }
+    }
+    @keyframes slidePanelRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    @keyframes slidePanelLeft {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+    @keyframes slidePanelBackdropIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slidePanelBackdropOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes spinnerRotate {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Slide Panel Container */
+    .slide-panel-container {
       position: fixed;
       inset: 0;
       z-index: 100000;
       display: none;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
-      padding: 1rem;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
-    .modal-container.open { display: flex; }
+    .slide-panel-container.open { display: flex; }
 
-    @media (max-width: 768px) {
-      .modal-container {
-        align-items: flex-start;
-        padding: 0.25rem;
-        padding-top: 1.5rem;
-        padding-bottom: 2rem;
+    @media (min-width: 950px) {
+      .slide-panel-container {
+        align-items: stretch;
+        justify-content: flex-end;
       }
     }
 
-    .modal-backdrop {
+    /* Slide Panel Backdrop */
+    .slide-panel-backdrop {
       position: fixed;
       inset: 0;
-      z-index: 100000;
-      background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      animation: slidePanelBackdropIn 0.3s ease-out forwards;
     }
 
-    .modal-wrapper {
-      position: relative;
-      z-index: 100001;
-      max-width: 520px;
-      width: 100%;
-      max-height: 90vh;
-      margin: auto;
+    .slide-panel-backdrop.closing {
+      animation: slidePanelBackdropOut 0.25s ease-in forwards;
     }
 
-    .modal {
+    /* Slide Panel - Mobile (bottom sheet) */
+    .slide-panel {
       position: relative;
-      background: #151517;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      padding: 2.5rem 2rem 2rem 2rem;
       width: 100%;
-      max-height: 90vh;
+      max-height: 85vh;
       overflow-y: auto;
-      box-sizing: border-box;
+      overscroll-behavior: contain;
+      border-top: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 1rem 1rem 0 0;
+      padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        linear-gradient(45deg, rgba(18, 18, 18, 0.97), rgba(28, 28, 28, 0.98));
+      backdrop-filter: blur(12px) saturate(1.4);
+      -webkit-backdrop-filter: blur(12px) saturate(1.4);
+      box-shadow:
+        0 -10px 40px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(255, 215, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+      animation: slidePanelUp 0.3s ease-out forwards;
     }
 
-    .modal-close-btn {
-      position: absolute;
-      top: -12px;
-      right: -12px;
-      width: 44px;
-      height: 44px;
-      min-width: 44px;
-      min-height: 44px;
-      padding: 0;
+    .slide-panel.closing {
+      animation: slidePanelDown 0.25s ease-in forwards;
+    }
+
+    /* Slide Panel - Desktop (right panel) */
+    @media (min-width: 950px) {
+      .slide-panel {
+        max-width: 500px;
+        max-height: 100dvh;
+        height: 100dvh;
+        border: none;
+        border-left: 1px solid rgba(255, 215, 0, 0.25);
+        border-radius: 1rem 0 0 1rem;
+        padding-bottom: 0;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
+          linear-gradient(45deg, rgba(14, 14, 14, 0.98), rgba(24, 24, 24, 0.99));
+        backdrop-filter: blur(16px) saturate(1.5);
+        -webkit-backdrop-filter: blur(16px) saturate(1.5);
+        box-shadow:
+          -20px 0 60px rgba(0, 0, 0, 0.6),
+          -5px 0 20px rgba(0, 0, 0, 0.4),
+          0 0 50px rgba(255, 215, 0, 0.08),
+          inset 1px 0 0 rgba(255, 255, 255, 0.06),
+          inset 0 1px 0 rgba(255, 255, 255, 0.04),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+        animation: slidePanelRight 0.3s ease-out forwards;
+      }
+
+      .slide-panel.closing {
+        animation: slidePanelLeft 0.25s ease-in forwards;
+      }
+    }
+
+    /* Slide Panel Header */
+    .slide-panel-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgb(18, 18, 18) 50%);
+      border-radius: 1rem 1rem 0.5rem 0.5rem;
+    }
+
+    @media (min-width: 950px) {
+      .slide-panel-header {
+        border-radius: 1rem 0 0 0.5rem;
+      }
+    }
+
+    .slide-panel-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .slide-panel-icon {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 215, 0, 0.15);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 12px rgba(255, 215, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide-panel-icon svg {
+      width: 20px;
+      height: 20px;
+      color: #ffd700;
+    }
+
+    .slide-panel-title {
+      font-family: var(--font-amulya), system-ui, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #ffd700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
       margin: 0;
-      background: rgba(40, 40, 40, 0.95);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      color: #fff;
+    }
+
+    .slide-panel-subtitle {
+      font-family: var(--font-synonym), system-ui, sans-serif;
+      font-size: 0.875rem;
+      color: rgba(229, 228, 221, 0.6);
+      margin: 0.25rem 0 0 0;
+    }
+
+    .slide-panel-close {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: transparent;
+      border: none;
+      color: rgba(255, 215, 0, 0.7);
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 100005;
+      transition: background-color 0.2s;
     }
 
-    .modal-close-btn:hover {
-      background: rgba(60, 60, 60, 0.95);
-      border-color: rgba(255, 255, 255, 0.5);
+    .slide-panel-close:hover {
+      background: rgba(255, 255, 255, 0.1);
     }
 
-    .modal-close-btn svg { pointer-events: none; display: block; flex-shrink: 0; }
-
-    /* Tool Modal (fits content) */
-    .tool-modal-wrapper {
-      position: relative;
-      z-index: 100001;
-      width: auto;
-      max-width: 98vw;
-      margin: auto;
+    /* Slide Panel Content */
+    .slide-panel-content {
+      padding: 1.25rem;
     }
 
-    .tool-modal {
-      position: relative;
-      background: #0a0a0a;
-      border: 1px solid rgba(255,215,0,0.3);
-      border-radius: 16px;
+    /* Tool Panel (iframe content) */
+    .slide-panel.tool-panel {
+      max-width: 920px;
+    }
+
+    .slide-panel.tool-panel .slide-panel-content {
       padding: 0;
-      overflow: hidden;
-      box-sizing: border-box;
-      box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
+      position: relative;
+      min-height: 600px;
     }
 
-    /* Close button for tool modals - half in, half out like base modal */
-    .tool-modal-wrapper .modal-close-btn {
-      position: absolute;
-      top: -12px;
-      right: -12px;
-      z-index: 100010;
-    }
-
-    .tool-modal iframe {
+    .slide-panel.tool-panel iframe {
       display: block;
+      width: 100%;
+      height: 650px;
       border: none;
-      border-radius: 0;
       background: #0a0a0a;
       opacity: 0;
       transition: opacity 0.4s ease-in-out;
-      margin: 0;
-      padding: 0;
     }
 
-    .tool-modal iframe.loaded {
+    .slide-panel.tool-panel iframe.loaded {
       opacity: 1;
     }
 
-    /* Loading spinner for tool modals */
-    .tool-modal-spinner {
+    /* Loading spinner for tool panels */
+    .tool-panel-spinner {
       position: absolute;
       top: 50%;
       left: 50%;
@@ -2195,7 +2322,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       transition: opacity 0.3s ease-out;
     }
 
-    .tool-modal-spinner.hidden {
+    .tool-panel-spinner.hidden {
       opacity: 0;
       pointer-events: none;
     }
@@ -2209,37 +2336,26 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       animation: spinnerRotate 1s linear infinite;
     }
 
-    @keyframes spinnerRotate {
-      to { transform: rotate(360deg); }
+    @media (max-width: 949px) {
+      .slide-panel.tool-panel iframe {
+        height: calc(85vh - 80px);
+      }
     }
 
-    #calculator-modal .tool-modal iframe {
-      width: 900px;
-      max-width: calc(100vw - 1rem);
-      height: 700px;
+    /* Hide scrollbar when slide panel is open */
+    .slide-panel-open {
+      overflow: hidden !important;
     }
-
-    #revshare-modal .tool-modal iframe {
-      width: 900px;
-      max-width: calc(100vw - 1rem);
-      height: 750px;
+    .slide-panel-open,
+    .slide-panel-open body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
     }
-
-    @media (max-width: 768px) {
-      .tool-modal-wrapper {
-        max-width: calc(100vw - 0.5rem);
-      }
-      /* Keep close button half in, half out on mobile too */
-      .tool-modal-wrapper .modal-close-btn {
-        top: -12px;
-        right: -12px;
-      }
-      #calculator-modal .tool-modal iframe,
-      #revshare-modal .tool-modal iframe {
-        width: 100%;
-        max-width: 100%;
-        height: calc(100vh - 100px);
-      }
+    .slide-panel-open::-webkit-scrollbar,
+    .slide-panel-open body::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
     }
 
     /* Join Modal */
@@ -3240,9 +3356,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       pointer-events: none;
     }
 
-    /* Prevent body scroll when modal is open */
-    body.modal-open { overflow: hidden; }
-    html.modal-open { overflow: hidden; }
+    /* Body scroll lock handled by .slide-panel-open class above */
   </style>
 
   <!-- GSAP and Lenis for scroll animations -->
@@ -4134,16 +4248,25 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
 
   </main>
 
-  <!-- Join Modal -->
-  <div class="modal-container" id="join-modal">
-    <div class="modal-backdrop" id="join-modal-backdrop"></div>
-    <div class="modal-wrapper">
-      <button class="modal-close-btn" id="join-modal-close" aria-label="Close modal">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-      <div class="modal">
-        <h3 class="join-modal-title">Join Smart Agent Alliance</h3>
-        <p class="join-modal-subtitle">Take the first step towards building your dream career at eXp Realty.</p>
+  <!-- Join Slide Panel -->
+  <div class="slide-panel-container" id="join-modal" role="dialog" aria-modal="true" aria-labelledby="join-panel-title">
+    <div class="slide-panel-backdrop" id="join-modal-backdrop"></div>
+    <div class="slide-panel" id="join-panel">
+      <div class="slide-panel-header">
+        <div class="slide-panel-header-left">
+          <div class="slide-panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <div>
+            <h3 id="join-panel-title" class="slide-panel-title">Join Smart Agent Alliance</h3>
+            <p class="slide-panel-subtitle">Take the first step towards your dream career</p>
+          </div>
+        </div>
+        <button class="slide-panel-close" id="join-modal-close" aria-label="Close panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="slide-panel-content">
         <form id="join-form">
           <div class="form-row">
             <div class="form-group">
@@ -4177,19 +4300,25 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
   </div>
 
-  <!-- Instructions Modal -->
-  <div class="modal-container" id="instructions-modal">
-    <div class="modal-backdrop" id="instructions-modal-backdrop"></div>
-    <div class="modal-wrapper">
-      <button class="modal-close-btn" id="instructions-modal-close" aria-label="Close modal">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-      <div class="modal instructions-modal">
-        <div class="success-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+  <!-- Instructions Slide Panel -->
+  <div class="slide-panel-container" id="instructions-modal" role="dialog" aria-modal="true" aria-labelledby="instructions-panel-title">
+    <div class="slide-panel-backdrop" id="instructions-modal-backdrop"></div>
+    <div class="slide-panel" id="instructions-panel">
+      <div class="slide-panel-header">
+        <div class="slide-panel-header-left">
+          <div class="slide-panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <h3 id="instructions-panel-title" class="slide-panel-title">Welcome, <span id="user-name-display">Agent</span>!</h3>
+            <p class="slide-panel-subtitle">Follow these steps to join eXp Realty</p>
+          </div>
         </div>
-        <h3 class="instructions-title">Welcome, <span id="user-name-display">Agent</span>!</h3>
-        <p class="instructions-subtitle">Follow these steps to join Smart Agent Alliance at eXp Realty.</p>
+        <button class="slide-panel-close" id="instructions-modal-close" aria-label="Close panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="slide-panel-content instructions-modal">
         <div class="instructions-list">
           <div class="instruction-item">
             <div class="instruction-number">1</div>
@@ -4233,15 +4362,26 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
   </div>
 
-  <!-- Commission Calculator Modal -->
-  <div class="modal-container" id="calculator-modal">
-    <div class="modal-backdrop" id="calculator-modal-backdrop"></div>
-    <div class="tool-modal-wrapper">
-      <button class="modal-close-btn" id="calculator-modal-close" aria-label="Close calculator">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-      <div class="tool-modal">
-        <div class="tool-modal-spinner" id="calculator-spinner">
+  <!-- Commission Calculator Slide Panel -->
+  <div class="slide-panel-container" id="calculator-modal" role="dialog" aria-modal="true" aria-labelledby="calculator-panel-title">
+    <div class="slide-panel-backdrop" id="calculator-modal-backdrop"></div>
+    <div class="slide-panel tool-panel" id="calculator-panel">
+      <div class="slide-panel-header">
+        <div class="slide-panel-header-left">
+          <div class="slide-panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="14" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+          </div>
+          <div>
+            <h3 id="calculator-panel-title" class="slide-panel-title">Commission Calculator</h3>
+            <p class="slide-panel-subtitle">Compare eXp vs traditional brokerages</p>
+          </div>
+        </div>
+        <button class="slide-panel-close" id="calculator-modal-close" aria-label="Close panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="slide-panel-content">
+        <div class="tool-panel-spinner" id="calculator-spinner">
           <div class="spinner-ring"></div>
         </div>
         <iframe id="calculator-iframe" src="" title="Commission Calculator" loading="lazy"></iframe>
@@ -4249,15 +4389,26 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     </div>
   </div>
 
-  <!-- RevShare Visualizer Modal -->
-  <div class="modal-container" id="revshare-modal">
-    <div class="modal-backdrop" id="revshare-modal-backdrop"></div>
-    <div class="tool-modal-wrapper">
-      <button class="modal-close-btn" id="revshare-modal-close" aria-label="Close visualizer">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-      </button>
-      <div class="tool-modal">
-        <div class="tool-modal-spinner" id="revshare-spinner">
+  <!-- RevShare Visualizer Slide Panel -->
+  <div class="slide-panel-container" id="revshare-modal" role="dialog" aria-modal="true" aria-labelledby="revshare-panel-title">
+    <div class="slide-panel-backdrop" id="revshare-modal-backdrop"></div>
+    <div class="slide-panel tool-panel" id="revshare-panel">
+      <div class="slide-panel-header">
+        <div class="slide-panel-header-left">
+          <div class="slide-panel-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <div>
+            <h3 id="revshare-panel-title" class="slide-panel-title">Revenue Share Calculator</h3>
+            <p class="slide-panel-subtitle">Visualize your potential income</p>
+          </div>
+        </div>
+        <button class="slide-panel-close" id="revshare-modal-close" aria-label="Close panel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="slide-panel-content">
+        <div class="tool-panel-spinner" id="revshare-spinner">
           <div class="spinner-ring"></div>
         </div>
         <iframe id="revshare-iframe" src="" title="Revenue Share Visualizer" loading="lazy"></iframe>
@@ -4490,12 +4641,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
             }
           }
           if (event.data && event.data.type === 'scrollToBottom') {
-            // Scroll the modal wrapper to show expanded content
-            const modalWrapper = event.data.modal === 'calculator'
-              ? document.querySelector('#calculator-modal .tool-modal-wrapper')
-              : document.querySelector('#revshare-modal .tool-modal-wrapper');
-            if (modalWrapper) {
-              modalWrapper.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            // Scroll the slide panel to show expanded content
+            const panel = event.data.modal === 'calculator'
+              ? document.querySelector('#calculator-panel')
+              : document.querySelector('#revshare-panel');
+            if (panel) {
+              panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' });
             }
           }
         });
@@ -4574,55 +4725,117 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         bookCallWrapper.style.pointerEvents = 'auto';
       }
 
-      // Modal functions
-      function getModal(type) {
+      // Slide Panel functions
+      const SWIPE_THRESHOLD = 80;
+      const ANIMATION_DURATION = 250;
+      let panelTouchStart = null;
+      let panelClosing = {};
+
+      function getPanel(type) {
         switch(type) {
-          case 'join': return joinModal;
-          case 'instructions': return instructionsModal;
-          case 'calculator': return calculatorModal;
-          case 'revshare': return revshareModal;
+          case 'join': return { container: joinModal, panel: document.getElementById('join-panel'), backdrop: document.getElementById('join-modal-backdrop') };
+          case 'instructions': return { container: instructionsModal, panel: document.getElementById('instructions-panel'), backdrop: document.getElementById('instructions-modal-backdrop') };
+          case 'calculator': return { container: calculatorModal, panel: document.getElementById('calculator-panel'), backdrop: document.getElementById('calculator-modal-backdrop') };
+          case 'revshare': return { container: revshareModal, panel: document.getElementById('revshare-panel'), backdrop: document.getElementById('revshare-modal-backdrop') };
           default: return null;
         }
       }
 
       function openModal(type) {
-        const modal = getModal(type);
-        if (!modal) return;
+        const elements = getPanel(type);
+        if (!elements) return;
 
-        // For tool modals, load the iframe src when opening (using actual React pages with embed mode)
+        // For tool panels, load the iframe src when opening
         if (type === 'calculator' && calculatorIframe) {
-          // Reset state: show spinner, hide iframe
           calculatorIframe.classList.remove('loaded');
           calculatorSpinner.classList.remove('hidden');
           calculatorIframe.src = '/exp-commission-calculator/?embed=true';
         } else if (type === 'revshare' && revshareIframe) {
-          // Reset state: show spinner, hide iframe
           revshareIframe.classList.remove('loaded');
           revshareSpinner.classList.remove('hidden');
           revshareIframe.src = '/exp-realty-revenue-share-calculator/?embed=true';
         }
 
-        modal.classList.add('open');
-        document.body.classList.add('modal-open');
-        document.documentElement.classList.add('modal-open');
+        // Reset closing state
+        panelClosing[type] = false;
+        elements.panel.classList.remove('closing');
+        elements.backdrop.classList.remove('closing');
+
+        elements.container.classList.add('open');
+        document.body.classList.add('slide-panel-open');
+        document.documentElement.classList.add('slide-panel-open');
+
+        // Add swipe handlers
+        elements.panel.addEventListener('touchstart', handlePanelTouchStart, { passive: true });
+        elements.panel.addEventListener('touchend', (e) => handlePanelTouchEnd(e, type), { passive: true });
       }
 
       function closeModal(type) {
-        const modal = getModal(type);
-        if (!modal) return;
+        const elements = getPanel(type);
+        if (!elements || panelClosing[type]) return;
 
-        modal.classList.remove('open');
-        document.body.classList.remove('modal-open');
-        document.documentElement.classList.remove('modal-open');
+        panelClosing[type] = true;
 
-        // Clear iframe src when closing to stop any running scripts
-        if (type === 'calculator' && calculatorIframe) {
-          calculatorIframe.src = '';
-          calculatorIframe.classList.remove('loaded');
-        } else if (type === 'revshare' && revshareIframe) {
-          revshareIframe.src = '';
-          revshareIframe.classList.remove('loaded');
+        // Add closing animation classes
+        elements.panel.classList.add('closing');
+        elements.backdrop.classList.add('closing');
+
+        // Wait for animation to complete
+        setTimeout(() => {
+          elements.container.classList.remove('open');
+          elements.panel.classList.remove('closing');
+          elements.backdrop.classList.remove('closing');
+          document.body.classList.remove('slide-panel-open');
+          document.documentElement.classList.remove('slide-panel-open');
+          panelClosing[type] = false;
+
+          // Clear iframe src when closing
+          if (type === 'calculator' && calculatorIframe) {
+            calculatorIframe.src = '';
+            calculatorIframe.classList.remove('loaded');
+          } else if (type === 'revshare' && revshareIframe) {
+            revshareIframe.src = '';
+            revshareIframe.classList.remove('loaded');
+          }
+        }, ANIMATION_DURATION);
+      }
+
+      function handlePanelTouchStart(e) {
+        const target = e.currentTarget;
+        panelTouchStart = {
+          x: e.touches[0].clientX,
+          y: e.touches[0].clientY,
+          scrollTop: target.scrollTop
+        };
+      }
+
+      function handlePanelTouchEnd(e, type) {
+        if (!panelTouchStart || panelClosing[type]) return;
+
+        const touchEnd = {
+          x: e.changedTouches[0].clientX,
+          y: e.changedTouches[0].clientY
+        };
+
+        const deltaX = touchEnd.x - panelTouchStart.x;
+        const deltaY = touchEnd.y - panelTouchStart.y;
+        const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+        const isMobile = window.innerWidth < 950;
+
+        if (isMobile) {
+          // Swipe down to close - only if at top of scroll
+          const wasAtTop = panelTouchStart.scrollTop <= 0;
+          if (deltaY > SWIPE_THRESHOLD && !isHorizontalSwipe && wasAtTop) {
+            closeModal(type);
+          }
+        } else {
+          // Swipe right to close
+          if (deltaX > SWIPE_THRESHOLD && isHorizontalSwipe) {
+            closeModal(type);
+          }
         }
+
+        panelTouchStart = null;
       }
 
       // Form submission
