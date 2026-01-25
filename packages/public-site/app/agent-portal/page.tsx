@@ -14,96 +14,131 @@ import confetti from 'canvas-confetti';
 // Custom SVG Icon Components
 // ============================================================================
 
-// Wolf icon for Wolf Pack sections (based on Emojione wolf)
-const WolfIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32 4c-8 0-14.5 6.5-14.5 14.5c0 3.5 1.2 6.7 3.2 9.2L6 42l8 8l10-10c2.5 2 5.7 3.2 9.2 3.2c3.5 0 6.7-1.2 9.2-3.2l10 10l8-8l-14.7-14.3c2-2.5 3.2-5.7 3.2-9.2C49.5 10.5 42 4 32 4z" fill="currentColor"/>
-    <ellipse cx="26" cy="18" rx="3" ry="3.5" fill="#1a1a1a"/>
-    <ellipse cx="38" cy="18" rx="3" ry="3.5" fill="#1a1a1a"/>
-    <ellipse cx="32" cy="26" rx="4" ry="3" fill="#1a1a1a"/>
-  </svg>
-);
-
-// Bot sparkle icon for AI Agent Accelerator (based on Fluent Color)
+// Robot icon for AI Agent Accelerator (Fluent Emoji Flat Robot)
 const BotSparkleIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8" y="16" width="32" height="24" rx="4" fill="currentColor"/>
-    <circle cx="18" cy="26" r="3" fill="#1a1a1a"/>
-    <circle cx="30" cy="26" r="3" fill="#1a1a1a"/>
-    <rect x="20" y="32" width="8" height="3" rx="1.5" fill="#1a1a1a"/>
-    <rect x="22" y="8" width="4" height="8" rx="2" fill="currentColor"/>
-    <circle cx="24" cy="6" r="3" fill="currentColor"/>
-    <path d="M40 8l2 4l4 2l-4 2l-2 4l-2-4l-4-2l4-2z" fill="#ffd700"/>
-    <path d="M44 20l1.5 3l3 1.5l-3 1.5l-1.5 3l-1.5-3l-3-1.5l3-1.5z" fill="#ffd700"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className} style={style}>
+    <g fill="none">
+      <path fill="#f8312f" d="M5 3.5a1.5 1.5 0 0 1-1 1.415V12l2.16 5.487L4 23c-1.1 0-2-.9-2-1.998v-7.004a2 2 0 0 1 1-1.728V4.915A1.5 1.5 0 1 1 5 3.5m25.05.05c0 .681-.44 1.26-1.05 1.468V12.2c.597.347 1 .994 1 1.73v7.01c0 1.1-.9 2-2 2l-2.94-5.68L28 11.93V5.018a1.55 1.55 0 1 1 2.05-1.468"></path>
+      <path fill="#ffb02e" d="M11 4.5A1.5 1.5 0 0 1 12.5 3h7a1.5 1.5 0 0 1 .43 2.938c-.277.082-.57.104-.847.186l-3.053.904l-3.12-.908c-.272-.08-.56-.1-.832-.18A1.5 1.5 0 0 1 11 4.5"></path>
+      <path fill="#cdc4d6" d="M22.05 30H9.95C6.66 30 4 27.34 4 24.05V12.03C4 8.7 6.7 6 10.03 6h11.95C25.3 6 28 8.7 28 12.03v12.03c0 3.28-2.66 5.94-5.95 5.94"></path>
+      <path fill="#212121" d="M9.247 18.5h13.506c2.33 0 4.247-1.919 4.247-4.25A4.257 4.257 0 0 0 22.753 10H9.247A4.257 4.257 0 0 0 5 14.25a4.257 4.257 0 0 0 4.247 4.25m4.225 7.5h5.056C19.34 26 20 25.326 20 24.5s-.66-1.5-1.472-1.5h-5.056C12.66 23 12 23.674 12 24.5s.66 1.5 1.472 1.5"></path>
+      <path fill="#00a6ed" d="M10.25 12C9.56 12 9 12.56 9 13.25v2.5a1.25 1.25 0 1 0 2.5 0v-2.5c0-.69-.56-1.25-1.25-1.25m11.5 0c-.69 0-1.25.56-1.25 1.25v2.5a1.25 1.25 0 1 0 2.5 0v-2.5c0-.69-.56-1.25-1.25-1.25"></path>
+    </g>
   </svg>
 );
 
-// People community icon for Master Agent Attraction (based on Fluent Color)
+// People team icon for Master Agent Attraction (Fluent Color People Team)
 const PeopleCommunityIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="24" cy="12" r="6" fill="currentColor"/>
-    <path d="M24 20c-6.6 0-12 4.5-12 10v2h24v-2c0-5.5-5.4-10-12-10z" fill="currentColor"/>
-    <circle cx="10" cy="18" r="4" fill="currentColor" opacity="0.7"/>
-    <path d="M10 24c-4.4 0-8 3-8 6.7V32h8v-2c0-2.2.7-4.2 1.9-5.9c-0.6-0.1-1.3-0.1-1.9-0.1z" fill="currentColor" opacity="0.7"/>
-    <circle cx="38" cy="18" r="4" fill="currentColor" opacity="0.7"/>
-    <path d="M38 24c-0.6 0-1.3 0-1.9 0.1c1.2 1.7 1.9 3.7 1.9 5.9v2h8v-1.3c0-3.7-3.6-6.7-8-6.7z" fill="currentColor" opacity="0.7"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className} style={style}>
+    <g fill="none">
+      <path fill="url(#SVGHVkQ9dLR)" d="M24.623 26.997H25a5 5 0 0 0 5-5v-6.5a2.5 2.5 0 0 0-2.5-2.5h-5.377a2.5 2.5 0 0 0-2.5 2.5v6.5a5 5 0 0 0 5 5"></path>
+      <path fill="url(#SVGIxxzWUJd)" fillOpacity={0.5} d="M24.623 26.997H25a5 5 0 0 0 5-5v-6.5a2.5 2.5 0 0 0-2.5-2.5h-5.377a2.5 2.5 0 0 0-2.5 2.5v6.5a5 5 0 0 0 5 5"></path>
+      <path fill="url(#SVGU1WQ0bIo)" d="M7 27h.377a5 5 0 0 0 5-5v-6.5a2.5 2.5 0 0 0-2.5-2.5H4.5A2.5 2.5 0 0 0 2 15.5V22a5 5 0 0 0 5 5"></path>
+      <path fill="url(#SVG2fkBpbjr)" fillOpacity={0.5} d="M7 27h.377a5 5 0 0 0 5-5v-6.5a2.5 2.5 0 0 0-2.5-2.5H4.5A2.5 2.5 0 0 0 2 15.5V22a5 5 0 0 0 5 5"></path>
+      <path fill="url(#SVG0akaIc4Q)" d="M12.5 13a2.5 2.5 0 0 0-2.5 2.5V23a6 6 0 0 0 12 0v-7.5a2.5 2.5 0 0 0-2.5-2.5z"></path>
+      <path fill="url(#SVGKuZ9jeMu)" d="M12.5 13a2.5 2.5 0 0 0-2.5 2.5V23a6 6 0 0 0 12 0v-7.5a2.5 2.5 0 0 0-2.5-2.5z"></path>
+      <path fill="url(#SVGTddjJnbd)" d="M29 7.5a3.5 3.5 0 1 1-7 0a3.5 3.5 0 0 1 7 0"></path>
+      <path fill="url(#SVGGvF4wTWb)" d="M10 7.5a3.5 3.5 0 1 1-7 0a3.5 3.5 0 0 1 7 0"></path>
+      <path fill="url(#SVGawFSeblX)" d="M16 11a4 4 0 1 0 0-8a4 4 0 0 0 0 8"></path>
+      <defs>
+        <linearGradient id="SVGHVkQ9dLR" x1={22.091} x2={29.91} y1={14.858} y2={24.112} gradientUnits="userSpaceOnUse"><stop offset={0.125} stopColor="#7a41dc"></stop><stop offset={1} stopColor="#5b2ab5"></stop></linearGradient>
+        <linearGradient id="SVGU1WQ0bIo" x1={4.468} x2={12.287} y1={14.861} y2={24.116} gradientUnits="userSpaceOnUse"><stop offset={0.125} stopColor="#9c6cfe"></stop><stop offset={1} stopColor="#7a41dc"></stop></linearGradient>
+        <linearGradient id="SVG0akaIc4Q" x1={12.854} x2={21.772} y1={15.127} y2={25.807} gradientUnits="userSpaceOnUse"><stop offset={0.125} stopColor="#bd96ff"></stop><stop offset={1} stopColor="#9c6cfe"></stop></linearGradient>
+        <linearGradient id="SVGKuZ9jeMu" x1={16} x2={29.705} y1={11.095} y2={30.3} gradientUnits="userSpaceOnUse"><stop stopColor="#885edb" stopOpacity={0}></stop><stop offset={1} stopColor="#e362f8"></stop></linearGradient>
+        <linearGradient id="SVGTddjJnbd" x1={23.665} x2={27.232} y1={4.931} y2={10.627} gradientUnits="userSpaceOnUse"><stop offset={0.125} stopColor="#7a41dc"></stop><stop offset={1} stopColor="#5b2ab5"></stop></linearGradient>
+        <linearGradient id="SVGGvF4wTWb" x1={4.665} x2={8.232} y1={4.931} y2={10.627} gradientUnits="userSpaceOnUse"><stop offset={0.125} stopColor="#9c6cfe"></stop><stop offset={1} stopColor="#7a41dc"></stop></linearGradient>
+        <linearGradient id="SVGawFSeblX" x1={13.902} x2={17.98} y1={4.063} y2={10.574} gradientUnits="userSpaceOnUse"><stop offset={0.125} stopColor="#bd96ff"></stop><stop offset={1} stopColor="#9c6cfe"></stop></linearGradient>
+        <radialGradient id="SVGIxxzWUJd" cx={0} cy={0} r={1} gradientTransform="matrix(8.3508 0 0 19.1127 17.992 19.669)" gradientUnits="userSpaceOnUse"><stop offset={0.433} stopColor="#3b148a"></stop><stop offset={1} stopColor="#3b148a" stopOpacity={0}></stop></radialGradient>
+        <radialGradient id="SVG2fkBpbjr" cx={0} cy={0} r={1} gradientTransform="matrix(-9.24155 0 0 -21.1514 15.739 19.672)" gradientUnits="userSpaceOnUse"><stop offset={0.433} stopColor="#3b148a"></stop><stop offset={1} stopColor="#3b148a" stopOpacity={0}></stop></radialGradient>
+      </defs>
+    </g>
   </svg>
 );
 
-// Money bag icon for Investment Course (based on Noto)
+// Money bag icon for Investor Army (Noto V1 Money Bag)
 const MoneyBagIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M24 6l-6 8h12l-6-8z" fill="currentColor"/>
-    <ellipse cx="24" cy="30" rx="16" ry="14" fill="currentColor"/>
-    <text x="24" y="35" textAnchor="middle" fill="#1a1a1a" fontSize="16" fontWeight="bold" fontFamily="system-ui">$</text>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" className={className} style={style}>
+    <path fill="#fcc21b" d="M68.43 5.38c.89-1.95 2.55-2.5 3.93-2.56c2.1-.1 4.3 1.35 6.37 3.06C80.2 7.54 81.96 8.82 84 9.72c1.41.5 2.81.6 4.23.53c2-.1 4.03-.54 6.04-.64l.11-.01l.91-.08c2.3-.11 4.47.43 6.53 1.62c1.89 1.72 2.72 3.86 2.46 6.44c-.44 2.13-.06 4.08 1.13 5.85c2.05 1.44 4.2 2.7 6.46 3.77c2.34 1.28 3.81 3.21 4.45 5.78c.23 2.72-1.03 4.46-3.75 5.21c-3.54.89-8.3.89-12.31 3.99c-5.86 4.89-7.7 9.82-10.25 10.57c-1.25-1.42-9.05-7.45-22.13-10.34c-2.34-8.07-3.76-27.55.55-37.03"></path>
+    <path fill="#d19b15" d="M81.63 40.69c2.3-4.6 8.85-12.69 10.42-11.09c1.55 1.74-2.02 10.78-4.53 15.21c-.89-.94-3.76-2.91-5.01-3.24"></path>
+    <path fill="#8d6e63" d="M93.2 55.42c-1.35 0-2.67-.69-3.42-1.93c-6.88-11.32-22.46-10.13-22.61-10.11c-2.2.18-4.14-1.44-4.33-3.63a4.006 4.006 0 0 1 3.61-4.34c.84-.08 20.67-1.71 30.17 13.94c1.15 1.89.54 4.35-1.34 5.49c-.66.39-1.37.58-2.08.58"></path>
+    <path fill="#fcc21b" d="M96.06 122.07c-17.13 4.22-40.94 3.92-57.95.56C22.19 119.48 10 110.09 11.4 91.61c1.42-18.7 13.81-36.31 30.85-44.07c16.49-7.51 38.62-11.17 50.28 5.87c2.9 4.24 8.44 13.65 8.7 18.27c.02.37.04.7.12 1.02c.02 1.16.49 2.33 1.63 3.19c7.33 5.55 12.67 12.91 13.65 23c1.16 12.03-10.22 20.63-20.57 23.18"></path>
+    <path fill="#424242" d="M80.87 91.13c-2.08-3.38-5.91-7.05-9.53-10.2l2.81-7.78c2.5 1.95 4.7 3.78 6.42 5.36c.28.27.72.29 1.04.06l6.44-4.79c.18-.14.29-.34.32-.57a.8.8 0 0 0-.21-.62c-1.91-2.13-6.05-5.86-10.58-8.93l1.65-4.56c.19-.52-.07-1.09-.6-1.29l-7.57-2.74c-.52-.19-1.1.08-1.29.6l-1.23 3.41c-7.13-2.21-12.79-1.5-17.23 2.21c-3.48 2.92-4.98 7.09-3.92 10.87c1.08 4.03 4.24 6.79 8.24 10.28l.51.45c.93.8 1.92 1.63 2.89 2.46l-3.42 9.46c-4.49-2.94-8.25-7.01-8.89-7.9a.806.806 0 0 0-1.08-.21l-7.42 4.74c-.18.11-.31.3-.36.52c-.04.21 0 .43.12.61c2.23 3.36 5.88 7.12 9.77 10.06c.93.7 2.33 1.68 4.05 2.71l-1.29 3.55c-.18.52.08 1.09.6 1.28l7.58 2.75c.52.19 1.1-.08 1.29-.6l1.07-2.96c6.92 1.88 13 .79 17.7-3.23c4.54-3.89 5.32-9.35 2.12-15M65.18 68.4l-2.07 5.73c-1.93-1.5-2.96-2.63-2.23-4.25c.76-1.66 2.65-1.77 4.3-1.48m2.05 23.9c1.33 1.29 2.27 2.48 2.36 3.57c.04.62-.19 1.22-.73 1.84c-.94 1.09-2.44 1.3-3.99 1.11z"></path>
   </svg>
 );
 
-// Graduation cap icon for Social Agent Academy (based on Noto)
+// Graduation cap icon for Social Agent Academy PRO (Noto Graduation Cap)
 const GraduationCapColorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M24 8L2 20l22 12l22-12L24 8z" fill="currentColor"/>
-    <path d="M10 24v12c0 0 6 6 14 6s14-6 14-6V24L24 32L10 24z" fill="currentColor" opacity="0.8"/>
-    <rect x="42" y="20" width="2" height="16" fill="currentColor"/>
-    <circle cx="43" cy="38" r="3" fill="#ffd700"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" className={className} style={style}>
+    <path fill="#424242" d="M99.06 91.42S83.95 105.6 63.97 105.6S28.89 91.42 28.89 91.42s-2.81-13.49 4.45-36.78c3.83-12.28 58.33-13.53 62.6-2.79c7.26 18.23 3.12 39.57 3.12 39.57"></path>
+    <path fill="#212121" d="m28.89 91.42l4.79 3.84s-.04-7.6 2.31-14.69c.88-2.65 4.02-3.76 6.38-2.27l18.29 11.47a6.39 6.39 0 0 0 6.7.05c8.74-5.3 31.54-19.17 32.58-20.02c0 0 0-1.71-.43-3.89L28.63 66z"></path>
+    <path fill="#424242" d="m122.81 52.03l-56.8 33.83c-1.24.74-2.79.74-4.04 0L5.19 52.03c-1.58-.94-1.58-3.23 0-4.17l56.8-33.83c1.24-.74 2.79-.74 4.04 0l56.8 33.83c1.57.94 1.57 3.23-.02 4.17"></path>
+    <path fill="#9e9e9e" d="M64.04 83.38c-.01 0-.03.01-.04.01c-.16 0-.32-.04-.46-.13L4.18 49.04s-.29.55 0 1.54c.3.99.76 1.31 1.01 1.46l56.8 33.83c.62.37 1.32.56 2.02.56h.04v-3.05z"></path>
+    <path fill="#616161" d="M64 83.38c.01 0 .03.01.04.01c.16 0 .32-.04.46-.13l59.36-34.22s.29.55 0 1.54c-.3.99-.76 1.31-1.01 1.46l-56.8 33.83c-.62.37-1.32.56-2.02.56h-.04v-3.05z"></path>
+    <path fill="#424242" d="m35.45 70.06l.32-2.81S60.28 53.92 62.7 52.52s4.96-2.96 6.09-4.21c2-2.2.56-3.58.56-3.58s-1.58 2.56-5.35 2.11c-2.16-.26-4.97-2.01-5.44-2.83s-27.67 19.9-27.67 19.9l-.19 3.33z"></path>
+    <path fill="#e2a610" d="M69.35 44.74c-2.62 3.66-7.06 2.06-7.06 2.06s-13.91 6.67-14.43 5.66s11.49-7.19 11.49-7.19s-.67-2.46-.6-3.51c0 0-21.72 13.82-29.87 18.47c-4.27 2.44-5.18 4.74-5.17 7.98c0 1.42.02 6.03.04 8.78c0 .51-.22.99-.61 1.31a5.16 5.16 0 0 0-1.89 3.99c0 1.53.67 2.9 1.73 3.85c.57.51.45 1.61.5 2.32c.1 1.36 0 1.98-.56 3.24c-.55 1.23-1.06 2.49-1.41 3.79c-.27 1-.45 2.03-.63 3.05c-1.19 6.83-1.73 14.13-4.88 20.41a.993.993 0 0 0 .45 1.34a1.007 1.007 0 0 0 1.35-.44c1.64-3.27 2.49-6.85 3.19-10.4c-.04 3.21-.06 6.45-.17 9.95c-.02.68-.07 2.05.55 2.35c2.33 1.13 2.33-2.35 2.33-2.35s.03 3.13 3.2 3.13s3.4-3.13 3.4-3.13s.23 2.87 1.86 2.73c.66-.06 1.53-.46 1.22-3.89c-.31-3.42-1.08-15.68-1.41-19.56c-.46-5.37-2.22-8.56-2.58-10.46c-.13-.72-.14-1.47.43-1.94a5.165 5.165 0 0 0 .13-7.88a1.71 1.71 0 0 1-.58-1.42c.19-2.59.4-6.35.57-7.22c.74-3.91 2.67-4.61 4.65-5.77c1.98-1.17 30.66-14.19 32.33-15.3c3.09-2.07 2.43-3.95 2.43-3.95"></path>
+    <path fill="#ffca28" d="M69.35 44.74c-2.47 3.49-7.6 1.93-7.6 1.93s-13.11 5.81-12.24 4.76c.86-1.05 9.84-6.16 9.84-6.16s-.67-2.46-.6-3.51c0 0-22.1 12.77-30.67 18.91c-2.21 1.59-4.95 4.19-2.72 6.78c1.03 1.19 3.02 1.44 4.29.5c.77-.56 1.37-1.38 2.05-2.03c.84-.82 1.86-1.34 2.86-1.93c1.98-1.17 30.66-14.19 32.33-15.3c3.12-2.07 2.46-3.95 2.46-3.95"></path>
+    <path fill="#9e740b" d="M26.11 91.86c-1.32 0-2.21-.11-3.02-.3a.62.62 0 0 1-.48-.65l.26-3.82c.03-.39.4-.66.78-.55c.9.26 2.7.52 5.64-.1c.36-.08.72.17.76.54l.4 3.8c.03.31-.17.6-.47.67c-1.53.35-2.64.41-3.87.41"></path>
+    <path fill="#616161" d="M99.06 91.42s1.77-9.24 1.06-19.07c-.12-1.66-1.14-3.09-1.93 2.72c-.45 3.33-1.43 13.3-3.1 19.53c2.55-1.84 3.97-3.18 3.97-3.18M65.73 36.79c.73.23 1.4.79 1.59 1.54c.25 1-.38 2-1.06 2.78c-1.33 1.53-3.16 2.87-5.19 2.8c-.67-.02-1.39-.24-1.8-.77c-.29-.37-.39-.85-.42-1.32c-.18-3.43 3.7-6.03 6.88-5.03"></path>
   </svg>
 );
 
-// Brain icon for Connor's call (based on Twemoji)
+// Brain icon for Connor's call (Twemoji)
 const BrainIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M24 4c-8 0-14 6-14 14c0 4 1.6 7.6 4.2 10.2c-0.1 0.6-0.2 1.2-0.2 1.8c0 4.4 3.6 8 8 8h4c4.4 0 8-3.6 8-8c0-0.6-0.1-1.2-0.2-1.8c2.6-2.6 4.2-6.2 4.2-10.2c0-8-6-14-14-14z" fill="currentColor"/>
-    <path d="M18 16c0-2 1.5-4 4-4s4 2 4 4M26 16c0-2 1.5-4 4-4s4 2 4 4M14 22c0 2 1.5 4 4 4s4-2 4-4M26 22c0 2 1.5 4 4 4s4-2 4-4" stroke="#1a1a1a" strokeWidth="2" fill="none"/>
-    <line x1="24" y1="12" x2="24" y2="34" stroke="#1a1a1a" strokeWidth="2"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" className={className} style={style}>
+    <path fill="#ea596e" d="M29.896 26.667c.003.283-.07.653-.146.958c-.531 2.145-2.889 4.552-6.208 4.333c-3.008-.198-5.458-1.642-5.458-3.667s2.444-3.667 5.458-3.667s6.335.018 6.354 2.043"></path>
+    <path fill="#dd2e44" d="M23.542 24.964c-1.619 0-5.314.448-6.162.448c-1.498 0-2.713.94-2.713 2.1c0 .558.286 1.062.744 1.438c0 0 1.006 1.009 2.818.525c.793-.212 2.083-1.786 4.354-2.036c1.131-.125 3.25.75 6.974.771c.16-.344.193-.583.193-.583c0-2.027-3.194-2.663-6.208-2.663"></path>
+    <path fill="#f4abba" d="M29.75 27.625s2.184-.443 3.542-2.229c1.583-2.083 1.375-4.312 1.375-4.312c1.604-3-.5-5.813-.5-5.813C33.958 12.104 32 10.792 32 10.792c-1.271-3.021-4.083-3.833-4.083-3.833c-2.208-2.583-6.125-2.5-6.125-2.5s-3.67-1.345-8.708.167c-.833.25-3.625.833-5.667 2.083C.981 10.649.494 16.793.584 17.792C1.083 23.375 5 24.375 7.5 24.958c.583 1.583 2.729 4.5 6.583 3.417c4.75-.833 6.75-2.25 7.917-2.25s4.417 1.25 7.75 1.5"></path>
+    <g fill="#ea596e">
+      <path d="M17.737 18.648c2.328-1.255 3.59-1.138 4.704-1.037c.354.032.689.057 1.028.055c1.984-.045 3.591-.881 4.302-1.69a.501.501 0 0 0-.752-.661c-.548.624-1.899 1.313-3.573 1.351c-.3.009-.601-.021-.913-.05c-1.195-.111-2.679-.247-5.271 1.152c-.665.359-1.577.492-2.565.592c-2.197-3.171-.875-5.933-.497-6.591c.037.002.073.014.111.014c.4 0 .802-.098 1.166-.304a.5.5 0 0 0-.492-.87a1.426 1.426 0 0 1-1.88-.467a.5.5 0 0 0-.841.539c.237.371.571.65.948.837c-.521 1.058-1.51 3.84.372 6.951c-1.324.13-2.65.317-3.688.986a7.2 7.2 0 0 0-1.878 1.791c-.629-.108-2.932-.675-3.334-3.231c.25-.194.452-.45.577-.766a.5.5 0 1 0-.93-.368a.77.77 0 0 1-.454.461a.78.78 0 0 1-.643-.07a.5.5 0 0 0-.486.874c.284.158.588.238.89.238c.037 0 .072-.017.109-.019c.476 2.413 2.383 3.473 3.732 3.794a3.7 3.7 0 0 0-.331 1.192a.5.5 0 0 0 .454.542l.045.002a.5.5 0 0 0 .498-.456c.108-1.213 1.265-2.48 2.293-3.145c.964-.621 2.375-.752 3.741-.879c1.325-.121 2.577-.237 3.558-.767m12.866-1.504a.5.5 0 0 0 .878.48c.019-.034 1.842-3.449-1.571-5.744a.5.5 0 0 0-.558.83c2.644 1.778 1.309 4.326 1.251 4.434M9.876 9.07a.5.5 0 0 0 .406-.208c1.45-2.017 3.458-1.327 3.543-1.295a.5.5 0 0 0 .345-.938c-.96-.356-3.177-.468-4.7 1.65a.5.5 0 0 0 .406.791m13.072-1.888c2.225-.181 3.237 1.432 3.283 1.508a.5.5 0 0 0 .863-.507c-.054-.091-1.34-2.218-4.224-1.998a.5.5 0 0 0 .078.997m9.15 14.611c-.246-.014-.517.181-.539.457c-.002.018-.161 1.719-1.91 2.294a.499.499 0 0 0 .157.975a.5.5 0 0 0 .156-.025c2.372-.778 2.586-3.064 2.594-3.161a.5.5 0 0 0-.458-.54"></path>
+      <path d="M7.347 16.934a.5.5 0 1 0 .965.26a1.423 1.423 0 0 1 1.652-1.014a.5.5 0 0 0 .205-.979a2.35 2.35 0 0 0-1.248.086c-1.166-1.994-.939-3.96-.936-3.981a.5.5 0 0 0-.429-.562a.503.503 0 0 0-.562.427c-.013.097-.28 2.316 1.063 4.614a2.4 2.4 0 0 0-.71 1.149m11.179-2.47a1.07 1.07 0 0 1 1.455.015a.5.5 0 0 0 .707-.011a.5.5 0 0 0-.01-.707a2 2 0 0 0-.797-.465c.296-1.016.179-1.467-.096-2.312a21 21 0 0 1-.157-.498l-.03-.1c-.364-1.208-.605-2.005.087-3.13a.5.5 0 0 0-.852-.524c-.928 1.508-.587 2.637-.192 3.944l.03.1q.088.29.163.517c.247.761.322 1.016.02 1.936a2 2 0 0 0-1.01.504a.5.5 0 0 0 .682.731m6.365-2.985a2 2 0 0 0 .859-.191a.5.5 0 0 0-.426-.905a1.07 1.07 0 0 1-1.384-.457a.5.5 0 1 0-.881.472c.18.336.448.601.76.785c-.537 1.305-.232 2.691.017 3.426a.5.5 0 1 0 .947-.319c-.168-.498-.494-1.756-.002-2.826c.038.002.073.015.11.015m4.797 9.429a.497.497 0 0 0-.531-.467a1.825 1.825 0 0 1-1.947-1.703a.51.51 0 0 0-.533-.465a.5.5 0 0 0-.465.533c.041.59.266 1.122.608 1.555c-.804.946-1.857 1.215-2.444 1.284c-.519.062-.973.009-1.498-.053c-.481-.055-1.025-.118-1.698-.098l-.005.001c-.02-.286-.088-.703-.305-1.05a.501.501 0 0 0-.847.531c.134.215.159.558.159.725c-.504.181-.94.447-1.334.704c-.704.458-1.259.82-2.094.632c-.756-.173-1.513-.208-2.155-.118c-.1-.251-.258-.551-.502-.782a.5.5 0 0 0-.687.727c.086.081.154.199.209.317c-1.103.454-1.656 1.213-1.682 1.25a.499.499 0 0 0 .407.788a.5.5 0 0 0 .406-.205c.005-.008.554-.743 1.637-1.04c.56-.154 1.363-.141 2.146.037c.219.05.422.067.619.07c.093.218.129.477.134.573a.5.5 0 0 0 .499.472l.027-.001a.5.5 0 0 0 .473-.523a3 3 0 0 0-.13-.686c.461-.167.862-.428 1.239-.673c.572-.373 1.113-.726 1.82-.749c.592-.021 1.08.036 1.551.091c.474.055.94.091 1.454.061c.091.253.084.591.07.704a.503.503 0 0 0 .497.563a.5.5 0 0 0 .495-.435a2.9 2.9 0 0 0-.059-.981a4.67 4.67 0 0 0 2.345-1.471a2.8 2.8 0 0 0 1.656.413a.5.5 0 0 0 .465-.531"></path>
+    </g>
   </svg>
 );
 
-// Money with wings icon for Mike's call (based on Emojione)
+// Money with wings icon for Mike's call (Emojione)
 const MoneyWingsIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="12" y="16" width="24" height="16" rx="2" fill="currentColor"/>
-    <circle cx="24" cy="24" r="6" fill="currentColor" stroke="#1a1a1a" strokeWidth="2"/>
-    <text x="24" y="28" textAnchor="middle" fill="#1a1a1a" fontSize="10" fontWeight="bold" fontFamily="system-ui">$</text>
-    <path d="M12 20c-4-2-8-1-10 2c2-1 5 0 8 2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M12 24c-4 0-8 1-10 4c2-1 5-1 8 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M12 28c-4 2-8 3-10 2c2 0 5-1 8-2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M36 20c4-2 8-1 10 2c-2-1-5 0-8 2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M36 24c4 0 8 1 10 4c-2-1-5-1-8 0" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M36 28c4 2 8 3 10 2c-2 0-5-1-8-2" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" className={className} style={style}>
+    <path fill="#699635" d="M61 20.9C54.8 15.3 48.6 9.6 42.4 4C33.3 17.8 17.9 30.1 3.3 39c-.4 1.9-.8 3.7-1.3 5.5C8.4 50.3 14.8 56.2 21.2 62C36.3 53.7 52.3 41.9 62 28.5c-.3-2.5-.7-5-1-7.6"></path>
+    <path fill="#83bf4f" d="M22.4 54.6C16.1 48.8 9.8 43 3.5 37.3c15.7-8.9 28.9-21 38.6-35.3C48.4 7.8 54.7 13.5 61 19.3c-9.7 14.3-22.9 26.4-38.6 35.3"></path>
+    <g fill="#699635">
+      <path d="M20.8 50.8c-4.2-3.8-8.4-7.7-12.6-11.5c.3-.2.5-.3.8-.5c.8-.5 1-1.4.3-2.1l-.6-.6C21.4 28.3 32.4 18.3 41 6.7l.6.6c.7.6 1.7.5 2.3-.2c.2-.2.3-.5.5-.7c4.2 3.8 8.4 7.7 12.6 11.5c-.2.2-.3.5-.5.7c-.6.8-.5 1.9.2 2.6l.6.6C48.7 33.3 37.7 43.3 25 51.1l-.6-.6c-.7-.6-1.9-.7-2.8-.2c-.3.2-.5.3-.8.5m-9.9-11.4c3.4 3.1 6.8 6.2 10.3 9.4c1.3-.4 2.8-.3 4 .3C36.8 41.7 46.9 32.5 55 21.8c-.7-1.1-.8-2.5-.3-3.7c-3.4-3.1-6.8-6.2-10.3-9.4c-.9.8-2.2.9-3.3.3C33 19.8 22.9 29 11.3 36.4c.6 1 .5 2.2-.4 3"></path>
+      <path d="M20 37.3c1.1-.4 2.3-.3 3.1.4c-.5.4-1.1.8-1.6 1.2c-.2-.2-.7-.2-.9 0c-.3.2-.4.5-.1.7c.2.2.7.2 1 0c1.2-.8 2.9-.9 3.8 0c.7.7.8 1.7.1 2.5c.2.2.4.3.6.5c-.5.3-1 .7-1.5 1c-.2-.2-.4-.4-.6-.5c-1.1.3-2.3.2-3-.5c.6-.4 1.1-.7 1.7-1.1c.2.2.7.2 1 0s.3-.5.1-.7s-.6-.2-.9 0c-.7.5-1.6.7-2.4.6q-.9-.15-1.5-.6c-.7-.7-.7-1.6-.1-2.4c-.2-.1-.3-.3-.5-.5c.5-.3 1-.7 1.5-1c-.1.1.1.2.2.4m23.2-21.4c.9-.6 2-.6 2.7.1l-1.2 1.5c-.2-.2-.6-.2-.8.1s-.2.7 0 .9s.6.2.8-.1c.9-1.1 2.4-1.3 3.3-.5c.7.7.9 1.8.5 2.8c.2.2.4.3.6.5c-.4.5-.7.9-1.1 1.4c-.2-.2-.4-.4-.6-.5c-.9.5-1.9.5-2.6-.2c.4-.5.9-1 1.3-1.5c.2.2.6.2.8-.1s.2-.7 0-.9s-.6-.2-.8.1c-.5.6-1.3 1-2 1c-.5 0-1-.2-1.4-.5c-.7-.7-.9-1.7-.5-2.7c-.2-.1-.3-.3-.5-.5c.4-.4.8-.9 1.1-1.4c0 .2.2.3.4.5m-3 19.6c-3.2 2.9-8.6 2.8-11.7 0c-3.1-2.9-2.9-7.4.3-10.3s8.2-3.2 11.3-.3c3.2 2.8 3.3 7.7.1 10.6"></path>
+    </g>
+    <path fill="#ffdd7d" d="m21.8 24.5l18.9 17.3c2.2-1.8 4.2-3.7 6.2-5.7L28.1 18.8q-3 2.85-6.3 5.7"></path>
+    <path fill="#dbb471" d="M40.8 49.4c2.1-1.6 4.2-3.3 6.2-5V36c-2 2-4.1 3.9-6.2 5.7z"></path>
+    <path fill="#8d9998" d="M12.1 24.7c1.1-.4 2-1 2.9-1.7s1.7-1.4 2.6-2.2c.9-.7 1.8-1.5 2.8-2c1-.6 2.3-.9 3.4-.7c-1.1.2-2.1.7-3 1.4c-.9.6-1.7 1.4-2.6 2.1s-1.8 1.5-2.8 2.1s-2.2 1-3.3 1"></path>
+    <path fill="#e8e8e8" d="M39.8 33.1s4.9 1.4 16.3-1.6s6 29.8-14.8 29.8c-2.3 0-2.4-2.9 4-8.1c0 0-9 2.1-5.1-4.6c0 0-6.4 1.1-3.5-4c0 0 1.3-3.8.1-8.1c.1 0 .8-2.2 3-3.4"></path>
+    <g fill="#d1d1d1">
+      <path d="M61.5 34.7c.2 8.8-6.8 23.4-20.7 23.4h-.2c-1.3 2.1-.7 3.3.7 3.3c15.8-.1 22.7-18.9 20.2-26.7"></path>
+      <path d="M54.3 39.5c-3 10.8-15 11.7-15 11.7c-.5 2.3.5 3.3 1.8 3.3c4.4.1 12.6-7.2 13.2-15m-8.4 0c-7.1 10-9.6 6.3-9.6 6.3c-1.8 4 2.9 4 3.7 3.1c2.3-2.5 6-7.7 5.9-9.4"></path>
+    </g>
+    <path fill="#8d9998" d="M40.5 58.4c1.2-1.6 2.7-2.9 4.2-4.2s3-2.6 4.5-4c1.4-1.4 2.8-3 3.8-4.8s1.5-3.9 1.3-5.9c-.2 2-.9 3.9-2 5.5s-2.4 3.1-3.8 4.5s-2.9 2.7-4.3 4.2c-1.5 1.3-2.8 2.9-3.7 4.7m-1.2-7.2c.4-1.1 1-2 1.7-2.9s1.4-1.7 2.2-2.6c.7-.9 1.5-1.8 2-2.8c.6-1 .9-2.3.7-3.4c-.2 1.1-.7 2.1-1.4 3c-.6.9-1.4 1.7-2.1 2.6s-1.5 1.8-2.1 2.8s-1 2.2-1 3.3"></path>
+    <path fill="#e8e8e8" d="M30.2 24.2s-1.4-4.9 1.6-16.3S2 1.9 2 22.7c0 2.3 2.9 2.4 8.1-4c0 0-2.1 9 4.6 5.1c0 0-1.1 6.4 4 3.5c0 0 3.8-1.3 8.1-.1c0-.1 2.2-.8 3.4-3"></path>
+    <g fill="#d1d1d1">
+      <path d="M28.6 2.5C19.8 2.3 5.2 9.3 5.2 23.2v.2c-2.1 1.2-3.2.7-3.2-.7C2 6.9 20.8 0 28.6 2.5"></path>
+      <path d="M23.8 9.7c-10.8 3-11.7 15-11.7 15c-2.3.5-3.3-.5-3.3-1.8c-.1-4.4 7.2-12.6 15-13.2m0 8.4c-10 7.1-6.3 9.6-6.3 9.6c-4 1.8-4-2.9-3.1-3.7c2.5-2.3 7.7-6 9.4-5.9"></path>
+    </g>
+    <path fill="#8d9998" d="M4.9 23.5c1.6-1.2 2.9-2.7 4.2-4.2s2.6-3 4-4.5c1.4-1.4 3-2.8 4.8-3.8s3.9-1.5 5.9-1.3c-2 .2-3.9.9-5.5 2s-3.1 2.4-4.5 3.8s-2.7 2.9-4.2 4.3c-1.4 1.5-2.9 2.8-4.7 3.7"></path>
   </svg>
 );
 
-// Woman technologist icon for Women's call (based on Twemoji)
+// Woman technologist icon for Women's call (Twemoji)
 const WomanTechnologistIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="24" cy="14" r="10" fill="#ffcc4d"/>
-    <path d="M14 10c0-6 4-8 10-8s10 2 10 8c0 4-2 6-4 7l-6-3l-6 3c-2-1-4-3-4-7z" fill="#5c4033"/>
-    <circle cx="20" cy="14" r="1.5" fill="#1a1a1a"/>
-    <circle cx="28" cy="14" r="1.5" fill="#1a1a1a"/>
-    <path d="M22 18c0 0 1 2 2 2s2-2 2-2" stroke="#1a1a1a" strokeWidth="1.5" fill="none"/>
-    <rect x="6" y="30" width="36" height="14" rx="2" fill="currentColor"/>
-    <rect x="10" y="34" width="28" height="6" rx="1" fill="#1a1a1a"/>
-    <path d="M18 24l6 6l6-6" fill="currentColor"/>
+  <svg className={className} style={style} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+    <path fill="#9266cc" d="M35 36v-7c0-3.315-3.685-5.5-7-5.5H16c-3.313 0-7 2.185-7 5.5v7z"></path>
+    <path fill="#ffac33" d="M21.944 1.569c4.106 0 10.948 2.053 10.948 10.948s0 10.948-2.053 10.948s-4.79-2.053-8.896-2.053c-4.105 0-6.784 2.053-8.895 2.053c-2.287 0-2.053-8.211-2.053-10.948c.002-8.895 6.844-10.948 10.949-10.948"></path>
+    <path fill="#ffdc5d" d="M18.328 23.52C18.328 25 20.5 25.5 22 25.5s3.66-.5 3.66-1.98v-3.205h-7.332z"></path>
+    <path fill="#f9ca55" d="M18.321 21.679c1.023 1.155 2.291 1.468 3.669 1.468s2.647-.312 3.67-1.468v-2.936h-7.339z"></path>
+    <path fill="#ffdc5d" d="M13.734 12.217c0-5.834 3.676-10.563 8.21-10.563s8.211 4.729 8.211 10.563c0 5.833-3.677 10.286-8.211 10.286s-8.21-4.452-8.21-10.286"></path>
+    <path fill="#df1f32" d="M21.944 20.043c-1.605 0-2.446-.794-2.536-.885a.684.684 0 0 1 .96-.974c.035.032.553.491 1.576.491c1.039 0 1.557-.473 1.577-.492a.69.69 0 0 1 .963.02c.26.269.26.691-.004.955c-.089.091-.929.885-2.536.885"></path>
+    <path fill="#ffac33" d="M11.725 15.5c-.021-1-.044-.224-.044-.465c0-3.422 2.053.494 2.053-1.943c0-2.439 1.368-2.683 2.736-4.051c.685-.685 2.053-2.026 2.053-2.026s3.421 2.067 6.158 2.067c2.736 0 5.474 1.375 5.474 4.112s2.053-1.584 2.053 1.837c0 .244-.022-.531-.04.469h.718c.007-2 .007-1.924.007-3.202C32.893 3.403 26.05.091 21.945.091S10.998 3.348 10.998 12.243c0 .793-.02 1.257.008 3.257z"></path>
+    <path fill="#662113" d="M18.608 14.386a.85.85 0 0 1-.846-.846v-.845c0-.465.381-.846.846-.846s.847.381.847.846v.845a.85.85 0 0 1-.847.846m6.765 0a.85.85 0 0 1-.846-.846v-.845c0-.465.381-.846.846-.846s.846.381.846.846v.845a.85.85 0 0 1-.846.846"></path>
+    <path fill="#c1694f" d="M22.837 17h-1.691a.424.424 0 0 1-.423-.423v-.153c0-.233.189-.424.423-.424h1.691c.232 0 .423.19.423.424v.153a.424.424 0 0 1-.423.423"></path>
+    <path fill="#ffdc5d" d="M15.444 13.436c0 1.448-.734 2.622-1.639 2.622s-1.639-1.174-1.639-2.622s.734-2.623 1.639-2.623c.905-.001 1.639 1.174 1.639 2.623m16.389 0c0 1.448-.733 2.622-1.639 2.622c-.905 0-1.639-1.174-1.639-2.622s.733-2.623 1.639-2.623c.906-.001 1.639 1.174 1.639 2.623"></path>
+    <path fill="#e1e8ed" d="M33 35a1 1 0 0 1-1 1H22a1 1 0 1 1 0-2h10a1 1 0 0 1 1 1"></path>
+    <path fill="#e1e8ed" d="M20.24 22H3.759c-1.524 0-3.478.771-2.478 3.531l3.072 8.475C4.354 34.006 4.75 36 7 36h20l-4-11.24c-.438-1.322-1.235-2.76-2.76-2.76"></path>
+    <path fill="#99aab5" d="M19.24 22H2.759c-1.524 0-3.478.771-2.478 3.531l3.072 8.475C3.354 34.006 3.75 36 6 36h20l-4-11.24c-.438-1.322-1.235-2.76-2.76-2.76"></path>
+    <path fill="#e1e8ed" d="M14.019 29.283c.524 1.572.1 3.13-.949 3.479c-1.047.35-2.322-.641-2.846-2.213s-.099-3.13.949-3.479s2.323.641 2.846 2.213M19 24.75H3a.75.75 0 0 1 0-1.5h16a.75.75 0 0 1 0 1.5"></path>
   </svg>
 );
 
@@ -118,29 +153,20 @@ const CrownColorIcon = ({ className = '', style = {} }: { className?: string; st
   </svg>
 );
 
-// S logo icon for SAA Support
-const SLogoIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32 12c0-4.4-3.6-8-8-8c-4.4 0-8 3.6-8 8c0 3 1.6 5.5 4 6.9V24h-8c-4.4 0-8 3.6-8 8s3.6 8 8 8h16c4.4 0 8-3.6 8-8s-3.6-8-8-8h-8v-5.1c2.4-1.4 4-3.9 4-6.9z" fill="currentColor"/>
-    <text x="24" y="18" textAnchor="middle" fill="#1a1a1a" fontSize="14" fontWeight="bold" fontFamily="system-ui">S</text>
-  </svg>
-);
 
-// Location indicator icon for State Support (based on Openmoji)
+// Location indicator icon for State Support (Openmoji)
 const LocationIndicatorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M24 4C16.3 4 10 10.3 10 18c0 10 14 26 14 26s14-16 14-26c0-7.7-6.3-14-14-14z" fill="currentColor"/>
-    <circle cx="24" cy="18" r="6" fill="#1a1a1a"/>
+  <svg className={className} style={style} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72">
+    <circle cx={36.446} cy={28.864} r={7.225} fill="#fff"></circle>
+    <path fill="#d22f27" d="M52.573 29.11c0-9.315-7.133-16.892-15.903-16.892s-15.903 7.577-15.903 16.896c.002.465.223 11.609 12.96 31.245a3.46 3.46 0 0 0 2.818 1.934c1.84 0 3.094-2.026 3.216-2.232C52.58 40.414 52.58 29.553 52.573 29.11M36.67 35.914a7.083 7.083 0 1 1 7.083-7.083a7.09 7.09 0 0 1-7.083 7.083"></path>
+    <path fill="#ea5a47" d="M52.573 29.11c0-9.315-7.133-16.892-15.903-16.892a15 15 0 0 0-3.865.525c8.395.45 15.1 7.823 15.1 16.85c.006.443.006 11.303-12.813 30.95a6 6 0 0 1-.586.797c.52.584 1.257.928 2.04.954c1.839 0 3.093-2.027 3.215-2.233C52.58 40.414 52.58 29.553 52.573 29.11"></path>
+    <g fill="none" stroke="#000" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}>
+      <path d="M36.545 62.294a3.46 3.46 0 0 1-2.817-1.935C20.99 40.723 20.769 29.58 20.766 29.114c0-9.32 7.134-16.896 15.904-16.896s15.903 7.577 15.903 16.892c.007.444.007 11.304-12.812 30.95c-.122.207-1.377 2.234-3.216 2.234"></path>
+      <path d="M36.67 35.914a7.083 7.083 0 1 1 7.083-7.083a7.09 7.09 0 0 1-7.083 7.083"></path>
+    </g>
   </svg>
 );
 
-// eXp X logo icon for eXp Support
-const ExpXIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path fill="currentColor" d="M140.625 59.765625 L232.421875 175.78125 L125 325.683594 L204.101563 325.683594 L262.695313 241.210938 L321.289063 325.683594 L400.878906 325.683594 L293.457031 175.292969 L385.253906 59.765625 L305.664063 59.765625 L262.695313 117.675781 L220.214844 59.765625 Z"/>
-    <path fill="currentColor" d="M125 352.539063 L125 440.917969 L400.390625 440.917969 L400.390625 352.539063 L327.148438 352.539063 L327.148438 387.207031 L353.515625 387.207031 L353.515625 413.574219 L172.363281 413.574219 L172.363281 387.207031 L198.242188 387.207031 L198.242188 352.539063 Z"/>
-  </svg>
-);
 
 // House icon for Production Know-How (based on Noto)
 const HouseIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
@@ -152,21 +178,35 @@ const HouseIcon = ({ className = '', style = {} }: { className?: string; style?:
   </svg>
 );
 
-// Check icon for Checklists (based on Streamline)
+// Check icon for Agent Checklists (Streamline Ultimate Color Check)
 const CheckColorIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="24" cy="24" r="20" fill="currentColor"/>
-    <path d="M14 24l7 7l13-13" stroke="#1a1a1a" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className={className} style={style}>
+    <g fill="none">
+      <path fill="#00cf07" d="M1.987 13.704a1.084 1.084 0 0 0 0 1.534l5.203 5.204c.424.423 1.11.423 1.534 0l13.289-13.29a1.084 1.084 0 0 0 0-1.533l-2.06-2.06a1.084 1.084 0 0 0-1.533 0L7.957 14.022L5.58 11.644a1.085 1.085 0 0 0-1.534 0z"></path>
+      <path fill="#4eff52" d="M7.957 17.167L20.76 4.365l-.809-.809a1.085 1.085 0 0 0-1.534 0L7.957 14.022L5.58 11.644a1.084 1.084 0 0 0-1.534 0l-.809.809z"></path>
+      <path stroke="#191919" strokeLinecap="round" strokeLinejoin="round" d="M1.987 13.704a1.084 1.084 0 0 0 0 1.534l5.203 5.204c.424.423 1.11.423 1.534 0l13.289-13.29a1.084 1.084 0 0 0 0-1.533l-2.06-2.06a1.084 1.084 0 0 0-1.533 0L7.957 14.022L5.58 11.644a1.085 1.085 0 0 0-1.534 0z" strokeWidth={1}></path>
+    </g>
   </svg>
 );
 
-// Handshake icon for Mentor (based on Noto)
+// Person bowing icon for Get the Most From Your Mentor (Fluent Emoji Flat Person Bowing)
 const HandshakeIcon = ({ className = '', style = {} }: { className?: string; style?: React.CSSProperties }) => (
-  <svg className={className} style={style} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 20l8-8l8 4l4-4l8 8l-4 4l8 8l-8 8l-8-8l-4 4l-8-8l4-4l-8-8z" fill="currentColor" opacity="0.3"/>
-    <path d="M12 18l6 2l6-4l6 6l-4 4l6 6l-4 4l-6-6l-4 4l-6-6l4-4l-6-6z" fill="currentColor"/>
-    <circle cx="18" cy="22" r="2" fill="#1a1a1a"/>
-    <circle cx="30" cy="26" r="2" fill="#1a1a1a"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className={className} style={style}>
+    <g fill="none">
+      <path fill="#ff6723" d="M26.916 19.188A3.58 3.58 0 0 0 23.61 17H8.31c-1.442 0-2.744.86-3.305 2.188L2.25 25.83H7L14.5 30h3l7.5-4.15l4.75-.017z"></path>
+      <path fill="#ff8101" d="M11.307 25.688a3 3 0 0 0-.332-.098L6.31 24.195A3.5 3.5 0 0 0 5.189 24C3.423 24 2 25.346 2 26.995S3.423 30 5.178 30H9c.634-.459 4-1.17 4-1.98c0-1.064-.706-1.971-1.693-2.332m9.386 0a3 3 0 0 1 .332-.098l4.664-1.395A3.5 3.5 0 0 1 26.811 24C28.577 24 30 25.346 30 26.995S28.577 30 26.822 30H23c-.634-.459-4-1.17-4-1.98c0-1.064.706-1.971 1.693-2.332"></path>
+      <path fill="#46a4fb" d="m15.66 4.79l-1.122-2.248a.377.377 0 0 1 .34-.542h2.244c.28 0 .46.291.34.542L16.34 4.789a.38.38 0 0 1-.68 0m-5.148 1.193l-2.38-.79a.373.373 0 0 1-.14-.62l1.58-1.58c.2-.2.53-.12.62.15l.79 2.38c.1.28-.18.56-.47.46M23.86 5.19l-2.37.79c-.29.1-.57-.18-.47-.46l.79-2.38c.09-.27.42-.35.62-.15l1.58 1.58c.19.2.11.53-.15.62"></path>
+      <path fill="#fdbb11" d="M11.75 17.75a2 2 0 1 1-4 0a2 2 0 0 1 4 0m12.5 0a2 2 0 1 1-4 0a2 2 0 0 1 4 0"></path>
+      <path fill="#ffc83d" d="M14.6 8.52h2.82c3.16 0 5.59 2.79 5.18 5.91L22 21.7s-.44 4.3-5.97 4.3S10 21.7 10 21.7l-.57-7.27c-.36-3.27 2.01-5.91 5.17-5.91"></path>
+      <path fill="#fff" d="M11.2 20.88c.2-.77.9-1.35 1.74-1.35c.87 0 1.59.62 1.74 1.44c.04.18-.11.35-.29.35h-2.85c-.22 0-.4-.22-.34-.44m9.6 0c-.2-.77-.9-1.35-1.74-1.35c-.87 0-1.59.62-1.74 1.44c-.04.18.11.35.29.35h2.85c.22 0 .4-.22.34-.44"></path>
+      <path fill="#d37034" d="M11.33 18.55a.35.35 0 0 0 .49.07c.01-.01.77-.57 1.88-.44c.2.02.37-.12.39-.31a.357.357 0 0 0-.31-.39c-1.392-.169-2.34.542-2.39.58a.35.35 0 0 0-.06.49m8.85.07c.06.05.14.07.21.07c.1 0 .21-.04.28-.14a.35.35 0 0 0-.06-.49c-.05-.037-.997-.749-2.39-.58c-.2.02-.33.2-.31.39s.19.32.39.31c1.11-.13 1.87.43 1.88.44"></path>
+      <path fill="#7d4533" d="M12.06 21.02a1.14 1.14 0 1 1 2.24.3h-2.2a1.4 1.4 0 0 1-.04-.3m7.88 0c0-.63-.51-1.14-1.14-1.14s-1.15.52-1.14 1.14c0 .1.01.2.04.3h2.2c.02-.09.04-.19.04-.3"></path>
+      <path fill="#000" d="M13.2 20.37c.36 0 .65.29.65.65c0 .11-.02.21-.07.3h-1.16a.7.7 0 0 1-.07-.3c0-.36.29-.65.65-.65m5.59 0c-.36 0-.65.29-.65.65c0 .11.03.21.07.3h1.16c.04-.09.07-.19.07-.3c0-.36-.29-.65-.65-.65"></path>
+      <path fill="#ed9200" d="m15.52 20.92l-.66 2.14c-.14.44.19.88.65.88h.98c.46 0 .79-.45.65-.88l-.66-2.14c-.15-.47-.82-.47-.96 0"></path>
+      <path fill="#ffc83d" d="M11.335 26.653a1.6 1.6 0 0 0-.69-.153c-.915.01-1.655.786-1.645 1.735L9.01 30h5.721c.428 0 .769-.398.769-.847a.82.82 0 0 0-.457-.735zm9.33 0c.214-.102.447-.153.69-.153c.915.01 1.655.786 1.645 1.735V30h-5.731c-.428 0-.769-.398-.769-.847c0-.316.185-.602.457-.735z"></path>
+      <path fill="#f1a11e" d="M23.849 11.149a2.97 2.97 0 0 0-1.623-1.34a3.17 3.17 0 0 1-1.733-1.369A2.98 2.98 0 0 0 17.938 7c-.41 0-.811.08-1.172.242a1.93 1.93 0 0 1-1.533 0A2.8 2.8 0 0 0 14.071 7a2.98 2.98 0 0 0-2.524 1.4a3.37 3.37 0 0 1-1.773 1.41A3.02 3.02 0 0 0 8.1 11.24a3.04 3.04 0 0 0 .18 3.121c.22.332.35.715.35 1.118v1.984c0 .574.498 1.037 1.069 1.037l-.037-.443v.01c0-2.376 1.764-3.524 4.128-3.524h1.713c.32.03.59.231.711.533a3.1 3.1 0 0 0 2.835 1.833h1.563c.911.04 1.653-.06 1.753.836l-.016.745c.551 0 1.008-.443 1.008-.997v-2.025c0-.392.12-.784.35-1.107a2.98 2.98 0 0 0 .14-3.212"></path>
+      <path fill="#fff" d="M13.01 20.57a.2.2 0 1 1-.4 0a.2.2 0 0 1 .4 0m5.63 0a.2.2 0 1 1-.4 0a.2.2 0 0 1 .4 0"></path>
+    </g>
   </svg>
 );
 
@@ -2690,13 +2730,10 @@ function AgentPortal() {
       </div>
 
       {/* ========== Floating Help Buttons - Rendered at root level for proper fixed positioning ========== */}
-      {/* Support Help Button */}
-      {activeSection === 'support' && (
-        <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="teal" ariaLabel="Support Help" />
-      )}
+      {/* Support Help Button - REMOVED: UI is self-explanatory */}
       {/* Team Calls Help Button */}
       {activeSection === 'calls' && (
-        <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="gold" ariaLabel="Team Calls Help" />
+        <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
       )}
       {/* Templates Help Button */}
       {activeSection === 'templates' && (
@@ -3176,29 +3213,24 @@ function AgentPortal() {
                 </code>
               </div>
 
-              {/* Quick Tips */}
+              {/* Hidden Advantage */}
               <div
                 className="rounded-lg p-4"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.1) 0%, rgba(168, 85, 247, 0.02) 100%)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
                 }}
               >
-                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Quick Tips</p>
-                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Add your photo and choose an accent color to make it yours
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Add buttons for anything you want to share (calendars, socials, etc.)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Drag buttons to reorder them - put your most important links first
-                  </li>
-                </ul>
+                <p className="text-purple-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                  Hidden Advantage
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Other agents scope out the competition <em>all the time</em>. The <strong className="text-purple-400">"About Our eXp Team"</strong> button on your page will naturally be seen by agents checking you out - and maybe even clients who have been interested in becoming an agent. Every click is a potential recruit.
+                </p>
               </div>
             </div>
 
@@ -3286,7 +3318,7 @@ function AgentPortal() {
                 Welcome to your New Agent resource hub. Here you'll find everything you need to hit the ground running at eXp Realty and Smart Agent Alliance.
               </p>
 
-              {/* Categories Overview */}
+              {/* Production Know-How */}
               <div
                 className="rounded-lg p-4"
                 style={{
@@ -3295,44 +3327,72 @@ function AgentPortal() {
                 }}
               >
                 <p className="text-[#ffd700] text-sm mb-2 font-medium flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-                    <rect x="9" y="3" width="6" height="4" rx="2" />
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 9.3V4h-3v2.6L12 3 2 12h3v8h6v-6h2v6h6v-8h3l-3-2.7zM17 18h-2v-6H9v6H7v-7.81l5-4.5 5 4.5V18z"/>
                   </svg>
-                  Curated Resources
+                  Production Know-How
                 </p>
                 <p className="text-[#e5e4dd]/80 text-sm">
-                  Each category contains guides, checklists, and step-by-step instructions tailored for new agents. Click any category card to explore its documents.
+                  Master the fundamentals of real estate production with proven scripts, listing presentation guides, and strategies to win more deals. Includes FSBO scripts, buyer negotiation tactics, and open house best practices.
                 </p>
               </div>
 
-              {/* What's Included */}
+              {/* Agent Checklists */}
               <div
                 className="rounded-lg p-4"
                 style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(34, 197, 94, 0.02) 100%)',
+                  border: '1px solid rgba(34, 197, 94, 0.2)',
                 }}
               >
-                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">What's Included</p>
-                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Getting started checklists and setup guides
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    eXp Realty platform tutorials and best practices
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Smart Agent Alliance exclusive resources
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Downloadable documents for offline reference
-                  </li>
-                </ul>
+                <p className="text-green-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  Agent Checklists
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Never miss a step with comprehensive checklists for buyer offers, listing contracts, closing processes, and transaction management. Perfect for staying organized and professional.
+                </p>
+              </div>
+
+              {/* 8 Ways to Get Clients */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 100%)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                }}
+              >
+                <p className="text-blue-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                  </svg>
+                  8 Ways to Get Clients
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Learn the only ways to start earning commissions as a new agent. Focus on 1-3 methods that fit your style - from sphere marketing to online leads to open houses and referral networks.
+                </p>
+              </div>
+
+              {/* Get the Most From Your Mentor */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.08) 0%, rgba(168, 85, 247, 0.02) 100%)',
+                  border: '1px solid rgba(168, 85, 247, 0.2)',
+                }}
+              >
+                <p className="text-purple-400 text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  Get the Most From Your Mentor
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Maximize your first 3 transactions with mentor support. Learn what to expect from your mentor, how to evaluate them, and get connected to local resources for buyers and sellers.
+                </p>
               </div>
             </div>
 
@@ -3435,7 +3495,7 @@ function AgentPortal() {
                   Canva Access
                 </p>
                 <p className="text-[#e5e4dd]/80 text-sm">
-                  Use your <strong className="text-[#00c4cc]">eXp Realty email credentials</strong> to log into Canva and access these templates. The templates are shared with all eXp agents.
+                  These templates are <strong className="text-[#00c4cc]">exclusive to Smart Agent Alliance members</strong>. You'll receive Canva access credentials when you join SAA - reach out to your upline if you need help accessing the templates.
                 </p>
               </div>
 
@@ -3461,35 +3521,6 @@ function AgentPortal() {
                     <span className="text-[#e5e4dd]/70 text-sm">Black background</span>
                   </div>
                 </div>
-              </div>
-
-              {/* Categories */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                }}
-              >
-                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Template Categories</p>
-                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Social media posts and stories
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Listing marketing materials
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Agent attraction content
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Business cards and branding
-                  </li>
-                </ul>
               </div>
             </div>
 
@@ -3616,11 +3647,11 @@ function AgentPortal() {
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400">•</span>
-                    Step-by-step join instructions with your info pre-filled
+                    Video walkthrough of the opportunity
                   </li>
                   <li className="flex items-start gap-2">
                     <span className="text-purple-400">•</span>
-                    Video walkthrough of the opportunity
+                    Step-by-step join instructions with your info pre-filled
                   </li>
                 </ul>
               </div>
@@ -3666,138 +3697,7 @@ function AgentPortal() {
         </div>
       )}
 
-      {/* Support Help Modal */}
-      {showSupportHelpModal && (
-        <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
-          onClick={() => setShowSupportHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
-        >
-          {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
-          <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
-            style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(20, 184, 166, 0.3)',
-              boxShadow: '0 0 40px rgba(20, 184, 166, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-            }}
-            onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
-          >
-            {/* Header - Teal gradient accent */}
-            <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
-              style={{
-                background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.15) 0%, transparent 50%)',
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className="p-2 rounded-lg"
-                  style={{
-                    background: 'rgba(20, 184, 166, 0.2)',
-                    border: '1px solid rgba(20, 184, 166, 0.4)',
-                    boxShadow: '0 0 12px rgba(20, 184, 166, 0.3)',
-                  }}
-                >
-                  <MessageSquare className="w-6 h-6 text-teal-400" />
-                </div>
-                <h2 className="text-xl font-semibold text-teal-400" style={{ textShadow: '0 0 20px rgba(20, 184, 166, 0.3)' }}>Support Help</h2>
-              </div>
-              <button
-                onClick={() => setShowSupportHelpModal(false)}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-teal-400 hover:bg-teal-400/10 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Content */}
-            <div className="p-5 space-y-4">
-              {/* What it is */}
-              <p className="text-[#e5e4dd]/80">
-                Your direct line to Smart Agent Alliance resources, eXp support, and brokerage contacts. <strong className="text-teal-400">Everything you need in one place.</strong>
-              </p>
-
-              {/* What's Available */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(20, 184, 166, 0.02) 100%)',
-                  border: '1px solid rgba(20, 184, 166, 0.2)',
-                }}
-              >
-                <p className="text-teal-400 text-sm mb-2 font-medium flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  Support Resources
-                </p>
-                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-teal-400">•</span>
-                    Direct contact for Doug Smart (Team Leader)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-teal-400">•</span>
-                    State-specific broker contacts and regional support
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-teal-400">•</span>
-                    eXp Support links (Workplace, Help Desk, KW Connect)
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-teal-400">•</span>
-                    Smart Agent Alliance AI assistant
-                  </li>
-                </ul>
-              </div>
-
-              {/* Quick Tip */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                }}
-              >
-                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-2">Pro Tip</p>
-                <p className="text-[#e5e4dd]/70 text-sm">
-                  For general eXp questions, check Workplace first - most answers are there. For team-specific help or SAA resources, reach out to Doug directly.
-                </p>
-              </div>
-            </div>
-
-            {/* Footer */}
-            <div className="p-5 border-t border-white/10">
-              <button
-                onClick={() => setShowSupportHelpModal(false)}
-                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
-                style={{
-                  background: 'linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)',
-                  color: '#ffffff',
-                  boxShadow: '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(20, 184, 166, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                Got it!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Support Help Modal - REMOVED: UI is self-explanatory */}
 
       {/* Team Calls Help Modal */}
       {showTeamCallsHelpModal && (
@@ -3857,41 +3757,7 @@ function AgentPortal() {
                 Access all Smart Agent Alliance team calls and coaching sessions. <strong className="text-[#ffd700]">Stay connected and keep learning!</strong>
               </p>
 
-              {/* Weekly Calls */}
-              <div
-                className="rounded-lg p-4"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.02) 100%)',
-                  border: '1px solid rgba(255, 215, 0, 0.2)',
-                }}
-              >
-                <p className="text-[#ffd700] text-sm mb-2 font-medium flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  Weekly Team Calls
-                </p>
-                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    SAA Elite Team Call - Team coaching and updates
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Morning Mindset - Start your day with motivation
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Revenue Share Coaching - Build your passive income
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#ffd700]">•</span>
-                    Success Story Spotlight - Learn from top performers
-                  </li>
-                </ul>
-              </div>
-
-              {/* Quick Tip */}
+              {/* Pro Tip */}
               <div
                 className="rounded-lg p-4"
                 style={{
@@ -3922,6 +3788,246 @@ function AgentPortal() {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Elite Courses Help Modal */}
+      {showEliteCoursesHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowEliteCoursesHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Premium Glass Effect */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Purple gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(168, 85, 247, 0.2)',
+                    border: '1px solid rgba(168, 85, 247, 0.4)',
+                    boxShadow: '0 0 12px rgba(168, 85, 247, 0.3)',
+                  }}
+                >
+                  <GraduationCap className="w-6 h-6 text-purple-400" />
+                </div>
+                <h2 className="text-xl font-semibold text-purple-400" style={{ textShadow: '0 0 20px rgba(168, 85, 247, 0.3)' }}>Elite Courses Help</h2>
+              </div>
+              <button
+                onClick={() => setShowEliteCoursesHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-purple-400 hover:bg-purple-400/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* What it is */}
+              <p className="text-[#e5e4dd]/80">
+                Access elite training courses provided by top performers. <strong className="text-purple-400">Note:</strong> You need to request access for each platform separately.
+              </p>
+
+              {/* Wolf Pack Courses */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 136, 0.02) 100%)',
+                  border: '1px solid rgba(0, 255, 136, 0.2)',
+                }}
+              >
+                <p className="text-[#00ff88] text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                  Wolf Pack Courses (Mike Sherrard)
+                </p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/80 text-sm mb-3">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#00ff88]">•</span>
+                    <strong>Skool Community</strong> - Networking & discussions
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#00ff88]">•</span>
+                    <strong>Social Agent Academy 2.0</strong> - Social media mastery
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#00ff88]">•</span>
+                    <strong>Master Agent Attraction</strong> - Recruiting strategies
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#00ff88]">•</span>
+                    <strong>AI Agent Accelerator</strong> - AI-powered workflows
+                  </li>
+                </ul>
+                <div
+                  className="rounded-lg p-3 text-xs"
+                  style={{ background: 'rgba(0, 255, 136, 0.1)', border: '1px solid rgba(0, 255, 136, 0.15)' }}
+                >
+                  <p className="text-[#00ff88] font-medium">Important:</p>
+                  <p className="text-[#e5e4dd]/70 mt-1">SAA 2.0, Master Agent Attraction, and AI Accelerator share <strong className="text-[#00ff88]">ONE login</strong>. You only need two logins total: one for Skool and one for the courses.</p>
+                </div>
+              </div>
+
+              {/* Investor Army */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.02) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
+                }}
+              >
+                <p className="text-[#ffd700] text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                  </svg>
+                  Investor Army (Connor Steinbrook)
+                </p>
+                <p className="text-[#e5e4dd]/80 text-sm">
+                  Learn house flipping, raising capital, and finding off-market deals. <strong className="text-[#ffd700]">Separate access</strong> required from Wolf Pack courses.
+                </p>
+              </div>
+
+              {/* Email Templates Dropdown */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <p className="text-[#e5e4dd]/60 text-xs uppercase tracking-wider mb-3">Request Access</p>
+
+                {/* Wolf Pack Email */}
+                <details className="mb-3 group">
+                  <summary className="cursor-pointer list-none flex items-center justify-between p-3 rounded-lg bg-[#00ff88]/10 border border-[#00ff88]/20 hover:bg-[#00ff88]/15 transition-colors">
+                    <span className="text-[#00ff88] text-sm font-medium">Email Mike Sherrard (Wolf Pack)</span>
+                    <svg className="w-4 h-4 text-[#00ff88] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="mt-2 p-3 rounded-lg bg-black/30 text-sm space-y-2">
+                    <p className="text-[#e5e4dd]/70 font-mono text-xs">
+                      <strong className="text-[#00ff88]">To:</strong> support@mikesherrard.com
+                    </p>
+                    <p className="text-[#e5e4dd]/70 font-mono text-xs">
+                      <strong className="text-[#00ff88]">Subject:</strong> New SAA Agent - Login Request
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => {
+                          const text = `Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO (includes SAA 2.0, Master Agent Attraction, and AI Accelerator)\n- Skool community invite\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`;
+                          navigator.clipboard.writeText(text);
+                        }}
+                        className="flex-1 px-2 py-1.5 rounded bg-white/10 border border-white/20 text-[#e5e4dd] hover:bg-white/15 transition-colors text-xs"
+                      >
+                        Copy Email
+                      </button>
+                      <a
+                        href={`mailto:support@mikesherrard.com?subject=${encodeURIComponent('New SAA Agent - Login Request')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO (includes SAA 2.0, Master Agent Attraction, and AI Accelerator)\n- Skool community invite\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                        className="flex-1 px-2 py-1.5 rounded bg-[#00ff88]/10 border border-[#00ff88]/30 text-[#00ff88] hover:bg-[#00ff88]/20 transition-colors text-xs text-center"
+                      >
+                        Open in Email
+                      </a>
+                    </div>
+                  </div>
+                </details>
+
+                {/* Investor Army Email */}
+                <details className="group">
+                  <summary className="cursor-pointer list-none flex items-center justify-between p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/20 hover:bg-[#ffd700]/15 transition-colors">
+                    <span className="text-[#ffd700] text-sm font-medium">Email Connor Steinbrook (Investor Army)</span>
+                    <svg className="w-4 h-4 text-[#ffd700] transition-transform group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="mt-2 p-3 rounded-lg bg-black/30 text-sm space-y-2">
+                    <p className="text-[#e5e4dd]/70 font-mono text-xs">
+                      <strong className="text-[#ffd700]">To:</strong> connor.steinbrook@exprealty.com
+                    </p>
+                    <p className="text-[#e5e4dd]/70 font-mono text-xs">
+                      <strong className="text-[#ffd700]">Subject:</strong> New SAA Agent - Investor Army Login Request
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => {
+                          const text = `Hi Connor,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.\n\nCould you please help me get access to Investor Army?\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`;
+                          navigator.clipboard.writeText(text);
+                        }}
+                        className="flex-1 px-2 py-1.5 rounded bg-white/10 border border-white/20 text-[#e5e4dd] hover:bg-white/15 transition-colors text-xs"
+                      >
+                        Copy Email
+                      </button>
+                      <a
+                        href={`mailto:connor.steinbrook@exprealty.com?subject=${encodeURIComponent('New SAA Agent - Investor Army Login Request')}&body=${encodeURIComponent(`Hi Connor,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.\n\nCould you please help me get access to Investor Army?\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                        className="flex-1 px-2 py-1.5 rounded bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-xs text-center"
+                      >
+                        Open in Email
+                      </a>
+                    </div>
+                  </div>
+                </details>
+              </div>
+
+              {/* Pro Tip */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.05)',
+                  border: '1px solid rgba(34, 197, 94, 0.15)',
+                }}
+              >
+                <p className="text-green-400 text-sm font-medium mb-1">Pro Tip: Easy Referrals</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  Add your location to your Zoom display name (e.g., "Jane Smith - Austin, TX"). When other agents on the call have a lead in your area, they'll see your name and location instantly — making it easy for them to send you a referral.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowEliteCoursesHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)',
+                  color: '#ffffff',
+                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -4456,13 +4562,7 @@ function DashboardView({
               border: '1px solid rgba(255, 215, 0, 0.3)',
             }}
           >
-            {/* Animated glow pulse */}
-            <div
-              className="absolute inset-0 opacity-30 group-hover:opacity-50 transition-opacity duration-500"
-              style={{
-                background: 'radial-gradient(ellipse at center, rgba(255,215,0,0.2) 0%, transparent 70%)',
-              }}
-            />
+{/* Animated glow pulse removed - user requested no internal gradient hover */}
 
             {/* Top highlight line */}
             <div className="absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-[#ffd700]/40 to-transparent" />
@@ -5272,12 +5372,12 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
             >
               {/* Step Header */}
               <div
-                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
+                className="flex items-start gap-4 p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
                 onClick={() => setExpandedStep(isExpanded ? null : index)}
               >
-                {/* Checkbox - Premium glass style */}
+                {/* Checkbox - Premium glass style - centered with title text */}
                 <label
-                  className="flex-shrink-0 cursor-pointer relative"
+                  className="flex-shrink-0 cursor-pointer relative mt-1"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <input
@@ -5310,9 +5410,9 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                   </div>
                 </label>
 
-                {/* Step Number */}
+                {/* Step Number - aligned with checkbox */}
                 <div
-                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold"
+                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mt-0.5"
                   style={{
                     background: isChecked
                       ? 'rgba(34, 197, 94, 0.2)'
@@ -5353,9 +5453,9 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                   </p>
                 </div>
 
-                {/* Expand Arrow */}
+                {/* Expand Arrow - aligned with title */}
                 <svg
-                  className={`w-5 h-5 text-[#e5e4dd]/40 transition-transform duration-200 ${
+                  className={`w-5 h-5 text-[#e5e4dd]/40 transition-transform duration-200 mt-1.5 ${
                     isExpanded ? 'rotate-180' : ''
                   }`}
                   fill="none"
@@ -5496,7 +5596,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#3b82f6]/20" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
-                <ExpXIcon className="w-7 h-7" style={{ color: '#3b82f6' }} />
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-x-logo-icon/public" alt="eXp" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#3b82f6]">eXp Support</h3>
@@ -5623,7 +5723,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#ffd700]/20" style={{ background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
-                <SLogoIcon className="w-7 h-7" style={{ color: '#ffd700' }} />
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public" alt="SAA" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
@@ -5684,7 +5784,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#22c55e]/20" style={{ background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(34, 197, 94, 0.15)', border: '1px solid rgba(34, 197, 94, 0.3)' }}>
-                <WolfIcon className="w-7 h-7" style={{ color: '#22c55e' }} />
+                <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wolf-pack-logo-icon/public" alt="Wolf Pack" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#22c55e]">Wolf Pack Support</h3>
@@ -6464,7 +6564,8 @@ function TemplatesSection() {
 function CoursesSection() {
   const courses = [
     {
-      icon: WolfIcon,
+      icon: null,
+      imageUrl: 'https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/wolf-pack-logo-icon/public',
       title: 'Wolf Pack Skool',
       description: 'Access the Wolf Pack community and resources',
       url: 'https://www.skool.com/wolf-pack-6238',
@@ -6482,7 +6583,7 @@ function CoursesSection() {
     {
       icon: MoneyBagIcon,
       title: 'Investor Army',
-      description: 'Work with investor clients confidently',
+      description: 'Learn house flipping, raising capital, and finding off-market deals',
       url: 'https://info-investorarmy.clickfunnels.com/membership-access18193126?page_id=18193127&page_key=caoyze5b8hg4msp3&login_redirect=1',
       color: '#3b82f6', // Blue
       isCustomIcon: true,
@@ -6535,11 +6636,19 @@ function CoursesSection() {
                       border: `1px solid ${course.color}30`,
                     }}
                   >
-                    <IconComponent
-                      className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
-                      style={{ color: course.color }}
-                      {...(!(course as any).isCustomIcon && { strokeWidth: 1.5 })}
-                    />
+                    {(course as any).imageUrl ? (
+                      <img
+                        src={(course as any).imageUrl}
+                        alt={course.title}
+                        className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 object-contain"
+                      />
+                    ) : (
+                      <IconComponent
+                        className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
+                        style={{ color: course.color }}
+                        {...(!(course as any).isCustomIcon && { strokeWidth: 1.5 })}
+                      />
+                    )}
                   </div>
                   {/* Title - heading color, gold on hover */}
                   <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors leading-tight mb-2">
@@ -9658,27 +9767,59 @@ return (
               </div>
             </div>
 
-            {/* Text Size */}
+            {/* Text Size - with styled up/down buttons */}
             <div className="flex-1">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Text Size</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
-                <input
-                  type="number"
-                  step="0.5"
-                  min="8"
-                  max="24"
-                  value={linksSettings.buttonTextSize ?? 14}
-                  onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    if (!isNaN(value) && value >= 8 && value <= 24) {
-                      setLinksSettings(prev => ({ ...prev, buttonTextSize: value }));
+              <div className="flex items-center rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30">
+                {/* Down button */}
+                <button
+                  onClick={() => {
+                    const currentValue = linksSettings.buttonTextSize ?? 14;
+                    if (currentValue > 8) {
+                      setLinksSettings(prev => ({ ...prev, buttonTextSize: currentValue - 0.5 }));
                       setHasUnsavedChanges(true);
                     }
                   }}
-                  className="w-full px-3 py-1.5 text-xs text-center bg-transparent text-white focus:outline-none"
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
-                />
-                <span className="pr-3 py-1.5 text-xs text-white/50">px</span>
+                  disabled={(linksSettings.buttonTextSize ?? 14) <= 8}
+                  className="flex items-center justify-center rounded-full transition-colors disabled:opacity-30"
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                  }}
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="#ffd700" strokeWidth="3" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+                {/* Value display */}
+                <div className="flex-1 flex items-center justify-center">
+                  <span className="text-xs text-white" style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}>
+                    {linksSettings.buttonTextSize ?? 14}
+                  </span>
+                  <span className="text-xs text-white/50 ml-0.5">px</span>
+                </div>
+                {/* Up button */}
+                <button
+                  onClick={() => {
+                    const currentValue = linksSettings.buttonTextSize ?? 14;
+                    if (currentValue < 24) {
+                      setLinksSettings(prev => ({ ...prev, buttonTextSize: currentValue + 0.5 }));
+                      setHasUnsavedChanges(true);
+                    }
+                  }}
+                  disabled={(linksSettings.buttonTextSize ?? 14) >= 24}
+                  className="flex items-center justify-center rounded-full transition-colors disabled:opacity-30"
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                  }}
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="#ffd700" strokeWidth="3" viewBox="0 0 24 24">
+                    <path d="M18 15l-6-6-6 6" />
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -10159,9 +10300,8 @@ return (
                             border: isDefault
                               ? `2px solid ${linksSettings.accentColor}` // Solid border for default
                               : 'none',
-                            color: isDefault
-                              ? linksSettings.accentColor // Text matches border for default
-                              : (isAccentDark ? '#ffffff' : '#1a1a1a'),
+                            // Text color uses dark/light selector for ALL buttons including default
+                            color: isAccentDark ? '#ffffff' : '#1a1a1a',
                             fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                             fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
                             fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
@@ -10374,7 +10514,19 @@ return (
                               order: customLinks.length,
                             };
                             setCustomLinks(prev => [...prev, newLink]);
-                            setLinksSettings(prev => ({ ...prev, linkOrder: [...(prev.linkOrder || ['learn-about']), newLink.id] }));
+                            // Insert new button ABOVE "About Our eXp Team" (learn-about stays at bottom)
+                            setLinksSettings(prev => {
+                              const currentOrder = prev.linkOrder || ['learn-about'];
+                              const learnAboutIndex = currentOrder.indexOf('learn-about');
+                              if (learnAboutIndex === -1) {
+                                // learn-about not in order, just append
+                                return { ...prev, linkOrder: [...currentOrder, newLink.id, 'learn-about'] };
+                              }
+                              // Insert before learn-about
+                              const newOrder = [...currentOrder];
+                              newOrder.splice(learnAboutIndex, 0, newLink.id);
+                              return { ...prev, linkOrder: newOrder };
+                            });
                             setNewLinkLabel('');
                             setNewLinkUrl('');
                             setNewLinkIcon('Globe');
@@ -10503,14 +10655,18 @@ return (
 
               return (
                 <>
-                  {/* LEFT SIDE: Up/Down controls for all buttons - positioned ON phone border */}
+                  {/* LEFT SIDE: Up/Down controls for CUSTOM buttons only - positioned ON phone border */}
+                  {/* Note: "About Our eXp Team" (learn-about) has no placement controls - new buttons auto-insert above it */}
                   {allLinkIds.map((linkId, index) => {
                     const position = buttonPositions[linkId];
                     if (position === undefined) return null;
 
                     const isDefault = linkId === 'learn-about';
+                    // Skip controls for default "About Our eXp Team" button - it always stays at bottom
+                    if (isDefault) return null;
+
                     const customLink = customLinkMap.get(linkId);
-                    if (!isDefault && !customLink) return null;
+                    if (!customLink) return null;
 
                     return (
                       <div
@@ -10543,7 +10699,7 @@ return (
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
-                          disabled={index === allLinkIds.length - 1}
+                          disabled={index === allLinkIds.length - 2}
                           className="disabled:opacity-30 hover:brightness-125 flex items-center justify-center"
                           style={{
                             width: '14px',
@@ -11218,12 +11374,13 @@ return (
             {/* Simplified Button List for Mobile */}
             <div className="space-y-2">
               {/* Default button - muted styling (transparent bg + solid border) */}
+              {/* Text color uses dark/light selector same as other buttons */}
               <div
                 className="py-2.5 px-4 rounded-lg font-medium flex items-center gap-2"
                 style={{
                   backgroundColor: `${linksSettings.accentColor}33`,
                   border: `2px solid ${linksSettings.accentColor}`,
-                  color: linksSettings.accentColor,
+                  color: isAccentDark ? '#ffffff' : '#1a1a1a',
                   fontSize: `${linksSettings.buttonTextSize ?? 14}px`,
                   fontFamily: linksSettings.font === 'taskor' ? 'var(--font-taskor, sans-serif)' : 'var(--font-synonym, sans-serif)',
                   fontWeight: (linksSettings?.nameWeight || 'bold') === 'bold' ? 700 : 400,
@@ -11891,7 +12048,7 @@ function DownloadSection() {
           {/* App Icon */}
           <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden shadow-xl shadow-[#ffd700]/20 border border-[#ffd700]/30">
             <img
-              src="/icons/icon-512x512.png"
+              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public"
               alt="SAA Portal"
               className="w-full h-full object-cover"
             />

@@ -1582,6 +1582,9 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       .why-only-card-stack {
         height: 370px;
       }
+      .why-only-right-card {
+        height: 370px;
+      }
     }
     .why-only-card {
       position: absolute;
@@ -3633,8 +3636,8 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                   <p style="text-align: center; font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 0.75rem;">Click to control manually</p>
                 </div>
 
-                <!-- Right Column: Key message card -->
-                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; min-height: 340px; z-index: 1;">
+                <!-- Right Column: Key message card - height matches card stack (310px mobile, 370px desktop) -->
+                <figure style="border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; position: relative; overflow: hidden; height: 310px; z-index: 1;" class="why-only-right-card">
                   <div style="position: absolute; inset: 0;">
                     <img src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/exp-entrepreneurial-sponsor-v2/desktop" alt="eXp Realty sponsor delivering entrepreneurial systems to real estate agents" title="eXp Realty Entrepreneurial Sponsor Systems" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.1) 100%);"></div>
