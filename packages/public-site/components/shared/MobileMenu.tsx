@@ -49,11 +49,18 @@ interface MobileMenuProps {
  * Fullscreen menu overlay with Lenis smooth scrolling (hamburger button in Header)
  */
 export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobileMenuOpen, setIsMobileMenuOpen }: MobileMenuProps) {
-  const [shouldRenderMenu, setShouldRenderMenu] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<number | null>(null);
   const [closingDropdown, setClosingDropdown] = useState<number | null>(null);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hasBeenOpened, setHasBeenOpened] = useState(false); // Track if menu has ever been opened
   const savedScrollY = useRef<number>(0);
+
+  // Track when menu has been opened at least once (for keeping it in DOM)
+  useEffect(() => {
+    if (isMobileMenuOpen && !hasBeenOpened) {
+      setHasBeenOpened(true);
+    }
+  }, [isMobileMenuOpen, hasBeenOpened]);
 
   // Scroll lock - simplified without Lenis for better mobile performance
   useEffect(() => {
@@ -66,6 +73,9 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
       document.body.style.touchAction = 'pan-y'; // Allow vertical scrolling
       // Prevent iOS Safari bounce
       document.documentElement.style.overflow = 'hidden';
+
+      // Reset dropdown state when opening
+      setOpenDropdown(null);
 
       return () => {
         // Cleanup handled in the else branch
@@ -87,22 +97,6 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
         setTimeout(() => {
           setIsTransitioning(false);
         }, 100);
-      });
-    }
-  }, [isMobileMenuOpen]);
-
-  // Manage shouldRenderMenu based on isMobileMenuOpen prop
-  // Safari fix: Keep element in DOM longer to prevent state loss
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      setShouldRenderMenu(true);
-      setOpenDropdown(null);
-    } else {
-      // Safari fix: Use longer delay and requestAnimationFrame for smoother state transition
-      // This prevents Safari from losing track of the element's rendering context
-      requestAnimationFrame(() => {
-        const timer = setTimeout(() => setShouldRenderMenu(false), 400);
-        return () => clearTimeout(timer);
       });
     }
   }, [isMobileMenuOpen]);
@@ -153,10 +147,13 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           aria-hidden="true"
         />
       )}
-      <div
+      {/* Only render menu DOM after first open (prevents hydration mismatch and keeps DOM clean initially) */}
+      {hasBeenOpened && (
+        <div
           id="mobile-menu"
           role="dialog"
           aria-label="Mobile navigation menu"
+          aria-hidden={!isMobileMenuOpen}
           className={`mobile-menu-overlay fixed top-0 left-0 right-0 bottom-0 z-[9990] overflow-y-auto overflow-x-hidden ${
             isMobileMenuOpen ? 'menu-opening' : 'menu-closing'
           }`}
@@ -175,12 +172,13 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
             overscrollBehavior: 'contain',
             pointerEvents: isMobileMenuOpen ? 'auto' : 'none',
             WebkitOverflowScrolling: 'touch',
-            // Safari fix: use visibility instead of display to preserve element state
-            // This prevents Safari from losing track of the element when toggling
-            visibility: shouldRenderMenu ? 'visible' : 'hidden',
+            // Control visibility - always visible once rendered, transform handles show/hide
+            visibility: isMobileMenuOpen ? 'visible' : 'hidden',
             opacity: isMobileMenuOpen ? 1 : 0,
             // Transition for smooth open/close
-            transition: 'transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0.3s ease-out',
+            transition: 'transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0s linear 0.3s',
+            // When opening, visibility should be immediate (no delay)
+            ...(isMobileMenuOpen && { transition: 'transform 0.3s ease-out, opacity 0.3s ease-out, visibility 0s linear 0s' }),
           }}
         >
         <div
@@ -301,6 +299,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
           </nav>
         </div>
       </div>
+      )}
     </>
   );
 }
