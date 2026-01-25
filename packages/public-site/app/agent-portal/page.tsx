@@ -9019,7 +9019,7 @@ function AgentPagesSection({
   const [linksSettings, setLinksSettings] = useState<LinksSettings>(preloadedPageData?.page?.links_settings || DEFAULT_LINKS_SETTINGS);
   const [showStylesModal, setShowStylesModal] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(false);
-  const [showAttractionPreview, setShowAttractionPreview] = useState(false);
+  // Removed: showAttractionPreview state - preview now shows inline in UI
 
   // Tab navigation state for new UI - uses initialTab from props
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
@@ -9919,11 +9919,14 @@ function AgentPagesSection({
           </div>
         )}
 
-        {/* Main Content - 2 column on large screens */}
+        {/* Main Content - 2 column on large screens, stacked on mobile */}
+        {/* On mobile: Info first, Preview at bottom */}
+        {/* On desktop (≥1100px): Preview on left, Info on right */}
         <div className="flex flex-col min-[1100px]:flex-row gap-6">
-          {/* Left Column - Preview (hidden on mobile, visible on 1100px+) */}
-          <div className="hidden min-[1100px]:block min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
-            <div className="sticky top-4 rounded-xl overflow-hidden" style={{
+          {/* Preview Column - At bottom on mobile (<1100px), on left on desktop (≥1100px) */}
+          <div className="order-last min-[1100px]:order-first min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
+            {/* Sticky only on desktop, normal flow on mobile */}
+            <div className="min-[1100px]:sticky min-[1100px]:top-4 rounded-xl overflow-hidden" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
@@ -10151,78 +10154,8 @@ function AgentPagesSection({
           </div>
         </div>
 
-        {/* MOBILE PREVIEW BUTTON - Shows below 1100px */}
-        {/* - <950px: Full width with 10px margins, 10px above mobile nav (64px) = bottom-[74px]
-            - 950-1100px: 10px from bottom, 10px gap from sidebar (280px) = left-[290px], 10px right margin */}
-        <div className="fixed left-[10px] right-[10px] z-40 min-[1100px]:hidden bottom-[74px] min-[950px]:bottom-[10px] min-[950px]:left-[290px] min-[950px]:right-[10px]">
-          <button
-            onClick={() => setShowAttractionPreview(true)}
-            className="w-full py-3 rounded-xl text-white font-semibold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all duration-300 ease-out"
-            style={{
-              background: 'linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
-              WebkitTapHighlightColor: 'transparent',
-            } as React.CSSProperties}
-          >
-            <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            <span className="text-[#ffd700]">Preview</span>
-          </button>
-        </div>
-
-        {/* MOBILE PREVIEW MODAL */}
-        <Modal
-          isOpen={showAttractionPreview}
-          onClose={() => setShowAttractionPreview(false)}
-          size="lg"
-          showCloseButton={true}
-          closeOnBackdropClick={true}
-          closeOnEscape={true}
-        >
-          {/* Modal Header */}
-          <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/10">
-            <span className="text-lg font-medium text-[#e5e4dd]">Live Preview</span>
-            <span className="text-sm text-[#ffd700]">Agent Attraction Page</span>
-          </div>
-
-          {/* Preview Content */}
-          <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto relative">
-            {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-              <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: '#0a0a0a' }}>
-                <iframe
-                  src={pageUrlPreview}
-                  className="absolute top-0 left-0"
-                  style={{
-                    width: '390px',
-                    height: '680px',
-                    transform: 'scale(0.71)',
-                    transformOrigin: 'top left',
-                    pointerEvents: 'none',
-                    border: 'none',
-                    outline: 'none',
-                    background: '#0a0a0a',
-                  }}
-                  title="Attraction Page Preview"
-                />
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-[300px] text-center px-6">
-                <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                  </svg>
-                </div>
-                <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
-                <p className="text-[#e5e4dd]/40 text-xs">Upload a profile image and activate your page to see the preview</p>
-              </div>
-            )}
-          </div>
-        </Modal>
-
-        {/* Bottom spacer for mobile nav and preview button */}
-        <div className="h-24 min-[950px]:h-16 min-[1100px]:h-0" />
+        {/* Bottom spacer for mobile nav */}
+        <div className="h-20 min-[950px]:h-4 min-[1100px]:h-0" />
       </div>
     );
   }
