@@ -659,8 +659,9 @@ const shakeKeyframes = `
     border-left: 1px solid var(--help-accent, rgba(255, 215, 0, 0.25));
     border-radius: 1rem 0 0 1rem;
     padding-bottom: 0;
-    max-height: 100%;
-    height: 100%;
+    /* Use viewport height for definite constraint - enables overflow scrolling */
+    max-height: 100dvh;
+    height: 100dvh;
     max-width: 28rem;
     /* Premium glass background with subtle gradient */
     background:
