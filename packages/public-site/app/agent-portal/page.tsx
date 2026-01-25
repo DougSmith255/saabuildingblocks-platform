@@ -9917,92 +9917,6 @@ function AgentPagesSection({
           </div>
         )}
 
-        {/* Status Banner */}
-        {pageData?.activated ? (
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-green-500/10 border border-green-500/30">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-sm text-green-400 font-medium">Your Agent Attraction Page is live!</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
-            <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
-            <span className="text-sm text-yellow-400 font-medium">Complete your profile to activate</span>
-          </div>
-        )}
-
-        {/* Copy Link Buttons */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Copy Link Page URL - Primary option for most agents */}
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(linktreeUrl);
-              setCopiedLink('linkpage');
-              setTimeout(() => setCopiedLink(null), 2000);
-            }}
-            disabled={!pageData?.activated}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-          >
-            {copiedLink === 'linkpage' ? (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
-                Copy Link Page URL
-              </>
-            )}
-          </button>
-          {/* Copy Attraction Page URL */}
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(pageUrl);
-              setCopiedLink('attraction');
-              setTimeout(() => setCopiedLink(null), 2000);
-            }}
-            disabled={!pageData?.activated}
-            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
-          >
-            {copiedLink === 'attraction' ? (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                Copied!
-              </>
-            ) : (
-              <>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-                </svg>
-                Copy Attraction Page URL
-              </>
-            )}
-          </button>
-          {pageData?.activated && (
-            <a
-              href={pageUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#ffd700]/5 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/10 transition-colors text-sm font-medium"
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              Open Page
-            </a>
-          )}
-        </div>
-
         {/* Main Content - 2 column on large screens */}
         <div className="flex flex-col min-[1100px]:flex-row gap-6">
           {/* Left Column - Preview (hidden on mobile, visible on 1100px+) */}
@@ -10064,24 +9978,81 @@ function AgentPagesSection({
             }}>
               <h3 className="text-lg font-medium text-[#ffd700] mb-4">Which Link Should You Use?</h3>
               <div className="space-y-4 text-sm text-[#e5e4dd]/80">
+                {/* Option 1: Link Page */}
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
                     <span className="text-[#22c55e] font-bold text-xs">1</span>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Production? <span className="text-[#22c55e]">(Most Agents)</span></p>
-                    <p className="text-[#e5e4dd]/60 text-xs">Use your <strong className="text-[#22c55e]">Link Page</strong> as your one link for everything. It connects clients to your content and passively attracts agents in the background.</p>
+                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Use your <strong className="text-[#22c55e]">Link Page</strong> as your one link for everything. It connects clients to your content and passively attracts agents in the background.</p>
+                    {/* Subtle Copy Link Page Button */}
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(linktreeUrl);
+                        setCopiedLink('linkpage');
+                        setTimeout(() => setCopiedLink(null), 2000);
+                      }}
+                      disabled={!pageData?.activated}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#22c55e]/10 border border-[#22c55e]/20 text-[#22c55e]/80 hover:bg-[#22c55e]/20 hover:text-[#22c55e] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    >
+                      {copiedLink === 'linkpage' ? (
+                        <>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          Copied!
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                          </svg>
+                          Copy Link Page URL
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
+                {/* Option 2: Attraction Page */}
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#ffd700]/20 border border-[#ffd700]/30 flex items-center justify-center flex-shrink-0">
                     <span className="text-[#ffd700] font-bold text-xs">2</span>
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Agent Attraction?</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">Use your <strong className="text-[#ffd700]">Attraction Page</strong> directly when actively recruiting agents or targeting real estate communities.</p>
+                    <p className="text-[#e5e4dd]/60 text-xs mb-2">Use your <strong className="text-[#ffd700]">Attraction Page</strong> directly when actively recruiting agents or targeting real estate communities.</p>
+                    {/* Subtle Copy Attraction Page Button */}
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(pageUrl);
+                        setCopiedLink('attraction');
+                        setTimeout(() => setCopiedLink(null), 2000);
+                      }}
+                      disabled={!pageData?.activated}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-medium bg-[#ffd700]/10 border border-[#ffd700]/20 text-[#ffd700]/80 hover:bg-[#ffd700]/20 hover:text-[#ffd700] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    >
+                      {copiedLink === 'attraction' ? (
+                        <>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          Copied!
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                          </svg>
+                          Copy Attraction Page URL
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
+                {/* Either Way You Win */}
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
