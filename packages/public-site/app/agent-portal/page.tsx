@@ -549,6 +549,76 @@ const shakeKeyframes = `
   to { transform: translateY(0); }
 }
 
+/* Help panel slide-in animations and styling */
+/* Mobile: slide up from bottom, full width */
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* Desktop: slide in from right, full height */
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Color variants for help panels - defined first for use in .help-panel */
+.help-panel-gold {
+  --help-accent: rgba(255, 215, 0, 0.2);
+  --help-glow: rgba(255, 215, 0, 0.1);
+}
+
+.help-panel-purple {
+  --help-accent: rgba(168, 85, 247, 0.3);
+  --help-glow: rgba(168, 85, 247, 0.15);
+}
+
+.help-panel-teal {
+  --help-accent: rgba(45, 212, 191, 0.3);
+  --help-glow: rgba(45, 212, 191, 0.15);
+}
+
+.help-panel-gradient {
+  --help-accent: rgba(168, 85, 247, 0.25);
+  --help-glow: rgba(168, 85, 247, 0.1);
+}
+
+/* Help panel - mobile first (bottom sheet) */
+.help-panel {
+  animation: slideInUp 0.3s ease-out;
+  border-top: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
+  border-radius: 1rem 1rem 0 0;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+  max-height: 85vh;
+  width: 100%;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1));
+}
+
+.help-panel-header {
+  border-radius: 1rem 1rem 0 0;
+}
+
+/* Desktop (950px+): right panel */
+@media (min-width: 950px) {
+  .help-panel {
+    animation: slideInRight 0.3s ease-out;
+    border-top: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
+    border-left: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
+    border-bottom: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
+    border-right: none;
+    border-radius: 1rem 0 0 1rem;
+    padding-bottom: 0;
+    max-height: 100%;
+    height: 100%;
+    max-width: 28rem;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1));
+  }
+
+  .help-panel-header {
+    border-radius: 1rem 0 0 0;
+  }
+}
+
 /* Prevent image fade-in animations - images should appear instantly */
 .agent-portal-root img {
   opacity: 1 !important;
@@ -3236,29 +3306,28 @@ function AgentPortal() {
       {/* Link Page Help Modal - Premium Glass with Yellow Highlights */}
       {showLinkPageHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowLinkPageHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
-          {/* Backdrop with blur - isolation prevents blend mode interference with help button */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
+          {/* Backdrop with blur */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-gold relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.2)',
-              boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header - Gold gradient accent */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%)',
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
@@ -3381,29 +3450,28 @@ function AgentPortal() {
       {/* New Agents Help Modal */}
       {showNewAgentsHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowNewAgentsHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-gold relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.2)',
-              boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header - Gold gradient accent */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%)',
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
@@ -3543,29 +3611,28 @@ function AgentPortal() {
       {/* Templates Help Modal */}
       {showTemplatesHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowTemplatesHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-gold relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.2)',
-              boxShadow: '0 0 40px rgba(255, 215, 0, 0.1), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header - Gold gradient accent */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, transparent 50%)',
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
@@ -3671,29 +3738,29 @@ function AgentPortal() {
       {/* Agent Attraction Help Modal */}
       {showAgentAttractionHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowAgentAttractionHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-purple relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(168, 85, 247, 0.3)',
-              boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
-            }}
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
+              '--help-border-color': 'rgba(168, 85, 247, 0.3)',
+            } as React.CSSProperties}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header - Purple gradient accent */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
+                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
@@ -3818,27 +3885,26 @@ function AgentPortal() {
       {/* Support Help Modal */}
       {showSupportHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowSupportHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Multi-colored gradient theme */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-gradient relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header - Gradient accent matching the button */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
                 background: 'linear-gradient(35deg, rgba(59, 130, 246, 0.12), rgba(168, 85, 247, 0.12), rgba(255, 215, 0, 0.12), rgba(34, 197, 94, 0.12))',
               }}
@@ -3954,29 +4020,28 @@ function AgentPortal() {
       {/* Team Calls Help Modal */}
       {showTeamCallsHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowTeamCallsHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-teal relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(255, 215, 0, 0.3)',
-              boxShadow: '0 0 40px rgba(255, 215, 0, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
-            {/* Header - Gold gradient accent */}
+            {/* Header - Teal gradient accent */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, transparent 50%)',
+                background: 'linear-gradient(135deg, rgba(45, 212, 191, 0.15) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
@@ -4053,29 +4118,28 @@ function AgentPortal() {
       {/* Elite Courses Help Modal */}
       {showEliteCoursesHelpModal && (
         <div
-          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
           onClick={() => setShowEliteCoursesHelpModal(false)}
-          onWheel={(e) => e.stopPropagation()}
         >
           {/* Backdrop with blur */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
-
-          {/* Modal - Premium Glass Effect */}
           <div
-            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            style={{ isolation: 'isolate' }}
+          />
+
+          {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
+          <div
+            className="help-panel help-panel-purple relative overflow-y-auto overscroll-contain"
             style={{
-              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-              border: '1px solid rgba(168, 85, 247, 0.3)',
-              boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
           >
             {/* Header - Purple gradient accent */}
             <div
-              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, transparent 50%)',
+                background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
