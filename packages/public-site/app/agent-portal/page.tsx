@@ -549,17 +549,46 @@ const shakeKeyframes = `
   to { transform: translateY(0); }
 }
 
-/* Help panel slide-in animations and styling */
-/* Mobile: slide up from bottom, full width */
+/* Help panel slide-in/out animations and styling */
+/* Mobile: slide up/down from bottom */
 @keyframes slideInUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
 
-/* Desktop: slide in from right, full height */
+@keyframes slideOutDown {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+
+/* Desktop: slide in/out from right */
 @keyframes slideInRight {
   from { transform: translateX(100%); }
   to { transform: translateX(0); }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+/* Backdrop fade animations */
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes backdropFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.help-backdrop {
+  animation: backdropFadeIn 0.3s ease-out forwards;
+}
+
+.help-backdrop-closing {
+  animation: backdropFadeOut 0.25s ease-in forwards;
 }
 
 /* Color variants for help panels - defined first for use in .help-panel */
@@ -578,6 +607,11 @@ const shakeKeyframes = `
   --help-glow: rgba(45, 212, 191, 0.15);
 }
 
+.help-panel-green {
+  --help-accent: rgba(34, 197, 94, 0.3);
+  --help-glow: rgba(34, 197, 94, 0.15);
+}
+
 .help-panel-gradient {
   --help-accent: rgba(168, 85, 247, 0.25);
   --help-glow: rgba(168, 85, 247, 0.1);
@@ -585,7 +619,7 @@ const shakeKeyframes = `
 
 /* Help panel - mobile first (bottom sheet) */
 .help-panel {
-  animation: slideInUp 0.3s ease-out;
+  animation: slideInUp 0.3s ease-out forwards;
   border-top: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
   border-radius: 1rem 1rem 0 0;
   padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
@@ -594,14 +628,20 @@ const shakeKeyframes = `
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1));
 }
 
+.help-panel-closing {
+  animation: slideOutDown 0.25s ease-in forwards;
+}
+
 .help-panel-header {
-  border-radius: 1rem 1rem 0 0;
+  border-radius: 1rem 1rem 0.5rem 0.5rem;
+  background: rgb(18, 18, 18) !important;
+  backdrop-filter: none !important;
 }
 
 /* Desktop (950px+): right panel */
 @media (min-width: 950px) {
   .help-panel {
-    animation: slideInRight 0.3s ease-out;
+    animation: slideInRight 0.3s ease-out forwards;
     border-top: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
     border-left: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
     border-bottom: 1px solid var(--help-accent, rgba(255, 215, 0, 0.2));
@@ -614,8 +654,12 @@ const shakeKeyframes = `
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5), 0 0 40px var(--help-glow, rgba(255, 215, 0, 0.1));
   }
 
+  .help-panel-closing {
+    animation: slideOutRight 0.25s ease-in forwards;
+  }
+
   .help-panel-header {
-    border-radius: 1rem 0 0 0;
+    border-radius: 1rem 0 0 0.5rem;
   }
 }
 
@@ -878,6 +922,64 @@ function AgentPortal() {
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
   const [showSupportHelpModal, setShowSupportHelpModal] = useState(false);
   const [showTeamCallsHelpModal, setShowTeamCallsHelpModal] = useState(false);
+
+  // Help panel closing animation state
+  const [closingHelpPanel, setClosingHelpPanel] = useState<string | null>(null);
+
+  // Helper to close help panels with animation
+  const closeHelpPanel = (panelName: string, setShowFn: (show: boolean) => void) => {
+    setClosingHelpPanel(panelName);
+    setTimeout(() => {
+      setShowFn(false);
+      setClosingHelpPanel(null);
+    }, 250); // Match the animation duration
+  };
+
+  // Touch swipe tracking for help panels
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const SWIPE_THRESHOLD = 80; // Minimum distance in pixels to trigger close
+
+  // Create swipe handlers for a help panel
+  const createSwipeHandlers = (panelName: string, setShowFn: (show: boolean) => void) => ({
+    onTouchStart: (e: React.TouchEvent) => {
+      touchStartRef.current = {
+        x: e.touches[0].clientX,
+        y: e.touches[0].clientY,
+      };
+    },
+    onTouchEnd: (e: React.TouchEvent) => {
+      if (!touchStartRef.current) return;
+
+      const touchEnd = {
+        x: e.changedTouches[0].clientX,
+        y: e.changedTouches[0].clientY,
+      };
+
+      const deltaX = touchEnd.x - touchStartRef.current.x;
+      const deltaY = touchEnd.y - touchStartRef.current.y;
+
+      // Check if it's primarily a vertical or horizontal swipe
+      const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+
+      // Mobile (< 950px): Swipe down to close (bottom sheet)
+      // Desktop (>= 950px): Swipe right to close (side panel)
+      const isMobile = window.innerWidth < 950;
+
+      if (isMobile) {
+        // Swipe down to close
+        if (deltaY > SWIPE_THRESHOLD && !isHorizontalSwipe) {
+          closeHelpPanel(panelName, setShowFn);
+        }
+      } else {
+        // Swipe right to close
+        if (deltaX > SWIPE_THRESHOLD && isHorizontalSwipe) {
+          closeHelpPanel(panelName, setShowFn);
+        }
+      }
+
+      touchStartRef.current = null;
+    },
+  });
 
   // Check if any popup is open (for header slide animation)
   const isAnyPopupOpen = showEditProfile || showImageEditor;
@@ -2150,14 +2252,28 @@ function AgentPortal() {
 
           <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 min-[950px]:h-[85px]">
             {/* SAA Logo - links to dashboard */}
+            {/* Mobile (<950px): S icon logo */}
+            {/* Desktop (>=950px): Full SAA logo */}
             <button
               onClick={() => setActiveSection('dashboard')}
               className="flex-shrink-0 cursor-pointer"
               title="Go to Dashboard"
             >
+              {/* S logo for mobile */}
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public"
+                alt="Smart Agent Alliance"
+                className="min-[950px]:hidden"
+                style={{
+                  width: '36px',
+                  height: '36px',
+                }}
+              />
+              {/* Full SAA logo for desktop */}
               <img
                 src="/images/saa-logo-gold.png"
                 alt="Smart Agent Alliance"
+                className="hidden min-[950px]:block"
                 style={{
                   width: 'clamp(100px, calc(80px + 3vw), 140px)',
                   height: 'auto',
@@ -2195,7 +2311,7 @@ function AgentPortal() {
               {/* Mobile (<950px): Pixel Help Button - always visible, greyed out for sections without modals */}
               <div className="min-[950px]:hidden">
                 {activeSection === 'support' ? (
-                  <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" size="mobile" className="relative" />
+                  <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="green" ariaLabel="Support Help" size="mobile" className="relative" />
                 ) : activeSection === 'calls' ? (
                   <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
                 ) : activeSection === 'templates' ? (
@@ -2257,8 +2373,8 @@ function AgentPortal() {
           style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
         >
           {/* Mobile nav items change based on onboarding completion:
-              - Before completion: Onboarding, Support, Link Page, Profile (4 items, no Calls)
-              - After completion: Home, Support, Calls, Link Page, Profile (5 items, no Onboarding) */}
+              - Before completion: Start, Support, Link Page, Home (4 items - NO Profile, NO Calls)
+              - After completion: Home, Support, Calls, Link Page, Profile (5 items - NO Start/Onboarding) */}
           {(isOnboardingComplete
             ? [
                 { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
@@ -2271,7 +2387,7 @@ function AgentPortal() {
                 { id: 'onboarding' as SectionId, label: 'Start', Icon: Rocket },
                 { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
                 { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
-                { id: 'profile' as SectionId, label: 'Profile', Icon: User },
+                { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
               ]
           ).map((item, index, arr) => {
             const isActive = activeSection === item.id;
@@ -2916,7 +3032,7 @@ function AgentPortal() {
       <div className="hidden min-[950px]:block">
         {/* Support Help Button */}
         {activeSection === 'support' && (
-          <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" />
+          <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="green" ariaLabel="Support Help" />
         )}
         {/* Team Calls Help Button */}
         {activeSection === 'calls' && (
@@ -3307,21 +3423,22 @@ function AgentPortal() {
       {showLinkPageHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowLinkPageHelpModal(false)}
+          onClick={() => closeHelpPanel('linkpage', setShowLinkPageHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'linkpage' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-gold relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-gold relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'linkpage' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('linkpage', setShowLinkPageHelpModal)}
           >
             {/* Header - Gold gradient accent */}
             <div
@@ -3344,7 +3461,7 @@ function AgentPortal() {
                 <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Link Page Help</h2>
               </div>
               <button
-                onClick={() => setShowLinkPageHelpModal(false)}
+                onClick={() => closeHelpPanel('linkpage', setShowLinkPageHelpModal)}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3424,7 +3541,7 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowLinkPageHelpModal(false)}
+                onClick={() => closeHelpPanel('linkpage', setShowLinkPageHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
@@ -3451,21 +3568,22 @@ function AgentPortal() {
       {showNewAgentsHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowNewAgentsHelpModal(false)}
+          onClick={() => closeHelpPanel('newagents', setShowNewAgentsHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'newagents' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-gold relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-gold relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'newagents' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('newagents', setShowNewAgentsHelpModal)}
           >
             {/* Header - Gold gradient accent */}
             <div
@@ -3488,7 +3606,7 @@ function AgentPortal() {
                 <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>New Agents Help</h2>
               </div>
               <button
-                onClick={() => setShowNewAgentsHelpModal(false)}
+                onClick={() => closeHelpPanel('newagents', setShowNewAgentsHelpModal)}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3585,7 +3703,7 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowNewAgentsHelpModal(false)}
+                onClick={() => closeHelpPanel('newagents', setShowNewAgentsHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
@@ -3612,21 +3730,22 @@ function AgentPortal() {
       {showTemplatesHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowTemplatesHelpModal(false)}
+          onClick={() => closeHelpPanel('templates', setShowTemplatesHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'templates' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-gold relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-gold relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'templates' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('templates', setShowTemplatesHelpModal)}
           >
             {/* Header - Gold gradient accent */}
             <div
@@ -3649,7 +3768,7 @@ function AgentPortal() {
                 <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Templates Help</h2>
               </div>
               <button
-                onClick={() => setShowTemplatesHelpModal(false)}
+                onClick={() => closeHelpPanel('templates', setShowTemplatesHelpModal)}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3712,7 +3831,7 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowTemplatesHelpModal(false)}
+                onClick={() => closeHelpPanel('templates', setShowTemplatesHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
@@ -3739,22 +3858,23 @@ function AgentPortal() {
       {showAgentAttractionHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowAgentAttractionHelpModal(false)}
+          onClick={() => closeHelpPanel('agentattraction', setShowAgentAttractionHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'agentattraction' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-purple relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-purple relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'agentattraction' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
               '--help-border-color': 'rgba(168, 85, 247, 0.3)',
             } as React.CSSProperties}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('agentattraction', setShowAgentAttractionHelpModal)}
           >
             {/* Header - Purple gradient accent */}
             <div
@@ -3777,7 +3897,7 @@ function AgentPortal() {
                 <h2 className="text-xl font-semibold text-purple-400" style={{ textShadow: '0 0 20px rgba(168, 85, 247, 0.3)' }}>Agent Attraction Help</h2>
               </div>
               <button
-                onClick={() => setShowAgentAttractionHelpModal(false)}
+                onClick={() => closeHelpPanel('agentattraction', setShowAgentAttractionHelpModal)}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-purple-400 hover:bg-purple-400/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3859,7 +3979,7 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowAgentAttractionHelpModal(false)}
+                onClick={() => closeHelpPanel('agentattraction', setShowAgentAttractionHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)',
@@ -3886,45 +4006,46 @@ function AgentPortal() {
       {showSupportHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowSupportHelpModal(false)}
+          onClick={() => closeHelpPanel('support', setShowSupportHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'support' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-gradient relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-green relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'support' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('support', setShowSupportHelpModal)}
           >
-            {/* Header - Gradient accent matching the button */}
+            {/* Header - Green accent */}
             <div
               className="help-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                background: 'linear-gradient(35deg, rgba(59, 130, 246, 0.12), rgba(168, 85, 247, 0.12), rgba(255, 215, 0, 0.12), rgba(34, 197, 94, 0.12))',
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
               }}
             >
               <div className="flex items-center gap-3">
                 <div
                   className="p-2 rounded-lg"
                   style={{
-                    background: 'linear-gradient(35deg, rgba(59, 130, 246, 0.3), rgba(168, 85, 247, 0.3), rgba(255, 215, 0, 0.3), rgba(34, 197, 94, 0.3))',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    boxShadow: '0 0 12px rgba(168, 85, 247, 0.3)',
+                    background: 'rgba(34, 197, 94, 0.15)',
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                    boxShadow: '0 0 12px rgba(34, 197, 94, 0.2)',
                   }}
                 >
-                  <Headphones className="w-6 h-6 text-[#e5e4dd]" />
+                  <Headphones className="w-6 h-6 text-[#22c55e]" />
                 </div>
-                <h2 className="text-xl font-semibold text-[#e5e4dd]">When to Contact Who</h2>
+                <h2 className="text-xl font-semibold text-[#22c55e]" style={{ textShadow: '0 0 20px rgba(34, 197, 94, 0.3)' }}>When to Contact Who</h2>
               </div>
               <button
-                onClick={() => setShowSupportHelpModal(false)}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#e5e4dd] hover:bg-white/10 transition-colors"
+                onClick={() => closeHelpPanel('support', setShowSupportHelpModal)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#22c55e] hover:bg-[#22c55e]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -3995,18 +4116,19 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowSupportHelpModal(false)}
-                className="w-full px-4 py-3 rounded-lg font-semibold transition-all text-[#1a1a1a]"
+                onClick={() => closeHelpPanel('support', setShowSupportHelpModal)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
-                  background: 'linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e)',
-                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                  background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
+                  color: '#1a1a1a',
+                  boxShadow: '0 0 20px rgba(34, 197, 94, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 197, 94, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -4021,21 +4143,22 @@ function AgentPortal() {
       {showTeamCallsHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowTeamCallsHelpModal(false)}
+          onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'teamcalls' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-teal relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-teal relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'teamcalls' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('teamcalls', setShowTeamCallsHelpModal)}
           >
             {/* Header - Teal gradient accent */}
             <div
@@ -4058,7 +4181,7 @@ function AgentPortal() {
                 <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Team Calls Help</h2>
               </div>
               <button
-                onClick={() => setShowTeamCallsHelpModal(false)}
+                onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -4092,7 +4215,7 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowTeamCallsHelpModal(false)}
+                onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
@@ -4119,21 +4242,22 @@ function AgentPortal() {
       {showEliteCoursesHelpModal && (
         <div
           className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          onClick={() => setShowEliteCoursesHelpModal(false)}
+          onClick={() => closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal)}
         >
           {/* Backdrop with blur */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+            className={`help-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${closingHelpPanel === 'elitecourses' ? 'help-backdrop-closing' : ''}`}
             style={{ isolation: 'isolate' }}
           />
 
           {/* Slide-in Panel - Mobile: from bottom, Desktop: from right */}
           <div
-            className="help-panel help-panel-purple relative overflow-y-auto overscroll-contain"
+            className={`help-panel help-panel-purple relative overflow-y-auto overscroll-contain ${closingHelpPanel === 'elitecourses' ? 'help-panel-closing' : ''}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
             onClick={(e) => e.stopPropagation()}
+            {...createSwipeHandlers('elitecourses', setShowEliteCoursesHelpModal)}
           >
             {/* Header - Purple gradient accent */}
             <div
@@ -4156,7 +4280,7 @@ function AgentPortal() {
                 <h2 className="text-xl font-semibold text-purple-400" style={{ textShadow: '0 0 20px rgba(168, 85, 247, 0.3)' }}>Elite Courses Help</h2>
               </div>
               <button
-                onClick={() => setShowEliteCoursesHelpModal(false)}
+                onClick={() => closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal)}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-purple-400 hover:bg-purple-400/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -4331,7 +4455,7 @@ function AgentPortal() {
             {/* Footer */}
             <div className="p-5 border-t border-white/10">
               <button
-                onClick={() => setShowEliteCoursesHelpModal(false)}
+                onClick={() => closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
                   background: 'linear-gradient(135deg, #a855f7 0%, #9333ea 100%)',
@@ -4380,7 +4504,7 @@ function AgentPortal() {
               </div>
               <button
                 onClick={() => {
-                  setShowEliteCoursesHelpModal(false);
+                  closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal);
                   
                 }}
                 className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
@@ -4538,7 +4662,7 @@ function AgentPortal() {
             <div className="p-5 border-t border-white/10">
               <button
                 onClick={() => {
-                  setShowEliteCoursesHelpModal(false);
+                  closeHelpPanel('elitecourses', setShowEliteCoursesHelpModal);
                   
                 }}
                 className="w-full px-4 py-3 rounded-lg text-black font-semibold bg-purple-500 hover:bg-purple-400 transition-colors"
@@ -12093,8 +12217,8 @@ return (
         --yellow-500: #eab308;
         --black-25: rgba(0, 0, 0, 0.25);
 
-        /* position is set by Tailwind 'fixed' class - do not override */
-        display: block;
+        /* DO NOT set display here - let Tailwind classes control visibility */
+        /* The 'hidden min-[950px]:block' classes handle mobile/desktop visibility */
         width: 4rem;
         height: 4rem;
         cursor: pointer;
@@ -12334,7 +12458,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 // Pixel Help Button Component - Static CSS for each color variant
 // ============================================================================
 
-type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'gradient' | 'grey';
+type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'green' | 'gradient' | 'grey';
 type PixelHelpButtonSize = 'normal' | 'mobile';
 
 interface PixelHelpButtonProps {
@@ -12354,6 +12478,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
     gold: 'pixel-help-gold',
     purple: 'pixel-help-purple',
     teal: 'pixel-help-teal',
+    green: 'pixel-help-green',
     gradient: 'pixel-help-gradient',
     grey: 'pixel-help-grey',
   };
@@ -12384,7 +12509,14 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
           --btn-dark: #14b8a6;
           --btn-text: #134e4a;
         }
-        /* ===== GRADIENT VARIANT (Support - 4 colors at 35deg) ===== */
+        /* ===== GREEN VARIANT (Support - SAA brand green) ===== */
+        .pixel-help-green {
+          --btn-light: #4ade80;
+          --btn-main: #22c55e;
+          --btn-dark: #16a34a;
+          --btn-text: #052e16;
+        }
+        /* ===== GRADIENT VARIANT ===== */
         .pixel-help-gradient {
           --btn-light: linear-gradient(35deg, #60a5fa, #c084fc, #fde047, #4ade80);
           --btn-main: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e);
@@ -12424,6 +12556,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold,
         .pixel-help-purple,
         .pixel-help-teal,
+        .pixel-help-green,
         .pixel-help-gradient,
         .pixel-help-grey {
           --black-25: rgba(0, 0, 0, 0.25);
@@ -12451,8 +12584,12 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             1.9em 1.9em var(--btn-text) !important;
         }
         .pixel-help-mobile > span:nth-child(4)::after {
-          transform: scale(0.625);
-          transform-origin: top left;
+          /* Increase base pixel size (0.3rem vs 0.25rem) before scaling to make pixels appear more filled in */
+          width: 0.3rem !important;
+          height: 0.3rem !important;
+          /* Slightly larger scale (0.68) to compensate for smaller button size while maintaining filled-in look */
+          transform: scale(0.68) translate(-8%, 3%);
+          transform-origin: center center;
         }
         .pixel-help-mobile > span:nth-child(5) {
           inset: 0.3rem 0.9rem !important;
@@ -12465,6 +12602,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > button,
         .pixel-help-purple > button,
         .pixel-help-teal > button,
+        .pixel-help-green > button,
         .pixel-help-gradient > button,
         .pixel-help-grey > button {
           cursor: pointer;
@@ -12482,18 +12620,21 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > button:hover,
         .pixel-help-purple > button:hover,
         .pixel-help-teal > button:hover,
+        .pixel-help-green > button:hover,
         .pixel-help-gradient > button:hover {
           background-color: var(--btn-light);
         }
         .pixel-help-gold > button:active,
         .pixel-help-purple > button:active,
         .pixel-help-teal > button:active,
+        .pixel-help-green > button:active,
         .pixel-help-gradient > button:active {
           outline-color: var(--btn-text);
         }
         .pixel-help-gold > button:focus-visible,
         .pixel-help-purple > button:focus-visible,
         .pixel-help-teal > button:focus-visible,
+        .pixel-help-green > button:focus-visible,
         .pixel-help-gradient > button:focus-visible {
           outline-color: var(--btn-text);
           outline-style: dashed;
@@ -12501,6 +12642,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(2),
         .pixel-help-purple > span:nth-child(2),
         .pixel-help-teal > span:nth-child(2),
+        .pixel-help-green > span:nth-child(2),
         .pixel-help-gradient > span:nth-child(2),
         .pixel-help-grey > span:nth-child(2) {
           position: absolute;
@@ -12513,6 +12655,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(2)::before,
         .pixel-help-purple > span:nth-child(2)::before,
         .pixel-help-teal > span:nth-child(2)::before,
+        .pixel-help-green > span:nth-child(2)::before,
         .pixel-help-gradient > span:nth-child(2)::before,
         .pixel-help-grey > span:nth-child(2)::before {
           content: "";
@@ -12529,6 +12672,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(3),
         .pixel-help-purple > span:nth-child(3),
         .pixel-help-teal > span:nth-child(3),
+        .pixel-help-green > span:nth-child(3),
         .pixel-help-gradient > span:nth-child(3),
         .pixel-help-grey > span:nth-child(3) {
           position: absolute;
@@ -12538,6 +12682,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(3)::before,
         .pixel-help-purple > span:nth-child(3)::before,
         .pixel-help-teal > span:nth-child(3)::before,
+        .pixel-help-green > span:nth-child(3)::before,
         .pixel-help-gradient > span:nth-child(3)::before,
         .pixel-help-grey > span:nth-child(3)::before {
           content: "";
@@ -12556,6 +12701,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(4),
         .pixel-help-purple > span:nth-child(4),
         .pixel-help-teal > span:nth-child(4),
+        .pixel-help-green > span:nth-child(4),
         .pixel-help-gradient > span:nth-child(4),
         .pixel-help-grey > span:nth-child(4) {
           position: absolute;
@@ -12567,6 +12713,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(4)::after,
         .pixel-help-purple > span:nth-child(4)::after,
         .pixel-help-teal > span:nth-child(4)::after,
+        .pixel-help-green > span:nth-child(4)::after,
         .pixel-help-gradient > span:nth-child(4)::after,
         .pixel-help-grey > span:nth-child(4)::after {
           content: "";
@@ -12609,6 +12756,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(5),
         .pixel-help-purple > span:nth-child(5),
         .pixel-help-teal > span:nth-child(5),
+        .pixel-help-green > span:nth-child(5),
         .pixel-help-gradient > span:nth-child(5),
         .pixel-help-grey > span:nth-child(5) {
           position: absolute;
@@ -12628,6 +12776,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold button:active ~ span:nth-child(2),
         .pixel-help-purple button:active ~ span:nth-child(2),
         .pixel-help-teal button:active ~ span:nth-child(2),
+        .pixel-help-green button:active ~ span:nth-child(2),
         .pixel-help-gradient button:active ~ span:nth-child(2) {
           animation: pixel-help-pulse 150ms ease-out;
         }
@@ -12639,6 +12788,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold button:hover ~ span:nth-child(4),
         .pixel-help-purple button:hover ~ span:nth-child(4),
         .pixel-help-teal button:hover ~ span:nth-child(4),
+        .pixel-help-green button:hover ~ span:nth-child(4),
         .pixel-help-gradient button:hover ~ span:nth-child(4) {
           filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
         }
