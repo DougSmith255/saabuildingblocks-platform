@@ -5818,13 +5818,26 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   };
   
   const accentColor = settings.accentColor || '#ffd700';
-  const iconStyle = settings.iconStyle || 'light';
   const fontChoice = settings.font || 'synonym';
   const nameWeight = settings.nameWeight || 'bold'; // Default to bold
   const bio = settings.bio || '';
-  
-  // Icon color based on style
-  const iconColor = iconStyle === 'light' ? '#e5e4dd' : '#2a2a2a';
+
+  // Auto-detect if accent color is dark (same logic as preview)
+  // This determines whether text on accent-colored backgrounds should be white or dark
+  const isColorDark = (hex) => {
+    const color = hex.replace('#', '');
+    const r = parseInt(color.substring(0, 2), 16) / 255;
+    const g = parseInt(color.substring(2, 4), 16) / 255;
+    const b = parseInt(color.substring(4, 6), 16) / 255;
+    // Calculate relative luminance
+    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+    return luminance < 0.5; // Dark if luminance is below 0.5
+  };
+
+  const isAccentDark = isColorDark(accentColor);
+
+  // Icon/text color based on accent brightness (white on dark, dark on light)
+  const iconColor = isAccentDark ? '#ffffff' : '#1a1a1a';
   
   // Convert hex color to RGB for rgba variants
   const hexToRgb = (hex) => {
@@ -6027,8 +6040,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   // Button text size from settings (default: 14px)
   const buttonTextSize = agent.links_settings?.buttonTextSize ?? 14;
 
-  // S logo PNG: dark for light icon style, off-white for dark icon style
-  const sLogoPng = iconStyle === 'light' ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png';
+  // S logo PNG: off-white for dark accent (needs light logo), dark for light accent (needs dark logo)
+  const sLogoPng = isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png';
 
   // Function to generate all links HTML in the correct order
   function generateLinksHTML(agent, customLinks, accentColor, iconColor, attractionPageUrl) {
@@ -6175,7 +6188,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       height: 100%;
       object-fit: cover;
       border-radius: 50%;
-      border: 3px solid ${accentColor};
+      border: 3px solid ${socialIconColor};
       box-shadow: 0 0 20px rgba(${rgbString}, 0.3);
     }
 
@@ -6183,7 +6196,7 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 3px solid ${accentColor};
+      border: 3px solid ${socialIconColor};
       background: rgba(${rgbString}, 0.1);
       display: flex;
       align-items: center;
@@ -6191,34 +6204,28 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       color: ${accentColor};
     }
 
-    /* Neon Sign H1 Effect - uses agent's accent color */
-    /* Layers 4 & 5 removed for better readability */
+    /* Neon Sign H1 Effect - adapts based on accent color brightness */
+    /* Dark accents: use off-white text with subtle accent outline */
+    /* Light accents: use accent color with full neon glow */
     h1 {
       font-family: 'Taskor', 'Synonym', system-ui, sans-serif;
       font-size: clamp(1.75rem, 5vw, 2.5rem);
       font-weight: ${nameWeight === 'bold' ? '700' : '400'};
       letter-spacing: 0em;
-      color: ${accentColor};
+      color: ${isAccentDark ? '#e5e4dd' : accentColor};
       line-height: 1.1;
       margin-bottom: 0.5rem;
       /* Enable stylistic set 01 for alternate N, E, M glyphs */
       font-feature-settings: "ss01" 1;
       /* 3D perspective for neon sign depth effect */
       transform: perspective(800px) rotateX(12deg);
-      /* Multi-layer text-shadow - uses accent color for glow */
-      text-shadow:
-        /* WHITE CORE (3) */
-        0 0 0.01em #fff,
-        0 0 0.02em #fff,
-        0 0 0.03em rgba(255,255,255,0.8),
-        /* ACCENT COLOR GLOW - layers 4 & 5 removed for readability */
-        0 0 0.13em rgba(${rgbString}, 0.55),
-        0 0 0.18em rgba(${rgbString}, 0.35),
-        /* METAL BACKING (4) - increased by ~1px for sharper outline */
-        0.045em 0.045em 0 #2a2a2a,
-        0.06em 0.06em 0 #1a1a1a,
-        0.075em 0.075em 0 #0f0f0f,
-        0.09em 0.09em 0 #080808;
+      /* Multi-layer text-shadow - adapts to accent brightness */
+      text-shadow: ${isAccentDark
+        ? /* Dark accent: subtle outline with accent color */
+          `-0.5px -0.5px 0 rgba(${rgbString}, 0.25), 0.5px -0.5px 0 rgba(${rgbString}, 0.25), -0.5px 0.5px 0 rgba(${rgbString}, 0.25), 0.5px 0.5px 0 rgba(${rgbString}, 0.25), 0 0 0.1em rgba(${rgbString}, 0.38), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
+        : /* Light accent: full neon glow effect */
+          `0 0 0.01em #fff, 0 0 0.02em #fff, 0 0 0.03em rgba(255,255,255,0.8), 0 0 0.13em rgba(${rgbString}, 0.55), 0 0 0.18em rgba(${rgbString}, 0.35), 0.03em 0.03em 0 #2a2a2a, 0.045em 0.045em 0 #1a1a1a, 0.06em 0.06em 0 #0f0f0f, 0.075em 0.075em 0 #080808`
+      };
       /* GPU-accelerated depth shadow - uses accent color */
       filter: drop-shadow(0.05em 0.05em 0.08em rgba(0,0,0,0.7)) brightness(1) drop-shadow(0 0 0.08em rgba(${rgbString}, 0.25));
       /* Animation disabled for cleaner appearance */
@@ -6234,13 +6241,15 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     .bio {
-      font-size: 0.875rem;
-      color: #dcdbd5;
-      margin-bottom: 1rem;
-      opacity: 0.9;
-      max-width: 300px;
-      line-height: 1.4;
+      font-size: 0.75rem;
+      color: rgba(220, 219, 213, 0.5);
+      margin-top: 0.375rem;
+      margin-bottom: 0.75rem;
+      max-width: 220px;
+      line-height: 1.3;
       font-family: ${fontFamily};
+      text-align: center;
+      word-break: break-word;
     }
 
     .subtitle {
@@ -6252,8 +6261,9 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
 
     .social-links {
       display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -6357,9 +6367,10 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     }
 
     /* Default button - muted styling (transparent bg + solid border) */
+    /* Text color uses same dark/light logic as other buttons for consistency */
     .link-button.default-muted {
       background: ${accentColor}33;
-      color: ${accentColor};
+      color: ${iconColor};
       border: 2px solid ${accentColor};
     }
 
@@ -6608,13 +6619,14 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     ${profileImageHTML}
 
     <h1>${escapeHTML(fullName)}</h1>
-    ${bioHTML}
 
     ${socialLinks.length > 0 ? `
     <div class="social-links">
       ${socialLinksHTML}
     </div>
     ` : ''}
+
+    ${bioHTML}
 
     <div class="links-section">
       ${contactButtonsHTML}

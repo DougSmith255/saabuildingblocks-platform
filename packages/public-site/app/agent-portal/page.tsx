@@ -6642,13 +6642,13 @@ function CoursesSection() {
                         alt={course.title}
                         className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 object-contain"
                       />
-                    ) : (
+                    ) : IconComponent ? (
                       <IconComponent
                         className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8"
                         style={{ color: course.color }}
                         {...(!(course as any).isCustomIcon && { strokeWidth: 1.5 })}
                       />
-                    )}
+                    ) : null}
                   </div>
                   {/* Title - heading color, gold on hover */}
                   <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors leading-tight mb-2">
