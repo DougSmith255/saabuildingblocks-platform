@@ -693,6 +693,7 @@ function AgentPortal() {
   const [showEliteCoursesHelpModal, setShowEliteCoursesHelpModal] = useState(false);
   const [showEliteCoursesIntroModal, setShowEliteCoursesIntroModal] = useState(false);
   const [showSupportHelpModal, setShowSupportHelpModal] = useState(false);
+  const [showTeamCallsHelpModal, setShowTeamCallsHelpModal] = useState(false);
 
   // Check if any popup is open (for header slide animation)
   const isAnyPopupOpen = showEditProfile || showImageEditor;
@@ -2315,7 +2316,12 @@ function AgentPortal() {
             )}
 
             {/* Team Calls */}
-            {activeSection === 'calls' && <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />}
+            {activeSection === 'calls' && (
+              <>
+                <TeamCallsSection userGender={user?.gender} isLeader={user?.isLeader} />
+                <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="gold" ariaLabel="Team Calls Help" />
+              </>
+            )}
 
             {/* Templates */}
             {activeSection === 'templates' && (
@@ -3771,6 +3777,139 @@ function AgentPortal() {
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.boxShadow = '0 0 20px rgba(20, 184, 166, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Team Calls Help Modal */}
+      {showTeamCallsHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowTeamCallsHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Premium Glass Effect */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+              border: '1px solid rgba(255, 215, 0, 0.3)',
+              boxShadow: '0 0 40px rgba(255, 215, 0, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Gold gradient accent */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, transparent 50%)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'rgba(255, 215, 0, 0.2)',
+                    border: '1px solid rgba(255, 215, 0, 0.4)',
+                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.3)',
+                  }}
+                >
+                  <Video className="w-6 h-6 text-[#ffd700]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Team Calls Help</h2>
+              </div>
+              <button
+                onClick={() => setShowTeamCallsHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-5 space-y-4">
+              {/* What it is */}
+              <p className="text-[#e5e4dd]/80">
+                Access all Smart Agent Alliance team calls and coaching sessions. <strong className="text-[#ffd700]">Stay connected and keep learning!</strong>
+              </p>
+
+              {/* Weekly Calls */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.02) 100%)',
+                  border: '1px solid rgba(255, 215, 0, 0.2)',
+                }}
+              >
+                <p className="text-[#ffd700] text-sm mb-2 font-medium flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  Weekly Team Calls
+                </p>
+                <ul className="space-y-1.5 text-[#e5e4dd]/70 text-sm">
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    SAA Elite Team Call - Team coaching and updates
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Morning Mindset - Start your day with motivation
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Revenue Share Coaching - Build your passive income
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-[#ffd700]">•</span>
+                    Success Story Spotlight - Learn from top performers
+                  </li>
+                </ul>
+              </div>
+
+              {/* Quick Tip */}
+              <div
+                className="rounded-lg p-4"
+                style={{
+                  background: 'rgba(34, 197, 94, 0.05)',
+                  border: '1px solid rgba(34, 197, 94, 0.15)',
+                }}
+              >
+                <p className="text-green-400 text-sm font-medium mb-1">Pro Tip</p>
+                <p className="text-[#e5e4dd]/70 text-sm">
+                  Add these calls to your calendar! Consistent attendance is one of the top success factors for agents in our team.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowTeamCallsHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
+                  color: '#1a1a1a',
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
