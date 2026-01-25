@@ -11339,7 +11339,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 }
 
 // ============================================================================
-// Pixel Help Button Component - Reusable with color variants
+// Pixel Help Button Component - Static CSS for each color variant
 // ============================================================================
 
 type PixelHelpButtonColor = 'gold' | 'purple' | 'teal';
@@ -11350,48 +11350,50 @@ interface PixelHelpButtonProps {
   ariaLabel?: string;
 }
 
-const PIXEL_BUTTON_COLORS = {
-  gold: {
-    light: '#fde047',    // yellow-300
-    main: '#facc15',     // yellow-400
-    dark: '#eab308',     // yellow-500
-    text: '#292524',     // stone-800
-  },
-  purple: {
-    light: '#d8b4fe',    // purple-300
-    main: '#c084fc',     // purple-400
-    dark: '#a855f7',     // purple-500
-    text: '#faf5ff',     // purple-50 (light text)
-  },
-  teal: {
-    light: '#5eead4',    // teal-300
-    main: '#2dd4bf',     // teal-400
-    dark: '#14b8a6',     // teal-500
-    text: '#134e4a',     // teal-900
-  },
-};
-
 function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelHelpButtonProps) {
-  const colors = PIXEL_BUTTON_COLORS[color];
-  const uniqueId = `pixel-help-${color}-${Date.now()}`;
+  const classMap = {
+    gold: 'pixel-help-gold',
+    purple: 'pixel-help-purple',
+    teal: 'pixel-help-teal',
+  };
 
   return (
     <>
       <style jsx>{`
-        .${uniqueId} {
-          --btn-light: ${colors.light};
-          --btn-main: ${colors.main};
-          --btn-dark: ${colors.dark};
-          --btn-text: ${colors.text};
+        /* ===== GOLD VARIANT ===== */
+        .pixel-help-gold {
+          --btn-light: #fde047;
+          --btn-main: #facc15;
+          --btn-dark: #eab308;
+          --btn-text: #292524;
+        }
+        /* ===== PURPLE VARIANT ===== */
+        .pixel-help-purple {
+          --btn-light: #d8b4fe;
+          --btn-main: #c084fc;
+          --btn-dark: #a855f7;
+          --btn-text: #1e1b4b;
+        }
+        /* ===== TEAL VARIANT ===== */
+        .pixel-help-teal {
+          --btn-light: #5eead4;
+          --btn-main: #2dd4bf;
+          --btn-dark: #14b8a6;
+          --btn-text: #134e4a;
+        }
+        /* ===== SHARED STYLES ===== */
+        .pixel-help-gold,
+        .pixel-help-purple,
+        .pixel-help-teal {
           --black-25: rgba(0, 0, 0, 0.25);
-
           display: block;
           width: 4rem;
           height: 4rem;
           cursor: pointer;
         }
-
-        .${uniqueId} > button {
+        .pixel-help-gold > button,
+        .pixel-help-purple > button,
+        .pixel-help-teal > button {
           cursor: pointer;
           display: inline-block;
           height: 100%;
@@ -11404,21 +11406,25 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
           outline-offset: 2px;
           transition: background-color 0.2s;
         }
-
-        .${uniqueId} > button:hover {
+        .pixel-help-gold > button:hover,
+        .pixel-help-purple > button:hover,
+        .pixel-help-teal > button:hover {
           background-color: var(--btn-light);
         }
-
-        .${uniqueId} > button:active {
+        .pixel-help-gold > button:active,
+        .pixel-help-purple > button:active,
+        .pixel-help-teal > button:active {
           outline-color: var(--btn-text);
         }
-
-        .${uniqueId} > button:focus-visible {
+        .pixel-help-gold > button:focus-visible,
+        .pixel-help-purple > button:focus-visible,
+        .pixel-help-teal > button:focus-visible {
           outline-color: var(--btn-text);
           outline-style: dashed;
         }
-
-        .${uniqueId} > span:nth-child(2) {
+        .pixel-help-gold > span:nth-child(2),
+        .pixel-help-purple > span:nth-child(2),
+        .pixel-help-teal > span:nth-child(2) {
           position: absolute;
           inset: 3px;
           pointer-events: none;
@@ -11426,8 +11432,9 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
           border-bottom: 2px solid var(--black-25);
           transition: transform 75ms;
         }
-
-        .${uniqueId} > span:nth-child(2)::before {
+        .pixel-help-gold > span:nth-child(2)::before,
+        .pixel-help-purple > span:nth-child(2)::before,
+        .pixel-help-teal > span:nth-child(2)::before {
           content: "";
           position: absolute;
           inset: 0;
@@ -11437,16 +11444,18 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
           background-size: 8px 8px;
           mix-blend-mode: hard-light;
           opacity: 0.5;
-          animation: pixel-dots-${color} 0.5s infinite linear;
+          animation: pixel-dots-shared 0.5s infinite linear;
         }
-
-        .${uniqueId} > span:nth-child(3) {
+        .pixel-help-gold > span:nth-child(3),
+        .pixel-help-purple > span:nth-child(3),
+        .pixel-help-teal > span:nth-child(3) {
           position: absolute;
           pointer-events: none;
           inset: 0;
         }
-
-        .${uniqueId} > span:nth-child(3)::before {
+        .pixel-help-gold > span:nth-child(3)::before,
+        .pixel-help-purple > span:nth-child(3)::before,
+        .pixel-help-teal > span:nth-child(3)::before {
           content: "";
           width: 0.375rem;
           height: 0.375rem;
@@ -11460,16 +11469,18 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
             0 3.125em var(--btn-text),
             3.125em 3.125em var(--btn-text);
         }
-
-        .${uniqueId} > span:nth-child(4) {
+        .pixel-help-gold > span:nth-child(4),
+        .pixel-help-purple > span:nth-child(4),
+        .pixel-help-teal > span:nth-child(4) {
           position: absolute;
           pointer-events: none;
           inset: 0;
           filter: drop-shadow(0.25em 0.25em 0 rgba(0, 0, 0, 0.2));
           transition: all 75ms;
         }
-
-        .${uniqueId} > span:nth-child(4)::after {
+        .pixel-help-gold > span:nth-child(4)::after,
+        .pixel-help-purple > span:nth-child(4)::after,
+        .pixel-help-teal > span:nth-child(4)::after {
           content: "";
           width: 0.25rem;
           height: 0.25rem;
@@ -11507,8 +11518,9 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
             0.25em 0.25em var(--btn-text),
             0.25em 0.5em var(--btn-text);
         }
-
-        .${uniqueId} > span:nth-child(5) {
+        .pixel-help-gold > span:nth-child(5),
+        .pixel-help-purple > span:nth-child(5),
+        .pixel-help-teal > span:nth-child(5) {
           position: absolute;
           background-color: var(--btn-main);
           border: 2px solid var(--btn-text);
@@ -11522,24 +11534,25 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
             inset 0 -2px 0 0 var(--btn-dark);
           transition: all 0ms cubic-bezier(0, 0.5, 0.4, 1);
         }
-
-        .${uniqueId} button:active ~ span:nth-child(5) {
+        .pixel-help-gold button:active ~ span:nth-child(5),
+        .pixel-help-purple button:active ~ span:nth-child(5),
+        .pixel-help-teal button:active ~ span:nth-child(5) {
           transform: translateY(-200%);
           transition-duration: 200ms;
           opacity: 0;
         }
-
-        .${uniqueId} button:hover ~ span:nth-child(4) {
+        .pixel-help-gold button:hover ~ span:nth-child(4),
+        .pixel-help-purple button:hover ~ span:nth-child(4),
+        .pixel-help-teal button:hover ~ span:nth-child(4) {
           filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
         }
-
-        @keyframes pixel-dots-${color} {
+        @keyframes pixel-dots-shared {
           0% { background-position: 0 0, 4px 4px; }
           100% { background-position: 8px 0, 12px 4px; }
         }
       `}</style>
       <div
-        className={`fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 ${uniqueId}`}
+        className={`fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 ${classMap[color]}`}
         style={{ isolation: 'isolate' }}
         title={ariaLabel}
       >
