@@ -5399,7 +5399,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
               >
                 {/* Checkbox - Premium glass style - vertically centered */}
                 <label
-                  className="flex-shrink-0 cursor-pointer relative"
+                  className="flex-shrink-0 cursor-pointer relative flex items-center self-center"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <input
