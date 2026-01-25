@@ -12499,13 +12499,17 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             inset 0 -2px 0 0 var(--btn-dark);
           transition: all 0ms cubic-bezier(0, 0.5, 0.4, 1);
         }
-        .pixel-help-gold button:active ~ span:nth-child(5),
-        .pixel-help-purple button:active ~ span:nth-child(5),
-        .pixel-help-teal button:active ~ span:nth-child(5),
-        .pixel-help-gradient button:active ~ span:nth-child(5) {
-          transform: translateY(-200%);
-          transition-duration: 200ms;
-          opacity: 0;
+        /* Click effect: subtle pulse animation instead of flying ball */
+        .pixel-help-gold button:active ~ span:nth-child(2),
+        .pixel-help-purple button:active ~ span:nth-child(2),
+        .pixel-help-teal button:active ~ span:nth-child(2),
+        .pixel-help-gradient button:active ~ span:nth-child(2) {
+          animation: pixel-help-pulse 150ms ease-out;
+        }
+        @keyframes pixel-help-pulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(0.92); }
+          100% { transform: scale(1); }
         }
         .pixel-help-gold button:hover ~ span:nth-child(4),
         .pixel-help-purple button:hover ~ span:nth-child(4),
