@@ -5871,22 +5871,15 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   const lighterRgb = `${Math.min(255, rgb.r + 80)}, ${Math.min(255, rgb.g + 80)}, ${Math.min(255, rgb.b + 80)}`;
   const darkerRgb = `${Math.max(0, rgb.r - 40)}, ${Math.max(0, rgb.g - 40)}, ${Math.max(0, rgb.b - 40)}`;
 
-  // Auto-brighten dark accent colors for social icons
+  // Clamp dark accent colors at minimum lightness threshold for visibility
+  // Instead of brightening, just stops getting darker at the threshold
   const getVisibleSocialIconColor = (hexColor) => {
     const hex = hexColor.replace('#', '');
     const r = parseInt(hex.substring(0, 2), 16) / 255;
     const g = parseInt(hex.substring(2, 4), 16) / 255;
     const b = parseInt(hex.substring(4, 6), 16) / 255;
 
-    // Calculate relative luminance
-    const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-
-    // If luminance is above threshold, use the original color
-    if (luminance >= 0.35) {
-      return hexColor;
-    }
-
-    // Convert to HSL to lighten while preserving hue
+    // Convert to HSL
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     let h = 0, s = 0, l = (max + min) / 2;
@@ -5901,11 +5894,18 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       }
     }
 
-    // Increase lightness to make it visible
-    const newL = Math.max(0.55, l + (0.55 - l) * 1.5);
-    const newS = Math.min(1, s * 1.2);
+    // Minimum lightness threshold (0.35 = ~35% lightness)
+    const MIN_LIGHTNESS = 0.35;
 
-    // Convert back to RGB
+    // If lightness is above threshold, use the original color
+    if (l >= MIN_LIGHTNESS) {
+      return hexColor;
+    }
+
+    // Clamp lightness at minimum threshold
+    const clampedL = MIN_LIGHTNESS;
+
+    // Convert back to RGB with clamped lightness
     const hue2rgb = (p, q, t) => {
       if (t < 0) t += 1;
       if (t > 1) t -= 1;
@@ -5915,8 +5915,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       return p;
     };
 
-    const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
-    const p = 2 * newL - q;
+    const q = clampedL < 0.5 ? clampedL * (1 + s) : clampedL + s - clampedL * s;
+    const p = 2 * clampedL - q;
     const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
     const newG = Math.round(hue2rgb(p, q, h) * 255);
     const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
@@ -5925,6 +5925,16 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   };
 
   const socialIconColor = getVisibleSocialIconColor(accentColor);
+
+  // Auto-brighten logo color if accent is too dark (same logic as social icons)
+  const visibleLogoColor = getVisibleSocialIconColor(accentColor);
+  const visibleLogoRgb = {
+    r: parseInt(visibleLogoColor.replace('#', '').substring(0, 2), 16),
+    g: parseInt(visibleLogoColor.replace('#', '').substring(2, 4), 16),
+    b: parseInt(visibleLogoColor.replace('#', '').substring(4, 6), 16)
+  };
+  const visibleLogoLighterRgb = `${Math.min(255, visibleLogoRgb.r + 80)}, ${Math.min(255, visibleLogoRgb.g + 80)}, ${Math.min(255, visibleLogoRgb.b + 80)}`;
+  const visibleLogoDarkerRgb = `${Math.max(0, visibleLogoRgb.r - 40)}, ${Math.max(0, visibleLogoRgb.g - 40)}, ${Math.max(0, visibleLogoRgb.b - 40)}`;
 
   // Curated icon set (matching dashboard)
   const LINK_ICONS = {
@@ -6351,9 +6361,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
       width: 100%;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      padding: 0.75rem 2.5rem;
       background: ${accentColor};
       color: ${iconColor};
       text-decoration: none;
@@ -6375,9 +6384,14 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
     .link-button .link-icon {
       flex-shrink: 0;
       position: absolute;
-      left: 1rem;
+      left: 0.875rem;
       top: 50%;
       transform: translateY(-50%);
+    }
+
+    /* Slight left adjustment for S logo image to align with SVG icons */
+    .link-button .link-icon[alt="S"] {
+      left: 0.8rem;
     }
 
     /* Custom buttons - solid background */
@@ -6659,9 +6673,9 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
         <svg class="footer-logo-svg" viewBox="0 0 201.96256 75.736626" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="footerLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color: rgb(${lighterRgb}); stop-opacity: 1" />
-              <stop offset="40%" style="stop-color: ${accentColor}; stop-opacity: 1" />
-              <stop offset="100%" style="stop-color: rgb(${darkerRgb}); stop-opacity: 1" />
+              <stop offset="0%" style="stop-color: rgb(${visibleLogoLighterRgb}); stop-opacity: 1" />
+              <stop offset="40%" style="stop-color: ${visibleLogoColor}; stop-opacity: 1" />
+              <stop offset="100%" style="stop-color: rgb(${visibleLogoDarkerRgb}); stop-opacity: 1" />
             </linearGradient>
           </defs>
           <g transform="translate(-5.5133704,-105.97189)">

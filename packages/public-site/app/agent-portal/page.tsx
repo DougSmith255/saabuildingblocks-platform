@@ -8814,7 +8814,7 @@ const DEFAULT_LINKS_SETTINGS: LinksSettings = {
 };
 
 // Helper function to ensure social icon color is visible on dark backgrounds
-// If the accent color is too dark, lighten it while preserving the hue
+// If the accent color is too dark, clamp it at a minimum lightness threshold (doesn't brighten, just stops getting darker)
 function getVisibleSocialIconColor(hexColor: string): string {
   // Parse hex to RGB
   const hex = hexColor.replace('#', '');
@@ -8822,15 +8822,7 @@ function getVisibleSocialIconColor(hexColor: string): string {
   const g = parseInt(hex.substring(2, 4), 16) / 255;
   const b = parseInt(hex.substring(4, 6), 16) / 255;
 
-  // Calculate relative luminance
-  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
-
-  // If luminance is above threshold, use the original color
-  if (luminance >= 0.35) {
-    return hexColor;
-  }
-
-  // Convert to HSL to lighten while preserving hue
+  // Convert to HSL
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   let h = 0, s = 0, l = (max + min) / 2;
@@ -8845,12 +8837,18 @@ function getVisibleSocialIconColor(hexColor: string): string {
     }
   }
 
-  // Increase lightness to make it visible (target ~55% lightness minimum)
-  const newL = Math.max(0.55, l + (0.55 - l) * 1.5);
-  // Also boost saturation slightly for dark colors
-  const newS = Math.min(1, s * 1.2);
+  // Minimum lightness threshold (0.35 = ~35% lightness, visible on dark backgrounds)
+  const MIN_LIGHTNESS = 0.35;
 
-  // Convert back to RGB
+  // If lightness is above threshold, use the original color
+  if (l >= MIN_LIGHTNESS) {
+    return hexColor;
+  }
+
+  // Clamp lightness at minimum threshold (don't brighten beyond threshold, just stop getting darker)
+  const clampedL = MIN_LIGHTNESS;
+
+  // Convert back to RGB with clamped lightness
   const hue2rgb = (p: number, q: number, t: number) => {
     if (t < 0) t += 1;
     if (t > 1) t -= 1;
@@ -8860,8 +8858,8 @@ function getVisibleSocialIconColor(hexColor: string): string {
     return p;
   };
 
-  const q = newL < 0.5 ? newL * (1 + newS) : newL + newS - newL * newS;
-  const p = 2 * newL - q;
+  const q = clampedL < 0.5 ? clampedL * (1 + s) : clampedL + s - clampedL * s;
+  const p = 2 * clampedL - q;
   const newR = Math.round(hue2rgb(p, q, h + 1/3) * 255);
   const newG = Math.round(hue2rgb(p, q, h) * 255);
   const newB = Math.round(hue2rgb(p, q, h - 1/3) * 255);
