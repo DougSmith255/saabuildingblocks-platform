@@ -2186,13 +2186,24 @@ function AgentPortal() {
           className="relative flex items-center h-16 px-1"
           style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
         >
-          {[
-            { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
-            { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
-            { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
-            { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
-            { id: 'profile' as SectionId, label: 'Profile', Icon: User },
-          ].map((item, index, arr) => {
+          {/* Mobile nav items change based on onboarding completion:
+              - Before completion: Onboarding, Support, Link Page, Profile (4 items, no Calls)
+              - After completion: Home, Support, Calls, Link Page, Profile (5 items, no Onboarding) */}
+          {(isOnboardingComplete
+            ? [
+                { id: 'dashboard' as SectionId, label: 'Home', Icon: Home },
+                { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
+                { id: 'calls' as SectionId, label: 'Calls', Icon: Video },
+                { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
+                { id: 'profile' as SectionId, label: 'Profile', Icon: User },
+              ]
+            : [
+                { id: 'onboarding' as SectionId, label: 'Start', Icon: Rocket },
+                { id: 'support' as SectionId, label: 'Support', Icon: LifeBuoy },
+                { id: 'linktree' as SectionId, label: 'Link Page', Icon: LinkIcon },
+                { id: 'profile' as SectionId, label: 'Profile', Icon: User },
+              ]
+          ).map((item, index, arr) => {
             const isActive = activeSection === item.id;
             return (
               <div key={item.id} className="flex items-center flex-1 h-full">
