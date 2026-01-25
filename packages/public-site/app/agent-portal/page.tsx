@@ -513,11 +513,29 @@ const shakeKeyframes = `
   animation: fade-in 0.2s ease-out;
 }
 
+/* Link button insert animation - new button slides up, displaced button slides down */
+@keyframes insertSlideUp {
+  from { transform: translateY(44px); }
+  to { transform: translateY(0); }
+}
+
+@keyframes insertSlideDown {
+  from { transform: translateY(-44px); }
+  to { transform: translateY(0); }
+}
+
 /* Prevent image fade-in animations - images should appear instantly */
 .agent-portal-root img {
   opacity: 1 !important;
   animation: none !important;
   transition: none !important;
+}
+
+/* Prevent iframe artifacts - no borders, scrollbars, or white lines */
+.agent-portal-root iframe {
+  border: none !important;
+  outline: none !important;
+  background: #0a0a0a !important;
 }
 
 /* Section hover lift effect for desktop */
@@ -2092,7 +2110,13 @@ function AgentPortal() {
       {/* Mobile Bottom Navigation - 3D button styling with separators */}
       <nav
         className="mobile-bottom-nav min-[950px]:hidden fixed bottom-0 left-0 right-0 z-50"
-        style={{ WebkitTapHighlightColor: 'transparent', WebkitTouchCallout: 'none' } as React.CSSProperties}
+        style={{
+          WebkitTapHighlightColor: 'transparent',
+          WebkitTouchCallout: 'none',
+          transform: 'translate3d(0,0,0)', // Force GPU layer - prevents scroll jank
+          WebkitTransform: 'translate3d(0,0,0)',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)', // Handle notch devices
+        } as React.CSSProperties}
       >
         {/* Solid background - edge to edge, no rounded corners */}
         <div className="absolute inset-0 bg-[#0a0a0a] border-t border-white/[0.08]" />
@@ -2661,17 +2685,6 @@ function AgentPortal() {
                   <LogOut className="w-5 h-5" />
                   <span className="font-medium">Logout</span>
                 </button>
-
-                {/* Download App Button - Mobile only, hidden when running as PWA */}
-                {!isRunningAsPWA && (
-                  <a
-                    href="/download"
-                    className="md:hidden w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-[#ffd700] bg-[#ffd700]/10 hover:bg-[#ffd700]/20 border border-[#ffd700]/30 hover:border-[#ffd700]/50 transition-all"
-                  >
-                    <Download className="w-5 h-5" />
-                    <span className="font-medium">Download App</span>
-                  </a>
-                )}
               </div>
             )}
 
@@ -2757,7 +2770,10 @@ function AgentPortal() {
       </div>
 
       {/* ========== Floating Help Buttons - Rendered at root level for proper fixed positioning ========== */}
-      {/* Support Help Button - REMOVED: UI is self-explanatory */}
+      {/* Support Help Button */}
+      {activeSection === 'support' && (
+        <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" />
+      )}
       {/* Team Calls Help Button */}
       {activeSection === 'calls' && (
         <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" />
@@ -3724,7 +3740,141 @@ function AgentPortal() {
         </div>
       )}
 
-      {/* Support Help Modal - REMOVED: UI is self-explanatory */}
+      {/* Support Help Modal */}
+      {showSupportHelpModal && (
+        <div
+          className="fixed inset-0 z-[10020] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
+          onClick={() => setShowSupportHelpModal(false)}
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {/* Backdrop with blur */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-xl" style={{ isolation: 'isolate' }} />
+
+          {/* Modal - Multi-colored gradient theme */}
+          <div
+            className="relative w-full max-w-lg my-auto rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
+            style={{
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              boxShadow: '0 0 40px rgba(168, 85, 247, 0.15), 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+          >
+            {/* Header - Gradient accent matching the button */}
+            <div
+              className="flex items-center justify-between p-5 border-b border-white/10 rounded-t-2xl"
+              style={{
+                background: 'linear-gradient(35deg, rgba(59, 130, 246, 0.12), rgba(168, 85, 247, 0.12), rgba(255, 215, 0, 0.12), rgba(34, 197, 94, 0.12))',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    background: 'linear-gradient(35deg, rgba(59, 130, 246, 0.3), rgba(168, 85, 247, 0.3), rgba(255, 215, 0, 0.3), rgba(34, 197, 94, 0.3))',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 0 12px rgba(168, 85, 247, 0.3)',
+                  }}
+                >
+                  <Headphones className="w-6 h-6 text-[#e5e4dd]" />
+                </div>
+                <h2 className="text-xl font-semibold text-[#e5e4dd]">When to Contact Who</h2>
+              </div>
+              <button
+                onClick={() => setShowSupportHelpModal(false)}
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#e5e4dd] hover:bg-white/10 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Content - Use cases for each support option */}
+            <div className="p-5 space-y-4">
+              {/* eXp Support - Blue */}
+              <div className="rounded-xl p-4" style={{ background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.2)' }}>
+                <h4 className="font-semibold text-[#3b82f6] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#3b82f6]" />
+                  eXp Support
+                </h4>
+                <p className="text-[#e5e4dd]/70 text-sm">Tech issues with eXp tools, questions about eXp services, or help finding specific eXp resources.</p>
+              </div>
+
+              {/* Broker - Purple */}
+              <div className="rounded-xl p-4" style={{ background: 'rgba(168, 85, 247, 0.08)', border: '1px solid rgba(168, 85, 247, 0.2)' }}>
+                <h4 className="font-semibold text-[#a855f7] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#a855f7]" />
+                  State Broker
+                </h4>
+                <p className="text-[#e5e4dd]/70 text-sm">Agent production questions - contracts, commission splits, compliance, or transaction issues.</p>
+              </div>
+
+              {/* SAA Support - Gold */}
+              <div className="rounded-xl p-4" style={{ background: 'rgba(255, 215, 0, 0.08)', border: '1px solid rgba(255, 215, 0, 0.2)' }}>
+                <h4 className="font-semibold text-[#ffd700] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#ffd700]" />
+                  SAA Support
+                </h4>
+                <p className="text-[#e5e4dd]/70 text-sm">Questions about SAA assets (Agent Portal, Link Page, Templates, Team Calls) or SAA-related tech issues.</p>
+              </div>
+
+              {/* Text Doug - Gold variant */}
+              <div className="rounded-xl p-4 ml-4" style={{ background: 'rgba(255, 215, 0, 0.04)', border: '1px solid rgba(255, 215, 0, 0.15)' }}>
+                <h4 className="font-medium text-[#ffd700]/90 mb-2 flex items-center gap-2 text-sm">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  Text Doug
+                </h4>
+                <p className="text-[#e5e4dd]/60 text-xs">Critical bugs or tech issues in the Agent Portal specifically. Time-sensitive issues only.</p>
+              </div>
+
+              {/* Wolf Pack - Green */}
+              <div className="rounded-xl p-4" style={{ background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.2)' }}>
+                <h4 className="font-semibold text-[#22c55e] mb-2 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
+                  Wolf Pack Support
+                </h4>
+                <p className="text-[#e5e4dd]/70 text-sm mb-3">Questions about Wolf Pack courses and communities:</p>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-start gap-2 text-[#e5e4dd]/60">
+                    <span className="text-[#22c55e] mt-0.5">→</span>
+                    <span><strong className="text-[#e5e4dd]/80">Mike:</strong> Skool Community, Social Agent Academy, Master Agent Attraction, AI Agent Accelerator</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-[#e5e4dd]/60">
+                    <span className="text-[#3b82f6] mt-0.5">→</span>
+                    <span><strong className="text-[#e5e4dd]/80">Connor:</strong> Investor Army course</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="p-5 border-t border-white/10">
+              <button
+                onClick={() => setShowSupportHelpModal(false)}
+                className="w-full px-4 py-3 rounded-lg font-semibold transition-all text-[#1a1a1a]"
+                style={{
+                  background: 'linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e)',
+                  boxShadow: '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(168, 85, 247, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(168, 85, 247, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Got it!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Team Calls Help Modal */}
       {showTeamCallsHelpModal && (
@@ -3966,7 +4116,7 @@ function AgentPortal() {
                       <strong className="text-[#00ff88]">To:</strong> support@mikesherrard.com
                     </p>
                     <p className="text-[#e5e4dd]/70 font-mono text-xs">
-                      <strong className="text-[#00ff88]">Subject:</strong> New SAA Agent - Login Request
+                      <strong className="text-[#00ff88]">Subject:</strong> New Smart Agent Alliance Agent - Skool and Course Access
                     </p>
                     <div className="flex gap-2 mt-2">
                       <button
@@ -3979,7 +4129,7 @@ function AgentPortal() {
                         Copy Email
                       </button>
                       <a
-                        href={`mailto:support@mikesherrard.com?subject=${encodeURIComponent('New SAA Agent - Login Request')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO (includes SAA 2.0, Master Agent Attraction, and AI Accelerator)\n- Skool community invite\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                        href={`mailto:support@mikesherrard.com?subject=${encodeURIComponent('New Smart Agent Alliance Agent - Skool and Course Access')}&body=${encodeURIComponent(`Hi,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance and the Wolf Pack.\n\nCould you please help me with:\n- Login credentials for Social Agent Academy PRO (includes SAA 2.0, Master Agent Attraction, and AI Accelerator)\n- Skool community invite\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
                         className="flex-1 px-2 py-1.5 rounded bg-[#00ff88]/10 border border-[#00ff88]/30 text-[#00ff88] hover:bg-[#00ff88]/20 transition-colors text-xs text-center"
                       >
                         Open in Email
@@ -4001,7 +4151,7 @@ function AgentPortal() {
                       <strong className="text-[#ffd700]">To:</strong> connor.steinbrook@exprealty.com
                     </p>
                     <p className="text-[#e5e4dd]/70 font-mono text-xs">
-                      <strong className="text-[#ffd700]">Subject:</strong> New SAA Agent - Investor Army Login Request
+                      <strong className="text-[#ffd700]">Subject:</strong> New Smart Agent Alliance Agent - Investor Army Access
                     </p>
                     <div className="flex gap-2 mt-2">
                       <button
@@ -4014,7 +4164,7 @@ function AgentPortal() {
                         Copy Email
                       </button>
                       <a
-                        href={`mailto:connor.steinbrook@exprealty.com?subject=${encodeURIComponent('New SAA Agent - Investor Army Login Request')}&body=${encodeURIComponent(`Hi Connor,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.\n\nCould you please help me get access to Investor Army?\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
+                        href={`mailto:connor.steinbrook@exprealty.com?subject=${encodeURIComponent('New Smart Agent Alliance Agent - Investor Army Access')}&body=${encodeURIComponent(`Hi Connor,\n\nMy name is ${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'} and I recently joined Smart Agent Alliance.\n\nCould you please help me get access to Investor Army?\n\nThank you,\n${user?.firstName || '[First Name]'} ${user?.lastName || '[Last Name]'}`)}`}
                         className="flex-1 px-2 py-1.5 rounded bg-[#ffd700]/10 border border-[#ffd700]/30 text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-xs text-center"
                       >
                         Open in Email
@@ -5390,7 +5540,7 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
 
         {/* Instructions hint - below progress bar */}
         <p className="text-center text-sm text-[#e5e4dd]/60 mt-2">
-          <strong className="text-[#ffd700]/80">Check off each step</strong> as you complete it, then click <strong className="text-[#ffd700]/80">Complete</strong>
+          <strong className="text-[#ffd700]/80">Check off each step</strong> as you complete it, then click <strong className="text-[#ffd700]/80">Finished</strong>
         </p>
       </div>
 
@@ -5532,40 +5682,60 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
         })}
       </div>
 
-      {/* Complete Onboarding Button */}
-      {Object.values(progress).every(v => v === true) && !onboardingCompletedAt && (
-        <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/30">
+      {/* Finish Onboarding Button - Always visible, grayed out until all steps checked */}
+      {!onboardingCompletedAt && (
+        <div className={`mt-6 p-6 rounded-xl transition-all duration-300 ${
+          Object.values(progress).every(v => v === true)
+            ? 'bg-gradient-to-br from-green-500/10 to-blue-500/10 border border-green-500/30'
+            : 'bg-gradient-to-br from-gray-500/5 to-gray-600/5 border border-white/10'
+        }`}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-green-400 mb-2 flex items-center gap-2">
+              <h3 className={`text-lg font-semibold mb-2 flex items-center gap-2 transition-colors ${
+                Object.values(progress).every(v => v === true) ? 'text-green-400' : 'text-[#e5e4dd]/40'
+              }`}>
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                You&apos;re All Set!
+                {Object.values(progress).every(v => v === true) ? "You're All Set!" : "Complete All Steps"}
               </h3>
-              <p className="text-[#e5e4dd]/80 text-sm mb-1">
-                Congratulations! You&apos;ve completed all onboarding steps.
+              <p className={`text-sm mb-1 transition-colors ${
+                Object.values(progress).every(v => v === true) ? 'text-[#e5e4dd]/80' : 'text-[#e5e4dd]/40'
+              }`}>
+                {Object.values(progress).every(v => v === true)
+                  ? "Congratulations! You've completed all onboarding steps."
+                  : `${Object.values(progress).filter(v => v === true).length} of ${Object.values(progress).length} steps completed`
+                }
               </p>
-              <p className="text-[#e5e4dd]/60 text-xs">
-                Click complete to finish onboarding. You can access this guide anytime from your profile section.
+              <p className={`text-xs transition-colors ${
+                Object.values(progress).every(v => v === true) ? 'text-[#e5e4dd]/60' : 'text-[#e5e4dd]/30'
+              }`}>
+                {Object.values(progress).every(v => v === true)
+                  ? "Click Finished to complete onboarding. You can access this guide anytime from your profile section."
+                  : "Check off all the steps above to enable the Finished button."
+                }
               </p>
             </div>
             <button
               onClick={() => onComplete?.()}
-              disabled={isCompleting}
-              className="px-6 py-3 rounded-lg bg-green-500 hover:bg-green-400 text-black font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 whitespace-nowrap"
+              disabled={isCompleting || !Object.values(progress).every(v => v === true)}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 whitespace-nowrap ${
+                Object.values(progress).every(v => v === true)
+                  ? 'bg-green-500 hover:bg-green-400 text-black'
+                  : 'bg-gray-600/30 text-[#e5e4dd]/30 cursor-not-allowed'
+              } disabled:cursor-not-allowed`}
             >
               {isCompleting ? (
                 <>
                   <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                  Completing...
+                  Finishing...
                 </>
               ) : (
                 <>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Complete Onboarding
+                  Finished
                 </>
               )}
             </button>
@@ -5862,6 +6032,95 @@ function SupportSection({ userState }: SupportSectionProps) {
               <span className="truncate">connor.steinbrook@exprealty.com</span>
             </a>
           </div>
+        </div>
+      </div>
+
+      {/* My eXp App Card - Full width below support cards */}
+      <div
+        className="rounded-2xl overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+          border: '1px solid rgba(59, 130, 246, 0.25)',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+        }}
+      >
+        {/* Header with gradient */}
+        <div className="p-5 border-b border-[#3b82f6]/20" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 50%)' }}>
+          <div className="flex items-center gap-3">
+            <div className="p-3 rounded-xl" style={{ background: 'rgba(59, 130, 246, 0.15)', border: '1px solid rgba(59, 130, 246, 0.3)' }}>
+              <svg className="w-7 h-7 text-[#3b82f6]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-[#3b82f6]">My eXp App</h3>
+              <p className="text-sm text-[#e5e4dd]/60">Your central hub for all things eXp</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-5">
+          {/* Features grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-5">
+            <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
+              <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span>Production Stats</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
+              <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Revenue Share</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
+              <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Skyline</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
+              <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span>Contact Info</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
+              <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span>eXp Events</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
+              <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>eXp Tools</span>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <a
+            href="https://myexp.page.link/exp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-[#3b82f6] text-[#1a1a1a] font-semibold hover:bg-[#5b9aff] transition-colors"
+            style={{ WebkitTapHighlightColor: 'transparent' } as React.CSSProperties}
+          >
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download My eXp App
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+              <polyline points="15 3 21 3 21 9" />
+              <line x1="10" y1="14" x2="21" y2="3" />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
@@ -6546,14 +6805,30 @@ function TemplateCard({ template }: { template: CombinedTemplate }) {
 
 function TemplatesSection() {
   const [activeCategory, setActiveCategory] = useState(TEMPLATE_CATEGORIES[0].id);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [displayCategory, setDisplayCategory] = useState(TEMPLATE_CATEGORIES[0].id);
 
-  const currentCategory = TEMPLATE_CATEGORIES.find(c => c.id === activeCategory) || TEMPLATE_CATEGORIES[0];
+  const currentCategory = TEMPLATE_CATEGORIES.find(c => c.id === displayCategory) || TEMPLATE_CATEGORIES[0];
 
   // Combine W/B variants into single entries
   const combinedTemplates = useMemo(
     () => combineTemplateVariants(currentCategory.templates),
     [currentCategory.templates]
   );
+
+  // Handle category change with transition
+  const handleCategoryChange = (newCategoryId: string) => {
+    if (newCategoryId === activeCategory || isTransitioning) return;
+
+    setActiveCategory(newCategoryId);
+    setIsTransitioning(true);
+
+    // After fade out, switch content and fade in
+    setTimeout(() => {
+      setDisplayCategory(newCategoryId);
+      setIsTransitioning(false);
+    }, 150); // Half of the total transition time
+  };
 
   // No SectionWrapper - render directly to avoid container causing tap highlight issues
   return (
@@ -6567,7 +6842,7 @@ function TemplatesSection() {
         {TEMPLATE_CATEGORIES.map((category) => (
           <button
             key={category.id}
-            onClick={() => setActiveCategory(category.id)}
+            onClick={() => handleCategoryChange(category.id)}
             style={{
               WebkitTapHighlightColor: 'transparent',
               transition: 'background 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
@@ -6593,8 +6868,15 @@ function TemplatesSection() {
         ))}
       </div>
 
-      {/* Templates Grid - Now with combined cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      {/* Templates Grid - Now with combined cards and premium transition */}
+      <div
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"
+        style={{
+          opacity: isTransitioning ? 0 : 1,
+          transform: isTransitioning ? 'translateY(8px) scale(0.98)' : 'translateY(0) scale(1)',
+          transition: 'opacity 0.15s ease-out, transform 0.15s ease-out',
+        }}
+      >
         {combinedTemplates.map((template, index) => (
           <TemplateCard key={`${template.name}-${template.format}-${index}`} template={template} />
         ))}
@@ -8381,6 +8663,7 @@ function AgentPagesSection({
   const [editingLinkIcon, setEditingLinkIcon] = useState('Globe'); // Icon of link being edited
   const [addingNewLink, setAddingNewLink] = useState(false); // Track if adding new link
   const [animatingSwap, setAnimatingSwap] = useState<{ movingId: string, swappingId: string, direction: 'up' | 'down' } | null>(null); // Track button swap animation
+  const [animatingInsert, setAnimatingInsert] = useState<string | null>(null); // Track new button insert animation (stores new link ID)
 
   // FIX-007/024: Refs for button position tracking (controls rendered OUTSIDE phone inner)
   const buttonRowRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -8402,7 +8685,7 @@ function AgentPagesSection({
   const [activeTab, setActiveTab] = useState<AgentPagesTabId>(initialTab);
 
   // Copy link feedback state
-  const [copiedLink, setCopiedLink] = useState<'linktree' | 'attraction' | null>(null);
+  const [copiedLink, setCopiedLink] = useState<'linktree' | 'linkpage' | 'attraction' | null>(null);
 
   // QR Code state
   const qrCodeRef = useRef<HTMLDivElement>(null);
@@ -9311,6 +9594,34 @@ function AgentPagesSection({
 
         {/* Copy Link Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Copy Link Page URL - Primary option for most agents */}
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(linktreeUrl);
+              setCopiedLink('linkpage');
+              setTimeout(() => setCopiedLink(null), 2000);
+            }}
+            disabled={!pageData?.activated}
+            className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#22c55e]/10 border border-[#22c55e]/30 text-[#22c55e] hover:bg-[#22c55e]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+          >
+            {copiedLink === 'linkpage' ? (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+                Copied!
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                Copy Link Page URL
+              </>
+            )}
+          </button>
+          {/* Copy Attraction Page URL */}
           <button
             onClick={() => {
               navigator.clipboard.writeText(pageUrl);
@@ -9333,7 +9644,7 @@ function AgentPagesSection({
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
                 </svg>
-                Copy Attraction Page Link
+                Copy Attraction Page URL
               </>
             )}
           </button>
@@ -9369,19 +9680,22 @@ function AgentPagesSection({
                   <span className="text-xs text-[#e5e4dd]/50">Agent Attraction Page</span>
                 </div>
               </div>
-              <div className="relative w-full overflow-hidden" style={{ height: '500px' }}>
+              <div className="relative w-full overflow-hidden" style={{ height: '500px', background: '#0a0a0a' }}>
                 {pageData?.activated && (generatedSlug || pageData?.slug) ? (
                   <div className="flex justify-center pt-2 pb-4">
-                    <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
+                    <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: '#0a0a0a' }}>
                       <iframe
                         src={pageUrlPreview}
-                        className="border-0 absolute top-0 left-0"
+                        className="absolute top-0 left-0"
                         style={{
                           width: '390px',
                           height: '680px',
                           transform: 'scale(0.71)',
                           transformOrigin: 'top left',
                           pointerEvents: 'none',
+                          border: 'none',
+                          outline: 'none',
+                          background: '#0a0a0a',
                         }}
                         title="Attraction Page Preview"
                       />
@@ -9404,21 +9718,21 @@ function AgentPagesSection({
 
           {/* Right Column - Info sections */}
           <div className="flex-1 space-y-6">
-            {/* How It Works Section */}
+            {/* Which Link to Use Section */}
             <div className="p-5 rounded-xl" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.15)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-4">How Your Pages Work Together</h3>
+              <h3 className="text-lg font-medium text-[#ffd700] mb-4">Which Link Should You Use?</h3>
               <div className="space-y-4 text-sm text-[#e5e4dd]/80">
                 <div className="flex gap-3">
                   <div className="w-8 h-8 rounded-full bg-[#22c55e]/20 border border-[#22c55e]/30 flex items-center justify-center flex-shrink-0">
                     <span className="text-[#22c55e] font-bold text-xs">1</span>
                   </div>
                   <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">Share Your Link Page Everywhere</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">Your Link Page is your <strong className="text-[#22c55e]">one link for everything</strong> - social media bios, email signatures, business cards.</p>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Production? <span className="text-[#22c55e]">(Most Agents)</span></p>
+                    <p className="text-[#e5e4dd]/60 text-xs">Use your <strong className="text-[#22c55e]">Link Page</strong> as your one link for everything. It connects clients to your content and passively attracts agents in the background.</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -9426,8 +9740,8 @@ function AgentPagesSection({
                     <span className="text-[#ffd700] font-bold text-xs">2</span>
                   </div>
                   <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">Built-In Agent Attraction</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">Your Attraction Page is linked from your Link Page. Competitors get curious and land on your recruitment funnel.</p>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Focusing on Agent Attraction?</p>
+                    <p className="text-[#e5e4dd]/60 text-xs">Use your <strong className="text-[#ffd700]">Attraction Page</strong> directly when actively recruiting agents or targeting real estate communities.</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -9437,8 +9751,8 @@ function AgentPagesSection({
                     </svg>
                   </div>
                   <div>
-                    <p className="font-medium text-[#e5e4dd] mb-1">Passive Agent Funnel</p>
-                    <p className="text-[#e5e4dd]/60 text-xs">The funnel works in the background - no extra effort from you. Just share your Link Page and let it do both jobs.</p>
+                    <p className="font-medium text-[#e5e4dd] mb-1">Either Way, You Win</p>
+                    <p className="text-[#e5e4dd]/60 text-xs">Your Link Page has your Attraction Page built in. Competitors clicking around will find it and land on your recruitment funnel.</p>
                   </div>
                 </div>
               </div>
@@ -9483,13 +9797,33 @@ function AgentPagesSection({
               border: '1px solid rgba(255, 215, 0, 0.15)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
             }}>
-              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share</h3>
+              <h3 className="text-lg font-medium text-[#ffd700] mb-3">Where to Share Your Link</h3>
+              {/* Top 2 highlighted placements */}
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
+                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-sm">Business Cards</span>
+                    <p className="text-[#ffd700]/60 text-[10px]">#1 placement</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-[#e5e4dd] p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
+                  <svg className="w-5 h-5 text-[#ffd700] flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                  </svg>
+                  <div>
+                    <span className="font-medium text-sm">Social Media Bios</span>
+                    <p className="text-[#ffd700]/60 text-[10px]">#2 placement</p>
+                  </div>
+                </div>
+              </div>
+              {/* Other placements */}
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {[
                   { icon: 'M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z', label: 'Email signature' },
-                  { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z', label: 'Social media bio' },
                   { icon: 'M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z', label: 'Facebook groups' },
-                  { icon: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z', label: 'Business cards' },
                   { icon: 'M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z', label: 'Direct messages' },
                   { icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', label: 'Presentations' },
                 ].map((item, i) => (
@@ -9545,16 +9879,19 @@ function AgentPagesSection({
           {/* Preview Content */}
           <div className="flex flex-col items-center gap-4 max-w-[280px] mx-auto relative">
             {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-              <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px' }}>
+              <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: '#0a0a0a' }}>
                 <iframe
                   src={pageUrlPreview}
-                  className="border-0 absolute top-0 left-0"
+                  className="absolute top-0 left-0"
                   style={{
                     width: '390px',
                     height: '680px',
                     transform: 'scale(0.71)',
                     transformOrigin: 'top left',
                     pointerEvents: 'none',
+                    border: 'none',
+                    outline: 'none',
+                    background: '#0a0a0a',
                   }}
                   title="Attraction Page Preview"
                 />
@@ -10317,13 +10654,34 @@ return (
                     // Calculate animation transform
                     const buttonHeight = 44; // Approximate height of button + gap
                     let animationTransform = 'translateY(0)';
+                    let isAnimating = false;
+
                     if (animatingSwap) {
                       if (linkId === animatingSwap.movingId) {
                         // This is the button being moved
                         animationTransform = animatingSwap.direction === 'up' ? `translateY(-${buttonHeight}px)` : `translateY(${buttonHeight}px)`;
+                        isAnimating = true;
                       } else if (linkId === animatingSwap.swappingId) {
                         // This is the button being displaced
                         animationTransform = animatingSwap.direction === 'up' ? `translateY(${buttonHeight}px)` : `translateY(-${buttonHeight}px)`;
+                        isAnimating = true;
+                      }
+                    }
+
+                    // Handle new button insert animation - uses CSS keyframes (not transition)
+                    // The new button slides UP from learn-about's position, learn-about slides DOWN
+                    let insertAnimationStyle: React.CSSProperties = {};
+                    if (animatingInsert) {
+                      if (linkId === animatingInsert) {
+                        // New button: animate from below (learn-about's old position) to its correct position
+                        insertAnimationStyle = {
+                          animation: `insertSlideUp 0.25s ease-out forwards`,
+                        };
+                      } else if (linkId === 'learn-about') {
+                        // Learn-about: animate from above (where new button now is) down to its new position
+                        insertAnimationStyle = {
+                          animation: `insertSlideDown 0.25s ease-out forwards`,
+                        };
                       }
                     }
 
@@ -10333,10 +10691,11 @@ return (
                         ref={(el) => { buttonRowRefs.current[linkId] = el; }}
                         className="group relative"
                         style={{
-                          // Only apply transition when actively animating, otherwise instant movement
-                          transition: animatingSwap ? 'transform 0.25s ease-out' : 'none',
+                          // Only apply transition when actively animating with swap, otherwise instant movement
+                          transition: isAnimating ? 'transform 0.25s ease-out' : 'none',
                           transform: animationTransform,
                           overflow: 'visible',
+                          ...insertAnimationStyle,
                         }}
                         data-link-id={linkId}
                         data-is-default={isDefault}
@@ -10568,20 +10927,24 @@ return (
                               icon: newLinkIcon,
                               order: customLinks.length,
                             };
+                            // Add the new link to customLinks
                             setCustomLinks(prev => [...prev, newLink]);
-                            // Insert new button ABOVE "About My eXp Team" (learn-about stays at bottom)
+                            // Insert new button ABOVE "About My eXp Team" with animation
                             setLinksSettings(prev => {
                               const currentOrder = prev.linkOrder || ['learn-about'];
                               const learnAboutIndex = currentOrder.indexOf('learn-about');
                               if (learnAboutIndex === -1) {
-                                // learn-about not in order, just append
                                 return { ...prev, linkOrder: [...currentOrder, newLink.id, 'learn-about'] };
                               }
-                              // Insert before learn-about
                               const newOrder = [...currentOrder];
                               newOrder.splice(learnAboutIndex, 0, newLink.id);
                               return { ...prev, linkOrder: newOrder };
                             });
+                            // Trigger insert animation - new button swaps with learn-about
+                            setAnimatingInsert(newLink.id);
+                            setTimeout(() => {
+                              setAnimatingInsert(null);
+                            }, 250);
                             setNewLinkLabel('');
                             setNewLinkUrl('');
                             setNewLinkIcon('Globe');
@@ -11546,6 +11909,15 @@ return (
         height: 4rem;
         cursor: pointer;
       }
+      /* Half size on mobile (below 768px) */
+      @media (max-width: 767px) {
+        .pixel-help-button {
+          width: 2rem;
+          height: 2rem;
+          transform: scale(0.5);
+          transform-origin: bottom right;
+        }
+      }
 
       .pixel-help-button > button {
         cursor: pointer;
@@ -11718,7 +12090,7 @@ return (
     {/* Hide button when help modal is open to prevent visual artifacts from backdrop blur */}
     {!showLinkPageHelpModal && (
     <div
-      className="fixed bottom-6 right-6 z-[100] pixel-help-button"
+      className="fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 pixel-help-button"
       style={{ isolation: 'isolate' }}
       title="Need Help?"
     >
@@ -11781,7 +12153,7 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 // Pixel Help Button Component - Static CSS for each color variant
 // ============================================================================
 
-type PixelHelpButtonColor = 'gold' | 'purple' | 'teal';
+type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'gradient';
 
 interface PixelHelpButtonProps {
   onClick: () => void;
@@ -11794,6 +12166,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
     gold: 'pixel-help-gold',
     purple: 'pixel-help-purple',
     teal: 'pixel-help-teal',
+    gradient: 'pixel-help-gradient',
   };
 
   return (
@@ -11820,19 +12193,56 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
           --btn-dark: #14b8a6;
           --btn-text: #134e4a;
         }
+        /* ===== GRADIENT VARIANT (Support - 4 colors at 35deg) ===== */
+        .pixel-help-gradient {
+          --btn-light: linear-gradient(35deg, #60a5fa, #c084fc, #fde047, #4ade80);
+          --btn-main: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e);
+          --btn-dark: linear-gradient(35deg, #2563eb, #9333ea, #eab308, #16a34a);
+          --btn-text: #1a1a1a;
+        }
+        .pixel-help-gradient > button {
+          background: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e) !important;
+        }
+        .pixel-help-gradient > button:hover {
+          background: linear-gradient(35deg, #60a5fa, #c084fc, #fde047, #4ade80) !important;
+        }
+        .pixel-help-gradient > span:nth-child(2) {
+          background: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e) !important;
+        }
+        .pixel-help-gradient > span:nth-child(5) {
+          background: linear-gradient(35deg, #3b82f6, #a855f7, #ffd700, #22c55e) !important;
+          box-shadow:
+            7px 0 0 0 var(--btn-text),
+            inset 0 2px 0 0 rgba(255,255,255,0.3),
+            inset 0 -2px 0 0 rgba(0,0,0,0.2) !important;
+        }
         /* ===== SHARED STYLES ===== */
         .pixel-help-gold,
         .pixel-help-purple,
-        .pixel-help-teal {
+        .pixel-help-teal,
+        .pixel-help-gradient {
           --black-25: rgba(0, 0, 0, 0.25);
           display: block;
           width: 4rem;
           height: 4rem;
           cursor: pointer;
         }
+        /* Half size on mobile (below 768px) */
+        @media (max-width: 767px) {
+          .pixel-help-gold,
+          .pixel-help-purple,
+          .pixel-help-teal,
+          .pixel-help-gradient {
+            width: 2rem;
+            height: 2rem;
+            transform: scale(0.5);
+            transform-origin: bottom right;
+          }
+        }
         .pixel-help-gold > button,
         .pixel-help-purple > button,
-        .pixel-help-teal > button {
+        .pixel-help-teal > button,
+        .pixel-help-gradient > button {
           cursor: pointer;
           display: inline-block;
           height: 100%;
@@ -11847,23 +12257,27 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold > button:hover,
         .pixel-help-purple > button:hover,
-        .pixel-help-teal > button:hover {
+        .pixel-help-teal > button:hover,
+        .pixel-help-gradient > button:hover {
           background-color: var(--btn-light);
         }
         .pixel-help-gold > button:active,
         .pixel-help-purple > button:active,
-        .pixel-help-teal > button:active {
+        .pixel-help-teal > button:active,
+        .pixel-help-gradient > button:active {
           outline-color: var(--btn-text);
         }
         .pixel-help-gold > button:focus-visible,
         .pixel-help-purple > button:focus-visible,
-        .pixel-help-teal > button:focus-visible {
+        .pixel-help-teal > button:focus-visible,
+        .pixel-help-gradient > button:focus-visible {
           outline-color: var(--btn-text);
           outline-style: dashed;
         }
         .pixel-help-gold > span:nth-child(2),
         .pixel-help-purple > span:nth-child(2),
-        .pixel-help-teal > span:nth-child(2) {
+        .pixel-help-teal > span:nth-child(2),
+        .pixel-help-gradient > span:nth-child(2) {
           position: absolute;
           inset: 3px;
           pointer-events: none;
@@ -11873,7 +12287,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold > span:nth-child(2)::before,
         .pixel-help-purple > span:nth-child(2)::before,
-        .pixel-help-teal > span:nth-child(2)::before {
+        .pixel-help-teal > span:nth-child(2)::before,
+        .pixel-help-gradient > span:nth-child(2)::before {
           content: "";
           position: absolute;
           inset: 0;
@@ -11887,14 +12302,16 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold > span:nth-child(3),
         .pixel-help-purple > span:nth-child(3),
-        .pixel-help-teal > span:nth-child(3) {
+        .pixel-help-teal > span:nth-child(3),
+        .pixel-help-gradient > span:nth-child(3) {
           position: absolute;
           pointer-events: none;
           inset: 0;
         }
         .pixel-help-gold > span:nth-child(3)::before,
         .pixel-help-purple > span:nth-child(3)::before,
-        .pixel-help-teal > span:nth-child(3)::before {
+        .pixel-help-teal > span:nth-child(3)::before,
+        .pixel-help-gradient > span:nth-child(3)::before {
           content: "";
           width: 0.375rem;
           height: 0.375rem;
@@ -11910,7 +12327,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold > span:nth-child(4),
         .pixel-help-purple > span:nth-child(4),
-        .pixel-help-teal > span:nth-child(4) {
+        .pixel-help-teal > span:nth-child(4),
+        .pixel-help-gradient > span:nth-child(4) {
           position: absolute;
           pointer-events: none;
           inset: 0;
@@ -11919,7 +12337,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold > span:nth-child(4)::after,
         .pixel-help-purple > span:nth-child(4)::after,
-        .pixel-help-teal > span:nth-child(4)::after {
+        .pixel-help-teal > span:nth-child(4)::after,
+        .pixel-help-gradient > span:nth-child(4)::after {
           content: "";
           width: 0.25rem;
           height: 0.25rem;
@@ -11959,7 +12378,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold > span:nth-child(5),
         .pixel-help-purple > span:nth-child(5),
-        .pixel-help-teal > span:nth-child(5) {
+        .pixel-help-teal > span:nth-child(5),
+        .pixel-help-gradient > span:nth-child(5) {
           position: absolute;
           background-color: var(--btn-main);
           border: 2px solid var(--btn-text);
@@ -11975,14 +12395,16 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
         }
         .pixel-help-gold button:active ~ span:nth-child(5),
         .pixel-help-purple button:active ~ span:nth-child(5),
-        .pixel-help-teal button:active ~ span:nth-child(5) {
+        .pixel-help-teal button:active ~ span:nth-child(5),
+        .pixel-help-gradient button:active ~ span:nth-child(5) {
           transform: translateY(-200%);
           transition-duration: 200ms;
           opacity: 0;
         }
         .pixel-help-gold button:hover ~ span:nth-child(4),
         .pixel-help-purple button:hover ~ span:nth-child(4),
-        .pixel-help-teal button:hover ~ span:nth-child(4) {
+        .pixel-help-teal button:hover ~ span:nth-child(4),
+        .pixel-help-gradient button:hover ~ span:nth-child(4) {
           filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
         }
         @keyframes pixel-dots-shared {
