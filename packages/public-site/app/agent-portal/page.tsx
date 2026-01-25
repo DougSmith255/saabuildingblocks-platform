@@ -2508,7 +2508,10 @@ function AgentPortal() {
                 <div className="flex flex-col items-center mb-4">
                   <button
                     onClick={handleProfilePictureClick}
-                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] border-white/30 hover:border-[#ffd700]/50 transition-colors mb-3 bg-white/5"
+                    className="relative group w-[130px] h-[130px] rounded-full overflow-hidden border-[3px] transition-colors mb-3 bg-white/5"
+                    style={{
+                      borderColor: getVisibleSocialIconColor(preloadedAgentPageData?.page?.links_settings?.accentColor || '#ffd700'),
+                    }}
                     title="Click to change profile picture"
                   >
                     {/* Upload spinner - shows while uploading */}
@@ -2755,7 +2758,10 @@ function AgentPortal() {
                   <button
                     type="button"
                     onClick={handleProfilePictureClick}
-                    className="relative group w-32 h-32 rounded-full overflow-hidden border-2 border-white/20 hover:border-[#ffd700]/50 transition-colors bg-white/5"
+                    className="relative group w-32 h-32 rounded-full overflow-hidden border-[3px] transition-colors bg-white/5"
+                    style={{
+                      borderColor: getVisibleSocialIconColor(preloadedAgentPageData?.page?.links_settings?.accentColor || '#ffd700'),
+                    }}
                   >
                     {/* Upload spinner - shows while uploading */}
                     {isUploadingDashboardImage && (
@@ -3146,7 +3152,10 @@ function AgentPortal() {
                 <button
                   type="button"
                   onClick={handleProfilePictureClick}
-                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-2 border-white/20 hover:border-[#ffd700]/50 transition-colors bg-white/5"
+                  className="relative group w-[196px] h-[196px] rounded-full overflow-hidden border-[3px] transition-colors bg-white/5"
+                  style={{
+                    borderColor: getVisibleSocialIconColor(preloadedAgentPageData?.page?.links_settings?.accentColor || '#ffd700'),
+                  }}
                 >
                   {/* Upload spinner - shows while uploading */}
                   {isUploadingDashboardImage && (
@@ -11990,27 +11999,31 @@ return (
                 </svg>
                 <span className="text-sm font-medium text-pink-400" style={{ textShadow: '0 0 8px rgba(244, 114, 182, 0.5)' }}>Social Links</span>
               </div>
-              <div className="p-4 space-y-2 max-h-[200px] overflow-y-auto">
-                {SOCIAL_PLATFORMS.map(platform => (
-                  <div key={platform.id} className="flex items-center gap-2">
-                    <div className="w-6 h-6 flex items-center justify-center text-white/60">
-                      <platform.icon className="w-4 h-4" />
-                    </div>
-                    <input
-                      type="text"
-                      value={linksSettings.socialLinks[platform.id] || ''}
-                      onChange={(e) => {
-                        setLinksSettings(prev => ({
-                          ...prev,
-                          socialLinks: { ...prev.socialLinks, [platform.id]: e.target.value }
-                        }));
-                        setHasUnsavedChanges(true);
-                      }}
-                      placeholder={platform.placeholder}
-                      className="flex-1 px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none"
-                    />
-                  </div>
-                ))}
+              <div className="p-4 grid grid-cols-2 gap-2">
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Facebook</label>
+                  <input type="url" value={formData.facebook_url} onChange={(e) => handleInputChange('facebook_url', e.target.value)} placeholder="facebook.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">Instagram</label>
+                  <input type="url" value={formData.instagram_url} onChange={(e) => handleInputChange('instagram_url', e.target.value)} placeholder="instagram.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">X/Twitter</label>
+                  <input type="url" value={formData.twitter_url} onChange={(e) => handleInputChange('twitter_url', e.target.value)} placeholder="x.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">YouTube</label>
+                  <input type="url" value={formData.youtube_url} onChange={(e) => handleInputChange('youtube_url', e.target.value)} placeholder="youtube.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">TikTok</label>
+                  <input type="url" value={formData.tiktok_url} onChange={(e) => handleInputChange('tiktok_url', e.target.value)} placeholder="tiktok.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1">LinkedIn</label>
+                  <input type="url" value={formData.linkedin_url} onChange={(e) => handleInputChange('linkedin_url', e.target.value)} placeholder="linkedin.com/..." className="w-full px-2 py-1.5 rounded bg-black/40 border border-white/10 text-white text-xs focus:border-[#ffd700]/50 focus:outline-none" />
+                </div>
               </div>
             </div>
           </div>
@@ -12076,28 +12089,43 @@ return (
               <span className="text-sm font-medium text-[#ffd700]" style={{ textShadow: '0 0 8px rgba(255, 215, 0, 0.5)' }}>Page Actions</span>
             </div>
             <div className="p-4 space-y-3">
-              {/* Activate/Deactivate */}
-              <button
-                onClick={pageData?.activated ? handleDeactivatePage : handleActivatePage}
-                disabled={isSaving}
-                className={`w-full py-2.5 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
-                  pageData?.activated
-                    ? 'bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500/30'
-                    : 'bg-[#ffd700] text-black hover:bg-[#ffe55c]'
-                }`}
-              >
-                {pageData?.activated ? (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0" /><line x1="12" y1="2" x2="12" y2="12" /></svg>
-                    Deactivate Page
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12" /></svg>
-                    Activate Page
-                  </>
-                )}
-              </button>
+              {/* Activate Button - Shows only when page is not activated */}
+              {!pageData?.activated && (
+                <button
+                  onClick={handleActivate}
+                  disabled={isSaving}
+                  className="w-full py-2.5 px-4 rounded-lg font-semibold bg-[#ffd700]/20 border border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/30 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                >
+                  {isSaving ? (
+                    <div className="w-4 h-4 border-2 border-[#ffd700]/30 border-t-[#ffd700] rounded-full animate-spin" />
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                  )}
+                  {isSaving ? 'Activating...' : 'Activate my Page'}
+                </button>
+              )}
+
+              {/* Save Changes Button - Shows when page is activated */}
+              {pageData?.activated && (
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving || !hasUnsavedChanges}
+                  className="w-full py-2.5 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                  style={{
+                    backgroundColor: hasUnsavedChanges ? '#ffd700' : '#3a3a3a',
+                    color: hasUnsavedChanges ? '#000000' : '#888888',
+                    cursor: hasUnsavedChanges && !isSaving ? 'pointer' : 'not-allowed',
+                    opacity: isSaving ? 0.5 : 1,
+                  }}
+                >
+                  {isSaving ? (
+                    <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17,21 17,13 7,13 7,21" /><polyline points="7,3 7,8 15,8" /></svg>
+                  )}
+                  {isSaving ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'No Changes'}
+                </button>
+              )}
 
               {/* Preview Page */}
               <button
