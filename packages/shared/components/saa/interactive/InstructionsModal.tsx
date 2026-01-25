@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Modal } from './Modal';
-import { ModalTitle } from '../forms';
+import { SlidePanel } from './SlidePanel';
 
 export interface InstructionsModalProps {
   /** Whether the modal is open */
@@ -104,81 +103,90 @@ const styles: Record<string, React.CSSProperties> = {
 /**
  * InstructionsModal - Modal showing next steps after joining
  */
+// Success icon for the panel header
+const SuccessIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#00ff88"
+    strokeWidth="2"
+  >
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+);
+
 export function InstructionsModal({
   isOpen,
   onClose,
   userName = 'Agent',
 }: InstructionsModalProps) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <div style={styles.content}>
-        <div style={styles.successIcon}>
-          <svg style={styles.successSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-            <polyline points="22 4 12 14.01 9 11.01"/>
-          </svg>
-        </div>
-
-        <ModalTitle subtitle="Follow these steps to join Smart Agent Alliance at eXp Realty." centered>
-          Welcome, {userName}!
-        </ModalTitle>
-
-        <div style={styles.instructionsList}>
-          <div style={styles.instructionItem}>
-            <div style={styles.instructionNumber}>1</div>
-            <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Start Your Application</strong>
-              <p style={styles.instructionText}>
-                Visit <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer" style={styles.link}>joinapp.exprealty.com</a> to begin your eXp Realty application.
-              </p>
-            </div>
-          </div>
-
-          <div style={styles.instructionItem}>
-            <div style={styles.instructionNumber}>2</div>
-            <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Search for Your Sponsor</strong>
-              <p style={styles.instructionText}>
-                Enter <strong style={{color: '#fff'}}>doug.smart@expreferral.com</strong> and click Search. Select <strong style={{color: '#fff'}}>Sheldon Douglas Smart</strong> as your sponsor.
-              </p>
-            </div>
-          </div>
-
-          <div style={styles.instructionItem}>
-            <div style={styles.instructionNumber}>3</div>
-            <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>Complete Your Application</strong>
-              <p style={styles.instructionText}>
-                Fill out the application form and submit. You&apos;ll receive a confirmation email from eXp.
-              </p>
-            </div>
-          </div>
-
-          <div style={{...styles.instructionItem, marginBottom: 0}}>
-            <div style={styles.instructionNumber}>4</div>
-            <div style={styles.instructionContent}>
-              <strong style={styles.instructionTitle}>eXp Realty Support</strong>
-              <p style={styles.instructionText}>
-                For application issues, call <strong style={{color: '#fff'}}>833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style={styles.link}>expertcare@exprealty.com</a>.
-              </p>
-            </div>
+    <SlidePanel
+      isOpen={isOpen}
+      onClose={onClose}
+      title={`Welcome, ${userName}!`}
+      subtitle="Follow these steps to join Smart Agent Alliance at eXp Realty."
+      icon={<SuccessIcon />}
+      size="md"
+    >
+      <div style={styles.instructionsList}>
+        <div style={styles.instructionItem}>
+          <div style={styles.instructionNumber}>1</div>
+          <div style={styles.instructionContent}>
+            <strong style={styles.instructionTitle}>Start Your Application</strong>
+            <p style={styles.instructionText}>
+              Visit <a href="https://joinapp.exprealty.com/" target="_blank" rel="noopener noreferrer" style={styles.link}>joinapp.exprealty.com</a> to begin your eXp Realty application.
+            </p>
           </div>
         </div>
 
-        <a
-          href="https://joinapp.exprealty.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={styles.cta}
-        >
-          Join eXp with SAA
-        </a>
+        <div style={styles.instructionItem}>
+          <div style={styles.instructionNumber}>2</div>
+          <div style={styles.instructionContent}>
+            <strong style={styles.instructionTitle}>Search for Your Sponsor</strong>
+            <p style={styles.instructionText}>
+              Enter <strong style={{color: '#fff'}}>doug.smart@expreferral.com</strong> and click Search. Select <strong style={{color: '#fff'}}>Sheldon Douglas Smart</strong> as your sponsor.
+            </p>
+          </div>
+        </div>
 
-        <p style={styles.footer}>
-          Questions? Email us at <a style={styles.footerLink} href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>
-        </p>
+        <div style={styles.instructionItem}>
+          <div style={styles.instructionNumber}>3</div>
+          <div style={styles.instructionContent}>
+            <strong style={styles.instructionTitle}>Complete Your Application</strong>
+            <p style={styles.instructionText}>
+              Fill out the application form and submit. You&apos;ll receive a confirmation email from eXp.
+            </p>
+          </div>
+        </div>
+
+        <div style={{...styles.instructionItem, marginBottom: 0}}>
+          <div style={styles.instructionNumber}>4</div>
+          <div style={styles.instructionContent}>
+            <strong style={styles.instructionTitle}>eXp Realty Support</strong>
+            <p style={styles.instructionText}>
+              For application issues, call <strong style={{color: '#fff'}}>833-303-0610</strong> or email <a href="mailto:expertcare@exprealty.com" style={styles.link}>expertcare@exprealty.com</a>.
+            </p>
+          </div>
+        </div>
       </div>
-    </Modal>
+
+      <a
+        href="https://joinapp.exprealty.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={styles.cta}
+      >
+        Join eXp with SAA
+      </a>
+
+      <p style={styles.footer}>
+        Questions? Email us at <a style={styles.footerLink} href="mailto:team@smartagentalliance.com">team@smartagentalliance.com</a>
+      </p>
+    </SlidePanel>
   );
 }
 

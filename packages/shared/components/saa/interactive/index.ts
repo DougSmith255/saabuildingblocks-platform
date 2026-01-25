@@ -25,6 +25,9 @@ export type { FreebieDownloadModalProps } from './FreebieDownloadModal';
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
 
+export { SlidePanel } from './SlidePanel';
+export type { SlidePanelProps } from './SlidePanel';
+
 export { ScrollIndicator } from './ScrollIndicator';
 
 export { CommissionCalculator } from './CommissionCalculator';

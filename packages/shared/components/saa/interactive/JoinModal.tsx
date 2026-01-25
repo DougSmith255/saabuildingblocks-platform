@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Modal } from './Modal';
-import { FormInput, FormSelect, FormGroup, FormRow, FormButton, FormMessage, ModalTitle } from '../forms';
+import { SlidePanel } from './SlidePanel';
+import { FormInput, FormSelect, FormGroup, FormRow, FormButton, FormMessage } from '../forms';
 
 export interface JoinModalProps {
   /** Whether the modal is open */
@@ -135,11 +135,13 @@ export function JoinModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="md">
-      <ModalTitle subtitle="Take the first step towards building your dream career at eXp Realty.">
-        Join Smart Agent Alliance
-      </ModalTitle>
-
+    <SlidePanel
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Join Smart Agent Alliance"
+      subtitle="Take the first step towards building your dream career at eXp Realty."
+      size="md"
+    >
       <form onSubmit={handleSubmit}>
         <FormRow>
           <FormGroup label="First Name" htmlFor="firstName" required>
@@ -197,7 +199,7 @@ export function JoinModal({
           <FormMessage type={message.type}>{message.text}</FormMessage>
         )}
       </form>
-    </Modal>
+    </SlidePanel>
   );
 }
 

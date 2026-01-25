@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useCallback, useEffect } from 'react';
-import { Modal } from './Modal';
-import { FormInput, FormGroup, FormRow, FormButton, FormMessage, ModalTitle } from '../forms';
+import { SlidePanel } from './SlidePanel';
+import { FormInput, FormGroup, FormRow, FormButton, FormMessage } from '../forms';
 import Link from 'next/link';
 
 // localStorage key for storing user info
@@ -192,8 +192,35 @@ export function FreebieDownloadModal({
 
   if (!freebie) return null;
 
+  // Download icon for the panel header
+  const DownloadIcon = () => (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#ffd700"
+      strokeWidth="2"
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="md">
+    <SlidePanel
+      isOpen={isOpen}
+      onClose={handleClose}
+      title={showSuccess ? (isReturningUser ? 'Welcome Back!' : 'Success!') : freebie.title}
+      subtitle={showSuccess
+        ? (freebie.type === 'canva'
+            ? 'Opening Canva template in a new tab...'
+            : 'Your download is starting now.')
+        : 'Enter your details to download this free resource.'}
+      icon={<DownloadIcon />}
+      size="md"
+    >
       {showSuccess ? (
         <div style={{ textAlign: 'center', padding: '2rem 0' }}>
           <div style={{
@@ -210,155 +237,141 @@ export function FreebieDownloadModal({
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <h2 style={{
-            fontSize: 'var(--font-size-h4)',
-            fontFamily: 'var(--font-family-h4)',
-            color: 'var(--color-header-text)',
-            marginBottom: '0.75rem',
-          }}>
-            {isReturningUser ? 'Welcome Back!' : 'Success!'}
-          </h2>
           <p style={{
             fontSize: 'var(--font-size-body)',
             color: 'var(--text-muted)',
           }}>
             {freebie.type === 'canva'
-              ? 'Opening Canva template in a new tab...'
-              : 'Your download is starting now. Check your downloads folder.'}
+              ? 'Check your browser for the new tab!'
+              : 'Check your downloads folder.'}
           </p>
         </div>
       ) : (
-        <>
-          <ModalTitle subtitle="Enter your details to download this free resource.">
-            {freebie.title}
-          </ModalTitle>
-
-          <form onSubmit={handleSubmit}>
-            <FormRow>
-              <FormGroup label="First Name" htmlFor="freebie-firstName" required>
-                <FormInput
-                  type="text"
-                  id="freebie-firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup label="Last Name" htmlFor="freebie-lastName" required>
-                <FormInput
-                  type="text"
-                  id="freebie-lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </FormGroup>
-            </FormRow>
-
-            <FormGroup label="Email Address" htmlFor="freebie-email" required>
+        <form onSubmit={handleSubmit}>
+          <FormRow>
+            <FormGroup label="First Name" htmlFor="freebie-firstName" required>
               <FormInput
-                type="email"
-                id="freebie-email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="freebie-firstName"
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleInputChange}
                 required
               />
             </FormGroup>
+            <FormGroup label="Last Name" htmlFor="freebie-lastName" required>
+              <FormInput
+                type="text"
+                id="freebie-lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                required
+              />
+            </FormGroup>
+          </FormRow>
 
-            {/* Consent Checkbox */}
-            <div style={{ marginTop: '1.25rem' }}>
-              <label style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.75rem',
-                cursor: 'pointer',
+          <FormGroup label="Email Address" htmlFor="freebie-email" required>
+            <FormInput
+              type="email"
+              id="freebie-email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </FormGroup>
+
+          {/* Consent Checkbox */}
+          <div style={{ marginTop: '1.25rem' }}>
+            <label style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '0.75rem',
+              cursor: 'pointer',
+            }}>
+              {/* Hidden native checkbox */}
+              <input
+                type="checkbox"
+                name="consent"
+                checked={formData.consent}
+                onChange={handleInputChange}
+                style={{
+                  position: 'absolute',
+                  opacity: 0,
+                  width: 0,
+                  height: 0,
+                }}
+              />
+              {/* Custom checkbox */}
+              <span
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  minWidth: '20px',
+                  marginTop: '2px',
+                  borderRadius: '4px',
+                  border: formData.consent ? '2px solid #ffd700' : '2px solid #888888',
+                  backgroundColor: formData.consent ? '#ffd700' : 'transparent',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {formData.consent && (
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#1a1a1a"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                )}
+              </span>
+              <span style={{
+                fontSize: 'var(--font-size-caption)',
+                color: 'var(--text-muted)',
+                lineHeight: 1.5,
               }}>
-                {/* Hidden native checkbox */}
-                <input
-                  type="checkbox"
-                  name="consent"
-                  checked={formData.consent}
-                  onChange={handleInputChange}
-                  style={{
-                    position: 'absolute',
-                    opacity: 0,
-                    width: 0,
-                    height: 0,
-                  }}
-                />
-                {/* Custom checkbox */}
-                <span
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    minWidth: '20px',
-                    marginTop: '2px',
-                    borderRadius: '4px',
-                    border: formData.consent ? '2px solid #ffd700' : '2px solid #888888',
-                    backgroundColor: formData.consent ? '#ffd700' : 'transparent',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s ease',
-                  }}
+                I agree to the{' '}
+                <Link
+                  href="/terms-of-use/"
+                  target="_blank"
+                  style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
                 >
-                  {formData.consent && (
-                    <svg
-                      width="12"
-                      height="12"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#1a1a1a"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </span>
-                <span style={{
-                  fontSize: 'var(--font-size-caption)',
-                  color: 'var(--text-muted)',
-                  lineHeight: 1.5,
-                }}>
-                  I agree to the{' '}
-                  <Link
-                    href="/terms-of-use/"
-                    target="_blank"
-                    style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
-                  >
-                    Terms &amp; Conditions
-                  </Link>
-                  {' '}and{' '}
-                  <Link
-                    href="/privacy-policy/"
-                    target="_blank"
-                    style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
-                  >
-                    Privacy Policy
-                  </Link>
-                  {' '}and consent to receive emails.
-                </span>
-              </label>
-            </div>
+                  Terms &amp; Conditions
+                </Link>
+                {' '}and{' '}
+                <Link
+                  href="/privacy-policy/"
+                  target="_blank"
+                  style={{ color: 'var(--accent-gold)', textDecoration: 'underline' }}
+                >
+                  Privacy Policy
+                </Link>
+                {' '}and consent to receive emails.
+              </span>
+            </label>
+          </div>
 
-            <div style={{ marginTop: '1.5rem' }}>
-              <FormButton isLoading={isSubmitting} loadingText="Processing...">
-                Download
-              </FormButton>
-            </div>
+          <div style={{ marginTop: '1.5rem' }}>
+            <FormButton isLoading={isSubmitting} loadingText="Processing...">
+              Download
+            </FormButton>
+          </div>
 
-            {message && (
-              <FormMessage type={message.type}>{message.text}</FormMessage>
-            )}
-          </form>
-        </>
+          {message && (
+            <FormMessage type={message.type}>{message.text}</FormMessage>
+          )}
+        </form>
       )}
-    </Modal>
+    </SlidePanel>
   );
 }
 
