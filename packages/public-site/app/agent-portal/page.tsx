@@ -7059,7 +7059,7 @@ const NEW_AGENT_CATEGORIES: NewAgentCategory[] = [
     title: 'Production Know-How',
     icon: '📈',
     iconComponent: HouseIcon,
-    iconColor: '#ffd700',
+    iconColor: '#3b82f6',
     description: 'Essential knowledge for ramping up your production',
     documents: [
       {
@@ -7806,7 +7806,7 @@ AFTER APPOINTMENT
     title: '8 Ways to Get Clients',
     icon: '🎯',
     iconComponent: EightPointedStarIcon,
-    iconColor: '#3b82f6',
+    iconColor: '#ffd700',
     description: 'Proven strategies to grow your client base',
     documents: [
       {
