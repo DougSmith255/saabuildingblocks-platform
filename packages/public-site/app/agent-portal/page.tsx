@@ -12299,11 +12299,8 @@ return (
         transition: all 0ms cubic-bezier(0, 0.5, 0.4, 1);
       }
 
-      .pixel-help-button button:active ~ span:nth-child(5) {
-        transform: translateY(-200%);
-        transition-duration: 200ms;
-        opacity: 0;
-      }
+      /* Removed flying ball effect - was causing yellow element to shoot out on click */
+      /* .pixel-help-button button:active ~ span:nth-child(5) { transform: translateY(-200%); } */
 
       .pixel-help-button button:hover ~ span:nth-child(4) {
         filter: drop-shadow(0.125em 0.125em 0 rgba(0, 0, 0, 0.2));
