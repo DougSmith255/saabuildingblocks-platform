@@ -513,6 +513,13 @@ const shakeKeyframes = `
   animation: fade-in 0.2s ease-out;
 }
 
+/* Prevent image fade-in animations - images should appear instantly */
+.agent-portal-root img {
+  opacity: 1 !important;
+  animation: none !important;
+  transition: none !important;
+}
+
 /* Section hover lift effect for desktop */
 @media (min-width: 1024px) {
   .section-card {
@@ -2634,19 +2641,17 @@ function AgentPortal() {
 
                 {/* Logout Button */}
 
-                {/* Re-access Onboarding Link (Mobile) */}
+                {/* Re-access Onboarding Process */}
                 {onboardingCompletedAt && (
                   <button
                     onClick={() => {
                       setActiveSection('onboarding');
                       setSidebarOpen(false);
                     }}
-                    className="min-[1200px]:hidden w-full px-4 py-3 rounded-xl text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#ffd700]/30 transition-all text-left flex items-center gap-2"
+                    className="w-full px-4 py-3 rounded-xl text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#ffd700]/30 transition-all text-left flex items-center gap-2"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                    </svg>
-                    <span>Onboarding Guide</span>
+                    <Rocket className="w-4 h-4 text-[#ffd700]" />
+                    <span>Onboarding Process</span>
                   </button>
                 )}
                 <button
@@ -4686,7 +4691,7 @@ function DashboardView({
                 <h3 className="text-lg sm:text-xl font-bold text-[#ffd700] group-hover:text-[#ffe55c] transition-colors duration-300">
                   {heroCard.title}
                 </h3>
-                <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1">
+                <p className="text-sm sm:text-base text-[#e5e4dd]/70 mt-1 font-amulya">
                   {heroCard.description}
                 </p>
               </div>
@@ -4767,7 +4772,7 @@ function DashboardView({
                     >
                       {card.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#e5e4dd]/60 leading-snug">
+                    <p className="text-xs sm:text-sm text-[#e5e4dd]/60 leading-snug font-amulya">
                       {card.description}
                     </p>
                   </div>
@@ -4835,7 +4840,7 @@ function DashboardView({
                     <h3 className="text-sm font-semibold text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors duration-300 leading-tight">
                       {card.title}
                     </h3>
-                    <p className="text-[11px] text-[#e5e4dd]/50 leading-tight hidden sm:block">
+                    <p className="text-[11px] text-[#e5e4dd]/50 leading-tight hidden sm:block font-amulya">
                       {card.description}
                     </p>
                   </div>
@@ -5351,6 +5356,16 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
           </div>
         </div>
 
+        {/* Instructions Banner */}
+        <div className="mt-4 p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/30">
+          <p className="text-[#ffd700] text-sm flex items-center gap-2">
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span><strong>Check off each step</strong> as you complete it. Once all 10 steps are checked, click the <strong>Complete</strong> button to finish your onboarding.</span>
+          </p>
+        </div>
+
         {/* Progress bar */}
         <div className="mb-2">
           <div className="flex justify-between text-sm mb-1">
@@ -5745,7 +5760,7 @@ function SupportSection({ userState }: SupportSectionProps) {
           <div className="p-5 border-b border-[#ffd700]/20" style={{ background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%)' }}>
             <div className="flex items-center gap-3 mb-2">
               <div className="p-3 rounded-xl" style={{ background: 'rgba(255, 215, 0, 0.15)', border: '1px solid rgba(255, 215, 0, 0.3)' }}>
-                <img src="/icons/icon-192x192.png" alt="SAA" className="w-7 h-7 object-contain" />
+                <img src="/icons/s-logo-1000.png" alt="SAA" className="w-7 h-7 object-contain" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-[#ffd700]">SAA Support</h3>
@@ -6593,15 +6608,13 @@ function CoursesSection() {
       url: 'https://www.skool.com/wolf-pack-6238',
       color: '#22c55e', // Green to match Wolf Pack logo container
       isCustomIcon: true,
-      customBg: 'linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(12,12,12,0.98) 100%)', // Green tint
-      customBorder: 'rgba(34, 197, 94, 0.2)',
     },
     {
       icon: GraduationCapColorIcon,
       title: 'Social Agent Academy PRO',
       description: 'Generate inbound leads through content and visibility',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
-      color: '#22c55e', // Green
+      color: '#ffd700', // Gold/Yellow
       isCustomIcon: true,
     },
     {
@@ -6627,8 +6640,6 @@ function CoursesSection() {
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
       color: '#ec4899', // Pink
       isCustomIcon: true,
-      customBg: 'linear-gradient(135deg, rgba(168, 85, 247, 0.12) 0%, rgba(12,12,12,0.98) 100%)', // Light purple tint
-      customBorder: 'rgba(168, 85, 247, 0.2)',
     },
   ];
 
@@ -7973,7 +7984,7 @@ function NewAgentsSection() {
                 <p className="text-body text-[#dcdbd5] line-clamp-2">
                   {category.description}
                 </p>
-                <div className="mt-2 text-xs text-[#ffd700]/70">
+                <div className="mt-2 text-xs text-[#dcdbd5]/70">
                   {category.documents.length} {category.documents.length === 1 ? 'document' : 'documents'}
                 </div>
               </div>
@@ -8458,7 +8469,7 @@ function AgentPagesSection({
 
   // Preload S logo variants for instant switching
   useEffect(() => {
-    const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-offwhite.png'];
+    const preloadImages = ['/icons/s-logo-dark.png', '/icons/s-logo-1000.png'];
     preloadImages.forEach(src => {
       const img = new Image();
       img.src = src;
@@ -10352,7 +10363,7 @@ return (
                                 width: '16px',
                                 height: '16px',
                                 zIndex: 1,
-                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-offwhite.png' : '/icons/s-logo-dark.png'}')`,
+                                backgroundImage: `url('${isAccentDark ? '/icons/s-logo-1000.png' : '/icons/s-logo-dark.png'}')`,
                                 backgroundSize: 'contain',
                                 backgroundRepeat: 'no-repeat',
                                 backgroundPosition: 'center',
