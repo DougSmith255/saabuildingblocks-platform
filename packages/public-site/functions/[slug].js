@@ -822,19 +822,15 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       height: 38px !important;
     }
 
-    /* Hero Section */
+    /* Hero Section - scrolls naturally with page (like home page) */
     .hero-fixed {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 0;
-      pointer-events: none;
+      position: relative;
+      z-index: 1;
     }
 
-    .hero-content { pointer-events: auto; }
+    .hero-content { }
 
-    .hero-spacer { height: 100svh; }
+    .hero-spacer { display: none; /* Not needed when hero scrolls naturally */ }
 
     .hero-section {
       min-height: 100dvh;
@@ -3247,7 +3243,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
       <div class="hero-content">
         <section class="hero-section" aria-label="Hero">
           <!-- Agent Counter (Desktop) -->
-          <div class="agent-counter" id="agent-counter-desktop" style="opacity: 1; filter: blur(0px) brightness(1);">
+          <div class="agent-counter" id="agent-counter-desktop">
             <span style="display: inline-flex; align-items: center; gap: 0.25em; font-size: clamp(1.75rem, 2.625vw, 2.1875rem);">
               <span style="display: inline; color: #bfbdb0; font-family: var(--font-synonym), monospace; font-weight: 300; font-size: calc(1em + 10px);">
                 <span class="counter-digit">1</span><span class="counter-digit">6</span><span class="counter-digit">8</span><span class="counter-digit">8</span><span>+</span>
@@ -3257,7 +3253,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
 
           <!-- Reveal Mask Effect -->
-          <div class="reveal-mask-effect hero-effect-layer" style="opacity: 1; visibility: visible;">
+          <div class="reveal-mask-effect">
             <div class="reveal-glow" style="background: radial-gradient(52.3329% 36.633% at 50% 42%, rgba(255, 215, 0, 0.2) 0%, rgba(255, 180, 0, 0.12) 35%, rgba(255, 150, 0, 0.06) 55%, transparent 80%);"></div>
             <div class="reveal-ring reveal-ring-outer" style="transform: translate(-50%, -50%) rotate(9.55757deg); border-radius: 41.3239%;"></div>
             <div class="reveal-ring reveal-ring-inner" style="transform: translate(-50%, -50%) rotate(-4.77878deg); border-radius: 28.6761%;"></div>
@@ -3265,7 +3261,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
           </div>
 
           <!-- Hero Content -->
-          <div class="hero-content-wrapper" id="hero-content-wrapper" style="transform-origin: center center; transform: scale(1) translateY(0px); filter: blur(0px) brightness(1); opacity: 1;">
+          <div class="hero-content-wrapper" id="hero-content-wrapper">
             <!-- Profile Image -->
             <div class="hero-image-container">
               <div class="hero-3d-backdrop"></div>
@@ -4665,44 +4661,14 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
         }
       }
 
-      // Hero scroll effects
+      // Hero scroll effects - DISABLED: Hero now scrolls naturally like home page
       function setupScrollEffects() {
-        const heroContentWrapper = document.getElementById('hero-content-wrapper');
         const scrollIndicator = document.getElementById('scroll-indicator');
-        const heroEffectLayers = document.querySelectorAll('.hero-effect-layer');
-        const agentCounter = document.getElementById('agent-counter-desktop');
-        let lockedHeight = window.innerHeight;
+        // Hero effects removed - hero scrolls naturally with page
 
         function handleScroll() {
           const scrollY = window.scrollY;
-          const viewportHeight = lockedHeight;
-          const scrollProgress = Math.min(scrollY / viewportHeight, 1);
-
-          // Hero content fade/scale
-          const scale = 1 - scrollProgress * 0.4;
-          const blur = scrollProgress * 8;
-          const brightness = 1 - scrollProgress;
-          const opacity = 1 - scrollProgress;
-          const translateY = -scrollProgress * 50;
-
-          if (heroContentWrapper) {
-            heroContentWrapper.style.transformOrigin = 'center center';
-            heroContentWrapper.style.transform = 'scale(' + scale + ') translateY(' + translateY + 'px)';
-            heroContentWrapper.style.filter = 'blur(' + blur + 'px) brightness(' + brightness + ')';
-            heroContentWrapper.style.opacity = opacity;
-          }
-
-          // Effect layers
-          heroEffectLayers.forEach(el => {
-            el.style.opacity = opacity;
-            el.style.visibility = scrollProgress >= 1 ? 'hidden' : 'visible';
-          });
-
-          // Agent counter
-          if (agentCounter) {
-            agentCounter.style.opacity = opacity;
-            agentCounter.style.filter = 'blur(' + blur + 'px) brightness(' + brightness + ')';
-          }
+          // Hero scale/blur/fade effects removed - just scrolls naturally
 
           // Scroll indicator
           if (scrollIndicator) {
