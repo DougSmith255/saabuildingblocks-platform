@@ -39,43 +39,21 @@ html {
   /* scroll-behavior: smooth; - DISABLED: Lenis handles smooth scrolling, this conflicts */
   overflow-x: hidden;
   max-width: 100%;
+  /* Safari fix: ensure no horizontal offset */
+  margin: 0;
+  padding: 0;
 }
 
 body {
   overflow-x: hidden;
   max-width: 100%;
-}
-
-/* Safari-specific fixes for layout issues */
-@supports (-webkit-touch-callout: none) {
-  /* Fix Safari left padding/margin issue caused by overflow-x: hidden */
-  html, body {
-    /* Force reset all padding and margin */
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    /* Use 100% instead of 100vw to avoid scrollbar width issues */
-    width: 100% !important;
-    max-width: 100% !important;
-    /* Disable scrollbar gutter compensation */
-    scrollbar-gutter: auto !important;
-    /* Reset box-sizing to ensure consistent sizing */
-    box-sizing: border-box !important;
-  }
-
-  /* Ensure root element doesn't have weird positioning */
-  html {
-    position: relative;
-    left: 0 !important;
-    right: 0 !important;
-  }
-
-  /* Ensure body fills the viewport without offset */
-  body {
-    position: relative;
-    left: 0 !important;
-  }
+  /* Safari fix: ensure no horizontal offset */
+  margin: 0;
+  padding: 0;
+  /* Force the body to start at viewport edge */
+  position: relative;
+  left: 0;
+  right: 0;
 }
 
 /* Disable tap highlight on mobile - prevents grey flash on touch */
