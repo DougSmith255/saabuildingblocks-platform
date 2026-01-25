@@ -1005,8 +1005,10 @@ function AgentPortal() {
     },
   });
 
-  // Check if any popup is open (for header slide animation)
-  const isAnyPopupOpen = showEditProfile || showImageEditor;
+  // Check if any popup is open (for header slide animation and body scroll lock)
+  const isAnyPopupOpen = showEditProfile || showImageEditor ||
+    showLinkPageHelpModal || showNewAgentsHelpModal || showTemplatesHelpModal ||
+    showAgentAttractionHelpModal || showEliteCoursesHelpModal || showSupportHelpModal || showTeamCallsHelpModal;
 
 
   // Calculate minimum crop size percentage based on 900px minimum
@@ -4195,18 +4197,18 @@ function AgentPortal() {
                 <div
                   className="p-2 rounded-lg"
                   style={{
-                    background: 'rgba(255, 215, 0, 0.2)',
-                    border: '1px solid rgba(255, 215, 0, 0.4)',
-                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.3)',
+                    background: 'rgba(45, 212, 191, 0.2)',
+                    border: '1px solid rgba(45, 212, 191, 0.4)',
+                    boxShadow: '0 0 12px rgba(45, 212, 191, 0.3)',
                   }}
                 >
-                  <Video className="w-6 h-6 text-[#ffd700]" />
+                  <Video className="w-6 h-6 text-[#2dd4bf]" />
                 </div>
-                <h2 className="text-xl font-semibold text-[#ffd700]" style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}>Team Calls Help</h2>
+                <h2 className="text-xl font-semibold text-[#2dd4bf]" style={{ textShadow: '0 0 20px rgba(45, 212, 191, 0.3)' }}>Team Calls Help</h2>
               </div>
               <button
                 onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#ffd700] hover:bg-[#ffd700]/10 transition-colors"
+                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-[#2dd4bf] hover:bg-[#2dd4bf]/10 transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -4218,7 +4220,7 @@ function AgentPortal() {
             <div className="p-5 space-y-4">
               {/* What it is */}
               <p className="text-[#e5e4dd]/80">
-                Access all Smart Agent Alliance team calls and coaching sessions. <strong className="text-[#ffd700]">Stay connected and keep learning!</strong>
+                Access all Smart Agent Alliance team calls and coaching sessions. <strong className="text-[#2dd4bf]">Stay connected and keep learning!</strong>
               </p>
 
               {/* Pro Tip */}
@@ -4242,16 +4244,16 @@ function AgentPortal() {
                 onClick={() => closeHelpPanel('teamcalls', setShowTeamCallsHelpModal)}
                 className="w-full px-4 py-3 rounded-lg font-semibold transition-all"
                 style={{
-                  background: 'linear-gradient(135deg, #ffd700 0%, #f59e0b 100%)',
-                  color: '#1a1a1a',
-                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
+                  background: 'linear-gradient(135deg, #2dd4bf 0%, #14b8a6 100%)',
+                  color: '#134e4a',
+                  boxShadow: '0 0 20px rgba(45, 212, 191, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 30px rgba(255, 215, 0, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(45, 212, 191, 0.5), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(-1px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(255, 215, 0, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(45, 212, 191, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.3)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -11426,7 +11428,7 @@ return (
                         </button>
                         <button
                           onClick={(e) => { e.stopPropagation(); moveLink(linkId, 'down'); }}
-                          disabled={index === allLinkIds.length - 2}
+                          disabled={index === allLinkIds.length - 2 || allLinkIds[index + 1] === 'learn-about'}
                           className="disabled:opacity-30 hover:brightness-125 flex items-center justify-center"
                           style={{
                             width: '14px',
