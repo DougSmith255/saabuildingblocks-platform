@@ -6623,7 +6623,7 @@ function CoursesSection() {
       title: 'Social Agent Academy PRO',
       description: 'Generate inbound leads through content and visibility',
       url: 'https://www.socialagentcommunity.com/users/sign_in?post_login_redirect=https%3A%2F%2Fwww.socialagentcommunity.com%2F#email',
-      color: '#ffd700', // Gold/Yellow
+      color: '#3b82f6', // Blue
       isCustomIcon: true,
     },
     {
@@ -6631,7 +6631,7 @@ function CoursesSection() {
       title: 'Investor Army',
       description: 'Learn house flipping, raising capital, and finding off-market deals',
       url: 'https://info-investorarmy.clickfunnels.com/membership-access18193126?page_id=18193127&page_key=caoyze5b8hg4msp3&login_redirect=1',
-      color: '#3b82f6', // Blue
+      color: '#ffd700', // Gold/Yellow
       isCustomIcon: true,
     },
     {
