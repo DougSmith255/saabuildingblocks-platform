@@ -11974,16 +11974,16 @@ return (
             <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block text-[10px] text-white/50 mb-1">Weight</label>
-                <div className="flex rounded overflow-hidden border border-white/20">
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Bold</button>
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Normal</button>
+                <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'bold' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Bold</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.nameWeight === 'normal' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Normal</button>
                 </div>
               </div>
               <div>
                 <label className="block text-[10px] text-white/50 mb-1">Font</label>
-                <div className="flex rounded overflow-hidden border border-white/20">
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Syn</button>
-                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`flex-1 px-2 py-1.5 text-[10px] ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'bg-black/40 text-white/60'}`}>Task</button>
+                <div className="flex justify-center rounded overflow-hidden border border-white/20 bg-black/40">
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'synonym' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Syn</button>
+                  <button onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }} className={`px-3 py-1.5 text-[10px] rounded ${linksSettings.font === 'taskor' ? 'bg-[#ffd700] text-black' : 'text-white/60'}`}>Task</button>
                 </div>
               </div>
             </div>
@@ -12154,8 +12154,8 @@ return (
               className={`w-full py-2.5 rounded-lg bg-white/5 border border-white/10 text-white/70 text-sm flex items-center justify-center gap-2 ${pageData?.activated ? 'cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
               title={!pageData?.activated ? 'Activate your page first' : ''}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-              Save QR
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="14" width="3" height="3" /><rect x="14" y="18" width="3" height="3" /><rect x="18" y="18" width="3" height="3" /></svg>
+              QR Code
             </button>
           </div>
         </div>
