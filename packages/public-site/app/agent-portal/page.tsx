@@ -960,15 +960,20 @@ function AgentPortal() {
   };
 
   // Touch swipe tracking for help panels
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
   const SWIPE_THRESHOLD = 80; // Minimum distance in pixels to trigger close
 
   // Create swipe handlers for a help panel
+  // Mobile: Swipe down to close ONLY when scrolled to top (scrollTop === 0)
+  // Desktop: Swipe right to close (works regardless of scroll position)
   const createSwipeHandlers = (panelName: string, setShowFn: (show: boolean) => void) => ({
     onTouchStart: (e: React.TouchEvent) => {
+      // Store the scroll position at touch start
+      const target = e.currentTarget as HTMLElement;
       touchStartRef.current = {
         x: e.touches[0].clientX,
         y: e.touches[0].clientY,
+        scrollTop: target.scrollTop,
       };
     },
     onTouchEnd: (e: React.TouchEvent) => {
@@ -990,12 +995,14 @@ function AgentPortal() {
       const isMobile = window.innerWidth < 950;
 
       if (isMobile) {
-        // Swipe down to close
-        if (deltaY > SWIPE_THRESHOLD && !isHorizontalSwipe) {
+        // Swipe down to close - ONLY if already at top of scroll
+        // This prevents closing when user is just scrolling through content
+        const wasAtTop = touchStartRef.current.scrollTop <= 0;
+        if (deltaY > SWIPE_THRESHOLD && !isHorizontalSwipe && wasAtTop) {
           closeHelpPanel(panelName, setShowFn);
         }
       } else {
-        // Swipe right to close
+        // Swipe right to close (works regardless of scroll position)
         if (deltaX > SWIPE_THRESHOLD && isHorizontalSwipe) {
           closeHelpPanel(panelName, setShowFn);
         }
