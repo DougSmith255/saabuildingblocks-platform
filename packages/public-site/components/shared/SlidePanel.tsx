@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 export interface SlidePanelProps {
@@ -51,11 +52,17 @@ export function SlidePanel({
 }: SlidePanelProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
 
   const SWIPE_THRESHOLD = 80;
   const ANIMATION_DURATION = 250;
+
+  // Track when component is mounted (for portal rendering)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Size classes for desktop width
   const sizeClasses = {
@@ -158,8 +165,8 @@ export function SlidePanel({
     }
   };
 
-  // Don't render anything if never opened
-  if (!hasBeenOpened && !isOpen) {
+  // Don't render anything if never opened or not mounted (SSR safety)
+  if (!mounted || (!hasBeenOpened && !isOpen)) {
     return null;
   }
 
@@ -290,94 +297,97 @@ export function SlidePanel({
         }
       `}</style>
 
-      {/* Panel Container */}
-      <div
-        className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-        onClick={handleBackdropClick}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="slide-panel-title"
-      >
-        {/* Backdrop */}
+      {/* Portal to render at document.body level, escaping stacking context issues */}
+      {createPortal(
         <div
-          className={`slide-panel-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${
-            isClosing ? 'slide-panel-backdrop-closing' : ''
-          }`}
-          style={{ isolation: 'isolate' }}
-          aria-hidden="true"
-        />
-
-        {/* Panel */}
-        <div
-          ref={panelRef}
-          className={`slide-panel relative overflow-y-auto overscroll-contain ${sizeClasses[size]} ${
-            isClosing ? 'slide-panel-closing' : ''
-          } ${className}`}
-          style={{
-            background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
-          }}
-          onClick={(e) => e.stopPropagation()}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
+          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          onClick={handleBackdropClick}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="slide-panel-title"
         >
-          {/* Header */}
+          {/* Backdrop */}
           <div
-            className="slide-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
+            className={`slide-panel-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${
+              isClosing ? 'slide-panel-backdrop-closing' : ''
+            }`}
+            style={{ isolation: 'isolate' }}
+            aria-hidden="true"
+          />
+
+          {/* Panel */}
+          <div
+            ref={panelRef}
+            className={`slide-panel relative overflow-y-auto overscroll-contain ${sizeClasses[size]} ${
+              isClosing ? 'slide-panel-closing' : ''
+            } ${className}`}
             style={{
-              background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
+              background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
             }}
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
-            <div className="flex items-center gap-3">
-              {icon && (
-                <div
-                  className="p-2 rounded-lg"
-                  style={{
-                    background: 'rgba(255, 215, 0, 0.15)',
-                    border: '1px solid rgba(255, 215, 0, 0.3)',
-                    boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
-                  }}
-                >
-                  {icon}
-                </div>
-              )}
-              <div>
-                <h2
-                  id="slide-panel-title"
-                  className="text-xl font-semibold text-[#ffd700]"
-                  style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}
-                >
-                  {title}
-                </h2>
-                {subtitle && (
-                  <p className="text-sm text-[#e5e4dd]/60">{subtitle}</p>
-                )}
-              </div>
-            </div>
-            <button
-              onClick={handleClose}
-              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+            {/* Header */}
+            <div
+              className="slide-panel-header sticky top-0 z-10 flex items-center justify-between p-5 border-b border-white/10"
               style={{
-                color: 'rgba(255, 215, 0, 0.7)',
+                background: 'linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(20,20,20,0.98) 50%)',
               }}
-              aria-label="Close panel"
             >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Content */}
-          <div className="p-5">
-            {children}
-          </div>
-
-          {/* Footer (if provided) */}
-          {footer && (
-            <div className="p-5 border-t border-white/10">
-              {footer}
+              <div className="flex items-center gap-3">
+                {icon && (
+                  <div
+                    className="p-2 rounded-lg"
+                    style={{
+                      background: 'rgba(255, 215, 0, 0.15)',
+                      border: '1px solid rgba(255, 215, 0, 0.3)',
+                      boxShadow: '0 0 12px rgba(255, 215, 0, 0.2)',
+                    }}
+                  >
+                    {icon}
+                  </div>
+                )}
+                <div>
+                  <h2
+                    id="slide-panel-title"
+                    className="text-xl font-semibold text-[#ffd700]"
+                    style={{ textShadow: '0 0 20px rgba(255, 215, 0, 0.3)' }}
+                  >
+                    {title}
+                  </h2>
+                  {subtitle && (
+                    <p className="text-sm text-[#e5e4dd]/60">{subtitle}</p>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={handleClose}
+                className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+                style={{
+                  color: 'rgba(255, 215, 0, 0.7)',
+                }}
+                aria-label="Close panel"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-          )}
-        </div>
-      </div>
+
+            {/* Content */}
+            <div className="p-5">
+              {children}
+            </div>
+
+            {/* Footer (if provided) */}
+            {footer && (
+              <div className="p-5 border-t border-white/10">
+                {footer}
+              </div>
+            )}
+          </div>
+        </div>,
+        document.body
+      )}
     </>
   );
 }

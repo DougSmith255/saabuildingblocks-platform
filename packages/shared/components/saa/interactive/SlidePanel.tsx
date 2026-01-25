@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface SlidePanelProps {
   /** Whether the panel is open */
@@ -121,11 +122,17 @@ export function SlidePanel({
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const touchStartRef = useRef<{ x: number; y: number; scrollTop: number } | null>(null);
 
   const SWIPE_THRESHOLD = 80;
   const ANIMATION_DURATION = 250;
+
+  // Track when component is mounted (for portal rendering)
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Inject keyframes on mount
   useEffect(() => {
@@ -236,8 +243,8 @@ export function SlidePanel({
     }
   };
 
-  // Don't render anything if never opened
-  if (!hasBeenOpened && !isOpen) {
+  // Don't render anything if never opened or not mounted (SSR safety)
+  if (!mounted || (!hasBeenOpened && !isOpen)) {
     return null;
   }
 
@@ -379,7 +386,8 @@ export function SlidePanel({
     borderTop: '1px solid rgba(255, 255, 255, 0.1)',
   };
 
-  return (
+  // Use portal to render at document.body level, escaping any stacking context issues
+  return createPortal(
     <div
       style={containerStyle}
       onClick={handleBackdropClick}
@@ -446,7 +454,8 @@ export function SlidePanel({
         {/* Footer (if provided) */}
         {footer && <div style={footerStyle}>{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
