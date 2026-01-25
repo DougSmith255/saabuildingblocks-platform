@@ -2078,7 +2078,7 @@ function AgentPortal() {
             <div className={glassStyles['shimmerGradient']} />
           </div>
 
-          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 md:h-[85px]">
+          <div className="flex items-center justify-between px-4 sm:px-8 relative z-10 h-16 min-[950px]:h-[85px]">
             {/* SAA Logo - links to dashboard */}
             <button
               onClick={() => setActiveSection('dashboard')}
@@ -2095,58 +2095,58 @@ function AgentPortal() {
               />
             </button>
 
-            {/* Desktop: AGENT PORTAL title - centered in header, uses H1 component styling */}
-            <div className="hidden md:block absolute left-1/2 -translate-x-1/2">
+            {/* Desktop (>=950px): AGENT PORTAL title - centered in header */}
+            <div className="hidden min-[950px]:block absolute left-1/2 -translate-x-1/2">
               <H1 className="whitespace-nowrap" disableCloseGlow style={{ fontSize: 'clamp(28px, calc(20px + 1.5vw), 48px)' }}>
                 AGENT PORTAL
               </H1>
             </div>
 
-            {/* Mobile: Section Title + Help Button / Desktop: Logout Button */}
+            {/* Mobile (<950px): Section Title - centered */}
+            <div className="min-[950px]:hidden absolute left-1/2 -translate-x-1/2">
+              <span className="text-[#ffd700] font-semibold text-sm whitespace-nowrap">
+                {activeSection === 'onboarding' && 'Onboarding'}
+                {activeSection === 'dashboard' && 'Home'}
+                {activeSection === 'support' && 'Get Support'}
+                {activeSection === 'agent-page' && 'Agent Attraction'}
+                {activeSection === 'linktree' && 'Link Page'}
+                {activeSection === 'calls' && 'Team Calls'}
+                {activeSection === 'courses' && 'Courses'}
+                {activeSection === 'templates' && 'Templates'}
+                {activeSection === 'production' && 'Landing Pages'}
+                {activeSection === 'new-agents' && 'New Agents'}
+                {activeSection === 'download' && 'Download App'}
+                {activeSection === 'profile' && 'My Profile'}
+              </span>
+            </div>
+
+            {/* Right side: Mobile Help Button + Desktop Logout */}
             <div className="flex items-center gap-3">
-              {/* Mobile: Current section title with help button */}
-              <div className="md:hidden flex items-center gap-2">
-                <span className="text-[#ffd700] font-semibold text-sm">
-                  {activeSection === 'onboarding' && 'Onboarding'}
-                  {activeSection === 'dashboard' && 'Home'}
-                  {activeSection === 'support' && 'Get Support'}
-                  {activeSection === 'agent-page' && 'Agent Attraction'}
-                  {activeSection === 'linktree' && 'Link Page'}
-                  {activeSection === 'calls' && 'Team Calls'}
-                  {activeSection === 'courses' && 'Courses'}
-                  {activeSection === 'templates' && 'Templates'}
-                  {activeSection === 'production' && 'Landing Pages'}
-                  {activeSection === 'new-agents' && 'New Agents'}
-                  {activeSection === 'download' && 'Download App'}
-                  {activeSection === 'profile' && 'My Profile'}
-                </span>
-                {/* Mobile Help Button - uses actual PixelHelpButton component, scaled down for header */}
-                {activeSection === 'support' && (
-                  <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" size="small" className="relative" />
-                )}
-                {activeSection === 'calls' && (
-                  <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="small" className="relative" />
-                )}
-                {activeSection === 'templates' && (
-                  <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="small" className="relative" />
-                )}
-                {activeSection === 'courses' && (
-                  <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" size="small" className="relative" />
-                )}
-                {activeSection === 'new-agents' && (
-                  <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" size="small" className="relative" />
-                )}
-                {activeSection === 'agent-page' && (
-                  <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" size="small" className="relative" />
-                )}
-                {activeSection === 'linktree' && (
-                  <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" size="small" className="relative" />
+              {/* Mobile (<950px): Pixel Help Button - always visible, greyed out for sections without modals */}
+              <div className="min-[950px]:hidden">
+                {activeSection === 'support' ? (
+                  <PixelHelpButton onClick={() => setShowSupportHelpModal(true)} color="gradient" ariaLabel="Support Help" size="mobile" className="relative" />
+                ) : activeSection === 'calls' ? (
+                  <PixelHelpButton onClick={() => setShowTeamCallsHelpModal(true)} color="teal" ariaLabel="Team Calls Help" size="mobile" className="relative" />
+                ) : activeSection === 'templates' ? (
+                  <PixelHelpButton onClick={() => setShowTemplatesHelpModal(true)} color="gold" ariaLabel="Templates Help" size="mobile" className="relative" />
+                ) : activeSection === 'courses' ? (
+                  <PixelHelpButton onClick={() => setShowEliteCoursesHelpModal(true)} color="purple" ariaLabel="Elite Courses Help" size="mobile" className="relative" />
+                ) : activeSection === 'new-agents' ? (
+                  <PixelHelpButton onClick={() => setShowNewAgentsHelpModal(true)} color="gold" ariaLabel="New Agents Help" size="mobile" className="relative" />
+                ) : activeSection === 'agent-page' ? (
+                  <PixelHelpButton onClick={() => setShowAgentAttractionHelpModal(true)} color="purple" ariaLabel="Agent Attraction Help" size="mobile" className="relative" />
+                ) : activeSection === 'linktree' ? (
+                  <PixelHelpButton onClick={() => setShowLinkPageHelpModal(true)} color="gold" ariaLabel="Link Page Help" size="mobile" className="relative" />
+                ) : (
+                  /* Grey/disabled for sections without help modals: dashboard, onboarding, profile, production, download */
+                  <PixelHelpButton onClick={() => {}} color="grey" ariaLabel="Help unavailable" size="mobile" className="relative" disabled />
                 )}
               </div>
-              {/* Desktop: Logout Button - uses button text size clamp from master controller */}
+              {/* Desktop (>=950px): Logout Button */}
               <button
                 onClick={handleLogout}
-                className="hidden md:flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
+                className="hidden min-[950px]:flex items-center gap-2 px-4 py-2 rounded-lg text-[#e5e4dd] hover:text-[#ff4444] hover:bg-[#ff4444]/10 border border-transparent hover:border-[#ff4444]/30 transition-all uppercase font-semibold"
                 style={{
                   fontFamily: 'var(--font-taskor), Taskor, system-ui, sans-serif',
                   fontSize: 'clamp(17px, calc(15.36px + 0.55vw), 32px)',
@@ -12259,8 +12259,8 @@ function PageBadges({ pages }: { pages: ('agent' | 'linktree')[] }) {
 // Pixel Help Button Component - Static CSS for each color variant
 // ============================================================================
 
-type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'gradient';
-type PixelHelpButtonSize = 'normal' | 'small';
+type PixelHelpButtonColor = 'gold' | 'purple' | 'teal' | 'gradient' | 'grey';
+type PixelHelpButtonSize = 'normal' | 'mobile';
 
 interface PixelHelpButtonProps {
   onClick: () => void;
@@ -12268,17 +12268,22 @@ interface PixelHelpButtonProps {
   ariaLabel?: string;
   size?: PixelHelpButtonSize;
   className?: string; // For custom positioning (mobile header uses relative, desktop uses fixed)
+  disabled?: boolean; // When true, shows grey and non-interactive
 }
 
-function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = 'normal', className }: PixelHelpButtonProps) {
+function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = 'normal', className, disabled = false }: PixelHelpButtonProps) {
+  // If disabled, force grey color
+  const effectiveColor = disabled ? 'grey' : color;
+
   const classMap = {
     gold: 'pixel-help-gold',
     purple: 'pixel-help-purple',
     teal: 'pixel-help-teal',
     gradient: 'pixel-help-gradient',
+    grey: 'pixel-help-grey',
   };
 
-  const sizeClass = size === 'small' ? 'pixel-help-small' : '';
+  const sizeClass = size === 'mobile' ? 'pixel-help-mobile' : '';
 
   return (
     <>
@@ -12327,28 +12332,66 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
             inset 0 2px 0 0 rgba(255,255,255,0.3),
             inset 0 -2px 0 0 rgba(0,0,0,0.2) !important;
         }
+        /* ===== GREY VARIANT (Disabled/Inactive state) ===== */
+        .pixel-help-grey {
+          --btn-light: #6b6b6b;
+          --btn-main: #4a4a4a;
+          --btn-dark: #333333;
+          --btn-text: #1a1a1a;
+          opacity: 0.5;
+          cursor: not-allowed !important;
+        }
+        .pixel-help-grey > button {
+          cursor: not-allowed !important;
+          pointer-events: none;
+        }
         /* ===== SHARED STYLES ===== */
         .pixel-help-gold,
         .pixel-help-purple,
         .pixel-help-teal,
-        .pixel-help-gradient {
+        .pixel-help-gradient,
+        .pixel-help-grey {
           --black-25: rgba(0, 0, 0, 0.25);
           display: block;
           width: 4rem;
           height: 4rem;
           cursor: pointer;
         }
-        /* ===== SMALL SIZE (for mobile header) ===== */
-        .pixel-help-small {
-          width: 1.75rem !important;
-          height: 1.75rem !important;
-          transform: scale(0.4375);
-          transform-origin: center center;
+        /* ===== MOBILE SIZE (for mobile header - proper sizing without broken scale) ===== */
+        .pixel-help-mobile {
+          width: 2.5rem !important;
+          height: 2.5rem !important;
+        }
+        .pixel-help-mobile > span:nth-child(2) {
+          inset: 2px !important;
+        }
+        .pixel-help-mobile > span:nth-child(3)::before {
+          width: 0.25rem !important;
+          height: 0.25rem !important;
+          top: 0.15rem !important;
+          left: 0.15rem !important;
+          box-shadow:
+            1.9em 0 var(--btn-text),
+            0 1.9em var(--btn-text),
+            1.9em 1.9em var(--btn-text) !important;
+        }
+        .pixel-help-mobile > span:nth-child(4)::after {
+          transform: scale(0.625);
+          transform-origin: top left;
+        }
+        .pixel-help-mobile > span:nth-child(5) {
+          inset: 0.3rem 0.9rem !important;
+          border-radius: 0.5rem !important;
+          box-shadow:
+            4px 0 0 0 var(--btn-text),
+            inset 0 1px 0 0 var(--btn-light),
+            inset 0 -1px 0 0 var(--btn-dark) !important;
         }
         .pixel-help-gold > button,
         .pixel-help-purple > button,
         .pixel-help-teal > button,
-        .pixel-help-gradient > button {
+        .pixel-help-gradient > button,
+        .pixel-help-grey > button {
           cursor: pointer;
           display: inline-block;
           height: 100%;
@@ -12383,7 +12426,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(2),
         .pixel-help-purple > span:nth-child(2),
         .pixel-help-teal > span:nth-child(2),
-        .pixel-help-gradient > span:nth-child(2) {
+        .pixel-help-gradient > span:nth-child(2),
+        .pixel-help-grey > span:nth-child(2) {
           position: absolute;
           inset: 3px;
           pointer-events: none;
@@ -12394,7 +12438,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(2)::before,
         .pixel-help-purple > span:nth-child(2)::before,
         .pixel-help-teal > span:nth-child(2)::before,
-        .pixel-help-gradient > span:nth-child(2)::before {
+        .pixel-help-gradient > span:nth-child(2)::before,
+        .pixel-help-grey > span:nth-child(2)::before {
           content: "";
           position: absolute;
           inset: 0;
@@ -12409,7 +12454,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(3),
         .pixel-help-purple > span:nth-child(3),
         .pixel-help-teal > span:nth-child(3),
-        .pixel-help-gradient > span:nth-child(3) {
+        .pixel-help-gradient > span:nth-child(3),
+        .pixel-help-grey > span:nth-child(3) {
           position: absolute;
           pointer-events: none;
           inset: 0;
@@ -12417,7 +12463,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(3)::before,
         .pixel-help-purple > span:nth-child(3)::before,
         .pixel-help-teal > span:nth-child(3)::before,
-        .pixel-help-gradient > span:nth-child(3)::before {
+        .pixel-help-gradient > span:nth-child(3)::before,
+        .pixel-help-grey > span:nth-child(3)::before {
           content: "";
           width: 0.375rem;
           height: 0.375rem;
@@ -12434,7 +12481,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(4),
         .pixel-help-purple > span:nth-child(4),
         .pixel-help-teal > span:nth-child(4),
-        .pixel-help-gradient > span:nth-child(4) {
+        .pixel-help-gradient > span:nth-child(4),
+        .pixel-help-grey > span:nth-child(4) {
           position: absolute;
           pointer-events: none;
           inset: 0;
@@ -12444,7 +12492,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(4)::after,
         .pixel-help-purple > span:nth-child(4)::after,
         .pixel-help-teal > span:nth-child(4)::after,
-        .pixel-help-gradient > span:nth-child(4)::after {
+        .pixel-help-gradient > span:nth-child(4)::after,
+        .pixel-help-grey > span:nth-child(4)::after {
           content: "";
           width: 0.25rem;
           height: 0.25rem;
@@ -12485,7 +12534,8 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         .pixel-help-gold > span:nth-child(5),
         .pixel-help-purple > span:nth-child(5),
         .pixel-help-teal > span:nth-child(5),
-        .pixel-help-gradient > span:nth-child(5) {
+        .pixel-help-gradient > span:nth-child(5),
+        .pixel-help-grey > span:nth-child(5) {
           position: absolute;
           background-color: var(--btn-main);
           border: 2px solid var(--btn-text);
@@ -12527,7 +12577,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         style={{ isolation: 'isolate' }}
         title={ariaLabel}
       >
-        <button type="button" onClick={onClick} aria-label={ariaLabel}></button>
+        <button type="button" onClick={disabled ? undefined : onClick} aria-label={ariaLabel} disabled={disabled}></button>
         <span></span>
         <span></span>
         <span></span>
