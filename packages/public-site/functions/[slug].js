@@ -2151,13 +2151,12 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
     .tool-modal {
       position: relative;
       background: #0a0a0a;
-      border: none;
+      border: 1px solid rgba(255,215,0,0.3);
       border-radius: 16px;
       padding: 0;
       overflow: hidden;
       box-sizing: border-box;
-      /* Using inset box-shadow for border effect - renders cleaner corners than actual border */
-      box-shadow: inset 0 0 0 1px rgba(255,215,0,0.3), 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 10px 40px rgba(0,0,0,0.5);
     }
 
     /* Close button for tool modals - half in, half out like base modal */
@@ -3596,7 +3595,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
                 </h2>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: stretch;" class="why-only-grid-responsive">
+              <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start;" class="why-only-grid-responsive">
                 <!-- Left Column: Card Stack + Progress Bar -->
                 <div style="display: flex; flex-direction: column; position: relative; z-index: 10; justify-content: center;">
                   <!-- 3D Rotating Card Stack -->

@@ -4702,8 +4702,8 @@ function DashboardView({
                 }}
               >
                 <div className="flex flex-col items-center text-center space-y-2.5">
-                  {/* Centered icon with subtle background - square */}
-                  <div className="p-2.5 rounded-md bg-[#ffd700]/5 group-hover:bg-[#ffd700]/10 transition-colors duration-300 flex items-center justify-center aspect-square">
+                  {/* Centered icon with subtle background - square with hard border */}
+                  <div className="p-2.5 rounded-md bg-[#ffd700]/5 border border-[#ffd700]/30 group-hover:bg-[#ffd700]/10 group-hover:border-[#ffd700]/50 transition-all duration-300 flex items-center justify-center aspect-square">
                     <Icon3D color={accent}>
                       <IconComponent className="w-6 h-6 sm:w-7 sm:h-7 transition-transform duration-300" />
                     </Icon3D>
@@ -5293,13 +5293,13 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                     style={{
                       background: isChecked
                         ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
-                        : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                        : '#bfbdb0',
                       border: isChecked
                         ? '1px solid rgba(34, 197, 94, 0.5)'
-                        : '1px solid rgba(255,255,255,0.06)',
+                        : '1px solid rgba(255,255,255,0.15)',
                       boxShadow: isChecked
                         ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                        : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                        : 'inset 0 1px 2px rgba(0,0,0,0.2)',
                     }}
                   >
                     {isChecked && (
@@ -9765,13 +9765,13 @@ return (
                 style={{
                   background: formData.show_call_button
                     ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
-                    : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    : '#bfbdb0',
                   border: formData.show_call_button
                     ? '1px solid rgba(34, 197, 94, 0.5)'
-                    : '1px solid rgba(255,255,255,0.06)',
+                    : '1px solid rgba(255,255,255,0.15)',
                   boxShadow: formData.show_call_button
                     ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                    : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                    : 'inset 0 1px 2px rgba(0,0,0,0.2)',
                 }}
               >
                 {formData.show_call_button && (
@@ -9794,13 +9794,13 @@ return (
                 style={{
                   background: formData.show_text_button
                     ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
-                    : 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                    : '#bfbdb0',
                   border: formData.show_text_button
                     ? '1px solid rgba(34, 197, 94, 0.5)'
-                    : '1px solid rgba(255,255,255,0.06)',
+                    : '1px solid rgba(255,255,255,0.15)',
                   boxShadow: formData.show_text_button
                     ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-                    : '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+                    : 'inset 0 1px 2px rgba(0,0,0,0.2)',
                 }}
               >
                 {formData.show_text_button && (
@@ -11586,7 +11586,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help' }: PixelH
 
   return (
     <>
-      <style jsx>{`
+      <style jsx global>{`
         /* ===== GOLD VARIANT ===== */
         .pixel-help-gold {
           --btn-light: #fde047;
