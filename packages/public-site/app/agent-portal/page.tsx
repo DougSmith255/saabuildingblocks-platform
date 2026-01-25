@@ -2113,9 +2113,11 @@ function AgentPortal() {
         style={{
           WebkitTapHighlightColor: 'transparent',
           WebkitTouchCallout: 'none',
-          transform: 'translate3d(0,0,0)', // Force GPU layer - prevents scroll jank
-          WebkitTransform: 'translate3d(0,0,0)',
-          paddingBottom: 'env(safe-area-inset-bottom, 0px)', // Handle notch devices
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          contain: 'layout style paint',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         } as React.CSSProperties}
       >
         {/* Solid background - edge to edge, no rounded corners */}
