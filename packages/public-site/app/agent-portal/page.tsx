@@ -5252,9 +5252,9 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                 className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/[0.02] transition-colors"
                 onClick={() => setExpandedStep(isExpanded ? null : index)}
               >
-                {/* Checkbox */}
+                {/* Checkbox - Premium glass style */}
                 <label
-                  className="flex-shrink-0 cursor-pointer"
+                  className="flex-shrink-0 cursor-pointer relative"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <input
@@ -5263,8 +5263,28 @@ function OnboardingSection({ progress, onUpdateProgress, userName, userLastName,
                     onChange={(e) => {
                       onUpdateProgress({ [step.key]: e.target.checked });
                     }}
-                    className="w-5 h-5"
+                    className="sr-only peer"
                   />
+                  <div
+                    className="w-6 h-6 rounded-md flex items-center justify-center transition-all duration-200 peer-focus:ring-2 peer-focus:ring-offset-1 peer-focus:ring-offset-black"
+                    style={{
+                      background: isChecked
+                        ? 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)'
+                        : 'linear-gradient(145deg, rgba(30, 30, 32, 0.95) 0%, rgba(20, 20, 22, 0.98) 100%)',
+                      border: isChecked
+                        ? '1px solid rgba(34, 197, 94, 0.5)'
+                        : '1px solid rgba(255, 215, 0, 0.2)',
+                      boxShadow: isChecked
+                        ? '0 0 10px rgba(34, 197, 94, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
+                        : '0 2px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03)',
+                    }}
+                  >
+                    {isChecked && (
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
                 </label>
 
                 {/* Step Number */}
