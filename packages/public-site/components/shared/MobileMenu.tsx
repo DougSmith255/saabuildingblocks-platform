@@ -80,8 +80,9 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
       return () => {
         // Cleanup handled in the else branch
       };
-    } else {
-      // Show transition overlay to mask scroll restoration
+    } else if (hasBeenOpened) {
+      // Only show transition overlay when menu is actually CLOSING (not on initial mount)
+      // This prevents the dark blur overlay from showing on initial page load in Safari
       setIsTransitioning(true);
 
       // Restore body styles
@@ -99,7 +100,7 @@ export default function MobileMenu({ isPortalClicked, handlePortalClick, isMobil
         }, 100);
       });
     }
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, hasBeenOpened]);
 
   const toggleDropdown = (index: number) => {
     const previousDropdown = openDropdown;
