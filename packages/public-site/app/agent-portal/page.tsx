@@ -6539,10 +6539,9 @@ function SupportSection({ userState }: SupportSectionProps) {
             </a>
           </div>
         </div>
-      </div>
 
-      {/* My eXp App Card - Full width below support cards */}
-      <div
+        {/* My eXp App Card - Now part of the support cards grid */}
+        <div
         className="rounded-2xl overflow-hidden"
         style={{
           background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
@@ -6656,6 +6655,7 @@ function SupportSection({ userState }: SupportSectionProps) {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );
@@ -7482,7 +7482,8 @@ function CoursesSection() {
 
   return (
     <div className="space-y-4 sm:space-y-6 px-1 sm:px-2">
-      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
+      {/* Fluid grid: auto-fit with min 250px cards that expand to fill row */}
+      <div className="grid gap-3 sm:gap-4 lg:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
         {courses.map((course, index) => {
           const IconComponent = course.icon;
           return (
@@ -12550,9 +12551,9 @@ return (
           )}
         </div>
 
-        {/* Right Column: Preview (fixed 340px width) */}
+        {/* Right Column: Preview (fixed 340px width) - no sticky, scrolls with content */}
         <div className="w-[340px] flex-shrink-0">
-          <div className="sticky top-24 rounded-xl overflow-hidden" style={{
+          <div className="rounded-xl overflow-hidden" style={{
             background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(255, 215, 0, 0.2)',
             boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
