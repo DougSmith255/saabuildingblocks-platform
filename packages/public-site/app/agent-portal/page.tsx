@@ -11875,12 +11875,13 @@ return (
     </div>
 
     {/* ====================================================================
-        TABLET LAYOUT (950px - 1549px) - 2 Column with 2 Tabs
+        TABLET LAYOUT (950px - 1549px) - Tabbed Interface + Preview
+        Left: Tabs with stacked cards | Right: Fixed 340px preview
         ==================================================================== */}
-    <div className="hidden min-[950px]:block min-[1550px]:hidden space-y-4">
+    <div className="hidden min-[950px]:block min-[1550px]:hidden">
       {/* Save Bar */}
       {hasUnsavedChanges && (
-        <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between">
+        <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between mb-4">
           <span className="text-sm text-[#ffd700]">You have unsaved changes</span>
           <button
             onClick={handleSave}
@@ -11892,27 +11893,31 @@ return (
         </div>
       )}
 
-      {/* Tablet Pill Tabs */}
-      <div className="flex justify-center">
-        <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
-          <button
-            onClick={() => setTabletTab('content')}
-            className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'content' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
-          >
-            Profile & Social
-          </button>
-          <button
-            onClick={() => setTabletTab('style')}
-            className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'style' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
-          >
-            Style & Actions
-          </button>
-        </div>
-      </div>
+      {/* 2-Column Layout: Tabs + Preview */}
+      <div className="flex gap-4">
+        {/* Left Column: Tabbed Interface (fills remaining space) */}
+        <div className="flex-1 space-y-4">
+          {/* Tablet Pill Tabs */}
+          <div className="flex justify-center">
+            <div className="flex rounded-xl bg-black/40 border border-white/10 p-1">
+              <button
+                onClick={() => setTabletTab('content')}
+                className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'content' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+              >
+                Profile & Social
+              </button>
+              <button
+                onClick={() => setTabletTab('style')}
+                className={`py-2 px-6 rounded-lg text-sm font-medium transition-colors ${tabletTab === 'style' ? 'bg-[#ffd700] text-black' : 'text-white/60 hover:text-white'}`}
+              >
+                Style & Actions
+              </button>
+            </div>
+          </div>
 
-      {/* Tablet Tab Content - 2 Columns */}
-      {tabletTab === 'content' && (
-        <div className="grid grid-cols-2 gap-4">
+          {/* Tablet Tab Content - Stacked Cards */}
+          {tabletTab === 'content' && (
+            <div className="space-y-4">
           {/* Column 1: Profile */}
           <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
             <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
@@ -11995,10 +12000,8 @@ return (
             </div>
           </div>
 
-          {/* Column 2: Contact + Social Links */}
-          <div className="space-y-4">
-            {/* Contact Card */}
-            <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+              {/* Contact Card */}
+              <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
               <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
                 <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
                   <rect x="2" y="4" width="20" height="16" rx="2" />
@@ -12066,13 +12069,12 @@ return (
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {tabletTab === 'style' && (
-        <div className="grid grid-cols-2 gap-4">
-          {/* Column 1: Style */}
-          <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
+          {tabletTab === 'style' && (
+            <div className="space-y-4">
+              {/* Style Card */}
+              <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
             <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
               <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
@@ -12118,7 +12120,7 @@ return (
             </div>
           </div>
 
-          {/* Column 2: Page Actions */}
+              {/* Page Actions Card */}
           <div className="rounded-xl overflow-hidden" style={{ background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)', border: '1px solid rgba(255,255,255,0.06)', boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)' }}>
             <div className="px-4 py-2.5 border-b border-white/10 flex items-center gap-2">
               <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ filter: 'drop-shadow(0 0 4px currentColor)' }}>
@@ -12210,8 +12212,58 @@ return (
               </button>
             </div>
           </div>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Right Column: Preview (fixed 340px width) */}
+        <div className="w-[340px] flex-shrink-0">
+          <div className="sticky top-24 rounded-xl overflow-hidden" style={{
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+            border: '1px solid rgba(255, 215, 0, 0.2)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+          }}>
+            <div className="px-4 py-3 border-b border-white/10 bg-black/30">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-[#ffd700]">Link Page Preview</span>
+              </div>
+            </div>
+            <div className="relative w-full overflow-hidden" style={{ height: '500px', background: '#0a0a0a' }}>
+              {pageData?.activated && (generatedSlug || pageData?.slug) ? (
+                <div className="flex justify-center pt-2 pb-4">
+                  <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: '#0a0a0a' }}>
+                    <iframe
+                      src={`${linktreeUrl}?preview=true`}
+                      className="absolute top-0 left-0"
+                      style={{
+                        width: '390px',
+                        height: '680px',
+                        transform: 'scale(0.71)',
+                        transformOrigin: 'top left',
+                        pointerEvents: 'none',
+                        border: 'none',
+                        outline: 'none',
+                        background: '#0a0a0a',
+                      }}
+                      title="Link Page Preview"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-center px-6">
+                  <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                    </svg>
+                  </div>
+                  <p className="text-[#e5e4dd]/60 text-sm mb-2">Preview not available</p>
+                  <p className="text-[#e5e4dd]/40 text-xs">Activate your page to see the preview</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Bottom spacer for mobile nav */}
       <div className="h-20 min-[950px]:h-4" />
