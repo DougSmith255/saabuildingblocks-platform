@@ -8779,7 +8779,13 @@ function NewAgentsSection() {
   const handleCategoryClick = (category: NewAgentCategory) => {
     setSelectedCategory(category);
     setSelectedDocument(null);
-    setActivePanel('category');
+    // If category has only 1 document, go directly to it
+    if (category.documents.length === 1) {
+      setSelectedDocument(category.documents[0]);
+      setActivePanel('document');
+    } else {
+      setActivePanel('category');
+    }
   };
 
   const handleDocumentClick = (doc: NewAgentDocument) => {
@@ -8798,12 +8804,10 @@ function NewAgentsSection() {
   };
 
   const handleCloseModal = () => {
+    // Clear all state immediately so clicking a new card works right away
     setActivePanel(null);
-    // Clear data after animation completes
-    setTimeout(() => {
-      setSelectedCategory(null);
-      setSelectedDocument(null);
-    }, 300);
+    setSelectedCategory(null);
+    setSelectedDocument(null);
   };
 
   return (
