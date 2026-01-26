@@ -1450,7 +1450,6 @@ function AgentPortal() {
 
   const handleCompleteOnboarding = async () => {
     setIsCompletingOnboarding(true);
-    setIsOnboardingTransitioning(true); // Prevent instant redirect
 
     try {
       // Check if all steps are complete
@@ -1459,7 +1458,6 @@ function AgentPortal() {
       if (!allComplete) {
         alert('Please complete all onboarding steps first!');
         setIsCompletingOnboarding(false);
-        setIsOnboardingTransitioning(false);
         return;
       }
 
@@ -1482,14 +1480,17 @@ function AgentPortal() {
         setOnboardingCompletedAt(data.onboarding_completed_at);
         setShowCompletionModal(true);
 
-        // After 2.5 seconds, start fade-out transition to dashboard
+        // After 2.5 seconds, close modal and START the blur/fade transition
         setTimeout(() => {
           setShowCompletionModal(false);
-          // Smooth fade-out before transitioning
+          // NOW start the blur/fade transition (after modal is gone)
+          setIsOnboardingTransitioning(true);
+
+          // Wait for blur/fade animation to complete (800ms), then switch to dashboard
           setTimeout(() => {
             setActiveSection('dashboard');
             setIsOnboardingTransitioning(false);
-          }, 500); // Short delay for smooth transition
+          }, 800);
         }, 2500);
       }
     } catch (error) {
@@ -2804,11 +2805,11 @@ function AgentPortal() {
             {/* Onboarding Section - with blur/fade transition on completion */}
             {activeSection === 'onboarding' && (
               <div
-                className="transition-all duration-500 ease-out"
+                className="transition-all duration-700 ease-out"
                 style={{
                   opacity: isOnboardingTransitioning ? 0 : 1,
-                  filter: isOnboardingTransitioning ? 'blur(8px)' : 'blur(0px)',
-                  transform: isOnboardingTransitioning ? 'scale(0.98)' : 'scale(1)',
+                  filter: isOnboardingTransitioning ? 'blur(12px)' : 'blur(0px)',
+                  transform: isOnboardingTransitioning ? 'scale(0.95)' : 'scale(1)',
                 }}
               >
                 <OnboardingSection
@@ -10751,15 +10752,18 @@ return (
             {/* Button Weight */}
             <div className="flex-1">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Button Weight</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-                {/* Animated sliding pill indicator */}
+              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
+                {/* Animated sliding pill indicator - fixed width */}
                 <div
-                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                  style={{ transform: linksSettings.nameWeight === 'normal' ? 'translateX(100%)' : 'translateX(0)' }}
+                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                  style={{
+                    width: '88px',
+                    left: linksSettings.nameWeight === 'normal' ? 'calc(100% - 92px)' : '4px',
+                  }}
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: (linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10769,7 +10773,7 @@ return (
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.nameWeight === 'normal' ? '#000000' : 'rgba(255,255,255,0.6)'
