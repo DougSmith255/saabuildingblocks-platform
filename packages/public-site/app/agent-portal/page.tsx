@@ -13875,24 +13875,24 @@ function DownloadSection() {
                 <button
                   type="button"
                   onClick={() => setShowIOSInstructions(false)}
-                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 grid place-items-center"
+                  className="relative z-10 w-[130px] h-[44px] rounded-full text-lg font-bold transition-colors duration-300"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
                   }}
                 >
-                  Chrome
+                  <span className="absolute inset-0 flex items-center justify-center">Chrome</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowIOSInstructions(true)}
-                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 grid place-items-center"
+                  className="relative z-10 w-[130px] h-[44px] rounded-full text-lg font-bold transition-colors duration-300"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'
                   }}
                 >
-                  Safari
+                  <span className="absolute inset-0 flex items-center justify-center">Safari</span>
                 </button>
               </div>
             </div>

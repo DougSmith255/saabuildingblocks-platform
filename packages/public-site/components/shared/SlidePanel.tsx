@@ -94,11 +94,11 @@ export function SlidePanel({
     prevIsOpenRef.current = isOpen;
   }, [isOpen, isClosing]);
 
-  // Size classes for desktop width
+  // Size classes for desktop width - all use 500px like shared SlidePanel
   const sizeClasses = {
-    sm: 'min-[950px]:max-w-[20rem]',
-    md: 'min-[950px]:max-w-[24rem]',
-    lg: 'min-[950px]:max-w-[28rem]',
+    sm: 'min-[950px]:max-w-[500px]',
+    md: 'min-[950px]:max-w-[500px]',
+    lg: 'min-[950px]:max-w-[500px]',
   };
 
   // Close with animation
@@ -360,6 +360,8 @@ export function SlidePanel({
             } ${className}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
+              // Disable pointer events during closing so panel underneath can receive clicks
+              pointerEvents: (isClosing || isClosingTransition) ? 'none' : 'auto',
             }}
             onClick={(e) => e.stopPropagation()}
             onTouchStart={handleTouchStart}
