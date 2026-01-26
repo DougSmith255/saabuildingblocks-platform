@@ -1113,6 +1113,11 @@ function AgentPortal() {
     }
   }, [searchParams]);
 
+  // Scroll to top when activeSection changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [activeSection]);
+
   // Preload all app data during loading screen (or background preload if loading screen was skipped)
   useEffect(() => {
     console.log('[Loading Screen] Preload effect running, showLoadingScreen=', showLoadingScreen);
@@ -8768,6 +8773,8 @@ Note – although it's not advertised, you can push to get a different mentor if
 function NewAgentsSection() {
   const [selectedCategory, setSelectedCategory] = useState<NewAgentCategory | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<NewAgentDocument | null>(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const transitionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleCategoryClick = (category: NewAgentCategory) => {
     setSelectedCategory(category);
@@ -8775,17 +8782,41 @@ function NewAgentsSection() {
   };
 
   const handleDocumentClick = (doc: NewAgentDocument) => {
-    setSelectedDocument(doc);
+    // Store the category before transitioning
+    setIsTransitioning(true);
+    // Delay opening the document panel to allow category panel to start closing
+    transitionTimeoutRef.current = setTimeout(() => {
+      setSelectedDocument(doc);
+      setIsTransitioning(false);
+    }, 150);
   };
 
   const handleBackToCategory = () => {
-    setSelectedDocument(null);
+    setIsTransitioning(true);
+    // Delay to allow document panel to close first
+    transitionTimeoutRef.current = setTimeout(() => {
+      setSelectedDocument(null);
+      setIsTransitioning(false);
+    }, 150);
   };
 
   const handleCloseModal = () => {
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
     setSelectedCategory(null);
     setSelectedDocument(null);
+    setIsTransitioning(false);
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="space-y-6 px-2 sm:px-4">
@@ -8831,9 +8862,21 @@ function NewAgentsSection() {
         ))}
       </div>
 
+      {/* Shared Backdrop for both panels */}
+      {(selectedCategory !== null || selectedDocument !== null || isTransitioning) && (
+        <div
+          className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
+          style={{
+            opacity: (selectedCategory !== null || selectedDocument !== null) ? 1 : 0,
+          }}
+          onClick={handleCloseModal}
+          aria-hidden="true"
+        />
+      )}
+
       {/* Category SlidePanel - Shows list of documents */}
       <SlidePanel
-        isOpen={selectedCategory !== null && selectedDocument === null}
+        isOpen={(selectedCategory !== null && selectedDocument === null) || isTransitioning}
         onClose={handleCloseModal}
         title={selectedCategory?.title || ''}
         subtitle={selectedCategory?.description}
@@ -8843,6 +8886,8 @@ function NewAgentsSection() {
           <span className="text-xl">{selectedCategory?.icon}</span>
         )}
         size="md"
+        hideBackdrop={true}
+        zIndexOffset={selectedDocument !== null ? 0 : 1}
       >
         {selectedCategory && (
           <div className="space-y-3">
@@ -8886,6 +8931,8 @@ function NewAgentsSection() {
         subtitle={selectedCategory?.title}
         icon={<FileText className="w-5 h-5 text-[#ffd700]" />}
         size="md"
+        hideBackdrop={true}
+        zIndexOffset={2}
         footer={selectedDocument?.downloadUrl ? (
           <a
             href={selectedDocument.downloadUrl}
@@ -13791,166 +13838,186 @@ function DownloadSection() {
     <div className="space-y-6 px-2 sm:px-4">
       {/* App Info Card */}
       <GenericCard padding="lg">
-        <div className="text-center mb-6">
-          {/* App Icon */}
-          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden shadow-xl shadow-[#ffd700]/20 border border-[#ffd700]/30">
-            <img
-              src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public"
-              alt="SAA Portal"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <h3 className="text-h4 text-[#ffd700] mb-1">SAA Portal App</h3>
-          <p className="text-sm text-[#e5e4dd]/60">Smart Agent Alliance</p>
-        </div>
-
-        {/* Installation Instructions with Browser Tabs */}
-        <div className="space-y-4">
-          <p className="text-center text-sm text-[#e5e4dd]/70">
-            Install the SAA Portal as an app on your device for the best experience.
-          </p>
-
-          {/* Important note about installing from portal */}
-          <div className="mx-auto max-w-sm p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/20">
-            <p className="text-xs text-center text-[#ffd700]/90">
-              <span className="font-semibold">Important:</span> Install from this page to ensure the app opens directly to the SAA Portal login.
-            </p>
-          </div>
-
-          {/* Browser Tab Selector - Animated Pill Style (1.8X enlarged) */}
-          <div className="flex justify-center">
-            <div className="inline-flex rounded-full border border-white/20 p-1.5 bg-black/30 relative" style={{ width: '281px' }}>
-              {/* Animated sliding pill indicator - fixed width */}
-              <div
-                className="absolute top-1.5 bottom-1.5 rounded-full transition-all duration-300 ease-out pointer-events-none"
-                style={{
-                  width: '130px',
-                  left: showIOSInstructions ? 'calc(100% - 136px)' : '6px',
-                  backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
-                }}
+        {/* Two-column layout for screens > 1200px */}
+        <div className="flex flex-col min-[1200px]:flex-row min-[1200px]:gap-8">
+          {/* Left Column: App icon, title, info, important note */}
+          <div className="text-center min-[1200px]:text-left min-[1200px]:flex-shrink-0 min-[1200px]:w-[320px] mb-6 min-[1200px]:mb-0">
+            {/* App Icon */}
+            <div className="w-20 h-20 mx-auto min-[1200px]:mx-0 mb-4 rounded-2xl overflow-hidden shadow-xl shadow-[#ffd700]/20 border border-[#ffd700]/30">
+              <img
+                src="https://imagedelivery.net/RZBQ4dWu2c_YEpklnDDxFg/saa-s-icon-512x512/public"
+                alt="SAA Portal"
+                className="w-full h-full object-cover"
               />
-              <button
-                type="button"
-                onClick={() => setShowIOSInstructions(false)}
-                className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
-                }}
-              >
-                Chrome
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowIOSInstructions(true)}
-                className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 text-center"
-                style={{
-                  fontFamily: 'var(--font-synonym, sans-serif)',
-                  color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'
-                }}
-              >
-                Safari
-              </button>
+            </div>
+            <h1
+              className="text-2xl sm:text-3xl text-[#ffd700] mb-4"
+              style={{
+                fontFamily: 'var(--font-taskor, sans-serif)',
+                textShadow: '0 0 30px rgba(255, 215, 0, 0.3)'
+              }}
+            >
+              SAA Portal App
+            </h1>
+            <p className="text-sm text-[#e5e4dd]/70 mb-4">
+              Install the SAA Portal as an app on your device for the best experience.
+            </p>
+            {/* Important note about installing from portal */}
+            <div className="p-3 rounded-lg bg-[#ffd700]/10 border border-[#ffd700]/20">
+              <p className="text-xs text-[#ffd700]/90">
+                <span className="font-semibold">Important:</span> Install from this page to ensure the app opens directly to the SAA Portal login.
+              </p>
             </div>
           </div>
 
-          {/* Chrome Instructions */}
-          {!showIOSInstructions && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Phone Column */}
-              <div className="p-3 rounded-xl bg-black/20 border border-[#ffd700]/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                    <line x1="12" y1="18" x2="12.01" y2="18"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-[#ffd700]">Phone</span>
-                </div>
-                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
-                    <p>Tap <span className="text-[#ffd700] font-medium">⋮</span> (three dots) in top right</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
-                    <p>Scroll down, tap <span className="text-[#ffd700] font-medium">&quot;Add to Home screen&quot;</span></p>
-                  </div>
-                </div>
-              </div>
-              {/* Desktop Column */}
-              <div className="p-3 rounded-xl bg-black/20 border border-[#ffd700]/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                    <line x1="8" y1="21" x2="16" y2="21"/>
-                    <line x1="12" y1="17" x2="12" y2="21"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-[#ffd700]">Desktop</span>
-                </div>
-                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
-                    <p>Look for <svg className="inline-block w-4 h-4 text-[#ffd700] align-text-bottom" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M12 10v4m0 0l-2-2m2 2l2-2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> install icon in address bar</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
-                    <p>Or: <span className="text-[#ffd700] font-medium">⋮</span> menu → <span className="text-[#ffd700] font-medium">&quot;Install app&quot;</span></p>
-                  </div>
-                </div>
+          {/* Right Column: Pill selector and instructions */}
+          <div className="flex-1 space-y-4">
+            {/* Browser Tab Selector - Animated Pill Style (1.8X enlarged) */}
+            <div className="flex justify-center min-[1200px]:justify-start">
+              <div className="inline-flex rounded-full border border-white/20 p-1.5 bg-black/30 relative" style={{ width: '281px' }}>
+                {/* Animated sliding pill indicator - fixed width */}
+                <div
+                  className="absolute top-1.5 bottom-1.5 rounded-full transition-all duration-300 ease-out pointer-events-none"
+                  style={{
+                    width: '130px',
+                    left: showIOSInstructions ? 'calc(100% - 136px)' : '6px',
+                    backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowIOSInstructions(false)}
+                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 text-center"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
+                >
+                  Chrome
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowIOSInstructions(true)}
+                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 text-center"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'
+                  }}
+                >
+                  Safari
+                </button>
               </div>
             </div>
-          )}
 
-          {/* Safari Instructions */}
-          {showIOSInstructions && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Phone Column */}
-              <div className="p-3 rounded-xl bg-black/20 border border-[#007AFF]/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-4 h-4 text-[#007AFF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                    <line x1="12" y1="18" x2="12.01" y2="18"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-[#007AFF]">iPhone / iPad</span>
-                </div>
-                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
-                    <p>Tap <span className="text-[#007AFF] font-medium">⬆</span> Share button (bottom)</p>
+            {/* Instructions container with smooth height transition */}
+            <div className="relative overflow-hidden transition-all duration-300 ease-out" style={{ minHeight: '180px' }}>
+              {/* Chrome Instructions */}
+              <div
+                className={`transition-all duration-300 ease-out ${
+                  !showIOSInstructions ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4 absolute inset-0 pointer-events-none'
+                }`}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Phone Column */}
+                  <div className="p-3 rounded-xl bg-black/20 border border-[#ffd700]/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                        <line x1="12" y1="18" x2="12.01" y2="18"/>
+                      </svg>
+                      <span className="text-sm font-semibold text-[#ffd700]">Phone</span>
+                    </div>
+                    <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <p>Tap <span className="text-[#ffd700] font-medium">⋮</span> (three dots) in top right</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <p>Scroll down, tap <span className="text-[#ffd700] font-medium">&quot;Add to Home screen&quot;</span></p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
-                    <p>Scroll, tap <span className="text-[#007AFF] font-medium">&quot;Add to Home Screen&quot;</span></p>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
-                    <p>Tap <span className="text-[#007AFF] font-medium">&quot;Add&quot;</span> (top right)</p>
+                  {/* Desktop Column */}
+                  <div className="p-3 rounded-xl bg-black/20 border border-[#ffd700]/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-4 h-4 text-[#ffd700]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                      </svg>
+                      <span className="text-sm font-semibold text-[#ffd700]">Desktop</span>
+                    </div>
+                    <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <p>Look for <svg className="inline-block w-4 h-4 text-[#ffd700] align-text-bottom" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><path d="M12 10v4m0 0l-2-2m2 2l2-2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> install icon in address bar</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#ffd700] text-[#1a1a1a] text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <p>Or: <span className="text-[#ffd700] font-medium">⋮</span> menu → <span className="text-[#ffd700] font-medium">&quot;Install app&quot;</span></p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-              {/* Desktop Column */}
-              <div className="p-3 rounded-xl bg-black/20 border border-[#007AFF]/20">
-                <div className="flex items-center gap-2 mb-3">
-                  <svg className="w-4 h-4 text-[#007AFF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
-                    <line x1="8" y1="21" x2="16" y2="21"/>
-                    <line x1="12" y1="17" x2="12" y2="21"/>
-                  </svg>
-                  <span className="text-sm font-semibold text-[#007AFF]">Mac</span>
-                </div>
-                <div className="space-y-2 text-sm text-[#e5e4dd]/80">
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
-                    <p>Click <span className="text-[#007AFF] font-medium">File</span> menu</p>
+
+              {/* Safari Instructions */}
+              <div
+                className={`transition-all duration-300 ease-out ${
+                  showIOSInstructions ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4 absolute inset-0 pointer-events-none'
+                }`}
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Phone Column */}
+                  <div className="p-3 rounded-xl bg-black/20 border border-[#007AFF]/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-4 h-4 text-[#007AFF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                        <line x1="12" y1="18" x2="12.01" y2="18"/>
+                      </svg>
+                      <span className="text-sm font-semibold text-[#007AFF]">iPhone / iPad</span>
+                    </div>
+                    <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <p>Tap <span className="text-[#007AFF] font-medium">⬆</span> Share button (bottom)</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <p>Scroll, tap <span className="text-[#007AFF] font-medium">&quot;Add to Home Screen&quot;</span></p>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <p>Tap <span className="text-[#007AFF] font-medium">&quot;Add&quot;</span> (top right)</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
-                    <p>Select <span className="text-[#007AFF] font-medium">&quot;Add to Dock&quot;</span></p>
+                  {/* Desktop Column */}
+                  <div className="p-3 rounded-xl bg-black/20 border border-[#007AFF]/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg className="w-4 h-4 text-[#007AFF]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                      </svg>
+                      <span className="text-sm font-semibold text-[#007AFF]">Mac</span>
+                    </div>
+                    <div className="space-y-2 text-sm text-[#e5e4dd]/80">
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <p>Click <span className="text-[#007AFF] font-medium">File</span> menu</p>
+                      </div>
+                      <div className="flex gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#007AFF] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <p>Select <span className="text-[#007AFF] font-medium">&quot;Add to Dock&quot;</span></p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       </GenericCard>
 

@@ -23,6 +23,10 @@ export interface SlidePanelProps {
   size?: 'sm' | 'md' | 'lg';
   /** Additional class names for the panel */
   className?: string;
+  /** Hide the backdrop (for stacked panels sharing a single backdrop) */
+  hideBackdrop?: boolean;
+  /** Z-index offset for stacking panels */
+  zIndexOffset?: number;
 }
 
 /**
@@ -49,6 +53,8 @@ export function SlidePanel({
   footer,
   size = 'md',
   className = '',
+  hideBackdrop = false,
+  zIndexOffset = 0,
 }: SlidePanelProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
@@ -324,20 +330,23 @@ export function SlidePanel({
       {/* Portal to render at document.body level, escaping stacking context issues */}
       {createPortal(
         <div
-          className="fixed inset-0 z-[10020] flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          className="fixed inset-0 flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
+          style={{ zIndex: 10020 + zIndexOffset }}
           onClick={handleBackdropClick}
           role="dialog"
           aria-modal="true"
           aria-labelledby="slide-panel-title"
         >
-          {/* Backdrop */}
-          <div
-            className={`slide-panel-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${
-              isClosing ? 'slide-panel-backdrop-closing' : ''
-            }`}
-            style={{ isolation: 'isolate' }}
-            aria-hidden="true"
-          />
+          {/* Backdrop - conditionally rendered */}
+          {!hideBackdrop && (
+            <div
+              className={`slide-panel-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${
+                isClosing ? 'slide-panel-backdrop-closing' : ''
+              }`}
+              style={{ isolation: 'isolate' }}
+              aria-hidden="true"
+            />
+          )}
 
           {/* Panel */}
           <div

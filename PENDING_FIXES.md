@@ -1,16 +1,19 @@
 # Pending UI Fixes
 
-No pending fixes at this time.
+## FIX-1: Menu item selection should scroll to top
+When a menu item is selected, the page should automatically scroll to the top. Currently if user scrolls down on one menu item then navigates to another, they remain scrolled down which is jarring.
 
----
+## FIX-2: Download App tab improvements
+1. **Smooth layout shift** - When switching between Chrome/Safari, the parent container (logo to instructions) has a large layout shift. Make the expand/contract smooth with a transition.
+2. **Title styling** - Change "SAA Portal App" text to Taskor font with H1 styling
+3. **Remove subtitle** - Remove the "Smart Agent Alliance" text from below the title
+4. **Two-column layout for >1200px**:
+   - Left column: App icon, title, info, and "Important" note
+   - Right column: Pill selector and instructions
+   - Below 1200px: Keep single column layout
 
-## Recently Completed
-- FIX-1: Edit Profile Button hover state - Fixed (CSS injection for dynamic accent color)
-- FIX-2: Color pill selector structure - Fixed (all 3 instances updated)
-- FIX-3: Download App pill 1.8X enlargement - Fixed (281px container, 130px buttons, text-lg)
-- FIX-4: New Agents modals → slide-in panels - Fixed:
-  - Converted Modal to SlidePanel
-  - Smooth closing animation when panels switch
-  - File card titles: heading font (Taskor)
-  - Descriptions: body font (Amulya)
-- All previous fixes (scroll, cards, pills, etc.) - FIXED
+## FIX-3: New Agents SlidePanel transition improvements
+1. **No flash on panel switch** - Currently when clicking another file, the open panel disappears abruptly instead of sliding off smoothly
+2. **Backdrop flash** - The gradient backdrop also flashes gone and comes back with the next panel
+3. **Stacked slide transition** - When opening a new panel while one is open, the new panel should slide from underneath the one sliding out
+4. **Single backdrop** - Only keep one gradient background at a time (don't layer multiple)

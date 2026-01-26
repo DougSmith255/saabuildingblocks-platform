@@ -28,6 +28,10 @@ export interface SlidePanelProps {
   fitContent?: boolean;
   /** Desktop only: maximum width when fitContent is true (default: '85vw') */
   maxWidth?: string;
+  /** Hide the backdrop (for stacked panels sharing a single backdrop) */
+  hideBackdrop?: boolean;
+  /** Z-index offset for stacking panels */
+  zIndexOffset?: number;
 }
 
 // Size configurations - all desktop panels use 500px width
@@ -125,6 +129,8 @@ export function SlidePanel({
   showCloseButton = true,
   fitContent = false,
   maxWidth = '85vw',
+  hideBackdrop = false,
+  zIndexOffset = 0,
 }: SlidePanelProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
@@ -264,7 +270,7 @@ export function SlidePanel({
   const containerStyle: React.CSSProperties = {
     position: 'fixed',
     inset: 0,
-    zIndex: 100000,
+    zIndex: 100000 + zIndexOffset,
     display: 'flex',
     alignItems: isMobile ? 'flex-end' : 'stretch',
     justifyContent: isMobile ? 'center' : 'flex-end',
@@ -405,8 +411,8 @@ export function SlidePanel({
       aria-modal="true"
       aria-labelledby="slide-panel-title"
     >
-      {/* Backdrop */}
-      <div style={backdropStyle} aria-hidden="true" />
+      {/* Backdrop - conditionally rendered */}
+      {!hideBackdrop && <div style={backdropStyle} aria-hidden="true" />}
 
       {/* Panel */}
       <div
