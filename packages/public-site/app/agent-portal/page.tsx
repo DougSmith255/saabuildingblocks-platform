@@ -2575,9 +2575,10 @@ function AgentPortal() {
       <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-0 min-[950px]:pb-2 pt-20 md:pt-28">
         <div className="flex flex-col min-[950px]:flex-row gap-6">
 
-          {/* Sidebar Navigation - Desktop only (1200px+) */}
+          {/* Sidebar Navigation - Desktop only (950px+) */}
           {/* FIX: Sidebar scrolls with content on tabs that have tall content */}
-          <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
+          {/* self-start prevents flex stretching which can cause scroll hang-up */}
+          <aside className="hidden min-[950px]:block w-64 flex-shrink-0 self-start">
             <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction', 'production', 'download', 'support'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
               {/* User Profile Section - Premium Glass Card */}
               <div
@@ -6302,13 +6303,14 @@ function SupportSection({ userState }: SupportSectionProps) {
 
   return (
     <div className="space-y-6">
-      {/* Support Cards - grid with auto-fit, min 300px, equal widths */}
-      {/* Order: eXp Support, State Broker (if available), SAA Support, Wolf Pack Support */}
-      <div className="grid gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+      {/* Support Cards - flexbox with min 350px, cards stretch to fill row */}
+      {/* Order: eXp Support, State Broker (if available), SAA Support, Wolf Pack Support, My eXp App */}
+      <div className="flex flex-wrap gap-6">
         {/* eXp Support Card - Premium glass with blue accent */}
         <div
-          className="rounded-2xl overflow-hidden"
+          className="rounded-2xl overflow-hidden flex-1"
           style={{
+            minWidth: '350px',
             background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(59, 130, 246, 0.25)',
             boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
@@ -6377,8 +6379,9 @@ function SupportSection({ userState }: SupportSectionProps) {
         {/* State Broker Support Card - Premium glass with purple accent */}
         {brokerInfo && (
           <div
-            className="rounded-2xl overflow-hidden"
+            className="rounded-2xl overflow-hidden flex-1"
             style={{
+              minWidth: '350px',
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(168, 85, 247, 0.25)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
@@ -6434,8 +6437,9 @@ function SupportSection({ userState }: SupportSectionProps) {
 
         {/* SAA Support Card - Premium glass with gold accent */}
         <div
-          className="rounded-2xl overflow-hidden"
+          className="rounded-2xl overflow-hidden flex-1"
           style={{
+            minWidth: '350px',
             background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(255, 215, 0, 0.25)',
             boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
@@ -6495,8 +6499,9 @@ function SupportSection({ userState }: SupportSectionProps) {
 
         {/* Wolf Pack Support Card - Premium glass with green accent */}
         <div
-          className="rounded-2xl overflow-hidden"
+          className="rounded-2xl overflow-hidden flex-1"
           style={{
+            minWidth: '350px',
             background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
             border: '1px solid rgba(34, 197, 94, 0.25)',
             boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
@@ -6542,13 +6547,14 @@ function SupportSection({ userState }: SupportSectionProps) {
 
         {/* My eXp App Card - Now part of the support cards grid */}
         <div
-        className="rounded-2xl overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
-          border: '1px solid rgba(59, 130, 246, 0.25)',
-          boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
-        }}
-      >
+          className="rounded-2xl overflow-hidden flex-1"
+          style={{
+            minWidth: '350px',
+            background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+            border: '1px solid rgba(59, 130, 246, 0.25)',
+            boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
+          }}
+        >
         {/* Header with gradient */}
         <div className="p-5 border-b border-[#3b82f6]/20" style={{ background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 50%)' }}>
           <div className="flex items-center gap-3">
@@ -6570,13 +6576,13 @@ function SupportSection({ userState }: SupportSectionProps) {
               <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
-              <span>Production Stats</span>
+              <span>Stats</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
               <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span>Revenue Share</span>
+              <span>RevShare</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
               <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -6589,7 +6595,7 @@ function SupportSection({ userState }: SupportSectionProps) {
               <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span>Contact Info</span>
+              <span>Upline</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-[#e5e4dd]/70">
               <svg className="w-4 h-4 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -7482,8 +7488,8 @@ function CoursesSection() {
 
   return (
     <div className="space-y-4 sm:space-y-6 px-1 sm:px-2">
-      {/* Fluid grid: auto-fit with min 250px cards that expand to fill row */}
-      <div className="grid gap-3 sm:gap-4 lg:gap-6" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+      {/* Flexbox: cards stretch to fill row, min 350px */}
+      <div className="flex flex-wrap gap-3 sm:gap-4 lg:gap-6">
         {courses.map((course, index) => {
           const IconComponent = course.icon;
           return (
@@ -7492,7 +7498,8 @@ function CoursesSection() {
               href={course.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="block group"
+              className="block group flex-1"
+              style={{ minWidth: '350px' }}
             >
               <div
                 className="h-full p-4 sm:p-5 rounded-xl hover:scale-[1.02] hover:border-white/[0.12] transition-all duration-300 cursor-pointer"
@@ -10519,9 +10526,9 @@ return (
         Row 2: Social Links (spans 2 cols) | Page Actions | (Preview continues)
         ==================================================================== */}
 
-    {/* DESKTOP LAYOUT (≥1550px) - overflow visible for button controls */}
+    {/* DESKTOP LAYOUT (≥950px) - overflow visible for button controls */}
     <div
-      className="hidden min-[1550px]:grid gap-4 overflow-visible"
+      className="hidden min-[950px]:grid gap-4 overflow-visible"
       style={{
         gridTemplateColumns: '1fr 1fr 1fr minmax(300px, 340px)',
         gridTemplateRows: 'auto auto',
@@ -12181,10 +12188,9 @@ return (
     </div>
 
     {/* ====================================================================
-        TABLET LAYOUT (950px - 1549px) - Tabbed Interface + Preview
-        Left: Tabs with stacked cards | Right: Fixed 340px preview
+        TABLET LAYOUT - HIDDEN (now using desktop layout for screens >= 950px)
         ==================================================================== */}
-    <div className="hidden min-[950px]:block min-[1550px]:hidden">
+    <div className="hidden">
       {/* Save Bar */}
       {hasUnsavedChanges && (
         <div className="sticky top-0 z-20 p-3 rounded-xl bg-[#ffd700]/20 border border-[#ffd700]/40 flex items-center justify-between mb-4">
