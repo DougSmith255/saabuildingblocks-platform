@@ -679,7 +679,10 @@ const shakeKeyframes = `
     /* Use viewport height for definite constraint - enables overflow scrolling */
     max-height: 100dvh;
     height: 100dvh;
-    max-width: 28rem;
+    /* Fit content width: slides in only as much as needed, up to 85% of screen */
+    width: fit-content;
+    min-width: 28rem;
+    max-width: 85vw;
     /* Premium glass background with subtle gradient */
     background:
       linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 40%),
@@ -2554,12 +2557,14 @@ function AgentPortal() {
       </nav>
 
       {/* Main Dashboard Layout */}
-      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-4 min-[950px]:pb-8 pt-20 md:pt-28">
+      {/* FIX-4: Reduced bottom padding to prevent scroll when content fits above fold */}
+      <div className="max-w-[2500px] mx-auto px-3 sm:px-6 md:px-8 min-[950px]:px-12 pb-0 min-[950px]:pb-4 pt-20 md:pt-28">
         <div className="flex flex-col min-[950px]:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only (1200px+) */}
+          {/* FIX-3a: On Onboarding tab, sidebar scrolls with content (no sticky) */}
           <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
-            <div className="sticky top-24 space-y-4">
+            <div className={`${activeSection === 'onboarding' ? '' : 'sticky top-24'} space-y-4`}>
               {/* User Profile Section */}
               <div
                 className="rounded-xl p-4"
@@ -9388,15 +9393,12 @@ function AgentPagesSection({
   };
 
   // Compute background gradient colors from backgroundColor setting
-  // Gradient goes from selected color to LIGHTER variant (user requirement)
+  // Star background gradient: dark at TOP, lighter version of selected color at BOTTOM
   const bgRgb = hexToRgb(linksSettings.backgroundColor || '#ffd700');
-  // Selected color (darker, ~10% brightness) at center
-  const bgGradientCenter = `rgb(${Math.round(bgRgb.r * 0.10)}, ${Math.round(bgRgb.g * 0.10)}, ${Math.round(bgRgb.b * 0.10)})`;
-  // Lighter version (~25% brightness + tinted toward white) at edges
-  const bgGradientEdge = `rgb(${Math.round(bgRgb.r * 0.25 + 20)}, ${Math.round(bgRgb.g * 0.25 + 20)}, ${Math.round(bgRgb.b * 0.25 + 20)})`;
-  // Legacy variable names for compatibility
-  const bgGradientTop = bgGradientCenter;
-  const bgGradientBottom = bgGradientEdge;
+  // TOP: Very dark gray (consistent across all colors for stars to show)
+  const bgGradientTop = 'rgb(18, 18, 18)';
+  // BOTTOM: Lighter version of selected color (~30% brightness + tint toward white)
+  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.30 + 25)}, ${Math.round(bgRgb.g * 0.30 + 25)}, ${Math.round(bgRgb.b * 0.30 + 25)})`;
 
   // FIX-008: Unified threshold for button icons - matches isColorDark threshold (140/255 = ~0.549)
   // All elements (button text, S icon, contact icons) now use the same luminance threshold
@@ -10270,9 +10272,9 @@ function AgentPagesSection({
         {/* On desktop (≥1100px): Preview on left, Info on right */}
         <div className="flex flex-col min-[1100px]:flex-row gap-6">
           {/* Preview Column - At bottom on mobile (<1100px), on left on desktop (≥1100px) */}
+          {/* FIX-3b: Preview scrolls with page (no sticky) so user can see all content together */}
           <div className="order-last min-[1100px]:order-first min-[1100px]:w-[340px] min-[1100px]:flex-shrink-0">
-            {/* Sticky only on desktop, normal flow on mobile */}
-            <div className="min-[1100px]:sticky min-[1100px]:top-24 rounded-xl overflow-hidden" style={{
+            <div className="rounded-xl overflow-hidden" style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
               border: '1px solid rgba(255, 215, 0, 0.2)',
               boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03)',
@@ -11071,7 +11073,7 @@ return (
                     radial-gradient(1.5px 1.5px at 250px 100px, rgba(255,255,255,0.45) 0%, transparent 100%),
                     radial-gradient(1px 1px at 240px 340px, rgba(255,255,255,0.3) 0%, transparent 100%),
                     radial-gradient(1px 1px at 270px 480px, rgba(255,255,255,0.35) 0%, transparent 100%),
-                    radial-gradient(at center bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%)
+                    linear-gradient(to bottom, ${bgGradientTop} 0%, ${bgGradientBottom} 100%)
                   `,
                   pointerEvents: 'none',
                 }}
@@ -11079,7 +11081,8 @@ return (
               {/* Notch */}
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-24 h-7 bg-black rounded-full" style={{ boxShadow: '0 0 10px rgba(0,0,0,0.5)', zIndex: 10 }} />
               {/* Profile Photo - FIX-025: Use lightened color for border like social icons */}
-              <div className="flex flex-col items-center pt-6">
+              {/* FIX-2a/2b: Added relative z-[1] to ensure content sits above star background */}
+              <div className="flex flex-col items-center pt-6 relative z-[1]">
                 <div
                   className="w-20 h-20 rounded-full border-3 flex items-center justify-center overflow-hidden relative"
                   style={{
@@ -11214,7 +11217,7 @@ return (
                 const showIconsOnly = buttonCount > 1;
 
                 return (
-                  <div className="flex gap-1 mt-1.5" style={{ marginBottom: '6px' }}>
+                  <div className="flex gap-1 mt-1.5 relative z-[1]" style={{ marginBottom: '6px' }}>
                     {contacts.map((contact, idx) => (
                       <div
                         key={idx}
@@ -11248,7 +11251,7 @@ return (
               })()}
 
               {/* Button Links with Editor - FIX-007/024: controls rendered outside phone inner */}
-              <div ref={buttonLinksContainerRef} className="space-y-1.5 relative" style={{ overflow: 'visible' }}>
+              <div ref={buttonLinksContainerRef} className="space-y-1.5 relative z-[1]" style={{ overflow: 'visible' }}>
                 {(() => {
                   const linkOrder = linksSettings.linkOrder || ['learn-about'];
                   const customLinkMap = new Map(customLinks.map(l => [l.id, l]));
@@ -11364,7 +11367,7 @@ return (
                           className="w-full py-2.5 px-3 rounded-lg relative"
                           style={{
                             backgroundColor: isDefault
-                              ? `${linksSettings.accentColor}40` // 25% opacity for default button (more transparent)
+                              ? `${linksSettings.accentColor}55` // ~33% opacity for default button (slightly more visible)
                               : linksSettings.accentColor,
                             border: isDefault
                               ? `2px solid ${linksSettings.accentColor}` // Solid border for default

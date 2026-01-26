@@ -24,6 +24,10 @@ export interface SlidePanelProps {
   className?: string;
   /** Whether to show the close button (default: true) */
   showCloseButton?: boolean;
+  /** Desktop only: panel width fits content up to maxWidth (default: false, uses fixed size) */
+  fitContent?: boolean;
+  /** Desktop only: maximum width when fitContent is true (default: '85vw') */
+  maxWidth?: string;
 }
 
 // Size configurations
@@ -119,6 +123,8 @@ export function SlidePanel({
   size = 'md',
   className = '',
   showCloseButton = true,
+  fitContent = false,
+  maxWidth = '85vw',
 }: SlidePanelProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [hasBeenOpened, setHasBeenOpened] = useState(false);
@@ -304,8 +310,11 @@ export function SlidePanel({
       }
     : {
         position: 'relative',
-        width: '100%',
-        maxWidth: SIZE_CONFIG[size],
+        // fitContent: width auto-sizes to content, capped at maxWidth
+        // otherwise: fixed width based on size prop
+        width: fitContent ? 'fit-content' : '100%',
+        maxWidth: fitContent ? maxWidth : SIZE_CONFIG[size],
+        minWidth: fitContent ? SIZE_CONFIG[size] : undefined, // Keep minimum width for readability
         height: '100dvh',
         overflowY: 'auto',
         overscrollBehavior: 'contain',
