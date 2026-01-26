@@ -2575,9 +2575,9 @@ function AgentPortal() {
         <div className="flex flex-col min-[950px]:flex-row gap-6">
 
           {/* Sidebar Navigation - Desktop only (1200px+) */}
-          {/* FIX: Sidebar scrolls with content on Link Page tabs (onboarding, linkpage, templates, agent-attraction) */}
+          {/* FIX: Sidebar scrolls with content on tabs that have tall content */}
           <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
-            <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
+            <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction', 'production', 'download'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
               {/* User Profile Section - Premium Glass Card */}
               <div
                 className="rounded-xl p-4"
@@ -2801,18 +2801,27 @@ function AgentPortal() {
               userSelect: 'none',
             } as React.CSSProperties}
           >
-            {/* Onboarding Section */}
+            {/* Onboarding Section - with blur/fade transition on completion */}
             {activeSection === 'onboarding' && (
-              <OnboardingSection
-                progress={onboardingProgress}
-                onUpdateProgress={updateOnboardingProgress}
-                userName={user?.firstName || ''}
-                userLastName={user?.lastName || ''}
-                onNavigate={setActiveSection}
-                onComplete={handleCompleteOnboarding}
-                isCompleting={isCompletingOnboarding}
-                onboardingCompletedAt={onboardingCompletedAt}
-              />
+              <div
+                className="transition-all duration-500 ease-out"
+                style={{
+                  opacity: isOnboardingTransitioning ? 0 : 1,
+                  filter: isOnboardingTransitioning ? 'blur(8px)' : 'blur(0px)',
+                  transform: isOnboardingTransitioning ? 'scale(0.98)' : 'scale(1)',
+                }}
+              >
+                <OnboardingSection
+                  progress={onboardingProgress}
+                  onUpdateProgress={updateOnboardingProgress}
+                  userName={user?.firstName || ''}
+                  userLastName={user?.lastName || ''}
+                  onNavigate={setActiveSection}
+                  onComplete={handleCompleteOnboarding}
+                  isCompleting={isCompletingOnboarding}
+                  onboardingCompletedAt={onboardingCompletedAt}
+                />
+              </div>
             )}
 
             {/* Dashboard View */}
@@ -9359,11 +9368,12 @@ function AgentPagesSection({
 
   // Compute background gradient colors from backgroundColor setting
   // Star background gradient: dark at TOP, lighter version of selected color at BOTTOM
+  // Must match slug.js gradient calculation for consistency
   const bgRgb = hexToRgb(linksSettings.backgroundColor || '#ffd700');
-  // TOP: Very dark gray (consistent across all colors for stars to show)
-  const bgGradientTop = 'rgb(18, 18, 18)';
-  // BOTTOM: Lighter version of selected color (~30% brightness + tint toward white)
-  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.30 + 25)}, ${Math.round(bgRgb.g * 0.30 + 25)}, ${Math.round(bgRgb.b * 0.30 + 25)})`;
+  // TOP: Dark with subtle color tint (10% of background color) - matches slug.js
+  const bgGradientTop = `rgb(${Math.round(18 + bgRgb.r * 0.05)}, ${Math.round(18 + bgRgb.g * 0.05)}, ${Math.round(18 + bgRgb.b * 0.05)})`;
+  // BOTTOM: Visible color glow (40% of background color) - matches slug.js
+  const bgGradientBottom = `rgb(${Math.round(bgRgb.r * 0.4)}, ${Math.round(bgRgb.g * 0.4)}, ${Math.round(bgRgb.b * 0.4)})`;
 
   // FIX-008: Unified threshold for button icons - matches isColorDark threshold (140/255 = ~0.549)
   // All elements (button text, S icon, contact icons) now use the same luminance threshold
@@ -13787,19 +13797,19 @@ function DownloadSection() {
           {/* Browser Tab Selector - Animated Pill Style */}
           <div className="flex justify-center">
             <div className="relative inline-flex p-1 rounded-full bg-black/30 border border-white/10">
-              {/* Animated sliding pill background */}
+              {/* Animated sliding pill background - positioned behind active button */}
               <div
-                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out"
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                 style={{
+                  width: 'calc(50% - 4px)',
                   left: showIOSInstructions ? 'calc(50% + 2px)' : '4px',
-                  right: showIOSInstructions ? '4px' : 'calc(50% + 2px)',
                   backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
                 }}
               />
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(false)}
-                className={`relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 ${
+                className={`relative z-10 flex-1 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
                   !showIOSInstructions
                     ? 'text-[#1a1a1a]'
                     : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
@@ -13810,7 +13820,7 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className={`relative z-10 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 ${
+                className={`relative z-10 flex-1 px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
                   showIOSInstructions
                     ? 'text-white'
                     : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'

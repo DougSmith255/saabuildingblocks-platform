@@ -177,8 +177,8 @@ export function generateAgentPageHTML(agent, siteUrl = 'https://smartagentallian
   <link rel="preload" href="${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin />
 
-  <!-- Favicon -->
-  <link rel="icon" href="${siteUrl}/favicon.ico" />
+  <!-- Favicon - Gold S with transparent background -->
+  <link rel="icon" href="${siteUrl}/icons/s-logo-1000.png" type="image/png" />
 
   <style>
     @font-face {
@@ -507,7 +507,7 @@ function generateAttractionPageHTML(agent, siteUrl = 'https://smartagentalliance
   <meta property="og:image" content="${escapeHTML(agentImageUrl)}">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${escapeHTML(title)}">
-  <link rel="icon" href="https://saabuildingblocks.pages.dev/favicon.ico">
+  <link rel="icon" href="https://saabuildingblocks.pages.dev/icons/s-logo-1000.png" type="image/png">
   <link rel="preconnect" href="https://saabuildingblocks.pages.dev" crossorigin="">
   <link rel="preconnect" href="https://imagedelivery.net" crossorigin="">
   <link rel="preload" href="https://saabuildingblocks.pages.dev/_next/static/media/Amulya_Variable-s.6f10ee89.woff2" as="font" type="font/woff2" crossorigin="">
@@ -6411,8 +6411,8 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
   <link rel="preload" href="${siteUrl}/_next/static/media/Synonym_Variable-s.p.d321a09a.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="${siteUrl}/_next/static/media/taskor_regular_webfont-s.p.c4556052.woff2" as="font" type="font/woff2" crossorigin />
 
-  <!-- Favicon -->
-  <link rel="icon" href="${siteUrl}/favicon.ico" />
+  <!-- Favicon - Gold S with transparent background -->
+  <link rel="icon" href="${siteUrl}/icons/s-logo-1000.png" type="image/png" />
 
   <style>
     @font-face {

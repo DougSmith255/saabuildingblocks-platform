@@ -30,12 +30,12 @@ export interface SlidePanelProps {
   maxWidth?: string;
 }
 
-// Size configurations
+// Size configurations - all desktop panels use 500px width
 const SIZE_CONFIG = {
-  sm: '320px',
-  md: '384px',
-  lg: '448px',
-  xl: '560px',
+  sm: '500px',
+  md: '500px',
+  lg: '500px',
+  xl: '500px',
 } as const;
 
 // CSS keyframe animations as a string (injected once)
