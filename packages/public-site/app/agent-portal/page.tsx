@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCal
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
+import { SlidePanel } from '@saa/shared/components/saa/interactive/SlidePanel';
 import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
@@ -3254,37 +3255,36 @@ function AgentPortal() {
         )}
       </div>
 
-      {/* Edit Profile Modal */}
-      {showEditProfile && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 overflow-y-auto overscroll-contain"
-          onClick={handleCloseEditProfile}
-          onWheel={(e) => e.stopPropagation()}
-        >
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-black md:bg-black/90 md:backdrop-blur-md" />
-
-          {/* Modal */}
-          <div
-            className="relative w-full max-w-md my-auto bg-[#151517] rounded-2xl border border-white/10 shadow-2xl max-h-[90vh] overflow-y-auto overscroll-contain"
-            onClick={(e) => e.stopPropagation()}
-            onWheel={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div className="flex items-center justify-between p-6 border-b border-white/10 bg-[#151517] rounded-t-2xl">
-              <h2 className="text-xl font-semibold text-[#ffd700]">Edit Profile</h2>
-              <button
-                onClick={handleCloseEditProfile}
-                className="p-2 rounded-lg text-[#e5e4dd]/60 hover:text-white hover:bg-white/10 transition-colors"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleEditProfileSubmit} className="p-6 space-y-5">
+      {/* Edit Profile SlidePanel */}
+      <SlidePanel
+        isOpen={showEditProfile}
+        onClose={handleCloseEditProfile}
+        title="Edit Profile"
+        subtitle="Update your profile information"
+        icon={<User className="w-5 h-5 text-[#ffd700]" />}
+        size="md"
+        footer={
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={handleCloseEditProfile}
+              className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              form="edit-profile-form"
+              disabled={isSubmitting}
+              className="flex-1 px-4 py-3 rounded-lg text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        }
+      >
+        {/* Form */}
+        <form id="edit-profile-form" onSubmit={handleEditProfileSubmit} className="space-y-5">
               {/* Profile Picture Section - uses selected accent color for live preview */}
               {(() => {
                 const selectedAccentColor = DASHBOARD_ACCENT_COLORS.find(c => c.id === editFormData.dashboardAccent)?.color || '#ffd700';
@@ -3557,27 +3557,8 @@ function AgentPortal() {
                 </div>
               )}
 
-              {/* Actions */}
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={handleCloseEditProfile}
-                  className="flex-1 px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="flex-1 px-4 py-3 rounded-lg text-black font-semibold bg-[#ffd700] hover:bg-[#ffe55c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isSubmitting ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        </form>
+      </SlidePanel>
 
       {/* Link Page Intro Modal - One Time Notification */}
       {showLinkPageIntroModal && (
