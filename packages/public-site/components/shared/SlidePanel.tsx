@@ -335,7 +335,11 @@ export function SlidePanel({
       {createPortal(
         <div
           className="fixed inset-0 flex items-end min-[950px]:items-stretch min-[950px]:justify-end"
-          style={{ zIndex: 10020 + zIndexOffset }}
+          style={{
+            zIndex: 10020 + zIndexOffset,
+            // Disable pointer events on entire container during closing so panels underneath can receive clicks
+            pointerEvents: (isClosing || isClosingTransition) ? 'none' : 'auto',
+          }}
           onClick={handleBackdropClick}
           role="dialog"
           aria-modal="true"

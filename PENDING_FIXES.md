@@ -35,7 +35,7 @@ Panels not transitioning independently - one should slide out while other slides
 - ❌ Cannot click "Back to [category]" button
 - ❌ Back button should close document panel and reveal category panel sliding in from behind
 
-### Next Steps:
-- Use Playwright to debug click issues
-- Check z-index stacking during transitions
-- May need different approach for panel stacking
+### Playwright Testing (Attempt 8):
+- Confirmed: Category panel's CONTAINER div (`fixed inset-0`) intercepts ALL pointer events
+- The `pointerEvents: 'none'` was only on the panel content, not the full-screen container
+- **FIX**: Added `pointerEvents: (isClosing || isClosingTransition) ? 'none' : 'auto'` to the container div
