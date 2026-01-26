@@ -8863,9 +8863,9 @@ function NewAgentsSection() {
         />
       )}
 
-      {/* Category SlidePanel - Shows list of documents (higher z-index, slides out on top) */}
+      {/* Category SlidePanel - Shows list of documents (behind document panel) */}
       <SlidePanel
-        isOpen={activePanel === 'category'}
+        isOpen={activePanel === 'category' || activePanel === 'document'}
         onClose={handleCloseModal}
         title={selectedCategory?.title || ''}
         subtitle={selectedCategory?.description}
@@ -8876,7 +8876,7 @@ function NewAgentsSection() {
         )}
         size="md"
         hideBackdrop={true}
-        zIndexOffset={1}
+        zIndexOffset={0}
       >
         {selectedCategory && (
           <div className="space-y-3">
@@ -8912,7 +8912,7 @@ function NewAgentsSection() {
         )}
       </SlidePanel>
 
-      {/* Document Content SlidePanel (lower z-index, slides in underneath) */}
+      {/* Document Content SlidePanel (on top of category panel) */}
       <SlidePanel
         isOpen={activePanel === 'document'}
         onClose={handleCloseModal}
@@ -8921,7 +8921,7 @@ function NewAgentsSection() {
         icon={<FileText className="w-5 h-5 text-[#ffd700]" />}
         size="md"
         hideBackdrop={true}
-        zIndexOffset={0}
+        zIndexOffset={1}
         footer={selectedDocument?.downloadUrl ? (
           <a
             href={selectedDocument.downloadUrl}
