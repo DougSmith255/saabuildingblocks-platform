@@ -12974,7 +12974,7 @@ return (
               <div
                 className="py-2.5 px-4 rounded-lg font-medium flex items-center gap-2"
                 style={{
-                  backgroundColor: `${linksSettings.accentColor}40`, // 25% opacity - consistent with desktop
+                  backgroundColor: `${linksSettings.accentColor}60`, // 37% opacity - matches desktop preview
                   border: `2px solid ${linksSettings.accentColor}`,
                   color: isAccentDark ? '#ffffff' : '#1a1a1a',
                   fontSize: `${linksSettings.buttonTextSize ?? 14}px`,

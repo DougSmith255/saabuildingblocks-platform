@@ -6671,17 +6671,17 @@ export function generateAgentLinksPageHTML(agent, siteUrl = 'https://smartagenta
       stroke: ${buttonIconColor};
     }
 
-    /* Default button - muted styling (25% transparent bg + solid border) */
+    /* Default button - muted styling (37% transparent bg + solid border) */
     /* Matches preview section styling in agent portal */
     /* Text color uses same dark/light logic as other buttons for consistency */
     .link-button.default-muted {
-      background: ${accentColor}40;
+      background: ${accentColor}60;
       color: ${iconColor};
       border: 2px solid ${accentColor};
     }
 
     .link-button.default-muted:hover {
-      background: ${accentColor}60;
+      background: ${accentColor}80;
     }
 
     /* Contact Buttons - Segmented Style */
