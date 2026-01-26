@@ -13844,8 +13844,8 @@ function DownloadSection() {
               />
             </div>
             <div style={{ perspective: '1000px' }} className="relative">
-              <H1 disableCloseGlow={true} className="!text-2xl sm:!text-3xl mb-4" style={{ fontSize: 'clamp(1.5rem, 4vw, 1.875rem)' }}>
-                SAA Portal App
+              <H1 disableCloseGlow={true} className="!text-2xl sm:!text-3xl mb-4" style={{ fontSize: 'clamp(1.6875rem, 4.5vw, 2.0625rem)' }}>
+                SAA Portal
               </H1>
             </div>
             <p className="text-sm text-[#e5e4dd]/70 mb-4">
@@ -13866,13 +13866,13 @@ function DownloadSection() {
           <div className="flex-1 space-y-4 min-[1200px]:pl-4">
             {/* Browser Tab Selector - Animated Pill Style (1.8X enlarged) */}
             <div className="flex justify-center min-[1200px]:justify-start">
-              <div className="inline-flex rounded-full border border-white/20 p-1.5 bg-black/30 relative" style={{ width: '281px' }}>
-                {/* Animated sliding pill indicator - fixed width */}
+              <div className="inline-flex rounded-full border border-white/20 p-1.5 bg-black/30 relative" style={{ width: '272px' }}>
+                {/* Animated sliding pill indicator - fixed width, symmetric positioning */}
                 <div
                   className="absolute top-1.5 bottom-1.5 rounded-full transition-all duration-300 ease-out pointer-events-none"
                   style={{
                     width: '130px',
-                    left: showIOSInstructions ? '139px' : '6px',
+                    left: showIOSInstructions ? '136px' : '6px',
                     backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
                   }}
                 />
