@@ -10285,10 +10285,40 @@ function AgentPagesSection({
                   <span className="text-xs text-[#e5e4dd]/50">Agent Attraction Page</span>
                 </div>
               </div>
-              <div className="relative w-full overflow-hidden" style={{ height: '500px', background: '#0a0a0a' }}>
+              <div className="relative w-full overflow-hidden" style={{ height: '500px' }}>
+                {/* Star Field Background - matches Link Page preview style */}
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{
+                    background: `
+                      radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                      radial-gradient(1.5px 1.5px at 50px 160px, rgba(255,255,255,0.5) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                      radial-gradient(1.5px 1.5px at 130px 80px, rgba(255,255,255,0.45) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 160px 120px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 20px 200px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                      radial-gradient(1.5px 1.5px at 100px 250px, rgba(255,255,255,0.5) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 180px 300px, rgba(255,255,255,0.4) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 60px 350px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                      radial-gradient(1.5px 1.5px at 140px 380px, rgba(255,255,255,0.45) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 30px 420px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 200px 450px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                      radial-gradient(1.5px 1.5px at 80px 500px, rgba(255,255,255,0.5) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 170px 530px, rgba(255,255,255,0.4) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 110px 180px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 220px 220px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                      radial-gradient(1.5px 1.5px at 250px 100px, rgba(255,255,255,0.45) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 240px 340px, rgba(255,255,255,0.3) 0%, transparent 100%),
+                      radial-gradient(1px 1px at 270px 480px, rgba(255,255,255,0.35) 0%, transparent 100%),
+                      linear-gradient(to bottom, rgb(18, 18, 18) 0%, rgb(35, 35, 35) 100%)
+                    `,
+                    pointerEvents: 'none',
+                  }}
+                />
                 {pageData?.activated && (generatedSlug || pageData?.slug) ? (
-                  <div className="flex justify-center pt-2 pb-4">
-                    <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: '#0a0a0a' }}>
+                  <div className="flex justify-center pt-2 pb-4 relative z-[1]">
+                    <div className="relative overflow-hidden rounded-lg" style={{ width: '100%', maxWidth: '280px', height: '480px', background: 'transparent' }}>
                       <iframe
                         src={pageUrlPreview}
                         className="absolute top-0 left-0"
@@ -10300,14 +10330,14 @@ function AgentPagesSection({
                           pointerEvents: 'none',
                           border: 'none',
                           outline: 'none',
-                          background: '#0a0a0a',
+                          background: 'transparent',
                         }}
                         title="Attraction Page Preview"
                       />
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-center px-6">
+                  <div className="flex flex-col items-center justify-center h-full text-center px-6 relative z-[1]">
                     <div className="w-16 h-16 rounded-full bg-[#ffd700]/10 flex items-center justify-center mb-4">
                       <svg className="w-8 h-8 text-[#ffd700]/60" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
