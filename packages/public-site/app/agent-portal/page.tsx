@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useMemo, Suspense, useCal
 import { useRouter, useSearchParams } from 'next/navigation';
 import { H1, H2, CTAButton, GenericCard, FAQ, Icon3D } from '@saa/shared/components/saa';
 import { Modal } from '@saa/shared/components/saa/interactive/Modal';
-import { SlidePanel } from '@saa/shared/components/saa/interactive/SlidePanel';
+import { SlidePanel } from '@/components/shared/SlidePanel';
 import { Rocket, Video, Megaphone, GraduationCap, Users, PersonStanding, LayoutGrid, FileUser, Menu, Home, LifeBuoy, Headphones, MessageCircleQuestion, Building2, Wrench, User, LogOut, BarChart3, UserCircle, LinkIcon, Download, MapPin, ChevronRight, ChevronLeft, Crown, Smartphone, Building, Bot, Magnet, Sparkles, TrendingUp, Target, MessageSquare, LayoutTemplate, FileText } from 'lucide-react';
 import glassStyles from '@/components/shared/GlassShimmer.module.css';
 import { preloadAppData } from '@/components/pwa/PreloadService';
@@ -8773,38 +8773,32 @@ Note – although it's not advertised, you can push to get a different mentor if
 function NewAgentsSection() {
   const [selectedCategory, setSelectedCategory] = useState<NewAgentCategory | null>(null);
   const [selectedDocument, setSelectedDocument] = useState<NewAgentDocument | null>(null);
-  // Track which panel should show - separate from actual state for smooth transitions
-  const [showCategoryPanel, setShowCategoryPanel] = useState(false);
-  const [showDocumentPanel, setShowDocumentPanel] = useState(false);
+  // Single activePanel state - 'category' | 'document' | null
+  const [activePanel, setActivePanel] = useState<'category' | 'document' | null>(null);
 
   const handleCategoryClick = (category: NewAgentCategory) => {
     setSelectedCategory(category);
     setSelectedDocument(null);
-    setShowCategoryPanel(true);
-    setShowDocumentPanel(false);
+    setActivePanel('category');
   };
 
   const handleDocumentClick = (doc: NewAgentDocument) => {
     setSelectedDocument(doc);
-    // Stagger: start closing category, then open document after delay
-    setShowCategoryPanel(false);
-    setTimeout(() => {
-      setShowDocumentPanel(true);
-    }, 100);
+    // Immediately switch active panel - both animations start together
+    setActivePanel('document');
   };
 
   const handleBackToCategory = () => {
-    // Stagger: close document first, then show category
-    setShowDocumentPanel(false);
+    // Immediately switch back - both animations start together
+    setActivePanel('category');
+    // Clear document data after animation
     setTimeout(() => {
       setSelectedDocument(null);
-      setShowCategoryPanel(true);
-    }, 100);
+    }, 300);
   };
 
   const handleCloseModal = () => {
-    setShowCategoryPanel(false);
-    setShowDocumentPanel(false);
+    setActivePanel(null);
     // Clear data after animation completes
     setTimeout(() => {
       setSelectedCategory(null);
@@ -8857,20 +8851,21 @@ function NewAgentsSection() {
       </div>
 
       {/* Shared Backdrop for both panels */}
-      {(showCategoryPanel || showDocumentPanel || selectedCategory !== null) && (
+      {selectedCategory !== null && (
         <div
           className="fixed inset-0 z-[10019] bg-black/60 backdrop-blur-sm transition-opacity duration-300"
           style={{
-            opacity: (showCategoryPanel || showDocumentPanel) ? 1 : 0,
+            opacity: activePanel !== null ? 1 : 0,
+            pointerEvents: activePanel !== null ? 'auto' : 'none',
           }}
           onClick={handleCloseModal}
           aria-hidden="true"
         />
       )}
 
-      {/* Category SlidePanel - Shows list of documents */}
+      {/* Category SlidePanel - Shows list of documents (higher z-index, slides out on top) */}
       <SlidePanel
-        isOpen={showCategoryPanel}
+        isOpen={activePanel === 'category'}
         onClose={handleCloseModal}
         title={selectedCategory?.title || ''}
         subtitle={selectedCategory?.description}
@@ -8881,7 +8876,7 @@ function NewAgentsSection() {
         )}
         size="md"
         hideBackdrop={true}
-        zIndexOffset={0}
+        zIndexOffset={1}
       >
         {selectedCategory && (
           <div className="space-y-3">
@@ -8917,16 +8912,16 @@ function NewAgentsSection() {
         )}
       </SlidePanel>
 
-      {/* Document Content SlidePanel */}
+      {/* Document Content SlidePanel (lower z-index, slides in underneath) */}
       <SlidePanel
-        isOpen={showDocumentPanel}
+        isOpen={activePanel === 'document'}
         onClose={handleCloseModal}
         title={selectedDocument?.title || ''}
         subtitle={selectedCategory?.title}
         icon={<FileText className="w-5 h-5 text-[#ffd700]" />}
         size="md"
         hideBackdrop={true}
-        zIndexOffset={1}
+        zIndexOffset={0}
         footer={selectedDocument?.downloadUrl ? (
           <a
             href={selectedDocument.downloadUrl}
@@ -10635,7 +10630,7 @@ return (
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10652,7 +10647,7 @@ return (
                   }}
                   disabled={!hasColorImage}
                   title={!hasColorImage ? 'Upload a new photo to enable color mode' : 'Show color photo'}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)',
@@ -10745,7 +10740,7 @@ return (
               />
               <button
                 onClick={() => setColorEditMode('background')}
-                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   // Dynamic text color: white on dark pills, black on light pills
@@ -10758,7 +10753,7 @@ return (
               </button>
               <button
                 onClick={() => setColorEditMode('accent')}
-                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   // Dynamic text color: white on dark pills, black on light pills
@@ -10801,7 +10796,7 @@ return (
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'bold' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: (linksSettings?.nameWeight || 'bold') === 'bold' ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10811,7 +10806,7 @@ return (
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameWeight: 'normal' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.nameWeight === 'normal' ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10895,7 +10890,7 @@ return (
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.font === 'synonym' ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10905,7 +10900,7 @@ return (
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.font === 'taskor' ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10930,7 +10925,7 @@ return (
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.nameGlow !== false ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10940,7 +10935,7 @@ return (
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }}
-                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.nameGlow === false ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -12459,14 +12454,14 @@ return (
                   />
                   <button
                     onClick={() => setColorEditMode('background')}
-                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                   >
                     Background
                   </button>
                   <button
                     onClick={() => setColorEditMode('accent')}
-                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                   >
                     Accent
@@ -12830,14 +12825,14 @@ return (
                 />
                 <button
                   onClick={() => setColorEditMode('background')}
-                  className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                 >
                   Background
                 </button>
                 <button
                   onClick={() => setColorEditMode('accent')}
-                  className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                 >
                   Accent
@@ -13844,16 +13839,11 @@ function DownloadSection() {
                 className="w-full h-full object-cover"
               />
             </div>
-            <h1
-              className="text-2xl sm:text-3xl text-[#ffd700] mb-4"
-              style={{
-                fontFamily: 'var(--font-taskor, sans-serif)',
-                textShadow: '0 2px 4px rgba(0,0,0,0.5), 0 0 40px rgba(255,215,0,0.4), 0 0 80px rgba(255,215,0,0.2)',
-                WebkitTextStroke: '0.5px rgba(255,215,0,0.3)',
-              }}
-            >
-              SAA Portal App
-            </h1>
+            <div style={{ perspective: '1000px' }} className="relative">
+              <H1 disableCloseGlow={true} className="text-2xl sm:text-3xl mb-4">
+                SAA Portal App
+              </H1>
+            </div>
             <p className="text-sm text-[#e5e4dd]/70 mb-4">
               Install the SAA Portal as an app on your device for the best experience.
             </p>
@@ -13885,7 +13875,7 @@ function DownloadSection() {
                 <button
                   type="button"
                   onClick={() => setShowIOSInstructions(false)}
-                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 inline-flex items-center justify-center leading-none"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -13896,7 +13886,7 @@ function DownloadSection() {
                 <button
                   type="button"
                   onClick={() => setShowIOSInstructions(true)}
-                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 flex items-center justify-center"
+                  className="relative z-10 w-[130px] py-2.5 rounded-full text-lg font-bold transition-colors duration-300 inline-flex items-center justify-center leading-none"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'

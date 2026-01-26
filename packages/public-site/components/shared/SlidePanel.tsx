@@ -195,13 +195,17 @@ export function SlidePanel({
     }
   };
 
+  // Check if we need to render during a close transition
+  // This catches the race condition where render happens before useEffect sets isClosing
+  const isClosingTransition = prevIsOpenRef.current === true && !isOpen;
+
   // Don't render anything if never opened or not mounted (SSR safety)
-  if (!mounted || (!hasBeenOpened && !isOpen && !shouldRender)) {
+  if (!mounted || (!hasBeenOpened && !isOpen && !shouldRender && !isClosingTransition)) {
     return null;
   }
 
-  // Don't render if closed and not closing animation and not in shouldRender state
-  if (!isOpen && !isClosing && !shouldRender) {
+  // Don't render if closed and not closing animation and not in shouldRender state and not in closing transition
+  if (!isOpen && !isClosing && !shouldRender && !isClosingTransition) {
     return null;
   }
 
@@ -341,7 +345,7 @@ export function SlidePanel({
           {!hideBackdrop && (
             <div
               className={`slide-panel-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm ${
-                isClosing ? 'slide-panel-backdrop-closing' : ''
+                (isClosing || isClosingTransition) ? 'slide-panel-backdrop-closing' : ''
               }`}
               style={{ isolation: 'isolate' }}
               aria-hidden="true"
@@ -352,7 +356,7 @@ export function SlidePanel({
           <div
             ref={panelRef}
             className={`slide-panel relative overflow-y-auto overscroll-contain ${sizeClasses[size]} ${
-              isClosing ? 'slide-panel-closing' : ''
+              (isClosing || isClosingTransition) ? 'slide-panel-closing' : ''
             } ${className}`}
             style={{
               background: 'linear-gradient(135deg, rgba(20,20,20,0.98) 0%, rgba(12,12,12,0.99) 100%)',
