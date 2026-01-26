@@ -2578,7 +2578,7 @@ function AgentPortal() {
           {/* Sidebar Navigation - Desktop only (1200px+) */}
           {/* FIX: Sidebar scrolls with content on tabs that have tall content */}
           <aside className="hidden min-[950px]:block w-64 flex-shrink-0">
-            <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction', 'production', 'download'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
+            <div className={`${['onboarding', 'linkpage', 'templates', 'agent-attraction', 'production', 'download', 'support'].includes(activeSection) ? '' : 'sticky top-24'} space-y-4`}>
               {/* User Profile Section - Premium Glass Card */}
               <div
                 className="rounded-xl p-4"
@@ -5499,8 +5499,8 @@ function DashboardView({
         })}
       </div>
 
-      {/* Download App CTA - Mobile Only */}
-      <div className="min-[1200px]:hidden mt-6 mb-8">
+      {/* Download App CTA - Mobile Only (under 950px) */}
+      <div className="min-[950px]:hidden mt-6 mb-8">
         <a
           href="/download"
           className="block w-full py-4 px-6 rounded-xl bg-gradient-to-r from-[#ffd700] to-[#ffed4e] text-black font-semibold text-center shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2"
@@ -12165,19 +12165,15 @@ return (
             COPY URL
           </button>
 
-          {/* Download QR */}
+          {/* QR Code */}
           <button
             onClick={downloadQRCode}
             disabled={!pageData?.activated}
             className={`w-full py-2.5 px-4 rounded-lg font-medium bg-white/5 border border-white/10 text-white/70 transition-colors flex items-center justify-center gap-2 ${pageData?.activated ? 'hover:bg-white/10 cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
             title={!pageData?.activated ? 'Activate your page first to download QR code' : ''}
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            DOWNLOAD QR CODE
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="3" height="3" /><rect x="18" y="14" width="3" height="3" /><rect x="14" y="18" width="3" height="3" /><rect x="18" y="18" width="3" height="3" /></svg>
+            QR CODE
           </button>
         </div>
       </div>
@@ -13258,7 +13254,7 @@ return (
     {/* Hide button when help modal is open OR on mobile (mobile uses header button instead) */}
     {!showLinkPageHelpModal && (
     <div
-      className="hidden min-[950px]:block fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20 pixel-help-button"
+      className="hidden min-[950px]:block fixed bottom-6 right-6 z-[100] pixel-help-button"
       style={{ isolation: 'isolate' }}
       title="Need Help?"
     >
@@ -13669,7 +13665,7 @@ function PixelHelpButton({ onClick, color = 'gold', ariaLabel = 'Help', size = '
         }
       `}</style>
       <div
-        className={`${className || 'fixed bottom-6 right-6 z-[100] max-[1199px]:bottom-20'} ${classMap[color]} ${sizeClass}`}
+        className={`${className || 'fixed bottom-6 right-6 z-[100]'} ${classMap[color]} ${sizeClass}`}
         style={{ isolation: 'isolate' }}
         title={ariaLabel}
       >
