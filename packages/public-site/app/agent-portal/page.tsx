@@ -2674,14 +2674,16 @@ function AgentPortal() {
                   )}
 
                   {/* Edit Profile Button */}
+                  <style>{`
+                    .edit-profile-btn:hover {
+                      color: ${dashboardAccentColor} !important;
+                      background-color: ${dashboardAccentColor}15 !important;
+                      border-color: ${dashboardAccentColor}50 !important;
+                    }
+                  `}</style>
                   <button
                     onClick={handleOpenEditProfile}
-                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all hover:text-[var(--hover-text-color)] hover:bg-[var(--hover-bg-color)] hover:border-[var(--hover-border-color)]"
-                    style={{
-                      ['--hover-text-color' as any]: dashboardAccentColor,
-                      ['--hover-bg-color' as any]: `${dashboardAccentColor}15`,
-                      ['--hover-border-color' as any]: `${dashboardAccentColor}50`,
-                    }}
+                    className="edit-profile-btn mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
