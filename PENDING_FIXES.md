@@ -5,10 +5,8 @@ No pending fixes at this time.
 ---
 
 ## Recently Completed
-- FIX-1/8: Profile/Menu Section Scroll Issue - FIXED
-- FIX-2: My eXp App Card Layout - FIXED
-- FIX-3: QR Code Button Text and Icon - FIXED
-- FIX-4: Elite Courses Card Grid Layout - FIXED
-- FIX-5: Download Mobile App Button Visibility - FIXED
-- FIX-6: Preview Section Consistency (950px+) - FIXED
-- FIX-7: Pixel Question Button Position - FIXED
+- FIX-1: Edit Profile Button hover state - Fixed (switched to CSS hover)
+- FIX-2: Color pill selector structure - Fixed (all 3 instances updated)
+- FIX-3: Download App pill 1.8X enlargement - Fixed (281px container, 130px buttons)
+- FIX-4: New Agents modals → slide-in panels - Fixed (converted to SlidePanel)
+- All previous fixes (scroll, cards, pills, etc.) - FIXED

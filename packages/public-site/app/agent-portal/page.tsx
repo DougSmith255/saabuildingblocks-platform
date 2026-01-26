@@ -2676,21 +2676,11 @@ function AgentPortal() {
                   {/* Edit Profile Button */}
                   <button
                     onClick={handleOpenEditProfile}
-                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all"
+                    className="mt-3 flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-[#e5e4dd]/80 bg-white/5 border border-white/[0.08] transition-all hover:text-[var(--hover-text-color)] hover:bg-[var(--hover-bg-color)] hover:border-[var(--hover-border-color)]"
                     style={{
                       ['--hover-text-color' as any]: dashboardAccentColor,
                       ['--hover-bg-color' as any]: `${dashboardAccentColor}15`,
                       ['--hover-border-color' as any]: `${dashboardAccentColor}50`,
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.color = dashboardAccentColor;
-                      (e.target as HTMLElement).style.backgroundColor = `${dashboardAccentColor}15`;
-                      (e.target as HTMLElement).style.borderColor = `${dashboardAccentColor}50`;
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.color = '';
-                      (e.target as HTMLElement).style.backgroundColor = '';
-                      (e.target as HTMLElement).style.borderColor = '';
                     }}
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -8839,95 +8829,87 @@ function NewAgentsSection() {
         ))}
       </div>
 
-      {/* Category Modal - Shows list of documents */}
-      <Modal
+      {/* Category SlidePanel - Shows list of documents */}
+      <SlidePanel
         isOpen={selectedCategory !== null && selectedDocument === null}
         onClose={handleCloseModal}
-        size="lg"
-      >
-        {selectedCategory && (
-          <div className="space-y-4">
-            {/* Category Header */}
-            <div className="text-center pb-4 border-b border-white/10">
-              {selectedCategory.iconComponent ? (
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: `${selectedCategory.iconColor}20` }}>
-                  <selectedCategory.iconComponent className="w-9 h-9" style={{ color: selectedCategory.iconColor }} />
-                </div>
-              ) : (
-                <span className="text-5xl mb-3 block">{selectedCategory.icon}</span>
-              )}
-              <h3 className="text-xl font-bold text-[#ffd700]">{selectedCategory.title}</h3>
-              <p className="text-body text-[#dcdbd5] mt-1">{selectedCategory.description}</p>
-            </div>
-
-            {/* Document List */}
-            <div className="space-y-3">
-              {selectedCategory.documents.map((doc) => (
-                <button
-                  key={doc.id}
-                  onClick={() => handleDocumentClick(doc)}
-                  className="w-full text-left p-4 rounded-lg hover:border-[#ffd700]/40 transition-all group"
-                  style={{
-                    WebkitTapHighlightColor: 'transparent',
-                    background: 'linear-gradient(145deg, rgba(30, 30, 32, 0.9) 0%, rgba(20, 20, 22, 0.95) 100%)',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                    boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.02)',
-                  }}
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors">
-                        {doc.title}
-                      </h4>
-                      {doc.description && (
-                        <p className="text-body text-[#dcdbd5] mt-0.5">{doc.description}</p>
-                      )}
-                    </div>
-                    <ChevronRight className="w-5 h-5 text-[#e5e4dd]/40 group-hover:text-[#ffd700] transition-colors flex-shrink-0" />
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
+        title={selectedCategory?.title || ''}
+        subtitle={selectedCategory?.description}
+        icon={selectedCategory?.iconComponent ? (
+          <selectedCategory.iconComponent className="w-5 h-5" style={{ color: selectedCategory.iconColor }} />
+        ) : (
+          <span className="text-xl">{selectedCategory?.icon}</span>
         )}
-      </Modal>
-
-      {/* Document Content Modal */}
-      <Modal
-        isOpen={selectedDocument !== null}
-        onClose={handleCloseModal}
         size="md"
       >
-        {selectedDocument && selectedCategory && (
-          <div className="space-y-4">
-            {/* Document Header with Back Button */}
-            <div className="flex items-center gap-3 pb-4 border-b border-white/10">
+        {selectedCategory && (
+          <div className="space-y-3">
+            {selectedCategory.documents.map((doc) => (
               <button
-                onClick={handleBackToCategory}
-                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
+                key={doc.id}
+                onClick={() => handleDocumentClick(doc)}
+                className="w-full text-left p-4 rounded-xl hover:border-[#ffd700]/40 transition-all group"
+                style={{
+                  WebkitTapHighlightColor: 'transparent',
+                  background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(12,12,12,0.98) 100%)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  boxShadow: '0 0 0 1px rgba(255,255,255,0.02), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.03)',
+                }}
               >
-                <ChevronLeft className="w-5 h-5 text-[#e5e4dd]" />
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-[#e5e4dd] group-hover:text-[#ffd700] transition-colors">
+                      {doc.title}
+                    </h4>
+                    {doc.description && (
+                      <p className="text-sm text-[#dcdbd5]/70 mt-0.5">{doc.description}</p>
+                    )}
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-[#e5e4dd]/40 group-hover:text-[#ffd700] transition-colors flex-shrink-0" />
+                </div>
               </button>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-[#ffd700]/70 mb-0.5">{selectedCategory.title}</p>
-                <h3 className="text-lg font-bold text-[#e5e4dd]">{selectedDocument.title}</h3>
-              </div>
-            </div>
+            ))}
+          </div>
+        )}
+      </SlidePanel>
 
-            {/* Download Button - At Top */}
-            {selectedDocument.downloadUrl && (
-              <div className="pb-4 border-b border-white/10">
-                <a
-                  href={selectedDocument.downloadUrl}
-                  download
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-lg text-[#ffd700] hover:bg-[#ffd700]/20 transition-colors text-sm font-medium"
-                >
-                  <Download className="w-4 h-4" />
-                  Download Document
-                </a>
-              </div>
-            )}
+      {/* Document Content SlidePanel */}
+      <SlidePanel
+        isOpen={selectedDocument !== null}
+        onClose={handleCloseModal}
+        title={selectedDocument?.title || ''}
+        subtitle={selectedCategory?.title}
+        icon={<FileText className="w-5 h-5 text-[#ffd700]" />}
+        size="md"
+        footer={selectedDocument?.downloadUrl ? (
+          <a
+            href={selectedDocument.downloadUrl}
+            download
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-[#ffd700] rounded-lg text-black font-semibold hover:bg-[#ffe55c] transition-colors"
+          >
+            <Download className="w-4 h-4" />
+            Download Document
+          </a>
+        ) : (
+          <button
+            onClick={handleBackToCategory}
+            className="w-full px-4 py-3 rounded-lg text-[#e5e4dd]/80 bg-white/5 hover:bg-white/10 border border-white/10 transition-colors"
+          >
+            Back to {selectedCategory?.title}
+          </button>
+        )}
+      >
+        {selectedDocument && (
+          <div className="space-y-4">
+            {/* Back button at top */}
+            <button
+              onClick={handleBackToCategory}
+              className="inline-flex items-center gap-2 text-sm text-[#ffd700]/80 hover:text-[#ffd700] transition-colors"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
+            >
+              <ChevronLeft className="w-4 h-4" />
+              Back to {selectedCategory?.title}
+            </button>
 
             {/* Document Content */}
             <div className="prose prose-invert prose-sm max-w-none">
@@ -8937,7 +8919,7 @@ function NewAgentsSection() {
             </div>
           </div>
         )}
-      </Modal>
+      </SlidePanel>
 
     </div>
   );
@@ -10705,18 +10687,19 @@ return (
             <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
             {/* Background / Accent pill selector with color indicator */}
             {/* Pill text color adapts to background brightness */}
-            <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
-              {/* Animated sliding pill indicator */}
+            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative mb-3" style={{ width: '200px' }}>
+              {/* Animated sliding pill indicator - fixed width */}
               <div
-                className="absolute top-0.5 bottom-0.5 w-1/2 rounded-full transition-transform duration-200 ease-out"
+                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                 style={{
-                  transform: colorEditMode === 'accent' ? 'translateX(100%)' : 'translateX(0)',
+                  width: '95px',
+                  left: colorEditMode === 'accent' ? 'calc(100% - 99px)' : '4px',
                   backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
                 }}
               />
               <button
                 onClick={() => setColorEditMode('background')}
-                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 flex items-center justify-center gap-1.5`}
+                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   // Dynamic text color: white on dark pills, black on light pills
@@ -10725,11 +10708,11 @@ return (
                     : 'rgba(255,255,255,0.6)',
                 }}
               >
-                <span>Background</span>
+                Background
               </button>
               <button
                 onClick={() => setColorEditMode('accent')}
-                className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 flex items-center justify-center gap-1.5`}
+                className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   // Dynamic text color: white on dark pills, black on light pills
@@ -10738,7 +10721,7 @@ return (
                     : 'rgba(255,255,255,0.6)',
                 }}
               >
-                <span>Accent</span>
+                Accent
               </button>
             </div>
             {/* Context-aware color picker */}
@@ -12419,24 +12402,25 @@ return (
               <div>
                 <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Color</label>
                 {/* Background / Accent pill selector */}
-                <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
+                <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative mb-3" style={{ width: '200px' }}>
                   <div
-                    className="absolute top-0.5 bottom-0.5 w-1/2 rounded-full transition-transform duration-200 ease-out"
+                    className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                     style={{
-                      transform: colorEditMode === 'accent' ? 'translateX(100%)' : 'translateX(0)',
+                      width: '95px',
+                      left: colorEditMode === 'accent' ? 'calc(100% - 99px)' : '4px',
                       backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
                     }}
                   />
                   <button
                     onClick={() => setColorEditMode('background')}
-                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                   >
                     Background
                   </button>
                   <button
                     onClick={() => setColorEditMode('accent')}
-                    className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                    className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                     style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                   >
                     Accent
@@ -12789,24 +12773,25 @@ return (
             <div>
               <label className="block text-xs text-white/50 mb-2">Color</label>
               {/* Background / Accent pill selector */}
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative mb-3">
+              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative mb-3" style={{ width: '200px' }}>
                 <div
-                  className="absolute top-0.5 bottom-0.5 w-1/2 rounded-full transition-transform duration-200 ease-out"
+                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                   style={{
-                    transform: colorEditMode === 'accent' ? 'translateX(100%)' : 'translateX(0)',
+                    width: '95px',
+                    left: colorEditMode === 'accent' ? 'calc(100% - 99px)' : '4px',
                     backgroundColor: colorEditMode === 'accent' ? linksSettings.accentColor : (linksSettings.backgroundColor || '#ffd700'),
                   }}
                 />
                 <button
                   onClick={() => setColorEditMode('background')}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                  className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'background' ? (isColorDark(linksSettings.backgroundColor || '#ffd700') ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                 >
                   Background
                 </button>
                 <button
                   onClick={() => setColorEditMode('accent')}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200`}
+                  className="relative z-10 w-[95px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{ fontFamily: 'var(--font-synonym, sans-serif)', color: colorEditMode === 'accent' ? (isAccentDark ? '#ffffff' : '#000000') : 'rgba(255,255,255,0.6)' }}
                 >
                   Accent
@@ -13827,22 +13812,22 @@ function DownloadSection() {
             </p>
           </div>
 
-          {/* Browser Tab Selector - Animated Pill Style */}
+          {/* Browser Tab Selector - Animated Pill Style (1.8X enlarged) */}
           <div className="flex justify-center">
-            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
+            <div className="inline-flex rounded-full border border-white/20 p-1.5 bg-black/30 relative" style={{ width: '281px' }}>
               {/* Animated sliding pill indicator - fixed width */}
               <div
-                className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
+                className="absolute top-1.5 bottom-1.5 rounded-full transition-all duration-300 ease-out pointer-events-none"
                 style={{
-                  width: '72px',
-                  left: showIOSInstructions ? 'calc(100% - 76px)' : '4px',
+                  width: '130px',
+                  left: showIOSInstructions ? 'calc(100% - 136px)' : '6px',
                   backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
                 }}
               />
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(false)}
-                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                className="relative z-10 w-[130px] py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -13853,7 +13838,7 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                className="relative z-10 w-[130px] py-2.5 rounded-full text-sm font-bold transition-colors duration-300 text-center"
                 style={{
                   fontFamily: 'var(--font-synonym, sans-serif)',
                   color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'
