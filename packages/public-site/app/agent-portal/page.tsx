@@ -10596,15 +10596,18 @@ return (
                 Upload Photo
               </label>
               {/* B&W / Color Toggle - Pill Design with Animation */}
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-                {/* Animated sliding pill indicator */}
+              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
+                {/* Animated sliding pill indicator - fixed width */}
                 <div
-                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                  style={{ transform: linksSettings.showColorPhoto ? 'translateX(100%)' : 'translateX(0)' }}
+                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                  style={{
+                    width: '72px',
+                    left: linksSettings.showColorPhoto ? 'calc(100% - 76px)' : '4px',
+                  }}
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, showColorPhoto: false })); setHasUnsavedChanges(true); }}
-                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: !linksSettings.showColorPhoto ? '#000000' : 'rgba(255,255,255,0.6)'
@@ -10621,7 +10624,7 @@ return (
                   }}
                   disabled={!hasColorImage}
                   title={!hasColorImage ? 'Upload a new photo to enable color mode' : 'Show color photo'}
-                  className="flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200"
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
                   style={{
                     fontFamily: 'var(--font-synonym, sans-serif)',
                     color: linksSettings.showColorPhoto && hasColorImage ? '#000000' : 'rgba(255,255,255,0.6)',
@@ -10852,23 +10855,32 @@ return (
             {/* Font */}
             <div className="flex-1">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Font</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-                {/* Animated sliding pill indicator */}
+              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '185px' }}>
+                {/* Animated sliding pill indicator - fixed width */}
                 <div
-                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                  style={{ transform: linksSettings.font === 'taskor' ? 'translateX(100%)' : 'translateX(0)' }}
+                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                  style={{
+                    width: '88px',
+                    left: linksSettings.font === 'taskor' ? 'calc(100% - 92px)' : '4px',
+                  }}
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'synonym' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'synonym' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.font === 'synonym' ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   Synonym
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, font: 'taskor' })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.font === 'taskor' ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="relative z-10 w-[88px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.font === 'taskor' ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   Taskor
                 </button>
@@ -10878,23 +10890,32 @@ return (
             {/* Name Glow */}
             <div className="flex-1">
               <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-2">Name Glow</label>
-              <div className="flex rounded-full overflow-hidden border border-white/20 p-0.5 bg-black/30 relative">
-                {/* Animated sliding pill indicator */}
+              <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
+                {/* Animated sliding pill indicator - fixed width */}
                 <div
-                  className="absolute top-0.5 bottom-0.5 w-1/2 bg-[#ffd700] rounded-full transition-transform duration-200 ease-out"
-                  style={{ transform: linksSettings.nameGlow === false ? 'translateX(100%)' : 'translateX(0)' }}
+                  className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none bg-[#ffd700]"
+                  style={{
+                    width: '72px',
+                    left: linksSettings.nameGlow === false ? 'calc(100% - 76px)' : '4px',
+                  }}
                 />
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: true })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameGlow !== false ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.nameGlow !== false ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   Yes
                 </button>
                 <button
                   onClick={() => { setLinksSettings(prev => ({ ...prev, nameGlow: false })); setHasUnsavedChanges(true); }}
-                  className={`flex-1 px-3 py-1.5 text-xs font-bold rounded-full relative z-10 transition-colors duration-200 ${linksSettings.nameGlow === false ? 'text-black' : 'text-white/60 hover:text-white'}`}
-                  style={{ fontFamily: 'var(--font-synonym, sans-serif)' }}
+                  className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                  style={{
+                    fontFamily: 'var(--font-synonym, sans-serif)',
+                    color: linksSettings.nameGlow === false ? '#000000' : 'rgba(255,255,255,0.6)'
+                  }}
                 >
                   No
                 </button>
@@ -13808,8 +13829,8 @@ function DownloadSection() {
 
           {/* Browser Tab Selector - Animated Pill Style */}
           <div className="flex justify-center">
-            <div className="relative inline-flex rounded-full bg-black/30 border border-white/10 p-1" style={{ width: '156px' }}>
-              {/* Animated sliding pill background - positioned behind active button */}
+            <div className="inline-flex rounded-full border border-white/20 p-1 bg-black/30 relative" style={{ width: '156px' }}>
+              {/* Animated sliding pill indicator - fixed width */}
               <div
                 className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                 style={{
@@ -13821,22 +13842,22 @@ function DownloadSection() {
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(false)}
-                className={`relative z-10 w-[72px] py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
-                  !showIOSInstructions
-                    ? 'text-[#1a1a1a]'
-                    : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
-                }`}
+                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: !showIOSInstructions ? '#000000' : 'rgba(255,255,255,0.6)'
+                }}
               >
                 Chrome
               </button>
               <button
                 type="button"
                 onClick={() => setShowIOSInstructions(true)}
-                className={`relative z-10 w-[72px] py-1.5 rounded-full text-sm font-medium transition-colors duration-300 text-center ${
-                  showIOSInstructions
-                    ? 'text-white'
-                    : 'text-[#e5e4dd]/60 hover:text-[#e5e4dd]'
-                }`}
+                className="relative z-10 w-[72px] py-1.5 rounded-full text-xs font-bold transition-colors duration-300 text-center"
+                style={{
+                  fontFamily: 'var(--font-synonym, sans-serif)',
+                  color: showIOSInstructions ? '#ffffff' : 'rgba(255,255,255,0.6)'
+                }}
               >
                 Safari
               </button>
