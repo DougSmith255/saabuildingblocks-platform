@@ -13805,13 +13805,13 @@ function DownloadSection() {
 
           {/* Browser Tab Selector - Animated Pill Style */}
           <div className="flex justify-center">
-            <div className="relative inline-flex p-1 rounded-full bg-black/30 border border-white/10">
+            <div className="relative inline-flex rounded-full bg-black/30 border border-white/10 p-1" style={{ width: '156px' }}>
               {/* Animated sliding pill background - positioned behind active button */}
               <div
                 className="absolute top-1 bottom-1 rounded-full transition-all duration-300 ease-out pointer-events-none"
                 style={{
-                  width: '72px', // Fixed width matching button width
-                  left: showIOSInstructions ? 'calc(100% - 76px)' : '4px', // 72px + 4px padding
+                  width: '72px',
+                  left: showIOSInstructions ? 'calc(100% - 76px)' : '4px',
                   backgroundColor: showIOSInstructions ? '#007AFF' : '#ffd700',
                 }}
               />
